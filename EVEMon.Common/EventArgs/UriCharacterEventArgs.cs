@@ -106,7 +106,7 @@ namespace EVEMon.Common
                 uriCharacter = new UriCharacter(identity, m_uri, ccpCharacter);
             }
 
-            EveClient.Characters.Add(uriCharacter, true);
+            EveMonClient.Characters.Add(uriCharacter, true);
             return uriCharacter;
         }
 
@@ -138,10 +138,10 @@ namespace EVEMon.Common
         private CharacterIdentity GetIdentity(SerializableCharacterSheetBase character)
         {
             // Retrieve the identity and create one if needed
-            var identity = EveClient.CharacterIdentities[character.ID];
+            var identity = EveMonClient.CharacterIdentities[character.ID];
             if (identity == null)
             {
-                identity = EveClient.CharacterIdentities.Add(character.ID, character.Name);
+                identity = EveMonClient.CharacterIdentities.Add(character.ID, character.Name);
             }
             return identity;
         }

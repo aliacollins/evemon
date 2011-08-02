@@ -88,8 +88,8 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (EveClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider &&
-                    EveClient.APIProviders.CurrentProvider != APIProvider.TestProvider)
+                if (EveMonClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider &&
+                    EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider)
                     return false;
 
                 var cachedTime = (m_lastResult == null ? NextUpdate : m_lastResult.CachedUntil);
@@ -230,7 +230,7 @@ namespace EVEMon.Common
             // Starts the update
             m_isUpdating = true;
             m_status = QueryStatus.Updating;
-            QueryAsyncCore(EveClient.APIProviders.CurrentProvider, OnQueried);
+            QueryAsyncCore(EveMonClient.APIProviders.CurrentProvider, OnQueried);
         }
 
         /// <summary>

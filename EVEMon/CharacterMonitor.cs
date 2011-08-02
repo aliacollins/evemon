@@ -90,17 +90,17 @@ namespace EVEMon
             }
 
             // Subscribe events
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.SchedulerChanged += EveClient_SchedulerChanged;
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
-            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
-            EveClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
-            EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
-            EveClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
-            EveClient.NotificationSent += EveClient_NotificationSent;
-            EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SchedulerChanged += EveClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
+            EveMonClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
+            EveMonClient.NotificationSent += EveClient_NotificationSent;
+            EveMonClient.NotificationInvalidated += EveClient_NotificationInvalidated;
             Disposed += OnDisposed;
         }
 
@@ -111,17 +111,17 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
-            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
-            EveClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
-            EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
-            EveClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
-            EveClient.NotificationSent -= EveClient_NotificationSent;
-            EveClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
+            EveMonClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
+            EveMonClient.NotificationSent -= EveClient_NotificationSent;
+            EveMonClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
             Disposed -= OnDisposed;
         }
 
@@ -662,7 +662,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateNotifications()
         {
-            notificationList.Notifications = EveClient.Notifications.Where(x => x.Sender == m_character);
+            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == m_character);
         }
 
         #endregion
@@ -1306,7 +1306,7 @@ namespace EVEMon
                 Behaviour = NotificationBehaviour.Overwrite,
                 Description = "Test Character Notification."
             };
-            EveClient.Notifications.Notify(notification);
+            EveMonClient.Notifications.Notify(notification);
         }
 
         #endregion

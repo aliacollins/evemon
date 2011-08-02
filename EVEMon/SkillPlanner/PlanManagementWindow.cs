@@ -36,7 +36,7 @@ namespace EVEMon.SkillPlanner
             m_character = character;
             m_columnSorter = new PlanComparer(PlanSort.Name);
 
-            EveClient.CharacterPlanCollectionChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPlanCollectionChanged);
+            EveMonClient.CharacterPlanCollectionChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPlanCollectionChanged);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            EveClient.CharacterPlanCollectionChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPlanCollectionChanged);
+            EveMonClient.CharacterPlanCollectionChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPlanCollectionChanged);
             base.OnClosing(e);
         }
 
@@ -523,7 +523,7 @@ namespace EVEMon.SkillPlanner
         private void mFile_DropDownOpening(object sender, EventArgs e)
         {
             // See if we have multiple characters to determine if load from character is enabled
-            miLoadPlanFromCharacter.Enabled = (EveClient.Characters.Count > 1);
+            miLoadPlanFromCharacter.Enabled = (EveMonClient.Characters.Count > 1);
         }
 
         /// <summary>

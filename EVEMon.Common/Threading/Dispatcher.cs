@@ -214,7 +214,7 @@ namespace EVEMon.Common.Threading
         private static void OnOneSecondTimerTick()
         {
             // Updates the eve client
-            EveClient.UpdateOnOneSecondTick();
+            EveMonClient.UpdateOnOneSecondTick();
 
             // Check for scheduled operations before now
             List<Action> actionsToInvoke = new List<Action>();

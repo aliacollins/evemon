@@ -9,12 +9,12 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// The collection used by <see cref="EveClient.Notifications"/>
+    /// The collection used by <see cref="EveMonClient.Notifications"/>
     /// </summary>
     public sealed class GlobalNotificationCollection : ReadonlyCollection<Notification>
     {
         /// <summary>
-        /// Constructor, used by <see cref="EveClient"/> only.
+        /// Constructor, used by <see cref="EveMonClient"/> only.
         /// </summary>
         internal GlobalNotificationCollection() { }
 
@@ -56,7 +56,7 @@ namespace EVEMon.Common
                     break;
             }
 
-            EveClient.OnNotificationSent(notification);
+            EveMonClient.OnNotificationSent(notification);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EVEMon.Common
         public void Invalidate(NotificationInvalidationEventArgs args)
         {
             if (InvalidateCore(args.Key))
-                EveClient.OnNotificationInvalidated(args);
+                EveMonClient.OnNotificationInvalidated(args);
         }
 
         /// <summary>

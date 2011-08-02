@@ -55,9 +55,9 @@ namespace EVEMon
 
             m_requireRefresh = true;
 
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.TimerTick += EveClient_TimerTick;
             Disposed += OnDisposed;
         }
         
@@ -75,9 +75,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
             this.Disposed -= OnDisposed;
         }
 

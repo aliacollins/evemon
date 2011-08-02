@@ -48,8 +48,8 @@ namespace EVEMon.Common.IgbService
                     {
                         // Null out the listener then notify the trace file and the user
                         m_listener = null;
-                        EveClient.Trace(String.Format("{0} - {1} - {2}", ex.SocketErrorCode, ex.Message, ex.ErrorCode));
-                        EveClient.Notifications.NotifyIgbServiceException(m_listenEndpoint.Port);
+                        EveMonClient.Trace(String.Format("{0} - {1} - {2}", ex.SocketErrorCode, ex.Message, ex.ErrorCode));
+                        EveMonClient.Notifications.NotifyIgbServiceException(m_listenEndpoint.Port);
                     }
                 }
             }

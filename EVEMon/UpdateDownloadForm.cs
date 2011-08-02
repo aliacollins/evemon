@@ -29,7 +29,7 @@ namespace EVEMon
         {
             try
             {
-                m_request = EveClient.HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback, ProgressChangedCallback);
+                m_request = EveMonClient.HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback, ProgressChangedCallback);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ namespace EVEMon
         private void btCancel_Click(object sender, EventArgs e)
         {
             if (m_request != null)
-                EveClient.HttpWebService.CancelRequest(m_request);
+                EveMonClient.HttpWebService.CancelRequest(m_request);
         }
     }
 }

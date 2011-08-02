@@ -20,7 +20,7 @@ namespace EVEMon.Common
     /// See it as the entry point of the library and its collections as databases with stored procedures (the public ones).
     /// </summary>
     [EnforceUIThreadAffinity]
-    public static partial class EveClient
+    public static partial class EveMonClient
     {
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
@@ -1073,7 +1073,7 @@ namespace EVEMon.Common
             try
             {
                 System.Diagnostics.Trace.AutoFlush = true;
-                s_traceStream = File.CreateText(EveClient.TraceFileNameFullPath);
+                s_traceStream = File.CreateText(EveMonClient.TraceFileNameFullPath);
                 s_traceListener = new TextWriterTraceListener(s_traceStream);
                 System.Diagnostics.Trace.Listeners.Add(s_traceListener);
             }

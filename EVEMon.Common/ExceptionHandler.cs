@@ -19,7 +19,7 @@ namespace EVEMon.Common
         private static void LogException(Exception e, string header)
         {
             Trace.WriteLine(String.Empty);
-            EveClient.Trace(header);
+            EveMonClient.Trace(header);
             Trace.Indent();
             Trace.WriteLine(e.ToString());
             Trace.WriteLine(String.Empty);

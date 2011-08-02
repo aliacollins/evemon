@@ -43,7 +43,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
                 foreach (SerializableDatafile dfv in Datafiles)
                 {
-                    foreach (var datafile in EveClient.Datafiles)
+                    foreach (var datafile in EveMonClient.Datafiles)
                     {
                         if (datafile.Filename == dfv.Name)
                         {

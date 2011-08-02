@@ -71,24 +71,24 @@ namespace EVEMon.Common
             IsRestoringSettings = true;
             try
             {
-                EveClient.Trace("Settings.Import - begin");
+                EveMonClient.Trace("Settings.Import - begin");
 
                 // Import the characters, accounts and plans
                 if (!preferencesOnly)
                 {
                     // The above check prevents the settings form to trigger a 
                     // characters updates since the last queried infos would be lost.
-                    EveClient.Characters.Import(serial.Characters);
-                    EveClient.Characters.ImportPlans(serial.Plans);
-                    EveClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-                    EveClient.Accounts.Import(serial.Accounts);
+                    EveMonClient.Characters.Import(serial.Characters);
+                    EveMonClient.Characters.ImportPlans(serial.Plans);
+                    EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
+                    EveMonClient.Accounts.Import(serial.Accounts);
                 }
 
                 // Global settings
                 Settings.Compatibility = serial.Compatibility;
 
                 // API providers
-                EveClient.APIProviders.Import(serial.APIProviders);
+                EveMonClient.APIProviders.Import(serial.APIProviders);
 
                 // Scheduler
                 Scheduler.Import(serial.Scheduler);
@@ -110,10 +110,10 @@ namespace EVEMon.Common
                 SaveImmediate();
 
                 // Updates the data right now
-                EveClient.UpdateOnOneSecondTick();
-                EveClient.OnSettingsChanged();
+                EveMonClient.UpdateOnOneSecondTick();
+                EveMonClient.OnSettingsChanged();
 
-                EveClient.Trace("Settings.Import - done");
+                EveMonClient.Trace("Settings.Import - done");
             }
             finally
             {
@@ -199,13 +199,13 @@ namespace EVEMon.Common
             serial.Compatibility = Settings.Compatibility;
 
             // Export characters and such
-            serial.Characters = EveClient.Characters.Export();
-            serial.Accounts = EveClient.Accounts.Export();
-            serial.Plans = EveClient.Characters.ExportPlans();
-            serial.MonitoredCharacters = EveClient.MonitoredCharacters.Export();
+            serial.Characters = EveMonClient.Characters.Export();
+            serial.Accounts = EveMonClient.Accounts.Export();
+            serial.Plans = EveMonClient.Characters.ExportPlans();
+            serial.MonitoredCharacters = EveMonClient.MonitoredCharacters.Export();
 
             // API providers
-            serial.APIProviders = EveClient.APIProviders.Export();
+            serial.APIProviders = EveMonClient.APIProviders.Export();
 
             // Scheduler
             serial.Scheduler = Scheduler.Export();
@@ -263,7 +263,7 @@ namespace EVEMon.Common
         public static void Restore(string filename)
         {
             // Try deserialize
-            string settingsFile = EveClient.SettingsFileNameFullPath;
+            string settingsFile = EveMonClient.SettingsFileNameFullPath;
             SerializableSettings settings = TryDeserializeBackup(filename, settingsFile, false);
 
             // Loading from file failed, we abort and keep our current settings
@@ -284,13 +284,13 @@ namespace EVEMon.Common
         private static SerializableSettings TryDeserializeSettings()
         {
             SerializableSettings settings = null;
-            string settingsFile = EveClient.SettingsFileNameFullPath;
+            string settingsFile = EveMonClient.SettingsFileNameFullPath;
             string backupFile = settingsFile + ".bak";
 
             // Check that a settings file or backup exists
             if (File.Exists(settingsFile))
             {
-                EveClient.Trace("Settings.TryDeserializeSettings - begin");
+                EveMonClient.Trace("Settings.TryDeserializeSettings - begin");
 
                 // Check settings file length
                 FileInfo settingsInfo = new FileInfo(settingsFile);
@@ -316,7 +316,7 @@ namespace EVEMon.Common
                     {
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                        EveClient.Trace("Settings.TryDeserializeSettings - done");
+                        EveMonClient.Trace("Settings.TryDeserializeSettings - done");
                         return settings;
                     }
                 }
@@ -338,7 +338,7 @@ namespace EVEMon.Common
             // Load failed, so check for backup
             if (File.Exists(backupFile))
             {
-                EveClient.Trace("Settings.TryDeserializeBackup - begin");
+                EveMonClient.Trace("Settings.TryDeserializeBackup - begin");
 
                 FileInfo backupInfo = new FileInfo(backupFile);
                 if (backupInfo.Length > 0)
@@ -382,7 +382,7 @@ namespace EVEMon.Common
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                        EveClient.Trace("Settings.TryDeserializeBackup - done");
+                        EveMonClient.Trace("Settings.TryDeserializeBackup - done");
                         return settings;
                     }
 
@@ -518,7 +518,7 @@ namespace EVEMon.Common
             XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
 
             // Save in settings file
-            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileNameFullPath, fs =>
+            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fs =>
             {
                 xs.Serialize(fs, settings);
                 fs.Flush();
@@ -538,7 +538,7 @@ namespace EVEMon.Common
         {
             // Ensure we have the latest settings saved
             SaveImmediate();
-            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileNameFullPath, copyFileName);
+            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, copyFileName);
         }
 
         /// <summary>

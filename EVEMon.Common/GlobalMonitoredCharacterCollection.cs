@@ -31,7 +31,7 @@ namespace EVEMon.Common
             m_items.AddRange(order);
 
             // Notify the change
-            EveClient.OnMonitoredCharactersChanged();
+            EveMonClient.OnMonitoredCharactersChanged();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace EVEMon.Common
             m_items.RemoveAt(oldIndex);
             m_items.Insert(targetIndex, item);
 
-            EveClient.OnMonitoredCharactersChanged();
+            EveMonClient.OnMonitoredCharactersChanged();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EVEMon.Common
                 if (!m_items.Contains(character))
                 {
                     m_items.Add(character);
-                    EveClient.OnMonitoredCharactersChanged();
+                    EveMonClient.OnMonitoredCharactersChanged();
                 }
             }
             else
@@ -74,7 +74,7 @@ namespace EVEMon.Common
                 if (m_items.Contains(character))
                 {
                     m_items.Remove(character);
-                    EveClient.OnMonitoredCharactersChanged();
+                    EveMonClient.OnMonitoredCharactersChanged();
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace EVEMon.Common
             m_items.Clear();
             foreach (var characterSettings in monitoredCharacters)
             {
-                var character = EveClient.Characters[characterSettings.CharacterGuid];
+                var character = EveMonClient.Characters[characterSettings.CharacterGuid];
                 if (character != null)
                 {
                     m_items.Add(character);
@@ -97,7 +97,7 @@ namespace EVEMon.Common
                 }
             }
 
-            EveClient.OnMonitoredCharactersChanged();
+            EveMonClient.OnMonitoredCharactersChanged();
         }
 
         /// <summary>

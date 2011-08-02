@@ -707,7 +707,7 @@ namespace EVEMon.SettingsUI
             }
 
             // Queries Updater
-            foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
             {
                 // If any monitor's last update is found to exceed the max period,
                 // enable the queries updater button
@@ -900,7 +900,7 @@ namespace EVEMon.SettingsUI
             // Disable the button to prevent spamming
             btnResetUpdateQueryTimers.Enabled = false;
 
-            foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
             {
                 character.QueryMonitors.QueryEverything();
             }

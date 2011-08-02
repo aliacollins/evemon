@@ -339,7 +339,7 @@ namespace EVEMon
                 rect = GetDeleteIconRect(i);
                 if (e.Button == MouseButtons.Middle || rect.Contains(e.Location))
                 {
-                    EveClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
+                    EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
                     m_notifications.Remove(notification);
                     UpdateContent();
                     return;

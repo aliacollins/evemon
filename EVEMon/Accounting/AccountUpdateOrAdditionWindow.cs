@@ -134,7 +134,7 @@ namespace EVEMon.Accounting
                 {
                     Int64 userID;
                     Int64.TryParse(userIDTextBox.Text, out userID);
-                    EveClient.Accounts.TryAddOrUpdateAsync(userID, apiKeyTextBox.Text, OnUpdated);
+                    EveMonClient.Accounts.TryAddOrUpdateAsync(userID, apiKeyTextBox.Text, OnUpdated);
                 }
                 return;
             }

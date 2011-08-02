@@ -45,8 +45,8 @@ namespace EVEMon
 
             DoubleBuffered = true;
 
-            EveClient.CharacterStandingsUpdated += EveClient_CharacterStandingsUpdated;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.CharacterStandingsUpdated += EveClient_CharacterStandingsUpdated;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
             Disposed += OnDisposed;
         }
 
@@ -65,8 +65,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterStandingsUpdated -= EveClient_CharacterStandingsUpdated;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.CharacterStandingsUpdated -= EveClient_CharacterStandingsUpdated;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 

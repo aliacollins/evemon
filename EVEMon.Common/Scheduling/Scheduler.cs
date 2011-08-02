@@ -47,7 +47,7 @@ namespace EVEMon.Common.Scheduling
             s_schedule.Add(entry);
 
             // Notify to subscribers
-            EveClient.OnSchedulerChanged();
+            EveMonClient.OnSchedulerChanged();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace EVEMon.Common.Scheduling
             s_schedule.Remove(entry);
 
             // Notify to subscribers
-            EveClient.OnSchedulerChanged();
+            EveMonClient.OnSchedulerChanged();
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace EVEMon.Common.Scheduling
             }
 
             // Notify to subscribers
-            EveClient.OnSchedulerChanged();
+            EveMonClient.OnSchedulerChanged();
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace EVEMon.Common.Scheduling
             }
 
             // Notify to subscribers
-            EveClient.OnSchedulerChanged();
+            EveMonClient.OnSchedulerChanged();
         }
     }
 }

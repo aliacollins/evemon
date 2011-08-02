@@ -42,8 +42,8 @@ namespace EVEMon.SkillPlanner
 
             skillTreeDisplay.SkillClicked += skillTreeDisplay_SkillClicked;
             
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveClient_PlanChanged;
             Disposed += OnDisposed;
 
             //Update the controls
@@ -60,8 +60,8 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             skillTreeDisplay.SkillClicked -= skillTreeDisplay_SkillClicked;
-            EveClient.PlanChanged -= EveClient_PlanChanged;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 

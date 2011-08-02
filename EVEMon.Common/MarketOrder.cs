@@ -211,8 +211,8 @@ namespace EVEMon.Common
             if (station == null)
             {
                 station = StaticGeography.GetStationByID(60013747);
-                EveClient.Trace("Could not find station id {0}", id);
-                EveClient.Trace("Setting to {0}", station.Name);
+                EveMonClient.Trace("Could not find station id {0}", id);
+                EveMonClient.Trace("Setting to {0}", station.Name);
             }
 
             return station;

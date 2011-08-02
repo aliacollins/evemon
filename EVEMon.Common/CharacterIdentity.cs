@@ -52,8 +52,8 @@ namespace EVEMon.Common
                 CCPCharacter ccpCharacter = CCPCharacter;
                 if (ccpCharacter != null)
                 {
-                    EveClient.OnCharacterUpdated(ccpCharacter);
-                    EveClient.OnCharacterInfoUpdated(ccpCharacter);
+                    EveMonClient.OnCharacterUpdated(ccpCharacter);
+                    EveMonClient.OnCharacterInfoUpdated(ccpCharacter);
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (Character character in EveClient.Characters)
+                foreach (Character character in EveMonClient.Characters)
                 {
                     if (character is CCPCharacter && character.CharacterID == m_id)
                         return (CCPCharacter) character;
@@ -81,7 +81,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (Character character in EveClient.Characters)
+                foreach (Character character in EveMonClient.Characters)
                 {
                     var uriCharacter = character as UriCharacter;
                     if (uriCharacter != null)

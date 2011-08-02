@@ -126,11 +126,11 @@ namespace EVEMon.Common
         {
             get
             {
-                return EveClient.MonitoredCharacters.Contains(this);
+                return EveMonClient.MonitoredCharacters.Contains(this);
             }
             set
             {
-                EveClient.MonitoredCharacters.OnCharacterMonitoringChanged(this, value);
+                EveMonClient.MonitoredCharacters.OnCharacterMonitoringChanged(this, value);
             }
         }
 
@@ -154,7 +154,7 @@ namespace EVEMon.Common
                 if (m_name != value)
                 {
                     m_name = value;
-                    EveClient.OnCharacterUpdated(this);
+                    EveMonClient.OnCharacterUpdated(this);
                 }
             }
         }
@@ -571,7 +571,7 @@ namespace EVEMon.Common
         internal void Import(APIResult<SerializableAPICharacterSheet> serial)
         {
             Import(serial.Result);
-            EveClient.OnCharacterUpdated(this);
+            EveMonClient.OnCharacterUpdated(this);
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace EVEMon.Common
             m_securityStatus = serial.SecurityStatus;
             m_lastKnownLocation = serial.LastKnownLocation;
 
-            EveClient.OnCharacterInfoUpdated(this);
+            EveMonClient.OnCharacterInfoUpdated(this);
         }
 
         /// <summary>

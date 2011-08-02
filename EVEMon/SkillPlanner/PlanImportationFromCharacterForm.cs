@@ -86,7 +86,7 @@ namespace EVEMon.SkillPlanner
         private void CrossPlanSelect_Load(object sender, EventArgs e)
         {
             cbCharacter.Items.Clear();
-            foreach (var character in EveClient.Characters.Where(x => x.CharacterID != m_targetCharacter.CharacterID))
+            foreach (var character in EveMonClient.Characters.Where(x => x.CharacterID != m_targetCharacter.CharacterID))
             {
                 cbCharacter.Items.Add(character);
             }

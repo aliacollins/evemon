@@ -98,11 +98,11 @@ namespace EVEMon.Common.Serialization.API
             {
                 if (CCPError != null && CCPError.IsEVEBackendDatabaseDisabled)
                 {
-                    EveClient.Notifications.NotifyEVEBackendDatabaseDisabled(this);
+                    EveMonClient.Notifications.NotifyEVEBackendDatabaseDisabled(this);
                     return true;
                 }
 
-                EveClient.Notifications.InvalidateAPIError();
+                EveMonClient.Notifications.InvalidateAPIError();
                 return false;
             }
         }

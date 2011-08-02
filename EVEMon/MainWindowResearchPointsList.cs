@@ -53,8 +53,8 @@ namespace EVEMon
 
             Resize += MainWindowResearchPointsList_Resize;
 
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
             Disposed += OnDisposed;
         }
 
@@ -161,7 +161,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
+            EveMonClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
             Disposed -= OnDisposed;
         }
 

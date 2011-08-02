@@ -76,7 +76,7 @@ namespace EVEMon.Schedule
             calControl.Date = m_currentDate;
 
             // Subscribe to global events
-            EveClient.SchedulerChanged += new EventHandler(EveClient_SchedulerChanged);
+            EveMonClient.SchedulerChanged += new EventHandler(EveClient_SchedulerChanged);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            EveClient.SchedulerChanged -= new EventHandler(EveClient_SchedulerChanged);
+            EveMonClient.SchedulerChanged -= new EventHandler(EveClient_SchedulerChanged);
             base.OnClosing(e);
         }
 

@@ -340,7 +340,7 @@ namespace EVEMon.Common
 
             // Notify name change
             if (m_isConnected)
-                EveClient.OnPlanNameChanged(this);
+                EveMonClient.OnPlanNameChanged(this);
         }
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace EVEMon.Common
             { 
                 m_name = value;
                 if (m_isConnected)
-                    EveClient.OnPlanNameChanged(this);
+                    EveMonClient.OnPlanNameChanged(this);
             }
         }
 
@@ -488,7 +488,7 @@ namespace EVEMon.Common
 
             // Notify changes
             if ((change & PlanChange.Notification) != PlanChange.None && m_isConnected)
-                EveClient.OnPlanChanged(this);
+                EveMonClient.OnPlanChanged(this);
 
         }
         #endregion

@@ -43,7 +43,7 @@ namespace EVEMon.SkillPlanner
             tvCertList.MouseDown += new MouseEventHandler(tvCertList_MouseDown);
 
             this.Disposed += new EventHandler(OnDisposed);
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveMonClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             this.Disposed -= new EventHandler(OnDisposed);
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveMonClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
         }
 
         /// <summary>

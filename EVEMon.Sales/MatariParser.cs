@@ -35,7 +35,7 @@ namespace EVEMon.Sales
             string phoenixContent;
             try
             {
-                phoenixContent = EveClient.HttpWebService.DownloadString(
+                phoenixContent = EveMonClient.HttpWebService.DownloadString(
                     "http://www.evegeek.com/mineralindex.php");
             }
             catch (HttpWebServiceException ex)

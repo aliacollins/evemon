@@ -29,7 +29,7 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void BlankCharacterWindow_Load(object sender, EventArgs e)
         {
-            EveClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.TimerTick += EveClient_TimerTick;
             Disposed += OnDisposed;
 
             buttonOK.Enabled = false;
@@ -56,7 +56,7 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
             Disposed -= OnDisposed;
         }
         
@@ -153,7 +153,7 @@ namespace EVEMon.BlankCharacter
         private void AddBlankCharacter()
         {
             // Add blank character
-            EveClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(m_filename), (send, args) =>
+            EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(m_filename), (send, args) =>
             {
                 if (args == null || args.HasError)
                     return;

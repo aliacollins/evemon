@@ -145,7 +145,7 @@ namespace EVEMon.Common
 
             m_queryPending = true;
 
-            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
                                                                     APIMethods.NotificationTexts,
                                                                     m_ccpCharacter.Identity.Account.UserID,
                                                                     m_ccpCharacter.Identity.Account.APIKey,
@@ -164,7 +164,7 @@ namespace EVEMon.Common
 
             // Notify an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.NotificationTexts))
-                EveClient.Notifications.NotifyEVENotificationTextsError(m_ccpCharacter, result);
+                EveMonClient.Notifications.NotifyEVENotificationTextsError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -186,7 +186,7 @@ namespace EVEMon.Common
             // Import the data
             EVENotificationText = new EveNotificationText(result.Result.Texts[0]);
 
-            EveClient.OnCharacterEVENotificationTextDownloaded(m_ccpCharacter);
+            EveMonClient.OnCharacterEVENotificationTextDownloaded(m_ccpCharacter);
         }
 
         #endregion

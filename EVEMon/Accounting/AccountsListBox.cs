@@ -70,7 +70,7 @@ namespace EVEMon.Accounting
             try
             {
                 Items.Clear();
-                foreach (var account in EveClient.Accounts)
+                foreach (var account in EveMonClient.Accounts)
                 {
                     Items.Add(account);
                     if (account == oldSelection)

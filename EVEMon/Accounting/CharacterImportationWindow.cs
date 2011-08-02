@@ -149,7 +149,7 @@ namespace EVEMon.Accounting
 
             // Starts querying the web or the hard drive, and invokes the given callback on result.
             int version = m_version;
-            EveClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(uri), (sender, args) =>
+            EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(uri), (sender, args) =>
                 {
                     if (version != m_version)
                         return;

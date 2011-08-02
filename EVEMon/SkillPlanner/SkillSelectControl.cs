@@ -44,7 +44,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             Disposed -= OnDisposed;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
             Disposed += OnDisposed;
 
             cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;

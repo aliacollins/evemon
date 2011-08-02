@@ -53,9 +53,9 @@ namespace EVEMon
             DoubleBuffered = true;
             ListViewHelper.EnableDoubleBuffer(lvNotifications);
 
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
-            EveClient.CharacterEVENotificationTextDownloaded += EveClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
+            EveMonClient.CharacterEVENotificationTextDownloaded += EveClient_CharacterEVENotificationTextDownloaded;
             Disposed += OnDisposed;
         }
 
@@ -189,9 +189,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
-            EveClient.CharacterEVENotificationTextDownloaded -= EveClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
+            EveMonClient.CharacterEVENotificationTextDownloaded -= EveClient_CharacterEVENotificationTextDownloaded;
             Disposed -= OnDisposed;
         }
 

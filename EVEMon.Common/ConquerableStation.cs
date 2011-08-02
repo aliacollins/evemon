@@ -86,7 +86,7 @@ namespace EVEMon.Common
                 return;
 
             // Query the API
-            var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+            var result = EveMonClient.APIProviders.CurrentProvider.QueryConquerableStationList();
             OnUpdated(result);
         }
 
@@ -98,17 +98,17 @@ namespace EVEMon.Common
             // Was there an error ?
             if (result.HasError)
             {
-                EveClient.Notifications.NotifyConquerableStationListError(result);
+                EveMonClient.Notifications.NotifyConquerableStationListError(result);
                 return;
             }
 
-            EveClient.Notifications.InvalidateAPIError();
+            EveMonClient.Notifications.InvalidateAPIError();
 
             // Deserialize the list
             Import(result.Result.Outposts);
 
             // Notify the subscribers
-            EveClient.OnConquerableStationListUpdated();
+            EveMonClient.OnConquerableStationListUpdated();
         }
         #endregion
 
@@ -148,7 +148,7 @@ namespace EVEMon.Common
         /// </summary>
         private static void Import(IEnumerable<SerializableOutpost> outposts)
         {
-            EveClient.Trace("ConquerableStationList.Import - begin");
+            EveMonClient.Trace("ConquerableStationList.Import - begin");
             s_conqStationsByID.Clear();
 
             try
@@ -165,7 +165,7 @@ namespace EVEMon.Common
             finally
             {
                 s_loaded = true;
-                EveClient.Trace("ConquerableStationList.Import - done");
+                EveMonClient.Trace("ConquerableStationList.Import - done");
             }
         }
         #endregion

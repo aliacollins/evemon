@@ -28,8 +28,8 @@ namespace EVEMon.LogitechG15
         /// </summary>
         public static void Initialize()
         {
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
 
             // Subscribe to events which occur of G15 buttons pressed
             Lcdisplay.APIUpdateRequested += Lcdisplay_APIUpdateRequested;
@@ -92,7 +92,7 @@ namespace EVEMon.LogitechG15
             }
             catch(Exception ex)
             {
-                EveClient.Trace(ex.Message);
+                EveMonClient.Trace(ex.Message);
                 s_startupError = true;
                 s_running = false;
             }
@@ -109,7 +109,7 @@ namespace EVEMon.LogitechG15
             }
             catch (Exception ex)
             {
-                EveClient.Trace(ex.Message);
+                EveMonClient.Trace(ex.Message);
             }
             finally
             {
@@ -134,7 +134,7 @@ namespace EVEMon.LogitechG15
             // Characters names
             List<CCPCharacter> lcdCharacters = new List<CCPCharacter>();
 
-            foreach (Character character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            foreach (Character character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
             {
                 lcdCharacters.Add(character as CCPCharacter);
             }
@@ -142,7 +142,7 @@ namespace EVEMon.LogitechG15
             s_lcd.Characters = lcdCharacters.ToArray();
 
             // First character to complete a skill
-            var nextChar = EveClient.MonitoredCharacters.Where(x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
+            var nextChar = EveMonClient.MonitoredCharacters.Where(x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
             if (nextChar != null)
             {
                 s_lcd.FirstSkillCompletionRemaingTime = nextChar.CurrentlyTrainingSkill.RemainingTime;

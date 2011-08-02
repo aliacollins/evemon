@@ -70,7 +70,7 @@ namespace EVEMon.Common
         /// </summary>
         protected override void OnChanged()
         {
-            EveClient.OnCharacterPlanCollectionChanged(m_owner);
+            EveMonClient.OnCharacterPlanCollectionChanged(m_owner);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace EVEMon.Common
             }
 
             // Fire the global event
-            EveClient.OnCharacterPlanCollectionChanged(m_owner);
+            EveMonClient.OnCharacterPlanCollectionChanged(m_owner);
         }
     }
 }

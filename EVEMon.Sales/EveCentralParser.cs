@@ -38,7 +38,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EveClient.HttpWebService.DownloadString(
+                content = EveMonClient.HttpWebService.DownloadString(
                     "http://api.eve-central.com/api/evemon");
             }
             catch (HttpWebServiceException ex)

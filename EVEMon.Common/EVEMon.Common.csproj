@@ -184,7 +184,7 @@
     <Compile Include="Enforce.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="EveConstants.cs" />
-    <Compile Include="EveClient.cs" />
+    <Compile Include="EveMonClient.cs" />
     <Compile Include="EveIDtoName.cs" />
     <Compile Include="EveMailBody.cs" />
     <Compile Include="EveMailMessage.cs" />
@@ -882,9 +882,6 @@
     <None Include="Resources\info_balloon.png" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

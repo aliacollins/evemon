@@ -25,7 +25,7 @@ namespace EVEMon.Accounting
             label1.Text = newText;
 
             // Checks whether there will be no characters left after this deletion and hide/display the relevant labels.
-            int charactersLeft = EveClient.Characters.Count(x => x.Identity.Account == m_account);
+            int charactersLeft = EveMonClient.Characters.Count(x => x.Identity.Account == m_account);
             bool noCharactersLeft = (m_account != null && m_character is CCPCharacter && charactersLeft == 1);
             noCharactersCheckBox.Visible = noCharactersLeft;
             noCharactersLabel.Visible = noCharactersLeft;
@@ -41,12 +41,12 @@ namespace EVEMon.Accounting
             // Either delete this character only or the whole account.
             if (noCharactersCheckBox.Checked)
             {
-                EveClient.Characters.Remove(m_character);
-                EveClient.Accounts.Remove(m_account);
+                EveMonClient.Characters.Remove(m_character);
+                EveMonClient.Accounts.Remove(m_account);
             }
             else
             {
-                EveClient.Characters.Remove(m_character);
+                EveMonClient.Characters.Remove(m_character);
             }
 
             Close();

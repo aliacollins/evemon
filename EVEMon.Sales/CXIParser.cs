@@ -37,7 +37,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EveClient.HttpWebService.DownloadString(
+                content = EveMonClient.HttpWebService.DownloadString(
                     "http://www.c-l-o-t.com/cxi/orecalc/evemon.php");
             }
             catch (HttpWebServiceException ex)

@@ -78,7 +78,7 @@ namespace EVEMon.Common
                 if (m_current == value)
                     return;
                 m_current = value;
-                EveClient.OnCharacterUpdated(m_owner);
+                EveMonClient.OnCharacterUpdated(m_owner);
             }
         }
 
@@ -91,7 +91,7 @@ namespace EVEMon.Common
         {
             var set = new ImplantSet(m_owner, name);
             m_customSets.Add(set);
-            EveClient.OnCharacterUpdated(m_owner);
+            EveMonClient.OnCharacterUpdated(m_owner);
             return set;
         }
 
@@ -102,7 +102,7 @@ namespace EVEMon.Common
         public void Remove(ImplantSet set)
         {
             m_customSets.Remove(set);
-            EveClient.OnCharacterUpdated(m_owner);
+            EveMonClient.OnCharacterUpdated(m_owner);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace EVEMon.Common
             // Imports selection
             m_current = Enumerate().ElementAt(serial.SelectedIndex);
 
-            EveClient.OnSettingsChanged();
+            EveMonClient.OnSettingsChanged();
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace EVEMon.Common
 
             m_api.Import(serial);
 
-            EveClient.OnSettingsChanged();
+            EveMonClient.OnSettingsChanged();
         }
     }
 }

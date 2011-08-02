@@ -23,8 +23,8 @@ namespace EVEMon
             this.DoubleBuffered = true;
             this.AutoScroll = true;
 
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
+            EveMonClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
+            EveMonClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             this.Disposed += new EventHandler(Overview_Disposed);
         }
 
@@ -35,8 +35,8 @@ namespace EVEMon
         /// <param name="e"></param>
         void Overview_Disposed(object sender, EventArgs e)
         {
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
+            EveMonClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
+            EveMonClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             this.Disposed -= new EventHandler(Overview_Disposed);
         }
 
@@ -66,7 +66,7 @@ namespace EVEMon
                 CleanUp();
 
                 // Updates the visibility of the label for when no characters are loaded
-                bool noCharacters = EveClient.MonitoredCharacters.IsEmpty();
+                bool noCharacters = EveMonClient.MonitoredCharacters.IsEmpty();
                 
                 labelNoCharacters.Visible = noCharacters;
                 
@@ -77,12 +77,12 @@ namespace EVEMon
                 var characters = new List<Character>();
                 if (Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
                 {
-                    characters.AddRange(EveClient.MonitoredCharacters.Where(x => x.IsTraining));
-                    characters.AddRange(EveClient.MonitoredCharacters.Where(x => !x.IsTraining));
+                    characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
+                    characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => !x.IsTraining));
                 }
                 else
                 {
-                    characters.AddRange(EveClient.MonitoredCharacters);
+                    characters.AddRange(EveMonClient.MonitoredCharacters);
                 }
 
                 foreach (var character in characters)

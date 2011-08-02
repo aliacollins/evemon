@@ -363,7 +363,7 @@ namespace EVEMon.Common
             }
 
             // Fire the global event
-            EveClient.OnCharacterUpdated(this);
+            EveMonClient.OnCharacterUpdated(this);
         }
         
         #endregion
@@ -398,7 +398,7 @@ namespace EVEMon.Common
         /// </summary>
         private void QueryCharacterMailingList()
         {
-            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
                                                                         APIMethods.MailingLists,
                                                                         Identity.Account.UserID,
                                                                         Identity.Account.APIKey,
@@ -411,7 +411,7 @@ namespace EVEMon.Common
         /// </summary>
         private void QueryCharacterInfo()
         {
-            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
                                                                         APIMethods.CharacterInfo,
                                                                         Identity.Account.UserID,
                                                                         Identity.Account.APIKey,
@@ -427,7 +427,7 @@ namespace EVEMon.Common
         {
             // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.CharacterSheet))
-                EveClient.Notifications.NotifyCharacterSheetError(this, result);
+                EveMonClient.Notifications.NotifyCharacterSheetError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -441,11 +441,11 @@ namespace EVEMon.Common
             // Check the character has a sufficient clone or send a notification
             if (Monitored && (CloneSkillPoints < SkillPoints))
             {
-                EveClient.Notifications.NotifyInsufficientClone(this);
+                EveMonClient.Notifications.NotifyInsufficientClone(this);
             }
             else
             {
-                EveClient.Notifications.InvalidateInsufficientClone(this);
+                EveMonClient.Notifications.InvalidateInsufficientClone(this);
             }
 
             // Check for claimable certificates
@@ -453,11 +453,11 @@ namespace EVEMon.Common
             claimableCertifitates.AddRange(Certificates.Where(x => x.CanBeClaimed));
             if (Monitored && claimableCertifitates.Count > 0)
             {
-                EveClient.Notifications.NotifyClaimableCertificate(this, claimableCertifitates);
+                EveMonClient.Notifications.NotifyClaimableCertificate(this, claimableCertifitates);
             }
             else
             {
-                EveClient.Notifications.InvalidateClaimableCertificate(this);
+                EveMonClient.Notifications.InvalidateClaimableCertificate(this);
             }
         }
 
@@ -469,7 +469,7 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.CharacterInfo))
-                EveClient.Notifications.NotifyCharacterInfoError(this, result);
+                EveMonClient.Notifications.NotifyCharacterInfoError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -487,7 +487,7 @@ namespace EVEMon.Common
         {
             // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.SkillQueue))
-                EveClient.Notifications.NotifySkillQueueError(this, result);
+                EveMonClient.Notifications.NotifySkillQueueError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -502,11 +502,11 @@ namespace EVEMon.Common
             // Check the character has room in skill queue
             if (IsTraining && (SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
             {
-                EveClient.Notifications.NotifySkillQueueRoomAvailable(this);
+                EveMonClient.Notifications.NotifySkillQueueRoomAvailable(this);
                 return;
             }
 
-            EveClient.Notifications.InvalidateSkillQueueRoomAvailability(this);
+            EveMonClient.Notifications.InvalidateSkillQueueRoomAvailability(this);
         }
 
         /// <summary>
@@ -517,7 +517,7 @@ namespace EVEMon.Common
         {
             // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.Standings))
-                EveClient.Notifications.NotifyCharacterStandingsError(this, result);
+                EveMonClient.Notifications.NotifyCharacterStandingsError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -538,7 +538,7 @@ namespace EVEMon.Common
 
             // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.MarketOrders))
-                EveClient.Notifications.NotifyCharacterMarketOrdersError(this, result);
+                EveMonClient.Notifications.NotifyCharacterMarketOrdersError(this, result);
 
             // Add orders to list
             m_charOrdersAdded = AddOrders(result, m_corpOrdersAdded, IssuedFor.Character);
@@ -569,7 +569,7 @@ namespace EVEMon.Common
                 {
                     // Notify an error occurred
                     if (ShouldNotifyError(result, APIMethods.CorporationMarketOrders))
-                        EveClient.Notifications.NotifyCorporationMarketOrdersError(this, result);
+                        EveMonClient.Notifications.NotifyCorporationMarketOrdersError(this, result);
                 }
 
                 // Add orders to list
@@ -592,7 +592,7 @@ namespace EVEMon.Common
 
             // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.IndustryJobs))
-                EveClient.Notifications.NotifyCharacterIndustryJobsError(this, result);
+                EveMonClient.Notifications.NotifyCharacterIndustryJobsError(this, result);
 
             // Add jobs to list
             m_charJobsAdded = AddJobs(result, m_corpJobsAdded, IssuedFor.Character);
@@ -623,7 +623,7 @@ namespace EVEMon.Common
                 {
                     // Notify an error occurred
                     if (ShouldNotifyError(result, APIMethods.CorporationMarketOrders))
-                        EveClient.Notifications.NotifyCorporationIndustryJobsError(this, result);
+                        EveMonClient.Notifications.NotifyCorporationIndustryJobsError(this, result);
                 }
 
                 // Add jobs to list
@@ -643,7 +643,7 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.ResearchPoints))
-                EveClient.Notifications.NotifyResearchPointsError(this, result);
+                EveMonClient.Notifications.NotifyResearchPointsError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -661,7 +661,7 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.MailMessages))
-                EveClient.Notifications.NotifyEVEMailMessagesError(this, result);
+                EveMonClient.Notifications.NotifyEVEMailMessagesError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -676,7 +676,7 @@ namespace EVEMon.Common
 
             // Notify on new messages
             if (m_eveMailMessages.NewMessages != 0)
-                EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
+                EveMonClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
         }
 
         /// <summary>
@@ -687,7 +687,7 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.MailingLists))
-                EveClient.Notifications.NotifyMailingListsError(this, result);
+                EveMonClient.Notifications.NotifyMailingListsError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -705,7 +705,7 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.Notifications))
-                EveClient.Notifications.NotifyEVENotificationsError(this, result);
+                EveMonClient.Notifications.NotifyEVENotificationsError(this, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -716,7 +716,7 @@ namespace EVEMon.Common
 
             // Notify on new messages
             if (m_eveNotifications.NewNotifications != 0)
-                EveClient.Notifications.NotifyNewEVENotifications(this, m_eveNotifications.NewNotifications);
+                EveMonClient.Notifications.NotifyNewEVENotifications(this, m_eveNotifications.NewNotifications);
         }
         #endregion
 
@@ -758,7 +758,7 @@ namespace EVEMon.Common
             // Removes the previous error notification
             if (m_errorNotifiedMethod == method)
             {
-                EveClient.Notifications.InvalidateCharacterAPIError(this);
+                EveMonClient.Notifications.InvalidateCharacterAPIError(this);
                 m_errorNotifiedMethod = APIMethods.None;
             }
             return false;
@@ -803,7 +803,7 @@ namespace EVEMon.Common
 
             // Sends a notification
             if (endedOrders.Count != 0)
-                EveClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
+                EveMonClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
 
             // Reset flags
             m_charOrdersUpdated = false;
@@ -815,11 +815,11 @@ namespace EVEMon.Common
             // for its buying orders or send a notification
             if (!HasSufficientBalance)
             {
-                EveClient.Notifications.NotifyInsufficientBalance(this);
+                EveMonClient.Notifications.NotifyInsufficientBalance(this);
                 return;
             }
 
-            EveClient.Notifications.InvalidateInsufficientBalance(this);
+            EveMonClient.Notifications.InvalidateInsufficientBalance(this);
         }
 
         /// <summary>

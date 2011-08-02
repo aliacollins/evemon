@@ -83,7 +83,7 @@ namespace EVEMon.Common
             m_items.AddRange(newNotifications);
 
             // Fires the event regarding EVE mail messages update
-            EveClient.OnCharacterEVENotificationsUpdated(m_ccpCharacter);
+            EveMonClient.OnCharacterEVENotificationsUpdated(m_ccpCharacter);
         }
 
         /// <summary>

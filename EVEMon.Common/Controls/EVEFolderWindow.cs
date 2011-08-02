@@ -12,7 +12,7 @@ namespace EVEMon.Common.Controls
 {
     public partial class EveFolderWindow : EVEMonForm
     {
-        private readonly string[] m_defaultFolderLocation = EveClient.DefaultEvePortraitCacheFolders;
+        private readonly string[] m_defaultFolderLocation = EveMonClient.DefaultEvePortraitCacheFolders;
         private string[] m_specifiedPortraitFolder = new string[] { String.Empty };
 
         public EveFolderWindow()

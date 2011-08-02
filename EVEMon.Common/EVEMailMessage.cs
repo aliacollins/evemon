@@ -248,7 +248,7 @@ namespace EVEMon.Common
 
             m_queryPending = true;
 
-            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
                                                                     APIMethods.MailBodies,
                                                                     m_ccpCharacter.Identity.Account.UserID,
                                                                     m_ccpCharacter.Identity.Account.APIKey,
@@ -267,7 +267,7 @@ namespace EVEMon.Common
 
             // Notify an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.MailBodies))
-                EveClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
+                EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -289,7 +289,7 @@ namespace EVEMon.Common
             // Import the data
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
 
-            EveClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
+            EveMonClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
         }
 
         #endregion

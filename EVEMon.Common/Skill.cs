@@ -115,7 +115,7 @@ namespace EVEMon.Common
             set
             {
                 m_owned = value;
-                EveClient.OnCharacterUpdated(m_character);
+                EveMonClient.OnCharacterUpdated(m_character);
             }
         }
 

@@ -23,7 +23,7 @@ namespace EVEMon.Common.Controls
             InitializeComponent();
             pictureBox.Image = pictureBox.InitialImage;
 
-            EveClient.CharacterPortraitUpdated += EveClient_CharacterPortraitUpdated;
+            EveMonClient.CharacterPortraitUpdated += EveClient_CharacterPortraitUpdated;
             Disposed += OnDisposed;
         }
 
@@ -34,7 +34,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterPortraitUpdated -= EveClient_CharacterPortraitUpdated;
+            EveMonClient.CharacterPortraitUpdated -= EveClient_CharacterPortraitUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -161,8 +161,8 @@ namespace EVEMon.Common.Controls
             if (m_id <= 0)
                 return null;
 
-            EveClient.EnsureCacheDirInit();
-            string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
+            EveMonClient.EnsureCacheDirInit();
+            string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
                                                  String.Format("{0}.png", m_character.Guid));
 
             if (!File.Exists(cacheFileName))
@@ -249,8 +249,8 @@ namespace EVEMon.Common.Controls
             try
             {
                 // Save the image to the portrait cache file
-                EveClient.EnsureCacheDirInit();
-                string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
+                EveMonClient.EnsureCacheDirInit();
+                string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
                                                     String.Format("{0}.png", m_character.Guid));
 
                 FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
@@ -262,7 +262,7 @@ namespace EVEMon.Common.Controls
                 });
 
                 // Notify the other controls we updated this portrait
-                EveClient.OnCharacterPortraitUpdated(m_character);
+                EveMonClient.OnCharacterPortraitUpdated(m_character);
             }
             catch (Exception e)
             {
@@ -288,7 +288,7 @@ namespace EVEMon.Common.Controls
             try
             {
                 // If we don't have the game's portraits cache already, prompt the user
-                if (EveClient.EvePortraitCacheFolders == null || EveClient.EvePortraitCacheFolders.Length == 0)
+                if (EveMonClient.EvePortraitCacheFolders == null || EveMonClient.EvePortraitCacheFolders.Length == 0)
                 {
                     // Return if the user canceled
                     if (!ChangeEVEPortraitCache())
@@ -302,7 +302,7 @@ namespace EVEMon.Common.Controls
                     // Retrieve all files in the EVE cache directory which matches "<characterId>*"
                     List<FileInfo> filesInEveCache = new List<FileInfo>();
                     List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
-                    foreach (var evePortraitCacheFolder in EveClient.EvePortraitCacheFolders)
+                    foreach (var evePortraitCacheFolder in EveMonClient.EvePortraitCacheFolders)
                     {
                         DirectoryInfo di = new DirectoryInfo(evePortraitCacheFolder);
                         filesInEveCache.AddRange(di.GetFiles(String.Format("{0}*", m_id)));
@@ -328,7 +328,7 @@ namespace EVEMon.Common.Controls
                         message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
                         message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
                         message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
-                        message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}", EveClient.EVEApplicationDataDir, Environment.NewLine);
+                        message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}", EveMonClient.EVEApplicationDataDir, Environment.NewLine);
 
                         MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         
@@ -397,7 +397,7 @@ namespace EVEMon.Common.Controls
             {
                 if (f.ShowDialog() == DialogResult.OK)
                 {
-                    EveClient.SetEvePortraitCacheFolder(f.EVEPortraitCacheFolder);
+                    EveMonClient.SetEvePortraitCacheFolder(f.EVEPortraitCacheFolder);
                     return true;
                 }
             }

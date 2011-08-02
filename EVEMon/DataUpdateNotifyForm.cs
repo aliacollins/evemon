@@ -104,7 +104,7 @@ namespace EVEMon
             {
                 // Work out the new names of the files
                 string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
-                string oldFilename = Path.Combine(EveClient.EVEMonDataDir, dfv.Name);
+                string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, dfv.Name);
                 string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
 
                 // If the file already exists delete it

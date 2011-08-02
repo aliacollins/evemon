@@ -74,10 +74,10 @@ namespace EVEMon
             lblSkillQueueTrainingTime.Text = String.Empty;
 
             // Global events
-            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveClient.SchedulerChanged += EveClient_SchedulerChanged;
-            EveClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.SchedulerChanged += EveClient_SchedulerChanged;
+            EveMonClient.TimerTick += EveClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -154,10 +154,10 @@ namespace EVEMon
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
-            EveClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
             Disposed -= OnDisposed;
         }
 

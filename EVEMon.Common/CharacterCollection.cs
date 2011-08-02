@@ -104,7 +104,7 @@ namespace EVEMon.Common
             if (uriCharacter == null)
             {
                 m_uriCharacters.Add(new UriCharacter(m_characterID, serial));
-                EveClient.OnCharacterCollectionChanged();
+                EveMonClient.OnCharacterCollectionChanged();
             }
             else
             {
@@ -134,7 +134,7 @@ namespace EVEMon.Common
             var character = new UriCharacter(m_characterID, uri, result);
             m_uriCharacters.Add(character);
 
-            EveClient.OnCharacterCollectionChanged();
+            EveMonClient.OnCharacterCollectionChanged();
             return character;
         }
 
@@ -149,7 +149,7 @@ namespace EVEMon.Common
             {
                 throw new InvalidOperationException("This source does not belong to this character's sources");
             }
-            EveClient.OnCharacterCollectionChanged();
+            EveMonClient.OnCharacterCollectionChanged();
         }
 
         #region Enumerators

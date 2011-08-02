@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Subscribe the events
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Update the controls
@@ -76,7 +76,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 

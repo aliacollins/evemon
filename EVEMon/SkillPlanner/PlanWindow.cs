@@ -61,8 +61,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Global events (unsubscribed on window closing)
-            EveClient.PlanChanged += EveClient_PlanChanged;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
             ResizeEnd += PlanWindow_ResizeEnd;
 
             // Force an update
@@ -120,8 +120,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Unsubscribe global events
-            EveClient.PlanChanged -= EveClient_PlanChanged;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
             Settings.Save();
 
             // We're closing down

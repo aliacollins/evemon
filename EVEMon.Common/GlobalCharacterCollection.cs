@@ -47,7 +47,7 @@ namespace EVEMon.Common
         {
             m_items.Add(character);
             if (notify)
-                EveClient.OnCharacterCollectionChanged();
+                EveMonClient.OnCharacterCollectionChanged();
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace EVEMon.Common
             }
 
             if (notify)
-                EveClient.OnCharacterCollectionChanged();
+                EveMonClient.OnCharacterCollectionChanged();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<SerializableSettingsCharacter> serial)
         {
             // Clear the accounts on every identity
-            foreach (var id in EveClient.CharacterIdentities)
+            foreach (var id in EveMonClient.CharacterIdentities)
             {
                 id.Account = null;
             }
@@ -155,9 +155,9 @@ namespace EVEMon.Common
             foreach (var serialCharacter in serial)
             {
                 // Gets the identity or create it
-                var id = EveClient.CharacterIdentities[serialCharacter.ID];
+                var id = EveMonClient.CharacterIdentities[serialCharacter.ID];
                 if (id == null)
-                    id = EveClient.CharacterIdentities.Add(serialCharacter.ID, serialCharacter.Name);
+                    id = EveMonClient.CharacterIdentities.Add(serialCharacter.ID, serialCharacter.Name);
 
                 // Imports the character
                 var ccpCharacter = serialCharacter as SerializableCCPCharacter;
@@ -173,7 +173,7 @@ namespace EVEMon.Common
             }
 
             // Notify the change
-            EveClient.OnCharacterCollectionChanged();
+            EveMonClient.OnCharacterCollectionChanged();
         }
 
         /// <summary>

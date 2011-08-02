@@ -35,11 +35,11 @@ namespace EVEMon
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             // Subscribe to events
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveClient.CharacterInfoUpdated += EveClient_CharacterInfoUpdated;
-            EveClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersUpdated;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated += EveClient_CharacterInfoUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersUpdated;
             Disposed += OnDisposed;
         }
         #endregion
@@ -548,10 +548,10 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersUpdated;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
 

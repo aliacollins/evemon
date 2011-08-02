@@ -77,7 +77,7 @@ namespace EVEMon.Common
             m_items.AddRange(newJobs);
 
             // Fires the event regarding industry jobs update
-            EveClient.OnCharacterIndustryJobsUpdated(m_character);
+            EveMonClient.OnCharacterIndustryJobsUpdated(m_character);
         }
 
         /// <summary>
@@ -119,10 +119,10 @@ namespace EVEMon.Common
                 return;
 
             // Sends a notification
-            EveClient.Notifications.NotifyIndustryJobCompletion(m_character, jobsCompleted);
+            EveMonClient.Notifications.NotifyIndustryJobCompletion(m_character, jobsCompleted);
 
             // Fires the event regarding industry jobs completed
-            EveClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted);
+            EveMonClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted);
         }
     }
 }

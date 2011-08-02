@@ -42,8 +42,8 @@ namespace EVEMon.SkillPlanner
             certSelectCtl.SelectionChanged += certSelectCtl_SelectionChanged;
             certDisplayCtl.SelectionChanged += certDisplayCtl_SelectionChanged;
 
-            EveClient.PlanChanged += EveClient_PlanChanged;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
@@ -67,8 +67,8 @@ namespace EVEMon.SkillPlanner
             certSelectCtl.SelectionChanged -= certSelectCtl_SelectionChanged;
             certDisplayCtl.SelectionChanged -= certDisplayCtl_SelectionChanged;
 
-            EveClient.PlanChanged -= EveClient_PlanChanged;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 

@@ -201,7 +201,7 @@ namespace EVEMon.Common.Net
             }
 
             // Prevents invoking the callback on the UI thread when the application has been closed
-            if (EveClient.Closed)
+            if (EveMonClient.Closed)
                 return;
             m_asyncState.Callback(m_asyncState);
         }

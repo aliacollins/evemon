@@ -29,8 +29,8 @@ namespace EVEMon
             InitializeComponent();
             this.Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
 
-            EveClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnClosed(EventArgs e)
         {
-            EveClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
             displayTimer.Stop();
             base.OnClosed(e);
         }
@@ -100,7 +100,7 @@ namespace EVEMon
             }
             else
             {
-                m_characters.AddRange(EveClient.MonitoredCharacters.Where(x => x.IsTraining));
+                m_characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
             } 
 
             // Assembles the tooltip format

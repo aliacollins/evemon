@@ -47,7 +47,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             m_selectControl.SelectionChanged -= OnSelectionChanged;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
@@ -79,7 +79,7 @@ namespace EVEMon.SkillPlanner
             // Watch for selection changes
             m_selectControl.SelectionChanged += OnSelectionChanged;
 
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview

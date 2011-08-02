@@ -204,7 +204,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to call once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
         internal static void DownloadAPIResultAsync<T>(string url, HttpPostData postData, XslCompiledTransform transform, QueryCallback<T> callback)
         {
-            EveClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>
+            EveMonClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>
             {
                 APIResult<T> result;
 
@@ -239,7 +239,7 @@ namespace EVEMon.Common
             // Query async and wait
             using (var wait = new EventWaitHandle(false, EventResetMode.AutoReset))
             {
-                EveClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>
+                EveMonClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>
                 {
                     try
                     {
@@ -356,7 +356,7 @@ namespace EVEMon.Common
         public static void DownloadXMLAsync<T>(string url, HttpPostData postData, DownloadCallback<T> callback)
             where T : class
         {
-            EveClient.HttpWebService.DownloadXmlAsync(url, postData,
+            EveMonClient.HttpWebService.DownloadXmlAsync(url, postData,
 
             // Callback
             (asyncResult, userState) =>

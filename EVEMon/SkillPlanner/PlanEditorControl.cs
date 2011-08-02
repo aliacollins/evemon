@@ -76,11 +76,11 @@ namespace EVEMon.SkillPlanner
             tsSortPriorities.Click += tsSortPriorities_Clicked;
             cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveClient.PlanChanged += EveClient_PlanChanged;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.SchedulerChanged += EveClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.SchedulerChanged += EveClient_SchedulerChanged;
             Disposed += OnDisposed;
         }
 
@@ -91,11 +91,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveClient.PlanChanged -= EveClient_PlanChanged;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.SchedulerChanged -= EveClient_SchedulerChanged;
             Disposed -= OnDisposed;
         }
 

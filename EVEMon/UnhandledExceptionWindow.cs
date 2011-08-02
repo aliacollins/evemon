@@ -62,11 +62,11 @@ namespace EVEMon
             }
 
             string trace;
-            EveClient.StopTraceLogging();
+            EveMonClient.StopTraceLogging();
             
             try
             {
-                using (FileStream traceStream = new FileStream(EveClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read))
+                using (FileStream traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read))
                 {
                     using (StreamReader traceReader = new StreamReader(traceStream))
                     {
@@ -114,7 +114,7 @@ namespace EVEMon
 
                 try
                 {
-                    string[] datafiles = Directory.GetFiles(EveClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
+                    string[] datafiles = Directory.GetFiles(EveMonClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
 
                     datafileReport.AppendLine("Datafile report:");
 

@@ -35,7 +35,7 @@ namespace EVEMon.Common
             // Don't worry if we cant create MD5 maybe they have FIPS enforced.
             catch (Exception)
             {
-                EveClient.Trace("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");
+                EveMonClient.Trace("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");
             }
         }
     }

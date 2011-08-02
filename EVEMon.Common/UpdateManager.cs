@@ -29,7 +29,7 @@ namespace EVEMon.Common
         /// </summary>
         public static void DeleteInstallationFiles()
         {
-            foreach (string file in Directory.GetFiles(EveClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
+            foreach (string file in Directory.GetFiles(EveMonClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
@@ -71,7 +71,7 @@ namespace EVEMon.Common
         {
             s_checkScheduled = true;
             Dispatcher.Schedule(time, () => BeginCheck());
-            EveClient.Trace("UpdateManager.ScheduleCheck in {0}", time);
+            EveMonClient.Trace("UpdateManager.ScheduleCheck in {0}", time);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            EveClient.Trace("UpdateManager.BeginCheck");
+            EveMonClient.Trace("UpdateManager.BeginCheck");
 
             // Otherwise, query Batlleclinic
             Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, null, OnCheckCompleted);
@@ -116,7 +116,7 @@ namespace EVEMon.Common
             if (!String.IsNullOrEmpty(errorMessage))
             {
                 // Logs the error and reschedule
-                EveClient.Trace("UpdateManager: {0}", errorMessage);
+                EveMonClient.Trace("UpdateManager: {0}", errorMessage);
                 ScheduleCheck(s_frequency);
                 return;
             }
@@ -137,7 +137,7 @@ namespace EVEMon.Common
                 ScheduleCheck(s_frequency);
             }
 
-            EveClient.Trace("UpdateManager.OnCheckCompleted");
+            EveMonClient.Trace("UpdateManager.OnCheckCompleted");
         }
 
         private static void ScanUpdateFeed(SerializablePatch result)
@@ -162,7 +162,7 @@ namespace EVEMon.Common
             if (newestVersion > currentVersion)
             {
                 // Requests a notification to subscribers and quit
-                EveClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
+                EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
                                             newestVersion, canAutoInstall, installArgs);
                 return;
             }
@@ -170,7 +170,7 @@ namespace EVEMon.Common
             if (result.FilesHaveChanged)
             {
                 // Requests a notification to subscribers and quit
-                EveClient.OnDataUpdateAvailable(forumUrl, result.ChangedDataFiles);
+                EveMonClient.OnDataUpdateAvailable(forumUrl, result.ChangedDataFiles);
                 return;
             }
         }

@@ -336,7 +336,7 @@ namespace EVEMon.Common.IgbService
                 headerCharacterName = String.Empty;
 
             if (string.IsNullOrEmpty(headerCharacterName) || // no character in header
-                (EveClient.Characters.FirstOrDefault(x => x.Name == headerCharacterName) == null)) // character is not listed
+                (EveMonClient.Characters.FirstOrDefault(x => x.Name == headerCharacterName) == null)) // character is not listed
             {
                 sw.WriteLine("Hello {0}, this character is not recognized by EVEMon!", headerCharacterName);
                 return;
@@ -356,10 +356,10 @@ namespace EVEMon.Common.IgbService
                 }
                 requestUrl = match.Groups["request"].Value;
             }
-            var character = !string.IsNullOrEmpty(characterName) ? EveClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName) : null;
+            var character = !string.IsNullOrEmpty(characterName) ? EveMonClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName) : null;
             if (character == null)
             {
-                GenerateCharacterList(headerCharacterName, sw, EveClient.MonitoredCharacters);
+                GenerateCharacterList(headerCharacterName, sw, EveMonClient.MonitoredCharacters);
                 return;
             }
             else

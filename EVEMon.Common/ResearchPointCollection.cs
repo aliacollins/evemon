@@ -47,7 +47,7 @@ namespace EVEMon.Common
             }
 
             // Fires the event regarding research points update
-            EveClient.OnCharacterResearchPointsUpdated(m_character);
+            EveMonClient.OnCharacterResearchPointsUpdated(m_character);
         }
 
         /// <summary>

@@ -39,11 +39,11 @@ namespace EVEMon
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
             // Find our files
-            EveClient.InitializeFileSystemPaths();
+            EveMonClient.InitializeFileSystemPaths();
 
             // Creates a trace file
-            EveClient.StartTraceLogging();
-            EveClient.Trace("Starting up");
+            EveMonClient.StartTraceLogging();
+            EveMonClient.Trace("Starting up");
 
             // Make our windows nice
             MakeWindowsJuicy();
@@ -52,7 +52,7 @@ namespace EVEMon
             bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
 
             // Initialization
-            EveClient.Initialize();
+            EveMonClient.Initialize();
             Settings.InitializeFromFile();
 
             // Did something requested an exit before we entered Run() ?
@@ -62,9 +62,9 @@ namespace EVEMon
             // Fires the main window
             try
             {
-                EveClient.Trace("Main loop - start"); 
+                EveMonClient.Trace("Main loop - start"); 
                 Application.Run(new MainWindow(startMinimized));
-                EveClient.Trace("Main loop - done");
+                EveMonClient.Trace("Main loop - done");
             }
             // Save before we quit
             finally
@@ -72,8 +72,8 @@ namespace EVEMon
                 Settings.SaveImmediate();
                 EveIDtoName.Save();
                 BCAPI.UploadSettingsFile();
-                EveClient.Trace("Closed");
-                EveClient.StopTraceLogging();
+                EveMonClient.Trace("Closed");
+                EveMonClient.StopTraceLogging();
             }
         }
 
@@ -197,7 +197,7 @@ namespace EVEMon
                     // so we don't get multiple crashes
                     try
                     {
-                        EveClient.Shutdown();
+                        EveMonClient.Shutdown();
                         using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(ex))
                         {
                             f.ShowDialog(s_mainWindow);

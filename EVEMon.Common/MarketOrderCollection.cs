@@ -100,7 +100,7 @@ namespace EVEMon.Common
             m_items.AddRange(newOrders);
 
             // Fires the event regarding market orders update
-            EveClient.OnCharacterMarketOrdersUpdated(m_character);
+            EveMonClient.OnCharacterMarketOrdersUpdated(m_character);
         }
 
         /// <summary>

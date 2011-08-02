@@ -80,7 +80,7 @@ namespace EVEMon.SkillPlanner
             s_typeMap["subSystem"] = "SubSystem";
 
             // Subscribe global events
-            EveClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.PlanChanged += EveClient_PlanChanged;
 
             QueryLoadoutsFeed();
         }
@@ -118,7 +118,7 @@ namespace EVEMon.SkillPlanner
         private void LoadoutSelect_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Unsubscribe global events
-            EveClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.PlanChanged -= EveClient_PlanChanged;
         }
 
         /// <summary>

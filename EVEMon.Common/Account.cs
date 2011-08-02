@@ -142,7 +142,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (CharacterIdentity characterID in EveClient.CharacterIdentities)
+                foreach (CharacterIdentity characterID in EveMonClient.CharacterIdentities)
                 {
                     if (characterID.Account == this)
                         yield return characterID;
@@ -212,7 +212,7 @@ namespace EVEMon.Common
                 if (!m_skillInTrainingCache.ContainsKey(identity))
                     m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
 
-                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
+                EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
                     APIMethods.CharacterSkillInTraining,
                     m_userId,
                     m_apiKey,
@@ -241,7 +241,7 @@ namespace EVEMon.Common
                     return;
 
                 // Query the account status
-                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountStatus>(
+                EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountStatus>(
                     APIMethods.AccountStatus, m_userId, m_apiKey, OnKeyLevelUpdated);
             }
         }
@@ -280,7 +280,7 @@ namespace EVEMon.Common
             }
 
             // Fires the event regarding the account character list update
-            EveClient.OnCharacterListUpdated(this);
+            EveMonClient.OnCharacterListUpdated(this);
         }
 
         /// <summary>
@@ -319,12 +319,12 @@ namespace EVEMon.Common
                 if (result.EVEBackendDatabaseDisabled)
                     return;
 
-                EveClient.Notifications.NotifyCharacterListError(this, result);
+                EveMonClient.Notifications.NotifyCharacterListError(this, result);
                 return;
             }
 
             // Invalidates the notification and update
-            EveClient.Notifications.InvalidateAccountError(this);
+            EveMonClient.Notifications.InvalidateAccountError(this);
             Import(result);
 
             m_characterListUpdated = true;
@@ -342,7 +342,7 @@ namespace EVEMon.Common
             // Notify error if any
             if (m_keyLevel == CredentialsLevel.Unknown)
             {
-                EveClient.Notifications.NotifyKeyLevelError(this, result);
+                EveMonClient.Notifications.NotifyKeyLevelError(this, result);
                 return;
             }
 
@@ -351,7 +351,7 @@ namespace EVEMon.Common
             {
                 CCPCharacter ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter != null)
-                    EveClient.OnCharacterUpdated(ccpCharacter);
+                    EveMonClient.OnCharacterUpdated(ccpCharacter);
             }
         }
 
@@ -362,7 +362,7 @@ namespace EVEMon.Common
         /// <param name="character">The character's name.</param>
         private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string characterName)
         {
-            CCPCharacter ccpCharacter = EveClient.Characters.FirstOrDefault(x => x.Name == characterName) as CCPCharacter;
+            CCPCharacter ccpCharacter = EveMonClient.Characters.FirstOrDefault(x => x.Name == characterName) as CCPCharacter;
 
             // Return on error
             if (result.HasError)
@@ -372,14 +372,14 @@ namespace EVEMon.Common
                     return;
                 
                 if (ccpCharacter != null)
-                    EveClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
+                    EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
                 
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
                 return;
             }
 
             if (ccpCharacter != null)
-                EveClient.Notifications.InvalidateCharacterAPIError(ccpCharacter);
+                EveMonClient.Notifications.InvalidateCharacterAPIError(ccpCharacter);
 
             m_skillInTrainingCache[characterName].State = result.Result.SkillInTraining == 1
                                                      ? ResponseState.Training
@@ -408,7 +408,7 @@ namespace EVEMon.Common
             NotifyAccountNotInTraining();
 
             // Fires the event regarding the account characters skill in training update
-            EveClient.OnAccountCharactersSkillInTrainingUpdated(this);
+            EveMonClient.OnAccountCharactersSkillInTrainingUpdated(this);
 
             // Reset update pending flag
             m_updatePending = false;
@@ -427,11 +427,11 @@ namespace EVEMon.Common
                 if (result.EVEBackendDatabaseDisabled)
                     return;
                 
-                EveClient.Notifications.NotifyAccountStatusError(this, result);
+                EveMonClient.Notifications.NotifyAccountStatusError(this, result);
                 return;
             }
 
-            EveClient.Notifications.InvalidateAccountError(this);
+            EveMonClient.Notifications.InvalidateAccountError(this);
 
             m_accountCreated = result.Result.CreateDate;
             m_accountExpirationDate = result.Result.PaidUntil;
@@ -440,7 +440,7 @@ namespace EVEMon.Common
             NotifyAccountExpiration();
 
             // Fires the event regarding the account status update
-            EveClient.OnAccountStatusUpdated(this);
+            EveMonClient.OnAccountStatusUpdated(this);
         }
 
         #endregion
@@ -454,7 +454,7 @@ namespace EVEMon.Common
         private void ImportIdentities(IEnumerable<ISerializableCharacterIdentity> identities)
         {
             // Clear the accounts on this character
-            foreach (CharacterIdentity id in EveClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
             {
                 if (id.Account == this)
                     id.Account = null;
@@ -467,9 +467,9 @@ namespace EVEMon.Common
             // Assign owned identities to this account
             foreach (ISerializableCharacterIdentity serialID in identities)
             {
-                CharacterIdentity id = EveClient.CharacterIdentities[serialID.ID];
+                CharacterIdentity id = EveMonClient.CharacterIdentities[serialID.ID];
                 if (id == null)
-                    id = EveClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
+                    id = EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
 
                 id.Account = this;
             }
@@ -483,12 +483,12 @@ namespace EVEMon.Common
             // One of the remaining characters was training; account is training
             if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Training))
             {
-                EveClient.Notifications.InvalidateAccountNotInTraining(this);
+                EveMonClient.Notifications.InvalidateAccountNotInTraining(this);
                 return;
             }
 
             // No training characters found up until
-            EveClient.Notifications.NotifyAccountNotInTraining(this);
+            EveMonClient.Notifications.NotifyAccountNotInTraining(this);
         }
 
         /// <summary>
@@ -500,18 +500,18 @@ namespace EVEMon.Common
             TimeSpan daysToExpire = m_accountExpirationDate.Subtract(DateTime.UtcNow);
             if (daysToExpire < TimeSpan.FromDays(7) && daysToExpire > TimeSpan.FromDays(1))
             {
-                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpirationDate, NotificationPriority.Information);
+                EveMonClient.Notifications.NotifyAccountExpiration(this, m_accountExpirationDate, NotificationPriority.Information);
                 return;
             }
 
             // Is it to expire within the day? Send a warning notification
             if (daysToExpire <= TimeSpan.FromDays(1) && daysToExpire > TimeSpan.Zero)
             {
-                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpirationDate, NotificationPriority.Warning);
+                EveMonClient.Notifications.NotifyAccountExpiration(this, m_accountExpirationDate, NotificationPriority.Warning);
                 return;
             }
 
-            EveClient.Notifications.InvalidateAccountExpiration(this);
+            EveMonClient.Notifications.InvalidateAccountExpiration(this);
         }
 
         #endregion
@@ -526,7 +526,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public void TryUpdateAsync(string apiKey, EventHandler<AccountCreationEventArgs> callback)
         {
-            EveClient.Accounts.TryAddOrUpdateAsync(m_userId, apiKey, callback);
+            EveMonClient.Accounts.TryAddOrUpdateAsync(m_userId, apiKey, callback);
         }
 
         /// <summary>
@@ -546,7 +546,7 @@ namespace EVEMon.Common
             m_accountStatusMonitor.UpdateWith(accountStatusQueryResult);
 
             // Clear the account for the currently associated identities
-            foreach (CharacterIdentity id in EveClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
             {
                 if (id.Account == this)
                     id.Account = null;
@@ -565,7 +565,7 @@ namespace EVEMon.Common
                 if (ccpCharacter == null)
                 {
                     ccpCharacter = new CCPCharacter(id);
-                    EveClient.Characters.Add(ccpCharacter, true);
+                    EveMonClient.Characters.Add(ccpCharacter, true);
                     ccpCharacter.Monitored = true;
                 }
             }

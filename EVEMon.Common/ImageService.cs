@@ -37,13 +37,13 @@ namespace EVEMon.Common
             // Cache not to be used ?
             if (!useCache)
             {
-                EveClient.HttpWebService.DownloadImageAsync(url, GotImage, callback);
+                EveMonClient.HttpWebService.DownloadImageAsync(url, GotImage, callback);
                 return;
             }
 
             // First check whether the image exists in cache
-            EveClient.EnsureCacheDirInit();
-            string cacheFileName = Path.Combine(EveClient.EVEMonImageCacheDir, GetCacheName(url));
+            EveMonClient.EnsureCacheDirInit();
+            string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
             if (File.Exists(cacheFileName))
             {
                 try
@@ -73,7 +73,7 @@ namespace EVEMon.Common
             }
 
             // Downloads the image and adds it to cache
-            EveClient.HttpWebService.DownloadImageAsync(url, GotImage, (GetImageCallback)((img) =>
+            EveMonClient.HttpWebService.DownloadImageAsync(url, GotImage, (GetImageCallback)((img) =>
                 {
                     if (img != null)
                         AddImageToCache(url, img);
@@ -95,8 +95,8 @@ namespace EVEMon.Common
                 try
                 {
                     // Write this image to the cache file
-                    EveClient.EnsureCacheDirInit();
-                    string cacheFileName = Path.Combine(EveClient.EVEMonImageCacheDir, GetCacheName(url));
+                    EveMonClient.EnsureCacheDirInit();
+                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs => {
                         image.Save(fs, ImageFormat.Png);
                         fs.Flush();

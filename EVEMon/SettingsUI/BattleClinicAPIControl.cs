@@ -83,7 +83,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void BattleClinicAPIControl_Load(object sender, EventArgs e)
         {
-            EveClient.BCAPICredentialsUpdated += EveClient_BCAPICredentialsUpdated;
+            EveMonClient.BCAPICredentialsUpdated += EveClient_BCAPICredentialsUpdated;
             Disposed += OnDisposed;
 
             if (!BCAPI.HasCredentialsStored)
@@ -102,7 +102,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.BCAPICredentialsUpdated -= EveClient_BCAPICredentialsUpdated;
+            EveMonClient.BCAPICredentialsUpdated -= EveClient_BCAPICredentialsUpdated;
             Disposed -= OnDisposed;
         }
 

@@ -110,7 +110,7 @@ namespace EVEMon.ApiErrorHandling
                 return;
             }
 
-            EveClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(m_notification));
+            EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(m_notification));
             PerformAction(e.Action);
         }
 

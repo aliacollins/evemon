@@ -52,10 +52,10 @@ namespace EVEMon
             m_boldSkillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noSkillsQueueLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.TimerTick += EveClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -84,10 +84,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
             Disposed -= OnDisposed;
         }
 

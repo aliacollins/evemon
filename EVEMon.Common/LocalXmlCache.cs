@@ -21,8 +21,8 @@ namespace EVEMon.Common
         {
             lock (s_syncLock)
             {
-                EveClient.EnsureCacheDirInit();
-                return new FileInfo(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", filename)));
+                EveMonClient.EnsureCacheDirInit();
+                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", filename)));
             }
         }
 
@@ -36,8 +36,8 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 XmlDocument doc = new XmlDocument();
-                EveClient.EnsureCacheDirInit();
-                doc.Load(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", charName)));
+                EveMonClient.EnsureCacheDirInit();
+                doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", charName)));
                 return doc;
             }
         }
@@ -55,8 +55,8 @@ namespace EVEMon.Common
                 string name = (characterNode == null ? key : characterNode.InnerText);
 
                 // Writes in the target file
-                EveClient.EnsureCacheDirInit();
-                string fileName = Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
+                EveMonClient.EnsureCacheDirInit();
+                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
                 {
@@ -80,8 +80,8 @@ namespace EVEMon.Common
         {
             lock (s_syncLock)
             {
-                EveClient.EnsureCacheDirInit();
-                return new Uri(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", characterName)));
+                EveMonClient.EnsureCacheDirInit();
+                return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", characterName)));
             }
         }
 

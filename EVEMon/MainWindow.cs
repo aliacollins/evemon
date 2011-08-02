@@ -46,7 +46,7 @@ namespace EVEMon
 
         private readonly List<Notification> m_popupNotifications = new List<Notification>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
-        private string m_APIProviderName = EveClient.APIProviders.CurrentProvider.Name;
+        private string m_APIProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
 
         /// <summary>
         /// Constructor.
@@ -61,7 +61,7 @@ namespace EVEMon
             tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
             overview.CharacterClicked += overview_CharacterClicked;
             tcCharacterTabs.TabPages.Remove(tpOverview);
-            lblServerStatus.Text = String.Format("// {0}", EveClient.EVEServer.StatusText);
+            lblServerStatus.Text = String.Format("// {0}", EveMonClient.EVEServer.StatusText);
 
             DisplayTestMenu();
         }
@@ -118,16 +118,16 @@ namespace EVEMon
             standardToolStripMenuItem.Checked = standardToolbar.Visible = Settings.UI.MainWindow.ShowToolBar;
 
             // Subscribe events
-            EveClient.NotificationSent += EveClient_NotificationSent;
-            EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
-            EveClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
-            EveClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
-            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.NotificationSent += EveClient_NotificationSent;
+            EveMonClient.NotificationInvalidated += EveClient_NotificationInvalidated;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
+            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.TimerTick += EveClient_TimerTick;
 
             // Initialize all of our business objects
-            EveClient.Run(this);
+            EveMonClient.Run(this);
 
             // Upgrades the BattleClinic API settings
             BCAPI.UpgradeSettings();
@@ -251,7 +251,7 @@ namespace EVEMon
             trayIcon.Visible = false;
 
             // Stops the one-second timer right now
-            EveClient.Shutdown();
+            EveMonClient.Shutdown();
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace EVEMon
             {
                 // Rebuild the pages
                 int index = 0;
-                foreach (var character in EveClient.MonitoredCharacters)
+                foreach (var character in EveMonClient.MonitoredCharacters)
                 {
                     // Retrieve the current page, or null if we're past the limits
                     TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
@@ -429,7 +429,7 @@ namespace EVEMon
             }
 
             m_isUpdatingTabOrder = true;
-            EveClient.MonitoredCharacters.Update(order);
+            EveMonClient.MonitoredCharacters.Update(order);
             m_isUpdatingTabOrder = false;
         }
 
@@ -608,7 +608,7 @@ namespace EVEMon
         /// </summary>
         void UpdateNotifications()
         {
-            notificationList.Notifications = EveClient.Notifications.Where(x => x.Sender == null || x.SenderAccount != null);
+            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == null || x.SenderAccount != null);
         }
 
         /// <summary>
@@ -1222,7 +1222,7 @@ namespace EVEMon
                 "Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
-                EveClient.ClearCache();
+                EveMonClient.ClearCache();
         }
 
         /// <summary>
@@ -1738,7 +1738,7 @@ namespace EVEMon
             HidePopup();
 
             // Create the Plans sub-menu
-            List<Character> characters = new List<Character>(EveClient.MonitoredCharacters);
+            List<Character> characters = new List<Character>(EveMonClient.MonitoredCharacters);
             characters.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
             foreach (var character in characters)
             {
@@ -1814,15 +1814,15 @@ namespace EVEMon
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {
-                EveClient.UpdateAvailable += OnUpdateAvailable;
-                EveClient.DataUpdateAvailable += OnDataUpdateAvailable;
+                EveMonClient.UpdateAvailable += OnUpdateAvailable;
+                EveMonClient.DataUpdateAvailable += OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = true;
             }
 
             if (!Settings.Updates.CheckEVEMonVersion && m_isUpdateEventsSubscribed)
             {
-                EveClient.UpdateAvailable -= OnUpdateAvailable;
-                EveClient.DataUpdateAvailable -= OnDataUpdateAvailable;
+                EveMonClient.UpdateAvailable -= OnUpdateAvailable;
+                EveMonClient.DataUpdateAvailable -= OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = false;
             }
 
@@ -1835,16 +1835,16 @@ namespace EVEMon
 
             // Whenever we switch API provider we update
             // the server status and every monitored CCP character
-            if (m_APIProviderName != EveClient.APIProviders.CurrentProvider.Name)
+            if (m_APIProviderName != EveMonClient.APIProviders.CurrentProvider.Name)
             {
-                EveClient.EVEServer.ForceUpdate();
+                EveMonClient.EVEServer.ForceUpdate();
 
-                foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+                foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
                 {
                     character.QueryMonitors.QueryEverything();
                 }
 
-                m_APIProviderName = EveClient.APIProviders.CurrentProvider.Name;
+                m_APIProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             }
         }
 
@@ -1935,7 +1935,7 @@ namespace EVEMon
                 Behaviour = NotificationBehaviour.Overwrite,
                 Description = "Test Notification"
             };
-            EveClient.Notifications.Notify(notification);
+            EveMonClient.Notifications.Notify(notification);
         }
 
         /// <summary>

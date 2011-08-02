@@ -49,7 +49,7 @@ namespace EVEMon.Common
 
                 m_name = value;
 
-                EveClient.OnCharacterUpdated(m_owner);
+                EveMonClient.OnCharacterUpdated(m_owner);
             }
         }
 
@@ -82,7 +82,7 @@ namespace EVEMon.Common
                     m_values[(int)slot] = value;
                 }
 
-                EveClient.OnCharacterUpdated(m_owner);
+                EveMonClient.OnCharacterUpdated(m_owner);
             }
         }
 

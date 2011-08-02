@@ -52,11 +52,11 @@ namespace EVEMon
             mainPanel.BackColor = SystemColors.ControlLightLight;
 
             // Client events
-            EveClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
-            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveMonClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.TimerTick += EveClient_TimerTick;
 
             // Character Details
             UpdateContent();
@@ -69,11 +69,11 @@ namespace EVEMon
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            EveClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
-            EveClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveClient.ServerStatusUpdated -= EveClient_ServerStatusUpdated;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
+            EveMonClient.ServerStatusUpdated -= EveClient_ServerStatusUpdated;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace EVEMon
             {
                 // Creates the warning for accounts not in training
                 string warningMessage;
-                if (EveClient.Accounts.HasAccountsNotTraining(out warningMessage))
+                if (EveMonClient.Accounts.HasAccountsNotTraining(out warningMessage))
                 {
                     FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
                     mainPanel.Controls.Add(warningPanel);
@@ -295,7 +295,7 @@ namespace EVEMon
         /// <returns></returns>
         public static IEnumerable<Character> GetCharacters()
         {
-            IEnumerable<Character> characters = EveClient.MonitoredCharacters;
+            IEnumerable<Character> characters = EveMonClient.MonitoredCharacters;
 
             // Filter characters not in training ?
             if (!Settings.UI.SystemTrayPopup.ShowCharNotTraining)
@@ -417,7 +417,7 @@ namespace EVEMon
                 return;
 
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
-                m_serverStatusLabel.Text = EveClient.EVEServer.StatusText;
+                m_serverStatusLabel.Text = EveMonClient.EVEServer.StatusText;
         }
         #endregion
 

@@ -49,7 +49,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             get
             {
-                var settingsFileContent = File.ReadAllText(EveClient.SettingsFileNameFullPath);
+                var settingsFileContent = File.ReadAllText(EveMonClient.SettingsFileNameFullPath);
                 return HttpUtility.UrlEncode(settingsFileContent);
             }
         }
@@ -153,7 +153,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 return;
 
             FileSave();
-            EveClient.Trace("BCAPI.UploadSettingsFile - Done");
+            EveMonClient.Trace("BCAPI.UploadSettingsFile - Done");
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (!BCAPISettings.Default.DownloadAlways || !HasCredentialsStored)
                 return;
 
-            EveClient.Trace("BCAPI.DownloadSettingsFile - Initiated");
+            EveMonClient.Trace("BCAPI.DownloadSettingsFile - Initiated");
 
             FileGetByNameAsync(OnFileGetByName);
         }
@@ -181,7 +181,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey, BCAPISettings.Default.BCApplicationKey,
-               EveClient.SettingsFileName, SettingsFileContent));
+               EveMonClient.SettingsFileName, SettingsFileContent));
 
             QueryMethod(BCAPIMethods.FileSave, postData);
         }
@@ -193,7 +193,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                 BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
-                BCAPISettings.Default.BCApplicationKey, EveClient.SettingsFileName));
+                BCAPISettings.Default.BCApplicationKey, EveMonClient.SettingsFileName));
 
             QueryMethod(BCAPIMethods.FileGetByName, postData);
         }
@@ -220,7 +220,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
                 BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey, BCAPISettings.Default.BCApplicationKey,
-                EveClient.SettingsFileName, SettingsFileContent));
+                EveMonClient.SettingsFileName, SettingsFileContent));
 
             QueryMethodAsync<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData, callback);
         }
@@ -233,7 +233,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                 BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
-                BCAPISettings.Default.BCApplicationKey, EveClient.SettingsFileName));
+                BCAPISettings.Default.BCApplicationKey, EveMonClient.SettingsFileName));
 
             QueryMethodAsync<SerializableBCAPIFiles>(BCAPIMethods.FileGetByName, postData, callback);
         }
@@ -251,7 +251,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         private static void QueryMethod(BCAPIMethods method, HttpPostData postData)
         {
             string url = GetMethodUrl(method);
-            EveClient.HttpWebService.DownloadXml(url, postData);
+            EveMonClient.HttpWebService.DownloadXml(url, postData);
         }
 
         /// <summary>
@@ -282,13 +282,13 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                EveClient.OnBCAPICredentialsUpdated(errorMessage);
+                EveMonClient.OnBCAPICredentialsUpdated(errorMessage);
                 return;
             }
 
             if (result.HasError)
             {
-                EveClient.OnBCAPICredentialsUpdated(result.Error.ErrorMessage);
+                EveMonClient.OnBCAPICredentialsUpdated(result.Error.ErrorMessage);
                 return;
             }
 
@@ -298,7 +298,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             BCAPISettings.Default.BCAPIKey = s_apiKey;
             BCAPISettings.Default.Save();
 
-            EveClient.OnBCAPICredentialsUpdated(String.Empty);
+            EveMonClient.OnBCAPICredentialsUpdated(String.Empty);
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 return;
             }
 
-            EveClient.Trace("BCAPI.DownloadSettingsFile - Completed");
+            EveMonClient.Trace("BCAPI.DownloadSettingsFile - Completed");
 
             SaveSettingsFile(result.Result.Files[0]);
         }

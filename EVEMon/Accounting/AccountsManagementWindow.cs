@@ -46,16 +46,16 @@ namespace EVEMon.Accounting
             charactersListView.KeyDown += charactersListView_KeyDown;
             charactersListView.ItemChecked += charactersListView_ItemChecked;
 
-            EveClient.AccountCollectionChanged += EveClient_AccountCollectionChanged;
-            EveClient.CharacterCollectionChanged += EveClient_CharacterCollectionChanged;
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.AccountCollectionChanged += EveClient_AccountCollectionChanged;
+            EveMonClient.CharacterCollectionChanged += EveClient_CharacterCollectionChanged;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
 
             EveClient_AccountCollectionChanged(null, null);
             EveClient_CharacterCollectionChanged(null, null);
             AdjustColumns();
 
             // Selects the second page if no account known so far.
-            if (EveClient.Characters.Count == 0) tabControl.SelectedIndex = 1;
+            if (EveMonClient.Characters.Count == 0) tabControl.SelectedIndex = 1;
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveClient.AccountCollectionChanged -= EveClient_AccountCollectionChanged;
-            EveClient.CharacterCollectionChanged -= EveClient_CharacterCollectionChanged;
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.AccountCollectionChanged -= EveClient_AccountCollectionChanged;
+            EveMonClient.CharacterCollectionChanged -= EveClient_CharacterCollectionChanged;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
             base.OnClosing(e);
         }
 
@@ -90,8 +90,8 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         void EveClient_AccountCollectionChanged(object sender, EventArgs e)
         {
-            accountsListBox.Accounts = EveClient.Accounts;
-            accountsMultiPanel.SelectedPage = (EveClient.Accounts.IsEmpty() ? noAccountsPage : accountsListPage);
+            accountsListBox.Accounts = EveMonClient.Accounts;
+            accountsMultiPanel.SelectedPage = (EveMonClient.Accounts.IsEmpty() ? noAccountsPage : accountsListPage);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace EVEMon.Accounting
             accountsListBox.Invalidate();
 
             // Make a help message appears when no accounts exist.
-            if (EveClient.Characters.Count == 0)
+            if (EveMonClient.Characters.Count == 0)
             {
                 charactersMultiPanel.SelectedPage = noCharactersPage;
             }
@@ -267,7 +267,7 @@ namespace EVEMon.Accounting
                     bool hasUrlChars = false;
 
                     // Scroll through listview items to gather the groups
-                    foreach (var character in EveClient.Characters)
+                    foreach (var character in EveMonClient.Characters)
                     {
                         var uriCharacter = character as UriCharacter;
 
@@ -315,7 +315,7 @@ namespace EVEMon.Accounting
                 }
                 
                 // Add items
-                foreach (var character in EveClient.Characters.OrderBy(x => x.Name))
+                foreach (var character in EveMonClient.Characters.OrderBy(x => x.Name))
                 {
                     var item = new ListViewItem();
                     item.Checked = character.Monitored;

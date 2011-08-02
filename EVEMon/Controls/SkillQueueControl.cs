@@ -27,9 +27,9 @@ namespace EVEMon.Controls
             m_toolTip = new SkillQueueToolTip(this);
 
             this.Disposed += OnDisposed;
-            EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace EVEMon.Controls
         private void OnDisposed(object sender, EventArgs e)
         {
             this.Disposed -= OnDisposed;
-            EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
             m_toolTip.Dispose();
         }
 

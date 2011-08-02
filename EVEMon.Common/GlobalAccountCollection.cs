@@ -33,7 +33,7 @@ namespace EVEMon.Common
         {
             message = String.Empty;
 
-            var accountsNotTraining = EveClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && !x.HasCharacterInTraining);
+            var accountsNotTraining = EveMonClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && !x.HasCharacterInTraining);
 
             // All accounts are training ?
             if (accountsNotTraining.Count() == 0)
@@ -43,7 +43,7 @@ namespace EVEMon.Common
             StringBuilder builder = new StringBuilder();
             if (accountsNotTraining.Count() == 1)
             {
-                builder.AppendFormat("{0} is not in training", (EveClient.Accounts.Count == 1 ? "Your account" : "One of your accounts"));
+                builder.AppendFormat("{0} is not in training", (EveMonClient.Accounts.Count == 1 ? "Your account" : "One of your accounts"));
             }
             else
             {
@@ -91,10 +91,10 @@ namespace EVEMon.Common
             // Invokes on the thread pool
             Dispatcher.BackgroundInvoke(() =>
                 {
-                    var charListResult = EveClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
+                    var charListResult = EveMonClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
 
                     // Call account/AccountStatus.xml to check whether it is a full api key
-                    var accountStatusResult = EveClient.APIProviders.CurrentProvider.QueryAccountStatus(userID, apiKey);
+                    var accountStatusResult = EveMonClient.APIProviders.CurrentProvider.QueryAccountStatus(userID, apiKey);
 
                     // Invokes the callback on the UI thread
                     Dispatcher.Invoke(() => callback(null, new AccountCreationEventArgs(userID, apiKey, accountStatusResult, charListResult)));
@@ -120,7 +120,7 @@ namespace EVEMon.Common
                 throw new InvalidOperationException("This account does not exist in the list.");
             }
 
-            EveClient.OnAccountCollectionChanged();
+            EveMonClient.OnAccountCollectionChanged();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace EVEMon.Common
         {
             m_items.Add(account.UserID, account);
             if (notify)
-                EveClient.OnAccountCollectionChanged();
+                EveMonClient.OnAccountCollectionChanged();
         }
 
         /// <summary>
@@ -150,12 +150,12 @@ namespace EVEMon.Common
                 }
                 catch (ArgumentException ex)
                 {
-                    EveClient.Trace("GlobalAccountCollection.Import - An account with id {0} already existed; additional instance ignored.", serialAccount.ID);
+                    EveMonClient.Trace("GlobalAccountCollection.Import - An account with id {0} already existed; additional instance ignored.", serialAccount.ID);
                     ExceptionHandler.LogException(ex, true);
                 }
             }
 
-            EveClient.OnAccountCollectionChanged();
+            EveMonClient.OnAccountCollectionChanged();
         }
 
         /// <summary>

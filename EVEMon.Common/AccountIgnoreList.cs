@@ -52,7 +52,7 @@ namespace EVEMon.Common
                 
             // Create a new CCP character
             ccpCharacter = new CCPCharacter(id);
-            EveClient.Characters.Add(ccpCharacter, true);
+            EveMonClient.Characters.Add(ccpCharacter, true);
             return ccpCharacter;
         }
 
@@ -72,7 +72,7 @@ namespace EVEMon.Common
             // If the identity was belonging to this account, remove the character (won't be serialized anymore !)
             if (id.Account == m_owner)
             {
-                EveClient.Characters.Remove(character, true);
+                EveMonClient.Characters.Remove(character, true);
             }
         }
 
@@ -85,10 +85,10 @@ namespace EVEMon.Common
             m_items.Clear();
             foreach (var serialID in serialIDList)
             {
-                var id = EveClient.CharacterIdentities[serialID.ID];
+                var id = EveMonClient.CharacterIdentities[serialID.ID];
                 if (id == null)
                 {
-                    id = EveClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
+                    id = EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
                 }
                 m_items.Add(id);
             }

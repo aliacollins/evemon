@@ -47,7 +47,7 @@ namespace EVEMon.Common
         {
             get 
             { 
-                return (EveClient.APIProviders.CurrentProvider != APIProvider.TestProvider ?
+                return (EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider ?
                         "Tranquility" : "Sinqularity");
             }
         }
@@ -105,29 +105,29 @@ namespace EVEMon.Common
                     return;
 
                 m_status = ServerStatus.Unknown;
-                EveClient.Notifications.NotifyServerStatusError(result);
+                EveMonClient.Notifications.NotifyServerStatusError(result);
 
                 // Notify subscribers about update
-                EveClient.OnServerStatusUpdated(this, lastStatus, m_status);
+                EveMonClient.OnServerStatusUpdated(this, lastStatus, m_status);
                 return;
             }
 
             // Update status and users, notify no more errors
             m_users = result.Result.Players;
             m_status = (result.Result.Open ? ServerStatus.Online : ServerStatus.Offline);
-            EveClient.Notifications.InvalidateServerStatusError();
+            EveMonClient.Notifications.InvalidateServerStatusError();
 
             // Notify subscribers about update
-            EveClient.OnServerStatusUpdated(this, lastStatus, m_status);
+            EveMonClient.OnServerStatusUpdated(this, lastStatus, m_status);
 
             // Send a notification
             if (lastStatus != m_status)
             {
-                EveClient.Notifications.NotifyServerStatusChanged(Name, m_status);
+                EveMonClient.Notifications.NotifyServerStatusChanged(Name, m_status);
                 return;
             }
 
-            EveClient.Notifications.InvalidateServerStatusChange();
+            EveMonClient.Notifications.InvalidateServerStatusChange();
         }
     }
 }

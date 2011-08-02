@@ -73,9 +73,9 @@ namespace EVEMon.Common
         /// <exception cref="ApplicationException">The file does not exist or it cannot be copied</exception>
         internal static string GetFullPath(string filename)
         {
-            string evemonDataDir = EveClient.EVEMonDataDir == null ?
+            string evemonDataDir = EveMonClient.EVEMonDataDir == null ?
                             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon") :
-                            EveClient.EVEMonDataDir;
+                            EveMonClient.EVEMonDataDir;
 
             // Look in the %APPDATA% folder
             string filepath = String.Format(

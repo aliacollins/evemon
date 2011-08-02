@@ -90,7 +90,7 @@ namespace EVEMon.Common
 
             if (cache == null)
             {
-                EveClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
+                EveMonClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
                 File.Delete(s_file);
                 return;
             }
@@ -150,7 +150,7 @@ namespace EVEMon.Common
         private static void QueryAPICharacterName()
         {
             string IDs = string.Join(",", s_listOfIDsToQuery);
-            var result = EveClient.APIProviders.CurrentProvider.QueryCharacterName(IDs);
+            var result = EveMonClient.APIProviders.CurrentProvider.QueryCharacterName(IDs);
             OnQueryAPICharacterNameUpdated(result);
         }
 
@@ -166,11 +166,11 @@ namespace EVEMon.Common
                 if (result.EVEBackendDatabaseDisabled)
                     return;
                 
-                EveClient.Notifications.NotifyCharacterNameError(result);
+                EveMonClient.Notifications.NotifyCharacterNameError(result);
                 return;
             }
 
-            EveClient.Notifications.InvalidateAPIError();
+            EveMonClient.Notifications.InvalidateAPIError();
 
             // Deserialize the result
             Import(result.Result.Entities);

@@ -50,7 +50,7 @@ namespace EVEMon.Common
             foreach (var serialID in m_serialCharacterList.Result.Characters)
             {
                 // Look for an existing char ID and update its name
-                var id = EveClient.CharacterIdentities[serialID.ID];
+                var id = EveMonClient.CharacterIdentities[serialID.ID];
                 if (id != null)
                 {
                     id.Name = serialID.Name;
@@ -58,7 +58,7 @@ namespace EVEMon.Common
                 else
                 {
                     // Create an identity if necessary
-                    id = EveClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
+                    id = EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
                 }
 
                 m_identities.Add(id);
@@ -126,19 +126,19 @@ namespace EVEMon.Common
         public Account CreateOrUpdate()
         {
             // Checks whether this account already exists to update it.
-            var account = EveClient.Accounts[m_userID];
+            var account = EveMonClient.Accounts[m_userID];
             if (account != null)
             {
                 account.UpdateAPIKey(m_apiKey, m_keyLevel, m_identities, m_serialCharacterList, m_serialAccountStatus);
 
                 // Collection did not change but there is no "AccountChanged" event
-                EveClient.OnAccountCollectionChanged();
+                EveMonClient.OnAccountCollectionChanged();
             }
             else
             {
                 account = new Account(m_userID);
                 account.UpdateAPIKey(m_apiKey, m_keyLevel, m_identities, m_serialCharacterList, m_serialAccountStatus);
-                EveClient.Accounts.Add(account, true);
+                EveMonClient.Accounts.Add(account, true);
             }
 
             return account;

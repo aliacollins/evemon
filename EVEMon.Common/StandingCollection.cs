@@ -32,7 +32,7 @@ namespace EVEMon.Common
             }
 
             // Fires the event regarding standings update
-            EveClient.OnCharacterStandingsUpdated(m_character);
+            EveMonClient.OnCharacterStandingsUpdated(m_character);
         }
 
         /// <summary>

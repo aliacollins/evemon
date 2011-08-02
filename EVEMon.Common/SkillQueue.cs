@@ -119,12 +119,12 @@ namespace EVEMon.Common
                     Emailer.SendSkillCompletionMail(m_items, skill, m_character);
 
                 // Sends a notification
-                EveClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
+                EveMonClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
             }
 
             // At least one skill completed ?
             if (skillsCompleted.Count != 0)
-                EveClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
+                EveMonClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace EVEMon.Common
             }
 
             // Fires the event regarding the character skill queue update.
-            EveClient.OnCharacterSkillQueueUpdated(m_character);
+            EveMonClient.OnCharacterSkillQueueUpdated(m_character);
         }
     }
 }
