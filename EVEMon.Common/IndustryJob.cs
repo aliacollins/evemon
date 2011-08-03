@@ -197,7 +197,7 @@ namespace EVEMon.Common
 
             // Is it a conquerable outpost station ?
             if (station == null)
-                station = ConquerableStation.GetStation(id);
+                station = ConquerableStation.GetStationByID(id);
 
             // Still nothing ? Then it's a starbase structure
             // and will be assigned manually based on activity

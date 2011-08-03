@@ -204,7 +204,7 @@ namespace EVEMon.Common
 
             // We failed ? Then it's a conquerable outpost station
             if (station == null)
-                station = ConquerableStation.GetStation(id);
+                station = ConquerableStation.GetStationByID(id);
 
             // We failed again ? It's not in any data we can access
             // We set it to a fixed one and notify about it in the trace file
