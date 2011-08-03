@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
@@ -230,130 +229,19 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePropertiesList()
         {
-            // TODO: Refactor into a shorter method
-
             m_propertiesList.BeginUpdate();
             try
             {
                 // Refresh columns
                 m_propertiesList.Columns.Clear();
                 m_propertiesList.Columns.Add("Attribute");
-                foreach(var obj in m_selectControl.SelectedObjects)
+                foreach(Item obj in m_selectControl.SelectedObjects)
                 {
                     m_propertiesList.Columns.Add(obj.Name);
                 }
 
                 // Prepare properties list
-                m_propertiesList.Groups.Clear();
-                var items = new List<ListViewItem>();
-                foreach(var category in StaticProperties.AllCategories)
-                {
-                    var group = new ListViewGroup(category.DisplayName);
-                    bool hasProps = false;
-
-                    foreach(var prop in category)
-                    {
-                        // Checks whether we must display this property
-                        bool visibleProperty = false;
-
-                        // Some properties should be always visible (fitting, shields resists, etc)
-                        if (m_forceShipsPropertyToBeVisible)
-                            visibleProperty = prop.AlwaysVisibleForShips;
-
-                        // Or we check whether any object has this property
-                        if (!visibleProperty)
-                            visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
-
-                        // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
-                        if (prop.HideIfDefault)
-                            visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
-
-                        // Jump to next property if not visible
-                        if (!visibleProperty)
-                            continue;
-
-                        hasProps = true;
-
-                        // Retrieve the data to put in the columns
-                        var labels = m_selectControl.SelectedObjects.Select(x => prop.GetLabelOrDefault(x)).ToArray();
-                        var values = m_selectControl.SelectedObjects.Select(x => prop.GetNumericValue(x)).ToArray();
-                        var min = values.Min();
-                        var max = values.Max();
-                        var allEqual = values.All(x => x == min);
-                        if (!prop.HigherIsBetter)
-                        {
-                            var temp = min;
-                            min = max;
-                            max = temp;
-                        }
-
-                        // Create the list view item
-                        ListViewItem item = new ListViewItem(group);
-                        item.ToolTipText = prop.Description;
-                        item.Text = prop.Name;
-                        items.Add(item);
-
-                        // Add the value for every ship
-                        int index = 0;
-                        foreach(var obj in m_selectControl.SelectedObjects)
-                        {
-                            // Create the subitem and choose its forecolor
-                            var subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
-                            if (!allEqual)
-                            {
-                                if (values[index] == max)
-                                {
-                                    subItem.ForeColor = Color.DarkGreen;
-                                }
-                                else if (values[index] == min)
-                                {
-                                    subItem.ForeColor = Color.DarkRed;
-                                }
-
-                                item.UseItemStyleForSubItems = false;
-                            }
-                            else if (m_selectControl.SelectedObjects.Count > 1)
-                            {
-                                subItem.ForeColor = Color.DarkGray;
-                                item.UseItemStyleForSubItems = false;
-                            }
-
-                            item.SubItems.Add(subItem);
-                            index++;
-                        }
-                    }
-
-                    // Check if the objects belong to an item family that has fitting slot property 
-                    if (m_selectControl.SelectedObjects.Any(x => x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone))
-                    {
-                        // Create the list view item
-                        ListViewItem item = new ListViewItem(group);
-                        var labels = m_selectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
-                        if (category.Name == "General" && m_selectControl.SelectedObjects.Any(x => x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
-                        {
-                            item.ToolTipText = "The slot that this item fits in";
-                            item.Text = "Fitting Slot";
-                            items.Add(item);
-                        }
-
-                        // Add the value for every item
-                        int index = 0;
-                        foreach (var obj in m_selectControl.SelectedObjects)
-                        {
-                            // Create the subitem and choose its forecolor
-                            var subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
-                            subItem.ForeColor = m_selectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
-                            item.UseItemStyleForSubItems = false;
-
-                            item.SubItems.Add(subItem);
-                            index++;
-                        }
-                    }
-
-                    // Add properties
-                    if (hasProps)
-                        m_propertiesList.Groups.Add(group);
-                }
+                List<ListViewItem> items = AddPropertyGroups();
 
                 // Fetch the new items to the list view
                 m_propertiesList.Items.Clear();
@@ -365,6 +253,140 @@ namespace EVEMon.SkillPlanner
                 m_propertiesList.EndUpdate();
             }
         }
+
+        /// <summary>
+        /// Adds the property groups.
+        /// </summary>
+        /// <returns></returns>
+        private List<ListViewItem> AddPropertyGroups()
+        {
+            m_propertiesList.Groups.Clear();
+            List<ListViewItem> items = new List<ListViewItem>();
+            foreach (EvePropertyCategory category in StaticProperties.AllCategories)
+            {
+                ListViewGroup group = new ListViewGroup(category.DisplayName);
+                bool hasProps = false;
+
+                foreach (EveProperty prop in category)
+                {
+                    // Checks whether we must display this property
+                    bool visibleProperty = false;
+
+                    // Some properties should be always visible (fitting, shields resists, etc)
+                    if (m_forceShipsPropertyToBeVisible)
+                        visibleProperty = prop.AlwaysVisibleForShips;
+
+                    // Or we check whether any object has this property
+                    if (!visibleProperty)
+                        visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
+
+                    // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
+                    if (prop.HideIfDefault)
+                        visibleProperty = m_selectControl.SelectedObjects
+                            .Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
+
+                    // Jump to next property if not visible
+                    if (!visibleProperty)
+                        continue;
+
+                    hasProps = true;
+
+                    // Retrieve the data to put in the columns
+                    AddPropertyValue(items, group, prop);
+                }
+
+                // Check if the objects belong to an item family that has fitting slot property 
+                if (m_selectControl.SelectedObjects.Any(x => x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone))
+                {
+                    // Create the list view item
+                    ListViewItem item = new ListViewItem(group);
+                    string[] labels = m_selectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
+                    if (category.Name == "General" &&
+                        m_selectControl.SelectedObjects
+                            .Any(x => x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
+                    {
+                        item.ToolTipText = "The slot that this item fits in";
+                        item.Text = "Fitting Slot";
+                        items.Add(item);
+                    }
+
+                    // Add the value for every item
+                    int index = 0;
+                    foreach (var obj in m_selectControl.SelectedObjects)
+                    {
+                        // Create the subitem and choose its forecolor
+                        var subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
+                        subItem.ForeColor = m_selectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
+                        item.UseItemStyleForSubItems = false;
+
+                        item.SubItems.Add(subItem);
+                        index++;
+                    }
+                }
+
+                // Add properties
+                if (hasProps)
+                    m_propertiesList.Groups.Add(group);
+            }
+            return items;
+        }
+
+        /// <summary>
+        /// Adds the property value.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="group">The group.</param>
+        /// <param name="prop">The prop.</param>
+        private void AddPropertyValue(List<ListViewItem> items, ListViewGroup group, EveProperty prop)
+        {
+            string[] labels = m_selectControl.SelectedObjects.Select(x => prop.GetLabelOrDefault(x)).ToArray();
+            float[] values = m_selectControl.SelectedObjects.Select(x => prop.GetNumericValue(x)).ToArray();
+            float min = values.Min();
+            float max = values.Max();
+            bool allEqual = values.All(x => x == min);
+            if (!prop.HigherIsBetter)
+            {
+                var temp = min;
+                min = max;
+                max = temp;
+            }
+
+            // Create the list view item
+            ListViewItem item = new ListViewItem(group);
+            item.ToolTipText = prop.Description;
+            item.Text = prop.Name;
+            items.Add(item);
+
+            // Add the value for every item
+            int index = 0;
+            foreach (Item obj in m_selectControl.SelectedObjects)
+            {
+                // Create the subitem and choose its forecolor
+                ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
+                if (!allEqual)
+                {
+                    if (values[index] == max)
+                    {
+                        subItem.ForeColor = Color.DarkGreen;
+                    }
+                    else if (values[index] == min)
+                    {
+                        subItem.ForeColor = Color.DarkRed;
+                    }
+
+                    item.UseItemStyleForSubItems = false;
+                }
+                else if (m_selectControl.SelectedObjects.Count > 1)
+                {
+                    subItem.ForeColor = Color.DarkGray;
+                    item.UseItemStyleForSubItems = false;
+                }
+
+                item.SubItems.Add(subItem);
+                index++;
+            }
+        }
+
         #endregion
     }
 }
