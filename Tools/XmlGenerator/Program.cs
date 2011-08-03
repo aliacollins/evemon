@@ -785,7 +785,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Launcher group ?
-                int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupIDs, srcProp.AttributeID);
+                int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupPropertyIDs, srcProp.AttributeID);
                 if (launcherIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -797,7 +797,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Charge group ?
-                int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupIDs, srcProp.AttributeID);
+                int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupPropertyIDs, srcProp.AttributeID);
                 if (chargeIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -809,7 +809,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // CanFitShip group ?
-                int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupIDs, srcProp.AttributeID);
+                int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupPropertyIDs, srcProp.AttributeID);
                 if (canFitShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -821,7 +821,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // ModuleShip group ?
-                int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupIDs, srcProp.AttributeID);
+                int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupPropertyIDs, srcProp.AttributeID);
                 if (moduleShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -833,7 +833,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // SpecialisationAsteroid group ?
-                int specialisationAsteroidIndex = Array.IndexOf(DBConstants.SpecialisationAsteroidGroupIDs,
+                int specialisationAsteroidIndex = Array.IndexOf(DBConstants.SpecialisationAsteroidGroupPropertyIDs,
                                                                 srcProp.AttributeID);
                 if (specialisationAsteroidIndex >= 0)
                 {
@@ -846,7 +846,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Reaction group ?
-                int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupIDs, srcProp.AttributeID);
+                int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupPropertyIDs, srcProp.AttributeID);
                 if (reactionIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -858,7 +858,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // PosCargobayAccept group ?
-                int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupIDs, srcProp.AttributeID);
+                int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupPropertyIDs, srcProp.AttributeID);
                 if (posCargobayAcceptIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -1012,10 +1012,10 @@ namespace EVEMon.XmlGenerator
 
             // Set race to ORE if it is in the ORE market groups
             // within mining barges, exhumers, industrial or capital industrial ships
-            if (srcItem.MarketGroupID == DBConstants.MiningBargesMarketGroupID
-                || srcItem.MarketGroupID == DBConstants.ExhumersMarketGroupID
-                || srcItem.MarketGroupID == DBConstants.IndustrialsMarketGroupID
-                || srcItem.MarketGroupID == DBConstants.CapitalIndustrialsMarketGroupID)
+            if (srcItem.MarketGroupID == DBConstants.OREMiningBargesMarketGroupID
+                || srcItem.MarketGroupID == DBConstants.OREExhumersMarketGroupID
+                || srcItem.MarketGroupID == DBConstants.OREIndustrialsMarketGroupID
+                || srcItem.MarketGroupID == DBConstants.ORECapitalIndustrialsMarketGroupID)
                 item.Race = Race.Ore;
 
             // Set race to Faction if ship has Pirate Faction property

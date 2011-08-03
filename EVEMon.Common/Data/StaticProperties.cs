@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Initilizer
+        #region Initilization
 
         /// <summary>
         /// Initialize static properties.
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Data
                 EvePropertyCategory category = new EvePropertyCategory(srcCategory);
                 s_categoriesByName[category.Name] = category;
 
-                // Store skills
+                // Store properties
                 foreach (EveProperty property in category)
                 {
                     s_propertiesByID[property.ID] = property;
@@ -37,79 +37,20 @@ namespace EVEMon.Common.Data
                 }
             }
 
-            // Visibility in ships browser
-            s_propertiesByID[DBConstants.CPUOutputPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.PGOutputPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.UpgradeCapacityPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.HiSlotsPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.MedSlotsPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.LowSlotsPropertyID].AlwaysVisibleForShips = true;
+            // Set visibility in ships browser
+            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs)
+            {
+                if (s_propertiesByID.ContainsKey(propertyID))
+                    s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
+            }
 
-            s_propertiesByID[DBConstants.DroneCapacityPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.DroneBandwidthPropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.CargoCapacityPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.MassPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.VolumePropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.CapacitorCapacityPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.CapacitorRechargeRatePropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.MaxTargetRangePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ScanResolutionPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.SignatureRadiusPropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.MaxVelocityPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ShipWarpSpeedPropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.StructureHitpointsPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ShieldHitpointsPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ArmorHitpointsPropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ShieldRechargeRatePropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.ShieldEMResistancePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ShieldExplosiveResistancePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ShieldKineticResistancePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ShieldThermalResistancePropertyID].AlwaysVisibleForShips = true;
-
-            s_propertiesByID[DBConstants.ArmorEMResistancePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ArmorExplosiveResistancePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ArmorKineticResistancePropertyID].AlwaysVisibleForShips = true;
-            s_propertiesByID[DBConstants.ArmorThermalResistancePropertyID].AlwaysVisibleForShips = true;
-
-            // Hide if default
-            s_propertiesByID[DBConstants.LauncherSlotsLeftPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.TurretSlotsLeftPropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.TurretHardPointModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.LauncherHardPointModifierPropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.HiSlotModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.MedSlotModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.LowSlotModifierPropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.ScanRadarStrengthPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.ScanLadarStrengthPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.ScanMagnetometricStrengthPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.ScanGravimetricStrengthPropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.HullEMResistancePropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.HullExplosiveResistancePropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.HullKineticResistancePropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.HullThermalResistancePropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.EmDamagePropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.ExplosiveDamagePropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.KineticDamagePropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.ThermalDamagePropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.CharismaModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.IntelligenceModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.MemoryModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.PerceptionModifierPropertyID].HideIfDefault = true;
-            s_propertiesByID[DBConstants.WillpowerModifierPropertyID].HideIfDefault = true;
-
-            s_propertiesByID[DBConstants.MetaLevelPropertyID].HideIfDefault = true;
+            // Set hide if default for properties
+            // we want to hide in browser if they just show their default value
+            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs)
+            {
+                if (s_propertiesByID.ContainsKey(propertyID))
+                    s_propertiesByID[propertyID].HideIfDefault = true;
+            }
         }
 
         #endregion

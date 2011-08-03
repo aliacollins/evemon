@@ -338,7 +338,7 @@ namespace EVEMon.SkillPlanner
                     nodeName = "Rigs";
 
                 // Is it a subsystem?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.AdvancedSubsystemsMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.SubsystemsMarketGroupID }))
                     nodeName = "Subsystems";
 
                 // Is it a drone?

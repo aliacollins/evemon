@@ -400,7 +400,7 @@ namespace EVEMon.SkillPlanner
                 {
                     case BlueprintActivity.Manufacturing:
                         if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.DronesMarketGroupID })
-                            && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsGroupIDs))
+                            && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
                             cbFacility.Items.Add("Drone Assembly Array");
 
                         if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.AmmosAndChargesMarketGroupID }))
@@ -415,16 +415,16 @@ namespace EVEMon.SkillPlanner
                         if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ComponentsMarketGroupID }))
                             cbFacility.Items.Add("Component Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsMarketGroupIDs))
                             cbFacility.Items.Add("Subsystem Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
                             cbFacility.Items.Add("Ship Assembly Array (Ship Size)");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.CapitalShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.CapitalShipsMarketGroupIDs))
                             cbFacility.Items.Add("Capital Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedSmallToLargeShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedSmallToLargeShipsMarketGroupIDs))
                             cbFacility.Items.Add("Advanced Ship Assembly Array (Ship Size)");
 
                         break;
