@@ -297,32 +297,7 @@ namespace EVEMon.SkillPlanner
 
                 // Check if the objects belong to an item family that has fitting slot property 
                 if (m_selectControl.SelectedObjects.Any(x => x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone))
-                {
-                    // Create the list view item
-                    ListViewItem item = new ListViewItem(group);
-                    string[] labels = m_selectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
-                    if (category.Name == "General" &&
-                        m_selectControl.SelectedObjects
-                            .Any(x => x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
-                    {
-                        item.ToolTipText = "The slot that this item fits in";
-                        item.Text = "Fitting Slot";
-                        items.Add(item);
-                    }
-
-                    // Add the value for every item
-                    int index = 0;
-                    foreach (var obj in m_selectControl.SelectedObjects)
-                    {
-                        // Create the subitem and choose its forecolor
-                        var subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
-                        subItem.ForeColor = m_selectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
-                        item.UseItemStyleForSubItems = false;
-
-                        item.SubItems.Add(subItem);
-                        index++;
-                    }
-                }
+                    AddFittingSlotProperty(items, category, group);
 
                 // Add properties
                 if (hasProps)
@@ -357,7 +332,7 @@ namespace EVEMon.SkillPlanner
             item.Text = prop.Name;
             items.Add(item);
 
-            // Add the value for every item
+            // Add the value for every selected item
             int index = 0;
             foreach (Item obj in m_selectControl.SelectedObjects)
             {
@@ -381,6 +356,34 @@ namespace EVEMon.SkillPlanner
                     subItem.ForeColor = Color.DarkGray;
                     item.UseItemStyleForSubItems = false;
                 }
+
+                item.SubItems.Add(subItem);
+                index++;
+            }
+        }
+
+        private void AddFittingSlotProperty(List<ListViewItem> items, EvePropertyCategory category, ListViewGroup group)
+        {
+            // Create the list view item
+            ListViewItem item = new ListViewItem(group);
+            string[] labels = m_selectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
+            if (category.Name == "General" &&
+                m_selectControl.SelectedObjects.Any(x => x.FittingSlot != ItemSlot.None &&
+                                                    x.FittingSlot != ItemSlot.Empty))
+            {
+                item.ToolTipText = "The slot that this item fits in";
+                item.Text = "Fitting Slot";
+                items.Add(item);
+            }
+
+            // Add the value for every selected item
+            int index = 0;
+            foreach (Item obj in m_selectControl.SelectedObjects)
+            {
+                // Create the subitem and choose its forecolor
+                ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
+                subItem.ForeColor = m_selectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
+                item.UseItemStyleForSubItems = false;
 
                 item.SubItems.Add(subItem);
                 index++;
