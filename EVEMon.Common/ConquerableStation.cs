@@ -14,19 +14,22 @@ namespace EVEMon.Common
     public sealed class ConquerableStation : Station
     {
         private readonly static Dictionary<long, ConquerableStation> s_conqStationsByID = new Dictionary<long, ConquerableStation>();
+        private readonly static Dictionary<string, ConquerableStation> s_conqStationsByName = new Dictionary<string, ConquerableStation>();
         private readonly static string s_filename = "ConquerableStationList";
 
         private static bool s_loaded;
-        private string m_corp;
+
+        #region Constructor
 
         /// <summary>
         /// Constructor.
         /// </summary>
         private ConquerableStation(SerializableOutpost src)
-            : base (src)
+            : base(src)
         {
-            m_corp = src.CorporationName;
         }
+
+        #endregion
 
 
         #region Properties
@@ -53,17 +56,17 @@ namespace EVEMon.Common
         /// </summary>
         public string FullName
         {
-            get { return m_corp + " - " + Name; }
+            get { return CorporationName + " - " + Name; }
         }
 
         /// <summary>
-        /// Gets something like Region > Constellation > SolarSystem > CorpName - OutpostName.
+        /// Gets something like Region > Constellation > SolarSystem > OwnerName - StationName.
         /// </summary>
         public new string FullLocation
         {
             get { return SolarSystem.FullLocation + " > " + FullName; }
         }
-        
+
         #endregion
 
 
@@ -112,8 +115,18 @@ namespace EVEMon.Common
         }
         #endregion
 
-        
+
         #region Importation
+
+        /// <summary>
+        /// Ensures the list has been imported.
+        /// </summary>
+        private static void EnsureImportation()
+        {
+            UpdateList();
+            Import();
+        }
+
         /// <summary>
         /// Deserialize the file and import the list.
         /// </summary>
@@ -150,12 +163,14 @@ namespace EVEMon.Common
         {
             EveMonClient.Trace("ConquerableStationList.Import - begin");
             s_conqStationsByID.Clear();
+            s_conqStationsByName.Clear();
 
             try
             {
-                foreach (var outpost in outposts)
+                foreach (SerializableOutpost outpost in outposts)
                 {
                     s_conqStationsByID.Add(outpost.StationID, new ConquerableStation(outpost));
+                    s_conqStationsByName.Add(outpost.StationName, new ConquerableStation(outpost));
                 }
             }
             catch (Exception exc)
@@ -168,22 +183,16 @@ namespace EVEMon.Common
                 EveMonClient.Trace("ConquerableStationList.Import - done");
             }
         }
+
         #endregion
 
 
-        /// <summary>
-        /// Ensures the list has been imported.
-        /// </summary>
-        private static void EnsureImportation()
-        {
-            UpdateList();
-            Import();
-        }
+        #region Public Finders
 
         /// <summary>
         /// Gets the conquerable station with the provided ID.
         /// </summary>
-        internal static ConquerableStation GetStation(long id)
+        public static ConquerableStation GetStationByID(long id)
         {
             // Ensure list importation
             EnsureImportation();
@@ -192,5 +201,20 @@ namespace EVEMon.Common
             s_conqStationsByID.TryGetValue(id, out result);
             return result;
         }
+
+        /// <summary>
+        /// Gets the conquerable station with the provided name.
+        /// </summary>
+        public static ConquerableStation GetStationByName(string name)
+        {
+            // Ensure list importation
+            EnsureImportation();
+
+            ConquerableStation result = null;
+            s_conqStationsByName.TryGetValue(name, out result);
+            return result;
+        }
+
+        #endregion
     }
 }

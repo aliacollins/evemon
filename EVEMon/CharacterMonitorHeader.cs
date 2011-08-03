@@ -812,18 +812,29 @@ namespace EVEMon
             if (account == null || account.KeyLevel != CredentialsLevel.Full)
                 return;
 
-            string location = "Lost in a space";
+            string location = "Lost in space";
+            
+            // Check if in an NPC station
             Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation);
 
+            // Not in an NPC station ? Check if in an outpost
+            if (station == null)
+                station = ConquerableStation.GetStationByName(m_character.LastKnownLocation);
+
+            // Not in an potpost either ?
             if (station == null)
             {
+                // Has to be in a solar system at least
                 SolarSystem system = StaticGeography.GetSolarSystemByName(m_character.LastKnownLocation);
+                
+                // Not in a solar system ??? Then show default location
                 if (system != null)
                     location = String.Format("{0} ({1:N1})", system.FullLocation, system.SecurityLevel);
             }
             else
             {
-                location = String.Format("{0} ({1:N1})\nDocked in {2}", station.SolarSystem.FullLocation, station.SolarSystem.SecurityLevel, station.Name);
+                location = String.Format("{0} ({1:N1})\nDocked in {2}", station.SolarSystem.FullLocation,
+                    station.SolarSystem.SecurityLevel, (station is ConquerableStation ? ((ConquerableStation)station).FullName : station.Name));
             }
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);
