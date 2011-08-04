@@ -55,7 +55,6 @@ namespace EVEMon
             industryExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             industryExpPanelControl.Visible = false;
 
-            DoubleBuffered = true;
             ListViewHelper.EnableDoubleBuffer(lvJobs);
 
             lvJobs.ColumnClick += lvJobs_ColumnClick;

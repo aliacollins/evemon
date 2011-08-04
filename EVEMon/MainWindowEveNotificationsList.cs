@@ -50,7 +50,6 @@ namespace EVEMon
 
             noEVENotificationsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            DoubleBuffered = true;
             ListViewHelper.EnableDoubleBuffer(lvNotifications);
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;

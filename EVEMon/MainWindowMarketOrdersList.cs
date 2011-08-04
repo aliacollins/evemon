@@ -67,7 +67,6 @@ namespace EVEMon
             marketExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             marketExpPanelControl.Visible = false;
 
-            DoubleBuffered = true;
             ListViewHelper.EnableDoubleBuffer(lvOrders);
 
             lvOrders.ColumnClick += listView_ColumnClick;

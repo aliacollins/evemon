@@ -44,7 +44,6 @@ namespace EVEMon
 
             noResearchLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            DoubleBuffered = true;
             ListViewHelper.EnableDoubleBuffer(lvResearchPoints);
 
             lvResearchPoints.ColumnClick += lvResearchPoints_ColumnClick;

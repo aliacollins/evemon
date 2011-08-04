@@ -43,8 +43,6 @@ namespace EVEMon
             m_standingsBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noStandingsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            DoubleBuffered = true;
-
             EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
