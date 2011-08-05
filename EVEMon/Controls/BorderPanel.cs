@@ -9,22 +9,25 @@ namespace EVEMon.Controls
     /// There is probably some way to change the client rectangle area but I didn't find it.
     /// Did I mention I hate winforms very much ?
     /// </summary>
-    public partial class BorderPanel : Panel
+    public class BorderPanel : Panel
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public BorderPanel()
         {
-            InitializeComponent();
-            this.BackColor = SystemColors.Window;
-            this.ForeColor = Color.Gray;
-            this.Padding = new Padding(0);
-            this.Margin = new Padding(0);
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            DoubleBuffered = true;
+            BackColor = SystemColors.Window;
+            ForeColor = Color.Gray;
+            Padding = new Padding(0);
+            Margin = new Padding(0);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ContainerControl | 
+                     ControlStyles.DoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.AllPaintingInWmPaint, true);
+            UpdateStyles();
         }
 
         /// <summary>
@@ -34,12 +37,12 @@ namespace EVEMon.Controls
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-            var rect = this.ClientRectangle;
+            Rectangle rect = ClientRectangle;
             rect.Inflate(-1, -1);
 
-            using (var brush = new SolidBrush(this.ForeColor))
+            using (SolidBrush brush = new SolidBrush(ForeColor))
             {
-                using (var pen = new Pen(brush, 1.0f))
+                using (Pen pen = new Pen(brush, 1.0f))
                 {
                     pe.Graphics.DrawRectangle(pen, rect);
                 }

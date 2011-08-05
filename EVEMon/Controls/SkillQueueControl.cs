@@ -9,7 +9,7 @@ using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace EVEMon.Controls
 {
-    public partial class SkillQueueControl : Control
+    public class SkillQueueControl : Control
     {
         private DateTime m_nextRepainting = DateTime.MinValue;
         private static DateTime m_paintTime = DateTime.UtcNow;
@@ -22,11 +22,9 @@ namespace EVEMon.Controls
         /// </summary>
         public SkillQueueControl()
         {
-            InitializeComponent();
-
             m_toolTip = new SkillQueueToolTip(this);
 
-            this.Disposed += OnDisposed;
+            Disposed += OnDisposed;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
@@ -39,7 +37,7 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            this.Disposed -= OnDisposed;
+            Disposed -= OnDisposed;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
@@ -64,7 +62,7 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace EVEMon.Controls
             if (m_skillQueue == null || ccpCharacter.SkillQueue != m_skillQueue)
                 return;
 
-            this.Invalidate();
+            Invalidate();
         }
         #endregion
 
@@ -105,7 +103,7 @@ namespace EVEMon.Controls
             set
             {
                 m_skillQueue = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
 
@@ -126,7 +124,7 @@ namespace EVEMon.Controls
             set
             {
                 m_firstColor = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
 
@@ -146,7 +144,7 @@ namespace EVEMon.Controls
             set
             {
                 m_secondColor = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
 
@@ -166,7 +164,7 @@ namespace EVEMon.Controls
             set
             {
                 m_emptyColor = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
 
@@ -186,7 +184,7 @@ namespace EVEMon.Controls
             set
             {
                 m_borderColor = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
         #endregion
@@ -207,8 +205,8 @@ namespace EVEMon.Controls
             base.OnPaint(pe);
 
             Graphics g = pe.Graphics;
-            int width = this.Width;
-            int height = this.Height;
+            int width = Width;
+            int height = Height;
 
             // If we are in DesignMode we just paint a dummy queue
             if (DesignMode)
@@ -316,7 +314,7 @@ namespace EVEMon.Controls
         /// <param name="height">Height of the canvas</param>
         private void PaintPoint(Graphics g, int width, int height)
         {
-            using(Brush background = new SolidBrush(this.BackColor))
+            using(Brush background = new SolidBrush(BackColor))
             {
                 using(Pen pen = new Pen(GetBorderColor(), 1.0f))
                 {
@@ -392,7 +390,7 @@ namespace EVEMon.Controls
                 else
                 {
                     // Empty region
-                    var emptyRect = new Rectangle(lastX, 0, this.Width - lastX, this.Height);
+                    var emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
                     using (var brush = new SolidBrush(GetEmptyColor()))
                     {
                         g.FillRectangle(brush, emptyRect);
@@ -474,12 +472,12 @@ namespace EVEMon.Controls
             foreach (QueuedSkill skill in m_skillQueue)
             {
                 // Find the rectangle for the skill and paint it
-                Rectangle skillRect = GetSkillRect(skill, this.Width, this.Height);
+                Rectangle skillRect = GetSkillRect(skill, Width, Height);
                 lastX = skillRect.Right;
 
                 if (skillRect.Contains(e.Location))
                 {
-                    Point tipPoint = new Point((Math.Min(skillRect.Right, this.Width) + skillRect.Left) / 2, e.Location.Y);
+                    Point tipPoint = new Point((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2, e.Location.Y);
                     m_toolTip.Display(skill, tipPoint);
                     base.OnMouseMove(e);
                     return;
@@ -487,7 +485,7 @@ namespace EVEMon.Controls
             }
 
             // Are we in the empty space ?
-            var emptyRect = new Rectangle(lastX, 0, this.Width - lastX, this.Height);
+            var emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
             if (emptyRect.Contains(e.Location))
             {
                 var leftTime = (m_skillQueue.IsPaused ? m_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;

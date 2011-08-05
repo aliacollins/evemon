@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Drawing;
-using EVEMon.Controls.Design;
 using System.Drawing.Design;
+using System.Windows.Forms;
+using EVEMon.Controls.Design;
 
 namespace EVEMon.Controls
 {
     /// <summary>
-    /// A panel with multiple mages that can be switched.
+    /// A panel with multiple pages that can be switched.
     /// </summary>
     /// <remarks>
     /// Based on the work from Liron Levi on Code Project, under public domain. 
@@ -35,8 +33,10 @@ namespace EVEMon.Controls
             get { return m_selectedPage; }
             set
             {
-                if (m_selectedPage == value) return;
-                var oldPage = m_selectedPage;
+                if (m_selectedPage == value)
+                    return;
+
+                MultiPanelPage oldPage = m_selectedPage;
                 m_selectedPage = value;
 
                 foreach (Control child in Controls)
@@ -45,9 +45,7 @@ namespace EVEMon.Controls
                 } 
 
                 if( SelectionChange != null)
-                {
                     SelectionChange(null, new MultiPanelSelectionChangeEventArgs(oldPage, value));
-                }
             }
         }
 
@@ -95,15 +93,11 @@ namespace EVEMon.Controls
                 : base(owner)
             {
                 if (owner == null)
-                {
                     throw new ArgumentNullException("owner", "Tried to create a MultiPanelPagesCollection with a null owner.");
-                }
 
                 m_owner = owner as MultiPanel;
                 if (m_owner == null)
-                {
                     throw new ArgumentException("Tried to create a MultiPanelPagesCollection with a non-MultiPanel owner.", "owner");
-                }
             }
 
             /// <summary>
@@ -113,15 +107,11 @@ namespace EVEMon.Controls
             public override void Add(Control value)
             {
                 if (value == null)
-                {
                     throw new ArgumentNullException("value", "Tried to add a null value to the MultiPanelPagesCollection.");
-                }
 
                 MultiPanelPage p = value as MultiPanelPage;
                 if (p == null)
-                {
                     throw new ArgumentException("Tried to add a non-MultiPanelPage control to the MultiPanelPagesCollection", "value");
-                }
 
                 p.SendToBack();
                 base.Add(p);
@@ -133,7 +123,10 @@ namespace EVEMon.Controls
             /// <param name="controls"></param>
             public override void AddRange(Control[] controls)
             {
-                foreach (MultiPanelPage p in controls) Add(p);
+                foreach (MultiPanelPage p in controls)
+                {
+                    Add(p);
+                }
             }
 
             /// <summary>

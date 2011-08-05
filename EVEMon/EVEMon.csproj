@@ -150,9 +150,6 @@
     <Compile Include="Controls\BorderPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\BorderPanel.Designer.cs">
-      <DependentUpon>BorderPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Design\MultiPanelDesignerHelper.cs" />
     <Compile Include="Controls\Design\MultiPanelSelectionEditor.cs" />
     <Compile Include="Controls\DraggableListView.cs">
@@ -284,9 +281,6 @@
     </Compile>
     <Compile Include="Controls\Throbber.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Throbber.Designer.cs">
-      <DependentUpon>Throbber.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\DropDownMouseMoveComboBox.cs">
       <SubType>Component</SubType>
@@ -701,9 +695,6 @@
     </Compile>
     <Compile Include="Controls\SkillQueueControl.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SkillQueueControl.designer.cs">
-      <DependentUpon>SkillQueueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillsPieChart.cs">
       <SubType>Form</SubType>

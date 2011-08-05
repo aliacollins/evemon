@@ -16,7 +16,7 @@ namespace EVEMon.Controls
     /// <summary>
     /// The little "flower" displayed on the top right of the characters monitors.
     /// </summary>
-    public partial class Throbber : PictureBox
+    public class Throbber : PictureBox
     {
         // Static members
         private static int m_runners;
@@ -34,13 +34,9 @@ namespace EVEMon.Controls
         /// </summary>
         public Throbber()
         {
-            InitializeComponent();
-
             // Initializes the common images
             if (m_strobeFrame == null)
-            {
                 InitImages();
-            }
 
             // Initializes the common timer
             if (m_timer == null)
@@ -53,8 +49,8 @@ namespace EVEMon.Controls
             m_timer.Tick += m_timer_Tick;
 
             // Forces the control to be 24*24
-            this.MinimumSize = new Size(24, 24);
-            this.MaximumSize = new Size(24, 24);
+            MinimumSize = new Size(24, 24);
+            MaximumSize = new Size(24, 24);
         }
 
         /// <summary>
@@ -70,7 +66,7 @@ namespace EVEMon.Controls
                 m_state = value;
 
                 // Leave it stopped if not visible
-                if(!this.Visible) return;
+                if(!Visible) return;
 
                 // Start or stop
                 switch (m_state)
@@ -169,9 +165,9 @@ namespace EVEMon.Controls
         protected override void OnVisibleChanged(EventArgs e)
         {
             // When not visible, stop
-            if (!this.Visible)
+            if (!Visible)
             {
-                this.Stop();
+                Stop();
                 return;
             }
 

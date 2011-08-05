@@ -10,6 +10,8 @@ namespace EVEMon.Controls
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.DoubleBuffer |
                      ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.ContainerControl | 
                      ControlStyles.AllPaintingInWmPaint, true);
             UpdateStyles();
         }
