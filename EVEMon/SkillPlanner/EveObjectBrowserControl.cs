@@ -289,6 +289,9 @@ namespace EVEMon.SkillPlanner
                         visibleProperty = SelectControl.SelectedObjects
                             .Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
 
+                    if (prop.ID == DBConstants.ReprocessingSkillPropertyID)
+                        visibleProperty = false;
+
                     // Jump to next property if not visible
                     if (!visibleProperty)
                         continue;
@@ -345,14 +348,21 @@ namespace EVEMon.SkillPlanner
         /// <param name="values">The values.</param>
         private void AddValueForSelectedObjects(Object obj, ListViewItem item, string[] labels, float[] values)
         {
-            float min = values.Min();
-            float max = values.Max();
-            bool allEqual = values.All(x => x == min);
-            if (obj is EveProperty && !((EveProperty)obj).HigherIsBetter)
+            float min = 0f;
+            float max = 0f;
+            bool allEqual = true;
+
+            if (values.Count() > 0)
             {
-                float temp = min;
-                min = max;
-                max = temp;
+                min = values.Min();
+                max = values.Max();
+                allEqual = values.All(x => x == min);
+                if (obj is EveProperty && !((EveProperty)obj).HigherIsBetter)
+                {
+                    float temp = min;
+                    min = max;
+                    max = temp;
+                }
             }
 
             // Add the value for every selected item
@@ -399,15 +409,7 @@ namespace EVEMon.SkillPlanner
             items.Add(item);
 
             // Add the value for every selected item
-            for (int index = 0; index < SelectControl.SelectedObjects.Count; index++)
-            {
-                // Create the subitem and choose its forecolor
-                ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
-                subItem.ForeColor = SelectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
-                item.UseItemStyleForSubItems = false;
-
-                item.SubItems.Add(subItem);
-            }
+            AddValueForSelectedObjects(null, item, labels, new float[] { });
         }
 
         /// <summary>
@@ -428,6 +430,9 @@ namespace EVEMon.SkillPlanner
                 groupName = "Reprocessing Info";
 
             ListViewGroup group = new ListViewGroup(groupName);
+
+            // Add the reprocessing skill
+            AddReprocessingSkill(group, items);
 
             IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects
                                                             .Where(x => x.ReprocessingMaterials != null)
@@ -477,6 +482,30 @@ namespace EVEMon.SkillPlanner
             }
 
             PropertiesList.Groups.Add(group);
+        }
+
+        private void AddReprocessingSkill(ListViewGroup group, List<ListViewItem> items)
+        {
+            // Create the list of labels
+            List<string> labels = new List<string>();
+            foreach (var obj in SelectControl.SelectedObjects)
+            {
+                if (obj.ReprocessingMaterials == null)
+                {
+                    labels.Add("None");
+                    continue;
+                }
+                labels.Add(obj.ReprocessingSkill.Name);
+            }
+
+            // Create the list view item
+            ListViewItem item = new ListViewItem(group);
+            item.ToolTipText = StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).Description;
+            item.Text = StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).Name;
+            items.Add(item);
+
+            // Add the value for every selected item
+            AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] { });
         }
 
         #endregion
