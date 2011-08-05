@@ -42,7 +42,6 @@ namespace EVEMon.Common.Data
         {
             get
             {
-
                 foreach (EvePropertyValue prop in m_items)
                 {
                     if (prop.Property == null)

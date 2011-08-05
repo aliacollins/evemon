@@ -111,7 +111,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static EveProperty GetPropertyById(int id)
+        public static EveProperty GetPropertyByID(int id)
         {
             EveProperty property = null;
             s_propertiesByID.TryGetValue(id, out property);

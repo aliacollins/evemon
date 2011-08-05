@@ -13,6 +13,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
+        #region Fields
+
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
@@ -46,6 +48,9 @@ namespace EVEMon.Common
         private bool m_corpJobsUpdated;
         private bool m_charJobsAdded;
         private bool m_corpJobsAdded;
+        
+        #endregion
+
 
         #region Constructors
 

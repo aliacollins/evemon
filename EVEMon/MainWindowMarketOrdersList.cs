@@ -24,7 +24,6 @@ namespace EVEMon
         private MarketOrderGrouping m_grouping;
         private MarketOrderColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
-        private Character m_character;
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
@@ -84,11 +83,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        public Character Character
-        {
-            get { return m_character; }
-            set { m_character = value; }
-        }
+        public Character Character { get; set; }
         
         /// <summary>
         /// Gets or sets the text filter.
@@ -154,7 +149,7 @@ namespace EVEMon
         {
             get
             {
-                foreach (var order in m_list)
+                foreach (MarketOrder order in m_list)
                 {
                     yield return order;
                 }
@@ -178,17 +173,17 @@ namespace EVEMon
             get 
             { 
                 // Add the visible columns; matching the display order
-                var newColumns = new List<MarketOrderColumnSettings>();
+                List<MarketOrderColumnSettings> newColumns = new List<MarketOrderColumnSettings>();
                 foreach (var header in lvOrders.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    var columnSetting = m_columns.First(x => x.Column == (MarketOrderColumn)header.Tag);
+                    MarketOrderColumnSettings columnSetting = m_columns.First(x => x.Column == (MarketOrderColumn)header.Tag);
                     if (columnSetting.Width != -1)
                         columnSetting.Width = header.Width;
                     newColumns.Add(columnSetting);
                 }
 
                 // Then add the other columns
-                foreach (var column in m_columns.Where(x => !x.Visible))
+                foreach (MarketOrderColumnSettings column in m_columns.Where(x => !x.Visible))
                 {
                     newColumns.Add(column);
                 }
@@ -229,7 +224,7 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || m_character == null)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null)
                 return;
 
             base.OnVisibleChanged(e);
@@ -240,10 +235,10 @@ namespace EVEMon
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
-            Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
+            Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
 
             UpdateExpPanelContent();
             UpdateColumns();
@@ -275,9 +270,9 @@ namespace EVEMon
             {
                 lvOrders.Columns.Clear();
 
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (MarketOrderColumnSettings column in m_columns.Where(x => x.Visible))
                 {
-                    var header = lvOrders.Columns.Add(column.Column.GetHeader(), column.Width);
+                    ColumnHeader header = lvOrders.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = (object)column.Column;
 
                     switch (column.Column)
@@ -302,12 +297,12 @@ namespace EVEMon
                 UpdateContent();
 
                 // Force the auto-resize of the columns with -1 width
-                var resizeStyle = (lvOrders.Items.Count == 0 ?
-                    ColumnHeaderAutoResizeStyle.HeaderSize :
-                    ColumnHeaderAutoResizeStyle.ColumnContent);
+                ColumnHeaderAutoResizeStyle resizeStyle = (lvOrders.Items.Count == 0 ?
+                                                            ColumnHeaderAutoResizeStyle.HeaderSize :
+                                                            ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (MarketOrderColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     if (column.Width == -1)
                         lvOrders.AutoResizeColumn(index, resizeStyle);
@@ -341,9 +336,9 @@ namespace EVEMon
             lvOrders.BeginUpdate();
             try
             {
-                var text = m_textFilter.ToLowerInvariant();
-                var orders = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
-                if (m_character != null && m_hideInactive)
+                string text = m_textFilter.ToLowerInvariant();
+                IEnumerable<MarketOrder> orders = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
+                if (Character != null && m_hideInactive)
                     orders = orders.Where(x => x.IsAvailable);
 
                 switch (m_showIssuedFor)
@@ -361,43 +356,45 @@ namespace EVEMon
                 switch (m_grouping)
                 {
                     case MarketOrderGrouping.State:
-                        var groups0 = orders.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
+                        IOrderedEnumerable<IGrouping<OrderState, MarketOrder>> groups0 = orders.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
                         UpdateContent(groups0);
                         break;
                     case MarketOrderGrouping.StateDesc:
-                        var groups1 = orders.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
+                        IOrderedEnumerable<IGrouping<OrderState, MarketOrder>> groups1 = orders.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
                         UpdateContent(groups1);
                         break;
                     case MarketOrderGrouping.Issued:
-                        var groups2 = orders.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups2 = orders.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
                         UpdateContent(groups2);
                         break;
                     case MarketOrderGrouping.IssuedDesc:
-                        var groups3 = orders.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups3 = orders.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
                         UpdateContent(groups3);
                         break;
                     case MarketOrderGrouping.ItemType:
-                        var groups4 = orders.GroupBy(x => x.Item.MarketGroup).OrderBy(x => x.Key.Name);
+                        IOrderedEnumerable<IGrouping<MarketGroup, MarketOrder>> groups4 = orders.GroupBy(x => x.Item.MarketGroup).OrderBy(x => x.Key.Name);
                         UpdateContent(groups4);
                         break;
                     case MarketOrderGrouping.ItemTypeDesc:
-                        var groups5 = orders.GroupBy(x => x.Item.MarketGroup).OrderByDescending(x => x.Key.Name);
+                        IOrderedEnumerable<IGrouping<MarketGroup, MarketOrder>> groups5 = orders.GroupBy(x => x.Item.MarketGroup).OrderByDescending(x => x.Key.Name);
                         UpdateContent(groups5);
                         break;
                     case MarketOrderGrouping.Location:
-                        var groups6 = orders.GroupBy(x => x.Station).OrderBy(x => x.Key.Name);
+                        IOrderedEnumerable<IGrouping<Station, MarketOrder>> groups6 = orders.GroupBy(x => x.Station).OrderBy(x => x.Key.Name);
                         UpdateContent(groups6);
                         break;
                     case MarketOrderGrouping.LocationDesc:
-                        var groups7 = orders.GroupBy(x => x.Station).OrderByDescending(x => x.Key.Name);
+                        IOrderedEnumerable<IGrouping<Station, MarketOrder>> groups7 = orders.GroupBy(x => x.Station).OrderByDescending(x => x.Key.Name);
                         UpdateContent(groups7);
                         break;
                     case MarketOrderGrouping.OrderType:
-                        var groups8 = orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders").OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, MarketOrder>> groups8 = orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders")
+                                                                                            .OrderBy(x => x.Key);
                         UpdateContent(groups8);
                         break;
                     case MarketOrderGrouping.OrderTypeDesc:
-                        var groups9 = orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders").OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, MarketOrder>> groups9 = orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders")
+                                                                                            .OrderByDescending(x => x.Key);
                         UpdateContent(groups9);
                         break;
                 }
@@ -438,7 +435,7 @@ namespace EVEMon
             lvOrders.Groups.Clear();
 
             // Add the groups
-            foreach (var group in groups)
+            foreach (IGrouping<TKey, MarketOrder> group in groups)
             {
                 string groupText = String.Empty;
                 if (group.Key is OrderState)
@@ -454,16 +451,16 @@ namespace EVEMon
                     groupText = group.Key.ToString();
                 }
 
-                var listGroup = new ListViewGroup(groupText);
+                ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvOrders.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (var order in group)
+                foreach (MarketOrder order in group)
                 {
                     if (order.Item == null)
                         continue;
 
-                    var item = new ListViewItem(order.Item.Name, listGroup);
+                    ListViewItem item = new ListViewItem(order.Item.Name, listGroup);
                     item.UseItemStyleForSubItems = false;
                     item.Tag = order;
 
@@ -484,8 +481,8 @@ namespace EVEMon
                     // Creates the subitems
                     for (int i = 0; i < lvOrders.Columns.Count; i++)
                     {
-                        var header = lvOrders.Columns[i];
-                        var column = (MarketOrderColumn)header.Tag;
+                        ColumnHeader header = lvOrders.Columns[i];
+                        MarketOrderColumn column = (MarketOrderColumn)header.Tag;
                         SetColumn(order, item.SubItems[i], column);
                     }
 
@@ -523,7 +520,7 @@ namespace EVEMon
         {
             for (int i = 0; i < lvOrders.Columns.Count; i++)
             {
-                var column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
+                MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
                 if (m_sortCriteria == column)
                 {
                     lvOrders.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
@@ -550,7 +547,7 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Expiration:
-                    var format = FormatExpiration(order);
+                    CellFormat format = FormatExpiration(order);
                     item.Text = format.Text;
                     item.ForeColor = format.TextColor;
                     break;
@@ -711,7 +708,7 @@ namespace EVEMon
         private static CellFormat FormatExpiration(MarketOrder order)
         {
             // Initialize to sensible defaults
-            var format = new CellFormat()
+            CellFormat format = new CellFormat()
             {
                 TextColor = Color.Black,
                 Text = order.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc).ToUpper(CultureConstants.DefaultCulture)
@@ -796,7 +793,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            var column = (MarketOrderColumn)lvOrders.Columns[e.Column].Tag;
+            MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
             {
                 m_sortAscending = !m_sortAscending;
@@ -830,7 +827,7 @@ namespace EVEMon
                     // Mark as ignored
                     foreach (ListViewItem item in lvOrders.SelectedItems)
                     {
-                        var order = (MarketOrder)item.Tag;
+                        MarketOrder order = (MarketOrder)item.Tag;
                         order.Ignored = true;
                     }
 
@@ -868,7 +865,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (e.Character != ccpCharacter)
                 return;
             
@@ -887,7 +884,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateExpPanelContent()
         {
-            if (m_character == null)
+            if (Character == null)
             {
                 marketExpPanelControl.Visible = false;
                 return;
@@ -896,13 +893,21 @@ namespace EVEMon
             if (m_init)
                 marketExpPanelControl.Visible = true;
 
-            // Calculate the related info for the panel
-            CalculatePanelInfo();
+            // Update the Header text of the panel
+            UpdateHeaderText();
 
             // Update the info in the panel
             UpdatePanelInfo();
 
-            // Header text
+            // Force to redraw
+            marketExpPanelControl.Refresh();
+        }
+
+        /// <summary>
+        /// Updates the header text of the panel.
+        /// </summary>
+        private void UpdateHeaderText()
+        {
             int baseOrders = 5;
             int maxOrders = baseOrders + m_skillBasedOrders;
             int activeOrders = m_activeOrdersIssuedForCharacter + m_activeOrdersIssuedForCorporation;
@@ -913,13 +918,8 @@ namespace EVEMon
             string ordersRemainingText = String.Format(CultureConstants.DefaultCulture, "Orders Remaining: {0} out of {1} max", remainingOrders, maxOrders);
             string activeSellOrdersTotalText = String.Format(CultureConstants.DefaultCulture, "Sell Orders Total: {0:N} ISK", activeSellOrdersTotal);
             string activeBuyOrdersTotalText = String.Format(CultureConstants.DefaultCulture, "Buy Orders Total: {0:N} ISK", activeBuyOrdersTotal);
-            marketExpPanelControl.HeaderText = String.Format(CultureConstants.DefaultCulture, "{0}{3,5}{1}{3,5}{2}", ordersRemainingText, activeSellOrdersTotalText, activeBuyOrdersTotalText, String.Empty);
-
-            // Update label position
-            UpdatePanelControlPosition();
-
-            // Force to redraw
-            marketExpPanelControl.Refresh();
+            marketExpPanelControl.HeaderText = String.Format(CultureConstants.DefaultCulture, "{0}{3,5}{1}{3,5}{2}",
+                                                ordersRemainingText, activeSellOrdersTotalText, activeBuyOrdersTotalText, String.Empty);
         }
 
         /// <summary>
@@ -927,18 +927,21 @@ namespace EVEMon
         /// </summary>
         private void UpdatePanelInfo()
         {
-            // Update text
+            // Calculate the related info for the panel
+            CalculatePanelInfo();
+
+            // Update each label text
             decimal totalEscrow = m_issuedForCharacterTotalEscrow + m_issuedForCorporationTotalEscrow;
             decimal escrowAdditionalToCover = m_issuedForCharacterEscrowAdditionalToCover + m_issuedForCorporationEscrowAdditionalToCover;
             int activeSellOrdersCount = m_activeSellOrdersIssuedForCharacterCount + m_activeSellOrdersIssuedForCorporationCount;
             int activeBuyOrdersCount = m_activeBuyOrdersIssuedForCharacterCount + m_activeBuyOrdersIssuedForCorporationCount;
-            bool marketingFirstLevelIsTrained = (m_character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl > 0);
+            bool marketingFirstLevelIsTrained = (Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl > 0);
             string askRange = GetRange(m_askRange);
             string bidRange = GetRange(m_bidRange);
             string modificationRange = GetRange(m_modificationRange);
             string remoteBidRange = GetRange(m_remoteBidRange);
 
-            // Basic label text
+            // Update the basic label text
             lblTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture, "Total in Escrow: {0:N} ISK (additional {1:N} ISK to cover)", totalEscrow, escrowAdditionalToCover);
             lblBaseBrokerFee.Text = String.Format(CultureConstants.DefaultCulture, "Base Broker Fee: {0:0.0#}% of order value", m_baseBrokerFee);
             lblTransactionTax.Text = String.Format(CultureConstants.DefaultCulture, "Transaction Tax: {0:0.0#}% of sales value", m_transactionTax);
@@ -949,7 +952,7 @@ namespace EVEMon
             lblModificationRange.Text = String.Format(CultureConstants.DefaultCulture, "Modification Range: limited to {0}", modificationRange);
             lblRemoteBidRange.Text = (marketingFirstLevelIsTrained ? String.Format(CultureConstants.DefaultCulture, "Remote Bid Range: limited to {0}", remoteBidRange) : String.Empty);
 
-            // Supplemental label text
+            // Update the supplemental label text
             lblCharTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0:N} ISK (additional {1:N} ISK to cover)", m_issuedForCharacterTotalEscrow, m_issuedForCharacterEscrowAdditionalToCover);
             lblCorpTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0:N} ISK (additional {1:N} ISK to cover)", m_issuedForCorporationTotalEscrow, m_issuedForCorporationEscrowAdditionalToCover);
             lblActiveCharSellOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}", m_activeSellOrdersIssuedForCharacterCount);
@@ -960,6 +963,9 @@ namespace EVEMon
             lblActiveCorpSellOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_sellOrdersIssuedForCorporationTotal);
             lblActiveCharBuyOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_buyOrdersIssuedForCharacterTotal);
             lblActiveCorpBuyOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_buyOrdersIssuedForCorporationTotal);
+
+            // Update label position
+            UpdatePanelControlPosition();
         }
 
         /// <summary>
@@ -967,8 +973,10 @@ namespace EVEMon
         /// </summary>
         private void UpdatePanelControlPosition()
         {
-            var pad = 5;
-            var height = (marketExpPanelControl.ExpandDirection == Direction.Up ? pad : marketExpPanelControl.HeaderHeight);
+            marketExpPanelControl.SuspendLayout();
+
+            int pad = 5;
+            int height = (marketExpPanelControl.ExpandDirection == Direction.Up ? pad : marketExpPanelControl.HeaderHeight);
 
             lblTotalEscrow.Location = new Point(5, height);
             height += lblTotalEscrow.Height;
@@ -1054,7 +1062,10 @@ namespace EVEMon
             height += pad;
 
             // Update panel's expanded height
-            marketExpPanelControl.ExpandedHeight = height + (marketExpPanelControl.ExpandDirection == Direction.Up ? marketExpPanelControl.HeaderHeight : pad);
+            marketExpPanelControl.ExpandedHeight = height +
+                (marketExpPanelControl.ExpandDirection == Direction.Up ? marketExpPanelControl.HeaderHeight : pad);
+           
+            marketExpPanelControl.ResumeLayout();
         }
 
         /// <summary>
@@ -1062,38 +1073,42 @@ namespace EVEMon
         /// </summary>
         private void CalculatePanelInfo()
         {
-            var activeSellOrdersIssuedForCharacter = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is SellOrder && x.IssuedFor == IssuedFor.Character);
-            var activeSellOrdersIssuedForCorporation = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is SellOrder && x.IssuedFor == IssuedFor.Corporation);
-            var activeBuyOrdersIssuedForCharacter = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
-            var activeBuyOrdersIssuedForCorporation = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is BuyOrder && x.IssuedFor == IssuedFor.Corporation);
+            IEnumerable<MarketOrder> activeSellOrdersIssuedForCharacter = m_list
+                                        .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                                                    && x is SellOrder && x.IssuedFor == IssuedFor.Character);
+            IEnumerable<MarketOrder> activeSellOrdersIssuedForCorporation = m_list
+                                        .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                                                    && x is SellOrder && x.IssuedFor == IssuedFor.Corporation);
+            IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = m_list
+                                        .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                                                    && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
+            IEnumerable<MarketOrder> activeBuyOrdersIssuedForCorporation = m_list
+                                        .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                                                    && x is BuyOrder && x.IssuedFor == IssuedFor.Corporation);
 
             // Calculate character's max orders
-            m_skillBasedOrders = m_character.Skills[DBConstants.TradeSkillID].LastConfirmedLvl * 4
-                + m_character.Skills[DBConstants.RetailSkillID].LastConfirmedLvl * 8
-                + m_character.Skills[DBConstants.WholesaleSkillID].LastConfirmedLvl * 16
-                + m_character.Skills[DBConstants.TycconSkillID].LastConfirmedLvl * 32;
+            m_skillBasedOrders = Character.Skills[DBConstants.TradeSkillID].LastConfirmedLvl * 4
+                + Character.Skills[DBConstants.RetailSkillID].LastConfirmedLvl * 8
+                + Character.Skills[DBConstants.WholesaleSkillID].LastConfirmedLvl * 16
+                + Character.Skills[DBConstants.TycconSkillID].LastConfirmedLvl * 32;
 
             // Calculate character's base broker fee
-            m_baseBrokerFee = 1 - (m_character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f);
+            m_baseBrokerFee = 1 - (Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f);
 
             // Calculate character's transaction tax
-            m_transactionTax = 1 - (m_character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f);
+            m_transactionTax = 1 - (Character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f);
 
             // Calculate character's ask range
-            m_askRange = m_character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl;
+            m_askRange = Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl;
 
             // Calculate character's bid range
-            m_bidRange = m_character.Skills[DBConstants.ProcurementSkillID].LastConfirmedLvl;
+            m_bidRange = Character.Skills[DBConstants.ProcurementSkillID].LastConfirmedLvl;
 
             // Calculate character's modification range
-            m_modificationRange = m_character.Skills[DBConstants.DaytradingSkillID].LastConfirmedLvl;
+            m_modificationRange = Character.Skills[DBConstants.DaytradingSkillID].LastConfirmedLvl;
 
             // Calculate character's remote bid range
-            m_remoteBidRange = m_character.Skills[DBConstants.VisibilitySkillID].LastConfirmedLvl;
+            m_remoteBidRange = Character.Skills[DBConstants.VisibilitySkillID].LastConfirmedLvl;
 
             // Calculate active sell & buy orders total price (character & corporation issued separately)
             m_sellOrdersIssuedForCharacterTotal = activeSellOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
@@ -1150,6 +1165,8 @@ namespace EVEMon
 
         private void InitializeExpandablePanelControls()
         {
+            marketExpPanelControl.SuspendLayout();
+
             // Add basic labels to panel
             marketExpPanelControl.Controls.AddRange(new Label[]
             { 
@@ -1202,6 +1219,8 @@ namespace EVEMon
             {
                 control.MouseClick += new MouseEventHandler(marketExpPanelControl.expandablePanelControl_MouseClick);
             }
+
+            marketExpPanelControl.ResumeLayout();
         }
 
         #endregion

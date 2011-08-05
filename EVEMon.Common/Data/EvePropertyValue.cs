@@ -20,7 +20,7 @@ namespace EVEMon.Common.Data
         /// <param name="src"></param>
         internal EvePropertyValue(SerializablePropertyValue src)
         {
-            m_property = StaticProperties.GetPropertyById(src.ID);
+            m_property = StaticProperties.GetPropertyByID(src.ID);
             m_value = String.Intern(src.Value);
         }
         

@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<long, StaticCertificate> s_certificatesByID = new Dictionary<long, StaticCertificate>();
 
 
-        #region Initializer
+        #region Initialization
 
         /// <summary>
         /// Initialize static certificates.

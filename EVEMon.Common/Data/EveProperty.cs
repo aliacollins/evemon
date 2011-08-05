@@ -220,7 +220,7 @@ namespace EVEMon.Common.Data
                 }
                 catch
                 {
-                    return "Error";
+                    return "N/A";
                 }
             }
             return value;

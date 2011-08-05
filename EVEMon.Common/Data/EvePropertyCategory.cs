@@ -11,7 +11,7 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor.
         /// </summary>
         /// <param name="serial"></param>
-        internal EvePropertyCategory(SerializablePropertyCategory serial)
+        public EvePropertyCategory(SerializablePropertyCategory serial)
             : base(serial.Properties.Length)
         {
             Name = serial.Name;

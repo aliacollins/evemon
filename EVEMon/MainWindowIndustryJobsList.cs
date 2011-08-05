@@ -21,7 +21,6 @@ namespace EVEMon
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
-        private Character m_character;
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
@@ -73,11 +72,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        public Character Character
-        {
-            get { return m_character; }
-            set { m_character = value; }
-        }
+        public Character Character { get; set; }
         
         /// <summary>
         /// Gets or sets the text filter.
@@ -142,7 +137,7 @@ namespace EVEMon
         {
             get
             {
-                foreach (var job in m_list)
+                foreach (IndustryJob job in m_list)
                 {
                     yield return job;
                 }
@@ -166,10 +161,10 @@ namespace EVEMon
             get 
             { 
                 // Add the visible columns; matching the display order
-                var newColumns = new List<IndustryJobColumnSettings>();
-                foreach (var header in lvJobs.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
+                List<IndustryJobColumnSettings> newColumns = new List<IndustryJobColumnSettings>();
+                foreach (ColumnHeader header in lvJobs.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    var columnSetting = m_columns.First(x => x.Column == (IndustryJobColumn)header.Tag);
+                    IndustryJobColumnSettings columnSetting = m_columns.First(x => x.Column == (IndustryJobColumn)header.Tag);
                     if (columnSetting.Width != -1)
                         columnSetting.Width = header.Width;
 
@@ -177,7 +172,7 @@ namespace EVEMon
                 }
 
                 // Then add the other columns
-                foreach (var column in m_columns.Where(x => !x.Visible))
+                foreach (IndustryJobColumnSettings column in m_columns.Where(x => !x.Visible))
                 {
                     newColumns.Add(column);
                 }
@@ -223,7 +218,7 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted() || m_character == null)
+            if (DesignMode || this.IsDesignModeHosted() || Character == null)
                 return;
 
             base.OnVisibleChanged(e);
@@ -234,10 +229,10 @@ namespace EVEMon
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
-            Grouping = (m_character == null ? IndustryJobGrouping.State : m_character.UISettings.JobsGroupBy);
+            Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
 
             UpdateExpPanelContent();
             UpdateColumns();
@@ -265,9 +260,9 @@ namespace EVEMon
             {
                 lvJobs.Columns.Clear();
 
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (IndustryJobColumnSettings column in m_columns.Where(x => x.Visible))
                 {
-                    var header = lvJobs.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(), column.Width);
+                    ColumnHeader header = lvJobs.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(), column.Width);
                     header.Tag = (object)column.Column;
                 }
 
@@ -275,12 +270,12 @@ namespace EVEMon
                 UpdateContent();
 
                 // Force the auto-resize of the columns with -1 width
-                var resizeStyle = (lvJobs.Items.Count == 0 ?
-                    ColumnHeaderAutoResizeStyle.HeaderSize :
-                    ColumnHeaderAutoResizeStyle.ColumnContent);
+                ColumnHeaderAutoResizeStyle resizeStyle = (lvJobs.Items.Count == 0 ?
+                                                            ColumnHeaderAutoResizeStyle.HeaderSize :
+                                                            ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (IndustryJobColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     if (column.Width == -1)
                         lvJobs.AutoResizeColumn(index, resizeStyle);
@@ -314,10 +309,10 @@ namespace EVEMon
             lvJobs.BeginUpdate();
             try
             {
-                var text = m_textFilter.ToLowerInvariant();
-                var jobs = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
+                string text = m_textFilter.ToLowerInvariant();
+                IEnumerable<IndustryJob> jobs = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
 
-                if (m_character != null && m_hideInactive)
+                if (Character != null && m_hideInactive)
                     jobs = jobs.Where(x => x.IsActive);
 
                 if (m_showIssuedFor != IssuedFor.All)
@@ -328,51 +323,55 @@ namespace EVEMon
                 switch (m_grouping)
                 {
                     case IndustryJobGrouping.State:
-                        var groups0 = jobs.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
+                        IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups0 = jobs.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
                         UpdateContent(groups0);
                         break;
                     case IndustryJobGrouping.StateDesc:
-                        var groups1 = jobs.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
+                        IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups1 = jobs.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
                         UpdateContent(groups1);
                         break;
                     case IndustryJobGrouping.EndDate:
-                        var groups2 = jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 = jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
                         UpdateContent(groups2);
                         break;
                     case IndustryJobGrouping.EndDateDesc:
-                        var groups3 = jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 = jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
                         UpdateContent(groups3);
                         break;
                     case IndustryJobGrouping.InstalledItemType:
-                        var groups4 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath()).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups4 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath())
+                                                                                            .OrderBy(x => x.Key);
                         UpdateContent(groups4);
                         break;
                     case IndustryJobGrouping.InstalledItemTypeDesc:
-                        var groups5 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath()).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups5 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath())
+                                                                                            .OrderByDescending(x => x.Key);
                         UpdateContent(groups5);
                         break;
                     case IndustryJobGrouping.OutputItemType:
-                        var groups6 = jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath()).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups6 = jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath())
+                                                                                            .OrderBy(x => x.Key);
                         UpdateContent(groups6);
                         break;
                     case IndustryJobGrouping.OutputItemTypeDesc:
-                        var groups7 = jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath()).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups7 = jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath())
+                                                                                            .OrderByDescending(x => x.Key);
                         UpdateContent(groups7);
                         break;
                     case IndustryJobGrouping.Activity:
-                        var groups8 = jobs.GroupBy(x => x.Activity.GetDescription()).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups8 = jobs.GroupBy(x => x.Activity.GetDescription()).OrderBy(x => x.Key);
                         UpdateContent(groups8);
                         break;
                     case IndustryJobGrouping.ActivityDesc:
-                        var groups9 = jobs.GroupBy(x => x.Activity.GetDescription()).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups9 = jobs.GroupBy(x => x.Activity.GetDescription()).OrderByDescending(x => x.Key);
                         UpdateContent(groups9);
                         break;
                     case IndustryJobGrouping.Location:
-                        var groups10 = jobs.GroupBy(x => x.Installation).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups10 = jobs.GroupBy(x => x.Installation).OrderBy(x => x.Key);
                         UpdateContent(groups10);
                         break;
                     case IndustryJobGrouping.LocationDesc:
-                        var groups11 = jobs.GroupBy(x => x.Installation).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups11 = jobs.GroupBy(x => x.Installation).OrderByDescending(x => x.Key);
                         UpdateContent(groups11);
                         break;
                 }
@@ -413,7 +412,7 @@ namespace EVEMon
             lvJobs.Groups.Clear();
 
             // Add the groups
-            foreach (var group in groups)
+            foreach (IGrouping<TKey, IndustryJob> group in groups)
             {
                 string groupText = String.Empty;
                 if (group.Key is JobState)
@@ -429,16 +428,16 @@ namespace EVEMon
                     groupText = group.Key.ToString();
                 }
 
-                var listGroup = new ListViewGroup(groupText);
+                ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvJobs.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (var job in group)
+                foreach (IndustryJob job in group)
                 {
                     if (job.InstalledItem == null)
                         continue;
 
-                    var item = new ListViewItem(job.InstalledItem.Name, listGroup);
+                    ListViewItem item = new ListViewItem(job.InstalledItem.Name, listGroup);
                     item.UseItemStyleForSubItems = false;
                     item.Tag = job;
 
@@ -455,8 +454,8 @@ namespace EVEMon
                     // Creates the subitems
                     for (int i = 0; i < lvJobs.Columns.Count; i++)
                     {
-                        var header = lvJobs.Columns[i];
-                        var column = (IndustryJobColumn)header.Tag;
+                        ColumnHeader header = lvJobs.Columns[i];
+                        IndustryJobColumn column = (IndustryJobColumn)header.Tag;
                         SetColumn(job, item.SubItems[i], column);
                     }
 
@@ -472,7 +471,7 @@ namespace EVEMon
         private void UpdateSort()
         {
             lvJobs.ListViewItemSorter = new ListViewItemComparerByTag<IndustryJob>(
-                new IndustryJobComparer(m_sortCriteria, m_sortAscending));
+                                                    new IndustryJobComparer(m_sortCriteria, m_sortAscending));
 
             UpdateSortVisualFeedback();
         }
@@ -484,7 +483,7 @@ namespace EVEMon
         {
             for (int i = 0; i < lvJobs.Columns.Count; i++)
             {
-                var column = (IndustryJobColumn)lvJobs.Columns[i].Tag;
+                IndustryJobColumn column = (IndustryJobColumn)lvJobs.Columns[i].Tag;
                 if (m_sortCriteria == column)
                 {
                     lvJobs.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
@@ -769,7 +768,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void lvJobs_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            var column = (IndustryJobColumn)lvJobs.Columns[e.Column].Tag;
+            IndustryJobColumn column = (IndustryJobColumn)lvJobs.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
             {
                 m_sortAscending = !m_sortAscending;
@@ -803,7 +802,7 @@ namespace EVEMon
                     // Mark as ignored
                     foreach (ListViewItem item in lvJobs.SelectedItems)
                     {
-                        var job = (IndustryJob)item.Tag;
+                        IndustryJob job = (IndustryJob)item.Tag;
                         job.Ignored = true;
                     }
 
@@ -838,7 +837,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveMonClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (e.Character != ccpCharacter)
                 return;
             
@@ -855,7 +854,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            var colIndexTTC = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
+            int colIndexTTC = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
 
             for (int i = 0; i < lvJobs.Items.Count; i++)
             {
@@ -922,7 +921,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateExpPanelContent()
         {
-            if (m_character == null)
+            if (Character == null)
             {
                 industryExpPanelControl.Visible = false;
                 return;
@@ -931,13 +930,21 @@ namespace EVEMon
             if (m_init)
                 industryExpPanelControl.Visible = true;
 
-            // Calculate the related info for the panel
-            CalculatePanelInfo();
+            // Update the Header text of the panel
+            UpdateHeaderText();
 
             // Update the info in the panel
             UpdatePanelInfo();
 
-            // Header text
+            // Force to redraw
+            industryExpPanelControl.Refresh();
+        }
+
+        /// <summary>
+        /// Updates the header text of the panel.
+        /// </summary>
+        private void UpdateHeaderText()
+        {
             int baseJobs = 1;
             int maxManufacturingJobs = baseJobs + m_skillBasedManufacturingJobs;
             int maxResearchingJobs = baseJobs + m_skillBasedResearchingJobs;
@@ -951,12 +958,6 @@ namespace EVEMon
             string researchJobsRemainingText = String.Format(CultureConstants.DefaultCulture,
                 "Researching Jobs Remaining: {0} out of {1} max", remainingResearchingJobs, maxResearchingJobs);
             industryExpPanelControl.HeaderText = String.Format(CultureConstants.DefaultCulture, "{0}{2,5}{1}", manufJobsRemainingText, researchJobsRemainingText, String.Empty);
-
-            // Update label position
-            UpdatePanelControlPosition();
-
-            // Force to redraw
-            industryExpPanelControl.Refresh();
         }
 
         /// <summary>
@@ -964,6 +965,9 @@ namespace EVEMon
         /// </summary>
         private void UpdatePanelInfo()
         {
+            // Calculate the related info for the panel
+            CalculatePanelInfo();
+
             // Update text
             int activeManufacturingJobsCount = m_activeManufJobsIssuedForCharacterCount + m_activeManufJobsIssuedForCorporationCount;
             int activeResearchingJobsCount = m_activeResearchJobsIssuedForCharacterCount + m_activeResearchJobsIssuedForCorporationCount;
@@ -990,6 +994,9 @@ namespace EVEMon
                 CultureConstants.DefaultCulture, "Character Issued: {0}", m_activeResearchJobsIssuedForCharacterCount);
             lblActiveCorpResearchingJobs.Text = String.Format(
                 CultureConstants.DefaultCulture, "Corporation Issued: {0}", m_activeResearchJobsIssuedForCorporationCount);
+
+            // Update label position
+            UpdatePanelControlPosition();
         }
 
         /// <summary>
@@ -997,8 +1004,10 @@ namespace EVEMon
         /// </summary>
         private void UpdatePanelControlPosition()
         {
-            var pad = 5;
-            var height = (industryExpPanelControl.ExpandDirection == Direction.Up ? pad : industryExpPanelControl.HeaderHeight);
+            industryExpPanelControl.SuspendLayout();
+
+            int pad = 5;
+            int height = (industryExpPanelControl.ExpandDirection == Direction.Up ? pad : industryExpPanelControl.HeaderHeight);
 
             lblActiveManufacturingJobs.Location = new Point(5, height);
             lblRemoteManufacturingRange.Location = new Point(lblRemoteManufacturingRange.Location.X, height);
@@ -1043,7 +1052,10 @@ namespace EVEMon
             height += pad;
 
             // Update panel's expanded height
-            industryExpPanelControl.ExpandedHeight = height + (industryExpPanelControl.ExpandDirection == Direction.Up ? industryExpPanelControl.HeaderHeight : pad);
+            industryExpPanelControl.ExpandedHeight = height +
+                (industryExpPanelControl.ExpandDirection == Direction.Up ? industryExpPanelControl.HeaderHeight : pad);
+
+            industryExpPanelControl.ResumeLayout();
         }
 
         /// <summary>
@@ -1051,35 +1063,34 @@ namespace EVEMon
         /// </summary>
         private void CalculatePanelInfo()
         {
-            var activeManufJobsIssuedForCharacter = m_list.Where(x => (x.State == JobState.Active)
-                && x.Activity == BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Character);
-            var activeManufJobsIssuedForCorporation = m_list.Where(x => (x.State == JobState.Active)
-                && x.Activity == BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Corporation);
-            var activeResearchJobsIssuedForCharacter = m_list.Where(x => (x.State == JobState.Active)
-                && x.Activity != BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Character);
-            var activeResearchJobsIssuedForCorporation = m_list.Where(x => (x.State == JobState.Active)
-                && x.Activity != BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Corporation);
+            IEnumerable<IndustryJob> activeManufJobsIssuedForCharacter = m_list.Where(x => (x.State == JobState.Active)
+                                    && x.Activity == BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Character);
+            IEnumerable<IndustryJob> activeManufJobsIssuedForCorporation = m_list.Where(x => (x.State == JobState.Active)
+                                    && x.Activity == BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Corporation);
+            IEnumerable<IndustryJob> activeResearchJobsIssuedForCharacter = m_list.Where(x => (x.State == JobState.Active)
+                                    && x.Activity != BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Character);
+            IEnumerable<IndustryJob> activeResearchJobsIssuedForCorporation = m_list.Where(x => (x.State == JobState.Active)
+                                    && x.Activity != BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Corporation);
             
             // Calculate character's max manufacturing jobs
-            m_skillBasedManufacturingJobs = m_character.Skills[DBConstants.MassProductionSkillID].LastConfirmedLvl
-                + m_character.Skills[DBConstants.AdvancedMassProductionSkillID].LastConfirmedLvl;
+            m_skillBasedManufacturingJobs = Character.Skills[DBConstants.MassProductionSkillID].LastConfirmedLvl
+                + Character.Skills[DBConstants.AdvancedMassProductionSkillID].LastConfirmedLvl;
 
             // Calculate character's max researching jobs
-            m_skillBasedResearchingJobs = m_character.Skills[DBConstants.LaboratoryOperationSkillID].LastConfirmedLvl
-                + m_character.Skills[DBConstants.AdvancedLaboratoryOperationSkillID].LastConfirmedLvl;
+            m_skillBasedResearchingJobs = Character.Skills[DBConstants.LaboratoryOperationSkillID].LastConfirmedLvl
+                + Character.Skills[DBConstants.AdvancedLaboratoryOperationSkillID].LastConfirmedLvl;
 
             // Calculate character's remote manufacturing range
-            m_remoteManufacturingRange = m_character.Skills[DBConstants.SupplyChainManagementSkillID].LastConfirmedLvl;
+            m_remoteManufacturingRange = Character.Skills[DBConstants.SupplyChainManagementSkillID].LastConfirmedLvl;
 
             // Calculate character's remote researching range
-            m_remoteResearchingRange = m_character.Skills[DBConstants.ScientificNetworkingSkillID].LastConfirmedLvl;
+            m_remoteResearchingRange = Character.Skills[DBConstants.ScientificNetworkingSkillID].LastConfirmedLvl;
 
             // Calculate active manufacturing & researching jobs count (character & corporation issued separately)
             m_activeManufJobsIssuedForCharacterCount = activeManufJobsIssuedForCharacter.Count();
             m_activeManufJobsIssuedForCorporationCount = activeManufJobsIssuedForCorporation.Count();
             m_activeResearchJobsIssuedForCharacterCount = activeResearchJobsIssuedForCharacter.Count();
             m_activeResearchJobsIssuedForCorporationCount = activeResearchJobsIssuedForCorporation.Count();
-
         }
 
         # endregion
@@ -1101,6 +1112,8 @@ namespace EVEMon
 
         private void InitializeExpandablePanelControls()
         {
+            industryExpPanelControl.SuspendLayout();
+            
             // Add basic labels to panel
             industryExpPanelControl.Controls.AddRange(new Label[]
             { 
@@ -1138,6 +1151,8 @@ namespace EVEMon
             {
                 control.MouseClick += new MouseEventHandler(industryExpPanelControl.expandablePanelControl_MouseClick);
             }
+
+            industryExpPanelControl.ResumeLayout();
         }
 
         #endregion

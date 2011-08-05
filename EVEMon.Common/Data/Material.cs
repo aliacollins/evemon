@@ -1,4 +1,6 @@
-﻿using EVEMon.Common.Serialization.Datafiles;
+﻿using System.Linq;
+using EVEMon.Common.Serialization.Datafiles;
+using System.Globalization;
 
 namespace EVEMon.Common.Data
 {
@@ -12,10 +14,10 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="src">The SRC.</param>
+        /// <param name="src">The source.</param>
         public Material(SerializableMaterialQuantity src)
         {
-            Product = StaticItems.GetItemByID(src.ID);
+            Item = StaticItems.GetItemByID(src.ID);
             Quantity = src.Quantity;
         }
 
@@ -25,12 +27,12 @@ namespace EVEMon.Common.Data
         # region Public Properties
 
         /// <summary>
-        /// Gets the reprocessing product.
+        /// Gets the reprocessing item.
         /// </summary>
-        public Item Product { get; private set; }
+        public Item Item { get; private set; }
 
         /// <summary>
-        /// Gets the produced quantity.
+        /// Gets the reprocessed quantity.
         /// </summary>
         public int Quantity { get; private set; }
 

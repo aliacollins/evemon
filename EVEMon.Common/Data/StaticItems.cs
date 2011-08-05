@@ -13,9 +13,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<long, Item> s_itemsByID = new Dictionary<long, Item>();
         private static readonly ImplantCollection[] s_implantSlots = new ImplantCollection[10];
 
-        private static bool s_reprocessingInitialized = false;
-
-        #region Initializer
+        #region Initialization
 
         /// <summary>
         /// Initialize static items.
@@ -64,30 +62,6 @@ namespace EVEMon.Common.Data
             {
                 InitializeDictionaries(childGroup);
             }
-        }
-
-        /// <summary>
-        /// Ensures the reprocessing informations have been intialized.
-        /// </summary>
-        internal static bool EnsureReprocessingInitialized()
-        {
-            if (s_reprocessingInitialized)
-                return false;
-
-            ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
-
-            foreach (SerializableItemMaterials itemMaterials in datafile.Items)
-            {
-                // Skip if no materials
-                if (itemMaterials.Materials == null)
-                    continue;
-
-                Item item = s_itemsByID[itemMaterials.ID];
-                item.InitializeReprocessing(itemMaterials.Materials);
-            }
-
-            s_reprocessingInitialized = true;
-            return true;
         }
 
         #endregion

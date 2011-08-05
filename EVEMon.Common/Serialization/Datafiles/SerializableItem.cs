@@ -90,12 +90,5 @@ namespace EVEMon.Common.Serialization.Datafiles
             get;
             set;
         }
-
-        [XmlElement("r")]
-        public SerializableReprocessingMaterial[] Reprocessing
-        {
-            get;
-            set;
-        }
     }
 }

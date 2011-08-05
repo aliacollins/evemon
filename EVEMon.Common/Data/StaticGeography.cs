@@ -15,19 +15,19 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<long, SolarSystem> s_solarSystemsByID = new Dictionary<long, SolarSystem>();
         private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
         private static readonly Dictionary<long, Agent> s_agentsByID = new Dictionary<long, Agent>();
-        private static bool m_initialized = false;
+        private static bool s_initialized;
         
         #endregion
 
 
-        #region Initializer
+        #region Initialization
 
         /// <summary>
         /// Ensures the datafile has been intialized.
         /// </summary>
         public static void EnsureInitialized()
         {
-            if (m_initialized)
+            if (s_initialized)
                 return;
 
             GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Data
             }
 
             // Mark as initialized
-            m_initialized = true;
+            s_initialized = true;
         }
 
         #endregion
