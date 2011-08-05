@@ -13,7 +13,7 @@ namespace EVEMon.Common.Data
     public class Item
     {
         protected readonly FastList<StaticSkillLevel> m_prerequisites;
-        protected readonly FastList<Material> m_reprocessing;
+
 
         #region Constructors
 
@@ -28,7 +28,6 @@ namespace EVEMon.Common.Data
             Name = name;
             Description = "No description.";
 
-            m_reprocessing = new FastList<Material>(0);
             m_prerequisites = new FastList<StaticSkillLevel>(0);
         }
 
@@ -74,7 +73,6 @@ namespace EVEMon.Common.Data
             MetaGroup = src.MetaGroup;
 
             Properties = new EvePropertyCollection(src.Properties);
-            m_reprocessing = new FastList<Material>(0);
 
             // Skills prerequisites
             m_prerequisites = new FastList<StaticSkillLevel>(src.Prereqs != null ? src.Prereqs.Length : 0);
@@ -84,23 +82,6 @@ namespace EVEMon.Common.Data
             foreach (SerializablePrerequisiteSkill prereq in src.Prereqs)
             {
                 m_prerequisites.Add(new StaticSkillLevel(prereq.ID, prereq.Level));
-            }
-        }
-
-        #endregion
-
-
-        #region Internal Initilizators
-
-        /// <summary>
-        /// Initializes the reprocessing informations.
-        /// </summary>
-        /// <param name="srcMaterials"></param>
-        internal void InitializeReprocessing(SerializableMaterialQuantity[] srcMaterials)
-        {
-            foreach (SerializableMaterialQuantity src in srcMaterials)
-            {
-                m_reprocessing.Add(new Material(src));
             }
         }
 
@@ -178,13 +159,21 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
+        /// Gets the reprocessing materials and their quantities.
+        /// </summary>
+        public IEnumerable<Material> ReprocessingMaterials
+        {
+            get { return StaticReprocessing.GetItemMaterialsByID(ID); }
+        }
+
+        /// <summary>
         /// Gets the skill used to reprocess those items.
         /// </summary>
         public StaticSkill ReprocessingSkill
         {
             get
             {
-                Nullable<EvePropertyValue> property = Properties[StaticProperties.GetPropertyById(DBConstants.ReprocessingSkillPropertyID)];
+                Nullable<EvePropertyValue> property = Properties[StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID)];
 
                 // Returns scrap metal processing by default
                 if (property == null)
@@ -193,26 +182,6 @@ namespace EVEMon.Common.Data
                 // Returns the reprocessing skill specified by the property
                 int id = property.Value.IValue;
                 return StaticSkills.GetSkillById(id);
-            }
-        }
-
-        /// <summary>
-        /// Gets the reprocessing materials and their base quantities.
-        /// </summary>
-        public IEnumerable<Material> ReprocessingMaterials
-        {
-            get
-            {
-                StaticItems.EnsureReprocessingInitialized();
-
-                foreach (var material in m_reprocessing)
-                {
-                    yield return material;
-                }
-
-                // Debug : 10 trits and 20 pyerite.
-                yield return new Material(new SerializableMaterialQuantity { ID = 34, Quantity = 10 });
-                yield return new Material(new SerializableMaterialQuantity { ID = 35, Quantity = 20 });
             }
         }
 
@@ -366,6 +335,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

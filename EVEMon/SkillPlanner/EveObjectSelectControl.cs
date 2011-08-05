@@ -212,7 +212,7 @@ namespace EVEMon.SkillPlanner
 
         #region Selected Objects
         /// <summary>
-        /// All the selected objects (through multi-select)
+        /// All the selected objects (through multi-select).
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [DefaultValue(null)]
@@ -223,7 +223,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// The primary selected object
+        /// The primary selected object.
         /// </summary>
         [Browsable(false)]
         public Item SelectedObject
@@ -399,7 +399,7 @@ namespace EVEMon.SkillPlanner
 
         #region Predicates
         /// <summary>
-        /// Filter for all items
+        /// Filter for all items.
         /// </summary>
         /// <param name="eo"></param>
         /// <returns></returns>
@@ -409,7 +409,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Filter for items which can be used (prereqs met)
+        /// Filter for items which can be used (prereqs met).
         /// </summary>
         /// <param name="eo"></param>
         /// <returns></returns>

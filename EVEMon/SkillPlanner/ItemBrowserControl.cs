@@ -6,7 +6,6 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ItemBrowserControl : EveObjectBrowserControl
     {
-
         #region Constructors
 
         /// <summary>
@@ -16,7 +15,8 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             scObjectBrowser.RememberDistanceKey = "ItemBrowser_Left";
-            Initialize(lvItemProperties, itemSelectControl, false);
+            SelectControl = itemSelectControl;
+            PropertiesList = lvItemProperties;
         }
 
         #endregion

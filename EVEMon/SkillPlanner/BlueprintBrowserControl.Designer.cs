@@ -260,7 +260,7 @@ namespace EVEMon.SkillPlanner
             this.lvManufacturing.TabIndex = 0;
             this.lvManufacturing.UseCompatibleStateImageBehavior = false;
             this.lvManufacturing.View = System.Windows.Forms.View.Details;
-            this.lvManufacturing.DoubleClick += new System.EventHandler(this.m_propertiesList_DoubleClick);
+            this.lvManufacturing.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
             // chManufItem
             // 
@@ -311,7 +311,7 @@ namespace EVEMon.SkillPlanner
             this.lvCopying.TabIndex = 1;
             this.lvCopying.UseCompatibleStateImageBehavior = false;
             this.lvCopying.View = System.Windows.Forms.View.Details;
-            this.lvCopying.DoubleClick += new System.EventHandler(this.m_propertiesList_DoubleClick);
+            this.lvCopying.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
             // tpResearchME
             // 
@@ -346,7 +346,7 @@ namespace EVEMon.SkillPlanner
             this.lvResearchME.TabIndex = 1;
             this.lvResearchME.UseCompatibleStateImageBehavior = false;
             this.lvResearchME.View = System.Windows.Forms.View.Details;
-            this.lvResearchME.DoubleClick += new System.EventHandler(this.m_propertiesList_DoubleClick);
+            this.lvResearchME.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
             // lblNoItemME
             // 
@@ -393,7 +393,7 @@ namespace EVEMon.SkillPlanner
             this.lvResearchPE.TabIndex = 1;
             this.lvResearchPE.UseCompatibleStateImageBehavior = false;
             this.lvResearchPE.View = System.Windows.Forms.View.Details;
-            this.lvResearchPE.DoubleClick += new System.EventHandler(this.m_propertiesList_DoubleClick);
+            this.lvResearchPE.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
             // lblNoItemPE
             // 
@@ -439,7 +439,7 @@ namespace EVEMon.SkillPlanner
             this.lvInvention.TabIndex = 2;
             this.lvInvention.UseCompatibleStateImageBehavior = false;
             this.lvInvention.View = System.Windows.Forms.View.Details;
-            this.lvInvention.DoubleClick += new System.EventHandler(this.m_propertiesList_DoubleClick);
+            this.lvInvention.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
             // tpResearching
             // 

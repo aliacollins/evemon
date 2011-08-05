@@ -8,6 +8,8 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ShipBrowserControl : EveObjectBrowserControl
     {
+        #region Constructors
+        
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -15,16 +17,22 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             scObjectBrowser.RememberDistanceKey = "ShipsBrowser_Left";
-            Initialize(lvShipProperties, shipSelectControl, true);
+            SelectControl = shipSelectControl;
+            PropertiesList = lvShipProperties;
         }
 
+        #endregion
+
+
         #region Event Handlers
+
         /// <summary>
         /// Opens the BattleClinic Loadout window.
         /// </summary>
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var window = WindowsFactory<ShipLoadoutSelectWindow>.ShowUnique(() => new ShipLoadoutSelectWindow(SelectedObject as Item, Plan));
+            ShipLoadoutSelectWindow window = WindowsFactory<ShipLoadoutSelectWindow>.ShowUnique(
+                                            () => new ShipLoadoutSelectWindow(SelectedObject as Item, Plan));
         }
 
         /// <summary>
@@ -34,9 +42,12 @@ namespace EVEMon.SkillPlanner
         {
             ListViewExporter.CreateCSV(lvShipProperties);
         }
+
         #endregion
 
+
         #region Methods
+
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
@@ -57,7 +68,7 @@ namespace EVEMon.SkillPlanner
             // Required Skills
             requiredSkillsControl.Object = SelectedObject;
 
-            var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
+            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
             if (loadoutSelect != null)
                 loadoutSelect.Ship = (Item)shipSelectControl.SelectedObject;
         }
@@ -77,6 +88,7 @@ namespace EVEMon.SkillPlanner
             scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth ?
                                          reqSkillPanelMinWidth : reqSkillControlMinWidth);
         }
+
         #endregion
     }
 }

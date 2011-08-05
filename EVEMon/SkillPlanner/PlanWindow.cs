@@ -183,7 +183,7 @@ namespace EVEMon.SkillPlanner
                 skillBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
-                var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
+                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
 
                 if (loadoutSelect != null)
                     loadoutSelect.Plan = m_plan;

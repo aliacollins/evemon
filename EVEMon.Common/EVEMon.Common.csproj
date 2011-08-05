@@ -84,6 +84,7 @@
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
+    <Compile Include="Data\StaticReprocessing.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
@@ -150,7 +151,6 @@
     <Compile Include="Serialization\Datafiles\SerializablePropertyCategory.cs" />
     <Compile Include="Serialization\Datafiles\SerializablePropertyValue.cs" />
     <Compile Include="Serialization\Datafiles\SerializableRegion.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableReprocessingMaterial.cs" />
     <Compile Include="Serialization\Datafiles\SerializableRequiredMaterial.cs" />
     <Compile Include="Serialization\Datafiles\SerializableSkill.cs" />
     <Compile Include="Serialization\Datafiles\SerializableSkillGroup.cs" />

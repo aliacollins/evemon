@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using EVEMon.Common;
 using EVEMon.Common.Data;
+using EVEMon.Controls;
 
 namespace EVEMon.SkillPlanner
 {
@@ -21,11 +22,7 @@ namespace EVEMon.SkillPlanner
     /// try to design a class that inherits from an abstract class.</remarks>
     public partial class EveObjectBrowserControl : UserControl
     {
-        private bool m_forceShipsPropertyToBeVisible;
-        private EveObjectSelectControl m_selectControl;
-
         protected Plan m_plan;
-        protected ListView m_propertiesList;
 
         #region Initialization
 
@@ -39,28 +36,15 @@ namespace EVEMon.SkillPlanner
 
 
         /// <summary>
-        /// Unsubscribe events on disposing
+        /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            m_selectControl.SelectionChanged -= OnSelectionChanged;
+            SelectControl.SelectionChanged -= OnSelectionChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
-        }
-
-
-        /// <summary>
-        /// Used to complete the control's intialization before <see cref="OnLoad"/>.
-        /// </summary>
-        /// <param name="propertiesList"></param>
-        /// <param name="selectControl"></param>
-        protected void Initialize(ListView propertiesList, EveObjectSelectControl selectControl, bool forceShipsPropertyToBeVisible)
-        {
-            m_selectControl = selectControl;
-            m_propertiesList = propertiesList;
-            m_forceShipsPropertyToBeVisible = forceShipsPropertyToBeVisible;
         }
 
         /// <summary>
@@ -73,16 +57,18 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            ListViewHelper.EnableDoubleBuffer(PropertiesList);
+
             lblEveObjName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             
             // Watch for selection changes
-            m_selectControl.SelectionChanged += OnSelectionChanged;
+            SelectControl.SelectionChanged += OnSelectionChanged;
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
-            Control[] result = m_selectControl.Controls.Find("lowerPanel", true);
+            Control[] result = SelectControl.Controls.Find("lowerPanel", true);
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
@@ -114,8 +100,8 @@ namespace EVEMon.SkillPlanner
             else
             {
                 eoImage.ImageSize = EveImageSize.x64;
-                if (m_selectControl.SelectedObject != null)
-                    eoImage.EveItem = m_selectControl.SelectedObject;
+                if (SelectControl.SelectedObject != null)
+                    eoImage.EveItem = SelectControl.SelectedObject;
 
                 lblEveObjCategory.Location = new Point(70, lblEveObjCategory.Location.Y);
                 lblEveObjName.Location = new Point(70, lblEveObjName.Location.Y);
@@ -136,10 +122,49 @@ namespace EVEMon.SkillPlanner
             set
             {
                 m_plan = value;
-                m_selectControl.Plan = value;
+                SelectControl.Plan = value;
                 OnPlanChanged();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the currently selected object.
+        /// </summary>
+        [Browsable(false)]
+        public Item SelectedObject
+        {
+            get
+            {
+                if (SelectControl == null)
+                    return null;
+
+                return SelectControl.SelectedObject;
+            }
+            set
+            {
+                if (SelectControl == null)
+                    return;
+
+                SelectControl.SelectedObject = value;
+            }
+        }
+
+        #endregion
+
+
+        #region Protected Properties
+
+        /// <summary>
+        /// Gets or sets the select control.
+        /// </summary>
+        /// <value>The select control.</value>
+        protected EveObjectSelectControl SelectControl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the properties list.
+        /// </summary>
+        /// <value>The properties list.</value>
+        protected ListView PropertiesList { get; set; }
 
         #endregion
 
@@ -156,27 +181,6 @@ namespace EVEMon.SkillPlanner
 
 
         #region Selection management
-        /// <summary>
-        /// Gets or sets the currently selected object.
-        /// </summary>
-        [Browsable(false)]
-        public Item SelectedObject
-        {
-            get 
-            {
-                if (m_selectControl == null) 
-                    return null;
-
-                return m_selectControl.SelectedObject; 
-            }
-            set 
-            {
-                if (m_selectControl == null) 
-                    return;
-
-                m_selectControl.SelectedObject = value; 
-            }
-        }
 
         /// <summary>
         /// Updates the controls when the selection is changed.
@@ -186,7 +190,7 @@ namespace EVEMon.SkillPlanner
         protected virtual void OnSelectionChanged(object sender, EventArgs e)
         {
             // Updates the header and the panels visibility.
-            var firstSelected = m_selectControl.SelectedObject;
+            var firstSelected = SelectControl.SelectedObject;
             if (firstSelected == null)
             {
                 // Hide details and header
@@ -197,7 +201,7 @@ namespace EVEMon.SkillPlanner
                 lblHelp.Visible = true;
 
                 // Listview
-                m_propertiesList.Items.Clear();
+                PropertiesList.Items.Clear();
 
                 // Done
                 return;
@@ -216,7 +220,7 @@ namespace EVEMon.SkillPlanner
             lblEveObjCategory.Text = firstSelected.GetCategoryPath();
 
             // Stop here if it's the blueprint tab
-            if (m_selectControl is BlueprintSelectControl)
+            if (SelectControl is BlueprintSelectControl)
                 return;
             
             // Fill the list view
@@ -229,28 +233,28 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePropertiesList()
         {
-            m_propertiesList.BeginUpdate();
+            PropertiesList.BeginUpdate();
             try
             {
                 // Refresh columns
-                m_propertiesList.Columns.Clear();
-                m_propertiesList.Columns.Add("Attribute");
-                foreach(Item obj in m_selectControl.SelectedObjects)
+                PropertiesList.Columns.Clear();
+                PropertiesList.Columns.Add("Attribute");
+                foreach (Item obj in SelectControl.SelectedObjects)
                 {
-                    m_propertiesList.Columns.Add(obj.Name);
+                    PropertiesList.Columns.Add(obj.Name);
                 }
 
                 // Prepare properties list
                 List<ListViewItem> items = AddPropertyGroups();
 
                 // Fetch the new items to the list view
-                m_propertiesList.Items.Clear();
-                m_propertiesList.Items.AddRange(items.ToArray());
-                m_propertiesList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                PropertiesList.Items.Clear();
+                PropertiesList.Items.AddRange(items.ToArray());
+                PropertiesList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             }
             finally
             {
-                m_propertiesList.EndUpdate();
+                PropertiesList.EndUpdate();
             }
         }
 
@@ -260,7 +264,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private List<ListViewItem> AddPropertyGroups()
         {
-            m_propertiesList.Groups.Clear();
+            PropertiesList.Groups.Clear();
             List<ListViewItem> items = new List<ListViewItem>();
             foreach (EvePropertyCategory category in StaticProperties.AllCategories)
             {
@@ -273,16 +277,16 @@ namespace EVEMon.SkillPlanner
                     bool visibleProperty = false;
 
                     // Some properties should be always visible (fitting, shields resists, etc)
-                    if (m_forceShipsPropertyToBeVisible)
+                    if (this is ShipBrowserControl)
                         visibleProperty = prop.AlwaysVisibleForShips;
 
                     // Or we check whether any object has this property
                     if (!visibleProperty)
-                        visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
+                        visibleProperty = SelectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
 
                     // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
                     if (prop.HideIfDefault)
-                        visibleProperty = m_selectControl.SelectedObjects
+                        visibleProperty = SelectControl.SelectedObjects
                             .Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
 
                     // Jump to next property if not visible
@@ -296,35 +300,32 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Check if the objects belong to an item family that has fitting slot property 
-                if (m_selectControl.SelectedObjects.Any(x => x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone))
-                    AddFittingSlotProperty(items, category, group);
+                if (category.Name == "General" && 
+                    SelectControl.SelectedObjects.Any(x => (x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone) &&
+                                                            x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
+                    AddFittingSlotProperty(items, group);
 
                 // Add properties
                 if (hasProps)
-                    m_propertiesList.Groups.Add(group);
+                    PropertiesList.Groups.Add(group);
             }
+
+            // Add the reprocessing-refining info 
+            AddReprocessingInfo(items);
+
             return items;
         }
 
         /// <summary>
         /// Adds the property value.
         /// </summary>
-        /// <param name="items">The items.</param>
-        /// <param name="group">The group.</param>
-        /// <param name="prop">The prop.</param>
+        /// <param name="items">The list of items.</param>
+        /// <param name="group">The listGroup.</param>
+        /// <param name="prop">The property.</param>
         private void AddPropertyValue(List<ListViewItem> items, ListViewGroup group, EveProperty prop)
         {
-            string[] labels = m_selectControl.SelectedObjects.Select(x => prop.GetLabelOrDefault(x)).ToArray();
-            float[] values = m_selectControl.SelectedObjects.Select(x => prop.GetNumericValue(x)).ToArray();
-            float min = values.Min();
-            float max = values.Max();
-            bool allEqual = values.All(x => x == min);
-            if (!prop.HigherIsBetter)
-            {
-                var temp = min;
-                min = max;
-                max = temp;
-            }
+            string[] labels = SelectControl.SelectedObjects.Select(x => prop.GetLabelOrDefault(x)).ToArray();
+            float[] values = SelectControl.SelectedObjects.Select(x => prop.GetNumericValue(x)).ToArray();
 
             // Create the list view item
             ListViewItem item = new ListViewItem(group);
@@ -332,9 +333,30 @@ namespace EVEMon.SkillPlanner
             item.Text = prop.Name;
             items.Add(item);
 
+            AddValueForSelectedObjects(prop, item, labels, values);
+        }
+
+        /// <summary>
+        /// Adds the value for selected objects.
+        /// </summary>
+        /// <param name="obj">The evaluated object.</param>
+        /// <param name="items">The list of items.</param>
+        /// <param name="labels">The labels.</param>
+        /// <param name="values">The values.</param>
+        private void AddValueForSelectedObjects(Object obj, ListViewItem item, string[] labels, float[] values)
+        {
+            float min = values.Min();
+            float max = values.Max();
+            bool allEqual = values.All(x => x == min);
+            if (obj is EveProperty && !((EveProperty)obj).HigherIsBetter)
+            {
+                float temp = min;
+                min = max;
+                max = temp;
+            }
+
             // Add the value for every selected item
-            int index = 0;
-            foreach (Item obj in m_selectControl.SelectedObjects)
+            for (int index = 0; index < SelectControl.SelectedObjects.Count; index++)
             {
                 // Create the subitem and choose its forecolor
                 ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
@@ -351,43 +373,110 @@ namespace EVEMon.SkillPlanner
 
                     item.UseItemStyleForSubItems = false;
                 }
-                else if (m_selectControl.SelectedObjects.Count > 1)
+                else if (SelectControl.SelectedObjects.Count > 1)
                 {
                     subItem.ForeColor = Color.DarkGray;
                     item.UseItemStyleForSubItems = false;
                 }
 
                 item.SubItems.Add(subItem);
-                index++;
             }
         }
 
-        private void AddFittingSlotProperty(List<ListViewItem> items, EvePropertyCategory category, ListViewGroup group)
+        /// <summary>
+        /// Adds the fitting slot property.
+        /// </summary>
+        /// <param name="items">The list of items.</param>
+        /// <param name="group">The listGroup.</param>
+        private void AddFittingSlotProperty(List<ListViewItem> items, ListViewGroup group)
         {
+            string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
+
             // Create the list view item
             ListViewItem item = new ListViewItem(group);
-            string[] labels = m_selectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
-            if (category.Name == "General" &&
-                m_selectControl.SelectedObjects.Any(x => x.FittingSlot != ItemSlot.None &&
-                                                    x.FittingSlot != ItemSlot.Empty))
-            {
-                item.ToolTipText = "The slot that this item fits in";
-                item.Text = "Fitting Slot";
-                items.Add(item);
-            }
+            item.ToolTipText = "The slot that this item fits in";
+            item.Text = "Fitting Slot";
+            items.Add(item);
 
             // Add the value for every selected item
-            int index = 0;
-            foreach (Item obj in m_selectControl.SelectedObjects)
+            for (int index = 0; index < SelectControl.SelectedObjects.Count; index++)
             {
                 // Create the subitem and choose its forecolor
                 ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
-                subItem.ForeColor = m_selectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
+                subItem.ForeColor = SelectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
                 item.UseItemStyleForSubItems = false;
 
                 item.SubItems.Add(subItem);
-                index++;
             }
+        }
+
+        /// <summary>
+        /// Adds the reprocessing info.
+        /// </summary>
+        /// <param name="items">The list of items.</param>
+        private void AddReprocessingInfo(List<ListViewItem> items)
+        {
+            if (SelectControl.SelectedObjects.All(x => x.ReprocessingMaterials == null))
+                return;
+
+            string groupName = "Reprocessing - Refining Info";
+
+            if (SelectControl.SelectedObjects.All(x => x.ReprocessingSkill.ID != DBConstants.ScrapMetalProcessingSkillID))
+                groupName = "Refining Info";
+
+            if (SelectControl.SelectedObjects.All(x => x.ReprocessingSkill.ID == DBConstants.ScrapMetalProcessingSkillID))
+                groupName = "Reprocessing Info";
+
+            ListViewGroup group = new ListViewGroup(groupName);
+
+            IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects
+                                                            .Where(x => x.ReprocessingMaterials != null)
+                                                            .SelectMany(x => x.ReprocessingMaterials);
+
+            foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
+            {
+                if (!reprocessingMaterials.Any(x => x.Item == item))
+                    continue;
+
+                // Create the list of reprocessing materials we need to scroll through
+                List<Material> materials = new List<Material>();
+                foreach (Item obj in SelectControl.SelectedObjects)
+                {
+                    // Compansate for missing entries
+                    if (obj.ReprocessingMaterials == null)
+                    {
+                        materials.Add(null);
+                        continue;
+                    }
+                    materials.Add(obj.ReprocessingMaterials.FirstOrDefault(y => y.Item == item));
+                }
+               
+                // Create the list of labels and values
+                List<string> labels = new List<string>();
+                List<float> values = new List<float>();
+                foreach (Material material in materials)
+                {
+                    // Add default labels and values for non existing materials
+                    if (material == null)
+                    {
+                        labels.Add("0");
+                        values.Add(0f);
+                        continue;
+                    }
+                    labels.Add(material.Quantity.ToString("#,###0"));
+                    values.Add(material.Quantity);
+                }
+
+                // Create the list view item
+                ListViewItem lvItem = new ListViewItem(group);
+                lvItem.ToolTipText = item.Description;
+                lvItem.Text = item.Name;
+                items.Add(lvItem);
+
+                AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
+            }
+
+            PropertiesList.Groups.Add(group);
         }
 
         #endregion

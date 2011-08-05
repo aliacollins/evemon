@@ -32,8 +32,8 @@ namespace EVEMon.SkillPlanner
             this.lblBattleclinic = new System.Windows.Forms.LinkLabel();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.lvShipProperties = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.chAttribute = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ShipPropertiesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
@@ -42,26 +42,45 @@ namespace EVEMon.SkillPlanner
             this.recommendedCertificatesControl = new EVEMon.SkillPlanner.RecommendedCertificatesControl();
             this.gbRequiredSkills = new System.Windows.Forms.GroupBox();
             this.requiredSkillsControl = new EVEMon.SkillPlanner.RequiredSkillsControl();
-            this.scDetailsRight.Panel1.SuspendLayout();
-            this.scDetailsRight.Panel2.SuspendLayout();
-            this.scDetailsRight.SuspendLayout();
-            this.scDetails.Panel1.SuspendLayout();
-            this.scDetails.Panel2.SuspendLayout();
-            this.scDetails.SuspendLayout();
-            this.gbDescription.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
             this.scObjectBrowser.SuspendLayout();
             this.pnlDetails.SuspendLayout();
             this.pnlBrowserHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scDetailsRight)).BeginInit();
+            this.scDetailsRight.Panel1.SuspendLayout();
+            this.scDetailsRight.Panel2.SuspendLayout();
+            this.scDetailsRight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scDetails)).BeginInit();
+            this.scDetails.Panel1.SuspendLayout();
+            this.scDetails.Panel2.SuspendLayout();
+            this.scDetails.SuspendLayout();
+            this.gbDescription.SuspendLayout();
             this.gbAttributes.SuspendLayout();
             this.ShipPropertiesContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scDetailsLowerRight)).BeginInit();
             this.scDetailsLowerRight.Panel1.SuspendLayout();
             this.scDetailsLowerRight.Panel2.SuspendLayout();
             this.scDetailsLowerRight.SuspendLayout();
             this.gbRecommendedCert.SuspendLayout();
             this.gbRequiredSkills.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // scObjectBrowser
+            // 
+            // 
+            // scObjectBrowser.Panel1
+            // 
+            this.scObjectBrowser.Panel1.Controls.Add(this.shipSelectControl);
+            // 
+            // pnlBrowserHeader
+            // 
+            this.pnlBrowserHeader.Controls.Add(this.lblBattleclinic);
+            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblEveObjName, 0);
+            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblBattleclinic, 0);
+            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblEveObjCategory, 0);
+            this.pnlBrowserHeader.Controls.SetChildIndex(this.eoImage, 0);
             // 
             // scDetailsRight
             // 
@@ -87,27 +106,12 @@ namespace EVEMon.SkillPlanner
             // 
             this.tbDescription.Size = new System.Drawing.Size(234, 92);
             // 
-            // scObjectBrowser
-            // 
-            // 
-            // scObjectBrowser.Panel1
-            // 
-            this.scObjectBrowser.Panel1.Controls.Add(this.shipSelectControl);
-            // 
-            // pnlBrowserHeader
-            // 
-            this.pnlBrowserHeader.Controls.Add(this.lblBattleclinic);
-            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblEveObjName, 0);
-            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblBattleclinic, 0);
-            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblEveObjCategory, 0);
-            this.pnlBrowserHeader.Controls.SetChildIndex(this.eoImage, 0);
-            // 
             // lblBattleclinic
             // 
             this.lblBattleclinic.AutoSize = true;
             this.lblBattleclinic.Location = new System.Drawing.Point(70, 54);
             this.lblBattleclinic.Name = "lblBattleclinic";
-            this.lblBattleclinic.Size = new System.Drawing.Size(101, 13);
+            this.lblBattleclinic.Size = new System.Drawing.Size(102, 13);
             this.lblBattleclinic.TabIndex = 11;
             this.lblBattleclinic.TabStop = true;
             this.lblBattleclinic.Text = "BattleClinic loadouts";
@@ -127,8 +131,8 @@ namespace EVEMon.SkillPlanner
             // lvShipProperties
             // 
             this.lvShipProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
+            this.chAttribute,
+            this.chValue});
             this.lvShipProperties.ContextMenuStrip = this.ShipPropertiesContextMenu;
             this.lvShipProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvShipProperties.FullRowSelect = true;
@@ -139,15 +143,15 @@ namespace EVEMon.SkillPlanner
             this.lvShipProperties.UseCompatibleStateImageBehavior = false;
             this.lvShipProperties.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader1
+            // chAttribute
             // 
-            this.columnHeader1.Text = "Attribute";
-            this.columnHeader1.Width = 200;
+            this.chAttribute.Text = "Attribute";
+            this.chAttribute.Width = 120;
             // 
-            // columnHeader2
+            // chValue
             // 
-            this.columnHeader2.Text = "Value";
-            this.columnHeader2.Width = 140;
+            this.chValue.Text = "Value";
+            this.chValue.Width = 120;
             // 
             // ShipPropertiesContextMenu
             // 
@@ -232,6 +236,7 @@ namespace EVEMon.SkillPlanner
             // 
             // requiredSkillsControl
             // 
+            this.requiredSkillsControl.Activity = EVEMon.Common.BlueprintActivity.None;
             this.requiredSkillsControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.requiredSkillsControl.Location = new System.Drawing.Point(3, 16);
             this.requiredSkillsControl.MinimumSize = new System.Drawing.Size(187, 0);
@@ -247,25 +252,29 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "ShipBrowserControl";
             this.Controls.SetChildIndex(this.scObjectBrowser, 0);
-            this.scDetailsRight.Panel1.ResumeLayout(false);
-            this.scDetailsRight.Panel2.ResumeLayout(false);
-            this.scDetailsRight.ResumeLayout(false);
-            this.scDetails.Panel1.ResumeLayout(false);
-            this.scDetails.Panel2.ResumeLayout(false);
-            this.scDetails.ResumeLayout(false);
-            this.gbDescription.ResumeLayout(false);
             this.scObjectBrowser.Panel1.ResumeLayout(false);
             this.scObjectBrowser.Panel1.PerformLayout();
             this.scObjectBrowser.Panel2.ResumeLayout(false);
             this.scObjectBrowser.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).EndInit();
             this.scObjectBrowser.ResumeLayout(false);
             this.pnlDetails.ResumeLayout(false);
             this.pnlBrowserHeader.ResumeLayout(false);
             this.pnlBrowserHeader.PerformLayout();
+            this.scDetailsRight.Panel1.ResumeLayout(false);
+            this.scDetailsRight.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scDetailsRight)).EndInit();
+            this.scDetailsRight.ResumeLayout(false);
+            this.scDetails.Panel1.ResumeLayout(false);
+            this.scDetails.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scDetails)).EndInit();
+            this.scDetails.ResumeLayout(false);
+            this.gbDescription.ResumeLayout(false);
             this.gbAttributes.ResumeLayout(false);
             this.ShipPropertiesContextMenu.ResumeLayout(false);
             this.scDetailsLowerRight.Panel1.ResumeLayout(false);
             this.scDetailsLowerRight.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scDetailsLowerRight)).EndInit();
             this.scDetailsLowerRight.ResumeLayout(false);
             this.gbRecommendedCert.ResumeLayout(false);
             this.gbRequiredSkills.ResumeLayout(false);
@@ -276,8 +285,8 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private System.Windows.Forms.ListView lvShipProperties;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader chAttribute;
+        private System.Windows.Forms.ColumnHeader chValue;
         private ShipSelectControl shipSelectControl;
         private System.Windows.Forms.GroupBox gbAttributes;
         private System.Windows.Forms.LinkLabel lblBattleclinic;
