@@ -240,12 +240,12 @@ namespace EVEMon
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
 
-            UpdateExpPanelContent();
             UpdateColumns();
 
             m_init = true;
 
             UpdateContent();
+            UpdateExpPanelContent();
         }
 
         # endregion

@@ -234,12 +234,12 @@ namespace EVEMon
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
 
-            UpdateExpPanelContent();
             UpdateColumns();
 
             m_init = true;
 
             UpdateContent();
+            UpdateExpPanelContent();
         }
 
         # endregion
