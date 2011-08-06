@@ -10,17 +10,54 @@ namespace EVEMon.Common.Data
     {
         private static readonly Dictionary<long, Blueprint> s_blueprintsByID = new Dictionary<long, Blueprint>();
         private static readonly Dictionary<int, BlueprintActivity> s_activityByID = new Dictionary<int, BlueprintActivity>();
+
+
+        #region Initialization
+
+        /// <summary>
+        /// Initialize static blueprints.
+        /// </summary>
+        internal static void Load()
+        {
+            if (BlueprintMarketGroups != null)
+                return;
+            
+            BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
+
+            BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
+
+            foreach (BlueprintMarketGroup srcGroup in BlueprintMarketGroups)
+            {
+                InitializeDictionaries(srcGroup);
+            }
+        }
+
+        /// <summary>
+        /// Recursively collect the blueprints within all groups and stores them in the dictionaries.
+        /// </summary>
+        /// <param name="marketGroup"></param>
+        private static void InitializeDictionaries(BlueprintMarketGroup marketGroup)
+        {
+            foreach (Blueprint blueprint in marketGroup.Blueprints)
+            {
+                s_blueprintsByID[blueprint.ID] = blueprint;
+            }
+
+            foreach (BlueprintMarketGroup childGroup in marketGroup.SubGroups)
+            {
+                InitializeDictionaries(childGroup);
+            }
+        }
+
+        #endregion
+
         
         #region Public Properties
 
         /// <summary>
         /// Gets the root category, containing all the top level categories
         /// </summary>
-        public static BlueprintMarketGroupCollection BlueprintMarketGroups
-        {
-            get;
-            private set;
-        }
+        public static BlueprintMarketGroupCollection BlueprintMarketGroups { get; private set; }
 
         /// <summary>
         /// Gets the collection of all the blueprints in this category and its descendants.
@@ -68,46 +105,6 @@ namespace EVEMon.Common.Data
                     return item;
             }
             return null;
-        }
-
-        #endregion
-
-
-        #region Initializers
-
-        /// <summary>
-        /// Initialize static blueprints.
-        /// </summary>
-        internal static void Load()
-        {
-            if (BlueprintMarketGroups != null)
-                return;
-            
-            BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
-
-            BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
-
-            foreach (BlueprintMarketGroup srcGroup in BlueprintMarketGroups)
-            {
-                InitializeDictionaries(srcGroup);
-            }
-        }
-
-        /// <summary>
-        /// Recursively collect the blueprints within all groups and stores them in the dictionaries.
-        /// </summary>
-        /// <param name="marketGroup"></param>
-        private static void InitializeDictionaries(BlueprintMarketGroup marketGroup)
-        {
-            foreach (Blueprint blueprint in marketGroup.Blueprints)
-            {
-                s_blueprintsByID[blueprint.ID] = blueprint;
-            }
-
-            foreach (BlueprintMarketGroup childGroup in marketGroup.SubGroups)
-            {
-                InitializeDictionaries(childGroup);
-            }
         }
 
         #endregion

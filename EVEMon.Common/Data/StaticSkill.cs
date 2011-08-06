@@ -39,7 +39,7 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Initializer
+        #region Initialization
 
         /// <summary>
         /// Completes the initialization by updating the prequisites and checking trainability on trial account.

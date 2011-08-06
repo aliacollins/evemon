@@ -10,11 +10,11 @@ namespace EVEMon.Common.Data
     {
         private static int m_arrayIndicesCount;
         private static StaticSkill[] m_skills;
-        private static readonly Dictionary<long, StaticSkill> m_skillsById = new Dictionary<long, StaticSkill>();
+        private static readonly Dictionary<long, StaticSkill> m_skillsByID = new Dictionary<long, StaticSkill>();
         private static readonly Dictionary<string, StaticSkill> m_skillsByName = new Dictionary<string, StaticSkill>();
-        private static readonly Dictionary<long, StaticSkillGroup> m_allGroupsById = new Dictionary<long, StaticSkillGroup>();
+        private static readonly Dictionary<long, StaticSkillGroup> m_skillGroupsByID = new Dictionary<long, StaticSkillGroup>();
 
-        #region Initializers
+        #region Initialization
 
         /// <summary>
         /// Initialize static skills.
@@ -29,12 +29,12 @@ namespace EVEMon.Common.Data
             foreach (var srcGroup in datafile.Groups)
             {
                 StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref m_arrayIndicesCount);
-                m_allGroupsById[group.ID] = group;
+                m_skillGroupsByID[group.ID] = group;
 
                 // Store skills
                 foreach (StaticSkill skill in group)
                 {
-                    m_skillsById[skill.ID] = skill;
+                    m_skillsByID[skill.ID] = skill;
                     m_skillsByName[skill.Name] = skill;
                 }
 
@@ -47,7 +47,7 @@ namespace EVEMon.Common.Data
 
             // Complete initialization
             m_skills = new StaticSkill[m_arrayIndicesCount];
-            foreach (StaticSkill staticSkill in m_skillsById.Values)
+            foreach (StaticSkill staticSkill in m_skillsByID.Values)
             {
                 staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
                 m_skills[staticSkill.ArrayIndex] = staticSkill;
@@ -74,7 +74,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (StaticSkillGroup group in m_allGroupsById.Values)
+                foreach (StaticSkillGroup group in m_skillGroupsByID.Values)
                 {
                     yield return group;
                 }
@@ -88,7 +88,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (StaticSkillGroup group in m_allGroupsById.Values)
+                foreach (StaticSkillGroup group in m_skillGroupsByID.Values)
                 {
                     foreach (StaticSkill skill in group)
                     {
@@ -114,7 +114,7 @@ namespace EVEMon.Common.Data
         /// </remarks>
         public static StaticSkill GetSkill(this SerializableSkillPrerequisite src)
         {
-            StaticSkill skill = GetSkillById(src.ID);
+            StaticSkill skill = GetSkillByID(src.ID);
 
             if (skill == null)
                 skill = GetSkillByName(src.Name);
@@ -132,7 +132,7 @@ namespace EVEMon.Common.Data
             if (id == 0)
                 return string.Empty;
 
-            StaticSkill skill = StaticSkills.GetSkillById(id);
+            StaticSkill skill = StaticSkills.GetSkillByID(id);
             return (skill != null ? skill.Name : "Unknown");
         }
 
@@ -153,10 +153,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticSkill GetSkillById(long id)
+        public static StaticSkill GetSkillByID(long id)
         {
             StaticSkill skill = null;
-            m_skillsById.TryGetValue(id, out skill);
+            m_skillsByID.TryGetValue(id, out skill);
             return skill;
         }
 
@@ -175,10 +175,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static StaticSkillGroup GetGroupByID(int groupId)
+        public static StaticSkillGroup GetSkillGroupByID(int groupId)
         {
             StaticSkillGroup group = null;
-            m_allGroupsById.TryGetValue(groupId, out group);
+            m_skillGroupsByID.TryGetValue(groupId, out group);
             return group;
         }
 

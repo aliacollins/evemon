@@ -235,7 +235,7 @@ namespace EVEMon.Common
         public static StaticSkill GetSkill(SerializablePlanEntry serial)
         {
             // Try get skill by its ID
-            StaticSkill skill = StaticSkills.GetSkillById(serial.ID);
+            StaticSkill skill = StaticSkills.GetSkillByID(serial.ID);
 
             // We failed? Try get skill by its name
             if (skill == null)

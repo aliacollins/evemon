@@ -385,7 +385,7 @@ namespace EVEMon.BlankCharacter
 
             foreach (var raceSkill in startingSkills)
             {
-                var staticSkill = StaticSkills.GetSkillById(raceSkill.Key);
+                var staticSkill = StaticSkills.GetSkillByID(raceSkill.Key);
                 if (staticSkill == null)
                     continue;
 
@@ -393,8 +393,8 @@ namespace EVEMon.BlankCharacter
                 {
                     ID = raceSkill.Key,
                     Level = raceSkill.Value,
-                    Name = StaticSkills.GetSkillById(raceSkill.Key).Name,
-                    Skillpoints = StaticSkills.GetSkillById(raceSkill.Key).GetPointsRequiredForLevel(raceSkill.Value),
+                    Name = StaticSkills.GetSkillByID(raceSkill.Key).Name,
+                    Skillpoints = StaticSkills.GetSkillByID(raceSkill.Key).GetPointsRequiredForLevel(raceSkill.Value),
                     IsKnown = true,
                     OwnsBook = false,
                 };

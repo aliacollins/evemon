@@ -177,11 +177,11 @@ namespace EVEMon.Common.Data
 
                 // Returns scrap metal processing by default
                 if (property == null)
-                    return StaticSkills.GetSkillById(DBConstants.ScrapMetalProcessingSkillID);
+                    return StaticSkills.GetSkillByID(DBConstants.ScrapMetalProcessingSkillID);
 
                 // Returns the reprocessing skill specified by the property
                 int id = property.Value.IValue;
-                return StaticSkills.GetSkillById(id);
+                return StaticSkills.GetSkillByID(id);
             }
         }
 

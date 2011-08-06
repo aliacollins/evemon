@@ -13,6 +13,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<long, Item> s_itemsByID = new Dictionary<long, Item>();
         private static readonly ImplantCollection[] s_implantSlots = new ImplantCollection[10];
 
+
         #region Initialization
 
         /// <summary>

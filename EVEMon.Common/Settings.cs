@@ -77,7 +77,7 @@ namespace EVEMon.Common
                 if (!preferencesOnly)
                 {
                     // The above check prevents the settings form to trigger a 
-                    // characters updates since the last queried infos would be lost.
+                    // characters updates since the last queried infos would be lost
                     EveMonClient.Characters.Import(serial.Characters);
                     EveMonClient.Characters.ImportPlans(serial.Plans);
                     EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
@@ -269,7 +269,9 @@ namespace EVEMon.Common
             // Loading from file failed, we abort and keep our current settings
             if (settings == null)
             {
-                MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Cannot restore the settings from {0}, the file is corrupted.", filename), "Bad settings file.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                    "Cannot restore the settings from {0}, the file is corrupted.", filename),
+                    "Bad settings file.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -338,6 +340,7 @@ namespace EVEMon.Common
             // Load failed, so check for backup
             if (File.Exists(backupFile))
             {
+                System.DateTime startTime = System.DateTime.Now;
                 EveMonClient.Trace("Settings.TryDeserializeBackup - begin");
 
                 FileInfo backupInfo = new FileInfo(backupFile);
@@ -382,7 +385,7 @@ namespace EVEMon.Common
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                        EveMonClient.Trace("Settings.TryDeserializeBackup - done");
+                        EveMonClient.Trace("Settings.TryDeserializeBackup - done {0}", System.DateTime.Now.Subtract(startTime));
                         return settings;
                     }
 

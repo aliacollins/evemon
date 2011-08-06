@@ -19,7 +19,7 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(int id, int level)
             : this()
         {
-            Skill = StaticSkills.GetSkillById(id);
+            Skill = StaticSkills.GetSkillByID(id);
             Level = level;
         }
 
@@ -67,7 +67,7 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(int id, int level, int activityId)
             : this()
         {
-            Skill = StaticSkills.GetSkillById(id);
+            Skill = StaticSkills.GetSkillByID(id);
             Level = level;
             Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
         }
