@@ -245,7 +245,6 @@ namespace EVEMon
             m_init = true;
 
             UpdateContent();
-            UpdateExpPanelContent();
         }
 
         # endregion
@@ -408,6 +407,9 @@ namespace EVEMon
                             lvItem.Selected = true;
                     }
                 }
+
+                // Update the expandable panel info
+                UpdateExpPanelContent();
 
                 // Display or hide the "no orders" label
                 if (m_init)
@@ -871,7 +873,6 @@ namespace EVEMon
             
             Orders = ccpCharacter.MarketOrders;
             UpdateColumns();
-            UpdateExpPanelContent();
         }
 
         # endregion
@@ -889,9 +890,6 @@ namespace EVEMon
                 marketExpPanelControl.Visible = false;
                 return;
             }
-
-            if (m_init)
-                marketExpPanelControl.Visible = true;
 
             // Update the Header text of the panel
             UpdateHeaderText();

@@ -239,7 +239,6 @@ namespace EVEMon
             m_init = true;
 
             UpdateContent();
-            UpdateExpPanelContent();
         }
 
         # endregion
@@ -385,6 +384,9 @@ namespace EVEMon
                             lvItem.Selected = true;
                     }
                 }
+
+                // Update the expandable panel info
+                UpdateExpPanelContent();
 
                 // Display or hide the "no jobs" label
                 if (m_init)
@@ -843,7 +845,6 @@ namespace EVEMon
             
             Jobs = ccpCharacter.IndustryJobs;
             UpdateColumns();
-            UpdateExpPanelContent();
         }
 
         /// <summary>
@@ -926,9 +927,6 @@ namespace EVEMon
                 industryExpPanelControl.Visible = false;
                 return;
             }
-
-            if (m_init)
-                industryExpPanelControl.Visible = true;
 
             // Update the Header text of the panel
             UpdateHeaderText();

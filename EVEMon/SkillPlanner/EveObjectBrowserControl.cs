@@ -484,6 +484,11 @@ namespace EVEMon.SkillPlanner
             PropertiesList.Groups.Add(group);
         }
 
+        /// <summary>
+        /// Adds the reprocessing skill.
+        /// </summary>
+        /// <param name="group">The listGroup.</param>
+        /// <param name="items">The list of items.</param>
         private void AddReprocessingSkill(ListViewGroup group, List<ListViewItem> items)
         {
             // Create the list of labels
