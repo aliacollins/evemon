@@ -34,7 +34,7 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblTimeRequired = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.tvSkillList = new EVEMon.SkillPlanner.ReqSkillsTreeView();
+            this.tvSkillList = new EVEMon.SkillPlanner.OverridenTreeView();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.level0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -249,7 +249,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTimeRequired;
         private System.Windows.Forms.Panel panel2;
-        private ReqSkillsTreeView tvSkillList;
+        private OverridenTreeView tvSkillList;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem planToMenu;
         private System.Windows.Forms.ToolStripMenuItem level1ToolStripMenuItem;

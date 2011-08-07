@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 
 using EVEMon.Common;
 using EVEMon.Common.Data;
@@ -28,23 +26,34 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         TimeSpan trainTime;
 
-        #region Constructors
+        #region Constructor
+
         /// <summary>
         /// User control to display required certificates for a given eveobject and update a plan object for requirements not met.
         /// </summary>
         public RecommendedCertificatesControl()
         {
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.DoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.ContainerControl |
+                     ControlStyles.AllPaintingInWmPaint, true);
+            UpdateStyles();
+
             InitializeComponent();
 
-            tvCertList.DrawNode += new DrawTreeNodeEventHandler(tvCertList_DrawNode);
-            tvCertList.MouseDown += new MouseEventHandler(tvCertList_MouseDown);
+            tvCertList.DrawNode += tvCertList_DrawNode;
+            tvCertList.MouseDown += tvCertList_MouseDown;
 
-            this.Disposed += new EventHandler(OnDisposed);
-            EveMonClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveMonClient_PlanChanged);
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            Disposed += OnDisposed;
         }
+        
+        #endregion
+
+
+        #region Event Handlers
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -53,8 +62,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            this.Disposed -= new EventHandler(OnDisposed);
-            EveMonClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveMonClient_PlanChanged);
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -66,9 +75,12 @@ namespace EVEMon.SkillPlanner
         {
             UpdateDisplay();
         }
+
         #endregion
 
+
         #region Public Properties
+
         /// <summary>
         /// An EveObject for which we want to show required skills.
         /// </summary>
@@ -93,9 +105,12 @@ namespace EVEMon.SkillPlanner
                 UpdateDisplay();
             }
         }
+
         #endregion
 
+
         #region Content creation
+
         /// <summary>
         /// Updates control contents.
         /// </summary>
@@ -147,8 +162,8 @@ namespace EVEMon.SkillPlanner
             // Set minimun control size
             Size timeRequiredTextSize = TextRenderer.MeasureText(lblTimeRequired.Text, Font);
             Size newMinimumSize = new Size(timeRequiredTextSize.Width + btnAddCerts.Width, 0);
-            if (this.MinimumSize.Width < newMinimumSize.Width)
-                this.MinimumSize = newMinimumSize;
+            if (MinimumSize.Width < newMinimumSize.Width)
+                MinimumSize = newMinimumSize;
 
             // Enable / disable button
             btnAddCerts.Enabled = certsUnplanned;
@@ -336,7 +351,7 @@ namespace EVEMon.SkillPlanner
             // Performs the drawing
             using (var foreground = new SolidBrush(foreColor))
             {
-                var left = e.Bounds.Left + this.imageList.ImageSize.Width + 2;
+                var left = e.Bounds.Left + imageList.ImageSize.Width + 2;
                 e.Graphics.DrawString(line, Font, foreground, new PointF(left, e.Bounds.Top));
             }
 
@@ -377,9 +392,12 @@ namespace EVEMon.SkillPlanner
             if (selection != tvCertList.SelectedNode)
                 tvCertList.SelectedNode = selection;
         }
+
         #endregion
 
+
         #region Controls' handlers
+
         /// <summary>
         /// Event handler method for Add Certs button.
         /// </summary>
@@ -442,9 +460,12 @@ namespace EVEMon.SkillPlanner
                 pw.ShowSkillInBrowser(skill);
             }
         }
+
         #endregion
 
+
         #region Context menu
+
         /// <summary>
         /// Context menu opening, we update the menus' statuses.
         /// </summary>
@@ -587,50 +608,4 @@ namespace EVEMon.SkillPlanner
 
         #endregion
     }
-
-    #region ReqCertificatesTreeView
-    /// <summary>
-    /// Derived from TreeView class.
-    /// <para>Overrides standard node double click behaviour to prevent node expand / collapse actions</para>
-    /// </summary>
-    class ReqCertificatesTreeView : System.Windows.Forms.TreeView
-    {
-        private const int WM_LBUTTONDBLCLK = 0x203;
-
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_LBUTTONDBLCLK)
-            {
-                handleDoubleClick(ref m);
-            }
-            else
-            { 
-                base.WndProc(ref m);
-            }
-        }
-
-        private void handleDoubleClick(ref Message m)
-        {
-            // Get mouse location from message.lparam
-            // x is low order word, y is high order word
-            string lparam = m.LParam.ToString("X08");
-            int x = int.Parse(lparam.Substring(4, 4), NumberStyles.HexNumber);
-            int y = int.Parse(lparam.Substring(0, 4), NumberStyles.HexNumber);
-            // Test for a treenode at this location
-            TreeViewHitTestInfo info = this.HitTest(x, y);
-            if (info.Node != null)
-            {
-                // Raise NodeMouseDoubleClick event
-                TreeNodeMouseClickEventArgs e = new TreeNodeMouseClickEventArgs(info.Node, MouseButtons.Left, 2, x, y);
-                this.OnNodeMouseDoubleClick(e);
-            }
-        }
-
-        protected override void CreateHandle()
-        {
-            if (!this.IsDisposed)
-                base.CreateHandle();
-        }
-    }
-    #endregion
 }

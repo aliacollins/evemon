@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
+
 using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
     /// <summary>
-    /// UserControl to display a tree of certificates
+    /// UserControl to display a tree of certificates.
     /// </summary>
     public partial class CertificateTreeDisplayControl : UserControl
     {
@@ -31,19 +29,25 @@ namespace EVEMon.SkillPlanner
 
         public event EventHandler SelectionChanged;
 
-        #region Constructors
+
+        #region Constructor
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public CertificateTreeDisplayControl()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.DoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.ContainerControl |
+                     ControlStyles.AllPaintingInWmPaint, true);
+            UpdateStyles();
 
             InitializeComponent();
 
-            treeView.DrawNode += (treeView_DrawNode);
+            treeView.DrawNode += treeView_DrawNode;
             treeView.MouseDown += treeView_MouseDown;
 
             cmListSkills.Opening += cmListSkills_Opening;
@@ -52,24 +56,14 @@ namespace EVEMon.SkillPlanner
             treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
         }
 
         #endregion
 
 
-        #region Events
-
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
-            Disposed -= OnDisposed;
-        }
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the current plan.
@@ -83,22 +77,10 @@ namespace EVEMon.SkillPlanner
                 if (m_plan == null)
                     return;
 
-                Character character = (Character)m_plan.Character;
-                if (m_character == character)
-                    return;
-
-                m_character = character;
-
                 treeView.Nodes.Clear();
                 UpdateTree();
-
             }
         }
-
-        #endregion
-
-
-        #region Public Properties
 
         /// <summary>
         /// Gets or sets the certificate class (i.e. "Core competency").
@@ -175,12 +157,35 @@ namespace EVEMon.SkillPlanner
 
 
         #region Event Handlers
+ 
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            Disposed -= OnDisposed;
+        }
+
+        /// <summary>
+        /// Occurs when the plan changes, when update the tree.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        {
+            UpdateTree();
+        }
+
         /// <summary>
         /// Fired when one of the character changed (skill completion, update from CCP, etc).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateTree();
         }
@@ -236,12 +241,14 @@ namespace EVEMon.SkillPlanner
         {
             showInBrowserMenu_Click(sender, e);
         }
+
         #endregion
 
 
         #region Tree building
+
         /// <summary>
-        /// Update the whole tree
+        /// Update the whole tree.
         /// </summary>
         private void UpdateTree()
         {
@@ -297,7 +304,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Create a node from a prerequisite certificate
+        /// Create a node from a prerequisite certificate.
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
@@ -321,7 +328,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Create a node from a prerequisite skill
+        /// Create a node from a prerequisite skill.
         /// </summary>
         /// <param name="skillPrereq"></param>
         /// <returns></returns>
@@ -342,7 +349,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the specified node and its children
+        /// Updates the specified node and its children.
         /// </summary>
         /// <param name="node"></param>
         private void UpdateNode(TreeNode node)
@@ -406,7 +413,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Custom draw for the label
+        /// Custom draw for the label.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -503,10 +510,12 @@ namespace EVEMon.SkillPlanner
                     (int)(e.Bounds.Top + imgOffsetY));
             }
         }
+
         #endregion
 
 
         #region Context menus
+
         /// <summary>
         /// Context menu opening, we update the menus' statuses.
         /// </summary>
@@ -583,7 +592,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Plan "(selection)"
+        /// Treeview's context menu > Plan "(selection)".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -604,7 +613,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Expand
+        /// Treeview's context menu > Expand.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -614,7 +623,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Collapse
+        /// Treeview's context menu > Collapse.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -624,7 +633,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Expand All
+        /// Treeview's context menu > Expand All.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -635,7 +644,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Collapse All
+        /// Treeview's context menu > Collapse All.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -695,6 +704,7 @@ namespace EVEMon.SkillPlanner
             SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
             npw.ShowSkillInExplorer(prereq.Skill);
         }
+
         #endregion
     }
 }

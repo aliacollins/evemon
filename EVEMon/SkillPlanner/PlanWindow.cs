@@ -190,14 +190,7 @@ namespace EVEMon.SkillPlanner
 
                 // Jump to the appropriate tab depending on whether
                 // or not the plan is empty
-                if (m_plan.Count == 0)
-                {
-                    tabControl.SelectedTab = tpSkillBrowser;
-                }
-                else
-                {
-                    tabControl.SelectedTab = tpPlanQueue;
-                }
+                tabControl.SelectedTab = (m_plan.Count == 0 ? tpSkillBrowser : tpPlanQueue);
 
                 // Update controls
                 Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name, m_plan.Name);
@@ -487,29 +480,29 @@ namespace EVEMon.SkillPlanner
             WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
 
             // Remove the plan
-            var i = Character.Plans.IndexOf(m_plan);
+            int index = Character.Plans.IndexOf(m_plan);
             Character.Plans.Remove(m_plan);
 
             // Choose which plan to show next
             // By default we choose the next one,
             // if it was the last in the list we select the previous one
-            if (i > Character.Plans.Count - 1)
-                i--;
+            if (index > Character.Plans.Count - 1)
+                index--;
             
             // When no plans exists after deletion we close the window
-            if (i < 0)
+            if (index < 0)
             {
                 Close();
                 return;
             }
 
             // New plan to show
-            var newplan = Character.Plans[i];
+            Plan newplan = Character.Plans[index];
             Plan = newplan;
         }
 
         /// <summary>
-        /// When the selected 
+        /// When the selected tab changes we update the list.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -518,11 +511,9 @@ namespace EVEMon.SkillPlanner
             if (DesignMode)
                 return;
 
-            // Force update of column widths in case we've just created a new plan from within the planner window.
+            // Force update of column widths in case we've just created a new plan from within the planner window
             if (tabControl.SelectedIndex == 0)
-            {
                 planEditor.UpdateListColumns();
-            }
         }
 
         /// <summary>
@@ -591,10 +582,10 @@ namespace EVEMon.SkillPlanner
             // Is it another plan ?
             if (e.ClickedItem.Tag != null)
             {
-                var plan = (Plan)e.ClickedItem.Tag;
-                var window = WindowsFactory<PlanWindow>.GetByTag(plan);
+                Plan plan = (Plan)e.ClickedItem.Tag;
+                PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(plan);
 
-                // Opens the existing window when there is one, or switch to this plan when no window opened.
+                // Opens the existing window when there is one, or switch to this plan when no window opened
                 if (window != null)
                 {
                     window.BringToFront();

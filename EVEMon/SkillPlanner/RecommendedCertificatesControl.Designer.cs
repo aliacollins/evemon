@@ -41,7 +41,7 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.tvCertList = new EVEMon.SkillPlanner.ReqCertificatesTreeView();
+            this.tvCertList = new EVEMon.SkillPlanner.OverridenTreeView();
             this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
@@ -200,7 +200,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblTimeRequired;
         private System.Windows.Forms.Button btnAddCerts;
         private System.Windows.Forms.Panel panel2;
-        private ReqCertificatesTreeView tvCertList;
+        private OverridenTreeView tvCertList;
         private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem tsmAddToPlan;

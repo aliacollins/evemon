@@ -576,7 +576,7 @@
     <Compile Include="SkillPlanner\RecommendedCertificatesControl.Designer.cs">
       <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\ReqSkillsTreeView.cs">
+    <Compile Include="SkillPlanner\OverridenTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\ShipLoadoutSelectWindow.cs">

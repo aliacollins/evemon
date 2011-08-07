@@ -78,7 +78,7 @@ namespace EVEMon.SkillPlanner
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the character this control is bound to
+        /// Gets or sets the character this control is bound to.
         /// </summary>
         public Character Character
         {
@@ -102,7 +102,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// This is the way to get and set the selected certificate class
+        /// This is the way to get and set the selected certificate class.
         /// </summary>
         public CertificateClass SelectedCertificateClass
         {
@@ -117,7 +117,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// This is the way to set the selected certificate
+        /// This is the way to set the selected certificate.
         /// </summary>
         public Certificate SelectedCertificate
         {
@@ -258,7 +258,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates eligibility label and planning menus
+        /// Updates eligibility label and planning menus.
         /// </summary>
         private void UpdateEligibility()
         {
@@ -308,7 +308,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates a "plan to" menu
+        /// Updates a "plan to" menu.
         /// </summary>
         /// <param name="menu">The menu to update</param>
         /// <param name="certClass">The selected certificate class</param>
@@ -336,7 +336,7 @@ namespace EVEMon.SkillPlanner
         #region Control Events
 
         /// <summary>
-        /// When the user select a new certificate class, we update everything
+        /// When the user select a new certificate class, we update everything.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -346,7 +346,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Handler for the ship-links generated for the recommendations
+        /// Handler for the ship-links generated for the recommendations.
         /// </summary>
         void recommendations_MenuItem(object sender, EventArgs e)
         {
@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the display tree's selection changes, we may update the description
+        /// When the display tree's selection changes, we may update the description.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
