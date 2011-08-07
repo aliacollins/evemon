@@ -675,6 +675,7 @@
     <Compile Include="SkillPlanner\ShipBrowserControl.Designer.cs">
       <DependentUpon>ShipBrowserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\SkillClickedEventArgs.cs" />
     <Compile Include="SkillPlanner\SkillExplorerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -687,11 +688,11 @@
     <Compile Include="SkillPlanner\SkillSelectControl.Designer.cs">
       <DependentUpon>SkillSelectControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\SkillTreeDisplay.cs">
+    <Compile Include="SkillPlanner\SkillTreeDisplayControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\SkillTreeDisplay.Designer.cs">
-      <DependentUpon>SkillTreeDisplay.cs</DependentUpon>
+    <Compile Include="SkillPlanner\SkillTreeDisplayControl.Designer.cs">
+      <DependentUpon>SkillTreeDisplayControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SkillQueueControl.cs">
       <SubType>Component</SubType>
@@ -911,9 +912,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>SkillSelectControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\SkillTreeDisplay.resx">
+    <EmbeddedResource Include="SkillPlanner\SkillTreeDisplayControl.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>SkillTreeDisplay.cs</DependentUpon>
+      <DependentUpon>SkillTreeDisplayControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillsPieChart.resx">
       <SubType>Designer</SubType>

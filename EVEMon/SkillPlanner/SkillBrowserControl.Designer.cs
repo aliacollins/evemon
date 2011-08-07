@@ -41,7 +41,7 @@ namespace EVEMon.SkillPlanner
             this.verticalSplitContainer = new EVEMon.Controls.PersistentSplitContainer();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.rightPanel = new System.Windows.Forms.Panel();
-            this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplay();
+            this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplayControl();
             this.headerPanel = new System.Windows.Forms.Panel();
             this.pnlPlanControl = new System.Windows.Forms.Panel();
             this.flpSkillNameCost = new System.Windows.Forms.FlowLayoutPanel();
@@ -494,7 +494,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblLevel2Time;
         private System.Windows.Forms.Label lblLevel1Time;
         private System.Windows.Forms.Label lblSkillName;
-        private SkillTreeDisplay skillTreeDisplay;
+        private SkillTreeDisplayControl skillTreeDisplay;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo0;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.Panel rightPanel;

@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class SkillTreeDisplay
+    partial class SkillTreeDisplayControl
     {
         /// <summary> 
         /// Required designer variable.
