@@ -55,6 +55,7 @@ namespace EVEMon.SkillPlanner
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
@@ -167,17 +168,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             Disposed -= OnDisposed;
         }
 
         /// <summary>
-        /// Occurs when the plan changes, when update the tree.
+        /// On settings change, we update the tree.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        /// <remarks>Relates to safe for work setting</remarks>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateTree();
         }
@@ -188,6 +191,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (m_plan == null)
+                return;
+
+            if (e.Character != m_plan.Character)
+                return;
+
+            UpdateTree();
+        }
+
+        /// <summary>
+        /// Occurs when the plan changes, we update the tree.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdateTree();
         }
@@ -278,7 +297,6 @@ namespace EVEMon.SkillPlanner
                         // Does the old selection still exists ?
                         if (cert == oldSelection)
                             newSelection = node;
-
                     }
                 }
                 
@@ -357,7 +375,6 @@ namespace EVEMon.SkillPlanner
         private void UpdateNode(TreeNode node)
         {
             Certificate cert = node.Tag as Certificate;
-            ImageList noImageList = new ImageList() { ImageSize = new Size(24, 24) };
 
             // The node represents a certificate
             if (cert != null)
