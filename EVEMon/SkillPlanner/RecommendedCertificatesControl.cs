@@ -242,23 +242,20 @@ namespace EVEMon.SkillPlanner
                 var skill = character.Skills[skillPrereq.Skill];
 
                 // Skill requirement met
-                if (skill.Level >= skillPrereq.Level)
+                if (skillPrereq.IsKnown)
                 {
                     node.ImageIndex = GrantedIcon;
-                    node.SelectedImageIndex = GrantedIcon;
                 }
                 // Requirement not met, but planned
                 else if (m_plan.IsPlanned(skill, skillPrereq.Level))
                 {
                     node.ImageIndex = Planned;
-                    node.SelectedImageIndex = Planned;
                     allCertsKnown = false;
                 }
                 // Requirement not met, but not planned
                 else if (skill.IsKnown)
                 { 
                     node.ImageIndex = UnknownButTrainableIcon;
-                    node.SelectedImageIndex = UnknownButTrainableIcon;
                     allCertsKnown = false;
                     certsUnplanned = true;
                 }
@@ -266,7 +263,6 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     node.ImageIndex = UnknownIcon;
-                    node.SelectedImageIndex = UnknownIcon;
                     allCertsKnown = false;
                     certsUnplanned = true;
                 }

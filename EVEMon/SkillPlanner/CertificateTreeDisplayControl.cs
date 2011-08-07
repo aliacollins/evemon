@@ -20,6 +20,7 @@ namespace EVEMon.SkillPlanner
         private const int UnknownIcon = 3;
         private const int CertificateIcon = 4;
         private const int SkillIcon = 5;
+        private const int Planned = 6;
 
         private Plan m_plan;
         private Character m_character;
@@ -379,6 +380,10 @@ namespace EVEMon.SkillPlanner
                 if (skillPrereq.IsKnown)
                 {
                     node.ImageIndex = GrantedIcon;
+                }
+                else if (m_plan.IsPlanned(skill, skillPrereq.Level))
+                {
+                    node.ImageIndex = Planned;
                 }
                 else if (skill.IsKnown)
                 {

@@ -62,8 +62,8 @@ namespace EVEMon.SkillPlanner
             this.treeView.SelectedImageIndex = 0;
             this.treeView.Size = new System.Drawing.Size(359, 441);
             this.treeView.TabIndex = 0;
-            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
+            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             // 
             // cmListSkills
             // 
@@ -83,7 +83,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsmAddToPlan
             // 
-            this.tsmAddToPlan.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
+            this.tsmAddToPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsmAddToPlan.Image")));
             this.tsmAddToPlan.Name = "tsmAddToPlan";
             this.tsmAddToPlan.Size = new System.Drawing.Size(194, 22);
             this.tsmAddToPlan.Text = "&Plan...";
@@ -103,7 +103,7 @@ namespace EVEMon.SkillPlanner
             // 
             // showInExplorerMenu
             // 
-            this.showInExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
+            this.showInExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showInExplorerMenu.Image")));
             this.showInExplorerMenu.Name = "showInExplorerMenu";
             this.showInExplorerMenu.Size = new System.Drawing.Size(194, 22);
             this.showInExplorerMenu.Text = "Show in Skill &Explorer...";
@@ -157,6 +157,7 @@ namespace EVEMon.SkillPlanner
             this.imageList.Images.SetKeyName(3, "Certificate - Untrainable.png");
             this.imageList.Images.SetKeyName(4, "Certificate.png");
             this.imageList.Images.SetKeyName(5, "Skillbook.png");
+            this.imageList.Images.SetKeyName(6, "Plan.png");
             // 
             // CertificateTreeDisplayControl
             // 

@@ -10,26 +10,31 @@ namespace EVEMon.Common.Controls
     /// </summary>
     public class SplitContainerMinFixed : SplitContainer
     {
-        #region Private Properties
-        private bool    m_sizeSet = false;
-        private int     m_panel2MinSize;
+        #region Fields
+
+        private bool m_sizeSet = false;
+        private int m_panel2MinSize;
+
         #endregion
 
         #region Constructor
+
         public SplitContainerMinFixed()
             : base()
         {
             // Default value
             m_panel2MinSize = base.Panel2MinSize;
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// Property override defers setting base attribute unless size attribute has already been set
         /// </summary>
-        public new int Panel2MinSize 
-        { 
+        public new int Panel2MinSize
+        {
             get
             {
                 if (m_sizeSet)
@@ -47,9 +52,9 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Property override sets base panel2MinSize after base.Size is set
         /// </summary>
-        public new Size Size 
-        { 
-            get {return base.Size;}
+        public new Size Size
+        {
+            get { return base.Size; }
             set
             {
                 base.Size = value;
@@ -60,7 +65,8 @@ namespace EVEMon.Common.Controls
                         Panel2MinSize = m_panel2MinSize;
                 }
             }
-        } 
+        }
+
         #endregion
     }
 }
