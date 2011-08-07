@@ -5,13 +5,16 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Windows.Forms;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Common.SettingsObjects;
+
+using CommonResources = EVEMon.Common.Resources;
 
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
+using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
 {
@@ -24,7 +27,6 @@ namespace EVEMon.SkillPlanner
         private Character m_character;
         private Skill m_selectedSkill;
         private Plan m_plan;
-        private IEnumerable<Skill> m_skills;
 
         #region Lifecycle
 
@@ -34,7 +36,7 @@ namespace EVEMon.SkillPlanner
         public SkillSelectControl()
         {
             InitializeComponent();
-       }
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -82,7 +84,6 @@ namespace EVEMon.SkillPlanner
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
-            
             UpdateContent();
         }
 
@@ -97,7 +98,7 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            set 
+            set
             {
                 if (m_plan == value)
                     return;
@@ -108,7 +109,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the selected skill
+        /// Gets the selected skill.
         /// </summary>
         public Skill SelectedSkill
         {
@@ -129,7 +130,8 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets or sets true whether the control is hosted in the skill browser. When true, the "Show in skill browser" context menus won't be displayed.
+        /// Gets or sets true whether the control is hosted in the skill browser.
+        /// When true, the "Show in skill browser" context menus won't be displayed.
         /// </summary>
         [Category("Behavior")]
         [Description("When true, the \"Show in Skill Browser\" context menus won't be displayed.")]
@@ -145,8 +147,9 @@ namespace EVEMon.SkillPlanner
 
 
         #region Icon set
+
         /// <summary>
-        /// Gets the icon set for the given index
+        /// Gets the icon set for the given index.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -166,51 +169,57 @@ namespace EVEMon.SkillPlanner
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (index > 0 && index < EVEMon.Common.Resources.Skill_Select.IconSettings.Default.Properties.Count)
-            {
-                groupname = EVEMon.Common.Resources.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
-            }
-            if ((groupname != null && !System.IO.File.Exists(String.Format(
+
+            if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
+                groupname = CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
+
+            if ((groupname != null && !File.Exists(String.Format(
                         "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                         Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        AppDomain.CurrentDomain.BaseDirectory,
                         index,
                         groupname)) ||
-                !System.IO.File.Exists(String.Format(
+                !File.Exists(String.Format(
                         "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                         Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory))))
-            {
+                        AppDomain.CurrentDomain.BaseDirectory))))
                 groupname = null;
-            }
+
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(String.Format(
+                IResourceReader basic = new ResourceReader(String.Format(
                         "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                         Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory));
+                        AppDomain.CurrentDomain.BaseDirectory));
+
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
+
                 while (basicx.MoveNext())
                 {
                     def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
                 }
+
                 basic.Close();
-                basic = new System.Resources.ResourceReader(String.Format(
+
+                basic = new ResourceReader(String.Format(
                         "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                         Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        AppDomain.CurrentDomain.BaseDirectory,
                         index,
                         groupname));
+
                 basicx = basic.GetEnumerator();
+
                 while (basicx.MoveNext())
                 {
                     if (def.Images.ContainsKey(basicx.Key.ToString()))
-                    {
                         def.Images.RemoveByKey(basicx.Key.ToString());
-                    }
+
                     def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
                 }
+
                 basic.Close();
+
                 return def;
             }
             else
@@ -218,20 +227,21 @@ namespace EVEMon.SkillPlanner
                 return defaultList;
             }
         }
+
         #endregion
 
 
         #region Content creation and update
+
         /// <summary>
-        /// Updates the skills list content
+        /// Updates the skills list content.
         /// </summary>
         public void UpdateContent()
         {
             if (m_plan == null)
                 return;
 
-            m_skills = GetFilteredData();
-            UpdateTree();
+            IEnumerable<Skill> skills = GetFilteredData();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -239,25 +249,26 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = false;
 
             // Nothing to display ?
-            if (m_skills.IsEmpty())
+            if (skills.IsEmpty())
             {
                 lbNoMatches.Visible = true;
             }
             // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
+                UpdateListView(skills);
                 lvSortedSkillList.Visible = true;
-                UpdateListView();
-           }
+            }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
+                UpdateListBox(skills);
                 lbSearchList.Visible = true;
-                UpdateListBox();
             }
             // Regular display, the tree
             else
             {
+                UpdateTree(skills);
                 tvItems.Visible = true;
             }
         }
@@ -352,10 +363,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the skills tree.
         /// </summary>
-        private void UpdateTree()
+        private void UpdateTree(IEnumerable<Skill> skills)
         {
-            //Reset selected object
-            SelectedSkill = null;
+            // Store the selected node (if any) to restore it after the update
+            int selectedItem = (tvItems.SelectedNodes.Count > 0 ?
+                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -363,7 +375,6 @@ namespace EVEMon.SkillPlanner
                 iconGroupIndex = 1;
 
             tvItems.ImageList = GetIconSet(iconGroupIndex);
-            tvItems.ImageList.ColorDepth = ColorDepth.Depth32Bit;
 
             // Rebuild the nodes
             int numberOfItems = 0;
@@ -371,12 +382,13 @@ namespace EVEMon.SkillPlanner
             try
             {
                 tvItems.Nodes.Clear();
-                foreach (var group in m_skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
+
+                foreach (IGrouping<SkillGroup, Skill> group in skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
                 {
-                    int index = tvItems.ImageList.Images.IndexOfKey("book");
+                    int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
 
                     TreeNode groupNode = new TreeNode()
-                    { 
+                    {
                         Text = group.Key.Name,
                         ImageIndex = index,
                         SelectedImageIndex = index,
@@ -384,7 +396,7 @@ namespace EVEMon.SkillPlanner
                     };
 
                     // Add nodes for skills in this group
-                    foreach (var skill in group)
+                    foreach (Skill skill in group)
                     {
                         // Choose image index
                         int imageIndex = -1;
@@ -398,9 +410,9 @@ namespace EVEMon.SkillPlanner
                         }
                         else if (skill.IsOwned)
                         {
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("Book");
+                            imageIndex = tvItems.ImageList.Images.IndexOfKey("book");
                         }
-                        else if (skill.ArePrerequisitesMet) // prereqs met
+                        else if (skill.ArePrerequisitesMet)
                         {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsMet");
                         }
@@ -417,7 +429,7 @@ namespace EVEMon.SkillPlanner
                             SelectedImageIndex = imageIndex,
                             Tag = skill
                         };
-
+                        groupNode.Nodes.Add(node);
 
                         // We color some nodes
                         if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
@@ -436,11 +448,23 @@ namespace EVEMon.SkillPlanner
                         }
 
                         numberOfItems++;
-                        groupNode.Nodes.Add(node);
                     }
 
                     // Add group when not empty
                     tvItems.Nodes.Add(groupNode);
+                }
+
+                // Restore the selected node (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (TreeNode groupNode in tvItems.Nodes)
+                    {
+                        foreach (TreeNode node in groupNode.Nodes)
+                        {
+                            if (node.Tag.GetHashCode() == selectedItem)
+                                tvItems.SelectNodeWithTag(node.Tag);
+                        }
+                    }
                 }
             }
             finally
@@ -461,13 +485,13 @@ namespace EVEMon.SkillPlanner
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListBox()
+        private void UpdateListBox(IEnumerable<Skill> skills)
         {
             lbSearchList.BeginUpdate();
             try
             {
                 lbSearchList.Items.Clear();
-                foreach (var skill in m_skills)
+                foreach (var skill in skills)
                 {
                     lbSearchList.Items.Add(skill);
                 }
@@ -482,11 +506,11 @@ namespace EVEMon.SkillPlanner
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListView()
+        private void UpdateListView(IEnumerable<Skill> skills)
         {
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
-            string column = GetSortedListData(ref m_skills, ref labels);
+            string column = GetSortedListData(ref skills, ref labels);
             if (labels == null)
                 return;
 
@@ -498,7 +522,7 @@ namespace EVEMon.SkillPlanner
 
                 using (var labelsEnumerator = labels.GetEnumerator())
                 {
-                    foreach (var skill in m_skills)
+                    foreach (var skill in skills)
                     {
                         // Retrieves the label for the second column (sort key)
                         labelsEnumerator.MoveNext();
@@ -525,7 +549,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the data for the sorted list view
+        /// Gets the data for the sorted list view.
         /// </summary>
         /// <param name="skills"></param>
         /// <param name="labels"></param>
@@ -608,10 +632,12 @@ namespace EVEMon.SkillPlanner
                     return "SP/hour";
             }
         }
+
         #endregion
 
 
         #region Event Handlers
+
         /// <summary>
         /// When the user click the text search hint, he actually wants to select the text box.
         /// </summary>
@@ -660,7 +686,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedSkill = (lbSearchList.SelectedIndex >= 0 ? (Skill) lbSearchList.Items[lbSearchList.SelectedIndex] : null);
+            SelectedSkill = (lbSearchList.SelectedIndex >= 0 ? (Skill)lbSearchList.Items[lbSearchList.SelectedIndex] : null);
         }
 
         /// <summary>
@@ -741,7 +767,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Changes the selection when you right click on a skill node
+        /// Changes the selection when you right click on a skill node.
         /// </summary>
         /// <remarks>
         /// This fixes an issue with XP (and possibly Vista) where
@@ -758,7 +784,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Changes the selection when you right click on a search
+        /// Changes the selection when you right click on a search.
         /// </summary>
         /// <remarks>
         /// This fixes an issue with XP (and possibly Vista) where
@@ -794,10 +820,12 @@ namespace EVEMon.SkillPlanner
                 DoDragDrop(node, DragDropEffects.Move);
             }
         }
+
         #endregion
 
 
         #region Context menu
+
         /// <summary>
         /// When the tree's context menu opens, we update the submenus' statuses.
         /// </summary>
@@ -842,9 +870,9 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
-        
+
         /// <summary>
-        /// When the list's context menu opens, we update the menus status
+        /// When the list's context menu opens, we update the menus status.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -867,7 +895,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Listview, listbox, and tree view contexts menu > Plan to > Plan to N
+        /// Listview, listbox, and tree view contexts menu > Plan to > Plan to N.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -879,7 +907,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Collapse
+        /// Treeview's context menu > Collapse.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -889,7 +917,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Expand
+        /// Treeview's context menu > Expand.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -899,7 +927,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Expand all
+        /// Treeview's context menu > Expand all.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -910,7 +938,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Collapse all
+        /// Treeview's context menu > Collapse all.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -921,7 +949,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Show In Skill Browser
+        /// Context menu > Show In Skill Browser.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -937,7 +965,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Show In Skill Explorer
+        /// Context menu > Show In Skill Explorer.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -951,6 +979,7 @@ namespace EVEMon.SkillPlanner
             // Open the skill explorer
             npw.ShowSkillInExplorer(SelectedSkill);
         }
+
         #endregion
 
     }

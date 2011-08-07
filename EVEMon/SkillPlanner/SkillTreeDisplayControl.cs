@@ -54,9 +54,10 @@ namespace EVEMon.SkillPlanner
         {
             base.OnLoad(e);
 
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.Opaque, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
+                        ControlStyles.Opaque |
+                        ControlStyles.ResizeRedraw, true);
+            UpdateStyles();
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;

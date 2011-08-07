@@ -53,10 +53,10 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
-            this.ilSkillIcons = new System.Windows.Forms.ImageList(this.components);
+            this.ilCertIcons = new System.Windows.Forms.ImageList(this.components);
             this.lvSortedList = new System.Windows.Forms.ListView();
-            this.chName = new System.Windows.Forms.ColumnHeader();
-            this.chSortKey = new System.Windows.Forms.ColumnHeader();
+            this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSortKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlFilter = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.pnlResults.SuspendLayout();
@@ -221,7 +221,7 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel2,
             this.tsmLevel3,
             this.tsmLevel4});
-            this.cmiLvPlanTo.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
+            this.cmiLvPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiLvPlanTo.Image")));
             this.cmiLvPlanTo.Name = "cmiLvPlanTo";
             this.cmiLvPlanTo.Size = new System.Drawing.Size(166, 22);
             this.cmiLvPlanTo.Text = "&Add to plan...";
@@ -298,7 +298,7 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvItems.HideSelection = false;
             this.tvItems.ImageIndex = 0;
-            this.tvItems.ImageList = this.ilSkillIcons;
+            this.tvItems.ImageList = this.ilCertIcons;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
             this.tvItems.Margin = new System.Windows.Forms.Padding(2);
             this.tvItems.Name = "tvItems";
@@ -308,13 +308,12 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Size = new System.Drawing.Size(227, 343);
             this.tvItems.TabIndex = 20;
             // 
-            // ilSkillIcons
+            // ilCertIcons
             // 
-            this.ilSkillIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilSkillIcons.ImageStream")));
-            this.ilSkillIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilSkillIcons.Images.SetKeyName(0, "Certificate");
-            this.ilSkillIcons.Images.SetKeyName(1, "AllUntrained");
-            this.ilSkillIcons.Images.SetKeyName(2, "AllGranted");
+            this.ilCertIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilCertIcons.ImageStream")));
+            this.ilCertIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilCertIcons.Images.SetKeyName(0, "Certificate");
+            this.ilCertIcons.Images.SetKeyName(1, "AllGranted");
             // 
             // lvSortedList
             // 
@@ -394,7 +393,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ListView lvSortedList;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chSortKey;
-        private System.Windows.Forms.ImageList ilSkillIcons;
+        private System.Windows.Forms.ImageList ilCertIcons;
         private System.Windows.Forms.ContextMenuStrip cmListSkills;
         private System.Windows.Forms.ToolStripMenuItem cmiLvPlanTo;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel1;

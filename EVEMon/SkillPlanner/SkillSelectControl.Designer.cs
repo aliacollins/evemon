@@ -163,7 +163,7 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem,
             this.level4ToolStripMenuItem,
             this.level5ToolStripMenuItem});
-            this.cmiPlanTo.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
+            this.cmiPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiPlanTo.Image")));
             this.cmiPlanTo.Name = "cmiPlanTo";
             this.cmiPlanTo.Size = new System.Drawing.Size(185, 22);
             this.cmiPlanTo.Text = "&Plan to...";
@@ -224,7 +224,7 @@ namespace EVEMon.SkillPlanner
             // 
             // showInSkillExplorerMenu
             // 
-            this.showInSkillExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
+            this.showInSkillExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showInSkillExplorerMenu.Image")));
             this.showInSkillExplorerMenu.Name = "showInSkillExplorerMenu";
             this.showInSkillExplorerMenu.Size = new System.Drawing.Size(185, 22);
             this.showInSkillExplorerMenu.Text = "Show in Skill &Explorer";
@@ -298,7 +298,7 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel3,
             this.tsmLevel4,
             this.tsmLevel5});
-            this.cmiLvPlanTo.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
+            this.cmiLvPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiLvPlanTo.Image")));
             this.cmiLvPlanTo.Name = "cmiLvPlanTo";
             this.cmiLvPlanTo.Size = new System.Drawing.Size(185, 22);
             this.cmiLvPlanTo.Text = "&Plan To...";
@@ -359,7 +359,7 @@ namespace EVEMon.SkillPlanner
             // 
             // showInSkillExplorerListMenu
             // 
-            this.showInSkillExplorerListMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
+            this.showInSkillExplorerListMenu.Image = ((System.Drawing.Image)(resources.GetObject("showInSkillExplorerListMenu.Image")));
             this.showInSkillExplorerListMenu.Name = "showInSkillExplorerListMenu";
             this.showInSkillExplorerListMenu.Size = new System.Drawing.Size(185, 22);
             this.showInSkillExplorerListMenu.Text = "Show in Skill &Explorer";

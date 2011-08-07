@@ -179,7 +179,7 @@ namespace EVEMon.SkillPlanner
                 // Create the nodes
                 foreach (MarketGroup group in StaticItems.ShipsMarketGroup.SubGroups)
                 {
-                    TreeNode node = new TreeNode() 
+                    TreeNode node = new TreeNode()
                     {
                         Text = group.Name
                     };
@@ -192,7 +192,7 @@ namespace EVEMon.SkillPlanner
                         tvItems.Nodes.Add(node);
                     }
                 }
-                            }
+            }
             finally
             {
                 tvItems.EndUpdate();

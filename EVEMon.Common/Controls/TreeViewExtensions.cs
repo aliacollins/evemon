@@ -89,7 +89,7 @@ namespace EVEMon.Common.Controls
         /// <returns>The matching node if found, null otherwise</returns>
         public static TreeNode GetNodeWithTag(this EVEMon.Common.Controls.TreeView treeView, Object tag)
         {
-            foreach (var node in GetAllNodes(treeView))
+            foreach (TreeNode node in GetAllNodes(treeView))
             {
                 if (Object.ReferenceEquals(node.Tag, tag))
                     return node;
@@ -106,11 +106,7 @@ namespace EVEMon.Common.Controls
         /// <returns>The selected node, null if this tag was not found</returns>
         public static TreeNode SelectNodeWithTag(this EVEMon.Common.Controls.TreeView treeView, Object tag)
         {
-            // Is it already selected ?
-            if (treeView.SelectedNode != null && treeView.SelectedNode.Tag == tag)
-                return treeView.SelectedNode;
-
-            foreach (var node in GetAllNodes(treeView))
+            foreach (TreeNode node in GetAllNodes(treeView))
             {
                 if (Object.ReferenceEquals(node.Tag, tag))
                 {

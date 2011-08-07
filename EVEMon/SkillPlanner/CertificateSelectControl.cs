@@ -110,8 +110,7 @@ namespace EVEMon.SkillPlanner
         void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
-
-            UpdateContent();
+            UpdateCategoryNodes();
         }
 
         #endregion
@@ -131,15 +130,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
-
-                // Gets the character from the plan
-                Character character = (Character)m_plan.Character;
-                if (m_character == character) 
-                    return;
-
-                m_character = character;
-
-                UpdateCategoryNodes();
+                m_character = (Character)m_plan.Character;
             }
         }
 
@@ -185,6 +176,7 @@ namespace EVEMon.SkillPlanner
 
 
         #region Control events
+
         /// <summary>
         /// When the combo filter changes, we need to refresh the display.
         /// </summary>
@@ -193,13 +185,11 @@ namespace EVEMon.SkillPlanner
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSettingsForFilter(cbFilter.SelectedIndex);
-            IEnumerable<CertificateClass> classes = GetFilteredData();
             UpdateCategoryNodes();
-            UpdateTree(classes);
         }
 
         /// <summary>
-        /// When the sort filter changes, we need to refresh the display
+        /// When the sort filter changes, we need to refresh the display.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -310,6 +300,7 @@ namespace EVEMon.SkillPlanner
 
 
         #region Display update
+
         /// <summary>
         /// Update the root nodes for the treeview.
         /// </summary>
@@ -365,18 +356,19 @@ namespace EVEMon.SkillPlanner
             // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
-                lvSortedList.Visible = true;
                 UpdateListView(classes);
+                lvSortedList.Visible = true;
             }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                lbSearchList.Visible = true;
                 UpdateListBox(classes);
+                lbSearchList.Visible = true;
             }
             // Regular display, the tree 
             else
             {
+                UpdateTree(classes);
                 tvItems.Visible = true;
             }
         }
@@ -387,41 +379,66 @@ namespace EVEMon.SkillPlanner
         /// <param name="classes"></param>
         private void UpdateTree(IEnumerable<CertificateClass> classes)
         {
-            //Reset selected object
-            SelectedCertificateClass = null;
-            
+            // Store the selected node (if any) to restore it after the update
+            int selectedItem = (tvItems.SelectedNodes.Count > 0 ?
+                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+
             // Fill the tree
             int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
             {
-                int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
+                // Blank image list for 'Safe for work' setting
+                ImageList newImageList = new ImageList();
+                newImageList.ImageSize = new Size(24, 24);
+                newImageList.Images.Add(new Bitmap(24, 24));
 
-                foreach (TreeNode node in tvItems.Nodes)
+                tvItems.ImageList = (Settings.UI.SafeForWork ? newImageList : ilCertIcons);
+
+                // Clear the existing nodes
+                tvItems.Nodes.Clear();
+
+                // Creates the nodes representing the categories
+                foreach (CertificateCategory category in m_character.CertificateCategories)
                 {
+                    int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
 
-                    CertificateCategory category = (CertificateCategory)node.Tag;
-                    node.ImageIndex = imageIndex;
-                    node.SelectedImageIndex = imageIndex;
-
-                    node.Nodes.Clear();
-
-                    foreach (CertificateClass certClass in classes)
+                    TreeNode node = new TreeNode()
                     {
-                        if (certClass.Category == category)
-                        {
-                            int index = GetCertImageIndex(certClass);
-                            
-                            TreeNode childNode = new TreeNode()
-                            {
-                                Text = certClass.Name,
-                                ImageIndex = index,
-                                SelectedImageIndex = index,
-                                Tag = certClass
-                            };
+                        Text = category.Name,
+                        ImageIndex = imageIndex,
+                        SelectedImageIndex = imageIndex,
+                        Tag = category
+                    };
 
-                            numberOfItems++;
-                            node.Nodes.Add(childNode);
+                    foreach (CertificateClass certClass in classes.Where(x => x.Category == category))
+                    {
+                        int index = GetCertImageIndex(certClass);
+
+                        TreeNode childNode = new TreeNode()
+                        {
+                            Text = certClass.Name,
+                            ImageIndex = index,
+                            SelectedImageIndex = index,
+                            Tag = certClass
+                        };
+
+                        numberOfItems++;
+                        node.Nodes.Add(childNode);
+                    }
+
+                    tvItems.Nodes.Add(node);
+                }
+
+                // Restore the selected node (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (TreeNode childNode in tvItems.Nodes)
+                    {
+                        foreach (TreeNode node in childNode.Nodes)
+                        {
+                            if (node.Tag.GetHashCode() == selectedItem)
+                                tvItems.SelectNodeWithTag(node.Tag);
                         }
                     }
                 }

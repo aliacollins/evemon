@@ -276,6 +276,13 @@ namespace EVEMon.SkillPlanner
             Certificate oldSelection = SelectedCertificate;
             TreeNode newSelection = null;
 
+            // Blank image list for 'Safe for work' setting
+            ImageList newImageList = new ImageList();
+            newImageList.ImageSize = new Size(24, 24);
+            newImageList.Images.Add(new Bitmap(24, 24));
+
+            treeView.ImageList = (Settings.UI.SafeForWork ? newImageList : imageList);
+
             treeView.BeginUpdate();
             try
             {
@@ -330,9 +337,11 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode CreateNode(Certificate cert)
         {
-            TreeNode node = new TreeNode();
-            node.Text = cert.ToString();
-            node.Tag = cert;
+            TreeNode node = new TreeNode()
+            {
+                Text = cert.ToString(),
+                Tag = cert
+            };
 
             foreach (Certificate prereqCert in cert.PrerequisiteCertificates)
             {
@@ -354,9 +363,11 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode CreateNode(SkillLevel skillPrereq)
         {
-            TreeNode node = new TreeNode();
-            node.Text = skillPrereq.ToString();
-            node.Tag = skillPrereq;
+            TreeNode node = new TreeNode()
+            {
+                Text = skillPrereq.ToString(),
+                Tag = skillPrereq
+            };
 
             // Add this skill's prerequisites
             foreach (SkillLevel prereqSkill in skillPrereq.Skill.Prerequisites)

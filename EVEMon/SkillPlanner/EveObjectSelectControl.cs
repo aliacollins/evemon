@@ -188,7 +188,8 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            if (itm.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText) || itm.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
+            if (itm.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText) ||
+                itm.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
             {
                 filteredItems.Add(itm);
             }
@@ -258,7 +259,7 @@ namespace EVEMon.SkillPlanner
             if (m_selectedObjects.Count == 1)
             {
                 // If the object is not already selected
-                var obj = m_selectedObjects[0];
+                Item obj = m_selectedObjects[0];
                 tvItems.SelectNodeWithTag(obj);
             }
 
@@ -277,7 +278,7 @@ namespace EVEMon.SkillPlanner
                 List<Item> selectedObjects = new List<Item>();
                 foreach (TreeNode node in tvItems.SelectedNodes)
                 {
-                    var obj = node.Tag as Item;
+                    Item obj = node.Tag as Item;
                     if (obj != null)
                         selectedObjects.Add(obj);
                 }
