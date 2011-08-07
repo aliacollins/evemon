@@ -50,6 +50,11 @@ namespace EVEMon.Sales
             }
         }
 
+        public PictureBox Icon
+        {
+            get { return icon; }
+        }
+
         public int Quantity
         {
             get { return Int32.Parse(txtStock.Text); }
@@ -86,7 +91,7 @@ namespace EVEMon.Sales
                 Decimal pricePerUnit = Decimal.Parse(txtLastSell.Text);
                 int quantity = Int32.Parse(txtStock.Text);
 
-                m_subtotal = pricePerUnit*quantity;
+                m_subtotal = pricePerUnit * quantity;
             }
             catch (Exception e)
             {
