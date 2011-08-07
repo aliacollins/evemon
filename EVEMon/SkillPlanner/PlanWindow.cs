@@ -27,7 +27,7 @@ namespace EVEMon.SkillPlanner
         #region Initialization and Lifecycle
 
         /// <summary>
-        /// Default constructor for designer
+        /// Default constructor for designer.
         /// </summary>
         public PlanWindow()
         {
@@ -134,22 +134,18 @@ namespace EVEMon.SkillPlanner
 
                 // Tell the attributes optimization window we're closing down
                 if (m_attributesOptimizerWindow != null)
-                {
                     m_attributesOptimizerWindow.Close();
-                }
 
                 // Tell the implant window we're closing down
                 if (m_implantCalcWindow != null)
-                {
                     m_implantCalcWindow.Close();
-                }
             }
 
             base.OnFormClosing(e);
         }
 
         /// <summary>
-        /// Gets the current character
+        /// Gets the current character.
         /// </summary>
         public Character Character
         {
@@ -157,7 +153,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the plan represented by this window
+        /// Gets the plan represented by this window.
         /// </summary>
         public Plan Plan
         {
@@ -172,8 +168,16 @@ namespace EVEMon.SkillPlanner
                 // The tag is used by WindowsFactory.ShowByTag
                 Tag = value;
 
-                // Check to see if one or more obsolete entries were found
+                // Check to see if one or more obsolete entries were found,
+                // we this now so the related label is immediately visible
                 CheckObsoleteEntries();
+
+                // Jump to the appropriate tab depending on whether
+                // or not the plan is empty
+                tabControl.SelectedTab = (m_plan.Count == 0 ? tpSkillBrowser : tpPlanQueue);
+
+                // Update controls
+                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name, m_plan.Name);
 
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
@@ -183,17 +187,10 @@ namespace EVEMon.SkillPlanner
                 skillBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
+                // If the ShipLoadoutSelectWindow is open assign the new plan
                 ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
-
                 if (loadoutSelect != null)
                     loadoutSelect.Plan = m_plan;
-
-                // Jump to the appropriate tab depending on whether
-                // or not the plan is empty
-                tabControl.SelectedTab = (m_plan.Count == 0 ? tpSkillBrowser : tpPlanQueue);
-
-                // Update controls
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name, m_plan.Name);
 
                 // Check to see if one or more invalid entries were 
                 // found, we do this last so as not to cause problems
@@ -736,7 +733,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Toolbar > Print
+        /// Toolbar > Print.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
