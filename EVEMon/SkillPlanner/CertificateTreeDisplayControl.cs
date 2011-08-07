@@ -71,11 +71,13 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            set 
-            { 
+            set
+            {
                 m_plan = value;
                 if (m_plan == null)
                     return;
+
+                m_character = (Character)m_plan.Character;
 
                 treeView.Nodes.Clear();
                 UpdateTree();
