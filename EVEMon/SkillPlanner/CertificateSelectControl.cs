@@ -86,11 +86,11 @@ namespace EVEMon.SkillPlanner
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
             {
-                tbSearchText.Text = Settings.UI.CertificateBrowser.TextSearch;
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-
                 cbSorting.SelectedIndex = (int)Settings.UI.CertificateBrowser.Sort;
                 cbFilter.SelectedIndex = (int)Settings.UI.CertificateBrowser.Filter;
+
+                tbSearchText.Text = Settings.UI.CertificateBrowser.TextSearch;
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
             else
             {
@@ -110,7 +110,7 @@ namespace EVEMon.SkillPlanner
         void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
-            UpdateCategoryNodes();
+            UpdateContent();
         }
 
         #endregion
@@ -185,7 +185,7 @@ namespace EVEMon.SkillPlanner
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSettingsForFilter(cbFilter.SelectedIndex);
-            UpdateCategoryNodes();
+            UpdateContent();
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
+        private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
         {
             UpdateSelection(e.Node.Tag);
         }
@@ -300,37 +300,6 @@ namespace EVEMon.SkillPlanner
 
 
         #region Display update
-
-        /// <summary>
-        /// Update the root nodes for the treeview.
-        /// </summary>
-        private void UpdateCategoryNodes()
-        {
-            tvItems.BeginUpdate();
-            try
-            {
-                // Clear the existing nodes.
-                tvItems.Nodes.Clear();
-
-                // Creates the nodes representing the categories.
-                foreach (CertificateCategory category in m_character.CertificateCategories)
-                {
-                    TreeNode node = new TreeNode(category.Name, -1, -1)
-                    {
-                        Tag = category
-                    };
-
-                    tvItems.Nodes.Add(node);
-                }
-
-                // Update the other nodes.
-                UpdateContent();
-            }
-            finally
-            {
-                tvItems.EndUpdate();
-            }
-        }
 
         /// <summary>
         /// Updates the display.
@@ -352,24 +321,25 @@ namespace EVEMon.SkillPlanner
             if (classes.IsEmpty())
             {
                 lbNoMatches.Visible = true;
+                UpdateSelection(null);
             }
             // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
-                UpdateListView(classes);
                 lvSortedList.Visible = true;
+                UpdateListView(classes);
             }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                UpdateListBox(classes);
                 lbSearchList.Visible = true;
+                UpdateListBox(classes);
             }
             // Regular display, the tree 
             else
             {
-                UpdateTree(classes);
                 tvItems.Visible = true;
+                UpdateTree(classes);
             }
         }
 
@@ -447,10 +417,7 @@ namespace EVEMon.SkillPlanner
 
                 // Reset if the node doesn't exist anymore
                 if (selectedNode == null)
-                {
-                    tvItems.UnselectAllNodes();
-                    SelectedCertificateClass = null;
-                }
+                    UpdateSelection(null);
             }
             finally
             {
@@ -494,6 +461,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="classes"></param>
         private void UpdateListView(IEnumerable<CertificateClass> classes)
         {
+            // Store the selected node (if any) to restore it after the update
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
+                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+            
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
             string column = GetSortedListData(ref classes, ref labels);
@@ -520,6 +491,25 @@ namespace EVEMon.SkillPlanner
                         item.Tag = certClass;
                     }
                 }
+
+                ListViewItem selectedItem = null;
+
+                // Restore the selected node (if any)
+                if (selectedItemHash > 0)
+                {
+                    foreach (ListViewItem lvItem in lvSortedList.Items)
+                    {
+                        if (lvItem.Tag.GetHashCode() == selectedItemHash)
+                        {
+                            lvItem.Selected = true;
+                            selectedItem = lvItem;
+                        }
+                    }
+                }
+
+                // Reset if the node doesn't exist anymore
+                if (selectedItem == null)
+                    UpdateSelection(null);
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);

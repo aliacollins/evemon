@@ -455,6 +455,7 @@ namespace EVEMon.SkillPlanner
             this.lvSortedSkillList.ContextMenuStrip = this.cmListSkills;
             this.lvSortedSkillList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSortedSkillList.FullRowSelect = true;
+            this.lvSortedSkillList.HideSelection = false;
             this.lvSortedSkillList.Location = new System.Drawing.Point(0, 0);
             this.lvSortedSkillList.Margin = new System.Windows.Forms.Padding(2);
             this.lvSortedSkillList.MultiSelect = false;

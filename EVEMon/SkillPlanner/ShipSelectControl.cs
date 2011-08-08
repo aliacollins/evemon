@@ -11,9 +11,8 @@ namespace EVEMon.SkillPlanner
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
         private Func<Item, Boolean> m_racePredicate = x => true;
-        private bool m_isLoaded;
 
-        #region Initialisation
+        #region Initialization
 
         /// <summary>
         /// Constructor
@@ -37,9 +36,6 @@ namespace EVEMon.SkillPlanner
             // Call the base method
             base.EveObjectSelectControl_Load(sender, e);
 
-            // Build the ships tree
-            BuildTreeView();
-
             // Initialize the "skills" combo box
             cbUsabilityFilter.Items[0] = "All Ships";
             cbUsabilityFilter.Items[1] = "Ships I can fly";
@@ -62,6 +58,12 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cbUsabilityFilter.SelectedIndex = 0;
+                cbAmarr.Checked = true;
+                cbCaldari.Checked = true;
+                cbGallente.Checked = true;
+                cbMinmatar.Checked = true;
+                cbFaction.Checked = true;
+                cbORE.Checked = true;
             }
         }
 
@@ -132,7 +134,6 @@ namespace EVEMon.SkillPlanner
             m_racePredicate = x => (x.Race & race) != Race.None;
 
             // Update content
-            m_isLoaded = true;
             UpdateContent();
         }
 
@@ -157,9 +158,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
-            if (!m_isLoaded)
-                return;
-
             BuildTreeView();
             BuildListView();
         }
@@ -172,8 +170,6 @@ namespace EVEMon.SkillPlanner
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
                                 tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
-
-            TreeNode selectedNode = null;
             
             int numberOfItems = 0;
             tvItems.BeginUpdate();
@@ -198,6 +194,8 @@ namespace EVEMon.SkillPlanner
                         tvItems.Nodes.Add(node);
                     }
                 }
+
+                TreeNode selectedNode = null;
 
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)

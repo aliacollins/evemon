@@ -323,6 +323,7 @@ namespace EVEMon.SkillPlanner
             this.lvSortedList.ContextMenuStrip = this.cmListSkills;
             this.lvSortedList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSortedList.FullRowSelect = true;
+            this.lvSortedList.HideSelection = false;
             this.lvSortedList.Location = new System.Drawing.Point(0, 0);
             this.lvSortedList.Margin = new System.Windows.Forms.Padding(2);
             this.lvSortedList.Name = "lvSortedList";

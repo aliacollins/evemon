@@ -62,14 +62,20 @@ namespace EVEMon.SkillPlanner
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
-            cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
-            cbSorting.SelectedIndex = (int)Settings.UI.SkillBrowser.Sort;
-            cbSkillFilter.SelectedIndex = (int)Settings.UI.SkillBrowser.Filter;
-
             if (Settings.UI.UseStoredSearchFilters)
             {
+                cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
+                cbSkillFilter.SelectedIndex = (int)Settings.UI.SkillBrowser.Filter;
+                cbSorting.SelectedIndex = (int)Settings.UI.SkillBrowser.Sort;
+
                 tbSearchText.Text = Settings.UI.SkillBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            }
+            else
+            {
+                cbShowNonPublic.Checked = false;
+                cbSkillFilter.SelectedIndex = 0;
+                cbSorting.SelectedIndex = 0;
             }
 
             // Updates the controls
@@ -252,24 +258,25 @@ namespace EVEMon.SkillPlanner
             if (skills.IsEmpty())
             {
                 lbNoMatches.Visible = true;
+                SelectedSkill = null;
             }
             // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
-                UpdateListView(skills);
                 lvSortedSkillList.Visible = true;
+                UpdateListView(skills);
             }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                UpdateListBox(skills);
                 lbSearchList.Visible = true;
+                UpdateListBox(skills);
             }
             // Regular display, the tree
             else
             {
-                UpdateTree(skills);
                 tvItems.Visible = true;
+                UpdateTree(skills);
             }
         }
 
@@ -286,7 +293,7 @@ namespace EVEMon.SkillPlanner
                 skills = skills.Where(x => x.IsPublic);
 
             // Filter
-            var predicate = GetFilter();
+            Func<Skill,bool> predicate = GetFilter();
             skills = skills.Where(x => predicate(x));
 
             // Text search
@@ -368,8 +375,6 @@ namespace EVEMon.SkillPlanner
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
                                 tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
-
-            TreeNode selectedNode = null;
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -456,6 +461,8 @@ namespace EVEMon.SkillPlanner
                     tvItems.Nodes.Add(groupNode);
                 }
 
+                TreeNode selectedNode = null;
+
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
@@ -471,10 +478,7 @@ namespace EVEMon.SkillPlanner
 
                 // Reset if the node doesn't exist anymore
                 if (selectedNode == null)
-                {
-                    tvItems.UnselectAllNodes();
                     SelectedSkill = null;
-                }
             }
             finally
             {
@@ -500,7 +504,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 lbSearchList.Items.Clear();
-                foreach (var skill in skills)
+                foreach (Skill skill in skills)
                 {
                     lbSearchList.Items.Add(skill);
                 }
@@ -517,6 +521,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="skills"></param>
         private void UpdateListView(IEnumerable<Skill> skills)
         {
+            // Store the selected node (if any) to restore it after the update
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
+                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
             string column = GetSortedListData(ref skills, ref labels);
@@ -529,13 +537,13 @@ namespace EVEMon.SkillPlanner
             {
                 lvSortedSkillList.Items.Clear();
 
-                using (var labelsEnumerator = labels.GetEnumerator())
+                using (IEnumerator<string> labelsEnumerator = labels.GetEnumerator())
                 {
-                    foreach (var skill in skills)
+                    foreach (Skill skill in skills)
                     {
                         // Retrieves the label for the second column (sort key)
                         labelsEnumerator.MoveNext();
-                        var label = labelsEnumerator.Current;
+                        string label = labelsEnumerator.Current;
 
                         // Creates the item and adds it
                         ListViewItem lvi = new ListViewItem(skill.Name);
@@ -545,6 +553,25 @@ namespace EVEMon.SkillPlanner
                         lvSortedSkillList.Items.Add(lvi);
                     }
                 }
+
+                ListViewItem selectedItem = null;
+
+                // Restore the selected node (if any)
+                if (selectedItemHash > 0)
+                {
+                    foreach (ListViewItem lvItem in lvSortedSkillList.Items)
+                    {
+                        if (lvItem.Tag.GetHashCode() == selectedItemHash)
+                        {
+                            lvItem.Selected = true;
+                            selectedItem = lvItem;
+                        }
+                    }
+                }
+
+                // Reset if the node doesn't exist anymore
+                if (selectedItem == null)
+                    SelectedSkill = null;
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -573,16 +600,17 @@ namespace EVEMon.SkillPlanner
 
                 // Time to next level
                 case SkillSort.TimeToNextLevel:
-                    var times = skills.Select(x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites) + x.GetLeftTrainingTimeToNextLevel());
+                    IEnumerable<TimeSpan> times = skills.Select(
+                        x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToNextLevel()));
 
-                    var timesArray = times.ToArray();
-                    var skillsArray = skills.ToArray();
+                    TimeSpan[] timesArray = times.ToArray();
+                    Skill[] skillsArray = skills.ToArray();
                     Array.Sort(timesArray, skillsArray);
 
-                    var labelsArray = new string[skillsArray.Length];
+                    string[] labelsArray = new string[skillsArray.Length];
                     for (int i = 0; i < labelsArray.Length; i++)
                     {
-                        var time = timesArray[i];
+                        TimeSpan time = timesArray[i];
                         if (time == TimeSpan.Zero)
                         {
                             labelsArray[i] = "-";
@@ -612,7 +640,7 @@ namespace EVEMon.SkillPlanner
                     labelsArray = new string[skillsArray.Length];
                     for (int i = 0; i < labelsArray.Length; i++)
                     {
-                        var time = timesArray[i];
+                        TimeSpan time = timesArray[i];
                         if (time == TimeSpan.Zero)
                         {
                             labelsArray[i] = "-";
@@ -816,7 +844,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvItems_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            var node = tvItems.SelectedNode as TreeNode;
+            TreeNode node = tvItems.SelectedNode as TreeNode;
             if (node == null)
                 return;
 
@@ -911,7 +939,7 @@ namespace EVEMon.SkillPlanner
         private void planToLevelMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
-            var operation = levelItem.Tag as IPlanOperation;
+            IPlanOperation operation = levelItem.Tag as IPlanOperation;
             PlanHelper.SelectPerform(operation);
         }
 

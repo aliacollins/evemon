@@ -12,7 +12,7 @@ namespace EVEMon.SkillPlanner
     {
         private Func<Item, Boolean> m_metaGroupPredicate = (x) => true;
 
-        #region Initialisation
+        #region Initialization
 
         public BlueprintSelectControl()
         {
@@ -32,9 +32,6 @@ namespace EVEMon.SkillPlanner
 
             // Call the base method
             base.EveObjectSelectControl_Load(sender, e);
-
-            // Build the blueprints tree
-            BuildTreeView();
 
             // Initialize the "filter" combo box
             cbUsabilityFilter.Items[0] = "All Blueprints";
@@ -60,6 +57,12 @@ namespace EVEMon.SkillPlanner
             {
                 cbUsabilityFilter.SelectedIndex = 0;
                 cbActivityFilter.SelectedIndex = 0;
+                cbTech1.Checked = true;
+                cbTech2.Checked = true;
+                cbTech3.Checked = true;
+                cbFaction.Checked = true;
+                cbStoryline.Checked = true;
+                cbOfficer.Checked = true;
             }
         }
 
@@ -211,8 +214,6 @@ namespace EVEMon.SkillPlanner
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
                                 tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
             
-            TreeNode selectedNode = null;
-
             int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
@@ -236,6 +237,8 @@ namespace EVEMon.SkillPlanner
                         tvItems.Nodes.Add(node);
                     }
                 }
+
+                TreeNode selectedNode = null;
 
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)

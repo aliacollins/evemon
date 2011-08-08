@@ -130,7 +130,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected void BuildListView()
         {
-
             string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
 
             if (String.IsNullOrEmpty(searchText))
@@ -147,6 +146,7 @@ namespace EVEMon.SkillPlanner
             {
                 SearchNode(n, searchText, filteredItems);
             }
+
             filteredItems.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));
 
             lbSearchList.BeginUpdate();

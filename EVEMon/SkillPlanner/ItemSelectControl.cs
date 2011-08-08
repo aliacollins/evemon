@@ -17,9 +17,9 @@ namespace EVEMon.SkillPlanner
         private Func<Item, Boolean> m_slotPredicate = (x) => true;
         private Func<Item, Boolean> m_metaGroupPredicate = (x) => true;
         private Func<Item, Boolean> m_fittingPredicate = (x) => true;
-        private bool m_isLoaded;
 
-        #region Initialisation
+        #region Initialization
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -52,29 +52,21 @@ namespace EVEMon.SkillPlanner
             m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipEquipmentsMarketGroupID));
             m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesMarketGroupID));
 
-            // Initialize the metagroup combo
-            ccbGroupFilter.Items.Clear();
-            ccbGroupFilter.Items.AddRange(m_metaGroups.Cast<Object>().ToArray());
-            ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
-            ccbGroupFilter.ToolTip = toolTip;
-
             // Initialize the "skills" combo box
             cbUsabilityFilter.Items[0] = "All Items";
             cbUsabilityFilter.Items[1] = "Items I can use";
             cbUsabilityFilter.Items[2] = "Items I cannot use";
+
+            // Initialize the metagroup combo
+            ccbGroupFilter.Items.Clear();
+            ccbGroupFilter.Items.AddRange(m_metaGroups.Cast<Object>().ToArray());
+            ccbGroupFilter.ToolTip = toolTip;
             
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
             {
                 // Usability combo
                 cbUsabilityFilter.SelectedIndex = (int)Settings.UI.ItemBrowser.UsabilityFilter;
-
-                // Metagroups combo
-                for (int i = 0; i < m_metaGroups.Count; i++)
-                {
-                    ccbGroupFilter.SetItemChecked(i,
-                        (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.Empty);
-                }
 
                 // Slots combo
                 switch (Settings.UI.ItemBrowser.SlotFilter)
@@ -98,6 +90,13 @@ namespace EVEMon.SkillPlanner
                         throw new NotImplementedException();
                 }
 
+                // Metagroups combo
+                for (int i = 0; i < m_metaGroups.Count; i++)
+                {
+                    ccbGroupFilter.SetItemChecked(i,
+                        (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.Empty);
+                }
+
                 tbSearchText.Text = Settings.UI.ItemBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
@@ -105,16 +104,21 @@ namespace EVEMon.SkillPlanner
             {
                 cbUsabilityFilter.SelectedIndex = 0;
                 cbSlotFilter.SelectedIndex = 0;
+                for (int i = 0; i < m_metaGroups.Count; i++)
+                {
+                    ccbGroupFilter.SetItemChecked(i, true);
+                }
             }
 
-            // Update the display
-            m_isLoaded = true;
-            UpdateContent();
+            // We subscribe the 'ItemCheck' here to avoid event triggering while initializing
+            ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
         }
+
         #endregion
 
 
         #region Events handlers
+
         /// <summary>
         /// When the search text changed, we store the next settings
         /// and update the list view and the list/tree visibilities.
@@ -123,8 +127,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void tbSearchText_TextChanged(object sender, EventArgs e)
         {
-            if (m_isLoaded)
-                Settings.UI.ItemBrowser.TextSearch = tbSearchText.Text;
+            Settings.UI.ItemBrowser.TextSearch = tbSearchText.Text;
             base.tbSearchText_TextChanged(sender, e);
         }
 
@@ -136,8 +139,7 @@ namespace EVEMon.SkillPlanner
         private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update the settings
-            if (m_isLoaded)
-                Settings.UI.ItemBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
+            Settings.UI.ItemBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
 
             // Update the predicate
             switch (Settings.UI.ItemBrowser.UsabilityFilter)
@@ -170,8 +172,6 @@ namespace EVEMon.SkillPlanner
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update the settings
-            if (m_isLoaded)
-            {
                 switch (cbSlotFilter.SelectedIndex)
                 {
                     default:
@@ -194,7 +194,6 @@ namespace EVEMon.SkillPlanner
                         Settings.UI.ItemBrowser.SlotFilter = ItemSlot.None;
                         break;
                 }
-            }
 
             // Update the predicate
             ItemSlot slot = Settings.UI.ItemBrowser.SlotFilter;
@@ -209,21 +208,18 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ccbGroupFilter_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void ccbGroupFilter_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             // Update the settings
-            if (m_isLoaded)
+            Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.Empty;
+            for (int i = 0; i < m_metaGroups.Count; i++)
             {
-                Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.Empty;
-                for (int i = 0; i < m_metaGroups.Count; i++)
-                {
-                    if (ccbGroupFilter.GetItemChecked(i))
-                        Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
-                }
+                if (ccbGroupFilter.GetItemChecked(i))
+                    Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
             }
 
             // Update the predicate
-            var filter = Settings.UI.ItemBrowser.MetagroupFilter;
+            ItemMetaGroup filter = Settings.UI.ItemBrowser.MetagroupFilter;
             m_metaGroupPredicate = (x) => (x.MetaGroup & filter) != ItemMetaGroup.Empty;
 
             // Update the control's content
@@ -283,7 +279,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void showAllGroupsCheckbox_CheckedChanged(object sender, System.EventArgs e)
+        private void showAllGroupsCheckbox_CheckedChanged(object sender, System.EventArgs e)
         {
             Settings.UI.ItemBrowser.ShowAllGroups = showAllGroupsCheckbox.Checked;
             UpdateContent();
@@ -311,18 +307,17 @@ namespace EVEMon.SkillPlanner
                 m_fittingPredicate = (item) => item.CanActivate(cpuAvailable, gridAvailable);
             }
         }
+
         #endregion
 
 
         #region Content creation
+
         /// <summary>
         /// Refresh the controls.
         /// </summary>
         private void UpdateContent()
         {
-            if (!m_isLoaded)
-                return;
-
             BuildTreeView();
             BuildListView();
         }
@@ -335,8 +330,6 @@ namespace EVEMon.SkillPlanner
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
                                 tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
-
-            TreeNode selectedNode = null;
 
             int numberOfItems = 0;
             tvItems.BeginUpdate();
@@ -365,6 +358,8 @@ namespace EVEMon.SkillPlanner
                         tvItems.Nodes.Add(node);
                     }
                 }
+
+                TreeNode selectedNode = null;
 
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
@@ -445,6 +440,7 @@ namespace EVEMon.SkillPlanner
             }
             return result;
         }
+
         #endregion
     }
 }
