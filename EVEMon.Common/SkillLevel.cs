@@ -49,9 +49,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if this skill level is already known
+        /// Gets true if this skill level is already trained
         /// </summary>
-        public bool IsKnown
+        public bool IsTrained
         {
             get { return Skill.Level >= Level; }
         }

@@ -416,24 +416,24 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CanUse(Item eo)
         {
-            var prerequisites = eo.Prerequisites.Where(x => !x.Activity.Equals(BlueprintActivity.ReverseEngineering));
+            IEnumerable<StaticSkillLevel> prerequisites = eo.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
             bool hasSelectedActivity = true;
             bool bpBrowserControl = this is BlueprintSelectControl;
 
             // Is item a blueprint and supports the selected activity ?  
             if (bpBrowserControl)
             {
-                hasSelectedActivity = prerequisites.Any(x => x.Activity.Equals(m_activity))
-                       || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity.Equals(m_activity));
+                hasSelectedActivity = prerequisites.Any(x => x.Activity == m_activity)
+                       || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == m_activity);
 
                 // Can not be used when item doesn't support the selected activity
-                if ((m_activityFilter.Equals(ObjectActivityFilter.Manufacturing) || m_activityFilter.Equals(ObjectActivityFilter.Invention))
+                if ((m_activityFilter == ObjectActivityFilter.Manufacturing || m_activityFilter == ObjectActivityFilter.Invention)
                     && !hasSelectedActivity)
                     return false;
 
                 // Enumerates the prerequisites skills to the selected activity 
-                if (!m_activityFilter.Equals(ObjectActivityFilter.All) && !m_activityFilter.Equals(ObjectActivityFilter.Any))
-                    prerequisites = prerequisites.Where(x => x.Activity.Equals(m_activity));
+                if (m_activityFilter != ObjectActivityFilter.All && m_activityFilter != ObjectActivityFilter.Any)
+                    prerequisites = prerequisites.Where(x => x.Activity == m_activity);
             }
 
             // Item doesn't have prerequisites skills
@@ -442,29 +442,29 @@ namespace EVEMon.SkillPlanner
 
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
             List<Boolean> prereqTrained = new List<Boolean>();
-            if (bpBrowserControl && m_activityFilter.Equals(ObjectActivityFilter.Any))
+            if (bpBrowserControl && m_activityFilter == ObjectActivityFilter.Any)
             {
                 List<BlueprintActivity> prereqActivity = new List<BlueprintActivity>();
 
                 // Create a list with the activities this item supports
-                foreach (var prereq in prerequisites.Where(x => !prereqActivity.Contains(x.Activity)))
+                foreach (StaticSkillLevel prereq in prerequisites.Where(x => !prereqActivity.Contains(x.Activity)))
                 {
                     prereqActivity.Add(prereq.Activity);
                 }
 
                 // Create a list with each prereq skill trained status for the questioned activity
-                foreach (var activity in prereqActivity)
+                foreach (BlueprintActivity activity in prereqActivity)
                 {
                     prereqTrained.Clear();
 
-                    foreach (var prereq in prerequisites.Where(x => x.Activity.Equals(activity)))
+                    foreach (StaticSkillLevel prereq in prerequisites.Where(x => x.Activity == activity))
                     {
                         int level = m_plan.Character.GetSkillLevel(prereq.Skill);
                         prereqTrained.Add(level >= prereq.Level);
                     }
 
                     // Has the character trained all prereq skills for this activity ?
-                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x.Equals(true)))
+                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x == true))
                         return true;
                 }
                 return false;
@@ -473,7 +473,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 // Create a list with each prereq skill trained status
-                foreach (var prereq in prerequisites)
+                foreach (StaticSkillLevel prereq in prerequisites)
                 {
                     int level = m_plan.Character.GetSkillLevel(prereq.Skill);
                     prereqTrained.Add(level >= prereq.Level);

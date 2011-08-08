@@ -40,7 +40,7 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         public static bool AreTrained(this IEnumerable<SkillLevel> src)
         {
-            return src.All(x => x.IsKnown);
+            return src.All(x => x.IsTrained);
         }
 
         /// <summary>

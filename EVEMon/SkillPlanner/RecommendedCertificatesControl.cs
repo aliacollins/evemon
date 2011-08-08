@@ -257,7 +257,7 @@ namespace EVEMon.SkillPlanner
                 var skill = character.Skills[skillPrereq.Skill];
 
                 // Skill requirement met
-                if (skillPrereq.IsKnown)
+                if (skillPrereq.IsTrained)
                 {
                     node.ImageIndex = GrantedIcon;
                 }
@@ -331,7 +331,7 @@ namespace EVEMon.SkillPlanner
 
                 // When not known to the require level, let's calculate the training time
                 var skill = skillPrereq.Skill;
-                if (!skillPrereq.IsKnown)
+                if (!skillPrereq.IsTrained)
                     trainTime += skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
             }
 

@@ -504,11 +504,11 @@ namespace EVEMon.SkillPlanner
             node.Tag = obj;
 
             // When all prereqs satisifed, keep the default color
-            if (prerequisites.All(x => x.IsKnown))
+            if (prerequisites.All(x => x.IsTrained))
                     return node;
 
             // Are all other prerequisites known ?
-            if (prerequisites.All(x => x.IsKnown || x.Skill == m_skill))
+            if (prerequisites.All(x => x.IsTrained || x.Skill == m_skill))
             {
                 node.ForeColor = Color.Gray;
                 return node;
@@ -516,7 +516,7 @@ namespace EVEMon.SkillPlanner
 
             // Then we need to list the other prerequisites
             StringBuilder sb = new StringBuilder("Also Need To Train:");
-            foreach (SkillLevel prereq in CreatePrereqList(prerequisites).Where(x => x.Skill != m_skill && !x.IsKnown))
+            foreach (SkillLevel prereq in CreatePrereqList(prerequisites).Where(x => x.Skill != m_skill && !x.IsTrained))
             {
                 sb.AppendLine().Append(prereq.ToString());
             }
@@ -710,7 +710,7 @@ namespace EVEMon.SkillPlanner
             if (prereq.Skill.IsKnown)
             {
                 // We know this prereq, but not to a high enough level
-                if (!prereq.IsKnown)
+                if (!prereq.IsTrained)
                 {
                     index++;
                     string level = prereq.Skill.Level > 0 ? String.Format(CultureConstants.DefaultCulture, "(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)";
@@ -781,7 +781,7 @@ namespace EVEMon.SkillPlanner
             // "Add to plan" is enabled if we don't know all the prereqs 
             // and we're not already planning at least one of the unknown prereqs
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            bool canPlan = entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character).Any(x => !x.IsKnown && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
+            bool canPlan = entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character).Any(x => !x.IsTrained && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
             tsShowObjectPrereqs.Enabled = canPlan;
             tsAddObjectToPlan.Enabled = canPlan;
 
