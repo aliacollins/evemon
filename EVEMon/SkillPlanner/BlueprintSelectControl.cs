@@ -1,12 +1,9 @@
 using System;
-using System.Text;
 using System.Linq;
 using System.Windows.Forms;
-using System.Collections.Generic;
-
 
 using EVEMon.Common;
-using EVEMon.Common.SettingsObjects;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
@@ -210,8 +207,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void BuildTreeView()
         {
-            // Reset selected object
-            SelectedObject = null;
+            // Store the selected node (if any) to restore it after the update
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
+                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+            
+            TreeNode selectedNode = null;
 
             int numberOfItems = 0;
             tvItems.BeginUpdate();
@@ -220,11 +220,12 @@ namespace EVEMon.SkillPlanner
                 tvItems.Nodes.Clear();
 
                 // Create the nodes
-                foreach (var group in StaticBlueprints.BlueprintMarketGroups)
+                foreach (BlueprintMarketGroup group in StaticBlueprints.BlueprintMarketGroups)
                 {
                     TreeNode node = new TreeNode()
                     {
-                        Text = group.Name
+                        Text = group.Name,
+                        Tag = group
                     };
 
                     int result = BuildSubtree(group, node.Nodes);
@@ -234,6 +235,26 @@ namespace EVEMon.SkillPlanner
                         numberOfItems += result;
                         tvItems.Nodes.Add(node);
                     }
+                }
+
+                // Restore the selected node (if any)
+                if (selectedItemHash > 0)
+                {
+                    foreach (TreeNode node in tvItems.GetAllNodes())
+                    {
+                        if (node.Tag.GetHashCode() == selectedItemHash)
+                        {
+                            tvItems.SelectNodeWithTag(node.Tag);
+                            selectedNode = node;
+                        }
+                    }
+                }
+
+                // Reset if the node doesn't exist anymore
+                if (selectedNode == null)
+                {
+                    tvItems.UnselectAllNodes();
+                    SelectedObject = null;
                 }
             }
             finally
@@ -266,7 +287,8 @@ namespace EVEMon.SkillPlanner
             {
                 TreeNode node = new TreeNode()
                 {
-                    Text = childGroup.Name
+                    Text = childGroup.Name,
+                    Tag = childGroup
                 };
 
                 // Add this subcategory's blueprints count

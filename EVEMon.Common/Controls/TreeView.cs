@@ -386,6 +386,15 @@ namespace EVEMon.Common.Controls
 
 		#region Node selection methods
 
+        /// <summary>
+        /// Unselects all selected nodes.
+        /// </summary>
+        /// <param name="tva">Specifies the action that caused the selection change.</param>
+        public void UnselectAllNodes()
+        {
+            UnselectAllNodesExceptNode(null, TreeViewAction.Unknown);
+        }
+
 		/// <summary>
 		/// Unselects all selected nodes.
 		/// </summary>

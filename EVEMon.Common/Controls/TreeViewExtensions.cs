@@ -117,7 +117,7 @@ namespace EVEMon.Common.Controls
                 }
             }
 
-            treeView.SelectedNode = null;
+            treeView.UnselectAllNodes();
             return null;
         }
     }

@@ -366,8 +366,10 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItem = (tvItems.SelectedNodes.Count > 0 ?
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
                                 tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+
+            TreeNode selectedNode = null;
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -455,16 +457,23 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Restore the selected node (if any)
-                if (selectedItem > 0)
+                if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode groupNode in tvItems.Nodes)
+                    foreach (TreeNode node in tvItems.GetAllNodes())
                     {
-                        foreach (TreeNode node in groupNode.Nodes)
+                        if (node.Tag.GetHashCode() == selectedItemHash)
                         {
-                            if (node.Tag.GetHashCode() == selectedItem)
-                                tvItems.SelectNodeWithTag(node.Tag);
+                            tvItems.SelectNodeWithTag(node.Tag);
+                            selectedNode = node;
                         }
                     }
+                }
+
+                // Reset if the node doesn't exist anymore
+                if (selectedNode == null)
+                {
+                    tvItems.UnselectAllNodes();
+                    SelectedSkill = null;
                 }
             }
             finally
