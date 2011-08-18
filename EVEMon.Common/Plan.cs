@@ -507,12 +507,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Set the planned level to the given one, lowering it if it's higher than the targetted one. 
+        /// Set the planned level to the given one, lowering it if it's higher than the targetted one.
         /// When the skill is not planned already, the prerequisites are automatically added.
         /// Note this method won't remove entries other entries depend of.
         /// </summary>
         /// <param name="skill">The skill we want to plan</param>
         /// <param name="level">The level we want to train to</param>
+        /// <param name="priority">The priority.</param>
         /// <param name="noteForNewEntries">The reason we want to train this skill</param>
         public void PlanTo(StaticSkill skill, int level, int priority, string noteForNewEntries)
         {
@@ -525,11 +526,10 @@ namespace EVEMon.Common
                 // We may either have to add or remove entries. First, we assume we have to add ones
                 if (level > plannedLevel)
                 {
-                    var skillsToAdd = new List<StaticSkillLevel>();
-                    skillsToAdd.Add(new StaticSkillLevel(skill, level));
+                    List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel> {new StaticSkillLevel(skill, level)};
 
                     // None added ? Then return
-                    var operation = TryAddSet(skillsToAdd, noteForNewEntries);
+                    IPlanOperation operation = TryAddSet(skillsToAdd, noteForNewEntries);
                     operation.PerformAddition(priority);
                 }
                 else

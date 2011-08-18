@@ -10,9 +10,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static bool BelongsIn(this MarketGroup marketGroup, IEnumerable<int> group)
         {
+            int[] g = group.ToArray();
             while (marketGroup != null)
             {
-                if (group != null && group.Any(groupID => marketGroup.ID == groupID))
+                if (g.Any(x => x == marketGroup.ID))
                     return true;
 
                 marketGroup = marketGroup.ParentGroup;

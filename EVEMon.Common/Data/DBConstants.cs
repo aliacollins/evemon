@@ -10,19 +10,19 @@ namespace EVEMon.Common.Data
         #region Collections
 
         // Group of PropertyIDs
-        public static readonly int[] RequiredSkillPropertyIDs = new int[] 
+        public static readonly int[] RequiredSkillPropertyIDs = new[] 
             {
                 RequiredSkill1PropertyID, RequiredSkill2PropertyID, RequiredSkill3PropertyID,
                 RequiredSkill4PropertyID, RequiredSkill5PropertyID, RequiredSkill6PropertyID
             };
 
-        public static readonly int[] RequiredSkillLevelPropertyIDs = new int[]
+        public static readonly int[] RequiredSkillLevelPropertyIDs = new[]
             {
                 RequiredSkill1LevelPropertyID, RequiredSkill2LevelPropertyID, RequiredSkill3LevelPropertyID,
                 RequiredSkill4LevelPropertyID, RequiredSkill5LevelPropertyID, RequiredSkill6LevelPropertyID 
             };
 
-        public static readonly int[] AlwaysVisibleForShipPropertyIDs = new int[]
+        public static readonly int[] AlwaysVisibleForShipPropertyIDs = new[]
             { 
                 CPUOutputPropertyID, PGOutputPropertyID, UpgradeCapacityPropertyID, HiSlotsPropertyID,
                 MedSlotsPropertyID,LowSlotsPropertyID, DroneCapacityPropertyID, DroneBandwidthPropertyID,
@@ -35,7 +35,7 @@ namespace EVEMon.Common.Data
                 ArmorKineticResistancePropertyID, ArmorThermalResistancePropertyID
             };
 
-        public static readonly int[] HideIfDefaultPropertyIDs = new int[]
+        public static readonly int[] HideIfDefaultPropertyIDs = new[]
             { 
                 LauncherSlotsLeftPropertyID, TurretSlotsLeftPropertyID, TurretHardPointModifierPropertyID, 
                 LauncherHardPointModifierPropertyID, HiSlotModifierPropertyID, MedSlotModifierPropertyID,
@@ -47,52 +47,52 @@ namespace EVEMon.Common.Data
                 PerceptionModifierPropertyID, WillpowerModifierPropertyID, MetaLevelPropertyID
             };
 
-        public static readonly int[] LauncherGroupPropertyIDs = new int[]
+        public static readonly int[] LauncherGroupPropertyIDs = new[]
             { 
                 LauncherGroupPropertyID, LauncherGroup2PropertyID, LauncherGroup3PropertyID
             };
 
-        public static readonly int[] ChargeGroupPropertyIDs = new int[]
+        public static readonly int[] ChargeGroupPropertyIDs = new[]
             { 
                 ChargeGroup1PropertyID, ChargeGroup2PropertyID, ChargeGroup3PropertyID,
                 ChargeGroup4PropertyID, ChargeGroup5PropertyID
             };
 
-        public static readonly int[] CanFitShipGroupPropertyIDs = new int[] 
+        public static readonly int[] CanFitShipGroupPropertyIDs = new[] 
             {
                 CanFitShipGroup1PropertyID, CanFitShipGroup2PropertyID,
                 CanFitShipGroup3PropertyID, CanFitShipGroup4PropertyID
             };
 
-        public static readonly int[] ModuleShipGroupPropertyIDs = new int[]
+        public static readonly int[] ModuleShipGroupPropertyIDs = new[]
             {
                 ModuleShipGroup1PropertyID, ModuleShipGroup2PropertyID, ModuleShipGroup3PropertyID
             };
 
-        public static readonly int[] ReactionGroupPropertyIDs = new int[]
+        public static readonly int[] ReactionGroupPropertyIDs = new[]
             {
                 ReactionGroup1PropertyID, ReactionGroup2PropertyID
             };
 
-        public static readonly int[] IndustryModifyingPropertyIDs = new int[]
+        public static readonly int[] IndustryModifyingPropertyIDs = new[]
             { 
                 ManufacturingTimeBonusPropertyID, ManufactureCostBonusPropertyID, CopySpeedBonusPropertyID,
                 BlueprintManufactureTimeBonusPropertyID, MineralNeedResearchBonusPropertyID
             };
 
-        public static readonly int[] SpecialisationAsteroidGroupPropertyIDs = new int[] 
+        public static readonly int[] SpecialisationAsteroidGroupPropertyIDs = new[] 
             { SpecialisationAsteroidGroupPropertyID };
 
-        public static readonly int[] PosCargobayAcceptGroupPropertyIDs = new int[]
+        public static readonly int[] PosCargobayAcceptGroupPropertyIDs = new[]
             { PosCargobayAcceptGroupPropertyID };
 
         // Group of MarketGroupIDs
-        public static readonly int[] StategicComponentsMarketGroupIDs = new int[]
+        public static readonly int[] StategicComponentsMarketGroupIDs = new[]
             {
                 SubsystemsMarketGroupID, StrategicCruisersMarketGroupID
             };
 
-        public static readonly int[] SmallToXLargeShipsMarketGroupIDs = new int[]
+        public static readonly int[] SmallToXLargeShipsMarketGroupIDs = new[]
             {
                 StandardFrigatesMarketGroupID, StandardCruisersMarketGroupID, StandardBattleshipsMarketGroupID,
                 StandardIndustrialShipsMarketGroupID, ShuttlessMarketGroupID, StandardDestroyersMarketGroupID,
@@ -101,12 +101,12 @@ namespace EVEMon.Common.Data
                 CapitalIndustrialShipsMarketGroupID, FighterBombersMarketGroupID
             };
 
-        public static readonly int[] CapitalShipsMarketGroupIDs = new int[] 
+        public static readonly int[] CapitalShipsMarketGroupIDs = new[] 
             {
                 DreadnoughtsMarketGroupID, FreightersMarketGroupID, TitansMarketGroupID, CarriersMarketGroupID
             };
 
-        public static readonly int[] AdvancedSmallToLargeShipsMarketGroupIDs = new int[]
+        public static readonly int[] AdvancedSmallToLargeShipsMarketGroupIDs = new[]
             { 
                 InterceptorsMarketGroupID, CovertOpsMarketGroupID, AssaultShipsMarketGroupID, LogisticsMarketGroupID,
                 HeavyAssaultShipsMarketGroupID, TransportShipsMarketGroupID, CommandShipsMarketGroupID,

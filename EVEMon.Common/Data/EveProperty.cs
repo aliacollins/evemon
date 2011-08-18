@@ -140,7 +140,7 @@ namespace EVEMon.Common.Data
                 {
                     // Format a value of Packaged Volume
                     if (Name == "Packaged Volume")
-                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0} {1}", numericValue, Unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0:N1} {1}", numericValue, Unit);
 
                     // Format a value of Structure Volume
                     if (ID == DBConstants.VolumePropertyID)
@@ -148,7 +148,7 @@ namespace EVEMon.Common.Data
 
                     // Format a value of Capacitor Capacity
                     if (ID == DBConstants.CapacitorCapacityPropertyID)
-                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", Math.Floor(numericValue), Unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0:N0} {1}", Math.Floor(numericValue), Unit);
 
                     // Format a value of Ships Warp Speed
                     if (ID == DBConstants.ShipWarpSpeedPropertyID)
@@ -159,11 +159,11 @@ namespace EVEMon.Common.Data
                         // Format a value of Mass
                         case DBConstants.MassUnitID:
                             return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000 ?
-                                                    "{0:#,##0.0#} {1}" : "{0:#,##0} {1}", numericValue, Unit);
+                                                    "{0:#,##0.0#} {1}" : "{0:N0} {1}", numericValue, Unit);
 
                             // Format a value of Millseconds
                         case DBConstants.MillsecondsUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} {1}", numericValue / 1000, Unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:N2} {1}", numericValue / 1000, Unit);
 
                         // Format a value of Absolute Percentage
                         case DBConstants.AbsolutePercentUnitID:
@@ -181,7 +181,7 @@ namespace EVEMon.Common.Data
                         case DBConstants.InversedModifierPercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - numericValue) * 100, Unit);
 
-                        // A reference to a group (groupID), it has been pre-transformed on XmlGenerator.
+                        // A reference to a group (groupID), it has been pre-transformed on XmlGenerator
                         case DBConstants.GroupIDUnitID:
                             return value;
 

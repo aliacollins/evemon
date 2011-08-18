@@ -15,7 +15,7 @@ namespace EVEMon.SkillPlanner
         #region Initialization
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public ShipSelectControl()
         {
@@ -77,6 +77,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
         private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update settings
@@ -154,7 +155,7 @@ namespace EVEMon.SkillPlanner
         #region Content creation
 
         /// <summary>
-        /// Refresh the controls
+        /// Refresh the controls.
         /// </summary>
         private void UpdateContent()
         {
@@ -163,7 +164,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Rebuild the tree view
+        /// Rebuild the tree view.
         /// </summary>
         private void BuildTreeView()
         {
@@ -180,8 +181,8 @@ namespace EVEMon.SkillPlanner
                 // Create the nodes
                 foreach (MarketGroup group in StaticItems.ShipsMarketGroup.SubGroups)
                 {
-                    TreeNode node = new TreeNode()
-                    {
+                    TreeNode node = new TreeNode
+                                        {
                         Text = group.Name,
                         Tag = group
                     };
@@ -245,8 +246,8 @@ namespace EVEMon.SkillPlanner
             // Add all subcategories
             foreach (MarketGroup childGroup in group.SubGroups)
             {
-                TreeNode node = new TreeNode()
-                {
+                TreeNode node = new TreeNode
+                                    {
                     Text = childGroup.Name,
                     Tag = childGroup
                 };
@@ -260,10 +261,10 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all items
-            foreach (Item childItem in group.Items.Where(m_usabilityPredicate).Where(m_racePredicate))
+            foreach (Item childItem in group.Items.Where(x => m_usabilityPredicate(x) && m_racePredicate(x)))
             {
-                TreeNode node = new TreeNode()
-                {
+                TreeNode node = new TreeNode
+                                    {
                     Text = childItem.Name,
                     Tag = childItem
                 };

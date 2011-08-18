@@ -12,7 +12,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class Item
     {
-        protected readonly FastList<StaticSkillLevel> m_prerequisites;
+        private readonly FastList<StaticSkillLevel> m_prerequisites;
 
 
         #region Constructors

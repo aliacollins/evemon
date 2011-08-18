@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public EveObjectBrowserControl()
+        protected EveObjectBrowserControl()
         {
             InitializeComponent();
         }
@@ -287,7 +287,11 @@ namespace EVEMon.SkillPlanner
                     // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
                     if (prop.HideIfDefault)
                         visibleProperty = SelectControl.SelectedObjects
-                            .Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
+                            .Any(x =>
+                                     {
+                                         EvePropertyValue? eveProperty = x.Properties[prop];
+                                         return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
+                                     });
 
                     if (prop.ID == DBConstants.ReprocessingSkillPropertyID)
                         visibleProperty = false;
@@ -327,8 +331,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="prop">The property.</param>
         private void AddPropertyValue(List<ListViewItem> items, ListViewGroup group, EveProperty prop)
         {
-            string[] labels = SelectControl.SelectedObjects.Select(x => prop.GetLabelOrDefault(x)).ToArray();
-            float[] values = SelectControl.SelectedObjects.Select(x => prop.GetNumericValue(x)).ToArray();
+            string[] labels = SelectControl.SelectedObjects.Select(prop.GetLabelOrDefault).ToArray();
+            float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
             ListViewItem item = new ListViewItem(group);
@@ -343,7 +347,7 @@ namespace EVEMon.SkillPlanner
         /// Adds the value for selected objects.
         /// </summary>
         /// <param name="obj">The evaluated object.</param>
-        /// <param name="items">The list of items.</param>
+        /// <param name="item">The list of items.</param>
         /// <param name="labels">The labels.</param>
         /// <param name="values">The values.</param>
         private void AddValueForSelectedObjects(Object obj, ListViewItem item, string[] labels, float[] values)
@@ -403,9 +407,8 @@ namespace EVEMon.SkillPlanner
             string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group);
-            item.ToolTipText = "The slot that this item fits in";
-            item.Text = "Fitting Slot";
+            ListViewItem item = new ListViewItem(group)
+                                    {ToolTipText = "The slot that this item fits in", Text = "Fitting Slot"};
             items.Add(item);
 
             // Add the value for every selected item
@@ -473,9 +476,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Create the list view item
-                ListViewItem lvItem = new ListViewItem(group);
-                lvItem.ToolTipText = item.Description;
-                lvItem.Text = item.Name;
+                ListViewItem lvItem = new ListViewItem(group) {ToolTipText = item.Description, Text = item.Name};
                 items.Add(lvItem);
 
                 AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
@@ -504,9 +505,15 @@ namespace EVEMon.SkillPlanner
             }
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group);
-            item.ToolTipText = StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).Description;
-            item.Text = StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).Name;
+            ListViewItem item = new ListViewItem(group)
+                                    {
+                                        ToolTipText =
+                                            StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).
+                                            Description,
+                                        Text =
+                                            StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).
+                                            Name
+                                    };
             items.Add(item);
 
             // Add the value for every selected item

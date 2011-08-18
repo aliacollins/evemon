@@ -50,12 +50,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Constructor from an <see cref="ISkillLevel"/> object.
         /// </summary>
-        /// <param name="level"></param>
-        public StaticSkillLevel(ISkillLevel level)
+        /// <param name="obj"></param>
+        public StaticSkillLevel(ISkillLevel obj)
             : this()
         {
-            Skill = level.Skill;
-            Level = level.Level;
+            Skill = obj.Skill;
+            Level = obj.Level;
         }
 
         /// <summary>

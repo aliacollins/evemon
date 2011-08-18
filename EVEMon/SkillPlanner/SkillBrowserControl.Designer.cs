@@ -37,12 +37,23 @@ namespace EVEMon.SkillPlanner
             this.miPlanTo3 = new System.Windows.Forms.ToolStripMenuItem();
             this.miPlanTo4 = new System.Windows.Forms.ToolStripMenuItem();
             this.miPlanTo5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmrSkillTick = new System.Windows.Forms.Timer(this.components);
+            this.tmrTrainingSkillTick = new System.Windows.Forms.Timer(this.components);
             this.verticalSplitContainer = new EVEMon.Controls.PersistentSplitContainer();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.rightPanel = new System.Windows.Forms.Panel();
             this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplayControl();
             this.headerPanel = new System.Windows.Forms.Panel();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.showSkillExplorerMenu = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ownsBookMenu = new System.Windows.Forms.ToolStripButton();
+            this.planToMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.planTo0Menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.planTo1Menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.planTo2Menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.planTo3Menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.planTo4Menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.planTo5Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlPlanControl = new System.Windows.Forms.Panel();
             this.flpSkillNameCost = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSkillName = new System.Windows.Forms.Label();
@@ -55,17 +66,6 @@ namespace EVEMon.SkillPlanner
             this.lblLevel3Time = new System.Windows.Forms.Label();
             this.lblLevel2Time = new System.Windows.Forms.Label();
             this.lblLevel1Time = new System.Windows.Forms.Label();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.showSkillExplorerMenu = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.ownsBookMenu = new System.Windows.Forms.ToolStripButton();
-            this.planToMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.planTo0Menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.planTo1Menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.planTo2Menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.planTo3Menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.planTo4Menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.planTo5Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.lblHelp = new System.Windows.Forms.Label();
             this.cmsSkillContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.verticalSplitContainer)).BeginInit();
@@ -74,9 +74,9 @@ namespace EVEMon.SkillPlanner
             this.verticalSplitContainer.SuspendLayout();
             this.rightPanel.SuspendLayout();
             this.headerPanel.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.pnlPlanControl.SuspendLayout();
             this.flpSkillNameCost.SuspendLayout();
-            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmsSkillContext
@@ -89,54 +89,54 @@ namespace EVEMon.SkillPlanner
             this.miPlanTo4,
             this.miPlanTo5});
             this.cmsSkillContext.Name = "cmsSkillContext";
-            this.cmsSkillContext.Size = new System.Drawing.Size(151, 136);
+            this.cmsSkillContext.Size = new System.Drawing.Size(153, 158);
             // 
             // miPlanTo0
             // 
             this.miPlanTo0.Name = "miPlanTo0";
-            this.miPlanTo0.Size = new System.Drawing.Size(150, 22);
+            this.miPlanTo0.Size = new System.Drawing.Size(152, 22);
             this.miPlanTo0.Text = "Remove";
             this.miPlanTo0.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo1
             // 
             this.miPlanTo1.Name = "miPlanTo1";
-            this.miPlanTo1.Size = new System.Drawing.Size(150, 22);
+            this.miPlanTo1.Size = new System.Drawing.Size(152, 22);
             this.miPlanTo1.Text = "Plan to Level 1";
             this.miPlanTo1.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo2
             // 
             this.miPlanTo2.Name = "miPlanTo2";
-            this.miPlanTo2.Size = new System.Drawing.Size(150, 22);
+            this.miPlanTo2.Size = new System.Drawing.Size(152, 22);
             this.miPlanTo2.Text = "Plan to Level 2";
             this.miPlanTo2.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo3
             // 
             this.miPlanTo3.Name = "miPlanTo3";
-            this.miPlanTo3.Size = new System.Drawing.Size(150, 22);
+            this.miPlanTo3.Size = new System.Drawing.Size(152, 22);
             this.miPlanTo3.Text = "Plan to Level 3";
             this.miPlanTo3.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo4
             // 
             this.miPlanTo4.Name = "miPlanTo4";
-            this.miPlanTo4.Size = new System.Drawing.Size(150, 22);
+            this.miPlanTo4.Size = new System.Drawing.Size(152, 22);
             this.miPlanTo4.Text = "Plan to Level 4";
             this.miPlanTo4.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo5
             // 
             this.miPlanTo5.Name = "miPlanTo5";
-            this.miPlanTo5.Size = new System.Drawing.Size(150, 22);
+            this.miPlanTo5.Size = new System.Drawing.Size(152, 22);
             this.miPlanTo5.Text = "Plan to Level 5";
             this.miPlanTo5.Click += new System.EventHandler(this.planToMenu_Click);
             // 
-            // tmrSkillTick
+            // tmrTrainingSkillTick
             // 
-            this.tmrSkillTick.Enabled = true;
-            this.tmrSkillTick.Interval = 1000;
+            this.tmrTrainingSkillTick.Interval = 30000;
+            this.tmrTrainingSkillTick.Tick += new System.EventHandler(this.tmrTrainingSkill_Tick);
             // 
             // verticalSplitContainer
             // 
@@ -206,6 +206,109 @@ namespace EVEMon.SkillPlanner
             this.headerPanel.Name = "headerPanel";
             this.headerPanel.Size = new System.Drawing.Size(637, 131);
             this.headerPanel.TabIndex = 0;
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showSkillExplorerMenu,
+            this.toolStripSeparator1,
+            this.ownsBookMenu,
+            this.planToMenu});
+            this.toolStrip.Location = new System.Drawing.Point(0, 106);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(637, 25);
+            this.toolStrip.TabIndex = 20;
+            this.toolStrip.Text = "toolStrip";
+            // 
+            // showSkillExplorerMenu
+            // 
+            this.showSkillExplorerMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.showSkillExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showSkillExplorerMenu.Image")));
+            this.showSkillExplorerMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showSkillExplorerMenu.Name = "showSkillExplorerMenu";
+            this.showSkillExplorerMenu.Size = new System.Drawing.Size(182, 22);
+            this.showSkillExplorerMenu.Text = "&Show what this skill enables...";
+            this.showSkillExplorerMenu.ToolTipText = "Opens the Skill Explorer.";
+            this.showSkillExplorerMenu.Click += new System.EventHandler(this.showSkillExplorerMenu_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // ownsBookMenu
+            // 
+            this.ownsBookMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ownsBookMenu.Checked = true;
+            this.ownsBookMenu.CheckOnClick = true;
+            this.ownsBookMenu.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ownsBookMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ownsBookMenu.Image = ((System.Drawing.Image)(resources.GetObject("ownsBookMenu.Image")));
+            this.ownsBookMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ownsBookMenu.Name = "ownsBookMenu";
+            this.ownsBookMenu.Size = new System.Drawing.Size(71, 22);
+            this.ownsBookMenu.Text = "&Owns book";
+            this.ownsBookMenu.Click += new System.EventHandler(this.ownsBookMenu_Click);
+            // 
+            // planToMenu
+            // 
+            this.planToMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.planTo0Menu,
+            this.planTo1Menu,
+            this.planTo2Menu,
+            this.planTo3Menu,
+            this.planTo4Menu,
+            this.planTo5Menu});
+            this.planToMenu.Image = ((System.Drawing.Image)(resources.GetObject("planToMenu.Image")));
+            this.planToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.planToMenu.Name = "planToMenu";
+            this.planToMenu.Size = new System.Drawing.Size(82, 22);
+            this.planToMenu.Text = "&Plan to...";
+            // 
+            // planTo0Menu
+            // 
+            this.planTo0Menu.Name = "planTo0Menu";
+            this.planTo0Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo0Menu.Text = "&Remove";
+            this.planTo0Menu.Click += new System.EventHandler(this.planToMenu_Click);
+            // 
+            // planTo1Menu
+            // 
+            this.planTo1Menu.Name = "planTo1Menu";
+            this.planTo1Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo1Menu.Text = "Level &1";
+            this.planTo1Menu.Click += new System.EventHandler(this.planToMenu_Click);
+            // 
+            // planTo2Menu
+            // 
+            this.planTo2Menu.Name = "planTo2Menu";
+            this.planTo2Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo2Menu.Text = "Level &2";
+            this.planTo2Menu.Click += new System.EventHandler(this.planToMenu_Click);
+            // 
+            // planTo3Menu
+            // 
+            this.planTo3Menu.Name = "planTo3Menu";
+            this.planTo3Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo3Menu.Text = "Level &3";
+            this.planTo3Menu.Click += new System.EventHandler(this.planToMenu_Click);
+            // 
+            // planTo4Menu
+            // 
+            this.planTo4Menu.Name = "planTo4Menu";
+            this.planTo4Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo4Menu.Text = "Level &4";
+            this.planTo4Menu.Click += new System.EventHandler(this.planToMenu_Click);
+            // 
+            // planTo5Menu
+            // 
+            this.planTo5Menu.Name = "planTo5Menu";
+            this.planTo5Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo5Menu.Text = "Level &5";
+            this.planTo5Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // pnlPlanControl
             // 
@@ -336,109 +439,6 @@ namespace EVEMon.SkillPlanner
             this.lblLevel1Time.TabIndex = 1;
             this.lblLevel1Time.Text = "Level I: 1h, 48m, 55s (plus 140d, 10h, 15m, 30s)";
             // 
-            // toolStrip
-            // 
-            this.toolStrip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showSkillExplorerMenu,
-            this.toolStripSeparator1,
-            this.ownsBookMenu,
-            this.planToMenu});
-            this.toolStrip.Location = new System.Drawing.Point(0, 106);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(637, 25);
-            this.toolStrip.TabIndex = 20;
-            this.toolStrip.Text = "toolStrip";
-            // 
-            // showSkillExplorerMenu
-            // 
-            this.showSkillExplorerMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.showSkillExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showSkillExplorerMenu.Image")));
-            this.showSkillExplorerMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.showSkillExplorerMenu.Name = "showSkillExplorerMenu";
-            this.showSkillExplorerMenu.Size = new System.Drawing.Size(182, 22);
-            this.showSkillExplorerMenu.Text = "&Show what this skill enables...";
-            this.showSkillExplorerMenu.ToolTipText = "Opens the Skill Explorer.";
-            this.showSkillExplorerMenu.Click += new System.EventHandler(this.showSkillExplorerMenu_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // ownsBookMenu
-            // 
-            this.ownsBookMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ownsBookMenu.Checked = true;
-            this.ownsBookMenu.CheckOnClick = true;
-            this.ownsBookMenu.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ownsBookMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ownsBookMenu.Image = ((System.Drawing.Image)(resources.GetObject("ownsBookMenu.Image")));
-            this.ownsBookMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ownsBookMenu.Name = "ownsBookMenu";
-            this.ownsBookMenu.Size = new System.Drawing.Size(71, 22);
-            this.ownsBookMenu.Text = "&Owns book";
-            this.ownsBookMenu.Click += new System.EventHandler(this.ownsBookMenu_Click);
-            // 
-            // planToMenu
-            // 
-            this.planToMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.planTo0Menu,
-            this.planTo1Menu,
-            this.planTo2Menu,
-            this.planTo3Menu,
-            this.planTo4Menu,
-            this.planTo5Menu});
-            this.planToMenu.Image = ((System.Drawing.Image)(resources.GetObject("planToMenu.Image")));
-            this.planToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.planToMenu.Name = "planToMenu";
-            this.planToMenu.Size = new System.Drawing.Size(82, 22);
-            this.planToMenu.Text = "&Plan to...";
-            // 
-            // planTo0Menu
-            // 
-            this.planTo0Menu.Name = "planTo0Menu";
-            this.planTo0Menu.Size = new System.Drawing.Size(117, 22);
-            this.planTo0Menu.Text = "&Remove";
-            this.planTo0Menu.Click += new System.EventHandler(this.planToMenu_Click);
-            // 
-            // planTo1Menu
-            // 
-            this.planTo1Menu.Name = "planTo1Menu";
-            this.planTo1Menu.Size = new System.Drawing.Size(117, 22);
-            this.planTo1Menu.Text = "Level &1";
-            this.planTo1Menu.Click += new System.EventHandler(this.planToMenu_Click);
-            // 
-            // planTo2Menu
-            // 
-            this.planTo2Menu.Name = "planTo2Menu";
-            this.planTo2Menu.Size = new System.Drawing.Size(117, 22);
-            this.planTo2Menu.Text = "Level &2";
-            this.planTo2Menu.Click += new System.EventHandler(this.planToMenu_Click);
-            // 
-            // planTo3Menu
-            // 
-            this.planTo3Menu.Name = "planTo3Menu";
-            this.planTo3Menu.Size = new System.Drawing.Size(117, 22);
-            this.planTo3Menu.Text = "Level &3";
-            this.planTo3Menu.Click += new System.EventHandler(this.planToMenu_Click);
-            // 
-            // planTo4Menu
-            // 
-            this.planTo4Menu.Name = "planTo4Menu";
-            this.planTo4Menu.Size = new System.Drawing.Size(117, 22);
-            this.planTo4Menu.Text = "Level &4";
-            this.planTo4Menu.Click += new System.EventHandler(this.planToMenu_Click);
-            // 
-            // planTo5Menu
-            // 
-            this.planTo5Menu.Name = "planTo5Menu";
-            this.planTo5Menu.Size = new System.Drawing.Size(117, 22);
-            this.planTo5Menu.Text = "Level &5";
-            this.planTo5Menu.Click += new System.EventHandler(this.planToMenu_Click);
-            // 
             // lblHelp
             // 
             this.lblHelp.AutoSize = true;
@@ -464,12 +464,12 @@ namespace EVEMon.SkillPlanner
             this.rightPanel.ResumeLayout(false);
             this.headerPanel.ResumeLayout(false);
             this.headerPanel.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.pnlPlanControl.ResumeLayout(false);
             this.pnlPlanControl.PerformLayout();
             this.flpSkillNameCost.ResumeLayout(false);
             this.flpSkillNameCost.PerformLayout();
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -483,7 +483,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miPlanTo3;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo4;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo5;
-        private System.Windows.Forms.Timer tmrSkillTick;
+        private System.Windows.Forms.Timer tmrTrainingSkillTick;
         private System.Windows.Forms.Panel pnlPlanControl;
         private System.Windows.Forms.Label lblSkillClass;
         private System.Windows.Forms.TextBox descriptionTextBox;

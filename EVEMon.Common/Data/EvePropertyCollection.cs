@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -42,13 +42,10 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (EvePropertyValue prop in m_items)
+                foreach (EvePropertyValue prop in m_items.TakeWhile(prop => prop.Property != null)
+                    .Where(prop => prop.Property == property))
                 {
-                    if (prop.Property == null)
-                        break;
-
-                    if (prop.Property == property)
-                        return prop;
+                    return prop;
                 }
                 return null;
             }
@@ -57,19 +54,16 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets a property from its name. If not found, return null.
         /// </summary>
-        /// <param name="property">The property we're searching for.</param>
+        /// <param name="id">The property id we're searching for.</param>
         /// <returns>The wanted property when found; null otherwise.</returns>
-        public Nullable<EvePropertyValue> this[int id]
+        public EvePropertyValue? this[int id]
         {
             get
             {
-                foreach (EvePropertyValue prop in m_items)
+                foreach (EvePropertyValue prop in m_items.TakeWhile(prop => prop.Property != null)
+                    .Where(prop => prop.Property.ID == id))
                 {
-                    if (prop.Property == null)
-                        break;
-
-                    if (prop.Property.ID == id)
-                        return prop;
+                    return prop;
                 }
                 return null;
             }

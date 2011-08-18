@@ -82,7 +82,8 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                return from category in Categories from certClass in category from cert in certClass select cert;
+                return Categories.SelectMany(category => category, (category, certClass) => new {category, certClass}).
+                        SelectMany(x => x.certClass);
             }
         }
 

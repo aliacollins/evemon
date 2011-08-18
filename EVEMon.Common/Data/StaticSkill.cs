@@ -140,10 +140,11 @@ namespace EVEMon.Common.Data
         public string FormattedCost { get; private set; }
 
         /// <summary>
-        /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. 
+        /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>.
         /// The order matches the hierarchy but skills are not duplicated and are systematically trained to the highest required level.
         /// For example, if some skill is required to lv3 and, later, to lv4, this first time it is encountered, lv4 is returned.
         /// </summary>
+        /// <value>All prerequisites.</value>
         /// <remarks>Please note they may be redundancies.</remarks>
         public IEnumerable<StaticSkillLevel> AllPrerequisites
         {
@@ -176,8 +177,8 @@ namespace EVEMon.Common.Data
         /// Calculates the cumulative points required for a level of this skill (starting from a zero level).
         /// </summary>
         /// <param name="level">The level.</param>
-        /// <exception cref="NotImplementedException"></exception>
         /// <returns>The required nr. of points.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public int GetPointsRequiredForLevel(int level)
         {
             // Much faster than the old formula. This one too may have 1pt difference here and there, only on the lv2 skills

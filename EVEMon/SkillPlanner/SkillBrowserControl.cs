@@ -1,25 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
     public partial class SkillBrowser : UserControl
     {
-        private const DescriptiveTextOptions TimeOptions = DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText;
-
         private Skill m_selectedSkill;
         private Plan m_plan;
 
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public SkillBrowser()
         {
@@ -104,13 +98,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInExplorer(Skill skill)
         {
-            var planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            var skillExplorer = WindowsFactory<SkillExplorerWindow>.ShowByTag(planWindow, (window) => new SkillExplorerWindow(skill, window));
+            PlanWindow planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            SkillExplorerWindow skillExplorer = WindowsFactory<SkillExplorerWindow>
+                .ShowByTag(planWindow, window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
         }
 
 
         #region Content update
+
         /// <summary>
         /// Occurs whenever a plan is changed.
         /// </summary>
@@ -169,7 +165,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the browser's content.
         /// </summary>
-        public void UpdateContent()
+        private void UpdateContent()
         {
             if (m_selectedSkill == null)
             {
@@ -194,9 +190,8 @@ namespace EVEMon.SkillPlanner
             lblSkillCost.Text = String.Format(CultureConstants.DefaultCulture, "{0} ISK", m_selectedSkill.FormattedCost);
             descriptionTextBox.Text = m_selectedSkill.Description;
             if (!m_selectedSkill.IsPublic)
-            {
                 descriptionTextBox.Text += " ** THIS IS A NON-PUBLIC SKILL **";
-            }
+
             lblAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Primary: {0}, Secondary: {1} (SP/Hour: {2:#,##0})",
                                                     m_selectedSkill.PrimaryAttribute.ToString(),
                                                     m_selectedSkill.SecondaryAttribute.ToString(),
@@ -223,6 +218,8 @@ namespace EVEMon.SkillPlanner
             // Update "planned level" combo (on the top left)
             UpdatePlannedLevel();
 
+            // Enable refresh every 30s if the selected skill is in training
+            tmrTrainingSkillTick.Enabled = m_selectedSkill.IsTraining;
         }
 
         /// <summary>
@@ -245,7 +242,6 @@ namespace EVEMon.SkillPlanner
             }
 
             // Left training time for level only
-            bool isPlanned = m_plan.IsPlanned(m_selectedSkill, level);
             TimeSpan timeOfLevelOnly = m_selectedSkill.GetLeftTrainingTimeForLevelOnly(level);
             sb.Append(timeOfLevelOnly.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
 
@@ -269,22 +265,24 @@ namespace EVEMon.SkillPlanner
 
             label.Text = sb.ToString();
         }
+
         #endregion
 
 
         #region Controls events handlers
+
         /// <summary>
-        /// Every 30s, we update the time for the training skill
+        /// Every 30s, we update the time for the training skill.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tmrTrainingUpdateTick(object sender, EventArgs e)
+        private void tmrTrainingSkill_Tick(object sender, EventArgs e)
         {
             UpdateContent();
         }
 
         /// <summary>
-        /// Whenever the selection changes, we update the selected skill
+        /// Whenever the selection changes, we update the selected skill.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -294,14 +292,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Toolbar > Owns book
+        /// Toolbar > Owns book.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ownsBookMenu_Click(object sender, EventArgs e)
         {
             m_selectedSkill.IsOwned = ownsBookMenu.Checked;
-            UpdateContent();
             skillSelectControl.UpdateContent();
         }
 
@@ -314,10 +311,12 @@ namespace EVEMon.SkillPlanner
         {
             ShowSkillInExplorer(m_selectedSkill);
         }
+
         #endregion
 
 
         #region Skill tree's context menu
+
         /// <summary>
         /// Whenever the user right-click the skill tree on the left, we display the context menu.
         /// </summary>
@@ -327,65 +326,31 @@ namespace EVEMon.SkillPlanner
         {
             if (e.Button == MouseButtons.Right)
             {
-                bool isPlanned = false;
-                isPlanned |= PlanHelper.UpdatesRegularPlanToMenu(miPlanTo0, m_plan, e.Skill, 0);
-                isPlanned |= PlanHelper.UpdatesRegularPlanToMenu(miPlanTo1, m_plan, e.Skill, 1);
-                isPlanned |= PlanHelper.UpdatesRegularPlanToMenu(miPlanTo2, m_plan, e.Skill, 2);
-                isPlanned |= PlanHelper.UpdatesRegularPlanToMenu(miPlanTo3, m_plan, e.Skill, 3);
-                isPlanned |= PlanHelper.UpdatesRegularPlanToMenu(miPlanTo4, m_plan, e.Skill, 4);
-                isPlanned |= PlanHelper.UpdatesRegularPlanToMenu(miPlanTo5, m_plan, e.Skill, 5);
+                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo0, m_plan, e.Skill, 0);
+                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo1, m_plan, e.Skill, 1);
+                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo2, m_plan, e.Skill, 2);
+                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo3, m_plan, e.Skill, 3);
+                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo4, m_plan, e.Skill, 4);
+                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo5, m_plan, e.Skill, 5);
                 cmsSkillContext.Show(skillTreeDisplay, e.Location);
+                return;
             }
-            else
-            {
-                SelectedSkill = e.Skill;
-            }
+
+            SelectedSkill = e.Skill;
         }
 
         /// <summary>
-        /// Updates the given "Plan to N" menu item.
-        /// </summary>
-        /// <param name="menu"></param>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        private bool UpdatePlanToMenuItem(ToolStripMenuItem menu, Skill skill, int level)
-        {
-            bool isKnown = (level <= skill.Level);
-            bool isPlanned = m_plan.IsPlanned(skill, level);
-            bool isTraining = skill.IsTraining;
-            menu.Tag = skill;
-
-            // Already planned ?
-            if (isPlanned)
-            {
-                menu.Enabled = false;
-                return true;
-            }
-
-            // Level already known
-            if (isKnown)
-            {
-                menu.Enabled = false;
-                return false;
-            }
-
-            // Output with prerequisites : "Plan to level V (5d 3h 15m)" 
-            menu.Enabled = true;
-            return false;
-        }
-
-        /// <summary>
-        /// Context menu > Plan to N / Remove
-        /// Toolbar > Plan to... > Level N / Remove
+        /// Context menu > Plan to N / Remove.
+        /// Toolbar > Plan to... > Level N / Remove.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void planToMenu_Click(object sender, EventArgs e)
         {
-            var operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
+            IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
             PlanHelper.SelectPerform(operation);
         }
+
         #endregion
     }
 }

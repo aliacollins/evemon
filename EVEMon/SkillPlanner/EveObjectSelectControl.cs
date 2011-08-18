@@ -1,12 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Collections.Generic;
-
 using EVEMon.Common;
-using EVEMon.Common.Data;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
 {
@@ -15,17 +14,16 @@ namespace EVEMon.SkillPlanner
         public event EventHandler SelectionChanged;
 
         protected Func<Item, Boolean> m_usabilityPredicate;
-        protected List<Item> m_selectedObjects = null;
         protected ObjectActivityFilter m_activityFilter;
         protected BlueprintActivity m_activity;
-        protected Plan m_plan;
-
         protected bool m_allExpanded;
+
+        private List<Item> m_selectedObjects;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public EveObjectSelectControl()
+        protected EveObjectSelectControl()
         {
             InitializeComponent();
         }
@@ -33,11 +31,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
-        public Plan Plan
-        {
-            get { return m_plan; }
-            set { m_plan = value; }
-        }
+        public Plan Plan { private get; set; }
 
         /// <summary>
         /// Occurs when the control is loaded.
@@ -81,12 +75,13 @@ namespace EVEMon.SkillPlanner
         }
 
         #region Search
+
         /// <summary>
         /// Occurs when clicking on the search text control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void lbSearchTextHint_Click(object sender, EventArgs e)
+        private void lbSearchTextHint_Click(object sender, EventArgs e)
         {
             tbSearchText.Focus();
         }
@@ -96,7 +91,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void tbSearchText_Enter(object sender, EventArgs e)
+        private void tbSearchText_Enter(object sender, EventArgs e)
         {
             lbSearchTextHint.Visible = false;
         }
@@ -106,7 +101,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void tbSearchText_Leave(object sender, EventArgs e)
+        private void tbSearchText_Leave(object sender, EventArgs e)
         {
             lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
         }
@@ -178,8 +173,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="filteredItems"></param>
         private void SearchNode(TreeNode tn, string searchText, List<Item> filteredItems)
         {
-            Item itm = tn.Tag as Item;
-            if (itm == null)
+            Item item = tn.Tag as Item;
+            if (item == null)
             {
                 foreach (TreeNode subNode in tn.Nodes)
                 {
@@ -188,11 +183,9 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            if (itm.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText) ||
-                itm.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
-            {
-                filteredItems.Add(itm);
-            }
+            if (item.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText)
+                || item.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
+                filteredItems.Add(item);
         }
 
         /// <summary>
@@ -202,16 +195,18 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 0x01)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
+            if (e.KeyChar != 0x01)
+                return;
+
+            tbSearchText.SelectAll();
+            e.Handled = true;
         }
+
         #endregion
 
 
         #region Selected Objects
+
         /// <summary>
         /// All the selected objects (through multi-select).
         /// </summary>
@@ -250,7 +245,7 @@ namespace EVEMon.SkillPlanner
         /// Selects the given nodes.
         /// </summary>
         /// <param name="s"></param>
-        protected void SetSelectedObjects(IEnumerable<Item> s)
+        private void SetSelectedObjects(IEnumerable<Item> s)
         {
             // Updates selection
             m_selectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
@@ -275,20 +270,14 @@ namespace EVEMon.SkillPlanner
         {
             if (tvItems.SelectedNodes.Count != 0)
             {
-                List<Item> selectedObjects = new List<Item>();
-                foreach (TreeNode node in tvItems.SelectedNodes)
-                {
-                    Item obj = node.Tag as Item;
-                    if (obj != null)
-                        selectedObjects.Add(obj);
-                }
+                List<Item> selectedObjects = (tvItems.SelectedNodes.Cast<TreeNode>().Select(node => node.Tag)).OfType<Item>().ToList();
                 SetSelectedObjects(selectedObjects);
+                return;
             }
-            else
-            {
-                SetSelectedObjects(null);
-            }
+
+            SetSelectedObjects(null);
         }
+
         #endregion
 
 
@@ -313,19 +302,12 @@ namespace EVEMon.SkillPlanner
         {
             if (lbSearchList.SelectedItems.Count != 0)
             {
-                List<Item> selectedObjects = new List<Item>();
-                foreach (Object node in lbSearchList.SelectedItems)
-                {
-                    var obj = node as Item;
-                    if (obj != null)
-                        selectedObjects.Add(obj);
-                }
+                List<Item> selectedObjects = lbSearchList.SelectedItems.OfType<Item>().ToList();
                 SetSelectedObjects(selectedObjects);
+                return;
             }
-            else
-            {
-                SetSelectedObjects(null);
-            }
+
+            SetSelectedObjects(null);
         }
 
         /// <summary>
@@ -399,6 +381,7 @@ namespace EVEMon.SkillPlanner
 
 
         #region Predicates
+
         /// <summary>
         /// Filter for all items.
         /// </summary>
@@ -417,14 +400,13 @@ namespace EVEMon.SkillPlanner
         protected bool CanUse(Item eo)
         {
             IEnumerable<StaticSkillLevel> prerequisites = eo.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
-            bool hasSelectedActivity = true;
             bool bpBrowserControl = this is BlueprintSelectControl;
 
             // Is item a blueprint and supports the selected activity ?  
             if (bpBrowserControl)
             {
-                hasSelectedActivity = prerequisites.Any(x => x.Activity == m_activity)
-                       || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == m_activity);
+                bool hasSelectedActivity = prerequisites.Any(x => x.Activity == m_activity)
+                                           || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == m_activity);
 
                 // Can not be used when item doesn't support the selected activity
                 if ((m_activityFilter == ObjectActivityFilter.Manufacturing || m_activityFilter == ObjectActivityFilter.Invention)
@@ -457,31 +439,25 @@ namespace EVEMon.SkillPlanner
                 {
                     prereqTrained.Clear();
 
-                    foreach (StaticSkillLevel prereq in prerequisites.Where(x => x.Activity == activity))
-                    {
-                        int level = m_plan.Character.GetSkillLevel(prereq.Skill);
-                        prereqTrained.Add(level >= prereq.Level);
-                    }
+                    prereqTrained.AddRange(
+                        prerequisites.Where(x => x.Activity == activity).Select(
+                            prereq => new {prereq, level = Plan.Character.GetSkillLevel(prereq.Skill)}).Select(
+                                y => y.level >= y.prereq.Level));
 
                     // Has the character trained all prereq skills for this activity ?
-                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x == true))
+                    if (prerequisites.IsEmpty() || prereqTrained.All(x => true))
                         return true;
                 }
                 return false;
             }
-            // Do a simple predication
-            else
-            {
-                // Create a list with each prereq skill trained status
-                foreach (StaticSkillLevel prereq in prerequisites)
-                {
-                    int level = m_plan.Character.GetSkillLevel(prereq.Skill);
-                    prereqTrained.Add(level >= prereq.Level);
-                }
-            }
+
+            // Do a simple predication and create a list with each prereq skill trained status
+            prereqTrained.AddRange(
+                prerequisites.Select(prereq => new {prereq, level = Plan.Character.GetSkillLevel(prereq.Skill)}).
+                    Select(y => y.level >= y.prereq.Level));
 
             // Has the character trained all prereq skills ?
-            return (prereqTrained.All(x => x == true));
+            return (prereqTrained.All(x => true));
         }
 
         /// <summary>
@@ -493,6 +469,7 @@ namespace EVEMon.SkillPlanner
         {
             return !CanUse(eo);
         }
+
         #endregion
 
     }

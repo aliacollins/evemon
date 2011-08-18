@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a skill and level tuple
+    /// Represents a skill and level tuple.
     /// </summary>
     public struct SkillLevel : ISkillLevel
     {
         /// <summary>
-        /// Constructor from the skill object
+        /// Constructor from the skill object.
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
         public SkillLevel(Skill skill, int level)
             : this()
         {
-            this.Skill = skill;
-            this.Level = level;
+            Skill = skill;
+            Level = level;
         }
 
         /// <summary>
-        /// Gets the static skill
+        /// Gets the static skill.
         /// </summary>
         StaticSkill ISkillLevel.Skill
         {
@@ -31,25 +29,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets the skill
+        /// Gets or sets the skill.
         /// </summary>
-        public Skill Skill
-        {
-            get;
-            set;
-        }
+        public Skill Skill { get; private set; }
 
         /// <summary>
-        /// Gets or sets the skill level
+        /// Gets or sets the skill level.
         /// </summary>
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; private set; }
 
         /// <summary>
-        /// Gets true if this skill level is already trained
+        /// Gets true if this skill level is already trained.
         /// </summary>
         public bool IsTrained
         {
@@ -72,10 +62,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<SkillLevel> AllDependencies
         {
-            get
-            {
-                return new StaticSkillLevel(this).AllDependencies.ToCharacter(this.Skill.Character);
-            }
+            get { return new StaticSkillLevel(this).AllDependencies.ToCharacter(Skill.Character); }
         }
 
         /// <summary>
@@ -89,7 +76,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Implicitly converts from a non-static training
+        /// Implicitly converts from a non-static training.
         /// </summary>
         /// <param name="training"></param>
         /// <returns></returns>
@@ -99,7 +86,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a string representation of this prerequisite
+        /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

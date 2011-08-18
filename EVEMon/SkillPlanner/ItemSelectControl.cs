@@ -14,9 +14,9 @@ namespace EVEMon.SkillPlanner
         private readonly List<MarketGroup> m_presetGroups = new List<MarketGroup>();
         private readonly List<ItemMetaGroup> m_metaGroups = new List<ItemMetaGroup>();
 
-        private Func<Item, Boolean> m_slotPredicate = (x) => true;
-        private Func<Item, Boolean> m_metaGroupPredicate = (x) => true;
-        private Func<Item, Boolean> m_fittingPredicate = (x) => true;
+        private Func<Item, Boolean> m_slotPredicate = x => true;
+        private Func<Item, Boolean> m_metaGroupPredicate = x => true;
+        private Func<Item, Boolean> m_fittingPredicate = x => true;
 
         #region Initialization
 
@@ -197,7 +197,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the predicate
             ItemSlot slot = Settings.UI.ItemBrowser.SlotFilter;
-            m_slotPredicate = (x) => (x.FittingSlot & slot) != ItemSlot.Empty;
+            m_slotPredicate = x => (x.FittingSlot & slot) != ItemSlot.Empty;
 
             // Update the control's content
             UpdateContent();
@@ -220,7 +220,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the predicate
             ItemMetaGroup filter = Settings.UI.ItemBrowser.MetagroupFilter;
-            m_metaGroupPredicate = (x) => (x.MetaGroup & filter) != ItemMetaGroup.Empty;
+            m_metaGroupPredicate = x => (x.MetaGroup & filter) != ItemMetaGroup.Empty;
 
             // Update the control's content
             UpdateContent();
@@ -279,7 +279,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showAllGroupsCheckbox_CheckedChanged(object sender, System.EventArgs e)
+        private void showAllGroupsCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             Settings.UI.ItemBrowser.ShowAllGroups = showAllGroupsCheckbox.Checked;
             UpdateContent();
@@ -292,7 +292,7 @@ namespace EVEMon.SkillPlanner
         {
             if (!numCPU.Enabled && !numPowergrid.Enabled)
             {
-                m_fittingPredicate = (x) => true;
+                m_fittingPredicate = x => true;
             }
             else
             {
@@ -304,7 +304,7 @@ namespace EVEMon.SkillPlanner
                 if (numCPU.Enabled)
                     cpuAvailable = (double)numCPU.Value;
 
-                m_fittingPredicate = (item) => item.CanActivate(cpuAvailable, gridAvailable);
+                m_fittingPredicate = item => item.CanActivate(cpuAvailable, gridAvailable);
             }
         }
 
@@ -344,8 +344,8 @@ namespace EVEMon.SkillPlanner
                     if (!showAllGroupsCheckbox.Checked && !m_presetGroups.Contains(group))
                         continue;
 
-                    TreeNode node = new TreeNode()
-                    {
+                    TreeNode node = new TreeNode
+                                        {
                         Text = group.Name,
                         Tag = group
                     };
@@ -409,8 +409,8 @@ namespace EVEMon.SkillPlanner
             // Add all subcategories
             foreach (MarketGroup childGroup in group.SubGroups)
             {
-                TreeNode node = new TreeNode()
-                {
+                TreeNode node = new TreeNode
+                                    {
                     Text = childGroup.Name,
                     Tag = childGroup
                 };
@@ -424,13 +424,13 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all items
-            foreach (Item childItem in group.Items.Where(x => m_slotPredicate(x)
+            foreach (Item childItem in group.Items.Where(x => m_usabilityPredicate(x)
+                                                            && m_slotPredicate(x)
                                                             && m_metaGroupPredicate(x)
-                                                            && m_fittingPredicate(x)
-                                                            && m_usabilityPredicate(x)))
+                                                            && m_fittingPredicate(x)))
             {
-                TreeNode node = new TreeNode()
-                {
+                TreeNode node = new TreeNode
+                                    {
                     Text = childItem.Name,
                     Tag = childItem
                 };

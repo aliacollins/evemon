@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -14,7 +15,6 @@ using EVEMon.Common.Controls;
 using CommonResources = EVEMon.Common.Resources;
 
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
-using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
 {
@@ -22,7 +22,6 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler<EventArgs> SelectedSkillChanged;
 
-        private bool m_hostedInSkillBrowser;
         private bool m_allExpanded;
         private Character m_character;
         private Skill m_selectedSkill;
@@ -139,15 +138,8 @@ namespace EVEMon.SkillPlanner
         /// Gets or sets true whether the control is hosted in the skill browser.
         /// When true, the "Show in skill browser" context menus won't be displayed.
         /// </summary>
-        [Category("Behavior")]
-        [Description("When true, the \"Show in Skill Browser\" context menus won't be displayed.")]
-        [DefaultValue(false)]
-        public bool HostedInSkillBrowser
-        {
-            get { return m_hostedInSkillBrowser; }
-            set { m_hostedInSkillBrowser = value; }
-        }
-
+        [Category("Behavior"), Description("When true, the \"Show in Skill Browser\" context menus won't be displayed."), DefaultValue(false)]
+        public bool HostedInSkillBrowser { get; set; }
 
         #endregion
 
@@ -159,7 +151,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public ImageList GetIconSet(int index)
+        private ImageList GetIconSet(int index)
         {
             return GetIconSet(index, ilSkillIcons);
         }
@@ -170,14 +162,17 @@ namespace EVEMon.SkillPlanner
         /// <param name="index"></param>
         /// <param name="defaultList"></param>
         /// <returns></returns>
-        public static ImageList GetIconSet(int index, ImageList defaultList)
+        private static ImageList GetIconSet(int index, ImageList defaultList)
         {
-            ImageList def = new ImageList();
-            def.ColorDepth = ColorDepth.Depth32Bit;
+            ImageList def = new ImageList {ColorDepth = ColorDepth.Depth32Bit};
             string groupname = null;
 
             if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
-                groupname = CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
+            {
+                SettingsProperty settingsProperty = CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index];
+                if (settingsProperty != null)
+                    groupname = settingsProperty.DefaultValue.ToString();
+            }
 
             if ((groupname != null && !File.Exists(String.Format(
                         "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
@@ -228,10 +223,8 @@ namespace EVEMon.SkillPlanner
 
                 return def;
             }
-            else
-            {
-                return defaultList;
-            }
+
+            return defaultList;
         }
 
         #endregion
@@ -247,7 +240,7 @@ namespace EVEMon.SkillPlanner
             if (m_plan == null)
                 return;
 
-            IEnumerable<Skill> skills = GetFilteredData();
+            IEnumerable<Skill> skills = GetFilteredData().ToArray();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -294,7 +287,7 @@ namespace EVEMon.SkillPlanner
 
             // Filter
             Func<Skill,bool> predicate = GetFilter();
-            skills = skills.Where(x => predicate(x));
+            skills = skills.Where(predicate);
 
             // Text search
             if (!String.IsNullOrEmpty(tbSearchText.Text))
@@ -320,50 +313,49 @@ namespace EVEMon.SkillPlanner
             switch ((SkillFilter)cbSkillFilter.SelectedIndex)
             {
                 default:
-                case SkillFilter.All:
-                    return (x) => true;
+                    return x => true;
 
                 case SkillFilter.Known:
-                    return (x) => x.IsKnown;
+                    return x => x.IsKnown;
 
                 case SkillFilter.TrailAccountFriendly:
-                    return (x) => x.IsTrainableOnTrialAccount;
+                    return x => x.IsTrainableOnTrialAccount;
 
                 case SkillFilter.Unknown:
-                    return (x) => !x.IsKnown;
+                    return x => !x.IsKnown;
 
                 case SkillFilter.UnknownAndNotOwned:
-                    return (x) => !x.IsKnown && !x.IsOwned;
+                    return x => !x.IsKnown && !x.IsOwned;
 
                 case SkillFilter.UnknownButOwned:
-                    return (x) => !x.IsKnown && x.IsOwned;
+                    return x => !x.IsKnown && x.IsOwned;
 
                 case SkillFilter.UnknownButTrainable:
-                    return (x) => !x.IsKnown && x.ArePrerequisitesMet;
+                    return x => !x.IsKnown && x.ArePrerequisitesMet;
 
                 case SkillFilter.UnknownAndNotTrainable:
-                    return (x) => !x.IsKnown && !x.ArePrerequisitesMet;
+                    return x => !x.IsKnown && !x.ArePrerequisitesMet;
 
                 case SkillFilter.Planned:
-                    return (x) => m_plan.IsPlanned(x);
+                    return x => m_plan.IsPlanned(x);
 
                 case SkillFilter.Lv1Ready:
-                    return (x) => x.Level == 0 && x.ArePrerequisitesMet && !x.IsPartiallyTrained;
+                    return x => x.Level == 0 && x.ArePrerequisitesMet && !x.IsPartiallyTrained;
 
                 case SkillFilter.Trainable:
-                    return (x) => x.ArePrerequisitesMet && x.Level < 5;
+                    return x => x.ArePrerequisitesMet && x.Level < 5;
 
                 case SkillFilter.PartiallyTrained:
-                    return (x) => x.IsPartiallyTrained;
+                    return x => x.IsPartiallyTrained;
 
                 case SkillFilter.NotPlanned:
-                    return (x) => !(m_plan.IsPlanned(x) || x.Level == 5);
+                    return x => !(m_plan.IsPlanned(x) || x.Level == 5);
 
                 case SkillFilter.NotPlannedButTrainable:
-                    return (x) => !m_plan.IsPlanned(x) && x.ArePrerequisitesMet && x.Level < 5;
+                    return x => !m_plan.IsPlanned(x) && x.ArePrerequisitesMet && x.Level < 5;
 
                 case SkillFilter.NoLv5:
-                    return (x) => x.Level < 5;
+                    return x => x.Level < 5;
             }
         }
 
@@ -394,8 +386,8 @@ namespace EVEMon.SkillPlanner
                 {
                     int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
 
-                    TreeNode groupNode = new TreeNode()
-                    {
+                    TreeNode groupNode = new TreeNode
+                                             {
                         Text = group.Key.Name,
                         ImageIndex = index,
                         SelectedImageIndex = index,
@@ -406,7 +398,7 @@ namespace EVEMon.SkillPlanner
                     foreach (Skill skill in group)
                     {
                         // Choose image index
-                        int imageIndex = -1;
+                        int imageIndex;
                         if (skill.Level != 0)
                         {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl" + skill.Level);
@@ -429,8 +421,8 @@ namespace EVEMon.SkillPlanner
                         }
 
                         // Create node and adds it
-                        TreeNode node = new TreeNode()
-                        {
+                        TreeNode node = new TreeNode
+                                            {
                             Text = String.Format("{0} ({1})", skill.Name, skill.Rank),
                             ImageIndex = imageIndex,
                             SelectedImageIndex = imageIndex,
@@ -592,6 +584,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string GetSortedListData(ref IEnumerable<Skill> skills, ref IEnumerable<string> labels)
         {
+
             switch ((SkillSort)cbSorting.SelectedIndex)
             {
                 // Sort by name, default, occurs on initialization
@@ -844,7 +837,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvItems_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            TreeNode node = tvItems.SelectedNode as TreeNode;
+            TreeNode node = tvItems.SelectedNode;
             if (node == null)
                 return;
 
@@ -882,7 +875,7 @@ namespace EVEMon.SkillPlanner
 
             // "Show in skill browser/explorer"
             showInSkillExplorerMenu.Visible = (SelectedSkill != null);
-            showInSkillBrowserMenu.Visible = (SelectedSkill != null && !m_hostedInSkillBrowser);
+            showInSkillBrowserMenu.Visible = (SelectedSkill != null && !HostedInSkillBrowser);
 
             // "Collapse" and "Expand" menus
             cmiCollapseSelected.Visible = (SelectedSkill == null && node != null && node.IsExpanded);
@@ -928,7 +921,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // "Show in skill browser"
-            showInSkillBrowserListMenu.Visible = !m_hostedInSkillBrowser;
+            showInSkillBrowserListMenu.Visible = !HostedInSkillBrowser;
         }
 
         /// <summary>

@@ -152,7 +152,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Completes the initialization by updating the prerequisites.
         /// </summary>
-        internal void CompleteInitialization(SerializableCertificatePrerequisite[] prereqs)
+        internal void CompleteInitialization(IEnumerable<SerializableCertificatePrerequisite> prereqs)
         {
             foreach (SerializableCertificatePrerequisite prereq in prereqs)
             {
