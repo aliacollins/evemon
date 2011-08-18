@@ -68,8 +68,8 @@ namespace EVEMon.Common.Data
             {
                 if (paths.Count == 0)
                     return null;
-                PathFinder best = null;
-                int depth = 0;
+                PathFinder best;
+                int depth;
 
                 // Pick the best candidate path, but ensures it matches the best depth found so far
                 while (true)

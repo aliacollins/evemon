@@ -38,7 +38,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="property">The property we're searching for.</param>
         /// <returns>The wanted property when found; null otherwise.</returns>
-        public Nullable<EvePropertyValue> this[EveProperty property]
+        public EvePropertyValue? this[EveProperty property]
         {
             get
             {

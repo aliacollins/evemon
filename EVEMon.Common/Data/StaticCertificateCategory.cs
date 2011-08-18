@@ -16,7 +16,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="element"></param>
+        /// <param name="src"></param>
         internal StaticCertificateCategory(SerializableCertificateCategory src)
             : base(src.Classes.Length)
         {

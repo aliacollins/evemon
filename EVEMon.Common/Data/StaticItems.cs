@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents all the items (not ships or implants, see <see cref="StaticShips"/> and <see cref="StaticImplants"/> for that) loaded from the datafiles. 
-    /// Not that all items are present, only the ones you can use for your ship. 
+    /// Represents all the items loaded from the datafiles. 
     /// </summary>
     public static class StaticItems
     {
@@ -27,8 +27,7 @@ namespace EVEMon.Common.Data
             // Create the implants slots
             for (int i = 0; i < s_implantSlots.Length; i++)
             {
-                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i);
-                s_implantSlots[i].Add(new Implant());
+                s_implantSlots[i] = new ImplantCollection((ImplantSlots) i) {new Implant()};
             }
 
             // Deserialize the items datafile
@@ -85,13 +84,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<MarketGroup> AllGroups
         {
-            get
-            {
-                foreach (MarketGroup group in s_marketGroupsByID.Values)
-                {
-                    yield return group;
-                }
-            }
+            get { return s_marketGroupsByID.Values; }
         }
 
         /// <summary>
@@ -99,13 +92,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<Item> AllItems
         {
-            get
-            {
-                foreach (Item item in s_itemsByID.Values)
-                {
-                    yield return item;
-                }
-            }
+            get { return s_itemsByID.Values; }
         }
 
         #endregion
@@ -120,7 +107,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static ImplantCollection GetImplants(ImplantSlots slot)
         {
-            return s_implantSlots[(int)slot];
+            return s_implantSlots[(int) slot];
         }
 
         /// <summary>
@@ -131,7 +118,7 @@ namespace EVEMon.Common.Data
         /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
         public static Item GetItemByID(long itemId)
         {
-            Item value = null;
+            Item value;
             s_itemsByID.TryGetValue(itemId, out value);
             return value;
         }
@@ -144,12 +131,7 @@ namespace EVEMon.Common.Data
         /// <returns>The first item which name matches itemName, Null if no such item is found.</returns>
         public static Item GetItemByName(string itemName)
         {
-            foreach (Item item in s_itemsByID.Values)
-            {
-                if (item.Name == itemName)
-                    return item;
-            }
-            return null;
+            return s_itemsByID.Values.FirstOrDefault(item => item.Name == itemName);
         }
 
         #endregion

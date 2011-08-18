@@ -9,8 +9,8 @@ namespace EVEMon.Common.Data
     /// </summary>
     public struct EvePropertyValue
     {
-        private EveProperty m_property;
-        private string m_value;
+        private readonly EveProperty m_property;
+        private readonly string m_value;
 
         #region Constructor
 

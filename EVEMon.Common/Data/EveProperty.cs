@@ -11,7 +11,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="owner"></param>
+        /// <param name="category"></param>
         /// <param name="serial"></param>
         internal EveProperty(EvePropertyCategory category, SerializableProperty serial)
         {
@@ -119,7 +119,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public string GetLabelOrDefault(Item obj)
         {
-            Nullable<EvePropertyValue> value = obj.Properties[this];
+            EvePropertyValue? value = obj.Properties[this];
             if (value == null)
                 return Format(DefaultValue);
 
@@ -133,7 +133,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         private string Format(string value)
         {
-            float numericValue = 0f;
+            float numericValue;
             if (float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out numericValue))
             {
                 try
@@ -158,16 +158,10 @@ namespace EVEMon.Common.Data
                     {
                         // Format a value of Mass
                         case DBConstants.MassUnitID:
-                            if (numericValue <= 1000)
-                            {
-                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0#} {1}", numericValue, Unit);
-                            }
-                            else
-                            {
-                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", numericValue, Unit);
-                            }
+                            return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000 ?
+                                                    "{0:#,##0.0#} {1}" : "{0:#,##0} {1}", numericValue, Unit);
 
-                        // Format a value of Millseconds
+                            // Format a value of Millseconds
                         case DBConstants.MillsecondsUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} {1}", numericValue / 1000, Unit);
 
@@ -235,12 +229,11 @@ namespace EVEMon.Common.Data
         public float GetNumericValue(Item obj)
         {
             // Retrieve the string for the number
-            string number = String.Empty;
-            Nullable<EvePropertyValue> value = obj.Properties[this];
-            number = (value == null ? DefaultValue : value.Value.Value);
+            EvePropertyValue? value = obj.Properties[this];
+            string number = (value == null ? DefaultValue : value.Value.Value);
 
             // Try to parse it as a float
-            float result = float.NaN;
+            float result;
             float.TryParse(number, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
             return result;
         }

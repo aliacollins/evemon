@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -25,7 +26,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Ensures the datafile has been intialized.
         /// </summary>
-        public static void EnsureInitialized()
+        private static void EnsureInitialized()
         {
             if (s_initialized)
                 return;
@@ -91,10 +92,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (Region region in s_regionsByID.Values)
-                {
-                    yield return region;
-                }
+                return s_regionsByID.Values;
             }
         }
 
@@ -106,10 +104,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (Constellation constellation in s_constellationsByID.Values)
-                {
-                    yield return constellation;
-                }
+                return s_constellationsByID.Values;
             }
         }
 
@@ -121,10 +116,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (SolarSystem system in s_solarSystemsByID.Values)
-                {
-                    yield return system;
-                }
+                return s_solarSystemsByID.Values;
             }
         }
 
@@ -136,10 +128,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (Station station in s_stationsByID.Values)
-                {
-                    yield return station;
-                }
+                return s_stationsByID.Values;
             }
         }
 
@@ -151,10 +140,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (Agent agent in s_agentsByID.Values)
-                {
-                    yield return agent;
-                }
+                return s_agentsByID.Values;
             }
         }
         
@@ -171,7 +157,7 @@ namespace EVEMon.Common.Data
         public static Region GetRegionByID(long id)
         {
             EnsureInitialized();
-            Region result = null;
+            Region result;
             s_regionsByID.TryGetValue(id, out result);
             return result;
         }
@@ -184,12 +170,7 @@ namespace EVEMon.Common.Data
         public static Region GetRegionByName(string name)
         {
             EnsureInitialized();
-            foreach (Region region in s_regionsByID.Values)
-            {
-                if (region.Name == name)
-                    return region;
-            }
-            return null;
+            return s_regionsByID.Values.FirstOrDefault(region => region.Name == name);
         }
 
         /// <summary>
@@ -200,7 +181,7 @@ namespace EVEMon.Common.Data
         public static Constellation GetConstellationByID(long id)
         {
             EnsureInitialized();
-            Constellation result = null;
+            Constellation result;
             s_constellationsByID.TryGetValue(id, out result);
             return result;
         }
@@ -213,12 +194,7 @@ namespace EVEMon.Common.Data
         public static Constellation GetConstellationByName(string name)
         {
             EnsureInitialized();
-            foreach (Constellation constellation in s_constellationsByID.Values)
-            {
-                if (constellation.Name == name)
-                    return constellation;
-            }
-            return null;
+            return s_constellationsByID.Values.FirstOrDefault(constellation => constellation.Name == name);
         }
 
         /// <summary>
@@ -229,7 +205,7 @@ namespace EVEMon.Common.Data
         public static SolarSystem GetSolarSystemByID(long id)
         {
             EnsureInitialized();
-            SolarSystem result = null;
+            SolarSystem result;
             s_solarSystemsByID.TryGetValue(id, out result);
             return result;
         }
@@ -242,12 +218,7 @@ namespace EVEMon.Common.Data
         public static SolarSystem GetSolarSystemByName(string name)
         {
             EnsureInitialized();
-            foreach (SolarSystem system in s_solarSystemsByID.Values)
-            {
-                if (system.Name == name)
-                    return system;
-            }
-            return null;
+            return s_solarSystemsByID.Values.FirstOrDefault(system => system.Name == name);
         }
 
         /// <summary>
@@ -258,7 +229,7 @@ namespace EVEMon.Common.Data
         public static Station GetStationByID(long id)
         {
             EnsureInitialized();
-            Station result = null;
+            Station result;
             s_stationsByID.TryGetValue(id, out result);
             return result;
         }
@@ -271,12 +242,7 @@ namespace EVEMon.Common.Data
         public static Station GetStationByName(string name)
         {
             EnsureInitialized();
-            foreach (Station station in s_stationsByID.Values)
-            {
-                if (station.Name == name)
-                    return station;
-            }
-            return null;
+            return s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
         }
 
         /// <summary>
@@ -287,7 +253,7 @@ namespace EVEMon.Common.Data
         public static Agent GetAgentByID(long id)
         {
             EnsureInitialized();
-            Agent result = null;
+            Agent result;
             s_agentsByID.TryGetValue(id, out result);
             return result;
         }
@@ -300,12 +266,7 @@ namespace EVEMon.Common.Data
         public static Station GetAgentByName(string name)
         {
             EnsureInitialized();
-            foreach (Station station in s_stationsByID.Values)
-            {
-                if (station.Name == name)
-                    return station;
-            }
-            return null;
+            return s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
         }
 
         #endregion

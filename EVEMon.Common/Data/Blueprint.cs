@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -6,8 +7,8 @@ namespace EVEMon.Common.Data
 {
     public class Blueprint : Item
     {
-        protected readonly FastList<int> m_inventBlueprint;
-        protected readonly FastList<StaticRequiredMaterial> m_materialRequirements;
+        private readonly FastList<int> m_inventBlueprint;
+        private readonly FastList<StaticRequiredMaterial> m_materialRequirements;
 
         #region Constructors
 
@@ -23,7 +24,7 @@ namespace EVEMon.Common.Data
             ProducesItem = StaticItems.GetItemByID(src.ProduceItemID);
             ProductionTime = src.ProductionTime;
             ProductivityModifier = src.ProductivityModifier;
-            ResearchCopyTime = src.ResearchCopyTime * 2;
+            ResearchCopyTime = src.ResearchCopyTime*2;
             ResearchMaterialTime = src.ResearchMaterialTime;
             ResearchProductivityTime = src.ResearchProductivityTime;
             ResearchTechTime = src.ResearchTechTime;
@@ -41,7 +42,8 @@ namespace EVEMon.Common.Data
             }
 
             // Materials prerequisites
-            m_materialRequirements = new FastList<StaticRequiredMaterial>(src.ReqMaterial != null ? src.ReqMaterial.Length : 0);
+            m_materialRequirements =
+                new FastList<StaticRequiredMaterial>(src.ReqMaterial != null ? src.ReqMaterial.Length : 0);
             if (src.ReqMaterial == null)
                 return;
 
@@ -119,13 +121,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public IEnumerable<Blueprint> InventsBlueprint
         {
-            get
-            {
-                foreach (int itemID in m_inventBlueprint)
-                {
-                    yield return (StaticBlueprints.GetBlueprintByID(itemID));
-                }
-            }
+            get { return m_inventBlueprint.Select(itemID => (StaticBlueprints.GetBlueprintByID(itemID))); }
         }
 
         #endregion

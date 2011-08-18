@@ -13,7 +13,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="group">The blueprint market group.</param>
+        /// <param name="src">The source.</param>
         internal BlueprintMarketGroupCollection(BlueprintMarketGroup group, SerializableBlueprintMarketGroup[] src)
             : base(src == null ? 0 : src.Length)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -33,15 +34,12 @@ namespace EVEMon.Common.Data
             Categories.Sort((c1, c2) => String.CompareOrdinal(c1.Name, c2.Name));
 
             // Build inner collections
-            foreach (StaticCertificateCategory certCategory in Categories)
+            foreach (StaticCertificateClass certClass in Categories.SelectMany(certCategory => certCategory))
             {
-                foreach (StaticCertificateClass certClass in certCategory)
+                s_classesByName[certClass.Name] = certClass;
+                foreach (StaticCertificate cert in certClass)
                 {
-                    s_classesByName[certClass.Name] = certClass;
-                    foreach (StaticCertificate cert in certClass)
-                    {
-                        s_certificatesByID[cert.ID] = cert;
-                    }
+                    s_certificatesByID[cert.ID] = cert;
                 }
             }
 
@@ -74,16 +72,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<StaticCertificateClass> AllClasses
         {
-            get
-            {
-                foreach (StaticCertificateCategory category in Categories)
-                {
-                    foreach (StaticCertificateClass certClass in category)
-                    {
-                        yield return certClass;
-                    }
-                }
-            }
+            get { return Categories.SelectMany(category => category); }
         }
 
         /// <summary>
@@ -93,16 +82,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (StaticCertificateCategory category in Categories)
-                {
-                    foreach (StaticCertificateClass certClass in category)
-                    {
-                        foreach (StaticCertificate cert in certClass)
-                        {
-                            yield return cert;
-                        }
-                    }
-                }
+                return from category in Categories from certClass in category from cert in certClass select cert;
             }
         }
 

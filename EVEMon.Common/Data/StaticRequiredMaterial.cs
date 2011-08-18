@@ -10,10 +10,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="quantity"></param>
-        /// <param name="dmgPerJob"></param>
-        /// <param name="activityId"></param>
+        /// <param name="src"></param>
         internal StaticRequiredMaterial(SerializableRequiredMaterial src)
             : base(src.ID,  GetName(src.ID))
         {

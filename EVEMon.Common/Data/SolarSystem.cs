@@ -120,13 +120,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public IEnumerable<SolarSystem> Neighbors
         {
-            get
-            {
-                foreach (var system in m_jumps)
-                {
-                    yield return system;
-                }
-            }
+            get { return m_jumps; }
         }
 
         #endregion
@@ -186,10 +180,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(SolarSystem other)
         {
-            if (Constellation != other.Constellation)
-                return this.Constellation.CompareTo(other.Constellation);
-
-            return Name.CompareTo(other.Name);
+            return Constellation != other.Constellation ?
+                    Constellation.CompareTo(other.Constellation) :
+                    Name.CompareTo(other.Name);
         }
 
         #endregion

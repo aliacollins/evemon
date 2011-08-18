@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -22,7 +23,7 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor.
         /// </summary>
         /// <param name="category"></param>
-        /// <param name="element"></param>
+        /// <param name="src"></param>
         internal StaticCertificateClass(StaticCertificateCategory category, SerializableCertificateClass src)
         {
             ID = src.ID;
@@ -69,10 +70,9 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (StaticCertificate cert in m_certificates)
+                foreach (StaticCertificate cert in m_certificates.Where(cert => cert != null))
                 {
-                    if (cert != null)
-                        return cert;
+                    return cert;
                 }
                 throw new NotImplementedException();
             }
@@ -88,10 +88,9 @@ namespace EVEMon.Common.Data
             {
                 // Look for the next grade
                 StaticCertificate lastCert = null;
-                foreach (StaticCertificate cert in m_certificates)
+                foreach (StaticCertificate cert in m_certificates.Where(cert => cert != null))
                 {
-                    if (cert != null)
-                        lastCert = cert;
+                    lastCert = cert;
                 }
                 return lastCert;
             }
@@ -123,11 +122,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         protected override IEnumerable<StaticCertificate> Enumerate()
         {
-            foreach (StaticCertificate cert in m_certificates)
-            {
-                if (cert != null)
-                    yield return cert;
-            }
+            return m_certificates.Where(cert => cert != null);
         }
 
         /// <summary>

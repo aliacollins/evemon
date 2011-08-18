@@ -34,8 +34,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Base constructor for blueprints.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
+        /// <param name="group">The group.</param>
+        /// <param name="src">The source.</param>
         internal Item(BlueprintMarketGroup group, SerializableBlueprint src)
             : this(src.ID, src.Name)
         {
@@ -57,7 +57,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Base deserialization constructor.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="group">The group.</param>
+        /// <param name="src">The source.</param>
         internal Item(MarketGroup group, SerializableItem src)
             : this(src.ID, src.Name)
         {
@@ -173,7 +174,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                Nullable<EvePropertyValue> property = Properties[StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID)];
+                EvePropertyValue? property = Properties[StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID)];
 
                 // Returns scrap metal processing by default
                 if (property == null)

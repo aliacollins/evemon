@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -15,7 +16,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Ensures the reprocessing informations have been intialized.
         /// </summary>
-        internal static void EnsureInitialized()
+        private static void EnsureInitialized()
         {
             if (s_initialized)
                 return;
@@ -24,11 +25,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableItemMaterials item in datafile.Items)
             {
-                List<Material> listOfMaterials = new List<Material>();
-                foreach (SerializableMaterialQuantity itemMaterial in item.Materials)
-                {
-                     listOfMaterials.Add(new Material(itemMaterial));
-                }
+                List<Material> listOfMaterials = item.Materials.Select(itemMaterial => new Material(itemMaterial)).ToList();
                 s_itemMaterialsByID[item.ID] = listOfMaterials;
             }
 
@@ -44,10 +41,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (List<Material> materials in s_itemMaterialsByID.Values)
-                {
-                    yield return materials;
-                }
+                return s_itemMaterialsByID.Values;
             }
         }
 
@@ -57,10 +51,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static List<Material> GetItemMaterialsByID(long id)
+        public static IEnumerable<Material> GetItemMaterialsByID(long id)
         {
             EnsureInitialized();
-            List<Material> result = null;
+            List<Material> result;
             s_itemMaterialsByID.TryGetValue(id, out result);
             return result;
         }

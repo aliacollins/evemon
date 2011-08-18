@@ -1,5 +1,4 @@
-﻿using System;
-using EVEMon.Common.Serialization.Datafiles;
+﻿using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -29,10 +28,10 @@ namespace EVEMon.Common.Data
             : base(group, src)
         {
             // Gets the slot
-            Nullable<EvePropertyValue> slotProperty = Properties[DBConstants.ImplantSlotPropertyID];
+            EvePropertyValue? slotProperty = Properties[DBConstants.ImplantSlotPropertyID];
             Slot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IValue - 1));
 
-            /// Sets the implant bonus
+            // Sets the implant bonus
             SetImplantBonus();
 
             // Adds itself to the implants slot
@@ -77,25 +76,38 @@ namespace EVEMon.Common.Data
         /// </summary>
         private void SetImplantBonus()
         {
+            EvePropertyValue? eveProperty;
+
             // Get the bonus
             switch (Slot)
             {
                 case ImplantSlots.Charisma:
-                    Bonus = Properties[DBConstants.CharismaModifierPropertyID].Value.IValue;
+                    eveProperty = Properties[DBConstants.CharismaModifierPropertyID];
+                    if (eveProperty != null)
+                        Bonus = eveProperty.Value.IValue;
                     break;
                 case ImplantSlots.Intelligence:
-                    Bonus = Properties[DBConstants.IntelligenceModifierPropertyID].Value.IValue;
+                    eveProperty = Properties[DBConstants.IntelligenceModifierPropertyID];
+                    if (eveProperty != null)
+                        Bonus = eveProperty.Value.IValue;
                     break;
                 case ImplantSlots.Memory:
-                    Bonus = Properties[DBConstants.MemoryModifierPropertyID].Value.IValue;
+                    eveProperty = Properties[DBConstants.MemoryModifierPropertyID];
+                    if (eveProperty != null)
+                        Bonus = eveProperty.Value.IValue;
                     break;
                 case ImplantSlots.Perception:
-                    Bonus = Properties[DBConstants.PerceptionModifierPropertyID].Value.IValue;
+                    eveProperty = Properties[DBConstants.PerceptionModifierPropertyID];
+                    if (eveProperty != null)
+                        Bonus = eveProperty.Value.IValue;
                     break;
                 case ImplantSlots.Willpower:
-                    Bonus = Properties[DBConstants.WillpowerModifierPropertyID].Value.IValue;
+                    eveProperty = Properties[DBConstants.WillpowerModifierPropertyID];
+                    if (eveProperty != null)
+                        Bonus = eveProperty.Value.IValue;
                     break;
                 default:
+                    Bonus = 0;
                     break;
             }
         }
@@ -106,7 +118,7 @@ namespace EVEMon.Common.Data
         #region Static Methods
 
         /// <summary>
-        /// Converts the provided slot to an attribute. Returns <see cref="Attribute.None"/> when the provided slot does not match any attribute.
+        /// Converts the provided slot to an attribute. Returns <see cref="EveAttribute.None"/> when the provided slot does not match any attribute.
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
@@ -130,9 +142,9 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Converts the provided slot to an attribute. Returns <see cref="Attribute.None"/> when the provided slot does not match any attribute.
+        /// Converts the provided slot to an attribute. Returns <see cref="ImplantSlots.None"/> when the provided slot does not match any attribute.
         /// </summary>
-        /// <param name="slot"></param>
+        /// <param name="attr"></param>
         /// <returns></returns>
         public static ImplantSlots AttribToSlot(EveAttribute attr)
         {

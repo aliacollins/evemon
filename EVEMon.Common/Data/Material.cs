@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using EVEMon.Common.Serialization.Datafiles;
-using System.Globalization;
+﻿using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {

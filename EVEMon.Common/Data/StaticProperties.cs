@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -8,8 +9,12 @@ namespace EVEMon.Common.Data
         #region Fileds
 
         private static readonly Dictionary<long, EveProperty> s_propertiesByID = new Dictionary<long, EveProperty>();
-        private static readonly Dictionary<string, EveProperty> s_propertiesByName = new Dictionary<string, EveProperty>();
-        private static readonly Dictionary<string, EvePropertyCategory> s_categoriesByName = new Dictionary<string, EvePropertyCategory>();
+
+        private static readonly Dictionary<string, EveProperty> s_propertiesByName =
+            new Dictionary<string, EveProperty>();
+
+        private static readonly Dictionary<string, EvePropertyCategory> s_categoriesByName =
+            new Dictionary<string, EvePropertyCategory>();
 
         #endregion
 
@@ -21,7 +26,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            PropertiesDatafile datafile = Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile);
+            PropertiesDatafile datafile =
+                Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile);
 
             // Fetch deserialized data
             foreach (SerializablePropertyCategory srcCategory in datafile.Categories)
@@ -38,18 +44,18 @@ namespace EVEMon.Common.Data
             }
 
             // Set visibility in ships browser
-            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs)
+            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs
+                .Where(propertyID => s_propertiesByID.ContainsKey(propertyID)))
             {
-                if (s_propertiesByID.ContainsKey(propertyID))
-                    s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
+                s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
             }
 
             // Set hide if default for properties
             // we want to hide in browser if they just show their default value
-            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs)
+            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs
+                .Where(propertyID => s_propertiesByID.ContainsKey(propertyID)))
             {
-                if (s_propertiesByID.ContainsKey(propertyID))
-                    s_propertiesByID[propertyID].HideIfDefault = true;
+                s_propertiesByID[propertyID].HideIfDefault = true;
             }
         }
 
@@ -63,13 +69,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<EvePropertyCategory> AllCategories
         {
-            get
-            {
-                foreach (EvePropertyCategory category in s_categoriesByName.Values)
-                {
-                    yield return category;
-                }
-            }
+            get { return s_categoriesByName.Values; }
         }
 
         /// <summary>
@@ -77,16 +77,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<EveProperty> AllProperties
         {
-            get
-            {
-                foreach (EvePropertyCategory category in s_categoriesByName.Values)
-                {
-                    foreach (EveProperty property in category)
-                    {
-                        yield return property;
-                    }
-                }
-            }
+            get { return s_categoriesByName.Values.SelectMany(category => category); }
         }
 
         #endregion
@@ -101,7 +92,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static EveProperty GetPropertyByName(string name)
         {
-            EveProperty property = null;
+            EveProperty property;
             s_propertiesByName.TryGetValue(name, out property);
             return property;
         }
@@ -113,7 +104,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static EveProperty GetPropertyByID(int id)
         {
-            EveProperty property = null;
+            EveProperty property;
             s_propertiesByID.TryGetValue(id, out property);
             return property;
         }
@@ -125,7 +116,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static EvePropertyCategory GetCategoryByName(string name)
         {
-            EvePropertyCategory category = null;
+            EvePropertyCategory category;
             s_categoriesByName.TryGetValue(name, out category);
             return category;
         }

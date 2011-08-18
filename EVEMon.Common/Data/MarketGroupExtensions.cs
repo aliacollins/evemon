@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Data
 {
@@ -11,11 +12,8 @@ namespace EVEMon.Common.Data
         {
             while (marketGroup != null)
             {
-                foreach (var groupID in group)
-                {
-                    if (marketGroup.ID == groupID)
-                        return true;
-                }
+                if (group != null && group.Any(groupID => marketGroup.ID == groupID))
+                    return true;
 
                 marketGroup = marketGroup.ParentGroup;
             }

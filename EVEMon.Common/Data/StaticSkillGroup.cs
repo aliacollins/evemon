@@ -5,7 +5,7 @@ using EVEMon.Common.Serialization.Datafiles;
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents a readonly skill group definition. Characters have their own implementations, <see cref="Skillgroup"/>
+    /// Represents a readonly skill group definition. Characters have their own implementations, <see cref="SkillGroup"/>
     /// </summary>
     public sealed class StaticSkillGroup : ReadonlyKeyedCollection<int, StaticSkill>
     {
@@ -50,7 +50,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets a skill from this group by its id.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         public StaticSkill this[int id]
         {
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Checks whether this group contains the specified skill.
         /// </summary>
-        /// <param name="skillName"></param>
+        /// <param name="skillID"></param>
         /// <returns></returns>
         public bool Contains(int skillID)
         {

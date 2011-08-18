@@ -44,7 +44,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Completes the initialization by updating the prequisites and checking trainability on trial account.
         /// </summary>
-        internal void CompleteInitialization(SerializableSkillPrerequisite[] prereqs)
+        internal void CompleteInitialization(IEnumerable<SerializableSkillPrerequisite> prereqs)
         {
             if (prereqs == null)
                 return;
@@ -52,18 +52,14 @@ namespace EVEMon.Common.Data
             // Create the prerequisites list
             Prerequisites.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
 
+            if (!IsTrainableOnTrialAccount)
+                return;
+
             // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
-            if (IsTrainableOnTrialAccount)
-            {
-                foreach (StaticSkillLevel prereq in Prerequisites)
-                {
-                    if (!prereq.Skill.IsTrainableOnTrialAccount)
-                    {
-                        IsTrainableOnTrialAccount = false;
-                        return;
-                    }
-                }
-            }
+            if (!Prerequisites.Any(prereq => !prereq.Skill.IsTrainableOnTrialAccount))
+                return;
+
+            IsTrainableOnTrialAccount = false;
         }
 
         #endregion
@@ -163,13 +159,10 @@ namespace EVEMon.Common.Data
                 }
 
                 // Return the result
-                foreach (StaticSkillLevel newItem in list)
+                foreach (StaticSkillLevel newItem in list.Where(x => highestLevels[x.Skill.ArrayIndex] != 0))
                 {
-                    if (highestLevels[newItem.Skill.ArrayIndex] != 0)
-                    {
-                        yield return new StaticSkillLevel(newItem.Skill, highestLevels[newItem.Skill.ArrayIndex]);
-                        highestLevels[newItem.Skill.ArrayIndex] = 0;
-                    }
+                    yield return new StaticSkillLevel(newItem.Skill, highestLevels[newItem.Skill.ArrayIndex]);
+                    highestLevels[newItem.Skill.ArrayIndex] = 0;
                 }
             }
         }
@@ -183,6 +176,7 @@ namespace EVEMon.Common.Data
         /// Calculates the cumulative points required for a level of this skill (starting from a zero level).
         /// </summary>
         /// <param name="level">The level.</param>
+        /// <exception cref="NotImplementedException"></exception>
         /// <returns>The required nr. of points.</returns>
         public int GetPointsRequiredForLevel(int level)
         {
@@ -205,7 +199,7 @@ namespace EVEMon.Common.Data
                 case 3:
                     return 8000 * Rank;
                 case 4:
-                    return (int)(Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * Rank)));
+                    return Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * Rank));
                 case 5:
                     return 256000 * Rank;
                 default:
@@ -232,7 +226,7 @@ namespace EVEMon.Common.Data
         #region Private Methods
 
         /// <summary>
-        /// Remove line feeds and some other characters to format the string. Honestly, I don't understand the point.
+        /// Remove line feeds and some other characters to format the string.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="maxLength"></param>
@@ -251,7 +245,7 @@ namespace EVEMon.Common.Data
             List<string> lines = new List<string>(text.Length / maxLength);
             int currentLineLength = 0;
             string currentLine = String.Empty;
-            bool InTag = false;
+            bool inTag = false;
 
             foreach (string currentWord in words)
             {
@@ -259,9 +253,9 @@ namespace EVEMon.Common.Data
                 if (currentWord.Length > 0)
                 {
                     if (currentWord.Substring(0, 1) == "<")
-                        InTag = true;
+                        inTag = true;
 
-                    if (InTag)
+                    if (inTag)
                     {
                         //Handle filenames inside html tags
                         if (currentLine.EndsWith("."))
@@ -274,7 +268,7 @@ namespace EVEMon.Common.Data
                         }
 
                         if (currentWord.IndexOf(">") > -1)
-                            InTag = false;
+                            inTag = false;
                     }
                     else
                     {
@@ -299,13 +293,8 @@ namespace EVEMon.Common.Data
             string[] textLinesStr = new string[lines.Count];
             lines.CopyTo(textLinesStr, 0);
 
-            string strWrapped = String.Empty;
-            foreach (string line in textLinesStr)
-            {
-                strWrapped += line + "\n";
-            }
-
-            return strWrapped;
+            return textLinesStr.Aggregate(String.Empty,
+                (current, line) => string.Format("{0}{1}{2}", current, line, Environment.NewLine));
         }
 
         #endregion

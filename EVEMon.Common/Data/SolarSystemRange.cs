@@ -13,7 +13,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Private constructor.
         /// </summary>
-        /// <param name="range"></param>
+        /// <param name="source">The source.</param>
+        /// <param name="range">The range.</param>
         private SolarSystemRange(SolarSystem source, int range)
             : base(1)
         {

@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Constructor from the skill name.
         /// </summary>
-        /// <param name="skillName"></param>
+        /// <param name="name"></param>
         /// <param name="level"></param>
         public StaticSkillLevel(string name, int level)
             : this()
@@ -107,10 +107,7 @@ namespace EVEMon.Common.Data
                 StaticSkillLevelEnumerableExtensions.FillDependencies(set, list, this, false);
 
                 // Return the results
-                foreach (var item in list)
-                {
-                    yield return item;
-                }
+                return list;
             }
         }
 
@@ -122,7 +119,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets true if this skill level is, in any way, dependent of the provided skill level. Checks prerequisites but also same skill's lower levels.
         /// </summary>
-        /// <param name="level"><see cref="ISkillLevel">ISkillLevel</see> to check if current skill is a dependant of the SkillLevel pass</param>
+        /// <param name="skillLevel"><see cref="ISkillLevel">ISkillLevel</see> to check if current skill is a dependant of the SkillLevel pass</param>
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
         public bool IsDependentOf(ISkillLevel skillLevel)
         {
@@ -164,7 +161,7 @@ namespace EVEMon.Common.Data
         /// <returns>Skill Name and Level</returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, EVEMon.Common.Skill.GetRomanForInt(Level));
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Common.Skill.GetRomanForInt(Level));
         }
 
         #endregion

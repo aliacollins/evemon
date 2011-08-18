@@ -11,8 +11,9 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="src"></param>
-        internal MarketGroupCollection(MarketGroup cat, SerializableMarketGroup[] src)
+        /// <param name="group">The group.</param>
+        /// <param name="src">The SRC.</param>
+        internal MarketGroupCollection(MarketGroup group, SerializableMarketGroup[] src)
             : base(src == null ? 0 : src.Length)
         {
             if (src == null)
@@ -20,7 +21,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableMarketGroup subCat in src)
             {
-                m_items.Add(new MarketGroup(cat, subCat));
+                m_items.Add(new MarketGroup(group, subCat));
             }
         }
     }

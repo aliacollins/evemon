@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using EVEMon.Common.Serialization.Datafiles;
@@ -13,10 +14,10 @@ namespace EVEMon.Common.Data
         #region Constructors
 
         /// <summary>
-        /// Deserialization constructor for root category only
+        /// Deserialization constructor for root category only.
         /// </summary>
         /// <param name="src">Source Serializable Market Group</param>
-        public MarketGroup(SerializableMarketGroup src)
+        private MarketGroup(SerializableMarketGroup src)
         {
             ID = src.ID;
             Name = src.Name;
@@ -25,7 +26,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="parent">The Market Group this Market Group is contained within</param>
         /// <param name="src">Source Serializable Market Group</param>
@@ -36,21 +37,21 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Deserialization constructor for root category only
+        /// Deserialization constructor for root category only.
         /// </summary>
         /// <param name="src"></param>
-        public MarketGroup(SerializableBlueprintMarketGroup src)
+        protected MarketGroup(SerializableBlueprintMarketGroup src)
         {
             ID = src.ID;
             Name = src.Name;
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="parent">The Market Group this Market Group is contained within</param>
         /// <param name="src">Source Blueprint Group</param>
-        public MarketGroup(MarketGroup parent, SerializableBlueprintMarketGroup src)
+        protected MarketGroup(MarketGroup parent, SerializableBlueprintMarketGroup src)
             :this (src)
         {
             ParentGroup = parent;
@@ -98,12 +99,9 @@ namespace EVEMon.Common.Data
                     yield return item;
                 }
 
-                foreach (MarketGroup cat in SubGroups)
+                foreach (Item subItem in SubGroups.SelectMany(cat => cat.AllItems))
                 {
-                    foreach (Item subItem in cat.AllItems)
-                    {
-                        yield return subItem;
-                    }
+                    yield return subItem;
                 }
             }
         }

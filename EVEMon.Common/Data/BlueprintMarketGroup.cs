@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
@@ -25,7 +22,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="src">The source.</param>
         public BlueprintMarketGroup(BlueprintMarketGroup parent, SerializableBlueprintMarketGroup src)
             : base(parent, src)
         {
@@ -60,12 +58,9 @@ namespace EVEMon.Common.Data
                     yield return blueprint;
                 }
 
-                foreach (BlueprintMarketGroup cat in SubGroups)
+                foreach (Blueprint subBlueprint in SubGroups.SelectMany(cat => cat.AllBlueprints))
                 {
-                    foreach (Blueprint subBlueprint in cat.AllBlueprints)
-                    {
-                        yield return subBlueprint;
-                    }
+                    yield return subBlueprint;
                 }
             }
         }

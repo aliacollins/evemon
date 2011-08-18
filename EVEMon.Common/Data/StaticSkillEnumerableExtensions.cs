@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Data
 {
@@ -12,10 +13,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<Skill> ToCharacter(this IEnumerable<StaticSkill> src, Character character)
         {
-            foreach (StaticSkill skill in src)
-            {
-                yield return character.Skills[skill];
-            }
+            return src.Select(skill => character.Skills[skill]);
         }
 
         /// <summary>
@@ -30,22 +28,16 @@ namespace EVEMon.Common.Data
             List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
             // Fill the array
-            foreach (StaticSkill skill in src)
+            foreach (StaticSkillLevel prereq in src.SelectMany(skill => skill.Prerequisites))
             {
-                foreach (StaticSkillLevel prereq in skill.Prerequisites)
-                {
-                    FillPrerequisites(highestLevels, list, prereq, true);
-                }
+                FillPrerequisites(highestLevels, list, prereq, true);
             }
 
             // Return the result
-            foreach (StaticSkillLevel newSkill in list)
+            foreach (StaticSkillLevel newSkill in list.Where(newSkill => highestLevels[newSkill.Skill.ArrayIndex] != 0))
             {
-                if (highestLevels[newSkill.Skill.ArrayIndex] != 0)
-                {
-                    yield return new StaticSkillLevel(newSkill.Skill, highestLevels[newSkill.Skill.ArrayIndex]);
-                    highestLevels[newSkill.Skill.ArrayIndex] = 0;
-                }
+                yield return new StaticSkillLevel(newSkill.Skill, highestLevels[newSkill.Skill.ArrayIndex]);
+                highestLevels[newSkill.Skill.ArrayIndex] = 0;
             }
         }
 
@@ -61,22 +53,18 @@ namespace EVEMon.Common.Data
             // Prerequisites
             if (highestLevels[item.Skill.ArrayIndex] == 0)
             {
-                foreach (StaticSkillLevel prereq in item.Skill.Prerequisites)
+                foreach (StaticSkillLevel prereq in item.Skill.Prerequisites.Where(prereq => prereq.Skill != item.Skill))
                 {
-                    // Deal with recursive skills such as Polaris
-                    if (prereq.Skill != item.Skill)
-                    {
-                        FillPrerequisites(highestLevels, list, prereq, true);
-                    }
+                    FillPrerequisites(highestLevels, list, prereq, true);
                 }
             }
 
             // The very level
-            if (includeRoots && highestLevels[item.Skill.ArrayIndex] < item.Level) 
-            {
-                highestLevels[item.Skill.ArrayIndex] = item.Level;
-                list.Add(item);
-            }
+            if (!includeRoots || highestLevels[item.Skill.ArrayIndex] >= item.Level)
+                return;
+
+            highestLevels[item.Skill.ArrayIndex] = item.Level;
+            list.Add(item);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace EVEMon.Common.Data
         /// Constructor.
         /// </summary>
         /// <param name="src"></param>
-        public Station(SerializableOutpost src)
+        protected Station(SerializableOutpost src)
         {
             ID = src.StationID;
             Name = src.StationName;
@@ -29,7 +29,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="src">The source.</param>
         public Station(SolarSystem owner, SerializableStation src)
             : base(src.Agents == null ? 0 : src.Agents.Length)
         {
@@ -107,12 +108,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Station other)
         {
-            if (SolarSystem != other.SolarSystem)
-                return SolarSystem.CompareTo(other.SolarSystem);
-
-            return Name.CompareTo(other.Name);
+            return (SolarSystem != other.SolarSystem ? SolarSystem.CompareTo(other.SolarSystem) : Name.CompareTo(other.Name));
         }
-        
+
         #endregion
 
 

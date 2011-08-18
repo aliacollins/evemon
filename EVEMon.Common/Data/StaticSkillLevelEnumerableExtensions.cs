@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Data
 {
@@ -18,17 +19,16 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<SkillLevel> ToCharacter(this IEnumerable<StaticSkillLevel> src, Character character)
         {
-            foreach (StaticSkillLevel item in src)
-            {
-                yield return new SkillLevel(character.Skills[item.Skill], item.Level);
-            }
+            return src.Select(item => new SkillLevel(character.Skills[item.Skill], item.Level));
         }
 
         /// <summary>
         /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.
         /// I.e, for eidetic memory II, it will return <c>{ instant recall I, instant recall II, instant recall III, instant recall IV,  eidetic memory I, eidetic memory II }</c>.
         /// </summary>
+        /// <param name="src">The source.</param>
         /// <param name="includeRoots">When true, the levels in this enumeration are also included.</param>
+        /// <returns></returns>
         public static IEnumerable<StaticSkillLevel> GetAllDependencies(this IEnumerable<StaticSkillLevel> src, bool includeRoots)
         {
             SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
@@ -41,10 +41,7 @@ namespace EVEMon.Common.Data
             }
 
             // Return the results
-            foreach (StaticSkillLevel item in list)
-            {
-                yield return item;
-            }
+            return list;
         }
 
         #endregion
@@ -67,11 +64,9 @@ namespace EVEMon.Common.Data
             if (!set.Contains(skill, 1))
             {
                 // Prerequisites
-                foreach (var prereq in skill.Prerequisites)
+                foreach (StaticSkillLevel prereq in skill.Prerequisites.Where(prereq => skill != prereq.Skill))
                 {
-                    // Deal with recursive skills such as Polaris
-                    if (skill != prereq.Skill)
-                        FillDependencies(set, list, prereq, true);
+                    FillDependencies(set, list, prereq, true);
                 }
 
                 // Include the first level
@@ -84,12 +79,12 @@ namespace EVEMon.Common.Data
             int max = (includeRoots ? item.Level : item.Level - 1);
             for (int i = 2; i <= max; i++) 
             {
-                if (!set.Contains(skill, i))
-                {
-                    StaticSkillLevel newItem = new StaticSkillLevel(skill, i);
-                    list.Add(newItem);
-                    set.Set(newItem);
-                }
+                if (set.Contains(skill, i))
+                    continue;
+
+                StaticSkillLevel newItem = new StaticSkillLevel(skill, i);
+                list.Add(newItem);
+                set.Set(newItem);
             }
         }
 

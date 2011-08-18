@@ -23,7 +23,7 @@ namespace EVEMon.Common.Data
         /// Constructor from XML.
         /// </summary>
         /// <param name="certClass"></param>
-        /// <param name="element"></param>
+        /// <param name="src"></param>
         internal StaticCertificate(StaticCertificateClass certClass, SerializableCertificate src)
         {
             ID = src.ID;
@@ -164,18 +164,19 @@ namespace EVEMon.Common.Data
                 // Certificates
                 else
                 {
-                    CertificateGrade grade = StaticCertificate.GetGrade(prereq.Level);
+                    CertificateGrade grade = GetGrade(prereq.Level);
                     m_prerequisiteCertificates.Add(StaticCertificates.GetCertificateClass(prereq.Name)[grade]);
                 }
             }
         }
 
-        /// <summary>
-        /// Gets the grade from the provided grade key. No need to previously interns the key, it will be interned in this method.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private static CertificateGrade GetGrade(string key)
+	    /// <summary>
+	    /// Gets the grade from the provided grade key. No need to previously interns the key, it will be interned in this method.
+	    /// </summary>
+	    /// <param name="key"></param>
+	    /// <exception cref="NotImplementedException"></exception>
+	    /// <returns></returns>
+	    private static CertificateGrade GetGrade(string key)
         {
             switch (key)
             {
