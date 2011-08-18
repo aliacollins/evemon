@@ -29,19 +29,8 @@ namespace EVEMon
         public CharacterMonitorHeader()
         {
             InitializeComponent();
-
-            // Fonts
-            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
-            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            // Subscribe to events
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
-            Disposed += OnDisposed;
         }
+
         #endregion
 
 
@@ -63,7 +52,6 @@ namespace EVEMon
 
                 UpdateFrequentControls();
                 UpdateInfrequentControls();
-                UpdateInfoControls();
             }
         }
 
@@ -128,6 +116,8 @@ namespace EVEMon
                 FormatBalance();
 
                 FormatAttributes();
+
+                UpdateInfoControls();
             }
             finally
             {
@@ -372,8 +362,7 @@ namespace EVEMon
                 return;
 
             // Add new separator before monitor items
-            ThrobberSeparator = new ToolStripSeparator();
-            ThrobberSeparator.Name = "throbberSeparator";
+            ThrobberSeparator = new ToolStripSeparator {Name = "throbberSeparator"};
             ThrobberContextMenu.Items.Add(ThrobberSeparator);
         }
 
@@ -452,10 +441,8 @@ namespace EVEMon
                    DescriptiveTextOptions.SpaceText |
                    DescriptiveTextOptions.SpaceBetween, false);
             }
-            else
-            {
-                return "Less than a minute";
-            }
+
+            return "Less than a minute";
         }
 
         /// <summary>
@@ -470,7 +457,7 @@ namespace EVEMon
 
             ToolStripMenuItem menu = new ToolStripMenuItem(menuText)
             {
-                Tag = (object)monitor.Method,
+                Tag = monitor.Method,
                 Enabled = !monitor.ForceUpdateWillCauseError
             };
 
@@ -480,7 +467,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the attribute text for a character.
         /// </summary>
-        /// <param name="character">The character.</param>
+        /// <param name="label">The attribute label.</param>
         /// <param name="eveAttribute">The eve attribute.</param>
         /// <returns>Formatted string describing the attribute and its value.</returns>
         private void SetAttributeLabel(Label label, EveAttribute eveAttribute)
@@ -493,7 +480,6 @@ namespace EVEMon
         /// <summary>
         /// Formats the characters skill summary as a multi-line string.
         /// </summary>
-        /// <param name="character">The character.</param>
         /// <returns>Formatted list of information about a characters skills.</returns>
         private string FormatSkillSummary()
         {
@@ -526,6 +512,26 @@ namespace EVEMon
         
 
         #region Event Handlers
+
+        /// <summary>
+        /// Occurs when control loads.
+        /// </summary>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Fonts
+            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            // Subscribe to events
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Occurs when visibility changes.
@@ -814,14 +820,11 @@ namespace EVEMon
 
             string location = "Lost in space";
             
-            // Check if in an NPC station
-            Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation);
+            // Check if in an NPC station or in an outpost
+            Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation) ??
+                              ConquerableStation.GetStationByName(m_character.LastKnownLocation);
 
-            // Not in an NPC station ? Check if in an outpost
-            if (station == null)
-                station = ConquerableStation.GetStationByName(m_character.LastKnownLocation);
-
-            // Not in an potpost either ?
+            // Not in any station ?
             if (station == null)
             {
                 // Has to be in a solar system at least

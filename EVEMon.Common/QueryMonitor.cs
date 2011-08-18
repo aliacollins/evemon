@@ -271,7 +271,7 @@ namespace EVEMon.Common
             m_status = QueryStatus.Pending;
 
             // Do we need to retry the force update ?
-            m_forceUpdate = (m_retryOnForceUpdateError ? result.HasError : false);
+            m_forceUpdate = (m_retryOnForceUpdateError && result.HasError);
 
             // Was it canceled ?
             if (m_isCanceled)

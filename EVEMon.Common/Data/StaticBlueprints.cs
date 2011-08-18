@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -9,7 +10,6 @@ namespace EVEMon.Common.Data
     public static class StaticBlueprints
     {
         private static readonly Dictionary<long, Blueprint> s_blueprintsByID = new Dictionary<long, Blueprint>();
-        private static readonly Dictionary<int, BlueprintActivity> s_activityByID = new Dictionary<int, BlueprintActivity>();
 
 
         #region Initialization
@@ -62,15 +62,9 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of all the blueprints in this category and its descendants.
         /// </summary>
-        public static IEnumerable<Item> AllBlueprints
+        public static IEnumerable<Blueprint> AllBlueprints
         {
-            get
-            {
-                foreach (Blueprint blueprint in s_blueprintsByID.Values)
-                {
-                    yield return blueprint;
-                }
-            }
+            get { return s_blueprintsByID.Values; }
         }
 
         #endregion
@@ -82,11 +76,11 @@ namespace EVEMon.Common.Data
         /// Recursively searches the root category and all underlying categories
         /// for the first blueprint with an Id matching the given blueprintId.
         /// </summary>
-        /// <param name="itemId">The id of the blueprint to find.</param>
+        /// <param name="blueprintId">The id of the blueprint to find.</param>
         /// <returns>The first blueprint which id matches blueprintId, Null if no such blueprint is found.</returns>
         public static Blueprint GetBlueprintByID(long blueprintId)
         {
-            Blueprint value = null;
+            Blueprint value;
             s_blueprintsByID.TryGetValue(blueprintId, out value);
             return value;
         }
@@ -97,14 +91,9 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="blueprintName">The name of the blueprint to find.</param>
         /// <returns>The first blueprint which name matches blueprintName, Null if no such blueprint is found.</returns>
-        public static Item GetBlueprintByName(string blueprintName)
+        public static Blueprint GetBlueprintByName(string blueprintName)
         {
-            foreach (Blueprint item in s_blueprintsByID.Values)
-            {
-                if (item.Name == blueprintName)
-                    return item;
-            }
-            return null;
+            return s_blueprintsByID.Values.FirstOrDefault(x => x.Name == blueprintName);
         }
 
         #endregion
