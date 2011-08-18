@@ -40,6 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <DocumentationFile>
     </DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -66,11 +67,15 @@
       <HintPath>ExternalCalendar\Google.GData.Extensions.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>ExternalCalendar\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>ExternalCalendar\Office.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -886,24 +891,23 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-<Target Name="GenerateSerializationAssembliesForAllTypes"
+  <Target Name="GenerateSerializationAssembliesForAllTypes"
   DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource"
   Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)"
   Outputs="$(OutputPath)$(_SGenDllName)">
     <SGen BuildAssemblyName="$(TargetFileName)"
       BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)"
-      ShouldGenerateSerializer="true" UseProxyTypes="true"
+      ShouldGenerateSerializer="true" UseProxyTypes="false"
       KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)"
       DelaySign="$(DelaySign)" ToolPath="$(SGenToolPath)">
         <Output TaskParameter="SerializationAssembly"
           ItemName="SerializationAssembly" />
-     </SGen>
-	</Target>
+    </SGen>
+  </Target>
   <Target Name="BeforeBuild">
   </Target>
-<Target Name="AfterBuild"
-  DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
-</Target>
+  <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
+  </Target>
   -->
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)

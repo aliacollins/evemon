@@ -2,7 +2,7 @@
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
-    [XmlRoot("error")]
+    [XmlRoot("error", Namespace = "http://api.battleclinic.com")]
     public sealed class BCAPIError
     {
         [XmlAttribute("code")]
