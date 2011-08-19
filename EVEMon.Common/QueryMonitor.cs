@@ -258,7 +258,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected virtual void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            provider.QueryMethodAsync<T>(m_method, callback);
+            provider.QueryMethodAsync(m_method, callback);
         }
 
         /// <summary>

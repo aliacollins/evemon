@@ -1,68 +1,78 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using EVEMon.Common;
 
 namespace EVEMon.Controls
 {
     /// <summary>
     /// Wrapper class for the NotifyIcon component. Implements the NotifyIcon properties and events
     /// required for EVEMon usage, and adds MouseHover and MouseLeave events not provided by
-    /// the NotifyIcon class
+    /// the NotifyIcon class.
     /// </summary>
     public partial class TrayIcon : Component
     {
         /// <summary>
-        /// Holds the current mouse position state. The initial state is <see cref="TrayIcon.MouseOut"/> See <see cref="TrayIcon.MouseState"/> for more info.
+        /// Holds the current mouse position state.
+        /// The initial state is <see cref="MouseStateOut"/>. See <see cref="TrayIcon.MouseState"/> for more info.
         /// </summary>
-        private MouseState mouseState;
-        private string iconText;
+        private MouseState m_mouseState;
+
+        private string m_iconText;
 
 
         #region Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="EVEMon.TrayIcon"/> class.
+        /// Initializes a new instance of the <see cref="TrayIcon"/> class.
         /// </summary>
-        public TrayIcon() : this(null) {}
+        public TrayIcon()
+            : this(null)
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="EVEMon.TrayIcon"/> class with the specfied container.
+        /// Initializes a new instance of the <see cref="TrayIcon"/> class with the specfied container.
         /// </summary>
-        /// <param name="container">An <see cref="System.ComponentModel.IContainer"/> that represents the container for the <see cref="EVEMon.TrayIcon"/> control.</param>
+        /// <param name="container">An <see cref="System.ComponentModel.IContainer"/> that represents the container for the <see cref="TrayIcon"/> control.</param>
         public TrayIcon(IContainer container)
         {
             if (container != null)
                 container.Add(this);
+
             InitializeComponent();
-            this.mouseState = new MouseStateOut(this);
+
+            m_mouseState = new MouseStateOut(this);
         }
+
         #endregion
 
 
         #region Local Properties
-        private int mouseHoverTime = 250;
+
         /// <summary>
         /// The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised.
         /// </summary>
         [Category("Behaviour"),
-            Description("The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised"),
-            DefaultValue(250)]
-        public int MouseHoverTime
-        {
-            get { return mouseHoverTime; }
-            set { mouseHoverTime = value; }
-        }
+         Description(
+             "The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised"
+             ),
+         DefaultValue(250)]
+        public int MouseHoverTime { get; set; }
+
         #endregion
 
 
         #region NotifyIcon properties
+
         /// <summary>
-        /// Gets or sets the shortcut menu associated with the <see cref="EVEMon.TrayIcon"/>.
+        /// Gets or sets the shortcut menu associated with the <see cref="TrayIcon"/>.
         /// </summary>
         /// <remarks>
         /// Exposes the value of the underlying <see cref="System.Windows.Forms.NotifyIcon.ContextMenuStrip"/> property.
         /// </remarks>
-        [Category ("Behaviour")]
+        [Category("Behaviour")]
         public ContextMenuStrip ContextMenuStrip
         {
             get { return notifyIcon.ContextMenuStrip; }
@@ -75,11 +85,12 @@ namespace EVEMon.Controls
         /// <remarks>
         /// Exposes the value of the underlying <see cref="System.Windows.Forms.NotifyIcon.Icon"/> property.
         /// </remarks>
-        [Category ("Appearance"), Description("The icon to display in the system tray")]
+        [Category("Appearance"),
+         Description("The icon to display in the system tray")]
         public Icon Icon
         {
             get { return notifyIcon.Icon; }
-            set { notifyIcon.Icon = new Icon(value, new Size(16,16)); }
+            set { notifyIcon.Icon = new Icon(value, new Size(16, 16)); }
         }
 
         /// <summary>
@@ -88,7 +99,8 @@ namespace EVEMon.Controls
         /// <remarks>
         /// Exposes the value of the underlying <see cref="System.Windows.Forms.NotifyIcon.Text"/> property.
         /// </remarks>
-        [Category("Appearance"), Description("The text that will be displayed when the mouse hovers over the icon")]
+        [Category("Appearance"),
+         Description("The text that will be displayed when the mouse hovers over the icon")]
         public string Text
         {
             get { return notifyIcon.Text; }
@@ -101,53 +113,65 @@ namespace EVEMon.Controls
         /// <remarks>
         /// Exposes the value of the underlying <see cref="System.Windows.Forms.NotifyIcon.Visible"/> property.
         /// </remarks>
-        [Category("Behaviour"), Description("Determines whether the control is visible or hidden"), DefaultValue(false)]
+        [Category("Behaviour"),
+         Description("Determines whether the control is visible or hidden"),
+         DefaultValue(false)]
         public bool Visible
         {
             get { return notifyIcon.Visible; }
             set { notifyIcon.Visible = value; }
         }
+
         #endregion
 
 
         #region NotifyIcon Event Handler Methods
+
         /// <summary>
-        /// Propagates the NotifyIcon Click event to our subscribers
+        /// Propagates the NotifyIcon Click event to our subscribers.
         /// </summary>
         private void notifyIcon_Click(object sender, EventArgs e)
         {
             OnClick(e);
         }
+
         #endregion
 
 
         #region Events
+
         /// <summary>
-        /// Raised when the user clicks the icon in the notification area
+        /// Raised when the user clicks the icon in the notification area.
         /// </summary>
-        [Category("Action"), Description("Occurs when the icon is clicked")]
+        [Category("Action"),
+         Description("Occurs when the icon is clicked")]
         public event EventHandler Click;
 
         /// <summary>
-        /// Raised when the mouse pointer remains stationery over the icon in the notification area for the length of time specified by <see cref="EVEMon.TrayIcon.MouseHoverTime"/>
+        /// Raised when the mouse pointer remains stationery over the icon in the notification area.
+        /// for the length of time specified by <see cref="TrayIcon.MouseHoverTime"/>
         /// </summary>
-        [Category("Mouse"), Description("Occurs when the mouse remains stationary inside the control for an amount of time")]
+        [Category("Mouse"),
+         Description("Occurs when the mouse remains stationary inside the control for an amount of time")]
         public event EventHandler MouseHover;
 
         /// <summary>
-        /// Raised when the mouse pointer moves away from the icon in the notification area after it has been hovering over the icon
+        /// Raised when the mouse pointer moves away from the icon in the notification area after it has been hovering over the icon.
         /// </summary>
-        [Category("Mouse"), Description("Occurs when the mouse leaves the visible part of the control")]
+        [Category("Mouse"),
+         Description("Occurs when the mouse leaves the visible part of the control")]
         public event EventHandler MouseLeave;
+
         #endregion
 
 
         #region Event methods
+
         /// <summary>
         /// Helper method to fire events in a thread safe manner.
         /// </summary>
         /// <remarks>
-        /// Checks whether subscribers implement <see cref="System.ComponentModel.ISyncronizeInvoke"/> to ensure we raise the
+        /// Checks whether subscribers implement <see cref="System.ComponentModel.ISynchronizeInvoke"/> to ensure we raise the
         /// event on the correct thread.
         /// </remarks>
         /// <param name="mainHandler">The <see cref="System.EventHandler"/> for the event to be raised.</param>
@@ -155,60 +179,126 @@ namespace EVEMon.Controls
         private void FireEvent(EventHandler mainHandler, EventArgs e)
         {
             // Make sure we have some subscribers
-            if (mainHandler != null)
-            {
-                // Get each subscriber in turn
-                foreach (EventHandler handler in mainHandler.GetInvocationList())
-                {
-                    // Get the object containing the subscribing method
-                    // If the target doesn't implement ISyncronizeInvoke, this will be null
-                    ISynchronizeInvoke sync = handler.Target as ISynchronizeInvoke;
+            if (mainHandler == null)
+                return;
 
-                    // Check if our target requires an Invoke
-                    if (sync != null && sync.InvokeRequired)
-                    {
-                        // Yes it does, so invoke the handler using the target's BeginInvoke method, but wait for it to finish
-                        // This is preferable to using Invoke so that if an exception is thrown its presented
-                        // in the context of the handler, not the current thread
-                        IAsyncResult result = sync.BeginInvoke(handler, new object[] { this, e });
-                        sync.EndInvoke(result);
-                    }
-                    else
-                    {
-                        // No it doesn't, so invoke the handler directly
-                        handler(this, e);
-                    }
+            // Get each subscriber in turn
+            foreach (EventHandler handler in mainHandler.GetInvocationList())
+            {
+                // Get the object containing the subscribing method
+                // If the target doesn't implement ISyncronizeInvoke, this will be null
+                ISynchronizeInvoke sync = handler.Target as ISynchronizeInvoke;
+
+                // Check if our target requires an Invoke
+                if (sync != null && sync.InvokeRequired)
+                {
+                    // Yes it does, so invoke the handler using the target's BeginInvoke method, but wait for it to finish
+                    // This is preferable to using Invoke so that if an exception is thrown its presented
+                    // in the context of the handler, not the current thread
+                    IAsyncResult result = sync.BeginInvoke(handler, new object[] {this, e});
+                    sync.EndInvoke(result);
+                    return;
                 }
+
+                // No it doesn't, so invoke the handler directly
+                handler(this, e);
             }
         }
 
         /// <summary>
-        /// Raises the Click event
+        /// Raises the Click event.
         /// </summary>
-        protected virtual void OnClick(EventArgs e)
+        private void OnClick(EventArgs e)
         {
-            FireEvent(this.Click, e);
+            FireEvent(Click, e);
         }
 
         /// <summary>
-        /// Raises the MouseHover event
+        /// Raises the MouseHover event.
         /// </summary>
-        protected virtual void OnMouseHover(EventArgs e)
+        private void OnMouseHover(EventArgs e)
         {
-            FireEvent(this.MouseHover, e);
+            FireEvent(MouseHover, e);
         }
 
         /// <summary>
-        /// Raises the MouseLeave event
+        /// Raises the MouseLeave event.
         /// </summary>
-        protected virtual void OnMouseLeave(EventArgs e)
+        private void OnMouseLeave(EventArgs e)
         {
-            FireEvent(this.MouseLeave, e);
+            FireEvent(MouseLeave, e);
         }
+
+        #endregion
+
+
+        #region Static Popup management methods
+
+        /// <summary>
+        /// Sets the tool tip location.
+        /// </summary>
+        /// <param name="tooltipForm">The tooltip form.</param>
+        public static void SetToolTipLocation(Form tooltipForm)
+        {
+            Point mp = Control.MousePosition;
+            NativeMethods.APPBARDATA appBarData = NativeMethods.APPBARDATA.Create();
+            NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
+            NativeMethods.RECT taskBarLocation = appBarData.rc;
+
+            Screen curScreen = Screen.FromPoint(mp);
+            Point winPoint;
+            bool slideLeftRight;
+            switch (appBarData.uEdge)
+            {
+                default:
+                    winPoint = mp;
+                    slideLeftRight = true;
+                    break;
+                case NativeMethods.ABE_BOTTOM:
+                    winPoint = new Point(mp.X, taskBarLocation.Top - tooltipForm.Height);
+                    slideLeftRight = true;
+                    break;
+                case NativeMethods.ABE_TOP:
+                    winPoint = new Point(mp.X, taskBarLocation.Bottom);
+                    slideLeftRight = true;
+                    break;
+                case NativeMethods.ABE_LEFT:
+                    winPoint = new Point(taskBarLocation.Right, mp.Y);
+                    slideLeftRight = false;
+                    break;
+                case NativeMethods.ABE_RIGHT:
+                    winPoint = new Point(taskBarLocation.Left - tooltipForm.Width, mp.Y);
+                    slideLeftRight = false;
+                    break;
+            }
+
+            if (slideLeftRight)
+            {
+                if (winPoint.X + tooltipForm.Width > curScreen.Bounds.Right)
+                    winPoint = new Point(curScreen.Bounds.Right - tooltipForm.Width - 1, winPoint.Y);
+
+                if (winPoint.X < curScreen.Bounds.Left)
+                    winPoint = new Point(curScreen.Bounds.Left + 2, winPoint.Y);
+            }
+            else
+            {
+                if (winPoint.Y + tooltipForm.Height > curScreen.Bounds.Bottom)
+                    winPoint = new Point(winPoint.X, curScreen.Bounds.Bottom - tooltipForm.Height - 1);
+
+                if (winPoint.Y < curScreen.Bounds.Top)
+                    winPoint = new Point(winPoint.X, curScreen.Bounds.Top + 2);
+            }
+
+            tooltipForm.Location = winPoint;
+        }
+
         #endregion
 
 
         #region State Management
+
+        #region Private Abstract Class "MouseState"
+
         /// <summary>
         /// Abstract base class for monitoring mouse state through the derived concrete classes
         /// </summary>
@@ -220,61 +310,66 @@ namespace EVEMon.Controls
             /// <summary>
             /// Flag to determine if mouse tracking enabled
             /// </summary>
-            private bool mouseTrackingEnabled = false;
+            private bool m_mouseTrackingEnabled;
 
             /// <summary>
             /// A <see cref="System.Drawing.Point"/> holding the last known mouse position
             /// </summary>
-            protected Point mousePosition;
+            protected Point m_mousePosition;
 
             /// <summary>
-            /// The <see cref="EVEMon.TrayIcon"/> whose MouseState we are managing
+            /// The <see cref="TrayIcon"/> whose MouseState we are managing
             /// </summary>
-            protected TrayIcon trayIcon;
+            protected readonly TrayIcon m_trayIcon;
 
             /// <summary>
             /// Specifies a mouse state
             /// </summary>
-            protected enum States { MouseOut, MouseOver, MouseHovering };
+            protected enum States
+            {
+                MouseOut,
+                MouseOver,
+                MouseHovering
+            };
 
             /// <summary>
             /// Thread syncronisation lock. Used extensively to enusre that mouseMove event handlers
-            /// and thread timer callbacks always have a consistent object state
+            /// and thread timer callbacks always have a consistent object state.
             /// </summary>
-            protected Object syncLock;
+            protected readonly Object m_syncLock;
 
             /// <summary>
-            /// Initialises a new instance of the <see cref="EVEMon.MouseState"/> class with the given trayIcon and mousePosition
+            /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
             /// </summary>
-            /// <param name="trayIcon">The <see cref="EVEMon.TrayIcon"/> whose state is being managed.</param>
+            /// <param name="trayIcon">The <see cref="TrayIcon"/> whose state is being managed.</param>
             /// <param name="mousePosition">A <see cref="System.Drawing.Point"/> representing the last known mouse location.</param>
-            public MouseState(TrayIcon trayIcon, Point mousePosition)
+            protected MouseState(TrayIcon trayIcon, Point mousePosition)
             {
-                this.trayIcon = trayIcon;
-                this.mousePosition = mousePosition;
-                syncLock = new Object();
+                m_trayIcon = trayIcon;
+                m_mousePosition = mousePosition;
+                m_syncLock = new Object();
             }
 
             protected void EnableMouseTracking()
             {
-                lock (syncLock)
+                lock (m_syncLock)
                 {
                     // Add event handler for mouse movement
-                    this.trayIcon.notifyIcon.MouseMove += new MouseEventHandler(notifyIcon_MouseMove);
-                    mouseTrackingEnabled = true;
+                    m_trayIcon.notifyIcon.MouseMove += notifyIcon_MouseMove;
+                    m_mouseTrackingEnabled = true;
                 }
             }
 
             protected void DisableMouseTracking()
             {
-                lock (syncLock)
+                lock (m_syncLock)
                 {
-                    if (mouseTrackingEnabled)
-                    {
-                        // Unsubscribe this MouseState from the notify icon MouseMove event
-                        this.trayIcon.notifyIcon.MouseMove -= new MouseEventHandler(notifyIcon_MouseMove);
-                        mouseTrackingEnabled = false;
-                    }
+                    if (!m_mouseTrackingEnabled)
+                        return;
+
+                    // Unsubscribe this MouseState from the notify icon MouseMove event
+                    m_trayIcon.notifyIcon.MouseMove -= notifyIcon_MouseMove;
+                    m_mouseTrackingEnabled = false;
                 }
             }
 
@@ -287,66 +382,74 @@ namespace EVEMon.Controls
             {
                 // Lock syncLock to ensure that further events block until
                 // we've handled this one
-                lock (syncLock)
+                lock (m_syncLock)
                 {
                     // Only cascade the event if mouse tracking still active
-                    if (mouseTrackingEnabled)
-                    {
-                        this.mousePosition = Control.MousePosition;
-                        OnMouseMove();
-                    }
+                    if (!m_mouseTrackingEnabled)
+                        return;
+
+                    m_mousePosition = Control.MousePosition;
+                    OnMouseMove();
                 }
             }
 
             /// <summary>
-            /// Virtual stub overridden by derived classes to capture mouse movement
+            /// Virtual stub overridden by derived classes to capture mouse movement.
             /// </summary>
-            protected virtual void OnMouseMove() { }
+            protected virtual void OnMouseMove()
+            {
+            }
 
             /// <summary>
-            /// Changes the state of the parent <see cref="EVEMon.TrayIcon"/>
+            /// Changes the state of the parent <see cref="TrayIcon"/>.
             /// </summary>
-            /// <param name="state">A <see cref="EVEMon.TrayIcon.MouseState.States"/> indicating the state to change to.</param>
+            /// <param name="state">A <see cref="TrayIcon.MouseState.States"/> indicating the state to change to.</param>
             protected void ChangeState(States state)
             {
                 // Change the parent TrayIcon's state
                 switch (state)
                 {
                     case States.MouseOut:
-                        this.trayIcon.mouseState = new MouseStateOut(this.trayIcon);
+                        m_trayIcon.m_mouseState = new MouseStateOut(m_trayIcon);
                         break;
                     case States.MouseOver:
-                        this.trayIcon.mouseState = new MouseStateOver(this.trayIcon, this.mousePosition);
+                        m_trayIcon.m_mouseState = new MouseStateOver(m_trayIcon, m_mousePosition);
                         break;
                     case States.MouseHovering:
-                        this.trayIcon.mouseState = new MouseStateHovering(this.trayIcon, this.mousePosition);
+                        m_trayIcon.m_mouseState = new MouseStateHovering(m_trayIcon, m_mousePosition);
                         break;
                 }
             }
 
         }
 
+        #endregion
+
+
+        #region Private Class "MouseStateOut"
+
         /// <summary>
-        /// The initial state for mouse tracking
+        /// The initial state for mouse tracking.
         /// </summary>
         /// <remarks>
-        /// State is changed to <see cref="EVEMon.TrayIcon.MouseStateOver"/> when the mouses moves over the icon
+        /// State is changed to <see cref="TrayIcon.MouseStateOver"/> when the mouses moves over the icon.
         /// </remarks>
         private class MouseStateOut : MouseState
         {
-            
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="EVEMon.TrayIcon.MouseStateOut"/> class for a given trayIcon.
+            /// Initializes a new instance of the <see cref="TrayIcon.MouseStateOut"/> class for a given trayIcon.
             /// </summary>
-            /// <param name="trayIcon">A <see cref="EVEMon.TrayIcon"/> whose state we are managing.</param>
-            public MouseStateOut(TrayIcon trayIcon) : base(trayIcon, new Point(0,0))
+            /// <param name="trayIcon">A <see cref="TrayIcon"/> whose state we are managing.</param>
+            public MouseStateOut(TrayIcon trayIcon)
+                : base(trayIcon, new Point(0, 0))
             {
                 EnableMouseTracking();
             }
-            
+
             /// <summary>
             /// Overrides the base OnMouseMove method to change state to MouseOver when we capture a MouseMove event
-            /// fro the parent TrayIcon's underlying NotifyIcon.
+            /// from the parent TrayIcon's underlying NotifyIcon.
             /// </summary>
             protected override void OnMouseMove()
             {
@@ -356,37 +459,45 @@ namespace EVEMon.Controls
 
         }
 
+        #endregion
+
+
+        #region Private Class "MaouseStateOver"
+
         /// <summary>
         /// Mouse tracking state where the mouse has moved over the tray icon
         /// but we haven't established a hover state. To move to MouseStateHovering
         /// the mouse must remain stationary for the length of time specified
-        /// by TrayIcon.MouseHoverTime
+        /// by TrayIcon.MouseHoverTime.
         /// </summary>
         private class MouseStateOver : MouseState
         {
             /// <summary>
-            /// A <see cref="System.Threading.Timer"/> used to monitor mouse hover
+            /// A <see cref="System.Threading.Timer"/> used to monitor mouse hover.
             /// </summary>
-            private System.Threading.Timer timer;
+            private System.Threading.Timer m_timer;
 
             /// <summary>
-            /// Initialises a new instance of the <see cref="EVEMon.MouseState"/> class with the given trayIcon and mousePosition
+            /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
             /// </summary>
-            /// <param name="trayIcon">The <see cref="EVEMon.TrayIcon"/> whose state is being managed.</param>
+            /// <param name="trayIcon">The <see cref="TrayIcon"/> whose state is being managed.</param>
             /// <param name="mousePosition">A <see cref="System.Drawing.Point"/> representing the last known mouse location.</param>
             public MouseStateOver(TrayIcon trayIcon, Point mousePosition)
                 : base(trayIcon, mousePosition)
             {
                 // Store the existing icon text, then reset it
-                trayIcon.iconText = trayIcon.notifyIcon.Text;
+                trayIcon.m_iconText = trayIcon.notifyIcon.Text;
                 trayIcon.notifyIcon.Text = String.Empty;
+
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure
                 // initialisation completes before the timeout occurs
-                lock (syncLock)
+                lock (m_syncLock)
                 {
                     // Start the hover timer
-                    this.timer = new System.Threading.Timer(new System.Threading.TimerCallback(HoverTimeout), null, this.trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
+                    m_timer = new System.Threading.Timer(HoverTimeout, null, m_trayIcon.MouseHoverTime,
+                                                         System.Threading.Timeout.Infinite);
+
                     // Start tracking the mouse
                     EnableMouseTracking();
                 }
@@ -400,7 +511,7 @@ namespace EVEMon.Controls
                 try
                 {
                     // Mouse has moved, so reset the hover timer
-                    this.timer.Change(this.trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
+                    m_timer.Change(m_trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -420,24 +531,25 @@ namespace EVEMon.Controls
             /// <param name="state"></param>
             private void HoverTimeout(object state)
             {
-                lock (syncLock)
+                lock (m_syncLock)
                 {
-                    // We may have multiple callbacks pending because the threads in the threadpool were busy waiting for our requests to CCP.
-                    // As a result, they're going to execute one after the other one, raising ObjectDisposedException when trying to stops the timer.
-                    if (this.timer == null) return;
+                    // We may have multiple callbacks pending because the threads in the threadpool were busy waiting for our requests to CCP
+                    // As a result, they're going to execute one after the other one, raising ObjectDisposedException when trying to stops the timer
+                    if (m_timer == null)
+                        return;
 
                     // Stops and disposes the timer.
                     try
                     {
                         // Stop the timer in case its been restarted by a MouseMove
                         // in the event we were blocked
-                        this.timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                        m_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                     }
                     finally
                     {
                         // Dispose of the timer since we're done with it
-                        this.timer.Dispose();
-                        this.timer = null;
+                        m_timer.Dispose();
+                        m_timer = null;
                     }
 
                     // Mouse tracking no longer required
@@ -446,21 +558,19 @@ namespace EVEMon.Controls
                     // Check if the mouse is still in the same place
                     // Since we update mousePosition and reset the timer on MouseMove events, if it has moved
                     // when HoverTimeout is called it means its no longer over the icon
-                    if (Control.MousePosition == this.mousePosition)
-                    {
-                        ChangeState(States.MouseHovering);
-                    }
-                    else
-                    {
-                        ChangeState(States.MouseOut);
-                    }
+                    ChangeState(Control.MousePosition == m_mousePosition ? States.MouseHovering : States.MouseOut);
                 }
             }
         }
 
+        #endregion
+
+
+        #region Private Class "MouseStateHovering"
+
         /// <summary>
         /// The hover state reached when the mouse has been stationary over the notification icon
-        /// for at least the length of time specified by <see cref="EVEMon.TrayIcon.MouseHoverTime"/>.
+        /// for at least the length of time specified by <see cref="TrayIcon.MouseHoverTime"/>.
         /// Fires the parent TrayIcon's MouseHover event on entry.
         /// </summary>
         /// <remarks>
@@ -470,25 +580,27 @@ namespace EVEMon.Controls
         /// </remarks>
         private class MouseStateHovering : MouseState
         {
-            private System.Threading.Timer timer;
+            private readonly System.Threading.Timer m_timer;
 
             /// <summary>
-            /// Initialises a new instance of the <see cref="EVEMon.MouseState"/> class with the given trayIcon and mousePosition
+            /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
             /// </summary>
-            /// <param name="trayIcon">The <see cref="EVEMon.TrayIcon"/> whose state is being managed.</param>
+            /// <param name="trayicon">The <see cref="TrayIcon"/> whose state is being managed.</param>
             /// <param name="mousePosition">A <see cref="System.Drawing.Point"/> representing the last known mouse location.</param>
             public MouseStateHovering(TrayIcon trayicon, Point mousePosition)
                 : base(trayicon, mousePosition)
             {
                 // Fire the MouseHover event
-                trayIcon.OnMouseHover(new EventArgs());
+                m_trayIcon.OnMouseHover(new EventArgs());
+
                 // Lock the syncLock to make sure the timer is initialised before mouse events are handled
-                lock (syncLock)
+                lock (m_syncLock)
                 {
                     // Start tracking the mouse
                     EnableMouseTracking();
+
                     // Start the timer to monitor mouse position
-                    this.timer = new System.Threading.Timer(new System.Threading.TimerCallback(MouseMonitor), null, 100, System.Threading.Timeout.Infinite);
+                    m_timer = new System.Threading.Timer(MouseMonitor, null, 100, System.Threading.Timeout.Infinite);
                 }
             }
 
@@ -496,96 +608,44 @@ namespace EVEMon.Controls
             /// A <see cref="System.Threading.TimerCallback"/> method invoked to monitor mouse position.
             /// </summary>
             /// <remarks>
-            /// Called every 100ms so long as the mouse does not move. If the mouse moves, fire the parent TrayIcon's MouseLeave event
-            /// and changes state to MouseOut
+            /// Called every 100ms so long as the mouse does not move.
+            /// If the mouse moves, fire the parent TrayIcon's MouseLeave event and changes state to MouseOut.
             /// </remarks>
             /// <param name="state"></param>
             private void MouseMonitor(object state)
             {
-                lock (syncLock)
+                lock (m_syncLock)
                 {
-                    if (Control.MousePosition == this.mousePosition)
+                    if (Control.MousePosition == m_mousePosition)
                     {
                         // Mouse hasn't moved so check back in 100ms
-                        this.timer.Change(100, System.Threading.Timeout.Infinite);
+                        m_timer.Change(100, System.Threading.Timeout.Infinite);
+                        return;
                     }
-                    else
-                    {
-                        // Mouse has moved, and since we're tracking it over the icon
-                        // this means its moved away
-                        // Dispose of the timer since we're done with it
-                        this.timer.Dispose();
-                        // Switch of mouse tracking
-                        DisableMouseTracking();
-                        // Restore the default icon text
-                        trayIcon.notifyIcon.Text = trayIcon.iconText;
-                        // Fire the MouseLeave event
-                        this.trayIcon.OnMouseLeave(new EventArgs());
-                        // Change to MouseOut state
-                        ChangeState(States.MouseOut);
-                    }
+
+                    // Mouse has moved, and since we're tracking it over the icon
+                    // this means its moved away
+                    // Dispose of the timer since we're done with it
+                    m_timer.Dispose();
+
+                    // Switch of mouse tracking
+                    DisableMouseTracking();
+
+                    // Restore the default icon text
+                    m_trayIcon.notifyIcon.Text = m_trayIcon.m_iconText;
+
+                    // Fire the MouseLeave event
+                    m_trayIcon.OnMouseLeave(new EventArgs());
+
+                    // Change to MouseOut state
+                    ChangeState(States.MouseOut);
                 }
             }
         }
-        #endregion
-
-
-        #region Static Popup management methods
-        public static void SetToolTipLocation(Form tooltipForm)
-        {
-            Point mp = Control.MousePosition;
-            NativeMethods.APPBARDATA appBarData = NativeMethods.APPBARDATA.Create();
-            NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
-            NativeMethods.RECT taskBarLocation = appBarData.rc;
-
-            Point winPoint = mp;
-            Screen curScreen = Screen.FromPoint(mp);
-            bool slideLeftRight = true;
-            switch (appBarData.uEdge)
-            {
-                default:
-                case NativeMethods.ABE_BOTTOM:
-                    winPoint = new Point(mp.X, taskBarLocation.Top - tooltipForm.Height);
-                    slideLeftRight = true;
-                    break;
-                case NativeMethods.ABE_TOP:
-                    winPoint = new Point(mp.X, taskBarLocation.Bottom);
-                    slideLeftRight = true;
-                    break;
-                case NativeMethods.ABE_LEFT:
-                    winPoint = new Point(taskBarLocation.Right, mp.Y);
-                    slideLeftRight = false;
-                    break;
-                case NativeMethods.ABE_RIGHT:
-                    winPoint = new Point(taskBarLocation.Left - tooltipForm.Width, mp.Y);
-                    slideLeftRight = false;
-                    break;
-            }
-            if (slideLeftRight)
-            {
-                if (winPoint.X + tooltipForm.Width > curScreen.Bounds.Right)
-                {
-                    winPoint = new Point(curScreen.Bounds.Right - tooltipForm.Width - 1, winPoint.Y);
-                }
-                if (winPoint.X < curScreen.Bounds.Left)
-                {
-                    winPoint = new Point(curScreen.Bounds.Left + 2, winPoint.Y);
-                }
-            }
-            else
-            {
-                if (winPoint.Y + tooltipForm.Height > curScreen.Bounds.Bottom)
-                {
-                    winPoint = new Point(winPoint.X, curScreen.Bounds.Bottom - tooltipForm.Height - 1);
-                }
-                if (winPoint.Y < curScreen.Bounds.Top)
-                {
-                    winPoint = new Point(winPoint.X, curScreen.Bounds.Top + 2);
-                }
-            }
-            tooltipForm.Location = winPoint;
-        }
 
         #endregion
+
+        #endregion
+
     }
 }

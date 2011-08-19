@@ -21,7 +21,7 @@ namespace EVEMon.Common
     /// <typeparam name="T"></typeparam>
     /// <param name="result"></param>
     /// <param name="errorMessage"></param>
-    public delegate void DownloadCallback<T>(T result, string errorMessage);
+    public delegate void DownloadCallback<in T>(T result, string errorMessage);
 
     /// <summary>
     /// A collection of helper methods for downloads and deserialization.
@@ -47,12 +47,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Loads an XSL transform with the provided name from the resources.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="content"></param>
         /// <returns></returns>
         public static XslCompiledTransform LoadXSLT(string content)
         {
             XslCompiledTransform xslt = new XslCompiledTransform();
-            using (var stringReader = new StringReader(content))
+            using (StringReader stringReader = new StringReader(content))
             {
                 using (XmlTextReader reader = new XmlTextReader(stringReader))
                 {
@@ -100,28 +100,26 @@ namespace EVEMon.Common
 
                             // Deserialize from the given stream
                             stream.Seek(0, SeekOrigin.Begin);
-                            XmlSerializer xs = new XmlSerializer(typeof(T));
-                            return (T)xs.Deserialize(stream);
+                            XmlSerializer xs = new XmlSerializer(typeof (T));
+                            return (T) xs.Deserialize(stream);
                         }
                     }
                 }
+
                 // Deserialization without transform
-                else
+                using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
-                    using (var stream = FileHelper.OpenRead(filename, false))
-                    {
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
-                        return (T)xs.Deserialize(stream);
-                    }
+                    XmlSerializer xs = new XmlSerializer(typeof (T));
+                    return (T) xs.Deserialize(stream);
                 }
             }
-            // An error occurred during the XSL transform
+                // An error occurred during the XSL transform
             catch (XsltException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 return null;
             }
-            // An error occurred during the deserialization
+                // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
@@ -148,27 +146,29 @@ namespace EVEMon.Common
             try
             {
                 // Deserializes
-                using (var s = FileHelper.OpenRead(path, false))
+                using (Stream s = FileHelper.OpenRead(path, false))
                 {
                     using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
-                        return (T)xs.Deserialize(zs);
+                        XmlSerializer xs = new XmlSerializer(typeof (T));
+                        return (T) xs.Deserialize(zs);
                     }
                 }
             }
             catch (InvalidOperationException ex)
             {
                 String message = String.Format(CultureConstants.DefaultCulture,
-                    "An error occurred decompressing {0}, the error message was '{1}' from '{2}'. "
-                    + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                                               "An error occurred decompressing {0}, the error message was '{1}' from '{2}'. "
+                                               + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
+                                               ex.Message, ex.Source);
                 throw new ApplicationException(message, ex);
             }
             catch (XmlException ex)
             {
                 String message = String.Format(CultureConstants.DefaultCulture,
-                    "An error occurred reading the XML from {0}, the error message was '{1}' from '{2}'. "
-                    + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                                               "An error occurred reading the XML from {0}, the error message was '{1}' from '{2}'. "
+                                               + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
+                                               ex.Message, ex.Source);
                 throw new ApplicationException(message, ex);
             }
         }
@@ -177,6 +177,7 @@ namespace EVEMon.Common
         /// Deserialize an XML from a file.
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
+        /// <param name="filename">The filename.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized result</returns>
         internal static APIResult<T> DeserializeAPIResult<T>(string filename, XslCompiledTransform transform)
@@ -201,27 +202,22 @@ namespace EVEMon.Common
         /// <param name="url">The url to query</param>
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        /// <param name="callback">The callback to call once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
-        internal static void DownloadAPIResultAsync<T>(string url, HttpPostData postData, XslCompiledTransform transform, QueryCallback<T> callback)
+        /// <param name="callback">The callback to call once the query has been completed.</param>
+        internal static void DownloadAPIResultAsync<T>(string url, HttpPostData postData, XslCompiledTransform transform,
+                                                       QueryCallback<T> callback)
         {
-            EveMonClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>
-            {
-                APIResult<T> result;
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
+                (asyncResult, userState) =>
+                    {
+                        // Was there an HTTP error ?
+                        APIResult<T> result = asyncResult.Error != null
+                                                  ? new APIResult<T>(asyncResult.Error)
+                                                  : DeserializeAPIResultCore<T>(transform, asyncResult.Result);
 
-                // Was there an HTTP error ?
-                if (asyncResult.Error != null)
-                {
-                    result = new APIResult<T>(asyncResult.Error);
-                }
-                // No http error, let's try to deserialize
-                else
-                {
-                    result = DeserializeAPIResultCore<T>(transform, asyncResult.Result);
-                }
-
-                // We got the result, let's invoke the callback on this actor
-                Dispatcher.Invoke(() => callback.Invoke(result));
-            },
+                        // We got the result, let's invoke the callback on this actor
+                        Dispatcher.Invoke(() => callback.Invoke(result));
+                    },
                 null);
         }
 
@@ -232,39 +228,37 @@ namespace EVEMon.Common
         /// <param name="url">The url to query</param>
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData, XslCompiledTransform transform)
+        internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData,
+                                                          XslCompiledTransform transform)
         {
-            APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http, String.Format("Time out on querying {0}", url));
+            APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http,
+                                                   String.Format("Time out on querying {0}", url));
 
             // Query async and wait
-            using (var wait = new EventWaitHandle(false, EventResetMode.AutoReset))
+            using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
             {
-                EveMonClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>
-                {
-                    try
-                    {
-                        // Was there an HTTP error ?
-                        if (asyncResult.Error != null)
+                EveMonClient.HttpWebService.DownloadXmlAsync(
+                    url, postData,
+                    (asyncResult, userState) =>
                         {
-                            result = new APIResult<T>(asyncResult.Error);
-                        }
-                        // No http error, let's try to deserialize
-                        else
-                        {
-                            result = DeserializeAPIResultCore<T>(transform, asyncResult.Result);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, true);
-                        result = new APIResult<T>(APIEnumerations.APIErrors.Http, e.Message);
-                    }
-                    finally
-                    {
-                        // We got the result, so we resume the calling thread
-                        wait.Set();
-                    }
-                },
+                            try
+                            {
+                                // Was there an HTTP error ?
+                                result = asyncResult.Error != null
+                                             ? new APIResult<T>(asyncResult.Error)
+                                             : DeserializeAPIResultCore<T>(transform, asyncResult.Result);
+                            }
+                            catch (Exception e)
+                            {
+                                ExceptionHandler.LogException(e, true);
+                                result = new APIResult<T>(APIEnumerations.APIErrors.Http, e.Message);
+                            }
+                            finally
+                            {
+                                // We got the result, so we resume the calling thread
+                                wait.Set();
+                            }
+                        },
                     null);
 
                 // Wait for the completion of the background thread
@@ -284,7 +278,7 @@ namespace EVEMon.Common
         /// <returns>The result of the deserialization.</returns>
         private static APIResult<T> DeserializeAPIResultCore<T>(XslCompiledTransform transform, XmlDocument doc)
         {
-            APIResult<T> result = null;
+            APIResult<T> result;
 
             try
             {
@@ -304,31 +298,31 @@ namespace EVEMon.Common
 
                                 // Deserialize from the given stream
                                 stream.Seek(0, SeekOrigin.Begin);
-                                XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
-                                result = (APIResult<T>)xs.Deserialize(stream);
+                                XmlSerializer xs = new XmlSerializer(typeof (APIResult<T>));
+                                result = (APIResult<T>) xs.Deserialize(stream);
                             }
                         }
                     }
-                    // Deserialization without transform
+                        // Deserialization without transform
                     else
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
-                        result = (APIResult<T>)xs.Deserialize(reader);
+                        XmlSerializer xs = new XmlSerializer(typeof (APIResult<T>));
+                        result = (APIResult<T>) xs.Deserialize(reader);
                     }
                 }
 
                 // Fix times
                 DateTime requestTime = DateTime.UtcNow;
-                double CCPOffset = (result.CurrentTime.Subtract(requestTime)).TotalMilliseconds;
-                result.SynchronizeWithLocalClock(CCPOffset);
+                double offsetCCP = (result.CurrentTime.Subtract(requestTime)).TotalMilliseconds;
+                result.SynchronizeWithLocalClock(offsetCCP);
             }
-            // An error occurred during the XSL transform
+                // An error occurred during the XSL transform
             catch (XsltException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 result = new APIResult<T>(exc);
             }
-            // An error occurred during the deserialization
+                // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
@@ -351,48 +345,53 @@ namespace EVEMon.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The url to download from</param>
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
-        /// <param name="callback">A callback invoked on the UI thread</param>
+        /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <returns></returns>
         public static void DownloadXMLAsync<T>(string url, HttpPostData postData, DownloadCallback<T> callback)
             where T : class
         {
-            EveMonClient.HttpWebService.DownloadXmlAsync(url, postData,
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
 
-            // Callback
-            (asyncResult, userState) =>
-            {
-                T result = null;
-                string errorMessage = String.Empty;
-
-                // Was there an HTTP error ??
-                if (asyncResult.Error != null)
-                {
-                    errorMessage = asyncResult.Error.Message;
-                }
-                // No http error, let's try to deserialize
-                else
-                {
-                    try
+                // Callback
+                (asyncResult, userState) =>
                     {
-                        // Deserialize
-                        using (XmlNodeReader reader = new XmlNodeReader(asyncResult.Result))
+                        T result = null;
+                        string errorMessage = String.Empty;
+
+                        // Was there an HTTP error ??
+                        if (asyncResult.Error != null)
                         {
-                            XmlSerializer xs = new XmlSerializer(typeof(T));
-                            result = (T)xs.Deserialize(reader);
+                            errorMessage = asyncResult.Error.Message;
                         }
-                    }
-                    // An error occurred during the deserialization
-                    catch (InvalidOperationException exc)
-                    {
-                        ExceptionHandler.LogException(exc, true);
-                        errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
-                    }
-                }
+                            // No http error, let's try to deserialize
+                        else
+                        {
+                            try
+                            {
+                                // Deserialize
+                                using (
+                                    XmlNodeReader reader = new XmlNodeReader(asyncResult.Result))
+                                {
+                                    XmlSerializer xs = new XmlSerializer(typeof (T));
+                                    result = (T) xs.Deserialize(reader);
+                                }
+                            }
+                                // An error occurred during the deserialization
+                            catch (InvalidOperationException exc)
+                            {
+                                ExceptionHandler.LogException(exc, true);
+                                errorMessage = (exc.InnerException == null
+                                                    ? exc.Message
+                                                    : exc.InnerException.Message);
+                            }
+                        }
 
-                // We got the result, let's invoke the callback on this actor
-                Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-            },
-            null);
+                        // We got the result, let's invoke the callback on this actor
+                        Dispatcher.Invoke(
+                            () => callback.Invoke(result, errorMessage));
+                    },
+                null);
         }
 
         /// <summary>
@@ -403,9 +402,8 @@ namespace EVEMon.Common
         public static string GetXMLStringRepresentation(XmlDocument doc)
         {
             // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.NewLineHandling = NewLineHandling.Replace;
+            XmlWriterSettings settings = new XmlWriterSettings
+                                             {Indent = true, NewLineHandling = NewLineHandling.Replace};
 
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();
@@ -424,14 +422,14 @@ namespace EVEMon.Common
         /// <returns>The Xml document representing the given object.</returns>
         public static XmlDocument SerializeToXmlDocument(Type serializationType, object data)
         {
-            using (var memStream = new MemoryStream())
+            using (MemoryStream memStream = new MemoryStream())
             {
                 // Serializes to the stream
-                var serializer = new XmlSerializer(serializationType);
+                XmlSerializer serializer = new XmlSerializer(serializationType);
                 serializer.Serialize(memStream, data);
 
                 // Creates a XML doc from the stream
-                memStream.Seek(0, System.IO.SeekOrigin.Begin);
+                memStream.Seek(0, SeekOrigin.Begin);
                 XmlDocument doc = new XmlDocument();
                 doc.Load(memStream);
 
@@ -476,14 +474,14 @@ namespace EVEMon.Common
             // Uses a regex to retrieve the revision number.
             string content = File.ReadAllText(filename);
             Regex regex = new Regex("revision=\"([0-9]+)\"", RegexOptions.Compiled);
-            var match = regex.Match(content);
+            Match match = regex.Match(content);
 
             // No match ? Then there was no "revision" attribute, this is an old format.
             if (!match.Success || match.Groups.Count < 2)
                 return 0;
 
             // Returns the revision number (first group is the whole match, the second one the capture)
-            int revision = 0;
+            int revision;
             Int32.TryParse(match.Groups[1].Value, out revision);
             return revision;
         }
@@ -498,11 +496,11 @@ namespace EVEMon.Common
             string tempFile = Path.GetTempFileName();
 
             // We decompress the gzipped stream and writes it to a temporary file
-            using (var stream = File.OpenRead(filename))
+            using (FileStream stream = File.OpenRead(filename))
             {
-                using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
+                using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                 {
-                    using (var outStream = File.OpenWrite(tempFile))
+                    using (FileStream outStream = File.OpenWrite(tempFile))
                     {
                         byte[] bytes = new byte[4096];
 
@@ -511,7 +509,8 @@ namespace EVEMon.Common
                         while (true)
                         {
                             int count = gzipStream.Read(bytes, 0, bytes.Length);
-                            if (count == 0) break;
+                            if (count == 0)
+                                break;
 
                             outStream.Write(bytes, 0, count);
                         }
@@ -540,8 +539,7 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 throw new FileNotFoundException("Document not found", filename);
 
-            XmlTextReader reader = new XmlTextReader(filename);
-            reader.XmlResolver = null;
+            XmlTextReader reader = new XmlTextReader(filename) {XmlResolver = null};
 
             while (reader.Read())
             {

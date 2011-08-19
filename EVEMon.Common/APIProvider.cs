@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using System.Xml.Xsl;
 
 using EVEMon.Common.Attributes;
@@ -18,7 +19,7 @@ namespace EVEMon.Common
         private static APIProvider s_ccpTestProvider;
         private static XslCompiledTransform s_rowsetsTransform;
 
-        private List<APIMethod> m_methods;
+        private readonly List<APIMethod> m_methods;
 
         /// <summary>
         /// Default constructor 
@@ -31,6 +32,7 @@ namespace EVEMon.Common
         }
 
         #region Configuration
+
         /// <summary>
         /// Returns the name of this APIConfiguration.
         /// </summary>
@@ -48,19 +50,18 @@ namespace EVEMon.Common
         {
             get { return m_methods.AsReadOnly(); }
         }
+
         #endregion
 
 
         #region Helpers
+
         /// <summary>
         /// Returns true if this APIConfiguration represents the default API service.
         /// </summary>
         public bool IsDefault
         {
-            get
-            {
-                return (this == DefaultProvider);
-            }
+            get { return (this == DefaultProvider); }
         }
 
         /// <summary>
@@ -86,8 +87,8 @@ namespace EVEMon.Common
         public string GetMethodUrl(APIMethods requestMethod)
         {
             // Gets the proper data
-            var url = Url;
-            var path = GetMethod(requestMethod).Path;
+            string url = Url;
+            string path = GetMethod(requestMethod).Path;
             if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(url))
             {
                 url = s_ccpProvider.Url;
@@ -95,8 +96,8 @@ namespace EVEMon.Common
             }
 
             // Build the uri
-            var baseUri = new Uri(url);
-            var uriBuilder = new UriBuilder(baseUri);
+            Uri baseUri = new Uri(url);
+            UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
             return uriBuilder.Uri.ToString();
         }
@@ -111,9 +112,7 @@ namespace EVEMon.Common
                 if (s_ccpProvider != null)
                     return s_ccpProvider;
 
-                s_ccpProvider = new APIProvider();
-                s_ccpProvider.Url = NetworkConstants.APIBase;
-                s_ccpProvider.Name = "CCP";
+                s_ccpProvider = new APIProvider {Url = NetworkConstants.APIBase, Name = "CCP"};
 
                 return s_ccpProvider;
             }
@@ -129,17 +128,17 @@ namespace EVEMon.Common
                 if (s_ccpTestProvider != null)
                     return s_ccpTestProvider;
 
-                s_ccpTestProvider = new APIProvider();
-                s_ccpTestProvider.Url = NetworkConstants.APITestBase;
-                s_ccpTestProvider.Name = "CCP Test API";
+                s_ccpTestProvider = new APIProvider {Url = NetworkConstants.APITestBase, Name = "CCP Test API"};
 
                 return s_ccpTestProvider;
             }
         }
+
         #endregion
 
 
         #region Queries
+
         /// <summary>
         /// Query the account balance for a character. Requires full api key. Used to test whether a key is a full or limited one.
         /// </summary>
@@ -147,10 +146,13 @@ namespace EVEMon.Common
         /// <param name="apiKey"></param>
         /// <param name="charID"></param>
         /// <returns></returns>
-        public APIResult<SerializableAPIAccountBalance> QueryCharacterAccountBalance(long userID, string apiKey, long charID)
+        public APIResult<SerializableAPIAccountBalance> QueryCharacterAccountBalance(long userID, string apiKey,
+                                                                                     long charID)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
-            return QueryMethod<SerializableAPIAccountBalance>(APIMethods.CharacterAccountBalance, postData, RowsetsTransform);
+            HttpPostData postData =
+                new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
+            return QueryMethod<SerializableAPIAccountBalance>(APIMethods.CharacterAccountBalance, postData,
+                                                              RowsetsTransform);
         }
 
         /// <summary>
@@ -180,15 +182,18 @@ namespace EVEMon.Common
         /// </summary>
         public APIResult<SerializableAPIConquerableStationList> QueryConquerableStationList()
         {
-            return QueryMethod<SerializableAPIConquerableStationList>(APIMethods.ConquerableStationList, null, RowsetsTransform);
+            return QueryMethod<SerializableAPIConquerableStationList>(APIMethods.ConquerableStationList, null,
+                                                                      RowsetsTransform);
         }
 
         /// <summary>
         /// Query the character name from the provided list of IDs.
         /// </summary>
-        public APIResult<SerializableAPICharacterName> QueryCharacterName(string IDs)
+        /// <param name="ids">The Ids.</param>
+        /// <returns></returns>
+        public APIResult<SerializableAPICharacterName> QueryCharacterName(string ids)
         {
-            HttpPostData postData = new HttpPostData(String.Format("ids={0}",IDs));
+            HttpPostData postData = new HttpPostData(String.Format("ids={0}", ids));
             return QueryMethod<SerializableAPICharacterName>(APIMethods.CharacterName, postData, RowsetsTransform);
         }
 
@@ -197,10 +202,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
         /// <param name="method"></param>
-        /// <param name="callback">The callback to invoke once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
+        /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(APIMethods method, QueryCallback<T> callback)
         {
-            QueryMethodAsync<T>(method, null, RowsetsTransform, callback);
+            QueryMethodAsync(method, null, RowsetsTransform, callback);
         }
 
         /// <summary>
@@ -210,11 +215,11 @@ namespace EVEMon.Common
         /// <param name="method"></param>
         /// <param name="userID"></param>
         /// <param name="apiKey"></param>
-        /// <param name="callback">The callback to invoke once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
+        /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, QueryCallback<T> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
-            QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
+            QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
         /// <summary>
@@ -225,30 +230,38 @@ namespace EVEMon.Common
         /// <param name="userID"></param>
         /// <param name="apiKey"></param>
         /// <param name="charID"></param>
-        /// <param name="callback">The callback to invoke once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
-        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long charID, QueryCallback<T> callback)
+        /// <param name="callback">The callback to invoke once the query has been completed.</param>
+        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long charID,
+                                        QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
-            QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
+            HttpPostData postData =
+                new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
+            QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
         /// <summary>
         /// Query a method with the provided arguments for a character messages.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="method">The method.</param>
         /// <param name="userID">The account's ID</param>
         /// <param name="apiKey">The account's API key</param>
+        /// <param name="characterID">The character ID.</param>
         /// <param name="messageID">The message ID.</param>
-        /// <returns></returns>
-        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long characterID, long messageID, QueryCallback<T> callback)
+        /// <param name="callback">The callback.</param>
+        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long characterID, long messageID,
+                                        QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(
-                    "userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
-            QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
+            HttpPostData postData = new HttpPostData(
+                String.Format("userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
+            QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
+
         #endregion
 
 
         #region Querying helpers
+
         /// <summary>
         /// Query this method with the provided HTTP POST data
         /// </summary>
@@ -261,7 +274,7 @@ namespace EVEMon.Common
         {
             // Download
             string url = GetMethodUrl(method);
-            var result = Util.DownloadAPIResult<T>(url, postData, transform);
+            APIResult<T> result = Util.DownloadAPIResult<T>(url, postData, transform);
 
             // On failure with a custom method, fallback to CCP
             if (ShouldRetryWithCCP(result))
@@ -270,7 +283,7 @@ namespace EVEMon.Common
             // If the result is a character sheet, we store the result
             if (method == APIMethods.CharacterSheet && !result.HasError)
             {
-                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
+                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet) (Object) result.Result;
                 LocalXmlCache.Save(sheet.Name, result.XmlDocument);
             }
 
@@ -288,36 +301,39 @@ namespace EVEMon.Common
         /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult{T}"/>).</typeparam>
         /// <param name="method">The method to query</param>
         /// <param name="postData">The http POST data</param>
-        /// <param name="callback">The callback to invoke once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
+        /// <param name="callback">The callback to invoke once the query has been completed.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        private void QueryMethodAsync<T>(APIMethods method, HttpPostData postData, XslCompiledTransform transform, QueryCallback<T> callback)
+        private void QueryMethodAsync<T>(APIMethods method, HttpPostData postData, XslCompiledTransform transform,
+                                         QueryCallback<T> callback)
         {
             // Check callback not null
             if (callback == null)
-                throw new ArgumentNullException("The callback cannot be null.", "callback");
+                throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             // Lazy download
             string url = GetMethodUrl(method);
-            Util.DownloadAPIResultAsync<T>(url, postData, transform, (result) =>
-            {
-                // On failure with a custom method, fallback to CCP
-                if (ShouldRetryWithCCP(result))
-                    result = s_ccpProvider.QueryMethod<T>(method, postData, transform);
+            Util.DownloadAPIResultAsync<T>(
+                url, postData, transform,
+                result =>
+                    {
+                        // On failure with a custom method, fallback to CCP
+                        if (ShouldRetryWithCCP(result))
+                            result = s_ccpProvider.QueryMethod<T>(method, postData, transform);
 
-                // If the result is a character sheet, we store the result
-                if (method == APIMethods.CharacterSheet && !result.HasError)
-                {
-                    SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
-                    LocalXmlCache.Save(sheet.Name, result.XmlDocument);
-                }
+                        // If the result is a character sheet, we store the result
+                        if (method == APIMethods.CharacterSheet && !result.HasError)
+                        {
+                            SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet) (Object) result.Result;
+                            LocalXmlCache.Save(sheet.Name, result.XmlDocument);
+                        }
 
-                // If the result is a conquerable station list, we store the result
-                if (method == APIMethods.ConquerableStationList && !result.HasError)
-                    LocalXmlCache.Save(method.ToString(), result.XmlDocument);
+                        // If the result is a conquerable station list, we store the result
+                        if (method == APIMethods.ConquerableStationList && !result.HasError)
+                            LocalXmlCache.Save(method.ToString(), result.XmlDocument);
 
-                // Invokes the callback
-                callback(result);
-            });
+                        // Invokes the callback
+                        callback(result);
+                    });
         }
 
         /// <summary>
@@ -327,22 +343,18 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
-            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError && result.ErrorType != APIEnumerations.APIErrors.CCP);
+            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
+                    result.ErrorType != APIEnumerations.APIErrors.CCP);
         }
 
         /// <summary>
-        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XMLDeserializer"/>
+        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XmlSerializer"/>
         /// </summary>
         internal static XslCompiledTransform RowsetsTransform
         {
-            get
-            {
-                if (s_rowsetsTransform == null)
-                    s_rowsetsTransform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
-
-                return s_rowsetsTransform;
-            }
+            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT)); }
         }
+
         #endregion
 
         /// <summary>
