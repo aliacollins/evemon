@@ -890,7 +890,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="GenerateSerializationAssembliesForAllTypes"
   DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource"
   Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)"
@@ -908,7 +908,6 @@
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
   </Target>
-  -->
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)
 </PreBuildEvent>
