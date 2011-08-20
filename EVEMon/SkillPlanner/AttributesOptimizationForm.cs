@@ -370,7 +370,7 @@ namespace EVEMon.SkillPlanner
 
             // Check there are at least one year between each remap
             TimeSpan timeSinceLastRemap = remap.StartTime.Subtract(lastRemap);
-            if (timeSinceLastRemap < TimeSpan.FromDays(365.0) && remap.StartTime != TimeSpan.Zero)
+            if (timeSinceLastRemap < TimeSpan.FromDays(365) && remap.StartTime != TimeSpan.Zero)
             {
                 ListViewItem item =
                     new ListViewItem(String.Format(CultureConstants.DefaultCulture,

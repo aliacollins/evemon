@@ -1,10 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
@@ -16,6 +10,10 @@ namespace EVEMon.SkillPlanner
         private readonly Character m_character;
         private readonly Plan m_plan;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributesOptimizationSettingsForm"/> class.
+        /// </summary>
+        /// <param name="plan">The plan.</param>
         public AttributesOptimizationSettingsForm(Plan plan)
         {
             InitializeComponent();
@@ -28,31 +26,50 @@ namespace EVEMon.SkillPlanner
             m_character = (Character)plan.Character;
         }
 
+        /// <summary>
+        /// Gets the optimization form.
+        /// </summary>
+        /// <value>The optimization form.</value>
         public AttributesOptimizationForm OptimizationForm
         {
             get { return m_optimizationForm; }
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonRemappingPoints control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRemappingPoints_Click(object sender, EventArgs e)
         {
-            string title = "Attributes optimization (" + m_plan.Name + ", remapping points)";
-            string description = "Based on " + m_plan.Name + "; using the remapping points you defined.";
+            string title = String.Format("Attributes optimization ({0}, remapping points)", m_plan.Name);
+            string description = String.Format("Based on {0}; using the remapping points you defined.", m_plan.Name);
             m_optimizationForm = new AttributesOptimizationForm(m_character, m_plan, 
                 AttributesOptimizationForm.Strategy.RemappingPoints, title, description);
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonWholePlan control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonWholePlan_Click(object sender, EventArgs e)
         {
-            string title = "Attributes optimization (" + m_plan.Name + ", first year)";
-            string description = "Based on " + m_plan.Name + "; best attributes for the first year.";
+            string title = String.Format("Attributes optimization ({0}, first year)", m_plan.Name);
+            string description = String.Format("Based on {0}; best attributes for the first year.", m_plan.Name);
             m_optimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                 AttributesOptimizationForm.Strategy.OneYearPlan, title, description);
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonCharacter control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonCharacter_Click(object sender, EventArgs e)
         {
-            string title = "Attributes optimization (" + m_character.Name + ")";
-            string description = "Based on " + m_character.Name;
+            string title = String.Format("Attributes optimization ({0})", m_character.Name);
+            string description = String.Format("Based on {0}", m_character.Name);
             description += (description.EndsWith("s") ? "' skills" : "'s skills");
             m_optimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                 AttributesOptimizationForm.Strategy.Character, title, description);
