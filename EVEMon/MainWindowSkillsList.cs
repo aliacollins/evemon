@@ -60,11 +60,12 @@ namespace EVEMon
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
-        
+
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         public Character Character { get; set; }
+
 
         #region Inherited events
 
@@ -78,10 +79,9 @@ namespace EVEMon
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            this.Disposed -= OnDisposed;
+            Disposed -= OnDisposed;
         }
 
-        /// <summary>
         /// <summary>
         /// When the control becomes visible again, we update the content.
         /// </summary>
@@ -108,7 +108,7 @@ namespace EVEMon
         private void UpdateContent()
         {
             // Returns if not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             // When no character, we just clear the list
@@ -125,21 +125,22 @@ namespace EVEMon
             try
             {
                 IEnumerable<Skill> skills = GetCharacterSkills();
-                var groups = skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name);
+                IOrderedEnumerable<IGrouping<SkillGroup, Skill>> groups =
+                    skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name);
 
                 // Scroll through groups
                 lbSkills.Items.Clear();
-                foreach (var group in groups)
+                foreach (IGrouping<SkillGroup, Skill> group in groups)
                 {
                     lbSkills.Items.Add(group.Key);
 
                     // Add items in the group when it's not collapsed
-                    if (!Character.UISettings.CollapsedGroups.Contains(group.Key.Name))
+                    if (Character.UISettings.CollapsedGroups.Contains(group.Key.Name))
+                        continue;
+
+                    foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
                     {
-                        foreach (var skill in group.ToArray().OrderBy(x => x.Name))
-                        {
-                            lbSkills.Items.Add(skill);
-                        }
+                        lbSkills.Items.Add(skill);
                     }
                 }
 
@@ -159,7 +160,9 @@ namespace EVEMon
         /// <summary>
         /// Gets a characters skills, filtered by MainWindow settings
         /// </summary>
-        /// <returns>IEnumerable of <see cref="Skill"/>Skill</see></returns>
+        /// <returns>
+        /// IEnumerable of <see cref="Skill"/> Skill.
+        /// </returns>
         private IEnumerable<Skill> GetCharacterSkills()
         {
             if (Settings.UI.MainWindow.ShowPrereqMetSkills)
@@ -168,16 +171,16 @@ namespace EVEMon
             if (Settings.UI.MainWindow.ShowNonPublicSkills)
                 return Character.Skills;
 
-            if (Settings.UI.MainWindow.ShowAllPublicSkills)
-                return Character.Skills.Where(x => x.IsKnown || x.IsPublic);
-
-            return Character.Skills.Where(x => x.IsKnown);
+            return Settings.UI.MainWindow.ShowAllPublicSkills
+                       ? Character.Skills.Where(x => x.IsKnown || x.IsPublic)
+                       : Character.Skills.Where(x => x.IsKnown);
         }
 
         #endregion
 
 
         #region Drawing
+
         /// <summary>
         /// Handles the DrawItem event of the lbSkills control.
         /// </summary>
@@ -214,8 +217,8 @@ namespace EVEMon
         /// <summary>
         /// Gets the item's height.
         /// </summary>
-        /// <param name="e"></param>
-        /// <param name="item"></param>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
         private int GetItemHeight(object item)
         {
             if (item is SkillGroup)
@@ -229,7 +232,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="e"></param>
-        public void DrawItem(Skill skill, DrawItemEventArgs e)
+        private void DrawItem(Skill skill, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -249,104 +252,100 @@ namespace EVEMon
                 // Not in training - even
                 g.FillRectangle(Brushes.LightGray, e.Bounds);
             }
-            
+
             // Measure texts
-            TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+            const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
             int skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
-            
+
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", skill.Rank);
             string spText = String.Format(CultureConstants.DefaultCulture,
-                                    "SP: {0:#,##0}/{1:#,##0}", skill.SkillPoints, skillPointsToNextLevel);
+                                          "SP: {0:#,##0}/{1:#,##0}", skill.SkillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(skill.PercentCompleted));
 
-            Size skillNameSize = TextRenderer.MeasureText(g, skill.Name, m_boldSkillsFont, Size.Empty, format);
-            Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsFont, Size.Empty, format);
-            Size levelTextSize = TextRenderer.MeasureText(g, levelText, m_skillsFont, Size.Empty, format);
-            Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsFont, Size.Empty, format);
-            Size pctTextSize = TextRenderer.MeasureText(g, pctText, m_skillsFont, Size.Empty, format);
+            Size skillNameSize = TextRenderer.MeasureText(g, skill.Name, m_boldSkillsFont, Size.Empty, Format);
+            Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsFont, Size.Empty, Format);
+            Size levelTextSize = TextRenderer.MeasureText(g, levelText, m_skillsFont, Size.Empty, Format);
+            Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsFont, Size.Empty, Format);
+            Size pctTextSize = TextRenderer.MeasureText(g, pctText, m_skillsFont, Size.Empty, Format);
 
 
             // Draw texts
             Color highlightColor = Color.Black;
             if (!skill.IsKnown)
                 highlightColor = Color.Red;
+
             if (!skill.IsPublic)
                 highlightColor = Color.DarkRed;
+
             if (skill.ArePrerequisitesMet && skill.IsPublic && !skill.IsKnown)
                 highlightColor = Color.SlateGray;
+
             if (Settings.UI.MainWindow.HighlightPartialSkills && skill.IsPartiallyTrained && !skill.IsTraining)
                 highlightColor = Color.Green;
+
             if (Settings.UI.MainWindow.HighlightQueuedSkills && skill.IsQueued && !skill.IsTraining)
                 highlightColor = Color.RoyalBlue;
 
             TextRenderer.DrawText(g, skill.Name, m_boldSkillsFont,
-                                                            new Rectangle(
-                                                                e.Bounds.Left + PadLeft,
-                                                                e.Bounds.Top + PadTop,
-                                                                skillNameSize.Width + PadLeft,
-                                                                skillNameSize.Height), highlightColor);
+                                  new Rectangle(
+                                      e.Bounds.Left + PadLeft,
+                                      e.Bounds.Top + PadTop,
+                                      skillNameSize.Width + PadLeft,
+                                      skillNameSize.Height), highlightColor);
 
             TextRenderer.DrawText(g, rankText, m_skillsFont,
-                                                            new Rectangle(
-                                                                e.Bounds.Left + PadLeft + skillNameSize.Width,
-                                                                e.Bounds.Top + PadTop,
-                                                                rankTextSize.Width + PadLeft,
-                                                                rankTextSize.Height), highlightColor);
+                                  new Rectangle(
+                                      e.Bounds.Left + PadLeft + skillNameSize.Width,
+                                      e.Bounds.Top + PadTop,
+                                      rankTextSize.Width + PadLeft,
+                                      rankTextSize.Height), highlightColor);
 
             TextRenderer.DrawText(g, spText, m_skillsFont,
-                                                            new Rectangle(
-                                                                e.Bounds.Left + PadLeft,
-                                                                e.Bounds.Top + PadTop + skillNameSize.Height,
-                                                                spTextSize.Width + PadLeft,
-                                                                spTextSize.Height), highlightColor);
+                                  new Rectangle(
+                                      e.Bounds.Left + PadLeft,
+                                      e.Bounds.Top + PadTop + skillNameSize.Height,
+                                      spTextSize.Width + PadLeft,
+                                      spTextSize.Height), highlightColor);
 
             // Boxes
-            g.DrawRectangle(Pens.Black, new Rectangle(
-                                    e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth, BoxHeight));
-            
-            int levelBoxWidth = (BoxWidth - 4 - 3) / 5;
+            g.DrawRectangle(Pens.Black,
+                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth, BoxHeight));
+
+            const int LevelBoxWidth = (BoxWidth - 4 - 3) / 5;
             for (int level = 1; level <= 5; level++)
             {
                 Rectangle brect = new Rectangle(
-                                    e.Bounds.Right - BoxWidth - PadRight + 2 + (levelBoxWidth * (level - 1)) + (level - 1),
-                                    e.Bounds.Top + PadTop + 2, levelBoxWidth, BoxHeight - 3);
+                    e.Bounds.Right - BoxWidth - PadRight + 2 + (LevelBoxWidth * (level - 1)) + (level - 1),
+                    e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
-                if (level <= skill.Level)
-                {
-                    g.FillRectangle(Brushes.Black, brect);
-                }
-                else
-                {
-                    g.FillRectangle(Brushes.DarkGray, brect);
-                }
+                g.FillRectangle(level <= skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
 
                 // Color indicator for a queued level
                 CCPCharacter ccpCharacter = Character as CCPCharacter;
                 if (ccpCharacter != null)
                 {
                     SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                    foreach (var qskill in skillQueue)
-                    {
-                        if ((!skill.IsTraining && skill == qskill.Skill && level == qskill.Level)
-                           || (skill.IsTraining && skill == qskill.Skill && level == qskill.Level && level > skill.Level + 1))
-                            g.FillRectangle(Brushes.RoyalBlue, brect);
-                    }
+                    if (skillQueue.Any(qskill =>
+                                       (!skill.IsTraining && skill == qskill.Skill && level == qskill.Level) ||
+                                       (skill.IsTraining && skill == qskill.Skill && level == qskill.Level &&
+                                        level > skill.Level + 1)))
+                        g.FillRectangle(Brushes.RoyalBlue, brect);
                 }
-                
+
                 // Blinking indicator of skill in training level
-                if (skill.IsTraining && level == skill.Level + 1)
-                {
-                    if (m_count == 0)
-                        g.FillRectangle(Brushes.White, brect);
+                if (!skill.IsTraining || level != skill.Level + 1)
+                    continue;
 
-                    if (m_count == 1)
-                        m_count = -1;
+                if (m_count == 0)
+                    g.FillRectangle(Brushes.White, brect);
 
-                    m_count ++;
-                }
-           }
+                if (m_count == 1)
+                    m_count = -1;
+
+                m_count++;
+            }
 
             // Draw progression bar
             g.DrawRectangle(Pens.Black, new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
@@ -358,7 +357,7 @@ namespace EVEMon
                                                  BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * skill.FractionCompleted);
+            int fillWidth = (int) (pctBarRect.Width * skill.FractionCompleted);
             if (fillWidth > 0)
             {
                 Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
@@ -368,30 +367,30 @@ namespace EVEMon
 
             // Draw level and percent texts
             TextRenderer.DrawText(g, levelText, m_skillsFont,
-                                                        new Rectangle(
-                                                            e.Bounds.Right - BoxWidth - PadRight - BoxHPad - levelTextSize.Width,
-                                                            e.Bounds.Top + PadTop, levelTextSize.Width + PadRight,
-                                                            levelTextSize.Height), Color.Black);
+                                  new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad - levelTextSize.Width,
+                                      e.Bounds.Top + PadTop, levelTextSize.Width + PadRight,
+                                      levelTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, pctText, m_skillsFont,
-                                                        new Rectangle(
-                                                            e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
-                                                            e.Bounds.Top + PadTop + levelTextSize.Height,
-                                                            pctTextSize.Width + PadRight, pctTextSize.Height), Color.Black);
+                                  new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
+                                      e.Bounds.Top + PadTop + levelTextSize.Height,
+                                      pctTextSize.Width + PadRight, pctTextSize.Height), Color.Black);
         }
 
         /// <summary>
         /// Draws the list item for the given skill group.
         /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="e"></param>
-        public void DrawItem(SkillGroup group, DrawItemEventArgs e)
+        /// <param name="group">The group.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
+        private void DrawItem(SkillGroup group, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
             // Draws the background
             using (LinearGradientBrush lgb = new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F),
-                                                    Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
+                                                                     Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
             {
                 g.FillRectangle(lgb, e.Bounds);
             }
@@ -410,7 +409,7 @@ namespace EVEMon
                 skillInTrainingSuffix = "  ( 1 in training )";
             if (hasQueuedSkill)
                 skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture,
-                    "  ( {0} in queue )", group.Count(x => x.IsQueued && !x.IsTraining));
+                                                    "  ( {0} in queue )", group.Count(x => x.IsQueued && !x.IsTraining));
 
             string detailText = String.Format(CultureConstants.DefaultCulture,
                                               ", {0} of {1} skills, {2:#,##0} Points{3}",
@@ -419,18 +418,20 @@ namespace EVEMon
                                               group.TotalSP,
                                               skillInTrainingSuffix);
 
-            TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+            const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Size skillGroupNameTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, format);
+            Size skillGroupNameTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, Format);
             Rectangle skillGroupNameRect = new Rectangle(e.Bounds.Left + PadLeft,
-                                            e.Bounds.Top + ((e.Bounds.Height / 2) - (skillGroupNameTextSize.Height / 2)),
-                                            skillGroupNameTextSize.Width + (PadLeft / 2), skillGroupNameTextSize.Height);
+                                                         e.Bounds.Top +
+                                                         ((e.Bounds.Height / 2) - (skillGroupNameTextSize.Height / 2)),
+                                                         skillGroupNameTextSize.Width + (PadLeft / 2),
+                                                         skillGroupNameTextSize.Height);
 
-            Size detailTextSize = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, format);
+            Size detailTextSize = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, Format);
             Rectangle detailRect = new Rectangle(
                 skillGroupNameRect.X + skillGroupNameRect.Width, skillGroupNameRect.Y, detailTextSize.Width, detailTextSize.Height);
 
-            Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty, format);
+            Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty, Format);
             Rectangle skillQueueRect = new Rectangle(
                 detailRect.X + detailRect.Width, detailRect.Y, skillQueueTextSize.Width, skillQueueTextSize.Height);
 
@@ -438,7 +439,7 @@ namespace EVEMon
             TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, skillGroupNameRect, Color.White);
             TextRenderer.DrawText(g, detailText, m_skillsFont, detailRect, Color.White);
             TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect,
-                                 (Settings.UI.SafeForWork ? Color.White : Color.Yellow));
+                                  (Settings.UI.SafeForWork ? Color.White : Color.Yellow));
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
@@ -457,10 +458,12 @@ namespace EVEMon
         {
             return lbSkills.GetPreferredSize(proposedSize);
         }
+
         #endregion
 
 
         #region Toggle / expand
+
         /// <summary>
         /// Toggles all the skill groups to collapse or open.
         /// </summary>
@@ -471,10 +474,10 @@ namespace EVEMon
             {
                 Character.UISettings.CollapsedGroups.Clear();
             }
-            // When none collapsed, collapse all
+                // When none collapsed, collapse all
             else
             {
-                foreach (var group in Character.SkillGroups)
+                foreach (SkillGroup group in Character.SkillGroups)
                 {
                     Character.UISettings.CollapsedGroups.Add(group.Name);
                 }
@@ -488,7 +491,7 @@ namespace EVEMon
         /// Toggles the expansion or collapsing of a single group
         /// </summary>
         /// <param name="group">The group to expand or collapse.</param>
-        public void ToggleGroupExpandCollapse(SkillGroup group)
+        private void ToggleGroupExpandCollapse(SkillGroup group)
         {
             if (Character.UISettings.CollapsedGroups.Contains(group.Name))
             {
@@ -504,7 +507,7 @@ namespace EVEMon
         /// Expand a skill group
         /// </summary>
         /// <param name="group">Skill group in lbSkills</param>
-        public void ExpandSkillGroup(SkillGroup group)
+        private void ExpandSkillGroup(SkillGroup group)
         {
             Character.UISettings.CollapsedGroups.Remove(group.Name);
             UpdateContent();
@@ -514,11 +517,12 @@ namespace EVEMon
         /// Collapse a skill group
         /// </summary>
         /// <param name="group">Skill group in lbSkills</param>
-        public void CollapseSkillGroup(SkillGroup group)
+        private void CollapseSkillGroup(SkillGroup group)
         {
             Character.UISettings.CollapsedGroups.Add(group.Name);
             UpdateContent();
         }
+
         #endregion
 
 
@@ -561,11 +565,11 @@ namespace EVEMon
                     if (lbSkills.TopIndex - i >= 0)
                         item = lbSkills.Items[lbSkills.TopIndex - i];
                 }
-                // Going down
+                    // Going down
                 else
                 {
                     // Compute the height of the items from current the topindex (included)
-                    int height = 0; 
+                    int height = 0;
                     for (int j = lbSkills.TopIndex + i - 1; j < lbSkills.Items.Count; j++)
                     {
                         height += GetItemHeight(lbSkills.Items[j]);
@@ -618,7 +622,7 @@ namespace EVEMon
             if (item is SkillGroup)
             {
                 // Left button : expand/collapse
-                SkillGroup sg = (SkillGroup)item;
+                SkillGroup sg = (SkillGroup) item;
                 if (e.Button != MouseButtons.Right)
                 {
                     ToggleGroupExpandCollapse(sg);
@@ -640,12 +644,13 @@ namespace EVEMon
             }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
-            Skill skill = (Skill)item;
+            Skill skill = (Skill) item;
             if (e.Button == MouseButtons.Right)
             {
                 // "Show in Skill Explorer" menu item
-                ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", CommonProperties.Resources.LeadsTo);
-                tmSkillExplorer.Click += new EventHandler(tmSkillExplorer_Click);
+                ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer",
+                                                                          CommonProperties.Resources.LeadsTo);
+                tmSkillExplorer.Click += tmSkillExplorer_Click;
                 tmSkillExplorer.Tag = skill;
 
                 // Add to the context menu
@@ -655,20 +660,22 @@ namespace EVEMon
                 if (skill.Level < 5)
                 {
                     // Reset the menu.
-                    ToolStripMenuItem tm = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+                    ToolStripMenuItem tm =
+                        new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
 
                     // Build the level options.
                     int nextLevel = Math.Min(5, skill.Level + 1);
                     for (int level = nextLevel; level < 6; level++)
                     {
                         ToolStripMenuItem menuLevel = new ToolStripMenuItem(
-                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanForInt(level)));
+                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
                         tm.DropDownItems.Add(menuLevel);
                         Character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
-                        {
-                            menuPlanItem.Click += new EventHandler(menuPlanItem_Click);
-                            menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan, new SkillLevel(skill, level));
-                        });
+                                                                           {
+                                                                               menuPlanItem.Click += menuPlanItem_Click;
+                                                                               menuPlanItem.Tag = new Pair<Plan, SkillLevel>(
+                                                                                   plan, new SkillLevel(skill, level));
+                                                                           });
                     }
 
 
@@ -678,7 +685,7 @@ namespace EVEMon
                 }
 
                 // Display the context menu
-                contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
+                contextMenuStripPlanPopup.Show((Control) sender, new Point(e.X, e.Y));
                 return;
             }
 
@@ -691,12 +698,12 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void lbSkills_MouseMove(object sender, MouseEventArgs e)
+        private void lbSkills_MouseMove(object sender, MouseEventArgs e)
         {
             for (int i = 0; i < lbSkills.Items.Count; i++)
             {
                 // Skip until we found the mouse location
-                var rect = lbSkills.GetItemRectangle(i);
+                Rectangle rect = lbSkills.GetItemRectangle(i);
                 if (!rect.Contains(e.Location))
                     continue;
 
@@ -752,11 +759,11 @@ namespace EVEMon
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                        "Not yet trained to Level I ({0}%)\n", Math.Floor(skill.PercentCompleted));
+                                              "Not yet trained to Level I ({0}%)\n", Math.Floor(skill.PercentCompleted));
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                        "Next level I: {0:#,##0} skill points remaining\n", pointsLeft);
+                                              "Next level I: {0:#,##0} skill points remaining\n", pointsLeft);
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                        "Training time remaining: {0}", remainingTimeText);
+                                              "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(untrainedToolTip, skill);
                 return untrainedToolTip.ToString();
             }
@@ -767,12 +774,12 @@ namespace EVEMon
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                            "Partially Completed ({0}%)\n", Math.Floor(skill.PercentCompleted));
+                                                     "Partially Completed ({0}%)\n", Math.Floor(skill.PercentCompleted));
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                            "Training to level {0}: {1:#,##0} skill points remaining\n",
-                                            Skill.GetRomanForInt(nextLevel), pointsLeft);
+                                                     "Training to level {0}: {1:#,##0} skill points remaining\n",
+                                                     Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                            "Training time remaining: {0}", remainingTimeText);
+                                                     "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
                 return partiallyTrainedToolTip.ToString();
             }
@@ -784,20 +791,21 @@ namespace EVEMon
                 {
                     StringBuilder levelCompleteToolTip = new StringBuilder();
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                            "Completed Level {0}: {1:#,##0}/{2:#,##0}\n",
-                                             Skill.GetRomanForInt(skill.Level), sp, nextLevelSP);
+                                                      "Completed Level {0}: {1:#,##0}/{2:#,##0}\n",
+                                                      Skill.GetRomanFromInt(skill.Level), sp, nextLevelSP);
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                            "Next level {0}: {1:#,##0} skill points required\n",
-                                             Skill.GetRomanForInt(nextLevel), pointsLeft);
+                                                      "Next level {0}: {1:#,##0} skill points required\n",
+                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                            "Training Time: {0}", remainingTimeText);
+                                                      "Training Time: {0}", remainingTimeText);
                     AddSkillBoilerPlate(levelCompleteToolTip, skill);
                     return levelCompleteToolTip.ToString();
                 }
 
                 // Lv 5 completed
                 StringBuilder lv5ToolTip = new StringBuilder();
-                lv5ToolTip.AppendFormat(CultureConstants.DefaultCulture, "Level V Complete: {0:#,##0}/{1:#,##0}\n", sp, nextLevelSP);
+                lv5ToolTip.AppendFormat(CultureConstants.DefaultCulture, "Level V Complete: {0:#,##0}/{1:#,##0}\n", sp,
+                                        nextLevelSP);
                 lv5ToolTip.Append("No further training required\n");
                 AddSkillBoilerPlate(lv5ToolTip, skill);
                 return lv5ToolTip.ToString();
@@ -807,9 +815,9 @@ namespace EVEMon
             StringBuilder calculationErrorToolTip = new StringBuilder();
             calculationErrorToolTip.AppendLine("Partially Trained (Could not cacluate all skill details)");
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                        "Next level {0}: {1:#,##0} skill points remaining\n",nextLevel, pointsLeft);
+                                                 "Next level {0}: {1:#,##0} skill points remaining\n", nextLevel, pointsLeft);
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                        "Training time remaining: {0}", remainingTimeText);
+                                                 "Training time remaining: {0}", remainingTimeText);
             AddSkillBoilerPlate(calculationErrorToolTip, skill);
             return calculationErrorToolTip.ToString();
         }
@@ -831,7 +839,8 @@ namespace EVEMon
         /// <summary>
         /// Gets the tooltip content for the given skill group
         /// </summary>
-        /// <param name="sg"></param>
+        /// <param name="group">The group.</param>
+        /// <returns></returns>
         private string GetTooltip(SkillGroup group)
         {
             // Maximas are computed on public skills only
@@ -850,22 +859,23 @@ namespace EVEMon
                 double percentDoneSkills = (1.0 * Math.Min(known, maxKnown)) / maxKnown;
 
                 return String.Format(CultureConstants.DefaultCulture,
-                    "Points Completed: {0:#,##0} of {1:#,##0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
-                    totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
+                                     "Points Completed: {0:#,##0} of {1:#,##0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
+                                     totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
             }
 
             // The group has been completed !
             return String.Format(CultureConstants.DefaultCulture,
-                "Skill Group completed: {0:#,##0}/{1:#,##0} (100%)\nSkills: {2:#}/{3:#} (100%)",
-                totalSP, maxSP, known, maxKnown);
+                                 "Skill Group completed: {0:#,##0}/{1:#,##0} (100%)\nSkills: {2:#}/{3:#} (100%)",
+                                 totalSP, maxSP, known, maxKnown);
         }
 
         /// <summary>
         /// Gets the rectangle for the collapse/expand button.
         /// </summary>
-        /// <param name="itemRect"></param>
+        /// <param name="group">The group.</param>
+        /// <param name="itemRect">The item rect.</param>
         /// <returns></returns>
-        public Rectangle GetButtonRectangle(SkillGroup group, Rectangle itemRect)
+        private Rectangle GetButtonRectangle(SkillGroup group, Rectangle itemRect)
         {
             // Checks whether this group is collapsed
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
@@ -888,10 +898,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void menuPlanItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            var tag = (Pair<Plan, SkillLevel>)planItem.Tag;
+            ToolStripMenuItem planItem = (ToolStripMenuItem) sender;
+            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>) planItem.Tag;
 
-            var operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
+            IPlanOperation operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -902,22 +912,24 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tmSkillExplorer_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            ToolStripMenuItem item = (ToolStripMenuItem) sender;
             Skill skill = (Skill) item.Tag;
 
-            var window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
+            SkillExplorerWindow window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
             window.Skill = skill;
         }
+
         #endregion
 
 
         #region Global events
+
         /// <summary>
         /// On timer tick, we invalidate the training skill display
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // We trigger a refresh of the list to eliminate a designer leftover (scrollbar)
             if (m_requireRefresh)
@@ -925,24 +937,24 @@ namespace EVEMon
                 lbSkills.Invalidate();
                 m_requireRefresh = false;
             }
-            
-            if (Character.IsTraining && this.Visible)
-            {
-                // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)
-                var training = Character.CurrentlyTrainingSkill;
-                if (training.Skill == null)
-                    return;
 
-                // Invalidate the skill row
-                int index = lbSkills.Items.IndexOf(training.Skill);
-                if (index >= 0)
-                    lbSkills.Invalidate(lbSkills.GetItemRectangle(index));
+            if (!Character.IsTraining || !Visible)
+                return;
 
-                // Invalidate the skill group row
-                int groupIndex = lbSkills.Items.IndexOf(training.Skill.Group);
-                if (groupIndex >= 0)
-                    lbSkills.Invalidate(lbSkills.GetItemRectangle(groupIndex));
-            }
+            // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)
+            QueuedSkill training = Character.CurrentlyTrainingSkill;
+            if (training.Skill == null)
+                return;
+
+            // Invalidate the skill row
+            int index = lbSkills.Items.IndexOf(training.Skill);
+            if (index >= 0)
+                lbSkills.Invalidate(lbSkills.GetItemRectangle(index));
+
+            // Invalidate the skill group row
+            int groupIndex = lbSkills.Items.IndexOf(training.Skill.Group);
+            if (groupIndex >= 0)
+                lbSkills.Invalidate(lbSkills.GetItemRectangle(groupIndex));
         }
 
         /// <summary>
@@ -950,7 +962,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;
@@ -963,10 +975,11 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
+
         #endregion
     }
 }

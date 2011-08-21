@@ -22,7 +22,10 @@ namespace EVEMon.SkillPlanner
     /// try to design a class that inherits from an abstract class.</remarks>
     public partial class EveObjectBrowserControl : UserControl
     {
-        protected Plan m_plan;
+        protected const int Pad = 3;
+
+        private Plan m_plan;
+
 
         #region Initialization
 
@@ -60,7 +63,7 @@ namespace EVEMon.SkillPlanner
             ListViewHelper.EnableDoubleBuffer(PropertiesList);
 
             lblEveObjName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            
+
             // Watch for selection changes
             SelectControl.SelectionChanged += OnSelectionChanged;
 
@@ -72,8 +75,8 @@ namespace EVEMon.SkillPlanner
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
-            // Updates the control
-            EveMonClient_SettingsChanged(null, null);
+            // Updates the controls visibility
+            UpdateControlsVisibility();
 
             // Force a refresh
             OnSelectionChanged(null, null);
@@ -91,21 +94,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected virtual void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            if (Settings.UI.SafeForWork)
-            {
-                eoImage.ImageSize = EveImageSize.x0;
-                lblEveObjCategory.Location = new Point(3, lblEveObjCategory.Location.Y);
-                lblEveObjName.Location = new Point(3, lblEveObjName.Location.Y);
-            }
-            else
-            {
-                eoImage.ImageSize = EveImageSize.x64;
-                if (SelectControl.SelectedObject != null)
-                    eoImage.EveItem = SelectControl.SelectedObject;
-
-                lblEveObjCategory.Location = new Point(70, lblEveObjCategory.Location.Y);
-                lblEveObjName.Location = new Point(70, lblEveObjName.Location.Y);
-            }
+            UpdateControlsVisibility();
         }
 
         #endregion
@@ -133,13 +122,7 @@ namespace EVEMon.SkillPlanner
         [Browsable(false)]
         public Item SelectedObject
         {
-            get
-            {
-                if (SelectControl == null)
-                    return null;
-
-                return SelectControl.SelectedObject;
-            }
+            get { return SelectControl == null ? null : SelectControl.SelectedObject; }
             set
             {
                 if (SelectControl == null)
@@ -175,7 +158,9 @@ namespace EVEMon.SkillPlanner
         /// Called whenever the plan changes.
         /// </summary>
         /// <remarks>This virtual method is implemented in classes that inherit from EveObjectBrowserControl.</remarks>
-        protected virtual void OnPlanChanged() { }
+        protected virtual void OnPlanChanged()
+        {
+        }
 
         #endregion
 
@@ -190,7 +175,7 @@ namespace EVEMon.SkillPlanner
         protected virtual void OnSelectionChanged(object sender, EventArgs e)
         {
             // Updates the header and the panels visibility.
-            var firstSelected = SelectControl.SelectedObject;
+            Item firstSelected = SelectControl.SelectedObject;
             if (firstSelected == null)
             {
                 // Hide details and header
@@ -222,7 +207,7 @@ namespace EVEMon.SkillPlanner
             // Stop here if it's the blueprint tab
             if (SelectControl is BlueprintSelectControl)
                 return;
-            
+
             // Fill the list view
             UpdatePropertiesList();
 
@@ -307,9 +292,9 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Check if the objects belong to an item family that has fitting slot property 
-                if (category.Name == "General" && 
+                if (category.Name == "General" &&
                     SelectControl.SelectedObjects.Any(x => (x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone) &&
-                                                            x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
+                                                           x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
                     AddFittingSlotProperty(items, group);
 
                 // Add properties
@@ -335,9 +320,7 @@ namespace EVEMon.SkillPlanner
             float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group);
-            item.ToolTipText = prop.Description;
-            item.Text = prop.Name;
+            ListViewItem item = new ListViewItem(group) {ToolTipText = prop.Description, Text = prop.Name};
             items.Add(item);
 
             AddValueForSelectedObjects(prop, item, labels, values);
@@ -360,8 +343,8 @@ namespace EVEMon.SkillPlanner
             {
                 min = values.Min();
                 max = values.Max();
-                allEqual = values.All(x => x == min);
-                if (obj is EveProperty && !((EveProperty)obj).HigherIsBetter)
+                allEqual = values.All(x => Math.Abs(x - min) < float.Epsilon);
+                if (obj is EveProperty && !((EveProperty) obj).HigherIsBetter)
                 {
                     float temp = min;
                     min = max;
@@ -376,11 +359,11 @@ namespace EVEMon.SkillPlanner
                 ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
                 if (!allEqual)
                 {
-                    if (values[index] == max)
+                    if (Math.Abs(values[index] - max) < float.Epsilon)
                     {
                         subItem.ForeColor = Color.DarkGreen;
                     }
-                    else if (values[index] == min)
+                    else if (Math.Abs(values[index] - min) < float.Epsilon)
                     {
                         subItem.ForeColor = Color.DarkRed;
                     }
@@ -407,12 +390,11 @@ namespace EVEMon.SkillPlanner
             string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group)
-                                    {ToolTipText = "The slot that this item fits in", Text = "Fitting Slot"};
+            ListViewItem item = new ListViewItem(group) {ToolTipText = "The slot that this item fits in", Text = "Fitting Slot"};
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels, new float[] { });
+            AddValueForSelectedObjects(null, item, labels, new float[] {});
         }
 
         /// <summary>
@@ -438,8 +420,8 @@ namespace EVEMon.SkillPlanner
             AddReprocessingSkill(group, items);
 
             IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects
-                                                            .Where(x => x.ReprocessingMaterials != null)
-                                                            .SelectMany(x => x.ReprocessingMaterials);
+                .Where(x => x.ReprocessingMaterials != null)
+                .SelectMany(x => x.ReprocessingMaterials);
 
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
@@ -458,7 +440,7 @@ namespace EVEMon.SkillPlanner
                     }
                     materials.Add(obj.ReprocessingMaterials.FirstOrDefault(y => y.Item == item));
                 }
-               
+
                 // Create the list of labels and values
                 List<string> labels = new List<string>();
                 List<float> values = new List<float>();
@@ -517,7 +499,36 @@ namespace EVEMon.SkillPlanner
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] { });
+            AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] {});
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates the controls visibility.
+        /// </summary>
+        private void UpdateControlsVisibility()
+        {
+            if (Settings.UI.SafeForWork)
+            {
+                eoImage.ImageSize = EveImageSize.x0;
+                eoImage.Visible = false;
+                lblEveObjCategory.Location = new Point(Pad, lblEveObjCategory.Location.Y);
+                lblEveObjName.Location = new Point(Pad, lblEveObjName.Location.Y);
+            }
+            else
+            {
+                eoImage.ImageSize = EveImageSize.x64;
+                eoImage.Visible = true;
+                if (SelectControl.SelectedObject != null)
+                    eoImage.EveItem = SelectControl.SelectedObject;
+
+                lblEveObjCategory.Location = new Point(eoImage.Width + Pad * 2, lblEveObjCategory.Location.Y);
+                lblEveObjName.Location = new Point(eoImage.Width + Pad * 2, lblEveObjName.Location.Y);
+            }
         }
 
         #endregion

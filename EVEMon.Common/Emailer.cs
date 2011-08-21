@@ -8,11 +8,11 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-	/// <summary>
-	/// Provides SMTP based e-mail services taylored to Skill Completion.
-	/// </summary>
+    /// <summary>
+    /// Provides SMTP based e-mail services taylored to Skill Completion.
+    /// </summary>
     public static class Emailer
-	{
+    {
         /// <summary>
         /// Sends a test mail
         /// </summary>
@@ -23,10 +23,10 @@ namespace EVEMon.Common
         /// is changing settings.
         /// </remarks>
         /// <returns>False if an exception was thrown, otherwise True.</returns>
-		public static bool SendTestMail(NotificationSettings settings)
-		{
+        public static bool SendTestMail(NotificationSettings settings)
+        {
             return SendMail(settings, "EVEMon Test Mail", "This is a test email sent by EVEMon");
-		}
+        }
 
         /// <summary>
         /// Sends a mail alert for a skill completion
@@ -35,32 +35,34 @@ namespace EVEMon.Common
         /// <param name="skill">Skill that has just completed</param>
         /// <param name="character">Character affected</param>
         /// <returns></returns>
-		public static bool SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
-		{
+        public static void SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
+        {
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.
             if (ccpCharacter == null)
-                return false;
-            
+                return;
+
             string charName = character.Name;
             string skillName = skill.SkillName;
-            string skillLevelString = Skill.GetRomanForInt(skill.Level);
+            string skillLevelString = Skill.GetRomanFromInt(skill.Level);
 
-            var skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
+            DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
             bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
             string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 
             // Message's first line
             StringBuilder body = new StringBuilder();
-            body.AppendFormat(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}.{3}{3}", charName, skillName, skillLevelString, Environment.NewLine);
-            
+            body.AppendFormat(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}.{3}{3}", charName, skillName,
+                              skillLevelString, Environment.NewLine);
+
             // Next skills in queue
             if (queueList[0] != null)
             {
-                body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}", (queueList.Count > 1 ? "s" : String.Empty), Environment.NewLine);
-                foreach (var qskill in queueList)
+                body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}",
+                                  (queueList.Count > 1 ? "s" : String.Empty), Environment.NewLine);
+                foreach (QueuedSkill qskill in queueList)
                 {
                     body.AppendFormat(CultureConstants.DefaultCulture, "- {0}{1}", qskill, Environment.NewLine);
                 }
@@ -73,74 +75,83 @@ namespace EVEMon.Common
 
             // Free room in skill queue
             if (freeTime)
-                body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText, Environment.NewLine);
+                body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText,
+                                  Environment.NewLine);
 
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)
             {
-                return SendMail(Settings.Notifications, String.Format(CultureConstants.DefaultCulture, "[STC] {0} :: {1} {2}", charName, skillName, skillLevelString), body.ToString());
+                SendMail(Settings.Notifications,
+                         String.Format(CultureConstants.DefaultCulture, "[STC] {0} :: {1} {2}", charName, skillName,
+                                       skillLevelString), body.ToString());
+                return;
             }
 
             // Long format
-            if (character.Plans.Count > 0) body.AppendFormat(CultureConstants.DefaultCulture, "Next skills listed in plans:{0}{0}", Environment.NewLine);
+            if (character.Plans.Count > 0)
+                body.AppendFormat(CultureConstants.DefaultCulture, "Next skills listed in plans:{0}{0}", Environment.NewLine);
 
-            foreach (var plan in character.Plans)
-			{
-				if (plan.Count > 0)
-				{
-                    // Print plan name
-                    CharacterScratchpad scratchpad = new CharacterScratchpad(character);
-                    body.AppendFormat(CultureConstants.DefaultCulture, "{0}:{1}", plan.Name, Environment.NewLine);
+            foreach (Plan plan in character.Plans)
+            {
+                if (plan.Count <= 0)
+                    continue;
 
-                    // Scroll through entries
-					int i = 0;
-					int minDays = 1;
-					foreach (PlanEntry entry in plan)
-					{
-						TimeSpan trainTime = scratchpad.GetTrainingTime(entry.Skill, entry.Level, TrainingOrigin.FromPreviousLevelOrCurrent);
+                // Print plan name
+                CharacterScratchpad scratchpad = new CharacterScratchpad(character);
+                body.AppendFormat(CultureConstants.DefaultCulture, "{0}:{1}", plan.Name, Environment.NewLine);
 
-						// Only print the first three skills, and the very long skills
-                        // (first limit is one day, then we add skills duration)
-						if (++i <= 3 || trainTime.Days > minDays)
-						{
-							if (i > 3)
-							{
-								// Print long message once
-								if (minDays == 1)
-								{
-                                    body.AppendFormat(CultureConstants.DefaultCulture, "{1}Longer skills from {0}:{1}", plan.Name, Environment.NewLine);
-								}
+                // Scroll through entries
+                int i = 0;
+                int minDays = 1;
+                foreach (PlanEntry entry in plan)
+                {
+                    TimeSpan trainTime = scratchpad.GetTrainingTime(entry.Skill, entry.Level,
+                                                                    TrainingOrigin.FromPreviousLevelOrCurrent);
 
-								minDays = trainTime.Days + minDays;
-							}
-                            body.AppendFormat(CultureConstants.DefaultCulture, "\t{0}", entry);
+                    // Only print the first three skills, and the very long skills
+                    // (first limit is one day, then we add skills duration)
+                    if (++i > 3 && trainTime.Days <= minDays)
+                        continue;
 
-                            // Notes
-							if (entry.Notes != null && entry.Notes.Length > 0)
-							{
-                                body.AppendFormat(CultureConstants.DefaultCulture, " ({0})", entry.Notes);
-							}
+                    if (i > 3)
+                    {
+                        // Print long message once
+                        if (minDays == 1)
+                        {
+                            body.AppendFormat(CultureConstants.DefaultCulture, "{1}Longer skills from {0}:{1}", plan.Name,
+                                              Environment.NewLine);
+                        }
 
-                            // Training time
-							if (trainTime.Days > 0)
-							{
-                                body.AppendFormat(CultureConstants.DefaultCulture, " - {0}d, {1}", trainTime.Days, trainTime);
-							}
-							else
-							{
-                                body.AppendFormat(CultureConstants.DefaultCulture, " - {0}", trainTime);
-							}
+                        minDays = trainTime.Days + minDays;
+                    }
+                    body.AppendFormat(CultureConstants.DefaultCulture, "\t{0}", entry);
 
-							body.AppendLine();
-						}
-					}
-					body.AppendLine();
-				}
-			}
+                    // Notes
+                    if (!string.IsNullOrEmpty(entry.Notes))
+                    {
+                        body.AppendFormat(CultureConstants.DefaultCulture, " ({0})", entry.Notes);
+                    }
 
-            string subject = String.Format(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}", charName, skillName, skillLevelString);
-			return SendMail(Settings.Notifications, subject, body.ToString());
-		}
+                    // Training time
+                    if (trainTime.Days > 0)
+                    {
+                        body.AppendFormat(CultureConstants.DefaultCulture, " - {0}d, {1}", trainTime.Days, trainTime);
+                    }
+                    else
+                    {
+                        body.AppendFormat(CultureConstants.DefaultCulture, " - {0}", trainTime);
+                    }
+
+                    body.AppendLine();
+                }
+                body.AppendLine();
+            }
+
+            string subject = String.Format(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}", charName,
+                                           skillName, skillLevelString);
+            SendMail(Settings.Notifications, subject, body.ToString());
+            return;
+        }
 
         /// <summary>
         /// Triggers on when a SMTP client has finished (success or failure)
@@ -177,49 +188,49 @@ namespace EVEMon.Common
         /// Settings.Notifications unless using an alternative
         /// configuration.
         /// </remarks>
-		private static bool SendMail(NotificationSettings settings, string subject, string body)
-		{
+        private static bool SendMail(NotificationSettings settings, string subject, string body)
+        {
             // trace something to the logs so we can identify the time the message was sent.
             EveMonClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
-                subject,
-                settings.EmailSmtpServer,
-                settings.EmailPortNumber
+                               subject,
+                               settings.EmailSmtpServer,
+                               settings.EmailPortNumber
                 );
 
-			try
-			{
+            try
+            {
                 // Set up message
                 MailMessage msg = new MailMessage(settings.EmailFromAddress, settings.EmailToAddress, subject, body);
 
                 // Set up client
                 SmtpClient client = new SmtpClient(settings.EmailSmtpServer);
-                client.SendCompleted += new SendCompletedEventHandler(SendCompleted); 
+                client.SendCompleted += SendCompleted;
                 if (settings.EmailPortNumber > 0)
-				{
+                {
                     client.Port = settings.EmailPortNumber;
-				}
+                }
 
                 // Enter crendtials
                 if (settings.EmailAuthenticationRequired)
-				{
+                {
                     client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential(
                         settings.EmailAuthenticationUserName,
                         settings.EmailAuthenticationPassword);
-				}
+                }
 
                 // SSL
                 client.EnableSsl = settings.EmailServerRequiresSSL;
-                
+
                 // Send message
-				client.SendAsync(msg, null);
-				return true;
-			}
-			catch (Exception e)
-			{
-				ExceptionHandler.LogException(e, true);
-				return false;
-			}
-		}
-	}
+                client.SendAsync(msg, null);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+                return false;
+            }
+        }
+    }
 }

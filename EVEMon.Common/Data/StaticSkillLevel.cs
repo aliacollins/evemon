@@ -69,7 +69,7 @@ namespace EVEMon.Common.Data
         {
             Skill = StaticSkills.GetSkillByID(id);
             Level = level;
-            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
+            Activity = (BlueprintActivity) Enum.ToObject(typeof (BlueprintActivity), activityId);
         }
 
         #endregion
@@ -161,7 +161,7 @@ namespace EVEMon.Common.Data
         /// <returns>Skill Name and Level</returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Common.Skill.GetRomanForInt(Level));
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Common.Skill.GetRomanFromInt(Level));
         }
 
         #endregion

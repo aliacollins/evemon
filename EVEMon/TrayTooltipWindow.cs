@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -17,20 +16,42 @@ namespace EVEMon
     /// </summary>
     public partial class TrayTooltipWindow : Form
     {
-        private List<Character> m_characters = new List<Character>();
+        private readonly List<Character> m_characters = new List<Character>();
         private String m_tooltipFormat = String.Empty;
         private bool m_updatePending;
 
+
+        #region Constructor
+
         /// <summary>
-        /// Designer constructor
+        /// Designer constructor.
         /// </summary>
-        public TrayTooltipWindow() 
+        public TrayTooltipWindow()
         {
             InitializeComponent();
-            this.Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
+        }
+        
+        #endregion
+
+
+        #region Inherited Events
+
+        /// <summary>
+        /// On load, update controls.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode)
+                return;
+
+            Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
 
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+
+            UpdateCharactersList();
         }
 
         /// <summary>
@@ -46,18 +67,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On load, update controls
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            if (this.DesignMode) return;
-
-            UpdateCharactersList();
-        }
-
-        /// <summary>
         /// When the window is shown, sets it as topmost without activation.
         /// </summary>
         /// <param name="e"></param>
@@ -66,11 +75,11 @@ namespace EVEMon
             base.OnShown(e);
 
             // Equivalent to setting TopMost = true, except don't activate the window.
-            NativeMethods.SetWindowPos(this.Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
+            NativeMethods.SetWindowPos(Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
                 NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
 
             // Show the window without activating it.
-            NativeMethods.ShowWindow(this.Handle, NativeMethods.SW_SHOWNOACTIVATE);
+            NativeMethods.ShowWindow(Handle, NativeMethods.SW_SHOWNOACTIVATE);
         }
 
         /// <summary>
@@ -79,14 +88,17 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.Visible && m_updatePending)
+            if (Visible && m_updatePending)
                 UpdateContent();
 
             base.OnVisibleChanged(e);
         }
+        
+        #endregion
 
 
         #region Content creation and refresh
+
         /// <summary>
         /// Updates the tooltip format we use as a base for update on every second, along with the characters list.
         /// </summary>
@@ -94,14 +106,9 @@ namespace EVEMon
         {
             // Update characters list and selects display order
             m_characters.Clear();
-            if (Settings.UI.SystemTrayTooltip.DisplayOrder)
-            {    
-                m_characters.AddRange(TrayPopUpWindow.GetCharacters());
-            }
-            else
-            {
-                m_characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
-            } 
+            m_characters.AddRange(Settings.UI.SystemTrayTooltip.DisplayOrder
+                                      ? TrayPopUpWindow.GetCharacters()
+                                      : EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
 
             // Assembles the tooltip format
             StringBuilder sb = new StringBuilder();
@@ -143,7 +150,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateContent()
         {
-            if (!this.Visible)
+            if (!Visible)
             {
                 m_updatePending = true;
                 return;
@@ -152,11 +159,11 @@ namespace EVEMon
 
             // Replaces the fragments like "%10546464r" (the number being the character ID) by the remaining time.
             string tooltip = m_tooltipFormat;
-            foreach (var character in m_characters)
+            foreach (Character character in m_characters)
             {
                 if (character.IsTraining)
                 {
-                    var trainingSkill = character.CurrentlyTrainingSkill;
+                    QueuedSkill trainingSkill = character.CurrentlyTrainingSkill;
                     TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
 
                     tooltip = Regex.Replace(tooltip,
@@ -165,7 +172,7 @@ namespace EVEMon
                         RegexOptions.Compiled);
                 }
 
-                var ccpCharacter = character as CCPCharacter;
+                CCPCharacter ccpCharacter = character as CCPCharacter;
                 if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
                 {                    
                     tooltip = Regex.Replace(tooltip,
@@ -175,84 +182,86 @@ namespace EVEMon
             }
 
             // Updates the tooltip and its location
-            lblToolTip.Text = tooltip.ToString();
+            lblToolTip.Text = tooltip;
             TrayIcon.SetToolTipLocation(this);
         }
 
         /// <summary>
-        /// 
+        /// Formats the tooltip text.
         /// </summary>
-        /// <param name="toolTipFormat"></param>
-        /// <param name="character"></param>
+        /// <param name="toolTipFormat">The tool tip format.</param>
+        /// <param name="character">The character.</param>
         /// <returns></returns>
         private string FormatTooltipText(string toolTipFormat, Character character)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(Regex.Replace(toolTipFormat, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
-            {
-                int level = -1;
-
-                // First group
-                switch (m.Groups[1].Value[0])
-                {
-                    case 'n':
-                        return character.Name;
-                    case 'b':
-                        return character.Balance.ToString("N2");
-                }
-
-                var ccpCharacter = character as CCPCharacter;
-                if (ccpCharacter != null && (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
-                {
-                    switch (m.Groups[1].Value[0])
+            sb.Append(Regex.Replace(toolTipFormat, "%([nbsdr]|[ct][ir])",
+                delegate(Match m)
                     {
-                        case 'r':
-                            return '%' + character.CharacterID.ToString() + 'r';
-                        case 's':
-                            return character.CurrentlyTrainingSkill.SkillName;
-                        case 'd':
-                            return character.CurrentlyTrainingSkill.EndTime.ToString("g");
-                        case 'c':
-                            level = character.CurrentlyTrainingSkill.Level - 1;
-                            break;
-                        case 't':
-                            level = character.CurrentlyTrainingSkill.Level;
-                            break;
-                        default:
-                            return String.Empty;
-                    }
-
-                    // Second group
-                    if (level >= 0 && m.Groups[1].Value.Length > 1)
-                    {
-                        switch (m.Groups[1].Value[1])
+                        // First group
+                        switch (m.Groups[1].Value[0])
                         {
-                            case 'i':
-                                return level.ToString();
-                            case 'r':
-                                return Skill.GetRomanForInt(level);
-                            default:
-                                return String.Empty;
+                            case 'n':
+                                return character.Name;
+                            case 'b':
+                                return character.Balance.ToString("N2");
                         }
-                    }
-                }
 
-                return String.Empty;
-            }), RegexOptions.Compiled));
+                        CCPCharacter ccpCharacter = character as CCPCharacter;
+                        if (ccpCharacter != null && (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
+                        {
+                            int level;
+                            switch (m.Groups[1].Value[0])
+                            {
+                                case 'r':
+                                    return '%' + character.CharacterID.ToString() + 'r';
+                                case 's':
+                                    return character.CurrentlyTrainingSkill.SkillName;
+                                case 'd':
+                                    return character.CurrentlyTrainingSkill.EndTime.ToString("g");
+                                case 'c':
+                                    level = character.CurrentlyTrainingSkill.Level - 1;
+                                    break;
+                                case 't':
+                                    level = character.CurrentlyTrainingSkill.Level;
+                                    break;
+                                default:
+                                    return String.Empty;
+                            }
+
+                            // Second group
+                            if (level >= 0 && m.Groups[1].Value.Length > 1)
+                            {
+                                switch (m.Groups[1].Value[1])
+                                {
+                                    case 'i':
+                                        return level.ToString();
+                                    case 'r':
+                                        return Skill.GetRomanFromInt(level);
+                                    default:
+                                        return String.Empty;
+                                }
+                            }
+                        }
+
+                        return String.Empty;
+                    }, RegexOptions.Compiled));
 
             return sb.ToString();
         }
+
         #endregion
 
 
         #region Timer and global events
+
         /// <summary>
-        /// When a character changes (skill completed, now data from CCP, etc), update the characters list
+        /// When a character changes (skill completed, now data from CCP, etc), update the characters list.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateCharactersList();
         }
@@ -262,13 +271,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateCharactersList();
         }
 
         /// <summary>
-        /// Every second, when characters are in training, we update the tooltip
+        /// Every second, when characters are in training, we update the tooltip.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -277,25 +286,6 @@ namespace EVEMon
             UpdateContent();
         }
 
-        #endregion
-
-
-        #region Native Stuff
-        private static class NativeMethods
-        {
-            public const Int32 HWND_TOPMOST = -1;
-            public const Int32 SWP_NOACTIVATE = 0x0010;
-            public const Int32 SWP_NOSIZE = 0x0001;
-            public const Int32 SWP_NOMOVE = 0x0002;
-            public const Int32 SW_SHOWNOACTIVATE = 4;
-
-            [DllImport("user32.dll")]
-            public static extern bool ShowWindow(IntPtr hWnd, Int32 flags);
-            [DllImport("user32.dll")]
-            public static extern bool SetWindowPos(IntPtr hWnd,
-                Int32 hWndInsertAfter, Int32 X, Int32 Y, Int32 cx, Int32 cy, uint uFlags);
-
-        }
         #endregion
     }
 }

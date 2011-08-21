@@ -593,7 +593,7 @@ namespace EVEMon.SkillPlanner
                     SkillLevel prereq = (SkillLevel)node.Tag;
                     Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = "Plan \"" + skill.ToString() + " " + Skill.GetRomanForInt(prereq.Level) + "\"";
+                    tsmAddToPlan.Text = "Plan \"" + skill.ToString() + " " + Skill.GetRomanFromInt(prereq.Level) + "\"";
 
                     // Update "show in skill browser" menu
                     showInBrowserMenu.Enabled = true;

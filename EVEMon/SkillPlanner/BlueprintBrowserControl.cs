@@ -11,7 +11,12 @@ namespace EVEMon.SkillPlanner
 {
     public partial class BlueprintBrowserControl : EveObjectBrowserControl
     {
-        private string[] m_laboratories = new string[] { "Mobile Laboratory", "Advance Mobile Laboratory", "Any Other Laboratory" };
+        private readonly string[] m_laboratories = new[]
+                                                       {
+                                                           "Mobile Laboratory",
+                                                           "Advance Mobile Laboratory",
+                                                           "Any Other Laboratory"
+                                                       };
 
         private double m_timeMultiplier;
         private double m_materialMultiplier;
@@ -20,6 +25,7 @@ namespace EVEMon.SkillPlanner
         private Character m_character;
         private Blueprint m_blueprint;
         private BlueprintActivity m_activity;
+
 
         #region Constructors
 
@@ -45,6 +51,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            // Call the base method
+            base.OnLoad(e);
+
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
@@ -53,8 +62,8 @@ namespace EVEMon.SkillPlanner
             gbDescription.Text = "Attributes";
             pnlAttributes.AutoScroll = true;
 
-            // Call the base method
-            base.OnLoad(e);
+            // Update ImplantSet Modifier
+            UpdateImplantSetModifier();
         }
 
         /// <summary>
@@ -66,7 +75,7 @@ namespace EVEMon.SkillPlanner
         {
             // Call the base method
             base.OnSelectionChanged(sender, e);
-            
+
             if (SelectedObject == null)
                 return;
 
@@ -95,8 +104,9 @@ namespace EVEMon.SkillPlanner
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth ?
-                                         reqSkillPanelMinWidth : reqSkillControlMinWidth);
+            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
+                                           ? reqSkillPanelMinWidth
+                                           : reqSkillControlMinWidth);
         }
 
 
@@ -121,16 +131,18 @@ namespace EVEMon.SkillPlanner
         {
             // Determine the blueprints' activities  
             bool hasCopying = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Copying)
-                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying);
+                              || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying);
 
-            bool hasResearchingMaterialProductivity = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialProductivity)
+            bool hasResearchingMaterialProductivity =
+                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialProductivity)
                 || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialProductivity);
 
-            bool hasResearchingTimeProductivity = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingTimeProductivity)
+            bool hasResearchingTimeProductivity =
+                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingTimeProductivity)
                 || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingTimeProductivity);
 
             m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention)
-                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention);
+                             || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention);
 
             try
             {
@@ -180,34 +192,38 @@ namespace EVEMon.SkillPlanner
         /// Update the attributes info.
         /// </summary>
         private void UpdateAttributes()
-        {           
+        {
             // Produce item
             lblItem.ForeColor = Color.Blue;
-            lblItem.Text = (m_blueprint.ProducesItem == null ? // This should not happen but be prepared if something changes in CCP DB
-                m_blueprint.Name.Replace(" Blueprint", String.Empty) :
-                m_blueprint.ProducesItem.Name); 
+            lblItem.Text = (m_blueprint.ProducesItem == null
+                                ? // This should not happen but be prepared if something changes in CCP DB
+                            m_blueprint.Name.Replace(" Blueprint", String.Empty)
+                                : m_blueprint.ProducesItem.Name);
             lblItem.Tag = m_blueprint.ProducesItem;
-            
+
             // Invents blueprint
             InventBlueprintListBox.Items.Clear();
             foreach (Blueprint item in m_blueprint.InventsBlueprint)
             {
                 InventBlueprintListBox.Items.Add(item);
             }
-            
+
             // Runs per copy
             lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString();
 
             // Wastage factor
-            m_waste = ((double)m_blueprint.WasteFactor / 100) * (double)(nudME.Value >= 0 ? 1 / (nudME.Value + 1) : (1 - nudME.Value));
+            m_waste = ((double) m_blueprint.WasteFactor / 100) *
+                      (double) (nudME.Value >= 0 ? 1 / (nudME.Value + 1) : (1 - nudME.Value));
             lblWaste.Text = m_waste.ToString("0.0#%");
-            
+
             // Multipliers
-            m_timeMultiplier = GetFacilityMultiplier(out m_materialMultiplier);
+            double materialMultiplier;
+            m_timeMultiplier = GetFacilityMultiplier(out materialMultiplier);
+            m_materialMultiplier = materialMultiplier;
 
             // Manufacturing base time
             double factor = 0.04d;
-            double peModifier = (double)(nudPE.Value >= 0 ? (nudPE.Value / (1 + nudPE.Value)) : (nudPE.Value - 1));
+            double peModifier = (double) (nudPE.Value >= 0 ? (nudPE.Value / (1 + nudPE.Value)) : (nudPE.Value - 1));
             double pModifier = 1 - (m_blueprint.ProductivityModifier / m_blueprint.ProductionTime) * peModifier;
             lblProductionBaseTime.Text = BaseActivityTime(m_blueprint.ProductionTime * pModifier);
 
@@ -221,15 +237,17 @@ namespace EVEMon.SkillPlanner
             // Researching material efficiency character time
             factor = 0.05d;
             activityTime = m_blueprint.ResearchMaterialTime
-                * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingMaterialProductivity) * GetImplantMultiplier("J");
-            lblResearchMECharTime.Text = CharacterActivityTime(activityTime, DBConstants.MetallurgySkillID, factor, false);
+                           * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingMaterialProductivity) *
+                           GetImplantMultiplier("J");
+            lblResearchMECharTime.Text = CharacterActivityTime(activityTime, DBConstants.MetallurgySkillID, factor,
+                                                               false);
 
             // Researching copy base time
             lblResearchCopyBaseTime.Text = BaseActivityTime(m_blueprint.ResearchCopyTime);
 
             // Researching copy character time
             activityTime = (m_blueprint.ResearchCopyTime / m_blueprint.RunsPerCopy)
-                * GetResearchFacilityMultiplier(BlueprintActivity.Copying) * GetImplantMultiplier("K");
+                           * GetResearchFacilityMultiplier(BlueprintActivity.Copying) * GetImplantMultiplier("K");
             lblResearchCopyCharTime.Text = CharacterActivityTime(activityTime, DBConstants.ScienceSkillID, factor, true);
 
             // Researching productivity efficiency base time
@@ -237,10 +255,12 @@ namespace EVEMon.SkillPlanner
 
             // Researching productivity efficiency character time
             activityTime = m_blueprint.ResearchProductivityTime
-                * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingTimeProductivity) * GetImplantMultiplier("I");
+                           * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingTimeProductivity) *
+                           GetImplantMultiplier("I");
             lblResearchPECharTime.Text = CharacterActivityTime(activityTime, DBConstants.ResearchSkillID, factor, false);
 
-            gbResearching.Visible = !m_blueprint.MarketGroup.BelongsIn(new int[] { DBConstants.BlueprintRootNonMarketGroupID });
+            gbResearching.Visible =
+                !m_blueprint.MarketGroup.BelongsIn(new[] {DBConstants.BlueprintRootNonMarketGroupID});
             gbInvention.Text = (gbResearching.Visible ? "INVENTION" : "RESEARCHING");
             lblInventionTime.Text = (gbResearching.Visible ? "Invention Time:" : "Research Tech Time:");
             gbInvention.Location = (gbResearching.Visible ? new Point(3, 385) : new Point(3, 225));
@@ -250,7 +270,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Invention time
-            lblInventionBaseTime.Text = BaseActivityTime(m_blueprint.ResearchTechTime * GetResearchFacilityMultiplier(BlueprintActivity.Invention));
+            lblInventionBaseTime.Text =
+                BaseActivityTime(m_blueprint.ResearchTechTime *
+                                 GetResearchFacilityMultiplier(BlueprintActivity.Invention));
         }
 
         /// <summary>
@@ -290,10 +312,9 @@ namespace EVEMon.SkillPlanner
                         hasItem = true;
 
                         // Create the item
-                        ListViewItem item = new ListViewItem(group);
-                        item.Tag = StaticItems.GetItemByID(material.ID);
-                        item.Text = material.Name;
-                        
+                        ListViewItem item = new ListViewItem(group)
+                                                {Tag = StaticItems.GetItemByID(material.ID), Text = material.Name};
+
                         // Add the item to the list
                         items.Add(item);
 
@@ -301,44 +322,61 @@ namespace EVEMon.SkillPlanner
                         bool isRawMaterial = material.WasteAffected;
 
                         // Calculate the base material quantity
-                        int baseMaterialQuantity = (int)Math.Round(material.Quantity * m_materialMultiplier * GetImplantMultiplier("G"),
-                                                    0, MidpointRounding.AwayFromZero);
-                        
+                        int baseMaterialQuantity =
+                            (int) Math.Round(material.Quantity * m_materialMultiplier * GetImplantMultiplier("G"),
+                                             0, MidpointRounding.AwayFromZero);
+
                         // Calculate the perfect material efficiency level if it's a raw material
                         if (isRawMaterial)
-                            perfectMELevel = (int)Math.Round((0.02 * m_blueprint.WasteFactor * baseMaterialQuantity), 0, MidpointRounding.AwayFromZero);
+                            perfectMELevel =
+                                (int)
+                                Math.Round((0.02 * m_blueprint.WasteFactor * baseMaterialQuantity), 0,
+                                           MidpointRounding.AwayFromZero);
 
                         // Store the highest perfect material efficiency level
                         if (perfectMELevel > perfectME)
                             perfectME = perfectMELevel;
-                        
+
                         // Calculate the needed quantity by the character skills
-                        int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial ?
-                            (int)Math.Round(baseMaterialQuantity * (1.25 - (0.05 * productionEfficiencyLevel)) + (baseMaterialQuantity * m_waste), 0, MidpointRounding.AwayFromZero) :
-                            baseMaterialQuantity);
+                        int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
+                                               ? (int)
+                                                 Math.Round(
+                                                     baseMaterialQuantity *
+                                                     (1.25 - (0.05 * productionEfficiencyLevel)) +
+                                                     (baseMaterialQuantity * m_waste), 0,
+                                                     MidpointRounding.AwayFromZero)
+                                               : baseMaterialQuantity);
 
                         // Calculate the perfect quantity
-                        int perfectQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial ?
-                            (int)Math.Round(baseMaterialQuantity * (1 + m_waste), 0, MidpointRounding.AwayFromZero) : baseMaterialQuantity);
+                        int perfectQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
+                                                   ? (int)
+                                                     Math.Round(baseMaterialQuantity * (1 + m_waste), 0,
+                                                                MidpointRounding.AwayFromZero)
+                                                   : baseMaterialQuantity);
 
                         // Add the quantity for every item
-                        ListViewItem.ListViewSubItem subItemYou = new ListViewItem.ListViewSubItem(item, youQuantity.ToString());
+                        ListViewItem.ListViewSubItem subItemYou = new ListViewItem.ListViewSubItem(item,
+                                                                                                   youQuantity.ToString());
                         item.SubItems.Add(subItemYou);
 
                         // Has perfect values ?
                         hasPerfect |= (youQuantity != perfectQuantity);
 
                         // Add the perfect quantity for every item
-                        ListViewItem.ListViewSubItem subItemPerfect = new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString());
+                        ListViewItem.ListViewSubItem subItemPerfect = new ListViewItem.ListViewSubItem(item,
+                                                                                                       perfectQuantity.
+                                                                                                           ToString());
                         item.SubItems.Add(subItemPerfect);
 
                         // Has damage per run ?
                         hasDamagePerRun |= (material.DamagePerJob > 0 && material.DamagePerJob < 1);
 
                         // Add the damage per run for every item (empty string if it's 1)
-                        string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1 ?
-                            String.Format("{0:P1}", material.DamagePerJob) : String.Empty);
-                        ListViewItem.ListViewSubItem subItemDamagePerRun = new ListViewItem.ListViewSubItem(item, damagePerRun);
+                        string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
+                                                   ? String.Format("{0:P1}", material.DamagePerJob)
+                                                   : String.Empty);
+                        ListViewItem.ListViewSubItem subItemDamagePerRun = new ListViewItem.ListViewSubItem(item,
+                                                                                                            damagePerRun);
                         item.SubItems.Add(subItemDamagePerRun);
                     }
 
@@ -384,25 +422,25 @@ namespace EVEMon.SkillPlanner
 
             Item producedItem = m_blueprint.ProducesItem;
 
-            if (producedItem != null)// This should not happen but be prepared if something changes in CCP DB
+            if (producedItem != null) // This should not happen but be prepared if something changes in CCP DB
             {
                 switch (m_activity)
                 {
                     case BlueprintActivity.Manufacturing:
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.DronesMarketGroupID })
+                        if (producedItem.MarketGroup.BelongsIn(new[] {DBConstants.DronesMarketGroupID})
                             && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
                             cbFacility.Items.Add("Drone Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.AmmosAndChargesMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new[] {DBConstants.AmmosAndChargesMarketGroupID}))
                             cbFacility.Items.Add("Ammunition Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ShipEquipmentsMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new[] {DBConstants.ShipEquipmentsMarketGroupID}))
                         {
                             cbFacility.Items.Add("Equipment Assembly Array");
                             cbFacility.Items.Add("Rapid Equipment Assembly Array");
                         }
 
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ComponentsMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new[] {DBConstants.ComponentsMarketGroupID}))
                             cbFacility.Items.Add("Component Assembly Array");
 
                         if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsMarketGroupIDs))
@@ -427,8 +465,10 @@ namespace EVEMon.SkillPlanner
             // Update the selected index
             if (m_activity == BlueprintActivity.Manufacturing)
             {
-                cbFacility.SelectedIndex = (Settings.UI.BlueprintBrowser.ProductionFacilityIndex < cbFacility.Items.Count ?
-                    Settings.UI.BlueprintBrowser.ProductionFacilityIndex : 0);
+                cbFacility.SelectedIndex = (Settings.UI.BlueprintBrowser.ProductionFacilityIndex <
+                                            cbFacility.Items.Count
+                                                ? Settings.UI.BlueprintBrowser.ProductionFacilityIndex
+                                                : 0);
             }
             else
             {
@@ -441,7 +481,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateImplantSetModifier()
         {
-            m_character = (Character)m_plan.Character;
+            m_character = (Character) Plan.Character;
             cbImplantSet.Items.Clear();
             foreach (ImplantSet set in m_character.ImplantSets)
             {
@@ -449,8 +489,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the selected index
-            cbImplantSet.SelectedIndex = (Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count ? 
-                Settings.UI.BlueprintBrowser.ImplantSetIndex : 0);
+            cbImplantSet.SelectedIndex = (Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
+                                              ? Settings.UI.BlueprintBrowser.ImplantSetIndex
+                                              : 0);
         }
 
         /// <summary>
@@ -458,12 +499,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="items"></param>
         /// <param name="columnIndex"></param>
-        private void RemoveColumn(List<ListViewItem> items, int columnIndex)
+        private void RemoveColumn(IEnumerable<ListViewItem> items, int columnIndex)
         {
             // Remove the values of the column
-            for (int i = 0; i < items.Count; i++)
+            foreach (ListViewItem t in items)
             {
-                items[i].SubItems.RemoveAt(columnIndex);
+                t.SubItems.RemoveAt(columnIndex);
             }
 
             // Remove the column control
@@ -485,16 +526,19 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Calculate the character's activity time.
         /// </summary>
-        /// <param name="activityTime"></param>
-        /// <param name="skillID"></param>
+        /// <param name="activityTime">The activity time.</param>
+        /// <param name="skillID">The skill ID.</param>
+        /// <param name="factor">The factor.</param>
+        /// <param name="copyActivity">if set to <c>true</c> [copy activity].</param>
         /// <returns></returns>
         private string CharacterActivityTime(double activityTime, int skillID, double factor, bool copyActivity)
         {
             int skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
             double activityTimeModifier = (1 - (factor * skillLevel));
-            TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier );
+            TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
             bool includeSeconds = (time.Hours == 0 && time.Minutes < 10);
-            return String.Format("{0} (You{1})", TimeSpanToText(time, includeSeconds), (copyActivity ? " Per Single Copy" : String.Empty));
+            return String.Format("{0} (You{1})", TimeSpanToText(time, includeSeconds),
+                                 (copyActivity ? " Per Single Copy" : String.Empty));
         }
 
         /// <summary>
@@ -551,7 +595,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="item"></param>
         private void ShowInBrowser(Item item)
         {
-            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(Plan);
             if (item is Ship)
             {
                 pw.ShowShipInBrowser(item);
@@ -587,7 +631,7 @@ namespace EVEMon.SkillPlanner
 
             if (text.StartsWith("Advanced"))
                 materialMultiplier = 1.1d;
-            
+
             return m_timeMultiplier;
         }
 
@@ -626,7 +670,7 @@ namespace EVEMon.SkillPlanner
 
             return 1.0d;
         }
-        
+
         /// <summary>
         /// Gets the multiplier of an implant.
         /// </summary>
@@ -634,7 +678,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private double GetImplantMultiplier(string implantType)
         {
-            ImplantSet implantSet = (ImplantSet)cbImplantSet.Tag;
+            ImplantSet implantSet = (ImplantSet) cbImplantSet.Tag;
             string implantSubname = String.Format("Zainou 'Beancounter' {0}", implantType);
 
             Implant implant = implantSet.FirstOrDefault(x => x.Name.Contains(implantSubname));
@@ -642,7 +686,9 @@ namespace EVEMon.SkillPlanner
             if (implant == null)
                 return 1.0d;
 
-            double bonus = implant.Properties.FirstOrDefault(x=> Array.IndexOf(DBConstants.IndustryModifyingPropertyIDs, x.Property.ID) != -1).IValue;
+            double bonus =
+                implant.Properties.FirstOrDefault(
+                    x => Array.IndexOf(DBConstants.IndustryModifyingPropertyIDs, x.Property.ID) != -1).IValue;
             double multiplier = 1.0d + (bonus / 100);
 
             return multiplier;
@@ -735,7 +781,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lblItem_Click(object sender, EventArgs e)
         {
-            Item item = (Item)lblItem.Tag;
+            Item item = (Item) lblItem.Tag;
 
             if (item == null)
                 return;
@@ -752,7 +798,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbInventBlueprint_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Blueprint blueprint = (Blueprint)InventBlueprintListBox.SelectedItem;
+            Blueprint blueprint = (Blueprint) InventBlueprintListBox.SelectedItem;
 
             if (blueprint == null)
                 return;
@@ -768,16 +814,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void propertiesList_DoubleClick(object sender, EventArgs e)
         {
-            ListViewItem listItem = ((ListView)sender).FocusedItem;
-            Item item = (Item)listItem.Tag;
-            
+            ListViewItem listItem = ((ListView) sender).FocusedItem;
+            Item item = (Item) listItem.Tag;
+
             if (item == null)
                 return;
 
             ShowInBrowser(item);
         }
- 
+
         #endregion
 
-   }
+    }
 }

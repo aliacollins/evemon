@@ -7,8 +7,7 @@ namespace EVEMon.Common
     {
         public static void LogException(Exception e, bool handled)
         {
-            if (handled) LogException(e, "Handled exception");
-            else LogException(e, "Unhandled exception");
+            LogException(e, handled ? "Handled exception" : "Unhandled exception");
         }
 
         public static void LogRethrowException(Exception e)

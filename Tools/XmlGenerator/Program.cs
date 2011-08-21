@@ -11,24 +11,24 @@ using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
 {
-    internal class Program
+    internal static class Program
     {
         #region Static Fields
 
         private static string s_text = String.Empty;
-        private static double s_counter;
-        private static double s_tablesCount;
-        private static double s_totalTablesCount = 29;
-
+        private static int s_counter;
+        private static int s_tablesCount;
         private static int s_percentOld;
-        private static int s_propGenTotal = 1602;
-        private static int s_itemGenTotal = 8751;
-        private static int s_skillGenTotal = 454;
-        private static int s_certGenTotal = 4272;
-        private static int s_blueprintGenTotal = 3953;
-        private static int s_geoGen = 5219;
-        private static int s_geoGenTotal = 19501;
-        private static int s_reprocessGenTotal = 10074;
+
+        private const int TotalTablesCount = 29;
+        private const int PropGenTotal = 1602;
+        private const int ItemGenTotal = 8751;
+        private const int SkillGenTotal = 454;
+        private const int CertGenTotal = 4272;
+        private const int BlueprintGenTotal = 3953;
+        private const int GeoGen = 5219;
+        private const int GeoGenTotal = 19501;
+        private const int ReprocessGenTotal = 10074;
 
         private static DateTime s_startTime;
         private static DateTime s_endTime;
@@ -66,19 +66,20 @@ namespace EVEMon.XmlGenerator
         private static Bag<CrtCertificates> s_certificates;
         private static Bag<CrtRecommendations> s_crtRecommendations;
         private static Bag<CrtRelationships> s_crtRelationships;
-        
+
         #endregion
 
 
         #region Initilization
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             // Setting a standard format for the generated files
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             // Data dumps are available from CCP
             Console.Write(@"Loading Data from SQL Server... ");
+
 
             #region Read Tables From Database
 
@@ -147,6 +148,7 @@ namespace EVEMon.XmlGenerator
 
             #endregion
 
+
             // Generate datafiles
             Console.WriteLine(@"Datafile Generating In Progress");
             Console.WriteLine();
@@ -188,9 +190,9 @@ namespace EVEMon.XmlGenerator
             // Set attributes with CategoryID 'NULL" to NULL category
             foreach (DgmAttributeTypes attribute in s_attributeTypes.Where(x => x.CategoryID == null))
             {
-                attribute.CategoryID = (attribute.Published ?
-                                        DBConstants.MiscellaneousAttributeCategoryID :
-                                        DBConstants.NULLAtributeCategoryID);
+                attribute.CategoryID = (attribute.Published
+                                            ? DBConstants.MiscellaneousAttributeCategoryID
+                                            : DBConstants.NULLAtributeCategoryID);
             }
 
             // Change some display names and default values
@@ -233,7 +235,8 @@ namespace EVEMon.XmlGenerator
             s_attributeTypes[DBConstants.RigSizePropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
             s_attributeTypes[DBConstants.MaxSubSystemsPropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
             s_attributeTypes[DBConstants.FitsToShipTypePropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
-            s_attributeTypes[DBConstants.ShipMaintenanceBayCapacityPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
+            s_attributeTypes[DBConstants.ShipMaintenanceBayCapacityPropertyID].CategoryID =
+                DBConstants.StructureAtributeCategoryID;
             s_attributeTypes[DBConstants.TurretHardPointModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
             s_attributeTypes[DBConstants.LauncherHardPointModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
             s_attributeTypes[DBConstants.HiSlotModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
@@ -269,15 +272,15 @@ namespace EVEMon.XmlGenerator
 
             // We insert custom categories
             SerializablePropertyCategory general = new SerializablePropertyCategory
-            {
-                Name = "General",
-                Description = "General informations"
-            };
+                                                       {
+                                                           Name = "General",
+                                                           Description = "General informations"
+                                                       };
             SerializablePropertyCategory propulsion = new SerializablePropertyCategory
-            {
-                Name = "Propulsion",
-                Description = "Navigation attributes for ships"
-            };
+                                                          {
+                                                              Name = "Propulsion",
+                                                              Description = "Navigation attributes for ships"
+                                                          };
             List<SerializableProperty> gProperties = new List<SerializableProperty>();
             List<SerializableProperty> pProperties = new List<SerializableProperty>();
             categories.Insert(0, general);
@@ -296,7 +299,7 @@ namespace EVEMon.XmlGenerator
 
                 foreach (DgmAttributeTypes srcProp in s_attributeTypes.Where(x => x.CategoryID == srcCategory.ID))
                 {
-                    UpdatePercentDone(s_propGenTotal);
+                    UpdatePercentDone(PropGenTotal);
 
                     SerializableProperty prop = new SerializableProperty();
                     properties.Add(prop);
@@ -405,8 +408,6 @@ namespace EVEMon.XmlGenerator
                             properties.Insert(11, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        default:
-                            break;
                     }
 
                     // New ID
@@ -449,16 +450,21 @@ namespace EVEMon.XmlGenerator
             propulsion.Properties = pProperties.ToArray();
 
             // Sort groups
-            string[] orderedGroupNames = {"General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor", 
-                                             "Targeting", "Propulsion", "Miscellaneous", "NULL"};
+            string[] orderedGroupNames = {
+                                             "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
+                                             "Targeting", "Propulsion", "Miscellaneous", "NULL"
+                                         };
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            PropertiesDatafile datafile = new PropertiesDatafile();
-            datafile.Categories =
-                categories.OrderBy(x => Array.IndexOf(orderedGroupNames, String.Intern(x.Name))).ToArray();
+            PropertiesDatafile datafile = new PropertiesDatafile
+                                              {
+                                                  Categories =
+                                                      categories.OrderBy(
+                                                          x => Array.IndexOf(orderedGroupNames, String.Intern(x.Name))).ToArray()
+                                              };
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
 
@@ -576,7 +582,7 @@ namespace EVEMon.XmlGenerator
             s_types[DBConstants.VelatorID].Published = true;
             s_types[DBConstants.ReaperID].Published = true;
             s_types[DBConstants.CapsuleID].Published = true;
-            
+
             // Set some attributes to items because their MarketGroupID is NULL
             foreach (InvType srcItem in s_types.Where(x => x.Published && x.MarketGroupID == null))
             {
@@ -597,19 +603,19 @@ namespace EVEMon.XmlGenerator
                         break;
                     case DBConstants.CapsuleID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignsRootNonMarketGroupID;
-                        srcItem.RaceID = (int)Race.All;
+                        srcItem.RaceID = (int) Race.All;
                         break;
                     case DBConstants.MegathronFederateIssueID:
                     case DBConstants.RavenStateIssueID:
                     case DBConstants.TempestTribalIssueID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignBattleshipsNonMarketGroupID;
-                        srcItem.RaceID = (int)Race.Faction;
+                        srcItem.RaceID = (int) Race.Faction;
                         break;
                     case DBConstants.GorusShuttleID:
                     case DBConstants.GuristasShuttleID:
                     case DBConstants.InterbusShuttleID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesNonMarketGroupID;
-                        srcItem.RaceID = (int)Race.Faction;
+                        srcItem.RaceID = (int) Race.Faction;
                         break;
 
                         // Set some items market group to support blueprints
@@ -664,7 +670,7 @@ namespace EVEMon.XmlGenerator
             // Create the market groups
             foreach (InvMarketGroup srcGroup in s_marketGroups.Concat(s_injectedMarketGroups))
             {
-                SerializableMarketGroup group = new SerializableMarketGroup { ID = srcGroup.ID, Name = srcGroup.Name };
+                SerializableMarketGroup group = new SerializableMarketGroup {ID = srcGroup.ID, Name = srcGroup.Name};
                 groups[srcGroup.ID] = group;
 
                 // Add the items in this group
@@ -676,22 +682,26 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // If this is an implant group, we add the implants with no market groups in this one.
-                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID || srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
+                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
+                    srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
                 {
                     string slotString = srcGroup.Name.Substring("Implant Slot ".Length);
                     int slot = Int32.Parse(slotString);
 
                     // Enumerate all implants without market groups
                     foreach (InvType srcItem in s_types
-                        .Where(x => x.MarketGroupID == null 
-                        && s_groups[x.GroupID].CategoryID == DBConstants.ImplantCategoryID 
-                        && x.GroupID != DBConstants.CyberLearningImplantsGroupID)
-                        )
+                        .Where(x => x.MarketGroupID == null
+                                    && s_groups[x.GroupID].CategoryID == DBConstants.ImplantCategoryID
+                                    && x.GroupID != DBConstants.CyberLearningImplantsGroupID)
+                        .Select(srcItem =>
+                                new
+                                    {
+                                        srcItem,
+                                        slotAttrib = s_typeAttributes.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
+                                    })
+                        .Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue() == slot).Select(x => x.srcItem))
                     {
-                        // Check the slot matches
-                        DgmTypeAttribute slotAttrib = s_typeAttributes.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID);
-                        if (slotAttrib != null && slotAttrib.GetIntValue() == slot)
-                            CreateItem(srcItem, items);
+                        CreateItem(srcItem, items);
                     }
                 }
 
@@ -724,8 +734,7 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            ItemsDatafile datafile = new ItemsDatafile();
-            datafile.MarketGroups = rootGroups.ToArray();
+            ItemsDatafile datafile = new ItemsDatafile {MarketGroups = rootGroups.ToArray()};
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
 
@@ -737,36 +746,31 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static void CreateItem(InvType srcItem, List<SerializableItem> groupItems)
         {
-            UpdatePercentDone(s_itemGenTotal);
+            UpdatePercentDone(ItemGenTotal);
 
             srcItem.Generated = true;
 
             // Creates the item with base informations
             SerializableItem item = new SerializableItem
-                           {
-                               ID = srcItem.ID,
-                               Name = srcItem.Name,
-                               Description = srcItem.Description
-                           };
+                                        {
+                                            ID = srcItem.ID,
+                                            Name = srcItem.Name,
+                                            Description = srcItem.Description,
+                                            Icon = (srcItem.IconID.HasValue ? s_icons[srcItem.IconID.Value].Icon : String.Empty),
+                                            PortionSize = srcItem.PortionSize,
+                                            MetaGroup = ItemMetaGroup.Empty
+                                        };
 
-            // Icon
-            item.Icon = (srcItem.IconID.HasValue ? s_icons[srcItem.IconID.Value].Icon : String.Empty);
-
-            // Portion Size (the batch)
-            item.PortionSize = srcItem.PortionSize;
-            
-            // Initialize item metagroup
-            item.MetaGroup = ItemMetaGroup.Empty;
 
             // Add the properties and prereqs
-            int baseWarpSpeed = 3;
+            const int BaseWarpSpeed = 3;
             double warpSpeedMultiplier = 1;
             List<SerializablePropertyValue> props = new List<SerializablePropertyValue>();
             int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Length];
             int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
             foreach (DgmTypeAttribute srcProp in s_typeAttributes.Where(x => x.ItemID == srcItem.ID))
             {
-                int propIntValue = (srcProp.ValueInt.HasValue ? srcProp.ValueInt.Value : (int)srcProp.ValueFloat.Value);
+                int propIntValue = srcProp.GetIntValue();
 
                 // Is it a prereq skill ?
                 int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, srcProp.AttributeID);
@@ -789,10 +793,10 @@ namespace EVEMon.XmlGenerator
                 if (launcherIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
@@ -801,10 +805,10 @@ namespace EVEMon.XmlGenerator
                 if (chargeIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
@@ -813,10 +817,10 @@ namespace EVEMon.XmlGenerator
                 if (canFitShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
@@ -825,10 +829,10 @@ namespace EVEMon.XmlGenerator
                 if (moduleShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
@@ -838,10 +842,10 @@ namespace EVEMon.XmlGenerator
                 if (specialisationAsteroidIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
@@ -850,10 +854,10 @@ namespace EVEMon.XmlGenerator
                 if (reactionIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
@@ -862,43 +866,41 @@ namespace EVEMon.XmlGenerator
                 if (posCargobayAcceptIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
-                                    {
-                                        ID = srcProp.AttributeID,
-                                        Value = s_groups[propIntValue].Name
-                                    });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = s_groups[propIntValue].Name
+                                  });
                     continue;
                 }
 
                 // Get the warp speed multiplier
-                if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID)
+                if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID && srcProp.ValueFloat != null)
                     warpSpeedMultiplier = srcProp.ValueFloat.Value;
 
                 // We calculate and add the ships warp speed
                 if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
                 {
                     props.Add(new SerializablePropertyValue
-                                    { ID = srcProp.AttributeID, Value = (baseWarpSpeed * warpSpeedMultiplier).ToString() });
+                                  {ID = srcProp.AttributeID, Value = (BaseWarpSpeed * warpSpeedMultiplier).ToString()});
 
                     // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
                     props.Add(new SerializablePropertyValue
-                                    { ID = s_propPackagedVolumeID, Value = GetPackagedVolume(srcItem.GroupID).ToString() });
+                                  {ID = s_propPackagedVolumeID, Value = GetPackagedVolume(srcItem.GroupID).ToString()});
                 }
 
                 // Other props
-                props.Add(new SerializablePropertyValue
-                                {ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue()});
+                props.Add(new SerializablePropertyValue {ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue()});
 
                 // Is metalevel property ?
                 if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
                     item.MetaLevel = propIntValue;
-                
+
                 // Is techlevel property ?
                 if (srcProp.AttributeID == DBConstants.TechLevelPropertyID)
                 {
                     switch (propIntValue)
                     {
                         default:
-                        case DBConstants.TechLevelI:
                             item.MetaGroup = ItemMetaGroup.T1;
                             break;
                         case DBConstants.TechLevelII:
@@ -911,47 +913,44 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Is metagroup property ?
-                if (srcProp.AttributeID == DBConstants.MetaGroupPropertyID)
+                if (srcProp.AttributeID != DBConstants.MetaGroupPropertyID)
+                    continue;
+
+                switch (propIntValue)
                 {
-                    switch (propIntValue)
-                    {
-                        case DBConstants.StorylineMetaGroupID:
-                            item.MetaGroup = ItemMetaGroup.Storyline;
-                            break;
-                        case DBConstants.FactionMetaGroupID:
-                            item.MetaGroup = ItemMetaGroup.Faction;
-                            break;
-                        case DBConstants.OfficerMetaGroupID:
-                            item.MetaGroup = ItemMetaGroup.Officer;
-                            break;
-                        case DBConstants.DeadspaceMetaGroupID:
-                            item.MetaGroup = ItemMetaGroup.Deadspace;
-                            break;
-                        default:
-                            item.MetaGroup = ItemMetaGroup.None;
-                            break;
-                    }
+                    case DBConstants.StorylineMetaGroupID:
+                        item.MetaGroup = ItemMetaGroup.Storyline;
+                        break;
+                    case DBConstants.FactionMetaGroupID:
+                        item.MetaGroup = ItemMetaGroup.Faction;
+                        break;
+                    case DBConstants.OfficerMetaGroupID:
+                        item.MetaGroup = ItemMetaGroup.Officer;
+                        break;
+                    case DBConstants.DeadspaceMetaGroupID:
+                        item.MetaGroup = ItemMetaGroup.Deadspace;
+                        break;
+                    default:
+                        item.MetaGroup = ItemMetaGroup.None;
+                        break;
                 }
             }
 
             // Ensures there is a mass and add it to prop
-            if (srcItem.Mass != 0)
-                props.Add(new SerializablePropertyValue
-                            { ID = DBConstants.MassPropertyID, Value = srcItem.Mass.ToString() });
+            if (Math.Abs(srcItem.Mass) > double.Epsilon)
+                props.Add(new SerializablePropertyValue {ID = DBConstants.MassPropertyID, Value = srcItem.Mass.ToString()});
 
             // Ensures there is a cargo capacity and add it to prop
-            if (srcItem.Capacity != 0)
+            if (Math.Abs(srcItem.Capacity - 0) > double.Epsilon)
                 props.Add(new SerializablePropertyValue
-                            { ID = DBConstants.CargoCapacityPropertyID, Value = srcItem.Capacity.ToString() });
+                              {ID = DBConstants.CargoCapacityPropertyID, Value = srcItem.Capacity.ToString()});
 
             // Ensures there is a volume and add it to prop
-            if (srcItem.Volume != 0)
-                props.Add(new SerializablePropertyValue
-                            { ID = DBConstants.VolumePropertyID, Value = srcItem.Volume.ToString() });
+            if (Math.Abs(srcItem.Volume - 0) > double.Epsilon)
+                props.Add(new SerializablePropertyValue {ID = DBConstants.VolumePropertyID, Value = srcItem.Volume.ToString()});
 
             // Add base price as a prop
-            props.Add(new SerializablePropertyValue
-                        { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal()});
+            props.Add(new SerializablePropertyValue {ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal()});
 
             // Add properties info to item
             item.Properties = props.ToArray();
@@ -961,7 +960,7 @@ namespace EVEMon.XmlGenerator
             for (int i = 0; i < prereqSkills.Length; i++)
             {
                 if (prereqSkills[i] != 0)
-                    prereqs.Add(new SerializablePrerequisiteSkill { ID = prereqSkills[i], Level = prereqLevels[i] });
+                    prereqs.Add(new SerializablePrerequisiteSkill {ID = prereqSkills[i], Level = prereqLevels[i]});
             }
 
             // Add prerequisite skills info to item
@@ -1004,8 +1003,8 @@ namespace EVEMon.XmlGenerator
                 item.MetaGroup = ItemMetaGroup.T1;
 
             // Race ID
-            item.Race = (Race) Enum.ToObject(typeof (Race), (srcItem.RaceID == null ? 0 : srcItem.RaceID));
-            
+            item.Race = (Race) Enum.ToObject(typeof (Race), (srcItem.RaceID ?? 0));
+
             // Set race to Faction if item race is Jovian
             if (item.Race == Race.Jove)
                 item.Race = Race.Faction;
@@ -1019,11 +1018,8 @@ namespace EVEMon.XmlGenerator
                 item.Race = Race.Ore;
 
             // Set race to Faction if ship has Pirate Faction property
-            foreach (SerializablePropertyValue prop in props)
-            {
-                if (prop.ID == DBConstants.ShipBonusPirateFactionPropertyID)
-                    item.Race = Race.Faction;
-            }
+            if (props.Any(prop => prop.ID == DBConstants.ShipBonusPirateFactionPropertyID))
+                item.Race = Race.Faction;
 
             // Look for slots
             if (s_typeEffects.Contains(srcItem.ID, DBConstants.LowSlotEffectID))
@@ -1051,14 +1047,12 @@ namespace EVEMon.XmlGenerator
                 return;
 
             // Look for variations which are not in any market group
-            foreach (InvMetaType variation in s_metaTypes.Where(x => x.ParentItemID == srcItem.ID))
+            foreach (InvType srcVariationItem in s_metaTypes.Where(x => x.ParentItemID == srcItem.ID)
+                .Select(variation => s_types[variation.ItemID])
+                .Where(srcVariationItem => srcVariationItem.Published && srcVariationItem.MarketGroupID == null))
             {
-                InvType srcVariationItem = s_types[variation.ItemID];
-                if (srcVariationItem.Published && srcVariationItem.MarketGroupID == null)
-                {
-                    srcVariationItem.RaceID = (int)Race.Faction;
-                    CreateItem(srcVariationItem, groupItems);
-                }
+                srcVariationItem.RaceID = (int) Race.Faction;
+                CreateItem(srcVariationItem, groupItems);
             }
         }
 
@@ -1072,9 +1066,6 @@ namespace EVEMon.XmlGenerator
             switch (groupID)
             {
                 default:
-                case DBConstants.CapsuleGroupID:
-                case DBConstants.ShuttleGroupID:
-                case DBConstants.PrototypeExplorationShipGroupID:
                     return 500;
                 case DBConstants.FrigateGroupID:
                 case DBConstants.RookieShipGroupID:
@@ -1163,82 +1154,76 @@ namespace EVEMon.XmlGenerator
             List<SerializableSkillGroup> listOfSkillGroups = new List<SerializableSkillGroup>();
 
             foreach (InvGroup group in s_groups
-                    .Where(x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID)
-                    .OrderBy(x => x.Name))
+                .Where(x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID)
+                .OrderBy(x => x.Name))
             {
                 SerializableSkillGroup skillGroup = new SerializableSkillGroup
-                                                         {
-                                                             ID = group.ID,
-                                                             Name = group.Name,
-                                                         };
+                                                        {
+                                                            ID = group.ID,
+                                                            Name = group.Name,
+                                                        };
 
                 // Export skills
                 List<SerializableSkill> listOfSkillsInGroup = new List<SerializableSkill>();
 
                 foreach (InvType skill in s_types.Where(x => x.GroupID == group.ID))
                 {
-                    UpdatePercentDone(s_skillGenTotal);
+                    UpdatePercentDone(SkillGenTotal);
 
                     SerializableSkill singleSkill = new SerializableSkill
-                                                          {
-                                                              ID = skill.ID,
-                                                              Name = skill.Name,
-                                                              Description = skill.Description,
-                                                              Public = skill.Published,
-                                                              Cost = (long) skill.BasePrice,
-                                                          };
+                                                        {
+                                                            ID = skill.ID,
+                                                            Name = skill.Name,
+                                                            Description = skill.Description,
+                                                            Public = skill.Published,
+                                                            Cost = (long) skill.BasePrice,
+                                                        };
 
                     // Export skill atributes
-                    Dictionary<int, int> skillAttributes = new Dictionary<int, int>();
+                    Dictionary<int, int> skillAttributes = s_typeAttributes.Where(x => x.ItemID == skill.ID)
+                        .ToDictionary(attribute => attribute.AttributeID, attribute => attribute.GetIntValue());
 
-                    foreach (DgmTypeAttribute attribute in s_typeAttributes.Where(x => x.ItemID == skill.ID))
-                    {
-                        skillAttributes.Add(attribute.AttributeID, attribute.GetIntValue());
-                    }
-
-                    if (skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
-                        skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0)
-                    {
-                        singleSkill.Rank = skillAttributes[DBConstants.SkillTimeConstantPropertyID];
-                    }
-                    else
-                    {
-                        singleSkill.Rank = 1;
-                    }
+                    singleSkill.Rank = skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
+                                       skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0
+                                           ? skillAttributes[DBConstants.SkillTimeConstantPropertyID]
+                                           : 1;
 
                     singleSkill.PrimaryAttribute = skillAttributes.ContainsKey(DBConstants.PrimaryAttributePropertyID)
                                                        ? IntToEveAttribute(skillAttributes[DBConstants.PrimaryAttributePropertyID])
                                                        : EveAttribute.None;
                     singleSkill.SecondaryAttribute = skillAttributes.ContainsKey(DBConstants.SecondaryAttributePropertyID)
-                                                         ? IntToEveAttribute(skillAttributes[DBConstants.SecondaryAttributePropertyID])
+                                                         ? IntToEveAttribute(
+                                                             skillAttributes[DBConstants.SecondaryAttributePropertyID])
                                                          : EveAttribute.None;
                     singleSkill.CanTrainOnTrial = skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) &&
-                                                    skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0 ? true : false;
+                                                  skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0;
 
                     // Export prerequesities
                     List<SerializableSkillPrerequisite> listOfPrerequisites = new List<SerializableSkillPrerequisite>();
 
                     for (int i = 0; i < DBConstants.RequiredSkillPropertyIDs.Length; i++)
                     {
-                        if (skillAttributes.ContainsKey(DBConstants.RequiredSkillPropertyIDs[i]) &&
-                            skillAttributes.ContainsKey(DBConstants.RequiredSkillLevelPropertyIDs[i]))
-                        {
-                            int j = i;
-                            InvType prereqSkill =
-                                s_types.First(x => x.ID == skillAttributes[DBConstants.RequiredSkillPropertyIDs[j]]);
+                        if (!skillAttributes.ContainsKey(DBConstants.RequiredSkillPropertyIDs[i]) ||
+                            !skillAttributes.ContainsKey(DBConstants.RequiredSkillLevelPropertyIDs[i]))
+                            continue;
 
-                            SerializableSkillPrerequisite preReq = new SerializableSkillPrerequisite
-                                                                {
-                                                                    ID = prereqSkill.ID,
-                                                                    Level = skillAttributes[DBConstants.RequiredSkillLevelPropertyIDs[i]],
-                                                                };
+                        InvType prereqSkill =
+                            s_types.First(x => x.ID == skillAttributes[DBConstants.RequiredSkillPropertyIDs[i]]);
 
-                            if (prereqSkill != null)
-                                preReq.Name = prereqSkill.Name;
+                        if (prereqSkill == null)
+                            continue;
 
-                            // Add prerequisites
-                            listOfPrerequisites.Add(preReq);
-                        }
+                        SerializableSkillPrerequisite preReq = new SerializableSkillPrerequisite
+                                                                   {
+                                                                       ID = prereqSkill.ID,
+                                                                       Level =
+                                                                           skillAttributes[
+                                                                               DBConstants.RequiredSkillLevelPropertyIDs[i]],
+                                                                       Name = prereqSkill.Name
+                                                                   };
+
+                        // Add prerequisites
+                        listOfPrerequisites.Add(preReq);
                     }
 
                     // Add prerequesites to skill
@@ -1259,8 +1244,7 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            SkillsDatafile datafile = new SkillsDatafile();
-            datafile.Groups = listOfSkillGroups.ToArray();
+            SkillsDatafile datafile = new SkillsDatafile {Groups = listOfSkillGroups.ToArray()};
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
 
@@ -1330,18 +1314,18 @@ namespace EVEMon.XmlGenerator
                         continue;
 
                     SerializableCertificateClass crtClasses = new SerializableCertificateClass
-                                                                    {
-                                                                    ID = certClass.ID,
-                                                                    Name = certClass.ClassName,
-                                                                    Description = certClass.Description
-                                                                    };
+                                                                  {
+                                                                      ID = certClass.ID,
+                                                                      Name = certClass.ClassName,
+                                                                      Description = certClass.Description
+                                                                  };
 
                     // Export certificates
                     List<SerializableCertificate> listOfCertificates = new List<SerializableCertificate>();
 
                     foreach (CrtCertificates certificate in s_certificates.Where(x => x.ClassID == certClass.ID))
                     {
-                        UpdatePercentDone(s_certGenTotal);
+                        UpdatePercentDone(CertGenTotal);
 
                         SerializableCertificate crtCertificates = new SerializableCertificate
                                                                       {
@@ -1382,32 +1366,19 @@ namespace EVEMon.XmlGenerator
                             listOfPrereq.Add(crtPrerequisites);
                         }
 
-                        // Export recommendations
-                        List<SerializableCertificateRecommendation> listOfRecom = new List<SerializableCertificateRecommendation>();
-
-                        foreach (CrtRecommendations recommendation in s_crtRecommendations
-                            .Where(x => x.CertificateID == certificate.ID))
-                        {
-                            // Finds the ships name
-                            InvType shipName = s_types.First(x => x.ID == recommendation.ShipTypeID);
-
-                            SerializableCertificateRecommendation crtRecommendations = new SerializableCertificateRecommendation
-                                                                                            {
-                                                                                                ID = recommendation.ID,
-                                                                                                Ship = shipName.Name,
-                                                                                                Level = recommendation.Level
-                                                                                            };
-
-                            // Add recommendation
-                            listOfRecom.Add(crtRecommendations);
-                        }
-
-
                         //Add prerequisites to certificate
                         crtCertificates.Prerequisites = listOfPrereq.ToArray();
 
                         // Add recommendations to certificate
-                        crtCertificates.Recommendations = listOfRecom.ToArray();
+                        crtCertificates.Recommendations = (s_crtRecommendations.Where(x => x.CertificateID == certificate.ID)
+                            .Select(recommendation =>
+                                    new {recommendation, shipName = s_types.First(x => x.ID == recommendation.ShipTypeID)})
+                            .Select(certRecom => new SerializableCertificateRecommendation
+                                                     {
+                                                         ID = certRecom.recommendation.ID,
+                                                         Ship = certRecom.shipName.Name,
+                                                         Level = certRecom.recommendation.Level
+                                                     })).ToArray();
 
                         // Add certificate
                         listOfCertificates.Add(crtCertificates);
@@ -1417,14 +1388,14 @@ namespace EVEMon.XmlGenerator
                     }
 
                     // Grouping certificates according to their classes
-                    if (categoryID == category.ID)
-                    {
-                        // Add certificates to classes
-                        crtClasses.Certificates = listOfCertificates.OrderBy(x => x.Grade).ToArray();
+                    if (categoryID != category.ID)
+                        continue;
 
-                        // Add certificate class
-                        listOfCertClasses.Add(crtClasses);
-                    }
+                    // Add certificates to classes
+                    crtClasses.Certificates = listOfCertificates.OrderBy(x => x.Grade).ToArray();
+
+                    // Add certificate class
+                    listOfCertClasses.Add(crtClasses);
                 }
 
                 // Add classes to categories
@@ -1438,8 +1409,7 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            CertificatesDatafile datafile = new CertificatesDatafile();
-            datafile.Categories = listOfCertCategories.ToArray();
+            CertificatesDatafile datafile = new CertificatesDatafile {Categories = listOfCertCategories.ToArray()};
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
 
@@ -1490,18 +1460,18 @@ namespace EVEMon.XmlGenerator
             foreach (InvMarketGroup marketGroup in s_marketGroups.Concat(s_injectedMarketGroups))
             {
                 SerializableBlueprintMarketGroup group = new SerializableBlueprintMarketGroup
-                                                        {
-                                                            ID = marketGroup.ID,
-                                                            Name = marketGroup.Name,
-                                                        };
+                                                             {
+                                                                 ID = marketGroup.ID,
+                                                                 Name = marketGroup.Name,
+                                                             };
 
                 groups[marketGroup.ID] = group;
 
                 // Add the items in this group
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
                 foreach (InvType item in s_types.Where(x => x.MarketGroupID == marketGroup.ID
-                                       && s_groups[x.GroupID].CategoryID == DBConstants.BlueprintCategoryID
-                                       && s_groups[x.GroupID].Published))
+                                                            && s_groups[x.GroupID].CategoryID == DBConstants.BlueprintCategoryID
+                                                            && s_groups[x.GroupID].Published))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -1528,8 +1498,7 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            BlueprintsDatafile datafile = new BlueprintsDatafile();
-            datafile.MarketGroups = blueprintGroups.ToArray();
+            BlueprintsDatafile datafile = new BlueprintsDatafile {MarketGroups = blueprintGroups.ToArray()};
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
 
@@ -1538,71 +1507,67 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         private static void ConfigureNullMarketBlueprint()
         {
-            s_injectedMarketGroups = new List<InvMarketGroup>();
+            s_injectedMarketGroups = new List<InvMarketGroup>
+                                         {
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Various Non-Market",
+                                                     Description = "Various blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintsMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Tech I",
+                                                     Description = "Tech I blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintTechINonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Tech II",
+                                                     Description = "Tech II blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintTechIINonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Storyline",
+                                                     Description = "Storyline blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintStorylineNonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Faction",
+                                                     Description = "Faction blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintFactionNonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Officer",
+                                                     Description = "Officer blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintOfficerNonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Tech III",
+                                                     Description = "Tech III blueprints not in EVE market",
+                                                     ID = DBConstants.BlueprintTechIIINonMarketGroupID,
+                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                                                 }
+                                         };
 
             // Create custom market groups that don't exist in EVE
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Various Non-Market",
-                                               Description = "Various blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintsMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Tech I",
-                                               Description = "Tech I blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintTechINonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Tech II",
-                                               Description = "Tech II blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintTechIINonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Storyline",
-                                               Description = "Storyline blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintStorylineNonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Faction",
-                                               Description = "Faction blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintFactionNonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Officer",
-                                               Description = "Officer blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintOfficerNonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Tech III",
-                                               Description = "Tech III blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintTechIIINonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                           });
 
             // Set some blueprints to market groups manually
             foreach (InvType item in s_types.Where(x => x.MarketGroupID == null))
@@ -1618,7 +1583,7 @@ namespace EVEMon.XmlGenerator
                     case DBConstants.CaldariNavyHookbillBlueprintID:
                     case DBConstants.FederationNavyCometBlueprintID:
                     case DBConstants.RepublicFleetFiretailBlueprintID:
-                    case DBConstants.NightmareBlueprintID: 
+                    case DBConstants.NightmareBlueprintID:
                     case DBConstants.MacharielBlueprintID:
                     case DBConstants.DramielBlueprintID:
                     case DBConstants.CruorBlueprintID:
@@ -1673,7 +1638,7 @@ namespace EVEMon.XmlGenerator
                                                         s_types.Any(z => z.ID == s_blueprintTypes[x.ID].ProductTypeID)
                                                         && s_types[s_blueprintTypes[x.ID].ProductTypeID].Published))
             {
-                UpdatePercentDone(s_blueprintGenTotal);
+                UpdatePercentDone(BlueprintGenTotal);
 
                 foreach (InvMetaType relation in s_metaTypes
                     .Where(x => x.ItemID == s_blueprintTypes[item.ID].ProductTypeID))
@@ -1711,19 +1676,19 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static void CreateBlueprint(InvType srcBlueprint, List<SerializableBlueprint> blueprintsGroup)
         {
-            UpdatePercentDone(s_blueprintGenTotal);
+            UpdatePercentDone(BlueprintGenTotal);
 
             srcBlueprint.Generated = true;
 
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint
-                                                   {
-                                                       ID = srcBlueprint.ID,
-                                                       Name = srcBlueprint.Name,
-                                                   };
-
-            // Icon
-            blueprint.Icon = (srcBlueprint.IconID.HasValue ? s_icons[srcBlueprint.IconID.Value].Icon : String.Empty);
+                                                  {
+                                                      ID = srcBlueprint.ID,
+                                                      Name = srcBlueprint.Name,
+                                                      Icon = (srcBlueprint.IconID.HasValue
+                                                                  ? s_icons[srcBlueprint.IconID.Value].Icon
+                                                                  : String.Empty),
+                                                  };
 
             // Export attributes
             foreach (InvBlueprintTypes attribute in s_blueprintTypes.Where(x => x.ID == srcBlueprint.ID))
@@ -1747,7 +1712,6 @@ namespace EVEMon.XmlGenerator
                 switch (relation.MetaGroupID)
                 {
                     default:
-                    case DBConstants.TechIMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.T1;
                         break;
                     case DBConstants.TechIIMetaGroupID:
@@ -1795,22 +1759,14 @@ namespace EVEMon.XmlGenerator
             ExportRequirements(srcBlueprint, blueprint);
 
             // Look for the tech 2 variations that this blueprint invents
-            List<int> inventionBlueprint = new List<int>();
-            foreach (int relationItemID in s_metaTypes
-                .Where(x => x.ParentItemID == blueprint.ProduceItemID && x.MetaGroupID == DBConstants.TechIIMetaGroupID)
-                .Select(x => x.ItemID))
-            {
-                // Look for a blueprint that produces the related item
-                foreach (int variationItemID in s_blueprintTypes
-                    .Where(x => x.ProductTypeID == relationItemID).Select(x => x.ID))
-                {
-                    // Add the variation blueprint
-                    inventionBlueprint.Add(s_types[variationItemID].ID);
-                }
-            }
 
             // Add invention blueprints to item
-            blueprint.InventionTypeID = inventionBlueprint.ToArray();
+            blueprint.InventionTypeID = (s_metaTypes.Where(x => x.ParentItemID == blueprint.ProduceItemID
+                                                                && x.MetaGroupID == DBConstants.TechIIMetaGroupID)
+                .Select(x => x.ItemID).SelectMany(
+                    relationItemID => s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID)
+                                          .Select(x => x.ID), (relationItemID, variationItemID) => s_types[variationItemID].ID))
+                .ToArray();
 
             // Add this item
             blueprintsGroup.Add(blueprint);
@@ -1842,42 +1798,40 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Adds the raw materials needed to produce an item.
         /// </summary>
-        /// <param name="blueprint"></param>
-        /// <param name="requiredMaterials"></param>
+        /// <param name="produceItemID">The produce item ID.</param>
+        /// <param name="requiredMaterials">The required materials.</param>
         private static void AddRequiredRawMaterials(int produceItemID,
                                                     List<SerializableRequiredMaterial> requiredMaterials)
         {
             // Find the raw materials needed for the produced item and add them to the list
-            foreach (InvTypeMaterials reprocItem in s_typeMaterials.Where(x => x.TypeID == produceItemID))
-            {
-                requiredMaterials.Add(new SerializableRequiredMaterial
-                                          {
-                                              ID = reprocItem.MaterialTypeID,
-                                              Quantity = reprocItem.Quantity,
-                                              DamagePerJob = 1,
-                                              Activity = (int) BlueprintActivity.Manufacturing,
-                                              WasteAffected = 1
-                                          });
-            }
+            requiredMaterials.AddRange(s_typeMaterials.Where(x => x.TypeID == produceItemID)
+                                           .Select(reprocItem => new SerializableRequiredMaterial
+                                                                     {
+                                                                         ID = reprocItem.MaterialTypeID,
+                                                                         Quantity = reprocItem.Quantity,
+                                                                         DamagePerJob = 1,
+                                                                         Activity = (int) BlueprintActivity.Manufacturing,
+                                                                         WasteAffected = 1
+                                                                     }));
         }
 
         /// <summary>
         /// Adds the extra materials needed to produce an item.
         /// </summary>
-        /// <param name="srcBlueprint"></param>
-        /// <param name="prerequisiteSkills"></param>
-        /// <param name="requiredMaterials"></param>
+        /// <param name="blueprintID">The blueprint ID.</param>
+        /// <param name="prerequisiteSkills">The prerequisite skills.</param>
+        /// <param name="requiredMaterials">The required materials.</param>
         private static void AddRequiredExtraMaterials(int blueprintID,
                                                       List<SerializablePrereqSkill> prerequisiteSkills,
-                                                      List<SerializableRequiredMaterial> requiredMaterials)
+                                                      ICollection<SerializableRequiredMaterial> requiredMaterials)
         {
             // Find the additional extra materials and add them to the list
             foreach (RamTypeRequirements requirement in s_typeRequirements.Where(x => x.TypeID == blueprintID))
             {
                 // Is it a skill ? Add it to the prerequisities skills list
                 if (s_types.Any(x => x.ID == requirement.RequiredTypeID
-                                    && s_groups.Any(y => y.ID == x.GroupID
-                                    && y.CategoryID == DBConstants.SkillCategoryID)))
+                                     && s_groups.Any(y => y.ID == x.GroupID
+                                                          && y.CategoryID == DBConstants.SkillCategoryID)))
                 {
                     prerequisiteSkills.Add(new SerializablePrereqSkill
                                                {
@@ -1902,24 +1856,24 @@ namespace EVEMon.XmlGenerator
                     if (requirement.Recyclable)
                     {
                         foreach (InvTypeMaterials reprocItem in s_typeMaterials
-                                .Where(x => x.TypeID == requirement.RequiredTypeID))
+                            .Where(x => x.TypeID == requirement.RequiredTypeID))
                         {
-                            if (requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
-                            {
-                                SerializableRequiredMaterial material = requiredMaterials
-                                    .First(x => x.ID == reprocItem.MaterialTypeID);
+                            if (!requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
+                                continue;
 
-                                material.Quantity -= requirement.Quantity * reprocItem.Quantity;
+                            SerializableRequiredMaterial material = requiredMaterials
+                                .First(x => x.ID == reprocItem.MaterialTypeID);
 
-                                if (material.Quantity < 1)
-                                    requiredMaterials.Remove(material);
-                            }
+                            material.Quantity -= requirement.Quantity * reprocItem.Quantity;
+
+                            if (material.Quantity < 1)
+                                requiredMaterials.Remove(material);
                         }
                     }
 
                     // If activity is invention, add the prerequisite skill
                     // of the required material as it's not included in this table
-                    if (requirement.ActivityID == (int)BlueprintActivity.Invention)
+                    if (requirement.ActivityID == (int) BlueprintActivity.Invention)
                     {
                         // Add the prerequisite skills for a material used in invention activity.
                         MaterialPrereqSkill(requirement, prerequisiteSkills);
@@ -1938,11 +1892,9 @@ namespace EVEMon.XmlGenerator
             int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
 
             foreach (DgmTypeAttribute attribute in s_typeAttributes
-                    .Where(x => x.ItemID == requirement.RequiredTypeID))
+                .Where(x => x.ItemID == requirement.RequiredTypeID))
             {
-                int attributeIntValue = (attribute.ValueInt.HasValue
-                                                ? attribute.ValueInt.Value
-                                                : (int)attribute.ValueFloat.Value);
+                int attributeIntValue = attribute.GetIntValue();
 
                 // Is it a prereq skill ?
                 int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, attribute.AttributeID);
@@ -1954,11 +1906,10 @@ namespace EVEMon.XmlGenerator
 
                 // Is it a prereq level ?
                 prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, attribute.AttributeID);
-                if (prereqIndex >= 0)
-                {
-                    prereqLevels[prereqIndex] = attributeIntValue;
+                if (prereqIndex < 0)
                     continue;
-                }
+
+                prereqLevels[prereqIndex] = attributeIntValue;
             }
 
             // Add the prerequisite skills
@@ -1992,17 +1943,16 @@ namespace EVEMon.XmlGenerator
             s_text = String.Empty;
             s_startTime = DateTime.Now;
 
-            List<SerializableSolarSystem> allSystems = new List<SerializableSolarSystem>();
             List<SerializableRegion> regions = new List<SerializableRegion>();
 
             // Regions
             foreach (MapRegion srcRegion in s_regions)
             {
                 SerializableRegion region = new SerializableRegion
-                                                 {
-                                                     ID = srcRegion.ID,
-                                                     Name = srcRegion.Name
-                                                 };
+                                                {
+                                                    ID = srcRegion.ID,
+                                                    Name = srcRegion.Name
+                                                };
                 regions.Add(region);
 
                 // Constellations
@@ -2010,14 +1960,14 @@ namespace EVEMon.XmlGenerator
                 foreach (MapConstellation srcConstellation in s_constellations.Where(x => x.RegionID == srcRegion.ID))
                 {
                     SerializableConstellation constellation = new SerializableConstellation
-                                                                    {
-                                                                        ID = srcConstellation.ID,
-                                                                        Name = srcConstellation.Name
-                                                                    };
+                                                                  {
+                                                                      ID = srcConstellation.ID,
+                                                                      Name = srcConstellation.Name
+                                                                  };
                     constellations.Add(constellation);
 
                     // Systems
-                    const double baseDistance = 1.0E14;
+                    const double BaseDistance = 1.0E14;
                     List<SerializableSolarSystem> systems = new List<SerializableSolarSystem>();
                     foreach (
                         MapSolarSystem srcSystem in s_solarSystems.Where(x => x.ConstellationID == srcConstellation.ID))
@@ -2026,9 +1976,9 @@ namespace EVEMon.XmlGenerator
                                                              {
                                                                  ID = srcSystem.ID,
                                                                  Name = srcSystem.Name,
-                                                                 X = (int) (srcSystem.X/baseDistance),
-                                                                 Y = (int) (srcSystem.Y/baseDistance),
-                                                                 Z = (int) (srcSystem.Z/baseDistance),
+                                                                 X = (int) (srcSystem.X / BaseDistance),
+                                                                 Y = (int) (srcSystem.Y / BaseDistance),
+                                                                 Z = (int) (srcSystem.Z / BaseDistance),
                                                                  SecurityLevel = srcSystem.SecurityLevel
                                                              };
                         systems.Add(system);
@@ -2037,40 +1987,57 @@ namespace EVEMon.XmlGenerator
                         List<SerializableStation> stations = new List<SerializableStation>();
                         foreach (StaStation srcStation in s_stations.Where(x => x.SolarSystemID == srcSystem.ID))
                         {
-                            UpdatePercentDone(s_geoGen);
+                            UpdatePercentDone(GeoGen);
 
-                            // Agents
-                            List<SerializableAgent> stationAgents = new List<SerializableAgent>();
-                            foreach (AgtAgents srcAgent in s_agents.Where(x => x.LocationID == srcStation.ID))
-                            {
-                                AgtResearchAgents researchAgent = s_researchAgents.FirstOrDefault(x => x.ID == srcAgent.ID);
-                                AgtConfig agentConfig = s_agentConfig.FirstOrDefault(x => x.ID == srcAgent.ID);
-                                SerializableAgent agent = new SerializableAgent
-                                                                {
-                                                                    ID = srcAgent.ID,
-                                                                    Level = srcAgent.Level,
-                                                                    Quality = srcAgent.Quality,
-                                                                    Name = s_names.FirstOrDefault(x => x.ID == srcAgent.ID).Name,
-                                                                    DivisionName = s_npcDivisions.FirstOrDefault(x => x.ID == srcAgent.DivisionID).DivisionName,
-                                                                    AgentType = s_agentTypes.FirstOrDefault(x => x.ID == srcAgent.AgentTypeID).AgentType,
-                                                                    ResearchSkillID = (researchAgent != null ? researchAgent.ResearchSkillID : 0),
-                                                                    LocatorService = (agentConfig != null ?
-                                                                                        agentConfig.Key.Contains("agent.LocateCharacterService.enabled") :
-                                                                                        false)
-                                                                };
-                                stationAgents.Add(agent);
-                            }
+                            SerializableStation station =
+                                new SerializableStation
+                                    {
+                                        ID = srcStation.ID,
+                                        Name = srcStation.Name,
+                                        CorporationID = srcStation.CorporationID,
+                                        CorporationName =
+                                            s_names.First(x => x.ID == srcStation.CorporationID).Name,
+                                        ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
+                                        ReprocessingStationsTake = srcStation.ReprocessingStationsTake,
+                                        Agents = (s_agents.Where(x => x.LocationID == srcStation.ID)
+                                            .Select(srcAgent => new
+                                                                    {
+                                                                        srcAgent,
+                                                                        researchAgent =
+                                                                    s_researchAgents.FirstOrDefault(x => x.ID == srcAgent.ID)
+                                                                    })
+                                            .Select(config => new
+                                                                  {
+                                                                      config,
+                                                                      agentConfig =
+                                                                  s_agentConfig.FirstOrDefault(x => x.ID == config.srcAgent.ID)
+                                                                  })
+                                            .Select(agent => new SerializableAgent
+                                                                 {
+                                                                     ID = agent.config.srcAgent.ID,
+                                                                     Level = agent.config.srcAgent.Level,
+                                                                     Quality = agent.config.srcAgent.Quality,
+                                                                     Name =
+                                                                         s_names.First(x => x.ID == agent.config.srcAgent.ID).Name,
+                                                                     DivisionName =
+                                                                         s_npcDivisions.First(
+                                                                             x => x.ID == agent.config.srcAgent.DivisionID).
+                                                                         DivisionName,
+                                                                     AgentType =
+                                                                         s_agentTypes.First(
+                                                                             x => x.ID == agent.config.srcAgent.AgentTypeID).
+                                                                         AgentType,
+                                                                     ResearchSkillID =
+                                                                         (agent.config.researchAgent != null
+                                                                              ? agent.config.researchAgent.ResearchSkillID
+                                                                              : 0),
+                                                                     LocatorService =
+                                                                         (agent.agentConfig != null &&
+                                                                          agent.agentConfig.Key.Contains(
+                                                                              "agent.LocateCharacterService.enabled"))
+                                                                 })).ToArray(),
+                                    };
 
-                            SerializableStation station = new SerializableStation
-                                                              {
-                                                                  ID = srcStation.ID,
-                                                                  Name = srcStation.Name,
-                                                                  CorporationID = srcStation.CorporationID,
-                                                                  CorporationName = s_names.FirstOrDefault(x => x.ID == srcStation.CorporationID).Name,
-                                                                  ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
-                                                                  ReprocessingStationsTake = srcStation.ReprocessingStationsTake,
-                                                                  Agents = stationAgents.ToArray()
-                                                              };
                             stations.Add(station);
                         }
                         system.Stations = stations.OrderBy(x => x.Name).ToArray();
@@ -2084,7 +2051,7 @@ namespace EVEMon.XmlGenerator
             List<SerializableJump> jumps = new List<SerializableJump>();
             foreach (MapSolarSystemJump srcJump in s_jumps)
             {
-                UpdatePercentDone(s_geoGenTotal);
+                UpdatePercentDone(GeoGenTotal);
 
                 // In CCP tables, every jump is included twice, we only need one.
                 if (srcJump.A < srcJump.B)
@@ -2095,9 +2062,7 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            GeoDatafile datafile = new GeoDatafile();
-            datafile.Regions = regions.OrderBy(x => x.Name).ToArray();
-            datafile.Jumps = jumps.ToArray();
+            GeoDatafile datafile = new GeoDatafile {Regions = regions.OrderBy(x => x.Name).ToArray(), Jumps = jumps.ToArray()};
             Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
         }
 
@@ -2123,34 +2088,30 @@ namespace EVEMon.XmlGenerator
 
             foreach (int typeID in s_types.Where(x => x.Generated).Select(x => x.ID))
             {
-                UpdatePercentDone(s_reprocessGenTotal);
+                UpdatePercentDone(ReprocessGenTotal);
 
-                List<SerializableMaterialQuantity> materials = new List<SerializableMaterialQuantity>();
-                foreach (InvTypeMaterials srcMaterial in s_typeMaterials.Where(x => x.TypeID == typeID))
-                {
-                    materials.Add(new SerializableMaterialQuantity
-                                        { 
-                                            ID = srcMaterial.MaterialTypeID,
-                                            Quantity = srcMaterial.Quantity
-                                        });
-                }
+                List<SerializableMaterialQuantity> materials = s_typeMaterials.Where(x => x.TypeID == typeID)
+                    .Select(srcMaterial => new SerializableMaterialQuantity
+                                               {
+                                                   ID = srcMaterial.MaterialTypeID,
+                                                   Quantity = srcMaterial.Quantity
+                                               }).ToList();
 
-                if (materials.Count != 0)
-                {
-                    types.Add(new SerializableItemMaterials
-                                  {
-                                      ID = typeID,
-                                      Materials = materials.OrderBy(x => x.ID).ToArray()
-                                  });
-                }
+                if (materials.Count == 0)
+                    continue;
+
+                types.Add(new SerializableItemMaterials
+                              {
+                                  ID = typeID,
+                                  Materials = materials.OrderBy(x => x.ID).ToArray()
+                              });
             }
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            ReprocessingDatafile datafile = new ReprocessingDatafile();
-            datafile.Items = types.ToArray();
+            ReprocessingDatafile datafile = new ReprocessingDatafile {Items = types.ToArray()};
             Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }
 
@@ -2176,18 +2137,18 @@ namespace EVEMon.XmlGenerator
         /// Updates the percantage done of the datafile generating procedure.
         /// </summary>
         /// <param name="total"></param>
-        private static void UpdatePercentDone(double total)
+        private static void UpdatePercentDone(int total)
         {
             s_counter++;
-            int percent = (int)((s_counter / total) * 100);
+            int percent = (s_counter * 100 / total);
 
-            if (s_counter == 1 || s_percentOld < percent)
-            {
-                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                s_text = String.Format("{0}%", percent);
-                Console.Write(s_text);
-                s_percentOld = percent;
-            }
+            if (s_counter != 1 && s_percentOld >= percent)
+                return;
+
+            Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+            s_text = String.Format("{0}%", percent);
+            Console.Write(s_text);
+            s_percentOld = percent;
         }
 
         /// <summary>
@@ -2197,7 +2158,7 @@ namespace EVEMon.XmlGenerator
         {
             Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
             s_tablesCount++;
-            s_text = String.Format("{0}%", (int) ((s_tablesCount/s_totalTablesCount)*100));
+            s_text = String.Format("{0}%", (s_tablesCount * 100 / TotalTablesCount));
             Console.Write(s_text);
         }
 

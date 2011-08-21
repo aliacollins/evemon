@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CertificateTreeDisplayControl));
-            this.treeView = new System.Windows.Forms.TreeView();
+            this.treeView = new EVEMon.SkillPlanner.OverridenTreeView();
             this.cmListSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -175,7 +175,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView;
+        private OverridenTreeView treeView;
         private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.ContextMenuStrip cmListSkills;
         private System.Windows.Forms.ToolStripSeparator tsSeparator;

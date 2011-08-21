@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
@@ -12,10 +11,10 @@ namespace EVEMon.XmlGenerator.StaticData
         public int AttributeID;
 
         [XmlElement("valueInt")]
-        public Nullable<int> ValueInt;
+        public int? ValueInt;
 
         [XmlElement("valueFloat")]
-        public Nullable<double> ValueFloat;
+        public double? ValueFloat;
 
         /// <summary>
         /// Returns the value as an integer. 
@@ -24,13 +23,12 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <returns></returns>
         public int GetIntValue()
         {
-            if (ValueInt.HasValue)
-                return ValueInt.Value;
-
-            return (int)ValueFloat.Value;
+            return ValueInt.HasValue ? ValueInt.Value : (int) (ValueFloat.HasValue ? ValueFloat.Value : 0);
         }
 
+
         #region IRelation Members
+
         int IRelation.Left
         {
             get { return ItemID; }
@@ -40,6 +38,7 @@ namespace EVEMon.XmlGenerator.StaticData
         {
             get { return AttributeID; }
         }
+
         #endregion
     }
 }

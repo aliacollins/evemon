@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Notifications
 {
@@ -29,13 +30,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         public IEnumerable<QueuedSkill> Skills
         {
-            get
-            {
-                foreach (QueuedSkill skill in m_skills)
-                {
-                    yield return skill;
-                }
-            }
+            get { return m_skills; }
         }
 
         /// <summary>
@@ -43,12 +38,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         public override bool HasDetails
         {
-            get
-            {
-                if (m_skills.Count == 1)
-                    return false;
-                return true;
-            }
+            get { return m_skills.Count != 1; }
         }
 
         /// <summary>
@@ -57,11 +47,10 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(Notification other)
         {
-            List<QueuedSkill> skills = ((SkillCompletionNotification)other).m_skills;
-            foreach (QueuedSkill skill in skills)
+            List<QueuedSkill> skills = ((SkillCompletionNotification) other).m_skills;
+            foreach (QueuedSkill skill in skills.Where(skill => !m_skills.Contains(skill)))
             {
-                if (!m_skills.Contains(skill))
-                    m_skills.Add(skill);
+                m_skills.Add(skill);
             }
             UpdateDescription();
         }
@@ -72,14 +61,10 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            if (m_skills.Count == 1)
-            {
-                m_description = String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", m_skills[0].SkillName, Skill.GetRomanForInt(m_skills[0].Level));
-            }
-            else
-            {
-                m_description = String.Format(CultureConstants.DefaultCulture, "{0} skills completed.", m_skills.Count);
-            }
+            m_description = m_skills.Count == 1
+                                ? String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", m_skills[0].SkillName,
+                                                Skill.GetRomanFromInt(m_skills[0].Level))
+                                : String.Format(CultureConstants.DefaultCulture, "{0} skills completed.", m_skills.Count);
         }
     }
 }

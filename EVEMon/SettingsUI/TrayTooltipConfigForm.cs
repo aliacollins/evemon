@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
-using System.Text.RegularExpressions;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
@@ -17,28 +12,36 @@ namespace EVEMon.SettingsUI
     /// </summary>
     public partial class TrayTooltipConfigForm : EVEMonForm
     {
-        TrayTooltipSettings m_settings;
+        private readonly TrayTooltipSettings m_settings;
 
         // Array containing the example tooltip formats that are populated into the dropdown box.
-        private string[] tooltipCodes = {
-            "%n - %s %tr - %r",
-            "%n - %s [%cr->%tr]: %r",
-            "%n : %s - %d : %b ISK",
-            "%s %ci to %ti, %r left"
-        };
+        private readonly string[] m_tooltipCodes = {
+                                                       "%n - %s %tr - %r",
+                                                       "%n - %s [%cr->%tr]: %r",
+                                                       "%n : %s - %d : %b ISK",
+                                                       "%s %ci to %ti, %r left"
+                                                   };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrayTooltipConfigForm"/> class.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
         public TrayTooltipConfigForm(TrayTooltipSettings settings)
         {
             InitializeComponent();
             m_settings = settings;
         }
 
+        /// <summary>
+        /// On load, restores the window rectangle from the settings.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            for (int i = 0; i < tooltipCodes.Length; i++)
+            foreach (string tooltip in m_tooltipCodes)
             {
-                cbTooltipDisplay.Items.Add(FormatExampleTooltipText(tooltipCodes[i]));
+                cbTooltipDisplay.Items.Add(FormatExampleTooltipText(tooltip));
             }
             cbTooltipDisplay.Items.Add(" -- Custom -- ");
 
@@ -47,37 +50,52 @@ namespace EVEMon.SettingsUI
             cbTooltipOrder.Checked = m_settings.DisplayOrder;
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnOK control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOK_Click(object sender, EventArgs e)
         {
             m_settings.Format = tbTooltipString.Text;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnCancel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the TextChanged event of the tbTooltipString control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tbTooltipString_TextChanged(object sender, EventArgs e)
         {
             tbTooltipTestDisplay.Text = FormatExampleTooltipText(tbTooltipString.Text);
 
             if (cbTooltipDisplay.SelectedIndex == -1)
             {
-                int index = tooltipCodes.Length;
+                int index = m_tooltipCodes.Length;
 
-                for (int i = 0; i < tooltipCodes.Length; i++)
+                for (int i = 0; i < m_tooltipCodes.Length; i++)
                 {
-                    if (tooltipCodes[i].Equals(tbTooltipString.Text))
+                    if (m_tooltipCodes[i].Equals(tbTooltipString.Text))
                     {
                         index = i;
                     }
                 }
 
                 cbTooltipDisplay.SelectedIndex = index;
-                DisplayCustomControls(index == tooltipCodes.Length);
+                DisplayCustomControls(index == m_tooltipCodes.Length);
             }
         }
 
@@ -85,71 +103,79 @@ namespace EVEMon.SettingsUI
         // same as MainWindow.FormatTooltipText(...), with the exception of the exampe values.
         private string FormatExampleTooltipText(string fmt)
         {
-            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
-                {
-                    string value = String.Empty;
-                    char capture = m.Groups[1].Value[0];
+            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])",
+                                 delegate(Match m)
+                                     {
+                                         string value = String.Empty;
+                                         char capture = m.Groups[1].Value[0];
 
-                    switch (capture)
-                    {
-                        case 'n':
-                            value = "John Doe";
-                            break;
-                        case 'b':
-                            value = "183,415,254.05";
-                            break;
-                        case 's':
-                            value = "Gunnery";
-                            break;
-                        case 'd':
-                            value = "9/15/2006 6:36 PM";
-                            break;
-                        case 'r':
-                            value = "2h, 53m, 28s";
-                            break;
-                        default:
-                            int level = -1;
-                            if (capture == 'c')
-                            {
-                                level = 3;
-                            }
-                            else if (capture == 't')
-                            {
-                                level = 4;
-                            }
+                                         switch (capture)
+                                         {
+                                             case 'n':
+                                                 value = "John Doe";
+                                                 break;
+                                             case 'b':
+                                                 value = "183,415,254.05";
+                                                 break;
+                                             case 's':
+                                                 value = "Gunnery";
+                                                 break;
+                                             case 'd':
+                                                 value = "9/15/2006 6:36 PM";
+                                                 break;
+                                             case 'r':
+                                                 value = "2h, 53m, 28s";
+                                                 break;
+                                             default:
+                                                 int level = -1;
+                                                 switch (capture)
+                                                 {
+                                                     case 'c':
+                                                         level = 3;
+                                                         break;
+                                                     case 't':
+                                                         level = 4;
+                                                         break;
+                                                 }
 
-                            if (m.Groups[1].Value.Length > 1 && level >= 0)
-                            {
-                                capture = m.Groups[1].Value[1];
+                                                 if (m.Groups[1].Value.Length > 1 && level >= 0)
+                                                 {
+                                                     capture = m.Groups[1].Value[1];
 
-                                if (capture == 'i')
-                                {
-                                    value = level.ToString();
-                                }
-                                else if (capture == 'r')
-                                {
-                                    value = Skill.GetRomanForInt(level);
-                                }
-                            }
-                            break;
-                    }
+                                                     switch (capture)
+                                                     {
+                                                         case 'i':
+                                                             value = level.ToString();
+                                                             break;
+                                                         case 'r':
+                                                             value = Skill.GetRomanFromInt(level);
+                                                             break;
+                                                     }
+                                                 }
+                                                 break;
+                                         }
 
-                    return value;
-                }), RegexOptions.Compiled);
+                                         return value;
+                                     }, RegexOptions.Compiled);
         }
 
+        /// <summary>
+        /// Handles the SelectionChangeCommitted event of the cbTooltipDisplay control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cbTooltipDisplay_SelectionChangeCommitted(object sender, EventArgs e)
         {
             int index = cbTooltipDisplay.SelectedIndex;
 
-            if (index == tooltipCodes.Length)
+            if (index == m_tooltipCodes.Length)
             {
                 tbTooltipString.Text = m_settings.Format;
                 DisplayCustomControls(true);
             }
             else
             {
-                tbTooltipString.Text = tooltipCodes[index];
+                tbTooltipString.Text = m_tooltipCodes[index];
                 DisplayCustomControls(false);
             }
         }
@@ -160,9 +186,9 @@ namespace EVEMon.SettingsUI
         /// <param name="custom">Show tbTooltipTestDisplay?</param>
         private void DisplayCustomControls(bool custom)
         {
-            this.SuspendLayout();
+            SuspendLayout();
             tbTooltipString.ReadOnly = !custom;
-            this.ResumeLayout();
+            ResumeLayout();
         }
 
         /// <summary>
@@ -170,7 +196,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void cbTooltipOrder_CheckedChanged(object sender, EventArgs e)
         {
-                m_settings.DisplayOrder = cbTooltipOrder.Checked;
+            m_settings.DisplayOrder = cbTooltipOrder.Checked;
         }
 
     }

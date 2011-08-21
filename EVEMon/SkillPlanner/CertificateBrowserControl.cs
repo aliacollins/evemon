@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Controls;
 
@@ -15,7 +12,7 @@ namespace EVEMon.SkillPlanner
 {
     public partial class CertificateBrowserControl : UserControl
     {
-        private Plan m_plan = null;
+        private Plan m_plan;
         private const int HPad = 40;
 
         /// <summary>
@@ -37,6 +34,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
 
             certSelectCtl.SelectionChanged += certSelectCtl_SelectionChanged;
@@ -51,10 +50,8 @@ namespace EVEMon.SkillPlanner
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
-            // Check SafeForWork setting
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
-
-            base.OnLoad(e);
+            // Update the controls visibility
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -123,8 +120,8 @@ namespace EVEMon.SkillPlanner
         {
             set
             {
-                if (SelectedCertificateClass != value.Class)
-                    SelectedCertificateClass = value.Class;
+                if (SelectedCertificateClass == value.Class)
+                    return;
 
                 certDisplayCtl.ExpandCert(value);
             }
@@ -166,7 +163,7 @@ namespace EVEMon.SkillPlanner
 
             // Initialize the labels' text for every existing grade
             List<Control> newItems = new List<Control>();
-            Label[] labels = new Label[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
+            Label[] labels = new[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
             int lbIndex = 0;
             PersistentSplitContainer rSplCont = rightSplitContainer;
             foreach (Certificate cert in certClass)
@@ -174,7 +171,8 @@ namespace EVEMon.SkillPlanner
                 Label label = labels[lbIndex];
                 TimeSpan time = cert.GetTrainingTime();
                 label.Text = String.Format(CultureConstants.DefaultCulture, "{0} : {1}",
-                    cert.Grade, time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
+                                           cert.Grade,
+                                           time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
                 label.Visible = true;
                 lbIndex++;
 
@@ -184,33 +182,37 @@ namespace EVEMon.SkillPlanner
                     ships.Add(s.Name, s);
                 }
 
-                if (ships.Count != 0)
+                if (ships.Count == 0)
+                    continue;
+
+                Label tsl = new Label
+                                {
+                                    AutoSize = true,
+                                    Dock = DockStyle.Top,
+                                    Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade)
+                                };
+
+                tsl.Font = new Font(tsl.Font, FontStyle.Bold);
+                tsl.Padding = new Padding(5);
+                newItems.Add(tsl);
+
+                Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
+                int panelMinSize = rSplCont.Panel2MinSize;
+                rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
+                                              ? panelMinSize
+                                              : tslTextSize.Width + HPad);
+                rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
+
+                foreach (Item ship in ships.Values)
                 {
-                    Label tsl = new Label();
-                    tsl.AutoSize = true;
-                    tsl.Dock = DockStyle.Top;
-                    tsl.Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade.ToString());
-                    tsl.Font = new Font(tsl.Font, FontStyle.Bold);
-                    tsl.Padding = new Padding(5);
-                    newItems.Add(tsl);
-
-                    Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
-                    int panelMinSize = rSplCont.Panel2MinSize;
-                    rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad ?
-                                                                panelMinSize : tslTextSize.Width + HPad);
-                    rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
-
-                    foreach (Item s in ships.Values)
-                    {
-                        LinkLabel ll = new LinkLabel();
-                        ll.MouseClick += new MouseEventHandler(recommendations_MenuItem);
-                        ll.LinkBehavior = LinkBehavior.HoverUnderline;
-                        ll.Padding = new Padding(16, 0, 0, 0);
-                        ll.Dock = DockStyle.Top;
-                        ll.Text = s.Name;
-                        ll.Tag = s;
-                        newItems.Add(ll);
-                    }
+                    LinkLabel ll = new LinkLabel();
+                    ll.MouseClick += recommendations_MenuItem;
+                    ll.LinkBehavior = LinkBehavior.HoverUnderline;
+                    ll.Padding = new Padding(16, 0, 0, 0);
+                    ll.Dock = DockStyle.Top;
+                    ll.Text = ship.Name;
+                    ll.Tag = ship;
+                    newItems.Add(ll);
                 }
             }
 
@@ -244,11 +246,13 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                Label tsl = new Label();
-                tsl.Dock = DockStyle.Fill;
-                tsl.Text = "No Recommendations";
-                tsl.Enabled = false;
-                tsl.TextAlign = ContentAlignment.MiddleCenter;
+                Label tsl = new Label
+                                {
+                                    Dock = DockStyle.Fill,
+                                    Text = "No Recommendations",
+                                    Enabled = false,
+                                    TextAlign = ContentAlignment.MiddleCenter
+                                };
                 rSplCont.Panel2.Controls.Add(tsl);
 
                 Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
@@ -265,46 +269,43 @@ namespace EVEMon.SkillPlanner
             Certificate lastEligibleCert = null;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
-            if (certClass != null)
+            if (certClass == null)
+                return;
+
+            // First we search the highest eligible certificate after this plan
+            foreach (Certificate cert in certClass.TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)))
             {
-                // First we search the highest eligible certificate after this plan
-                foreach (Certificate cert in certClass)
-                {
-                    if (!m_plan.WillGrantEligibilityFor(cert))
-                        break;
+                lastEligibleCert = cert;
+            }
 
-                    lastEligibleCert = cert;
+            if (lastEligibleCert == null)
+            {
+                tslbEligible.Text = "(none)";
+            }
+            else
+            {
+                tslbEligible.Text = lastEligibleCert.Grade.ToString();
+
+                Certificate highestClaimedCertificate = certClass.HighestClaimedGrade;
+                if (highestClaimedCertificate == null)
+                {
+                    tslbEligible.Text += " (improved from \"none\")";
                 }
-
-                if (lastEligibleCert == null)
+                else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                 {
-                    tslbEligible.Text = "(none)";
+                    tslbEligible.Text += String.Format(" (improved from \"{0}\")",
+                                                       highestClaimedCertificate.Grade.ToString().ToLower(CultureConstants.DefaultCulture));
                 }
                 else
                 {
-                    tslbEligible.Text = lastEligibleCert.Grade.ToString();
-
-                    Certificate highestClaimedCertificate = certClass.HighestClaimedGrade;
-                    if (highestClaimedCertificate == null)
-                    {
-                        tslbEligible.Text += " (improved from \"none\")";
-                    }
-                    else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
-                    {
-                        tslbEligible.Text += String.Format(" (improved from \"{0}\")",
-                            highestClaimedCertificate.Grade.ToString().ToLower(CultureConstants.DefaultCulture));
-                    }
-                    else
-                    {
-                        tslbEligible.Text += " (no change)";
-                    }
+                    tslbEligible.Text += " (no change)";
                 }
-
-                UpdatePlanningMenuStatus(tsPlanToBasic, certClass, CertificateGrade.Basic, lastEligibleCert);
-                UpdatePlanningMenuStatus(tsPlanToStandard, certClass, CertificateGrade.Standard, lastEligibleCert);
-                UpdatePlanningMenuStatus(tsPlanToImproved, certClass, CertificateGrade.Improved, lastEligibleCert);
-                UpdatePlanningMenuStatus(tsPlanToElite, certClass, CertificateGrade.Elite, lastEligibleCert);
             }
+
+            UpdatePlanningMenuStatus(tsPlanToBasic, certClass, CertificateGrade.Basic, lastEligibleCert);
+            UpdatePlanningMenuStatus(tsPlanToStandard, certClass, CertificateGrade.Standard, lastEligibleCert);
+            UpdatePlanningMenuStatus(tsPlanToImproved, certClass, CertificateGrade.Improved, lastEligibleCert);
+            UpdatePlanningMenuStatus(tsPlanToElite, certClass, CertificateGrade.Elite, lastEligibleCert);
         }
 
         /// <summary>
@@ -325,7 +326,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 menu.Visible = true;
-                menu.Enabled = (lastEligibleCert == null ? true : ((int)cert.Grade > (int)lastEligibleCert.Grade));
+                menu.Enabled = (lastEligibleCert == null || ((int)cert.Grade > (int)lastEligibleCert.Grade));
             }
 
         }
@@ -340,7 +341,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void certSelectCtl_SelectionChanged(object sender, EventArgs e)
+        private void certSelectCtl_SelectionChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
@@ -348,7 +349,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Handler for the ship-links generated for the recommendations.
         /// </summary>
-        void recommendations_MenuItem(object sender, EventArgs e)
+        private void recommendations_MenuItem(object sender, EventArgs e)
         {
             Control tsi = sender as Control;
             if (tsi == null)
@@ -365,7 +366,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
+        private void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
             Certificate cert = certDisplayCtl.SelectedCertificateLevel;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
@@ -409,17 +410,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            // Read the SafeForWork settings
-            if (Settings.UI.SafeForWork)
-            {
-                pictureBox1.Visible = false;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            }
-            else
-            {
-                pictureBox1.Visible = true;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            }
+            UpdateControlVisibility();
         }
 
         #endregion
@@ -472,5 +463,27 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
+
+        
+        #region Heleper Methods
+		
+        /// <summary>
+        /// Updates the control visibility.
+        /// </summary>
+        private void UpdateControlVisibility()
+        {
+            if (Settings.UI.SafeForWork)
+            {
+                pictureBox1.Visible = false;
+                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            }
+            else
+            {
+                pictureBox1.Visible = true;
+                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            }
+        }
+ 
+	#endregion  
     }
 }

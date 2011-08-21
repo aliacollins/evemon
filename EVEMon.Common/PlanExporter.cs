@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 using EVEMon.Common.Serialization.Exportation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
@@ -11,12 +12,11 @@ namespace EVEMon.Common
 {
     public enum PlanFormat
     {
-        None = 0,
         Emp = 1,
         Xml = 2,
         Text = 3
     }
-    
+
     public static class PlanExporter
     {
         public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
@@ -26,28 +26,20 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="planToExport"></param>
         /// <param name="settings"></param>
-        /// <returns></returns>
-        public static string ExportAsText(Plan planToExport, PlanExportSettings settings)
-        {
-            return ExportAsText(planToExport, settings, null);
-        }
-
-        /// <summary>
-        /// Exports the plan under a text format.
-        /// </summary>
-        /// <param name="planToExport"></param>
-        /// <param name="settings"></param>
         /// <param name="exportActions"></param>
+        /// <exception cref="NotImplementedException"></exception>
         /// <returns></returns>
-        public static string ExportAsText(Plan planToExport, PlanExportSettings settings, ExportPlanEntryActions exportActions)
+        public static string ExportAsText(Plan planToExport, PlanExportSettings settings,
+                                          ExportPlanEntryActions exportActions = null)
         {
-            var plan = new PlanScratchpad(planToExport.Character, planToExport);
+            PlanScratchpad plan = new PlanScratchpad(planToExport.Character, planToExport);
             plan.Sort(planToExport.SortingPreferences);
             plan.UpdateStatistics();
 
-            var builder = new StringBuilder();
-            var timeFormat = DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText;
-            var character = (Character)plan.Character;
+            StringBuilder builder = new StringBuilder();
+            const DescriptiveTextOptions TimeFormat =
+                DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText;
+            Character character = (Character) plan.Character;
 
             // Initialize constants
             string lineFeed = Environment.NewLine;
@@ -56,8 +48,6 @@ namespace EVEMon.Common
 
             switch (settings.Markup)
             {
-                default:
-                    break;
                 case MarkupType.Forum:
                     boldStart = "[b]";
                     boldEnd = "[/b]";
@@ -67,20 +57,19 @@ namespace EVEMon.Common
                     boldStart = "<b>";
                     boldEnd = "</b>";
                     break;
+                case MarkupType.Undefined:
+                case MarkupType.None:
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
 
             // Header
             if (settings.IncludeHeader)
             {
                 builder.Append(boldStart);
-                if (settings.ShoppingList)
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Shopping list for {0}", character.Name);
-                }
-                else
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Skill plan for {0}", character.Name);
-                }
+                builder.AppendFormat(CultureConstants.DefaultCulture,
+                                     settings.ShoppingList ? "Shopping list for {0}" : "Skill plan for {0}", character.Name);
                 builder.Append(boldEnd);
                 builder.Append(lineFeed);
                 builder.Append(lineFeed);
@@ -100,7 +89,7 @@ namespace EVEMon.Common
 
                 // Skip is we're only build a shopping list
                 bool shoppingListCandidate = !(entry.CharacterSkill.IsKnown || entry.Level != 1 || entry.CharacterSkill.IsOwned);
-                if (settings.ShoppingList && !shoppingListCandidate) 
+                if (settings.ShoppingList && !shoppingListCandidate)
                     continue;
 
                 // Entry's index
@@ -113,14 +102,10 @@ namespace EVEMon.Common
 
                 if (settings.Markup.Equals(MarkupType.Html))
                 {
-                    if (!settings.ShoppingList)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">", entry.Skill.ID);
-                    }
-                    else
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
-                    }
+                    builder.AppendFormat(CultureConstants.DefaultCulture,
+                                         !settings.ShoppingList
+                                             ? "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">"
+                                             : "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
                 }
                 builder.Append(entry.Skill.Name);
 
@@ -128,12 +113,13 @@ namespace EVEMon.Common
                     builder.Append("</a>");
 
                 if (!settings.ShoppingList)
-                    builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanForInt(entry.Level));
+                    builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanFromInt(entry.Level));
 
                 builder.Append(boldEnd);
 
                 // Training time
-                if (settings.EntryTrainingTimes || settings.EntryStartDate || settings.EntryFinishDate || (settings.EntryCost && shoppingListCandidate))
+                if (settings.EntryTrainingTimes || settings.EntryStartDate || settings.EntryFinishDate ||
+                    (settings.EntryCost && shoppingListCandidate))
                 {
                     builder.Append(" (");
                     bool needComma = false;
@@ -142,7 +128,7 @@ namespace EVEMon.Common
                     if (settings.EntryTrainingTimes)
                     {
                         needComma = true;
-                        builder.Append(entry.TrainingTime.ToDescriptiveText(timeFormat));
+                        builder.Append(entry.TrainingTime.ToDescriptiveText(TimeFormat));
                     }
 
                     // Training start date
@@ -173,9 +159,7 @@ namespace EVEMon.Common
                         if (needComma)
                             builder.Append("; ");
 
-                        needComma = true;
-
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ISK",  entry.Skill.FormattedCost);
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ISK", entry.Skill.FormattedCost);
                     }
 
                     builder.Append(')');
@@ -213,7 +197,7 @@ namespace EVEMon.Common
                     needComma = true;
 
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Total time: {0}{1}{2}",
-                        boldStart, plan.GetTotalTime(null, true).ToDescriptiveText(timeFormat), boldEnd);
+                                         boldStart, plan.GetTotalTime(null, true).ToDescriptiveText(TimeFormat), boldEnd);
                 }
 
                 // End training date
@@ -233,8 +217,6 @@ namespace EVEMon.Common
                     if (needComma)
                         builder.Append("; ");
 
-                    needComma = true;
-
                     string formattedIsk = String.Format(CultureConstants.TidyInteger, "{0:n}", plan.NotKnownSkillBooksCost);
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
                 }
@@ -252,17 +234,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Exports the plan under a XML format.
         /// </summary>
-        /// <param name="planToExport"></param>
+        /// <param name="plan">The plan.</param>
         /// <returns></returns>
         public static string ExportAsXML(Plan plan)
         {
             // Generates a settings plan and transforms it to an output plan
-            var serial = plan.Export();
-            var output = new OutputPlan { Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision };
+            SerializablePlan serial = plan.Export();
+            OutputPlan output = new OutputPlan {Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision};
             output.Entries.AddRange(serial.Entries);
 
             // Serializes to XML document and gets a string representation
-            var doc = Util.SerializeToXmlDocument(typeof(OutputPlan), output);
+            XmlDocument doc = Util.SerializeToXmlDocument(typeof (OutputPlan), output);
             return Util.GetXMLStringRepresentation(doc);
         }
 
@@ -294,15 +276,10 @@ namespace EVEMon.Common
                 int revision = Util.GetRevisionNumber(filename);
 
                 // Old format
-                if (revision == 0)
-                {
-                    result = Util.DeserializeXML<SerializablePlan>(filename, Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
-                }
-                // New format
-                else
-                {
-                    result = Util.DeserializeXML<OutputPlan>(filename);
-                }
+                result = revision == 0
+                             ? Util.DeserializeXML<SerializablePlan>(filename,
+                                                                     Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport))
+                             : Util.DeserializeXML<OutputPlan>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {

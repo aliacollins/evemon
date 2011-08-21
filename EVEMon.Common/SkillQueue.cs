@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
@@ -15,10 +13,8 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class SkillQueue : ReadonlyCollection<QueuedSkill>
     {
-        private CCPCharacter m_character;
-        private QueuedSkill m_lastCompleted;
-        private DateTime startTime = DateTime.UtcNow;
-        private bool m_isPaused;
+        private readonly CCPCharacter m_character;
+        private readonly DateTime m_startTime = DateTime.UtcNow;
 
         /// <summary>
         /// Default constructor, only used by <see cref="Character"/>
@@ -36,7 +32,7 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_isPaused)
+                if (IsPaused)
                     return false;
 
                 return m_items.Count != 0;
@@ -46,23 +42,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the last completed skill.
         /// </summary>
-        public QueuedSkill LastCompleted
-        {
-            get { return m_lastCompleted; }
-        }
+        public QueuedSkill LastCompleted { get; private set; }
 
         /// <summary>
         /// Gets the training end time (UTC).
         /// </summary>
         public DateTime EndTime
         {
-            get
-            {
-                if (m_items.IsEmpty())
-                    return DateTime.UtcNow;
-
-                return m_items[m_items.Count - 1].EndTime;
-            }
+            get { return m_items.IsEmpty() ? DateTime.UtcNow : m_items[m_items.Count - 1].EndTime; }
         }
 
         /// <summary>
@@ -70,29 +57,20 @@ namespace EVEMon.Common
         /// </summary>
         public QueuedSkill CurrentlyTraining
         {
-            get 
-            {
-                if (m_items.Count == 0)
-                    return null;
-                
-                return m_items[0];
-            }
+            get { return m_items.Count == 0 ? null : m_items[0]; }
         }
 
         /// <summary>
         /// Gets true whether the skill queue is currently paused.
         /// </summary>
-        public bool IsPaused
-        {
-            get { return m_isPaused; }
-        }
+        public bool IsPaused { get; private set; }
 
         /// <summary>
         /// When the timer ticks, on every second, we update the skill.
         /// </summary>
         internal void UpdateOnTimerTick()
         {
-            if (m_isPaused)
+            if (IsPaused)
                 return;
 
             List<QueuedSkill> skillsCompleted = new List<QueuedSkill>();
@@ -111,7 +89,7 @@ namespace EVEMon.Common
                     skill.Skill.MarkAsCompleted();
 
                 skillsCompleted.Add(skill);
-                m_lastCompleted = skill;
+                LastCompleted = skill;
                 m_items.RemoveAt(0);
 
                 // Sends an email alert
@@ -133,12 +111,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableQueuedSkill> Export()
         {
-            var serial = new List<SerializableQueuedSkill>();
-            foreach (var skill in m_items)
-            {
-                serial.Add(skill.Export());
-            }
-            return serial;
+            return m_items.Select(skill => skill.Export()).ToList();
         }
 
         /// <summary>
@@ -147,23 +120,23 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableQueuedSkill> serial)
         {
-            m_isPaused = false;
+            IsPaused = false;
 
             // If the queue is paused, CCP sends empty start and end time.
             // So we base the start time on when the skill queue was started.
-            var startTimeWhenPaused = startTime;
+            DateTime startTimeWhenPaused = m_startTime;
 
             // Imports the queued skills and checks whether they are paused
             m_items.Clear();
-            foreach (var serialSkill in serial)
+            foreach (SerializableQueuedSkill serialSkill in serial)
             {
                 // When the skill queue is paused, startTime and endTime are empty in the XML document.
                 // As a result, the serialization leaves the DateTime with its default value.
                 if (serialSkill.EndTime == default(DateTime))
-                    m_isPaused = true;
+                    IsPaused = true;
 
                 // Creates the skill queue
-                m_items.Add(new QueuedSkill(m_character, serialSkill, m_isPaused, ref startTimeWhenPaused));
+                m_items.Add(new QueuedSkill(m_character, serialSkill, IsPaused, ref startTimeWhenPaused));
             }
 
             // Fires the event regarding the character skill queue update.

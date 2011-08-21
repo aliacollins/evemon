@@ -163,7 +163,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void Recalculate()
         {
-            var scratchpad = m_remapping.BaseScratchpad.Clone();
+            CharacterScratchpad scratchpad = m_remapping.BaseScratchpad.Clone();
             scratchpad.Memory.Base = pbMEMRemappable.Value + EveConstants.CharacterBaseAttributePoints;
             scratchpad.Charisma.Base = pbCHARemappable.Value + EveConstants.CharacterBaseAttributePoints;
             scratchpad.Willpower.Base = pbWILRemappable.Value + EveConstants.CharacterBaseAttributePoints;
@@ -171,7 +171,8 @@ namespace EVEMon.SkillPlanner
             scratchpad.Intelligence.Base = pbINTRemappable.Value + EveConstants.CharacterBaseAttributePoints;
 
             // Get remapping for provided attributes
-            var manualRemapping = new AttributesOptimizer.RemappingResult(m_remapping, scratchpad);
+            AttributesOptimizer.RemappingResult manualRemapping = new AttributesOptimizer.RemappingResult(m_remapping,
+                                                                                                          scratchpad);
             manualRemapping.Update();
             UpdateControls(m_character, m_plan, manualRemapping, m_description);
 
@@ -244,7 +245,10 @@ namespace EVEMon.SkillPlanner
         private void buttonCurrent_Click(object sender, EventArgs e)
         {
             // Make unoptimized remap
-            var zeroRemapping = new AttributesOptimizer.RemappingResult(m_remapping, m_remapping.BaseScratchpad.Clone());
+            AttributesOptimizer.RemappingResult zeroRemapping = new AttributesOptimizer.RemappingResult(m_remapping,
+                                                                                                        m_remapping.
+                                                                                                            BaseScratchpad
+                                                                                                            .Clone());
             zeroRemapping.Update();
 
             // Update the controls
@@ -263,7 +267,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void attributeButton_Click(object sender, EventArgs e)
         {
-            var button = (sender as AttributeButtonControl);
+            AttributeButtonControl button = (sender as AttributeButtonControl);
             if (button == null)
                 return;
             if (button.AttributeBar == null)
@@ -298,13 +302,14 @@ namespace EVEMon.SkillPlanner
         public void UpdateValuesFrom(RemappingPoint point)
         {
             // Creates a scratchpad with the base values from the provided point.
-            var scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));
             for (int i = 0; i < 5; i++)
             {
                 scratchpad[(EveAttribute) i].Base = point[(EveAttribute) i];
             }
 
-            var remapping = new AttributesOptimizer.RemappingResult(m_remapping, scratchpad);
+            AttributesOptimizer.RemappingResult remapping = new AttributesOptimizer.RemappingResult(m_remapping,
+                                                                                                    scratchpad);
             remapping.Update();
 
             // Update the controls

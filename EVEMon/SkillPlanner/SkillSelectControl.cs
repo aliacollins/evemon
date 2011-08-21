@@ -365,8 +365,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
-                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                                        : 0);
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -382,17 +383,19 @@ namespace EVEMon.SkillPlanner
             {
                 tvItems.Nodes.Clear();
 
-                foreach (IGrouping<SkillGroup, Skill> group in skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
+                foreach (
+                    IGrouping<SkillGroup, Skill> group in
+                        skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
                 {
                     int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
 
                     TreeNode groupNode = new TreeNode
                                              {
-                        Text = group.Key.Name,
-                        ImageIndex = index,
-                        SelectedImageIndex = index,
-                        Tag = group.Key
-                    };
+                                                 Text = group.Key.Name,
+                                                 ImageIndex = index,
+                                                 SelectedImageIndex = index,
+                                                 Tag = group.Key
+                                             };
 
                     // Add nodes for skills in this group
                     foreach (Skill skill in group)
@@ -423,11 +426,11 @@ namespace EVEMon.SkillPlanner
                         // Create node and adds it
                         TreeNode node = new TreeNode
                                             {
-                            Text = String.Format("{0} ({1})", skill.Name, skill.Rank),
-                            ImageIndex = imageIndex,
-                            SelectedImageIndex = imageIndex,
-                            Tag = skill
-                        };
+                                                Text = String.Format("{0} ({1})", skill.Name, skill.Rank),
+                                                ImageIndex = imageIndex,
+                                                SelectedImageIndex = imageIndex,
+                                                Tag = skill
+                                            };
                         groupNode.Nodes.Add(node);
 
                         // We color some nodes
@@ -458,13 +461,11 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes())
+                    foreach (TreeNode node in tvItems.GetAllNodes()
+                        .Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
-                        if (node.Tag.GetHashCode() == selectedItemHash)
-                        {
-                            tvItems.SelectNodeWithTag(node.Tag);
-                            selectedNode = node;
-                        }
+                        tvItems.SelectNodeWithTag(node.Tag);
+                        selectedNode = node;
                     }
                 }
 
@@ -478,7 +479,7 @@ namespace EVEMon.SkillPlanner
                 m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                if (numberOfItems < (tvItems.DisplayRectangle.Height/tvItems.ItemHeight))
                 {
                     tvItems.ExpandAll();
                     m_allExpanded = true;
@@ -514,8 +515,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
-                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                                        : 0);
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -551,13 +553,11 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (ListViewItem lvItem in lvSortedSkillList.Items)
+                    foreach (ListViewItem lvItem in lvSortedSkillList.Items.Cast<ListViewItem>()
+                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
                     {
-                        if (lvItem.Tag.GetHashCode() == selectedItemHash)
-                        {
-                            lvItem.Selected = true;
-                            selectedItem = lvItem;
-                        }
+                        lvItem.Selected = true;
+                        selectedItem = lvItem;
                     }
                 }
 
@@ -611,7 +611,7 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
-                                Skill.GetRomanForInt(skillsArray[i].Level + 1),
+                                Skill.GetRomanFromInt(skillsArray[i].Level + 1),
                                 time.ToDescriptiveText(DescriptiveTextOptions.Default));
                         }
                     }
@@ -789,11 +789,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearch_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (int)Keys.LButton)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
+            if (e.KeyChar != (int) Keys.LButton)
+                return;
+
+            tbSearchText.SelectAll();
+            e.Handled = true;
         }
 
         /// <summary>
@@ -841,14 +841,14 @@ namespace EVEMon.SkillPlanner
             if (node == null)
                 return;
 
-            if (node.Nodes.Count == 0)
-            {
-                Skill skill = node.Tag as Skill;
-                if (skill == null || m_plan.GetPlannedLevel(skill) == 5 || skill.Level == 5)
-                    return;
+            if (node.Nodes.Count != 0)
+                return;
 
-                DoDragDrop(node, DragDropEffects.Move);
-            }
+            Skill skill = node.Tag as Skill;
+            if (skill == null || m_plan.GetPlannedLevel(skill) == 5 || skill.Level == 5)
+                return;
+
+            DoDragDrop(node, DragDropEffects.Move);
         }
 
         #endregion
@@ -892,12 +892,12 @@ namespace EVEMon.SkillPlanner
 
             // "Plan to N" menus
             cmiPlanTo.Enabled = (SelectedSkill != null && SelectedSkill.Level < 5);
-            if (SelectedSkill != null)
+            if (SelectedSkill == null)
+                return;
+
+            for (int i = 0; i <= 5; i++)
             {
-                for (int i = 0; i <= 5; i++)
-                {
-                    PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
-                }
+                PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
             }
         }
 

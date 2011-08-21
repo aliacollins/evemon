@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -61,8 +60,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets a character scratchpad representing this character after a switch to the provided implant set.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="trainings"></param>
+        /// <param name="set">The set.</param>
         /// <returns></returns>
         public CharacterScratchpad After(ImplantSet set)
         {
@@ -99,18 +97,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public int GetSPToTrain(ISkillLevel level)
         {
-            return GetSPToTrain(level.Skill, level.Level, TrainingOrigin.FromCurrent);
-        }
-
-        /// <summary>
-        /// Computes the number of SP to train
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        public int GetSPToTrain(StaticSkill skill, int level)
-        {
-            return GetSPToTrain(skill, level, TrainingOrigin.FromCurrent);
+            return GetSPToTrain(level.Skill, level.Level);
         }
 
         /// <summary>
@@ -120,7 +107,7 @@ namespace EVEMon.Common
         /// <param name="level"></param>
         /// <param name="origin"></param>
         /// <returns></returns>
-        public int GetSPToTrain(StaticSkill skill, int level, TrainingOrigin origin)
+        private int GetSPToTrain(StaticSkill skill, int level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
         {
             if (level == 0)
                 return 0;
@@ -151,10 +138,7 @@ namespace EVEMon.Common
             }
 
             // Returns result
-            if (result < 0)
-                return 0;
-
-            return result;
+            return result < 0 ? 0 : result;
         }
 
         #endregion
@@ -163,36 +147,25 @@ namespace EVEMon.Common
         #region GetTrainingTime & GetTrainingTimeToMultipleSkills
 
         /// <summary>
-        /// Computes the training time for the given skill
+        /// Computes the training time for the given skill.
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
         public TimeSpan GetTrainingTime(ISkillLevel level)
         {
-            return GetTrainingTime(level.Skill, level.Level, TrainingOrigin.FromCurrent);
+            return GetTrainingTime(level.Skill, level.Level);
         }
 
         /// <summary>
-        /// Computes the training time for the given skill
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        public TimeSpan GetTrainingTime(StaticSkill skill, int level)
-        {
-            return GetTrainingTime(skill, level, TrainingOrigin.FromCurrent);
-        }
-
-        /// <summary>
-        /// Computes the training time for the given skill
+        /// Computes the training time for the given skill.
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <param name="origin"></param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime(StaticSkill skill, int level, TrainingOrigin origin)
+        public TimeSpan GetTrainingTime(StaticSkill skill, int level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
         {
-            var spPerHour = GetBaseSPPerHour(skill);
+            var spPerHour = GetBaseSPPerHour(skill); 
             int sp = GetSPToTrain(skill, level, origin);
             return GetTrainingTime(sp, spPerHour);
         }
@@ -203,11 +176,9 @@ namespace EVEMon.Common
         /// <param name="sp"></param>
         /// <param name="spPerHour"></param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime(int sp, float spPerHour)
+        private TimeSpan GetTrainingTime(int sp, float spPerHour)
         {
-            if (spPerHour == 0.0f)
-                return TimeSpan.FromDays(999.0);
-            return TimeSpan.FromHours(sp / spPerHour);
+            return Math.Abs(spPerHour) < float.Epsilon ? TimeSpan.FromDays(999.0) : TimeSpan.FromHours(sp / spPerHour);
         }
 
         /// <summary>
@@ -218,7 +189,7 @@ namespace EVEMon.Common
         public TimeSpan GetTrainingTimeToMultipleSkills<T>(IEnumerable<T> trainings)
             where T : ISkillLevel
         {
-            CharacterScratchpad scratchpad = this.After(trainings);
+            CharacterScratchpad scratchpad = After(trainings);
             return scratchpad.TrainingTime;
         }
 

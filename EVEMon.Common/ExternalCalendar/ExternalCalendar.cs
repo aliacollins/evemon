@@ -12,7 +12,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="character">The character.</param>
         public static void UpdateCalendar(CCPCharacter character)
         {
-            SkillQueue skillQueue = ((CCPCharacter)character).SkillQueue;
+            SkillQueue skillQueue = character.SkillQueue;
 
             int queuePosition = 0;
             foreach (QueuedSkill queuedSkill in skillQueue)
@@ -57,11 +57,11 @@ namespace EVEMon.Common.ExternalCalendar
                                                                             StartDate = DateTime.Now.AddDays(-40),
                                                                             EndDate = DateTime.Now.AddDays(100),
                                                                             Subject = String.Format(
-                                                                                        CultureConstants.DefaultCulture,
-                                                                                        "{0} - {1} {2}",
-                                                                                        queuedSkill.Owner.Name,
-                                                                                        queuedSkill.SkillName,
-                                                                                        Skill.GetRomanForInt(queuedSkill.Level))
+                                                                                CultureConstants.DefaultCulture,
+                                                                                "{0} - {1} {2}",
+                                                                                queuedSkill.Owner.Name,
+                                                                                queuedSkill.SkillName,
+                                                                                Skill.GetRomanFromInt(queuedSkill.Level))
                                                                         };
 
                 // Pull the list of appointments, hopefully we should either get 1 or none back
@@ -96,9 +96,9 @@ namespace EVEMon.Common.ExternalCalendar
             catch (Exception ex)
             {
                 string text = String.Format(
-                                CultureConstants.DefaultCulture,
-                                "{0} {1}{1} {2}", "There was a problem accessing the Outlook Libraries",
-                                Environment.NewLine, ex.Message);
+                    CultureConstants.DefaultCulture,
+                    "{0} {1}{1} {2}", "There was a problem accessing the Outlook Libraries",
+                    Environment.NewLine, ex.Message);
                 MessageBox.Show(text, "Problem integrating to Outlook");
                 return;
             }
@@ -114,7 +114,7 @@ namespace EVEMon.Common.ExternalCalendar
             try
             {
                 // Set the subject to the character name and the skill and level in queue for uniqueness sakes
-                GoogleAppointmentFilter googleAppointmentFilter = new GoogleAppointmentFilter()
+                GoogleAppointmentFilter googleAppointmentFilter = new GoogleAppointmentFilter
                                                                       {
                                                                           UserName = Settings.Calendar.GoogleEmail,
                                                                           Password = Settings.Calendar.GooglePassword,
@@ -122,16 +122,16 @@ namespace EVEMon.Common.ExternalCalendar
                                                                           StartDate = DateTime.Now.AddDays(-40),
                                                                           EndDate = DateTime.Now.AddDays(100),
                                                                           Subject = String.Format(
-                                                                                        CultureConstants.DefaultCulture,
-                                                                                        "{0} - {1} {2}",
-                                                                                        queuedSkill.Owner.Name,
-                                                                                        queuedSkill.SkillName,
-                                                                                        Skill.GetRomanForInt(queuedSkill.Level))
+                                                                              CultureConstants.DefaultCulture,
+                                                                              "{0} - {1} {2}",
+                                                                              queuedSkill.Owner.Name,
+                                                                              queuedSkill.SkillName,
+                                                                              Skill.GetRomanFromInt(queuedSkill.Level))
                                                                       };
 
                 // Log on to google
                 googleAppointmentFilter.Logon();
-              
+
                 // Pull the list of appointments, hopefully we should either get 1 or none back
                 googleAppointmentFilter.ReadAppointments();
 
@@ -151,7 +151,7 @@ namespace EVEMon.Common.ExternalCalendar
                 googleAppointmentFilter.EarlyReminder = Settings.Calendar.EarlyReminding;
                 googleAppointmentFilter.LateReminder = Settings.Calendar.LateReminding;
                 googleAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
-                googleAppointmentFilter.ReminderMethod = (int)Settings.Calendar.GoogleReminder;
+                googleAppointmentFilter.ReminderMethod = (int) Settings.Calendar.GoogleReminder;
 
                 try
                 {

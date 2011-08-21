@@ -16,8 +16,7 @@ namespace EVEMon
     {
         private static bool s_exitRequested;
         private static bool s_showWindowOnError = true;
-        private static MainWindow s_mainWindow;
-        private static bool s_isDebugBuild = false;
+        private static bool s_isDebugBuild;
 
         /// <summary>
         /// The main entry point for the application.
@@ -62,11 +61,11 @@ namespace EVEMon
             // Fires the main window
             try
             {
-                EveMonClient.Trace("Main loop - start"); 
+                EveMonClient.Trace("Main loop - start");
                 Application.Run(new MainWindow(startMinimized));
                 EveMonClient.Trace("Main loop - done");
             }
-            // Save before we quit
+                // Save before we quit
             finally
             {
                 Settings.SaveImmediate();
@@ -77,19 +76,16 @@ namespace EVEMon
             }
         }
 
+
         #region Properties
 
         /// <summary>
-        /// The main window of the application
+        /// The main window of the application.
         /// </summary>
-        public static MainWindow MainWindow
-        {
-            get { return s_mainWindow; }
-            set { s_mainWindow = value; }
-        }
+        public static MainWindow MainWindow { private get; set; }
 
         /// <summary>
-        /// Ensures that only one instance of EVEMon is ran at once
+        /// Ensures that only one instance of EVEMon is ran at once.
         /// </summary>
         private static bool IsInstanceUnique
         {
@@ -110,6 +106,7 @@ namespace EVEMon
 
 
         #region Helpers
+
         /// <summary>
         /// Makes the windows nice.
         /// </summary>
@@ -134,7 +131,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Will only execute if DEBUG is set, thus lets us avoid #IFDEF
+        /// Will only execute if DEBUG is set, thus lets us avoid #IFDEF.
         /// </summary>
         [Conditional("DEBUG")]
         private static void CheckIsDebug()
@@ -146,6 +143,7 @@ namespace EVEMon
 
 
         #region Callbacks
+
         /// <summary>
         /// If <see cref="Application.Exit()"/> is called before the <see cref="Application.Run()"/> method, then it won't occur. 
         /// So, here, we set up a boolean to prevent that.
@@ -171,54 +169,55 @@ namespace EVEMon
         /// <summary>
         /// Handles exceptions in WinForms threads, such exceptions
         /// would never reach the entry point of the application, 
-        /// generally causing a CTD or trigger WER. We display our
-        /// custom crash box
+        /// generally causing a CTD or trigger WER.
+        /// We display our custom crash box.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            HandleUnhandledException(e.Exception as Exception);
+            HandleUnhandledException(e.Exception);
         }
 
         /// <summary>
-        /// Handles an exception through the Unhandled Exception window
+        /// Handles an exception through the Unhandled Exception window.
         /// </summary>
         /// <param name="ex">Exception to display</param>
         private static void HandleUnhandledException(Exception ex)
         {
-            if (!Debugger.IsAttached)
+            if (Debugger.IsAttached)
+                return;
+
+            if (!s_showWindowOnError)
+                return;
+
+            s_showWindowOnError = false;
+
+            // Shutdown EveMonClient timer in case that was causing the crash
+            // so we don't get multiple crashes
+            try
             {
-                if (s_showWindowOnError)
+                EveMonClient.Shutdown();
+                using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(ex))
                 {
-                    s_showWindowOnError = false;
-
-                    // Shutdown EveMonClient timer incase that was causing the crash
-                    // so we don't get multiple crashes
-                    try
-                    {
-                        EveMonClient.Shutdown();
-                        using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(ex))
-                        {
-                            f.ShowDialog(s_mainWindow);
-                        }
-                    }
-                    catch
-                    {
-                        StringBuilder MessageBuilder = new StringBuilder();
-                        MessageBuilder.AppendLine("An error occurred and EVEMon was unable to handle the error message gracefully");
-                        MessageBuilder.AppendLine();
-                        MessageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.", ex.Message);
-                        MessageBuilder.AppendLine();
-                        MessageBuilder.AppendLine();
-                        MessageBuilder.AppendLine("Please report this on the EVEMon forums.");
-                        MessageBox.Show(MessageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    Environment.Exit(1);
+                    f.ShowDialog(MainWindow);
                 }
             }
+            catch
+            {
+                StringBuilder messageBuilder = new StringBuilder();
+                messageBuilder.AppendLine("An error occurred and EVEMon was unable to handle the error message gracefully");
+                messageBuilder.AppendLine();
+                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.", ex.Message);
+                messageBuilder.AppendLine();
+                messageBuilder.AppendLine();
+                messageBuilder.AppendLine("Please report this on the EVEMon forums.");
+                MessageBox.Show(messageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            Environment.Exit(1);
         }
+
         #endregion
     }
 }

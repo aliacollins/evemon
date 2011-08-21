@@ -1,8 +1,8 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
 {
@@ -31,8 +31,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ShipLoadoutSelectWindow window = WindowsFactory<ShipLoadoutSelectWindow>.ShowUnique(
-                                            () => new ShipLoadoutSelectWindow(SelectedObject as Item, Plan));
+            WindowsFactory<ShipLoadoutSelectWindow>.ShowUnique(() => new ShipLoadoutSelectWindow(SelectedObject, Plan));
         }
 
         /// <summary>
@@ -46,7 +45,29 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Methods
+        #region Inherited Events
+
+        /// <summary>
+        /// Occurs when the settings changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected override void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            base.EveMonClient_SettingsChanged(sender, e);
+            UpdateContolVisibility();
+        }
+
+        /// <summary>
+        /// Occurs when the conrol loads.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            UpdateContolVisibility();
+        }
 
         /// <summary>
         /// Updates the controls when the selection is changed.
@@ -70,7 +91,7 @@ namespace EVEMon.SkillPlanner
 
             ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
             if (loadoutSelect != null)
-                loadoutSelect.Ship = (Item)shipSelectControl.SelectedObject;
+                loadoutSelect.Ship = shipSelectControl.SelectedObject;
         }
 
         /// <summary>
@@ -89,6 +110,21 @@ namespace EVEMon.SkillPlanner
                                          reqSkillPanelMinWidth : reqSkillControlMinWidth);
         }
 
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates the contol visibility.
+        /// </summary>
+        private void UpdateContolVisibility()
+        {
+            lblBattleclinic.Location = Settings.UI.SafeForWork
+                                           ? new Point(Pad, lblBattleclinic.Location.Y)
+                                           : new Point(eoImage.Width + Pad * 2, lblBattleclinic.Location.Y);
+        }
+        
         #endregion
     }
 }

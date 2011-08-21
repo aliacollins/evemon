@@ -19,9 +19,10 @@ namespace EVEMon
     /// </summary>
     public partial class NotificationList : UserControl
     {
-        private readonly Color WarningColor = Color.LightGoldenrodYellow;
-        private readonly Color ErrorColor = Color.LavenderBlush;
-        private readonly Color InfoColor = Color.AliceBlue;
+        private readonly Color m_warningColor = Color.LightGoldenrodYellow;
+        private readonly Color m_errorColor = Color.LavenderBlush;
+        private readonly Color m_infoColor = Color.AliceBlue;
+        private readonly List<Notification> m_notifications = new List<Notification>();
 
         private const int TextLeft = 20;
         private const int LeftPadding = 2;
@@ -29,7 +30,6 @@ namespace EVEMon
         private const int IconDeletePositionFromRight = 14;
         private const int IconMagnifierPositionFromRight = 34;
 
-        private List<Notification> m_notifications = new List<Notification>();
         private int m_hoveredIndex = -1;
 
         private bool m_pendingUpdate;
@@ -55,31 +55,29 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            if (DesignMode || this.IsDesignModeHosted())
-            {
-                var list = new List<Notification>();
-                var notification = new Notification(NotificationCategory.AccountNotInTraining, null)
-                {
-                    Priority = NotificationPriority.Information,
-                    Description = "Some information"
-                };
-                
-                list.Add(notification);
-
-                notification = new Notification(NotificationCategory.AccountNotInTraining, null);
-                notification.Priority = NotificationPriority.Warning;
-                notification.Description = "Some warning";
-                list.Add(notification);
-
-                notification = new Notification(NotificationCategory.AccountNotInTraining, null);
-                notification.Priority = NotificationPriority.Error;
-                notification.Description = "Some error";
-                list.Add(notification);
-
-                Notifications = list;
-            }
-
             base.OnLoad(e);
+
+            if (!DesignMode && !this.IsDesignModeHosted())
+                return;
+
+            List<Notification> list = new List<Notification>();
+            Notification notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+                                            {
+                                                Priority = NotificationPriority.Information,
+                                                Description = "Some information"
+                                            };
+                
+            list.Add(notification);
+
+            notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+                               {Priority = NotificationPriority.Warning, Description = "Some warning"};
+            list.Add(notification);
+
+            notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+                               {Priority = NotificationPriority.Error, Description = "Some error"};
+            list.Add(notification);
+
+            Notifications = list;
         }
 
         /// <summary>
@@ -87,20 +85,14 @@ namespace EVEMon
         /// </summary>
         public IEnumerable<Notification> Notifications
         {
-            get 
-            {
-                foreach (var notification in m_notifications)
-                {
-                    yield return notification;
-                }
-            }
+            get { return m_notifications; }
             set
             {
                 m_notifications.Clear();
                 if (value != null)
                 {
-                    var notificationsToAdd = value.Where(x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
-                    m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
+                    IEnumerable<Notification> notificationsToAdd = value.Where(x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
+                    m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int) x.Priority));
                 }
                 UpdateContent();
             }
@@ -115,12 +107,10 @@ namespace EVEMon
         {
             int maxTextLength = 0;
 
-            foreach (var item in listBox.Items)
+            foreach (Size textSize in listBox.Items.Cast<object>().Select(item => item.ToString())
+                .Select(text => TextRenderer.MeasureText(text, font)).Where(textSize => textSize.Width > maxTextLength))
             {
-                string text = item.ToString();
-                Size textSize = TextRenderer.MeasureText(text, font);
-                if (textSize.Width > maxTextLength)
-                    maxTextLength = (int)textSize.Width;
+                maxTextLength = textSize.Width;
             }
 
             return maxTextLength;
@@ -135,18 +125,14 @@ namespace EVEMon
                 return;
 
             Font font = Font;
-            var fontSize = font.Size;
-            int magnifierIconSize;
+            float fontSize = font.Size;
 
             // Check for magnifier icon
-            var itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
-            if (itemWithDetails != null)
-                magnifierIconSize = IconMagnifierPositionFromRight;
-            else
-                magnifierIconSize = 0;
+            Notification itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
+            int magnifierIconSize = itemWithDetails != null ? IconMagnifierPositionFromRight : 0;
 
             // Calculates the available text space
-            var availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
+            int availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
 
             // If any text length exceeds our bounds we decrease the font size
             while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
@@ -182,7 +168,7 @@ namespace EVEMon
             try
             {
                 listBox.Items.Clear();
-                foreach (var notification in m_notifications)
+                foreach (Notification notification in m_notifications)
                 {
                     listBox.Items.Add(notification);
                 }
@@ -211,14 +197,15 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
         private void listBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index == -1)
                 return;
 
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
 
-            var notification = listBox.Items[e.Index] as Notification;
+            Notification notification = listBox.Items[e.Index] as Notification;
             if (notification == null)
                 return;
 
@@ -229,22 +216,22 @@ namespace EVEMon
             {
                 case NotificationPriority.Error:
                     icon = CommonProperties.Resources.Error16;
-                    color = ErrorColor;
+                    color = m_errorColor;
                     break;
                 case NotificationPriority.Warning:
                     icon = CommonProperties.Resources.Warning16;
-                    color = WarningColor;
+                    color = m_warningColor;
                     break;
                 case NotificationPriority.Information:
                     icon = CommonProperties.Resources.Information16;
-                    color = InfoColor;
+                    color = m_infoColor;
                     break;
                 default:
                     throw new NotImplementedException();
             }
 
             // Background
-            using (var brush = new SolidBrush(color))
+            using (SolidBrush brush = new SolidBrush(color))
             {
                 g.FillRectangle(brush, e.Bounds);
             }
@@ -264,17 +251,17 @@ namespace EVEMon
             }
 
             // Text
-            using (var foreBrush = new SolidBrush(ForeColor))
+            using (SolidBrush foreBrush = new SolidBrush(ForeColor))
             {
                 string text = notification.ToString();
-                var size = g.MeasureString(text, Font);
+                SizeF size = g.MeasureString(text, Font);
                 g.DrawString(text, Font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
-            using (var lineBrush = new SolidBrush(Color.Gray))
+            using (SolidBrush lineBrush = new SolidBrush(Color.Gray))
             {
-                using (var pen = new Pen(lineBrush, 1.0f))
+                using (Pen pen = new Pen(lineBrush, 1.0f))
                 {
                     g.DrawLine(pen, new Point(e.Bounds.Left, e.Bounds.Bottom - 1), new Point(e.Bounds.Right, e.Bounds.Bottom - 1));
                 }
@@ -284,26 +271,27 @@ namespace EVEMon
         /// <summary>
         /// When the mouse moves, detect the hovered index
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void listBox_MouseMove(object sender, MouseEventArgs e)
+        private void listBox_MouseMove(object sender, MouseEventArgs e)
         {
             int oldHoveredIndex = m_hoveredIndex;
 
             m_hoveredIndex = -1;
             for (int i = 0; i < listBox.Items.Count; i++)
             {
-                var rect = GetDeleteIconRect(i);
-                if (rect.Contains(e.Location))
+                Rectangle rect = GetDeleteIconRect(i);
+                if (!rect.Contains(e.Location))
+                    continue;
+
+                // Repaint the listbox if the previous index was different
+                m_hoveredIndex = i;
+                if (oldHoveredIndex != m_hoveredIndex)
                 {
-                    // Repaint the listbox if the previous index was different
-                    m_hoveredIndex = i;
-                    if (oldHoveredIndex != m_hoveredIndex)
-                    {
-                        listBox.Invalidate();
-                        DisplayTooltip((Notification)listBox.Items[i]);
-                    }
-                    return;
+                    listBox.Invalidate();
+                    DisplayTooltip((Notification)listBox.Items[i]);
                 }
+                return;
             }
 
             toolTip.Active = false;
@@ -312,20 +300,21 @@ namespace EVEMon
         /// <summary>
         /// When the user clicks, we need to detect whether it was on one of the buttons.
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void listBox_MouseDown(object sender, MouseEventArgs e)
+        private void listBox_MouseDown(object sender, MouseEventArgs e)
         {
             // First test whether the "delete" and "magnifier" icons have been clicked
             for (int i = 0; i < listBox.Items.Count; i++)
             {
-                var rect = listBox.GetItemRectangle(i);                
+                Rectangle rect = listBox.GetItemRectangle(i);                
                 if (!rect.Contains(e.Location))
                     continue;
 
-                var notification = listBox.Items[i] as Notification;
+                Notification notification = listBox.Items[i] as Notification;
 
                 // Did he click on the "magnifier" icon ?
-                if (notification.HasDetails)
+                if (notification != null && notification.HasDetails)
                 {
                     rect = GetMagnifierIconRect(i);
                     if (rect.Contains(e.Location))
@@ -337,13 +326,13 @@ namespace EVEMon
 
                 // Did he click on the "delete" icon or did a wheel-click?
                 rect = GetDeleteIconRect(i);
-                if (e.Button == MouseButtons.Middle || rect.Contains(e.Location))
-                {
-                    EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
-                    m_notifications.Remove(notification);
-                    UpdateContent();
-                    return;
-                }
+                if (e.Button != MouseButtons.Middle && !rect.Contains(e.Location))
+                    continue;
+
+                EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
+                m_notifications.Remove(notification);
+                UpdateContent();
+                return;
             }
         }
 
@@ -356,7 +345,7 @@ namespace EVEMon
             // API error ?
             if (notification is APIErrorNotification)
             {
-                var window = WindowsFactory<APIErrorWindow>.ShowUnique();
+                APIErrorWindow window = WindowsFactory<APIErrorWindow>.ShowUnique();
                 window.Notification = (APIErrorNotification)notification;
                 return;
             }
@@ -364,7 +353,7 @@ namespace EVEMon
             // Skills Completion ?
             if (notification is SkillCompletionNotification)
             {
-                var window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
+                SkillCompletionWindow window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
                 window.Notification = (SkillCompletionNotification)notification;
                 return;
             }
@@ -372,7 +361,7 @@ namespace EVEMon
             // Claimable certificate ?
             if (notification is ClaimableCertificateNotification)
             {
-                var window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
+                ClaimableCertificateWindow window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
                 window.Notification = (ClaimableCertificateNotification)notification;
                 return;
             }
@@ -380,8 +369,8 @@ namespace EVEMon
             // Market orders ?
             if (notification is MarketOrdersNotification)
             {
-                var ordersNotification = (MarketOrdersNotification)notification;
-                var window = WindowsFactory<MarketOrdersWindow>.ShowUnique();
+                MarketOrdersNotification ordersNotification = (MarketOrdersNotification)notification;
+                MarketOrdersWindow window = WindowsFactory<MarketOrdersWindow>.ShowUnique();
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 window.Grouping = MarketOrderGrouping.State;
@@ -392,8 +381,8 @@ namespace EVEMon
             // Industry jobs ?
             if (notification is IndustryJobsNotification)
             {
-                var jobsNotification = (IndustryJobsNotification)notification;
-                var window = WindowsFactory<IndustryJobsWindow>.ShowUnique();
+                IndustryJobsNotification jobsNotification = (IndustryJobsNotification)notification;
+                IndustryJobsWindow window = WindowsFactory<IndustryJobsWindow>.ShowUnique();
                 window.Jobs = jobsNotification.Jobs;
                 window.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
                 window.Grouping = IndustryJobGrouping.State;
@@ -417,7 +406,7 @@ namespace EVEMon
             // API error ?
             if (notification is APIErrorNotification)
             {
-                var errorNotification = (APIErrorNotification)notification;
+                APIErrorNotification errorNotification = (APIErrorNotification)notification;
                 toolTip.SetToolTip(listBox, errorNotification.Result.ErrorMessage);
                 toolTip.Active = true;
                 return;
@@ -426,12 +415,12 @@ namespace EVEMon
             // Skills Completion ?
             if (notification is SkillCompletionNotification)
             {
-                var skillNotifications = (SkillCompletionNotification)notification;
+                SkillCompletionNotification skillNotifications = (SkillCompletionNotification)notification;
                 StringBuilder builder = new StringBuilder();
-                foreach (var skill in skillNotifications.Skills.Reverse())
+                foreach (QueuedSkill skill in skillNotifications.Skills.Reverse())
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture,
-                        "{0} {1} completed.", skill.SkillName, Skill.GetRomanForInt(skill.Level)).AppendLine();
+                        "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine();
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());
                 toolTip.Active = true;
@@ -456,28 +445,25 @@ namespace EVEMon
             // Market orders ?
             if (notification is MarketOrdersNotification)
             {
-                var ordersNotification = (MarketOrdersNotification)notification;
+                MarketOrdersNotification ordersNotification = (MarketOrdersNotification)notification;
 
                 StringBuilder builder = new StringBuilder();
-                foreach (var orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
+                foreach (IGrouping<OrderState, MarketOrder> orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
                 {
                     if (builder.Length != 0)
                         builder.AppendLine();
                     builder.AppendLine(orderGroup.Key.GetHeader());
 
-                    foreach (var order in orderGroup)
+                    foreach (MarketOrder order in orderGroup.Where(order => order.Item != null))
                     {
-                        if (order.Item == null)
-                            continue;
-
-                        var format = AbbreviationFormat.AbbreviationSymbols;
+                        const AbbreviationFormat Format = AbbreviationFormat.AbbreviationSymbols;
 
                         // Expired :    12k/15k invulnerability fields at Pator V - Tech School
                         // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                         if (order.State == OrderState.Expired)
-                            builder.Append(MarketOrder.Format(order.RemainingVolume, format)).Append("/");
+                            builder.Append(MarketOrder.Format(order.RemainingVolume, Format)).Append("/");
                         
-                        builder.Append(MarketOrder.Format(order.InitialVolume, format)).Append(" ");
+                        builder.Append(MarketOrder.Format(order.InitialVolume, Format)).Append(" ");
                         builder.Append(order.Item.Name).Append(" at ");
                         builder.AppendLine(order.Station.Name);
                     }
@@ -490,14 +476,11 @@ namespace EVEMon
             // Industry jobs ?
             if (notification is IndustryJobsNotification)
             {
-                var jobsNotification = (IndustryJobsNotification)notification;
+                IndustryJobsNotification jobsNotification = (IndustryJobsNotification)notification;
 
                 StringBuilder builder = new StringBuilder();
-                foreach (var job in jobsNotification.Jobs)
+                foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
                 {
-                    if (job.InstalledItem == null)
-                        continue;
-
                     builder.Append(job.InstalledItem.Name).Append(" at ");
                     builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}", job.SolarSystem.Name, job.Installation).AppendLine();
                 }
@@ -512,13 +495,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void listBox_MouseLeave(object sender, EventArgs e)
+        private void listBox_MouseLeave(object sender, EventArgs e)
         {
-            if (m_hoveredIndex != -1)
-            {
-                m_hoveredIndex = -1;
-                listBox.Invalidate();
-            }
+            if (m_hoveredIndex == -1)
+                return;
+
+            m_hoveredIndex = -1;
+            listBox.Invalidate();
         }
 
         /// <summary>
@@ -528,10 +511,10 @@ namespace EVEMon
         /// <returns></returns>
         private Rectangle GetMagnifierIconRect(int index)
         {
-            var rect = listBox.GetItemRectangle(index);
-            var icon = CommonProperties.Resources.Magnifier;
-            var yOffset = (rect.Height - icon.Height) / 2;
-            var magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
+            Rectangle rect = listBox.GetItemRectangle(index);
+            Bitmap icon = CommonProperties.Resources.Magnifier;
+            int yOffset = (rect.Height - icon.Height) / 2;
+            Rectangle magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
             magnifierIconRect.Inflate(2, 8);
             return magnifierIconRect;
         }
@@ -543,10 +526,10 @@ namespace EVEMon
         /// <returns></returns>
         private Rectangle GetDeleteIconRect(int index)
         {
-            var rect = listBox.GetItemRectangle(index);
-            var icon = CommonProperties.Resources.CrossBlack;
-            var yOffset = (rect.Height - icon.Height) / 2;
-            var deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
+            Rectangle rect = listBox.GetItemRectangle(index);
+            Bitmap icon = CommonProperties.Resources.CrossBlack;
+            int yOffset = (rect.Height - icon.Height) / 2;
+            Rectangle deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
             deleteIconRect.Inflate(2, 8);
             return deleteIconRect;
         }

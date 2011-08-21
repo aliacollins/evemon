@@ -31,7 +31,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
-        public Plan Plan { private get; set; }
+        public Plan Plan { get; set; }
 
         /// <summary>
         /// Occurs when the control is loaded.

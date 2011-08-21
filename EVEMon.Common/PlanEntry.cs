@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -27,20 +26,13 @@ namespace EVEMon.Common
         private string m_notes;
 
         // Statistics computed on Plan.UpdateTrainingTimes
-        private TimeSpan m_naturalTrainingTime;
-        private TimeSpan m_oldTrainingTime;
-        private TimeSpan m_trainingTime;
-        private DateTime m_startTime;
-        private DateTime m_endTime;
-        private int m_spPerHour;
-        private int m_totalSP;
-        private  int m_skillPointsRequired;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="owner"></param>
-        /// <param name="skill"></param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">The level.</param>
         public PlanEntry(BasePlan owner, StaticSkill skill, int level)
         {
             m_owner = owner;
@@ -50,15 +42,15 @@ namespace EVEMon.Common
             m_priority = DefaultPriority;
             m_notes = String.Empty;
 
-            m_oldTrainingTime = TimeSpan.Zero;
-            m_trainingTime = TimeSpan.Zero;
+            OldTrainingTime = TimeSpan.Zero;
+            TrainingTime = TimeSpan.Zero;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="owner"></param>
-        /// <param name="skill"></param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">The level.</param>
         public PlanEntry(StaticSkill skill, int level)
             : this(null, skill, level)
         {
@@ -67,8 +59,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Deserialization constructor
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="serial"></param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="serial">The serial.</param>
         internal PlanEntry(BasePlan owner, SerializablePlanEntry serial)
         {
             m_owner = owner;
@@ -115,11 +107,8 @@ namespace EVEMon.Common
         {
             get
             {
-                var character = m_owner.Character as Character;
-                if (character == null)
-                    return null;
-
-                return m_skill.ToCharacter(character);
+                Character character = m_owner.Character as Character;
+                return character == null ? null : m_skill.ToCharacter(character);
             }
         }
 
@@ -193,17 +182,11 @@ namespace EVEMon.Common
             get
             {
                 if (m_planGroups == null || m_planGroups.Count == 0)
-                {
                     return "None";
-                }
-                else if (m_planGroups.Count == 1)
-                {
-                    return (string)m_planGroups[0];
-                }
-                else
-                {
-                    return String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
-                }
+
+                return m_planGroups.Count == 1
+                           ? m_planGroups[0]
+                           : String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
             }
         }
 
@@ -214,32 +197,27 @@ namespace EVEMon.Common
         {
             get
             {
-                var character = Character;
+                BaseCharacter character = Character;
 
                 // Checks all the prerequisites are trained
-                bool Prereqmet = m_skill.Prerequisites.All(x => character.GetSkillLevel(x.Skill) >= x.Level);
+                bool prereqMet = m_skill.Prerequisites.All(x => character.GetSkillLevel(x.Skill) >= x.Level);
 
                 // Checks the skill has the previous level
-                if (Prereqmet && m_level != 0 && character.GetSkillLevel(m_skill) >= m_level - 1)
-                    return true;
-
-                return false;
+                return prereqMet && m_level != 0 && character.GetSkillLevel(m_skill) >= m_level - 1;
             }
         }
 
         /// <summary>
         /// Gets a skill by its ID or its name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="serial">The serial.</param>
         /// <returns></returns>
-        public static StaticSkill GetSkill(SerializablePlanEntry serial)
+        private static StaticSkill GetSkill(SerializablePlanEntry serial)
         {
             // Try get skill by its ID
-            StaticSkill skill = StaticSkills.GetSkillByID(serial.ID);
+            StaticSkill skill = StaticSkills.GetSkillByID(serial.ID) ?? StaticSkills.GetSkillByName(serial.SkillName);
 
             // We failed? Try get skill by its name
-            if (skill == null)
-                skill = StaticSkills.GetSkillByName(serial.SkillName);
 
             return skill;
         }
@@ -251,88 +229,63 @@ namespace EVEMon.Common
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
         public bool IsDependentOf(ISkillLevel level)
         {
-            return ((StaticSkillLevel)this).IsDependentOf(level);
+            return ((StaticSkillLevel) this).IsDependentOf(level);
         }
+
 
         #region Computations done when UpdateTrainingTime is called
 
         /// <summary>
-        /// Gets the training time computed the last time the <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the training time computed the last time the <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public TimeSpan TrainingTime
-        {
-            get { return m_trainingTime; }
-        }
+        public TimeSpan TrainingTime { get; private set; }
 
         /// <summary>
-        /// Gets the backup of the training time made just before <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the backup of the training time made just before <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public TimeSpan OldTrainingTime
-        {
-            get { return m_oldTrainingTime; }
-        }
+        public TimeSpan OldTrainingTime { get; private set; }
 
         /// <summary>
-        /// Gets the training time without implants, as computed the last time <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the training time without implants, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public TimeSpan NaturalTrainingTime
-        {
-            get { return m_naturalTrainingTime; }
-        }
+        public TimeSpan NaturalTrainingTime { get; private set; }
 
         /// <summary>
-        /// Gets the skill points total at the end of the training, as computed the last time <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the skill points total at the end of the training, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public int EstimatedTotalSkillPoints
-        {
-            get { return m_totalSP; }
-        }
+        public int EstimatedTotalSkillPoints { get; private set; }
 
         /// <summary>
-        /// Gets the SP/Hour, as computed the last time <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the SP/Hour, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public int SpPerHour
-        {
-            get { return m_spPerHour; }
-        }
+        public int SpPerHour { get; private set; }
 
         /// <summary>
-        /// Gets the training start time, as computed the last time <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the training start time, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public DateTime StartTime
-        {
-            get { return m_startTime; }
-        }
+        public DateTime StartTime { get; private set; }
 
         /// <summary>
-        /// Gets the training end time, as computed the last time <see cref="Plan.UpdateStatistics"/> was called.
+        /// Gets the training end time, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public DateTime EndTime
-        {
-            get { return m_endTime; }
-        }
+        public DateTime EndTime { get; private set; }
 
         /// <summary>
-        /// Represents the progress towards completion
+        /// Represents the progress towards completion.
         /// </summary>
         public float FractionCompleted
         {
             get
             {
-                if (m_level == (CharacterSkill.Level + 1))
-                    return (float)CharacterSkill.FractionCompleted;
-
                 //Not partially trained? Then it's 0.0
-                return 0.0f;
+                return m_level == (CharacterSkill.Level + 1) ? CharacterSkill.FractionCompleted : 0.0f;
             }
         }
 
-        /// How many skill points are required to train this skill
+        /// <summary>
+        /// How many skill points are required to train this skill.
         /// </summary>
-        public int SkillPointsRequired
-        {
-            get { return m_skillPointsRequired; }
-        }
+        public int SkillPointsRequired { get; private set; }
 
         /// <summary>
         /// Updates the column statistics (with the exception of the <see cref="UpdateOldTrainingTime"/>) from the given scratchpad.
@@ -342,14 +295,14 @@ namespace EVEMon.Common
         /// <param name="time"></param>
         internal void UpdateStatistics(BaseCharacter character, BaseCharacter characterWithoutImplants, ref DateTime time)
         {
-            m_skillPointsRequired = m_skill.GetPointsRequiredForLevel(m_level) - character.GetSkillPoints(m_skill);
-            m_totalSP = character.SkillPoints + m_skillPointsRequired;
-            m_trainingTime = character.GetTrainingTime(m_skill, m_level);
-            m_naturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
-            m_spPerHour = (int)Math.Round(character.GetBaseSPPerHour(m_skill));
-            m_endTime = time + m_trainingTime;
-            m_startTime = time;
-            time = m_endTime;
+            SkillPointsRequired = m_skill.GetPointsRequiredForLevel(m_level) - character.GetSkillPoints(m_skill);
+            EstimatedTotalSkillPoints = character.SkillPoints + SkillPointsRequired;
+            TrainingTime = character.GetTrainingTime(m_skill, m_level);
+            NaturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
+            SpPerHour = (int) Math.Round(character.GetBaseSPPerHour(m_skill));
+            EndTime = time + TrainingTime;
+            StartTime = time;
+            time = EndTime;
         }
 
         /// <summary>
@@ -358,9 +311,11 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal void UpdateOldTrainingTime(BaseCharacter character)
         {
-            m_oldTrainingTime = character.GetTrainingTime(m_skill, m_level);
+            OldTrainingTime = character.GetTrainingTime(m_skill, m_level);
         }
+
         #endregion
+
 
         /// <summary>
         /// Gets a hash code from the level and skill ID.
@@ -372,7 +327,7 @@ namespace EVEMon.Common
             // warning. GetHashCode can't possibly be unique for every object
             // there is, additionally GetHashCode() should not be used for
             // equality only grouping; or at least Google says so...
-            return (int)m_skill.ID << 3 | m_level;
+            return (int) m_skill.ID << 3 | m_level;
         }
 
         /// <summary>
@@ -381,8 +336,7 @@ namespace EVEMon.Common
         /// <returns>Hull Upgrades IV</returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                m_skill.Name, EVEMon.Common.Skill.GetRomanForInt(m_level));
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_skill.Name, Common.Skill.GetRomanFromInt(m_level));
         }
 
         /// <summary>
@@ -402,14 +356,16 @@ namespace EVEMon.Common
         internal PlanEntry Clone(BasePlan plan)
         {
             // We need a skill for the plan's character
-            PlanEntry clone = new PlanEntry(plan, m_skill, m_level);
-            clone.m_entryType = m_entryType;
-            clone.m_priority = m_priority;
-            clone.m_notes = m_notes;
+            PlanEntry clone = new PlanEntry(plan, m_skill, m_level)
+                                  {
+                                      m_entryType = m_entryType,
+                                      m_priority = m_priority,
+                                      m_notes = m_notes,
+                                      m_remapping = (m_remapping != null ? m_remapping.Clone() : null),
+                                      OldTrainingTime = OldTrainingTime,
+                                      TrainingTime = TrainingTime
+                                  };
             clone.m_planGroups.AddRange(m_planGroups);
-            clone.m_remapping = (m_remapping != null ? m_remapping.Clone() : null);
-            clone.m_oldTrainingTime = m_oldTrainingTime;
-            clone.m_trainingTime = m_trainingTime;
             return clone;
         }
 

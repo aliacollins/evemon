@@ -19,6 +19,7 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.Controls;
@@ -46,12 +47,12 @@ namespace EVEMon
 
         private readonly List<Notification> m_popupNotifications = new List<Notification>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
-        private string m_APIProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+        private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MainWindow()
+        private MainWindow()
         {
             InitializeComponent();
             Program.MainWindow = this;
@@ -65,7 +66,7 @@ namespace EVEMon
 
             DisplayTestMenu();
         }
-        
+
         /// <summary>
         /// Constructor for a minimized window.
         /// </summary>
@@ -79,7 +80,7 @@ namespace EVEMon
             {
                 WindowState = FormWindowState.Minimized;
                 ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
-                                    || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
+                                || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
                 Visible = ShowInTaskbar;
             }
 
@@ -93,13 +94,13 @@ namespace EVEMon
         {
             AutoShrink.Dirty(TimeSpan.FromSeconds(5));
         }
-        
+
+
         #region Loading, closing, resizing, etc
 
         /// <summary>
         /// Once the window is loaded, we complete initialization.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
@@ -110,8 +111,8 @@ namespace EVEMon
             Visible = false;
             trayIcon.Text = Application.ProductName;
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
-                            && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                            || WindowState == FormWindowState.Minimized);
+                               && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                                   || WindowState == FormWindowState.Minimized);
 
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
@@ -131,7 +132,7 @@ namespace EVEMon
 
             // Upgrades the BattleClinic API settings
             BCAPI.UpgradeSettings();
-            
+
             // BattleClinic storage service
             BCAPI.DownloadSettingsFile();
 
@@ -156,7 +157,6 @@ namespace EVEMon
         /// <summary>
         /// Check for time synchronization, or reschedule it for later if no connection is available.
         /// </summary>
-        /// <param name="um"></param>
         private static void CheckTimeSynchronization()
         {
             // Do it now if network available
@@ -167,22 +167,21 @@ namespace EVEMon
             }
 
             // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => CheckTimeSynchronization());
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), CheckTimeSynchronization);
         }
 
         /// <summary>
         /// Occurs when the window is shown, display a tooltip message.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnShown(EventArgs e)
         {
             // Welcome message
             TipWindow.ShowTip(this, "startup",
-                "Getting Started",
-                "To begin using EVEMon, click the File|Add Account... menu option, " +
-                "enter your CCP API information " +
-                "and choose the characters to monitor.");
+                              "Getting Started",
+                              "To begin using EVEMon, click the File|Add Account... menu option, " +
+                              "enter your CCP API information " +
+                              "and choose the characters to monitor.");
         }
 
         /// <summary>
@@ -195,14 +194,14 @@ namespace EVEMon
             UpdateStatusLabel();
             UpdateWindowTitle();
             UpdateNotifications();
-            
+
             // Updates tray icon visibility
-            if (WindowState == FormWindowState.Minimized && Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
-            {
-                trayIcon.Visible = Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.MinimizeToTaskbar
-                                || Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled;
-                Visible = (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar);
-            }
+            if (WindowState != FormWindowState.Minimized || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled)
+                return;
+
+            trayIcon.Visible = Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.MinimizeToTaskbar
+                               || Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled;
+            Visible = (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar);
         }
 
         /// <summary>
@@ -214,29 +213,25 @@ namespace EVEMon
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Is there a reason that we should really close the window
-            if (Visible &&                                                 // and main form is visible
-                !m_isUpdating &&                                           // and code auto-update not currently in process   
-                !m_isUpdatingData &&                                       // and data auto-update not currently in process
-                !(e.CloseReason == CloseReason.ApplicationExitCall) &&          // and Application.Exit() was not called
-                !(e.CloseReason == CloseReason.TaskManagerClosing) &&           // and the user isn't trying to shut the program down for some reason
-                !(e.CloseReason == CloseReason.WindowsShutDown))                // and Windows is not shutting down
-            {
-                // Should we actually just minimize ?
-                if (Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.Exit)// and EVEMon is configured to close to system tray
-                {
-                    // If the user has right clicked the task bar item item while
-                    // this window is minimized, and chosen close then then the
-                    // following will evaluate to false and EVEMon will close.
-                    if (WindowState != FormWindowState.Minimized)
-                    {
-                        // Cancel the close operation and minimize the window
-                        // Display of the tray icon and window will be handled by 
-                        // MainWindow_Resize
-                        e.Cancel = true;
-                        WindowState = FormWindowState.Minimized;
-                    }
-                }
-            }
+            if (!Visible || m_isUpdating || m_isUpdatingData || e.CloseReason == CloseReason.ApplicationExitCall ||
+                e.CloseReason == CloseReason.TaskManagerClosing || e.CloseReason == CloseReason.WindowsShutDown)
+                return;
+
+            // Should we actually just minimize ?
+            if (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.Exit)
+                return;
+
+            // If the user has right clicked the task bar item item while
+            // this window is minimized, and chosen close then then the
+            // following will evaluate to false and EVEMon will close.
+            if (WindowState == FormWindowState.Minimized)
+                return;
+
+            // Cancel the close operation and minimize the window
+            // Display of the tray icon and window will be handled by 
+            // MainWindow_Resize
+            e.Cancel = true;
+            WindowState = FormWindowState.Minimized;
         }
 
         /// <summary>
@@ -282,10 +277,12 @@ namespace EVEMon
                 timeDialog.ShowDialog();
             }
         }
+
         #endregion
 
 
         #region Tabs management
+
         /// <summary>
         /// Occurs when the monitored characters collection is changed.
         /// </summary>
@@ -304,14 +301,13 @@ namespace EVEMon
         /// </summary>
         private void UpdateTabs()
         {
-            var selectedTab = tcCharacterTabs.SelectedTab;
+            TabPage selectedTab = tcCharacterTabs.SelectedTab;
 
             // Collect the existing pages
             Dictionary<Character, TabPage> pages = new Dictionary<Character, TabPage>();
-            foreach (TabPage page in tcCharacterTabs.TabPages)
+            foreach (TabPage page in tcCharacterTabs.TabPages.Cast<TabPage>().Where(page => page.Tag is Character))
             {
-                if (page.Tag is Character)
-                    pages[page.Tag as Character] = page;
+                pages[(Character) page.Tag] = page;
             }
 
             // Updates the pages
@@ -320,7 +316,7 @@ namespace EVEMon
             {
                 // Rebuild the pages
                 int index = 0;
-                foreach (var character in EveMonClient.MonitoredCharacters)
+                foreach (Character character in EveMonClient.MonitoredCharacters)
                 {
                     // Retrieve the current page, or null if we're past the limits
                     TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
@@ -338,14 +334,14 @@ namespace EVEMon
                     if (currentTag != character)
                     {
                         // Retrieve the page when it was previously created
-                        TabPage page = null;
+                        TabPage page;
                         // Is the character later in the collection ?
                         if (pages.TryGetValue(character, out page))
                         {
                             // Remove the page from old location
                             tcCharacterTabs.TabPages.Remove(page);
                         }
-                        // So we need to inserts it now
+                            // So we need to inserts it now
                         else
                         {
                             // Creates a new page
@@ -356,14 +352,15 @@ namespace EVEMon
                     }
 
                     // Remove processed character from the dictionary and move forward.
-                    pages.Remove(character);
+                    if (character != null)
+                        pages.Remove(character);
                     index++;
                 }
 
                 // Ensures the overview has been added when necessary
                 if (Settings.UI.MainWindow.ShowOverview)
                 {
-                    if (!tcCharacterTabs.TabPages.Contains(tpOverview))
+                    if (tpOverview != null && !tcCharacterTabs.TabPages.Contains(tpOverview))
                     {
                         // Trim the overview page index
                         int overviewIndex = Settings.UI.MainWindow.OverviewIndex;
@@ -373,8 +370,8 @@ namespace EVEMon
                         tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
                     }
                 }
-                // Or remove it when it should not be here anymore
-                else if (tcCharacterTabs.TabPages.Contains(tpOverview))
+                    // Or remove it when it should not be here anymore
+                else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
                 {
                     tcCharacterTabs.TabPages.Remove(tpOverview);
                 }
@@ -384,7 +381,7 @@ namespace EVEMon
                     tcCharacterTabs.SelectedTab = selectedTab;
 
                 // Dispose the removed tabs
-                foreach (var page in pages.Values)
+                foreach (TabPage page in pages.Values)
                 {
                     page.Dispose();
                 }
@@ -403,11 +400,11 @@ namespace EVEMon
         private static TabPage CreateTab(Character character)
         {
             TabPage page = new TabPage(character.Name)
-            {
-                UseVisualStyleBackColor = true,
-                Padding = new Padding(5),
-                Tag = character
-            };
+                               {
+                                   UseVisualStyleBackColor = true,
+                                   Padding = new Padding(5),
+                                   Tag = character
+                               };
 
             return page;
         }
@@ -421,12 +418,8 @@ namespace EVEMon
         {
             Settings.UI.MainWindow.OverviewIndex = tcCharacterTabs.TabPages.IndexOf(tpOverview);
 
-            List<Character> order = new List<Character>();
-            foreach (TabPage page in tcCharacterTabs.TabPages)
-            {
-                if (page.Tag is Character)
-                    order.Add(page.Tag as Character);
-            }
+            List<Character> order = tcCharacterTabs.TabPages.Cast<TabPage>()
+                .Where(page => page.Tag is Character).Select(page => page.Tag as Character).ToList();
 
             m_isUpdatingTabOrder = true;
             EveMonClient.MonitoredCharacters.Update(order);
@@ -438,40 +431,38 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
+        private void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateControlsOnTabSelectionChange();
+            UIHelper.CurrentMonitor = GetCurrentMonitor();
         }
 
         /// <summary>
-        /// Updates G15 and enables / disables button (remove chars, plans, etc).
+        /// Enables / disables the menu buttons (remove chars, plans, etc).
         /// </summary>
         private void UpdateControlsOnTabSelectionChange()
         {
-            // If the page content has not been created yet, do it now.
+            // If the page content has not been created yet, do it now
             TabPage page = tcCharacterTabs.SelectedTab;
             if (page != null && page.Controls.Count == 0)
+                new CharacterMonitor((Character) page.Tag) {Parent = page, Dock = DockStyle.Fill};
+
+            
+            // Collext the menu buttons that get enabled by a character
+            ToolStripItem[] characterEnabledMenuItems = new ToolStripItem[]
+                                                            {
+                                                                hideCharacterMenu, loadFromFileToolStripMenuItem,
+                                                                skillsPieChartMenu, deleteCharacterMenu, showOwnedSkillbooksMenu,
+                                                                exportCharacterMenu, implantsMenu, skillsPieChartTbMenu,
+                                                                hideCharacterTbMenu, plansTbMenu
+                                                            };
+
+            // Enable or disable the menu buttons
+            foreach (ToolStripItem item in characterEnabledMenuItems)
             {
-                var character = (Character)page.Tag;
-                CharacterMonitor monitor = new CharacterMonitor(character);
-                monitor.Parent = page;
-                monitor.Dock = DockStyle.Fill;
+                item.Enabled = GetCurrentCharacter() != null;
             }
 
-            // Enabled or disables the menus
-            bool hasCharacterSelected = (GetCurrentCharacter() != null);
-
-            hideCharacterMenu.Enabled = hasCharacterSelected;
-            hideCharacterTbMenu.Enabled = hasCharacterSelected;
-            loadFromFileToolStripMenuItem.Enabled = hasCharacterSelected;
-            skillsPieChartMenu.Enabled = hasCharacterSelected;
-            skillsPieChartTbMenu.Enabled = hasCharacterSelected;
-
-            deleteCharacterMenu.Enabled = hasCharacterSelected;
-            plansTbMenu.Enabled = hasCharacterSelected;
-            showOwnedSkillbooksMenu.Enabled = hasCharacterSelected;
-            exportCharacterMenu.Enabled = hasCharacterSelected;
-            implantsMenu.Enabled = hasCharacterSelected;
         }
 
         /// <summary>
@@ -481,14 +472,12 @@ namespace EVEMon
         /// <param name="e"></param>
         private void overview_CharacterClicked(object sender, CharacterChangedEventArgs e)
         {
-            foreach (TabPage tab in tcCharacterTabs.TabPages)
+            foreach (TabPage tab in tcCharacterTabs.TabPages.Cast<TabPage>()
+                .Select(tab => new {tab, character = tab.Tag as Character})
+                .Where(tab => tab.character == e.Character).Select(character => character.tab))
             {
-                var character = tab.Tag as Character;
-                if (character == e.Character)
-                {
-                    tcCharacterTabs.SelectedTab = tab;
-                    return;
-                }
+                tcCharacterTabs.SelectedTab = tab;
+                return;
             }
         }
 
@@ -496,9 +485,11 @@ namespace EVEMon
         /// Gets the currently selected character; or null when the tabs selection does not match.
         /// </summary>
         /// <returns></returns>
-        public Character GetCurrentCharacter()
+        private Character GetCurrentCharacter()
         {
-            if (tcCharacterTabs.SelectedTab == null) return null;
+            if (tcCharacterTabs.SelectedTab == null)
+                return null;
+
             return tcCharacterTabs.SelectedTab.Tag as Character;
         }
 
@@ -506,26 +497,25 @@ namespace EVEMon
         /// Gets the currently selected monitor; or null when the tabs selection does not match.
         /// </summary>
         /// <returns></returns>
-        public CharacterMonitor GetCurrentMonitor()
+        private CharacterMonitor GetCurrentMonitor()
         {
-            if (tcCharacterTabs.SelectedTab == null)
-                return null;
-
-            if (tcCharacterTabs.SelectedTab.Controls.Count == 0)
+            if (tcCharacterTabs.SelectedTab == null || tcCharacterTabs.SelectedTab.Controls.Count == 0)
                 return null;
 
             return tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
         }
+
         #endregion
 
 
         #region Notifications, server status change, skill completion sound
+
         /// <summary>
         /// Occurs when the server status is updated.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
+        private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             lblServerStatus.Text = String.Format("// {0}", e.Server.StatusText);
         }
@@ -535,7 +525,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_NotificationInvalidated(object sender, NotificationInvalidationEventArgs e)
+        private void EveMonClient_NotificationInvalidated(object sender, NotificationInvalidationEventArgs e)
         {
             UpdateNotifications();
         }
@@ -545,14 +535,14 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_NotificationSent(object sender, Notification e)
+        private void EveMonClient_NotificationSent(object sender, Notification e)
         {
             // Updates the notifications list of the main window
             UpdateNotifications();
 
             // Takes care of the tooltip
-            var catSettings = Settings.Notifications.Categories[e.Category];
-            var behaviour = catSettings.ToolTipBehaviour;
+            NotificationCategorySettings catSettings = Settings.Notifications.Categories[e.Category];
+            ToolTipNotificationBehaviour behaviour = catSettings.ToolTipBehaviour;
             if (e.UserValidated || behaviour == ToolTipNotificationBehaviour.Never)
                 return;
 
@@ -560,23 +550,25 @@ namespace EVEMon
             m_popupNotifications.Add(e);
 
             // Group by account
-            var groups = m_popupNotifications.GroupBy(x => 
-                {
-                    if (x.Sender == null)
-                        return 0;
+            IGrouping<long, Notification>[] groups = m_popupNotifications.GroupBy(x =>
+                                                                                      {
+                                                                                          if (x.Sender == null)
+                                                                                              return 0;
 
-                    if (x.SenderAccount != null)
-                        return x.SenderAccount.UserID;
+                                                                                          if (x.SenderAccount != null)
+                                                                                              return x.SenderAccount.UserID;
 
-                    if (x.SenderCharacter.Identity.Account == null)
-                        return 1;
-
-                    return x.SenderCharacter.Identity.Account.UserID;
-                }).ToArray();
+                                                                                          return
+                                                                                              x.SenderCharacter.Identity.Account ==
+                                                                                              null
+                                                                                                  ? 1
+                                                                                                  : x.SenderCharacter.Identity.
+                                                                                                        Account.UserID;
+                                                                                      }).ToArray();
 
             // Add every group, order by character's name, accounts being on top
-            var newList = new List<Notification>();
-            foreach(var group in groups)
+            List<Notification> newList = new List<Notification>();
+            foreach (IGrouping<long, Notification> group in groups)
             {
                 newList.AddRange(group.OrderBy(x => x.SenderCharacter == null ? "" : x.SenderCharacter.Name));
             }
@@ -587,16 +579,17 @@ namespace EVEMon
             // If the info must be presented once only, schedule a deletion
             if (behaviour == ToolTipNotificationBehaviour.Once)
             {
-                Dispatcher.Schedule(TimeSpan.FromSeconds(60), () =>
-                {
-                    if (!m_popupNotifications.Contains(e))
-                        return;
+                Dispatcher.Schedule(TimeSpan.FromSeconds(60),
+                                    () =>
+                                        {
+                                            if (!m_popupNotifications.Contains(e))
+                                                return;
 
-                    m_popupNotifications.Remove(e);
+                                            m_popupNotifications.Remove(e);
 
-                    if (m_popupNotifications.Count == 0)
-                        niAlertIcon.Visible = false;
-                });
+                                            if (m_popupNotifications.Count == 0)
+                                                niAlertIcon.Visible = false;
+                                        });
             }
 
             // Now check whether we must 
@@ -606,7 +599,7 @@ namespace EVEMon
         /// <summary>
         /// Update the notifications list.
         /// </summary>
-        void UpdateNotifications()
+        private void UpdateNotifications()
         {
             notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == null || x.SenderAccount != null);
         }
@@ -623,21 +616,22 @@ namespace EVEMon
                 return;
             }
 
-            int level = 0, maxlevel = 0, textlenght = 0, count = 0;
+            int maxlevel = 0, textlenght = 0, count = 0;
             Object lastSender = m_popupNotifications[0].Sender;
             StringBuilder builder = new StringBuilder();
 
             // We build the tooltip notification text
-            foreach (var notification in m_popupNotifications)
+            foreach (Notification notification in m_popupNotifications)
             {
                 // Tooltip notification text space is limited 
                 // so we apply restrains in how many notifications will be shown
                 if (textlenght <= 100)
                 {
-                    bool senderIsCharacter = (notification.Sender != null) && (notification.Sender == notification.SenderCharacter);
+                    bool senderIsCharacter = (notification.Sender != null) &&
+                                             (notification.Sender == notification.SenderCharacter);
                     string tooltipText = notification.Description;
-                    maxlevel = Math.Max(maxlevel, (int)notification.Priority);
-                    level = (int)notification.Priority;
+                    maxlevel = Math.Max(maxlevel, (int) notification.Priority);
+                    int level = (int) notification.Priority;
 
                     if (notification.Sender != lastSender)
                         builder.AppendLine();
@@ -650,7 +644,8 @@ namespace EVEMon
                         {
                             case 0:
                                 tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "for {0}.", notification.SenderCharacter);
+                                tooltipText += String.Format(CultureConstants.DefaultCulture, "for {0}.",
+                                                             notification.SenderCharacter);
                                 break;
                             case 1:
                                 string character = notification.SenderCharacter.ToString();
@@ -658,13 +653,14 @@ namespace EVEMon
                                 break;
                             case 2:
                                 tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.", notification.SenderCharacter);
+                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.",
+                                                             notification.SenderCharacter);
                                 break;
                         }
                     }
                     builder.AppendLine(tooltipText);
                 }
-                // When the text gets too long we add an informative text once
+                    // When the text gets too long we add an informative text once
                 else if (count == 0)
                 {
                     builder.AppendLine("\r\nMore notifications are available.\nCheck character monitor for more information.");
@@ -745,7 +741,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             // Play a sound
             TryPlaySkillCompletionSound();
@@ -766,30 +762,30 @@ namespace EVEMon
                 return;
 
             // Play the sound
-            using (SoundPlayer sp = new SoundPlayer(EVEMon.Common.Properties.Resources.SkillTrained))
+            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
             {
                 sp.Play();
             }
         }
+
         #endregion
 
 
         #region Per-second updates
+
         /// <summary>
         /// Occurs every second.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateStatusLabel();
             UpdateWindowTitle();
 
             // Checks whether the tooltip must be displayed
             if (m_popupNotifications.Count != 0 && DateTime.UtcNow > m_nextPopupUpdate)
-            {
                 DisplayTooltipNotifications();
-            }
         }
 
         /// <summary>
@@ -807,8 +803,6 @@ namespace EVEMon
         /// <summary>
         /// Updates the window's title.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateWindowTitle()
         {
             if (!Visible)
@@ -852,27 +846,27 @@ namespace EVEMon
 
                     switch (Settings.UI.MainWindow.TitleFormat)
                     {
-                        // (Default) Single Char - finishing skill next
+                            // (Default) Single Char - finishing skill next
                         case MainWindowTitleFormat.Default:
                         case MainWindowTitleFormat.NextCharToFinish:
                             if (builder.Length == 0)
                                 builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                        // Single Char - selected char
+                            // Single Char - selected char
                         case MainWindowTitleFormat.SelectedChar:
                             if (selectedChar == character)
                                 builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                        // Multi Char - finishing skill next first
+                            // Multi Char - finishing skill next first
                         case MainWindowTitleFormat.AllCharacters:
                             if (builder.Length > 0)
                                 builder.Append(" | ");
                             builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                        // Multi Char - selected char first
+                            // Multi Char - selected char first
                         case MainWindowTitleFormat.AllCharactersButSelectedOneAhead:
                             // Selected char ? Insert at the beginning
                             if (selectedChar == character)
@@ -886,7 +880,7 @@ namespace EVEMon
                                 // Insert it at the beginning
                                 builder.Insert(0, subBuilder.ToString());
                             }
-                            // Non-selected char ? Same as "3"
+                                // Non-selected char ? Same as "3"
                             else
                             {
                                 if (builder.Length > 0)
@@ -899,8 +893,7 @@ namespace EVEMon
 
                 // If we go through the loop again we will remove another component of the TimeSpan
                 trimTimeSpanComponents++;
-            }
-            // Each pass we remove one component of the time span up until the hours
+            } // Each pass we remove one component of the time span up until the hours
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
@@ -919,25 +912,28 @@ namespace EVEMon
         /// <returns></returns>
         private SortedList<TimeSpan, CCPCharacter> GetOrderedCharactersTrainingTime()
         {
-            var sortedList = new SortedList<TimeSpan, CCPCharacter>();
+            SortedList<TimeSpan, CCPCharacter> sortedList = new SortedList<TimeSpan, CCPCharacter>();
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
                 // Is it a character bound to CCP ?
-                if (tp.Tag is CCPCharacter)
+                if (!(tp.Tag is CCPCharacter))
+                    continue;
+
+                // Is it in training ?
+                CCPCharacter character = tp.Tag as CCPCharacter;
+                if (!character.IsTraining)
+                    continue;
+
+                TimeSpan ts = character.CurrentlyTrainingSkill.RemainingTime;
+
+                // While the timespan is not unique, we add 1ms
+                while (sortedList.ContainsKey(ts))
                 {
-                    // Is it in training ?
-                    var character = tp.Tag as CCPCharacter;
-                    if (character.IsTraining)
-                    {
-                        TimeSpan ts = character.CurrentlyTrainingSkill.RemainingTime;
-
-                        // While the timespan is not unique, we add 1ms
-                        while (sortedList.ContainsKey(ts)) ts = ts + TimeSpan.FromTicks(1);
-
-                        // Add it to the sorted list
-                        sortedList.Add(ts, character);
-                    }
+                    ts += TimeSpan.FromTicks(1);
                 }
+
+                // Add it to the sorted list
+                sortedList.Add(ts, character);
             }
             return sortedList;
         }
@@ -947,21 +943,22 @@ namespace EVEMon
         /// Format is : "1d, 5h, 32m John Doe (Eidetic Memory)"
         /// Used to update the window's title.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="character"></param>
-        /// <param name="time"></param>
-        private static string AppendCharacterTrainingTime(CCPCharacter character, TimeSpan time)
+        /// <param name="character">The character.</param>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
+        private static string AppendCharacterTrainingTime(Character character, TimeSpan time)
         {
             StringBuilder builder = new StringBuilder();
 
             string skillDescriptionText = time.ToDescriptiveText(DescriptiveTextOptions.Default);
-            builder.AppendFormat(CultureConstants.DefaultCulture,"{0} {1}", skillDescriptionText, character.Name);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillDescriptionText, character.Name);
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)
                 builder.AppendFormat(CultureConstants.DefaultCulture, " ({0})", character.CurrentlyTrainingSkill.SkillName);
 
             return builder.ToString();
         }
+
         #endregion
 
 
@@ -1050,14 +1047,17 @@ namespace EVEMon
             // Find the expected path for EVEMon.Watchdog.exe
             Assembly assembly = Assembly.GetEntryAssembly();
             string path = Path.GetDirectoryName(assembly.Location);
-            string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
+            if (path != null)
+            {
+                string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
 
-            // If the watchdog doesn't exist just quit
-            if (!File.Exists(executable))
-                Application.Exit();
+                // If the watchdog doesn't exist just quit
+                if (!File.Exists(executable))
+                    Application.Exit();
 
-            // Start the watchdog process
-            StartProcess(executable, Environment.GetCommandLineArgs());
+                // Start the watchdog process
+                StartProcess(executable, Environment.GetCommandLineArgs());
+            }
 
             Application.Exit();
         }
@@ -1069,18 +1069,19 @@ namespace EVEMon
         /// <param name="arguments">Arguments to pass to the executable.</param>
         private static void StartProcess(string executable, string[] arguments)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo()
-            {
-                FileName = executable,
-                Arguments = String.Join(" ", arguments),
-                UseShellExecute = false
-            };
+            ProcessStartInfo startInfo = new ProcessStartInfo
+                                             {
+                                                 FileName = executable,
+                                                 Arguments = String.Join(" ", arguments),
+                                                 UseShellExecute = false
+                                             };
 
-            using (Process evemonProc = new Process { StartInfo = startInfo })
+            using (Process evemonProc = new Process {StartInfo = startInfo})
             {
                 evemonProc.Start();
             }
         }
+
         #endregion
 
 
@@ -1093,7 +1094,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void addAccountMenu_Click(object sender, EventArgs e)
         {
-            using (var window = new AccountUpdateOrAdditionWindow())
+            using (AccountUpdateOrAdditionWindow window = new AccountUpdateOrAdditionWindow())
             {
                 window.ShowDialog(this);
             }
@@ -1107,7 +1108,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void manageAccountsMenuItem_Click(object sender, EventArgs e)
         {
-            using (var window = new AccountsManagementWindow())
+            using (AccountsManagementWindow window = new AccountsManagementWindow())
             {
                 window.ShowDialog(this);
             }
@@ -1121,7 +1122,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void hideCharacterMenu_Click(object sender, EventArgs e)
         {
-            var character = GetCurrentCharacter();
+            Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
@@ -1135,11 +1136,11 @@ namespace EVEMon
         /// <param name="e"></param>
         private void deleteCharacterMenu_Click(object sender, EventArgs e)
         {
-            var character = GetCurrentCharacter();
+            Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
-            using (var window = new CharacterDeletionWindow(character))
+            using (CharacterDeletionWindow window = new CharacterDeletionWindow(character))
             {
                 window.ShowDialog(this);
             }
@@ -1153,7 +1154,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void saveCharacterInfosMenuItem_Click(object sender, EventArgs e)
         {
-            var character = GetCurrentCharacter();
+            Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
@@ -1168,11 +1169,11 @@ namespace EVEMon
         private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save current directory
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
 
             // Prompts the user for a location
-            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
-            var result = saveFileDialog.ShowDialog();
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            DialogResult result = saveFileDialog.ShowDialog();
 
             // Restore current directory
             Directory.SetCurrentDirectory(currentDirectory);
@@ -1192,11 +1193,11 @@ namespace EVEMon
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save current directory
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
 
             // Prompts the user for a location
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
-            var result = openFileDialog.ShowDialog();
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            DialogResult result = openFileDialog.ShowDialog();
 
             // Restore current directory
             Directory.SetCurrentDirectory(currentDirectory);
@@ -1219,7 +1220,8 @@ namespace EVEMon
         {
             // Manually delete the Settings file for any non-recoverable errors
             DialogResult dr = MessageBox.Show("Are you sure you want to clear the cache ?",
-                "Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                              "Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                              MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 EveMonClient.ClearCache();
@@ -1234,8 +1236,10 @@ namespace EVEMon
         private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show("Are you sure you want to reset the settings ?\r\nEverything will be lost, including the plans.",
-                "Confirm Settings Reseting", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr =
+                MessageBox.Show("Are you sure you want to reset the settings ?\r\nEverything will be lost, including the plans.",
+                                "Confirm Settings Reseting", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 Settings.Reset();
@@ -1342,7 +1346,7 @@ namespace EVEMon
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(character) { Name = planName };
+            Plan newPlan = new Plan(character) {Name = planName};
 
             // Add plan and save
             character.Plans.Add(newPlan);
@@ -1350,7 +1354,7 @@ namespace EVEMon
             // Show the editor for this plan
             WindowsFactory<PlanWindow>.ShowByTag(newPlan);
         }
-        
+
         /// <summary>
         /// File > Load Plan from file...
         /// </summary>
@@ -1359,14 +1363,14 @@ namespace EVEMon
         private void loadFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            
+
             // Prompt the user to select a file
             DialogResult dr = ofdOpenDialog.ShowDialog();
             if (dr == DialogResult.Cancel)
                 return;
 
             // Load from file and returns if an error occurred (user has already been warned)
-            var serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
+            SerializablePlan serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
             if (serial == null)
                 return;
 
@@ -1386,7 +1390,7 @@ namespace EVEMon
                 character.Plans.Add(loadedPlan);
             }
         }
-        
+
         /// <summary>
         /// Plans > Manage...
         /// Displays the "Manage Plans" window.
@@ -1420,11 +1424,11 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void planItem_Click(object sender, EventArgs e)
+        private void planItem_Click(object sender, EventArgs e)
         {
             // Retrieve the plan
-            var menuItem = (ToolStripMenuItem)sender;
-            Plan plan = (Plan)menuItem.Tag;
+            ToolStripMenuItem menuItem = (ToolStripMenuItem) sender;
+            Plan plan = (Plan) menuItem.Tag;
 
             // Show or bring to front if a window with the same plan as tag already exists
             WindowsFactory<PlanWindow>.ShowByTag(plan);
@@ -1450,7 +1454,7 @@ namespace EVEMon
         private void tsSkillsPieChartTool_Click(object sender, EventArgs e)
         {
             // Return if no selected tab (cannot infere which character the chart should represent)
-            var character = GetCurrentCharacter();
+            Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
@@ -1508,10 +1512,9 @@ namespace EVEMon
 
             // Collect the owned skillbooks and sort them by name
             SortedList<string, bool> sortedSkills = new SortedList<string, bool>();
-            foreach (var skill in character.Skills)
+            foreach (Skill skill in character.Skills.Where(skill => skill.IsOwned && !skill.IsKnown))
             {
-                if (skill.IsOwned && !skill.IsKnown)
-                    sortedSkills.Add(skill.Name, skill.ArePrerequisitesMet);
+                sortedSkills.Add(skill.Name, skill.ArePrerequisitesMet);
             }
 
             // Build a string representation of the list
@@ -1524,14 +1527,16 @@ namespace EVEMon
 
                 firstSkill = false;
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}",skillName, sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillName,
+                                sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
             }
 
             // Prints the message box
             if (firstSkill)
                 sb.Append("You don't have any skill books marked as \"Owned\".");
 
-            MessageBox.Show(sb.ToString(), "Skill books owned by " + character.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(sb.ToString(), "Skill books owned by " + character.Name, MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -1637,7 +1642,7 @@ namespace EVEMon
 
             // Clear the menu items and rebuild them
             plansTbMenu.DropDownItems.Clear();
-            
+
             character.Plans.AddTo(plansTbMenu.DropDownItems, InitializePlanItem);
         }
 
@@ -1651,10 +1656,12 @@ namespace EVEMon
             menubarToolStripMenuItem.Enabled = standardToolbar.Visible;
             standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
         }
+
         #endregion
 
 
         #region Tray icon
+
         /// <summary>
         /// Remove the popup if its showing.
         /// </summary>
@@ -1676,7 +1683,7 @@ namespace EVEMon
         private void trayIcon_Click(object sender, EventArgs e)
         {
             // Returns for right-button click
-            if (e is MouseEventArgs && ((MouseEventArgs)e).Button == MouseButtons.Right)
+            if (e is MouseEventArgs && ((MouseEventArgs) e).Button == MouseButtons.Right)
                 return;
 
             // Update the tray icon's visibility
@@ -1740,7 +1747,7 @@ namespace EVEMon
             // Create the Plans sub-menu
             List<Character> characters = new List<Character>(EveMonClient.MonitoredCharacters);
             characters.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
-            foreach (var character in characters)
+            foreach (Character character in characters)
             {
                 ToolStripMenuItem characterItem = new ToolStripMenuItem(character.Name);
                 planToolStripMenuItem.DropDownItems.Add(characterItem);
@@ -1793,21 +1800,23 @@ namespace EVEMon
             Activate();
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
         }
+
         #endregion
 
 
         #region Reaction to settings change
+
         /// <summary>
         /// Occurs when the settings form has been validated.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
-                            && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                            || WindowState == FormWindowState.Minimized);
+                               && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                                   || WindowState == FormWindowState.Minimized);
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
@@ -1835,17 +1844,17 @@ namespace EVEMon
 
             // Whenever we switch API provider we update
             // the server status and every monitored CCP character
-            if (m_APIProviderName != EveMonClient.APIProviders.CurrentProvider.Name)
+            if (m_apiProviderName == EveMonClient.APIProviders.CurrentProvider.Name)
+                return;
+
+            EveMonClient.EVEServer.ForceUpdate();
+
+            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
             {
-                EveMonClient.EVEServer.ForceUpdate();
-
-                foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
-                {
-                    character.QueryMonitors.QueryEverything();
-                }
-
-                m_APIProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+                character.QueryMonitors.QueryEverything();
             }
+
+            m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
         }
 
         /// <summary>
@@ -1879,10 +1888,12 @@ namespace EVEMon
             // Finally start the service
             m_igbServer.Start();
         }
+
         #endregion
 
 
         #region Testing Functions
+
         [Conditional("DEBUG")]
         private void DisplayTestMenu()
         {
@@ -1891,7 +1902,7 @@ namespace EVEMon
             testsToolStripSeperator.Visible = true;
             testCharacterNotificationToolStripMenuItem.Visible = true;
         }
-        
+
         /// <summary>
         /// Enables the character notification if the current character is valid.
         /// </summary>
@@ -1929,12 +1940,12 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var notification = new Notification(NotificationCategory.TestNofitication, null)
-            {
-                Priority = NotificationPriority.Information,
-                Behaviour = NotificationBehaviour.Overwrite,
-                Description = "Test Notification"
-            };
+            Notification notification = new Notification(NotificationCategory.TestNofitication, null)
+                                            {
+                                                Priority = NotificationPriority.Information,
+                                                Behaviour = NotificationBehaviour.Overwrite,
+                                                Description = "Test Notification"
+                                            };
             EveMonClient.Notifications.Notify(notification);
         }
 
@@ -1945,7 +1956,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testCharacterNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var monitor = GetCurrentMonitor();
+            CharacterMonitor monitor = GetCurrentMonitor();
             monitor.TestCharacterNotification();
         }
 

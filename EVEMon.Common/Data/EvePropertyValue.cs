@@ -9,9 +9,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public struct EvePropertyValue
     {
-        private readonly EveProperty m_property;
-        private readonly string m_value;
-
         #region Constructor
 
         /// <summary>
@@ -19,9 +16,10 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         internal EvePropertyValue(SerializablePropertyValue src)
+            : this()
         {
-            m_property = StaticProperties.GetPropertyByID(src.ID);
-            m_value = String.Intern(src.Value);
+            Property = StaticProperties.GetPropertyByID(src.ID);
+            Value = String.Intern(src.Value);
         }
         
         #endregion
@@ -32,25 +30,19 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property.
         /// </summary>
-        public EveProperty Property
-        {
-            get { return m_property; }
-        }
+        public EveProperty Property { get; private set; }
 
         /// <summary>
         /// Gets the property value.
         /// </summary>
-        public string Value
-        {
-            get { return m_value; }
-        }
+        public string Value { get; private set; }
 
         /// <summary>
         /// Gets the integer value.
         /// </summary>
         public int IValue
         {
-            get { return Int32.Parse(m_value); }
+            get { return Int32.Parse(Value); }
         }
 
         /// <summary>
@@ -58,7 +50,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public float FValue
         {
-            get { return Single.Parse(m_value); }
+            get { return Single.Parse(Value); }
         }
 
         #endregion
@@ -71,7 +63,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return m_property.Name;
+            return Property.Name;
         }
 
         #endregion

@@ -1,26 +1,17 @@
 ﻿using System;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a skill training
+    /// Represents a skill training.
     /// </summary>
     [EnforceUIThreadAffinity]
     public sealed class QueuedSkill
     {
-        private readonly Character m_owner;
-        private int m_level;
-        private Skill m_skill;
-        private DateTime m_startTime;
-        private DateTime m_endTime;
-        private int m_startSP;
-        private int m_endSP;
-
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="character">The character for this training</param>
         /// <param name="serial">The serialization object for this training</param>
@@ -28,143 +19,104 @@ namespace EVEMon.Common
         /// <param name="startTimeWhenPaused">Training starttime when the queue is actually paused. Indeed, in such case, CCP returns empty start and end time, so we compute a "what if we start now" scenario.</param>
         internal QueuedSkill(Character character, SerializableQueuedSkill serial, bool isPaused, ref DateTime startTimeWhenPaused)
         {
-            m_owner = character;
-            m_startSP = serial.StartSP;
-            m_endSP = serial.EndSP;
-            m_level = serial.Level;
-            m_skill = character.Skills[serial.ID];
+            Owner = character;
+            StartSP = serial.StartSP;
+            EndSP = serial.EndSP;
+            Level = serial.Level;
+            Skill = character.Skills[serial.ID];
 
             if (!isPaused)
             {
                 // Not paused, we should trust CCP
-                m_startTime = serial.StartTime;
-                m_endTime = serial.EndTime;
+                StartTime = serial.StartTime;
+                EndTime = serial.EndTime;
             }
             else
             {
                 // StartTime and EndTime were empty on the serialization object if the skill was paused
                 // So we compute a "what if we start now" scenario
-                m_startTime = startTimeWhenPaused;
-                if (m_skill != null)
-                    startTimeWhenPaused += m_skill.GetLeftTrainingTimeForLevelOnly(m_level);
-                m_endTime = startTimeWhenPaused;
+                StartTime = startTimeWhenPaused;
+                if (Skill != null)
+                    startTimeWhenPaused += Skill.GetLeftTrainingTimeForLevelOnly(Level);
+                EndTime = startTimeWhenPaused;
             }
         }
 
         /// <summary>
         /// Gets the character training this.
         /// </summary>
-        public Character Owner
-        {
-            get { return m_owner; }
-        }
+        public Character Owner { get; private set; }
 
         /// <summary>
-        /// Gets the trained level
+        /// Gets the trained level.
         /// </summary>
-        public int Level
-        {
-            get { return m_level; }
-        }
+        public int Level { get; private set; }
 
         /// <summary>
         /// Gets the trained skill. May be null if the skill is not in our datafiles.
         /// </summary>
-        public Skill Skill
-        {
-            get { return m_skill; }
-        }
+        public Skill Skill { get; private set; }
 
         /// <summary>
         /// Gets the skill name, or "Unknown skill" if the skill was not in our datafiles.
         /// </summary>
         public string SkillName
         {
-            get { return (m_skill != null ? m_skill.Name : "Unknown Skill"); }
+            get { return (Skill != null ? Skill.Name : "Unknown Skill"); }
         }
 
         /// <summary>
-        /// Gets the training start time (UTC)
+        /// Gets the training start time (UTC).
         /// </summary>
-        public DateTime StartTime
-        {
-            get { return m_startTime; }
-        }
+        public DateTime StartTime { get; private set; }
 
         /// <summary>
-        /// Gets the time this training will be completed (UTC)
+        /// Gets the time this training will be completed (UTC).
         /// </summary>
-        public DateTime EndTime
-        {
-            get { return m_endTime; }
-        }
+        public DateTime EndTime { get; private set; }
 
         /// <summary>
-        /// Gets the number of SP this skill had when the training started
+        /// Gets the number of SP this skill had when the training started.
         /// </summary>
-        public int StartSP
-        {
-            get { return m_startSP; }
-        }
+        public int StartSP { get; private set; }
 
         /// <summary>
-        /// Gets the number of SP this skill will have once the training is over
+        /// Gets the number of SP this skill will have once the training is over.
         /// </summary>
-        public int EndSP
-        {
-            get { return m_endSP; }
-        }
+        public int EndSP { get; private set; }
 
         /// <summary>
-        /// Gets the fraction completed, between 0 and 1
+        /// Gets the fraction completed, between 0 and 1.
         /// </summary>
         public float FractionCompleted
         {
-            get 
-            {
-                return (m_skill == null ? 0 : m_skill.FractionCompleted);
-            }
+            get { return (Skill == null ? 0 : Skill.FractionCompleted); }
         }
 
         /// <summary>
-        /// Computes an estimation of the current SP 
+        /// Computes an estimation of the current SP.
         /// </summary>
         public int CurrentSP
         {
             get
             {
-                // Computes the total SP after this training
-                int totalSP = 0;
-                foreach (var skill in StaticSkills.AllSkills)
-                {
-                    if (m_skill.StaticData == skill && m_skill.IsTraining)
-                    {
-                        totalSP += m_endSP;
-                    }
-                    else
-                    {
-                        totalSP += m_owner.GetSkillPoints(skill);
-                    }
-                }
-
-                // Computes estimated current SP
-                var spPerHour = m_owner.GetBaseSPPerHour(m_skill);
-                var estimatedSP = m_endSP - (m_endTime - DateTime.UtcNow).TotalHours * spPerHour;
-                return (m_skill.IsTraining ? Math.Max((int)estimatedSP, m_startSP) : m_startSP);
+                float spPerHour = Owner.GetBaseSPPerHour(Skill);
+                double estimatedSP = EndSP - (EndTime.Subtract(DateTime.UtcNow)).TotalHours * spPerHour;
+                return (Skill.IsTraining ? Math.Max((int) estimatedSP, StartSP) : StartSP);
             }
         }
 
         /// <summary>
-        /// Computes the remaining time. Returns <see cref="TimeSpan.Zero"/> if already completed;
+        /// Computes the remaining time.
         /// </summary>
+        /// <value>The remaining time.</value>
+        /// <returns> Returns <see cref="TimeSpan.Zero"/> if already completed.</returns>
         public TimeSpan RemainingTime
         {
             get
             {
-                TimeSpan left = m_endTime.Subtract(DateTime.UtcNow);
-                if (left < TimeSpan.Zero)
-                    return TimeSpan.Zero;
-                return left;
+                TimeSpan left = EndTime.Subtract(DateTime.UtcNow);
+                return left < TimeSpan.Zero ? TimeSpan.Zero : left;
             }
         }
 
@@ -175,9 +127,7 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_endTime <= DateTime.UtcNow)
-                    return true;
-                return false;
+                return EndTime <= DateTime.UtcNow;
             }
         }
 
@@ -187,32 +137,32 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableQueuedSkill Export()
         {
-            var skill = new SerializableQueuedSkill
-            {
-                ID = (m_skill == null ? 0 : m_skill.ID),
-                Level = m_level,
-                StartSP = m_startSP,
-                EndSP = m_endSP,
-            };
+            SerializableQueuedSkill skill = new SerializableQueuedSkill
+                                                {
+                                                    ID = (Skill == null ? 0 : Skill.ID),
+                                                    Level = Level,
+                                                    StartSP = StartSP,
+                                                    EndSP = EndSP,
+                                                };
 
-            // CCP's API indicates paused training with missing skill
-            // start and end times. Mimicing them is ugly but necessary
-            if (m_owner.IsTraining)
+            // CCP's API indicates paused training skill with missing start and end times
+            // Mimicing them is ugly but necessary
+            if (Owner.IsTraining)
             {
-                skill.StartTime = m_startTime;
-                skill.EndTime = m_endTime;
+                skill.StartTime = StartTime;
+                skill.EndTime = EndTime;
             }
 
             return skill;
         }
 
         /// <summary>
-        /// Gets a string representation of this skill
+        /// Gets a string representation of this skill.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("{0} {1}", SkillName, Skill.GetRomanForInt(m_level));
+            return String.Format("{0} {1}", SkillName, Skill.GetRomanFromInt(Level));
         }
     }
 }

@@ -91,7 +91,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return Skill.Name + " " + Skill.GetRomanForInt(Level);
+            return Skill.Name + " " + Skill.GetRomanFromInt(Level);
         }
     }
 }

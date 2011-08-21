@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
     /// <summary>
-    /// Actions to take on obsolete entries
+    /// Actions to take on obsolete entries.
     /// </summary>
     public enum ObsoleteEntriesAction
     {
@@ -28,7 +24,7 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class ObsoleteEntriesForm : EVEMonForm
     {
-        private Plan m_plan;
+        private readonly Plan m_plan;
         private ObsoleteEntriesAction m_result = ObsoleteEntriesAction.None;
         private ObsoleteEntriesAction m_previewResult = ObsoleteEntriesAction.None;
 
@@ -62,7 +58,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private ObsoleteEntriesAction ShowObsoleteEntriesDialog()
         {
-            this.ShowDialog();
+            ShowDialog();
             return m_result;
         }
 
@@ -132,6 +128,7 @@ namespace EVEMon.SkillPlanner
         /// preview result.
         /// </summary>
         /// <param name="lvi"><c>ListViewItem</c> to format</param>
+        /// <exception cref="NotImplementedException"></exception>
         private void FormatListViewItem(ListViewItem lvi)
         {
             bool confirmed = (bool)lvi.Tag;
@@ -155,9 +152,10 @@ namespace EVEMon.SkillPlanner
                     }
                     break;
                 case ObsoleteEntriesAction.None:
-                default:
                     FormatListViewNormalStyle(lvi);
                     break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -215,7 +213,7 @@ namespace EVEMon.SkillPlanner
         private void KeepAllButton_Click(object sender, EventArgs e)
         {
             m_result = ObsoleteEntriesAction.KeepAll;
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -226,7 +224,7 @@ namespace EVEMon.SkillPlanner
         private void RemoveAllButton_Click(object sender, EventArgs e)
         {
             m_result = ObsoleteEntriesAction.RemoveAll;
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -237,7 +235,7 @@ namespace EVEMon.SkillPlanner
         private void RemoveConfirmedButton_Click(object sender, EventArgs e)
         {
             m_result = ObsoleteEntriesAction.RemoveConfirmed;
-            this.Close();
+            Close();
         }
 
         /// <summary>

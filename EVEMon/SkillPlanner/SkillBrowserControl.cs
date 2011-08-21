@@ -27,6 +27,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             lblSkillName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
             
             // Reposition the help text along side the treeview
@@ -40,10 +42,8 @@ namespace EVEMon.SkillPlanner
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
 
-            //Update the controls
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
-
-            base.OnLoad(e);
+            //Update the controls visibility
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -124,6 +124,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            UpdateControlVisibility();
+        }
+
+        /// <summary>
+        /// Updates the control visibility.
+        /// </summary>
+        private void UpdateControlVisibility()
+        {
             if (!Settings.UI.SafeForWork)
             {
                 planToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
@@ -159,7 +167,7 @@ namespace EVEMon.SkillPlanner
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
 
             planToMenu.Text = (level == 0 ? "Plan To (none)..." :
-                String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...", Skill.GetRomanForInt(level)));
+                String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...", Skill.GetRomanFromInt(level)));
         }
 
         /// <summary>
@@ -232,7 +240,7 @@ namespace EVEMon.SkillPlanner
             // "Level III :"
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ",Skill.GetRomanForInt(level));
+            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ",Skill.GetRomanFromInt(level));
 
             // Is it already trained ?
             if (m_selectedSkill.Level >= level)

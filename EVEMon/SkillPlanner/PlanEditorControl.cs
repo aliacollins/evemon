@@ -39,11 +39,6 @@ namespace EVEMon.SkillPlanner
         private RemappingPoint m_formTag;
         private AttributesOptimizationForm m_oldForm;
 
-        /// <summary>
-        /// To enable the three-state columns, we need to persist the base plan,
-        /// whose order is unchanged, and the sorted plan, which represents the plan the way it is displayed.
-        /// </summary>
-        private PlanScratchpad m_displayPlan;
         private Plan m_plan;
 
         // The ImplantsControl or the AttributesOptimizationForm
@@ -138,7 +133,7 @@ namespace EVEMon.SkillPlanner
                 
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
-                m_displayPlan = new PlanScratchpad(m_character);
+                DisplayPlan = new PlanScratchpad(m_character);
                 m_lastImplantSetIndex = -1;
 
                 // Children controls
@@ -159,10 +154,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the version of the plan as it is currently displayed.
         /// </summary>
-        public PlanScratchpad DisplayPlan
-        {
-            get { return m_displayPlan; }
-        }
+        public PlanScratchpad DisplayPlan { get; private set; }
 
         /// <summary>
         /// Gets the character this control is bound to.
@@ -303,18 +295,18 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateDisplayPlan()
         {
-            m_displayPlan.RebuildPlanFrom(m_plan, true);
+            DisplayPlan.RebuildPlanFrom(m_plan, true);
 
             // Share the remapping points
             PlanEntry[] srcEntries = m_plan.ToArray();
-            PlanEntry[] destEntries = m_displayPlan.ToArray();
+            PlanEntry[] destEntries = DisplayPlan.ToArray();
             for (int i = 0; i < srcEntries.Length; i++)
             {
                 destEntries[i].Remapping = srcEntries[i].Remapping;
             }
 
             // Apply the sort
-            m_displayPlan.Sort(m_plan.SortingPreferences);
+            DisplayPlan.Sort(m_plan.SortingPreferences);
         }
 
         /// <summary>
@@ -339,7 +331,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Scroll through entries and their remapping points
                 List<ListViewItem> items = new List<ListViewItem>();
-                foreach (PlanEntry entry in m_displayPlan)
+                foreach (PlanEntry entry in DisplayPlan)
                 {
                     // In any case, we must insert a new item for this plan's entry at the current index
                     // Do we need to insert a remapping point ?
@@ -408,11 +400,13 @@ namespace EVEMon.SkillPlanner
         private void UpdateListViewItems()
         {
             // When there is a pluggable (implants calculator or attributes optimizer)
-            // This one provides us the scratchpad to update training times.
+            // This one provides us the scratchpad to update training times
             m_areRemappingPointsActive = true;
             if (m_pluggable != null)
             {
-                m_pluggable.UpdateStatistics(m_displayPlan, out m_areRemappingPointsActive);
+                bool areRemappingPointsActive;
+                m_pluggable.UpdateStatistics(DisplayPlan, out areRemappingPointsActive);
+                m_areRemappingPointsActive = areRemappingPointsActive;
             }
             else
             {
@@ -420,7 +414,7 @@ namespace EVEMon.SkillPlanner
                 if (m_plan.ChosenImplantSet != null)
                     scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
 
-                m_displayPlan.UpdateStatistics(scratchpad, true, true);
+                DisplayPlan.UpdateStatistics(scratchpad, true, true);
             }
 
             // Start updating the list
@@ -829,7 +823,7 @@ namespace EVEMon.SkillPlanner
         {
             m_plan.ChosenImplantSet = cbChooseImplantSet.SelectedItem as ImplantSet;
             m_lastImplantSetIndex = cbChooseImplantSet.SelectedIndex;
-            m_displayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
+            DisplayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
 
             if (m_pluggable != null)
                 m_pluggable.UpdateOnImplantSetChange();
@@ -1172,7 +1166,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
         private void lvSkills_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             ColumnHeader column = lvSkills.Columns[e.Column];
@@ -1194,8 +1187,6 @@ namespace EVEMon.SkillPlanner
                         case ThreeStateSortOrder.Descending:
                             m_plan.SortingPreferences.Order = ThreeStateSortOrder.None;
                             break;
-                        default:
-                            throw new NotImplementedException();
                     }
                 }
                 else
@@ -1220,10 +1211,9 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private ColumnHeader GetColumn(PlanEntrySort criteria)
         {
-            if (criteria == PlanEntrySort.None)
-                return null;
-
-            return lvSkills.Columns.Cast<ColumnHeader>().FirstOrDefault(header => GetPlanSort(header) == criteria);
+            return criteria == PlanEntrySort.None
+                       ? null
+                       : lvSkills.Columns.Cast<ColumnHeader>().FirstOrDefault(header => GetPlanSort(header) == criteria);
         }
 
         /// <summary>
@@ -1297,13 +1287,14 @@ namespace EVEMon.SkillPlanner
 
 
             // Adds the icon on the new column
-            if (m_plan.SortingPreferences.Criteria != PlanEntrySort.None && m_plan.SortingPreferences.Order != ThreeStateSortOrder.None)
-            {
-                ColumnHeader column = GetColumn(m_plan.SortingPreferences.Criteria);
+            if (m_plan.SortingPreferences.Criteria == PlanEntrySort.None ||
+                m_plan.SortingPreferences.Order == ThreeStateSortOrder.None)
+                return;
 
-                if (column != null)
-                    column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending ? ArrowUpIndex : ArrowDownIndex);
-            }
+            ColumnHeader column = GetColumn(m_plan.SortingPreferences.Criteria);
+
+            if (column != null)
+                column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending ? ArrowUpIndex : ArrowDownIndex);
         }
 
         #endregion
@@ -1455,11 +1446,11 @@ namespace EVEMon.SkillPlanner
         {
             ListViewItem item = lvSkills.SelectedItems[0];
             PlanEntry entry = item.Tag as PlanEntry;
-            if (entry != null)
-            {
-                Skill skill = entry.CharacterSkill;
-                WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInBrowser(skill);
-            }
+            if (entry == null)
+                return;
+
+            Skill skill = entry.CharacterSkill;
+            WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -1472,11 +1463,11 @@ namespace EVEMon.SkillPlanner
         {
             ListViewItem item = lvSkills.SelectedItems[0];
             PlanEntry entry = item.Tag as PlanEntry;
-            if (entry != null)
-            {
-                Skill skill = entry.CharacterSkill;
-                WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInExplorer(skill);
-            }
+            if (entry == null)
+                return;
+
+            Skill skill = entry.CharacterSkill;
+            WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInExplorer(skill);
         }
 
         /// <summary>
@@ -1527,37 +1518,37 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // Update priorities, while performing backup for subsequent check
-                if (!m_plan.TrySetPriority(m_displayPlan, entries, form.Priority))
+                if (m_plan.TrySetPriority(DisplayPlan, entries, form.Priority))
+                    return;
+
+                bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
+
+                // User wishes the dialog to be displayed
+                if (showDialog)
                 {
-                    bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
+                    string text = String.Concat("This would result in a priority conflict.",
+                                                " (Either pre-requisites with a lower priority or dependant skills with a higher priority).\r\n\r\n",
+                                                "Click Yes if you wish to do this and adjust the other skills\r\nor No if you do not wish to change the priority.");
+                    const string CaptionText = "Priority Conflict";
+                    const string CbOptionText = "Do not show this dialog again";
 
-                    // User wishes the dialog to be displayed
-                    if (showDialog)
-                    {
-                        string text = String.Concat("This would result in a priority conflict.",
-                               " (Either pre-requisites with a lower priority or dependant skills with a higher priority).\r\n\r\n",
-                               "Click Yes if you wish to do this and adjust the other skills\r\nor No if you do not wish to change the priority.");
-                        const string CaptionText = "Priority Conflict";
-                        const string CbOptionText = "Do not show this dialog again";
+                    // Shows the custom dialog box
+                    MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
+                    DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                    Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = msgBoxCustom.cbUnchecked;
 
-                        // Shows the custom dialog box
-                        MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
-                        DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                        Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = msgBoxCustom.cbUnchecked;
+                    // When the checkbox is checked we store the dialog result
+                    if (!msgBoxCustom.cbUnchecked)
+                        Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
 
-                        // When the checkbox is checked we store the dialog result
-                        if (!msgBoxCustom.cbUnchecked)
-                            Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
+                    if (drb == DialogResult.Yes)
+                        m_plan.SetPriority(DisplayPlan, entries, form.Priority);
 
-                        if (drb == DialogResult.Yes)
-                            m_plan.SetPriority(m_displayPlan, entries, form.Priority);
-
-                    }
+                }
                     // User wishes the dialog not to be displayed and has set the dialog result to "Yes"
-                    else if (Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult == DialogResult.Yes)
-                    {
-                        m_plan.SetPriority(m_displayPlan, entries, form.Priority);
-                    }
+                else if (Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult == DialogResult.Yes)
+                {
+                    m_plan.SetPriority(DisplayPlan, entries, form.Priority);
                 }
             }
         }
@@ -1593,7 +1584,7 @@ namespace EVEMon.SkillPlanner
                 entry.Notes = noteText;
             }
 
-            m_plan.RebuildPlanFrom(m_displayPlan, true);
+            m_plan.RebuildPlanFrom(DisplayPlan, true);
         }
 
         /// <summary>
@@ -1620,7 +1611,7 @@ namespace EVEMon.SkillPlanner
 
             // Create a new plan
             Plan newPlan = new Plan(Character) {Name = planName};
-            IPlanOperation operation = newPlan.TryAddSet(entries, string.Format("Exported from {0}", m_plan.Name));
+            IPlanOperation operation = newPlan.TryAddSet(entries, String.Format("Exported from {0}", m_plan.Name));
             operation.Perform();
 
             // Add plan and save
@@ -1846,39 +1837,39 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (lvSkills.SelectedItems.Count == 1)
+            if (lvSkills.SelectedItems.Count != 1)
+                return;
+
+            // When the first entry is a skill, shows it in the skill browser.
+            if (GetFirstSelectedEntry() != null)
             {
-                // When the first entry is a skill, shows it in the skill browser.
-                if (GetFirstSelectedEntry() != null)
-                {
-                    miShowInSkillBrowser_Click(sender, e);
-                }
+                miShowInSkillBrowser_Click(sender, e);
+            }
                 // When it is a remapping point, edit it
-                else
+            else
+            {
+                // Retrieves the point
+                ListViewItem nextItem = lvSkills.Items[lvSkills.SelectedIndices[0] + 1];
+                PlanEntry entry = GetPlanEntry(nextItem);
+                RemappingPoint point = entry.Remapping;
+
+                // Display the attributes optimization form
+                // if it's not already shown
+                if (point != m_formTag)
                 {
-                    // Retrieves the point
-                    ListViewItem nextItem = lvSkills.Items[lvSkills.SelectedIndices[0] + 1];
-                    PlanEntry entry = GetPlanEntry(nextItem);
-                    RemappingPoint point = entry.Remapping;
+                    // When we click on another point the previous form closes
+                    if (m_oldForm != null)
+                        m_oldForm.Close();
 
-                    // Display the attributes optimization form
-                    // if it's not already shown
-                    if (point != m_formTag)
-                    {
-                        // When we click on another point the previous form closes
-                        if (m_oldForm != null)
-                            m_oldForm.Close();
-
-                        // Creates the form and displays it
-                        AttributesOptimizationForm form = new AttributesOptimizationForm(m_character, m_plan, point);
-                        form.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
-                        form.PlanEditor = this;
-                        form.Show(this);
+                    // Creates the form and displays it
+                    AttributesOptimizationForm form = new AttributesOptimizationForm(m_character, m_plan, point);
+                    form.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
+                    form.PlanEditor = this;
+                    form.Show(this);
                         
-                        // Update variables for forms display control
-                        m_formTag = point;
-                        m_oldForm = form;
-                    }
+                    // Update variables for forms display control
+                    m_formTag = point;
+                    m_oldForm = form;
                 }
             }
         }

@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        public PlanWindow()
+        private PlanWindow()
         {
             InitializeComponent();
             RememberPositionKey = "PlanWindow";
@@ -87,7 +87,7 @@ namespace EVEMon.SkillPlanner
 
             //Update the controls
             EveMonClient_SettingsChanged(null, EventArgs.Empty);
-            
+
             //Update the status bar
             UpdateStatusBar();
         }
@@ -99,11 +99,11 @@ namespace EVEMon.SkillPlanner
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
-            if (s_lastActivated != this)
-            {
-                s_lastActivated = this;
-                planEditor.ImportColumnSettings(Settings.UI.PlanWindow.Columns);
-            }
+            if (s_lastActivated == this)
+                return;
+
+            s_lastActivated = this;
+            planEditor.ImportColumnSettings(Settings.UI.PlanWindow.Columns);
         }
 
         /// <summary>
@@ -125,9 +125,10 @@ namespace EVEMon.SkillPlanner
             Settings.Save();
 
             // We're closing down
-            if (!(e.CloseReason == CloseReason.ApplicationExitCall) && // and Application.Exit() was not called
-                !(e.CloseReason == CloseReason.TaskManagerClosing) &&  // and the user isn't trying to shut the program down for some reason
-                !(e.CloseReason == CloseReason.WindowsShutDown))       // and Windows is not shutting down
+            if (e.CloseReason != CloseReason.ApplicationExitCall && // and Application.Exit() was not called
+                e.CloseReason != CloseReason.TaskManagerClosing &&
+                // and the user isn't trying to shut the program down for some reason
+                e.CloseReason != CloseReason.WindowsShutDown) // and Windows is not shutting down
             {
                 // Tell the skill explorer we're closing down
                 WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
@@ -149,7 +150,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public Character Character
         {
-            get { return (Character)m_plan.Character; }
+            get { return (Character) m_plan.Character; }
         }
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            protected set
+            private set
             {
                 if (m_plan == value)
                     return;
@@ -177,7 +178,8 @@ namespace EVEMon.SkillPlanner
                 tabControl.SelectedTab = (m_plan.Count == 0 ? tpSkillBrowser : tpPlanQueue);
 
                 // Update controls
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name, m_plan.Name);
+                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name,
+                                     m_plan.Name);
 
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
@@ -198,6 +200,7 @@ namespace EVEMon.SkillPlanner
                 CheckInvalidEntries();
             }
         }
+
         #endregion
 
 
@@ -216,56 +219,57 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Opens this skill in the skill explorer and switches to this tab.
         /// </summary>
-        /// <param name="gs"></param>
-        public void ShowSkillInExplorer(Skill gs)
+        /// <param name="skill"></param>
+        public void ShowSkillInExplorer(Skill skill)
         {
-            skillBrowser.ShowSkillInExplorer(gs);
+            skillBrowser.ShowSkillInExplorer(skill);
         }
 
         /// <summary>
         /// Opens this ship in the ship browser and switches to this tab.
         /// </summary>
-        /// <param name="gs"></param>
-        public void ShowShipInBrowser(Item s)
+        /// <param name="ship"></param>
+        public void ShowShipInBrowser(Item ship)
         {
             tabControl.SelectedTab = tpShipBrowser;
-            shipBrowser.SelectedObject = s;
+            shipBrowser.SelectedObject = ship;
         }
 
         /// <summary>
         /// Opens this blueprint in the blueprint browser and switches to this tab.
         /// </summary>
-        /// <param name="gs"></param>
-        public void ShowBlueprintInBrowser(Item i)
+        /// <param name="blueprint"></param>
+        public void ShowBlueprintInBrowser(Item blueprint)
         {
             tabControl.SelectedTab = tpBlueprintBrowser;
-            blueprintBrowser.SelectedObject = i;
+            blueprintBrowser.SelectedObject = blueprint;
         }
 
         /// <summary>
         /// Opens this item in the item browser and switches to this tab.
         /// </summary>
-        /// <param name="gs"></param>
-        public void ShowItemInBrowser(Item i)
+        /// <param name="item"></param>
+        public void ShowItemInBrowser(Item item)
         {
             tabControl.SelectedTab = tpItemBrowser;
-            itemBrowser.SelectedObject = i;
+            itemBrowser.SelectedObject = item;
         }
 
         /// <summary>
         /// Opens this certificate in the certificate browser and switches to this tab.
         /// </summary>
-        /// <param name="gs"></param>
-        public void ShowCertInBrowser(Certificate c)
+        /// <param name="certificate"></param>
+        public void ShowCertInBrowser(Certificate certificate)
         {
             tabControl.SelectedTab = tpCertificateBrowser;
-            certBrowser.SelectedCertificate = c;
+            certBrowser.SelectedCertificate = certificate;
         }
 
         /// <summary>
         /// Identifies if there are obsolete entries in the skill plan,
         /// displays message if required.
         /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public void CheckObsoleteEntries()
         {
             switch (Settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour)
@@ -291,31 +295,39 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void CheckInvalidEntries()
         {
-            if (m_plan.ContainsInvalidEntries)
+            if (!m_plan.ContainsInvalidEntries)
+                return;
+
+            StringBuilder message = new StringBuilder();
+
+            message.AppendLine(
+                "When loading the plan one or more skills were not found. " +
+                "This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.");
+            message.AppendLine();
+
+            foreach (InvalidPlanEntry entry in m_plan.InvalidEntries)
             {
-                StringBuilder message = new StringBuilder();
+                message.AppendFormat(CultureConstants.DefaultCulture, " - {0} planned to {1}{2}", entry.SkillName,
+                                     entry.PlannedLevel, Environment.NewLine);
+            }
 
-                message.AppendLine("When loading the plan one or more skills were not found. This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.");
-                message.AppendLine();
+            message.AppendLine();
+            message.AppendLine(
+                "Do you wish to keep these entries?\r\n- " +
+                "If you select \"Yes\" the entries will be removed from the plan\r  and will be stored in settings.\r\n- " +
+                "If you select \"No\" the entries will be discarded.");
 
-                foreach (var entry in m_plan.InvalidEntries)
-                {
-                    message.AppendFormat(CultureConstants.DefaultCulture, " - {0} planned to {1}{2}", entry.SkillName, entry.PlannedLevel, Environment.NewLine);
-                }
+            DialogResult result = MessageBox.Show(message.ToString(), "Invalid Entries Detected",
+                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
-                message.AppendLine();
-                message.AppendLine("Do you wish to keep these entries?\r\n- If you select \"Yes\" the entries will be removed from the plan\r  and will be stored in settings.\r\n- If you select \"No\" the entries will be discarded.");
-
-                var result = MessageBox.Show(message.ToString(), "Invalid Entries Detected", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-                if (result == DialogResult.No)
-                {
+            switch (result)
+            {
+                case DialogResult.No:
                     m_plan.ClearInvalidEntries();
-                }
-                else if (result == DialogResult.Yes)
-                {
+                    break;
+                case DialogResult.Yes:
                     m_plan.AcknoledgeInvalidEntries();
-                }
+                    break;
             }
         }
 
@@ -333,6 +345,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_plan != e.Plan)
                 return;
+
             UpdateEnables();
         }
 
@@ -353,20 +366,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            tabControl.ImageList = (!Settings.UI.SafeForWork ?
-                ilTabIcons :
-                new ImageList() { ImageSize = new Size(24, 24)});
+            tabControl.ImageList = (!Settings.UI.SafeForWork
+                                        ? ilTabIcons
+                                        : new ImageList {ImageSize = new Size(24, 24)});
 
             foreach (ToolStripItem button in upperToolStrip.Items)
             {
-                button.DisplayStyle = (!Settings.UI.SafeForWork ?
-                    ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Text);
+                button.DisplayStyle = (!Settings.UI.SafeForWork
+                                           ? ToolStripItemDisplayStyle.ImageAndText
+                                           : ToolStripItemDisplayStyle.Text);
             }
 
             foreach (ToolStripItem label in MainStatusStrip.Items)
             {
-                label.DisplayStyle = (!Settings.UI.SafeForWork ?
-                    ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Text);
+                label.DisplayStyle = (!Settings.UI.SafeForWork
+                                          ? ToolStripItemDisplayStyle.ImageAndText
+                                          : ToolStripItemDisplayStyle.Text);
             }
         }
 
@@ -384,51 +399,70 @@ namespace EVEMon.SkillPlanner
             tsmiPlan.Enabled = m_plan.Count > 0;
         }
 
+        /// <summary>
+        /// Updates the skill status label.
+        /// </summary>
+        /// <param name="selected">if set to <c>true</c> [selected].</param>
+        /// <param name="skillCount">The skill count.</param>
+        /// <param name="uniqueCount">The unique count.</param>
         internal void UpdateSkillStatusLabel(bool selected, int skillCount, int uniqueCount)
         {
             SkillsStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} skill{1} {2} ({3} unique)",
-                skillCount,
-                skillCount == 1 ? String.Empty : "s",
-                selected ? "selected" : "planned",
-                uniqueCount);
+                                                   skillCount,
+                                                   skillCount == 1 ? String.Empty : "s",
+                                                   selected ? "selected" : "planned",
+                                                   uniqueCount);
         }
 
+        /// <summary>
+        /// Updates the time status label.
+        /// </summary>
+        /// <param name="skillCount">The skill count.</param>
+        /// <param name="totalTime">The total time.</param>
         private void UpdateTimeStatusLabel(int skillCount, TimeSpan totalTime)
         {
             UpdateTimeStatusLabel(false, skillCount, totalTime);
         }
 
+        /// <summary>
+        /// Updates the time status label.
+        /// </summary>
+        /// <param name="selected">if set to <c>true</c> [selected].</param>
+        /// <param name="skillCount">The skill count.</param>
+        /// <param name="totalTime">The total time.</param>
         internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime)
         {
             TimeStatusLabel.AutoToolTip = false;
             TimeStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} to train {1}",
-                totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                selected ? 
-                String.Format("selected skill{0}", skillCount == 1 ? String.Empty : "s")
-                : "whole plan");
+                                                 totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                                                 selected
+                                                     ? String.Format("selected skill{0}",
+                                                                     skillCount == 1 ? String.Empty : "s")
+                                                     : "whole plan");
         }
 
+        /// <summary>
+        /// Updates the cost status label.
+        /// </summary>
+        /// <param name="selected">if set to <c>true</c> [selected].</param>
+        /// <param name="totalcost">The totalcost.</param>
+        /// <param name="cost">The cost.</param>
         internal void UpdateCostStatusLabel(bool selected, long totalcost, long cost)
         {
             CostStatusLabel.AutoToolTip = totalcost <= 0;
 
             if (totalcost > 0)
             {
-                CostStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required to purchase {1} skill{2} anew",
-                    totalcost,
-                    selected ? "selected" : "all",
-                    m_plan.UniqueSkillsCount == 1 ? String.Empty : "s");
+                CostStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture,
+                                                            "{0:0,0,0} ISK required to purchase {1} skill{2} anew",
+                                                            totalcost,
+                                                            selected ? "selected" : "all",
+                                                            m_plan.UniqueSkillsCount == 1 ? String.Empty : "s");
             }
 
-            if (cost > 0)
-            {
-                CostStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required",
-                     cost);
-            }
-            else
-            {
-                CostStatusLabel.Text = "0 ISK required";
-            }
+            CostStatusLabel.Text = cost > 0
+                                       ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required", cost)
+                                       : "0 ISK required";
         }
 
         /// <summary>
@@ -437,15 +471,9 @@ namespace EVEMon.SkillPlanner
         internal void UpdateStatusBar()
         {
             // Training time
-            CharacterScratchpad scratchpad;
-            if (m_plan.ChosenImplantSet != null)
-            {
-                scratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
-            }
-            else
-            {
-                scratchpad = new CharacterScratchpad(Character);
-            }
+            CharacterScratchpad scratchpad = m_plan.ChosenImplantSet != null
+                                                 ? m_plan.Character.After(m_plan.ChosenImplantSet)
+                                                 : new CharacterScratchpad(Character);
 
             TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
 
@@ -467,8 +495,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete this plan?", "Delete Plan", 
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show("Are you sure you want to delete this plan?", "Delete Plan",
+                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                              MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -485,7 +514,7 @@ namespace EVEMon.SkillPlanner
             // if it was the last in the list we select the previous one
             if (index > Character.Plans.Count - 1)
                 index--;
-            
+
             // When no plans exists after deletion we close the window
             if (index < 0)
             {
@@ -518,6 +547,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
         private void obsoleteEntriesToolStripStatusLabel_Click(object sender, EventArgs e)
         {
             ObsoleteEntriesAction action = ObsoleteEntriesForm.ShowDialog(m_plan);
@@ -534,8 +564,9 @@ namespace EVEMon.SkillPlanner
                     break;
                 case ObsoleteEntriesAction.KeepAll:
                 case ObsoleteEntriesAction.None:
-                default:
                     break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -549,20 +580,23 @@ namespace EVEMon.SkillPlanner
             tsddbPlans.DropDownItems.Clear();
             tsddbPlans.DropDownItems.Add("<New Plan>");
 
-            Character.Plans.AddTo(tsddbPlans.DropDownItems, (menuPlanItem, plan) => {
-                    menuPlanItem.Tag = plan;
+            Character.Plans.AddTo(
+                tsddbPlans.DropDownItems,
+                (menuPlanItem, plan) =>
+                    {
+                        menuPlanItem.Tag = plan;
 
-                    // Put current plan to bold
-                    if (plan == m_plan)
-                    {
-                        menuPlanItem.Enabled = false;
-                    }
-                    // Is it already opened in another plan ?
-                    else if (WindowsFactory<PlanWindow>.GetByTag(plan) != null)
-                    {
-                        menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
-                    }
-                });
+                        // Put current plan to bold
+                        if (plan == m_plan)
+                        {
+                            menuPlanItem.Enabled = false;
+                        }
+                            // Is it already opened in another plan ?
+                        else if (WindowsFactory<PlanWindow>.GetByTag(plan) != null)
+                        {
+                            menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
+                        }
+                    });
         }
 
         /// <summary>
@@ -579,7 +613,7 @@ namespace EVEMon.SkillPlanner
             // Is it another plan ?
             if (e.ClickedItem.Tag != null)
             {
-                Plan plan = (Plan)e.ClickedItem.Tag;
+                Plan plan = (Plan) e.ClickedItem.Tag;
                 PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(plan);
 
                 // Opens the existing window when there is one, or switch to this plan when no window opened
@@ -602,18 +636,17 @@ namespace EVEMon.SkillPlanner
                 if (dr == DialogResult.Cancel)
                     return;
 
-                var plan = new Plan(Character)
-                {
-                    Name = npw.Result
-                };
+                Plan plan = new Plan(Character)
+                                {
+                                    Name = npw.Result
+                                };
                 Character.Plans.Add(plan);
                 Plan = plan;
             }
         }
 
-
         /// <summary>
-        /// Toolbar > Export > Plan
+        /// Toolbar > Export > Plan.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -623,7 +656,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Toolbar > Export > After Plan Character
+        /// Toolbar > Export > After Plan Character.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -633,7 +666,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Opens the EFTLoadout form and passes it the current Plan
+        /// Opens the EFTLoadout form and passes it the current Plan.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -664,15 +697,16 @@ namespace EVEMon.SkillPlanner
                 Clipboard.SetText(output);
 
                 MessageBox.Show("The skill plan has been copied to the clipboard in a " +
-                            "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+                                "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
             }
             catch (ExternalException ex)
             {
                 ExceptionHandler.LogException(ex, true);
 
-                MessageBox.Show("The copy to clipboard has failed. You may retry later", "Plan Copy Failure", MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+                MessageBox.Show("The copy to clipboard has failed. You may retry later", "Plan Copy Failure",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
             }
         }
 
@@ -709,27 +743,26 @@ namespace EVEMon.SkillPlanner
             if (m_attributesOptimizerWindow == null)
             {
                 // Display the settings window
-                using (var settingsForm = new AttributesOptimizationSettingsForm(m_plan))
+                using (AttributesOptimizationSettingsForm settingsForm = new AttributesOptimizationSettingsForm(m_plan))
                 {
                     settingsForm.ShowDialog(this);
 
-                    if (settingsForm.DialogResult == DialogResult.OK)
-                    {
-                        // Now displays the computation window
-                        m_attributesOptimizerWindow = settingsForm.OptimizationForm;
-                        m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
-                        m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
-                        m_attributesOptimizerWindow.Show(this);
-                    }
+                    if (settingsForm.DialogResult != DialogResult.OK)
+                        return;
+
+                    // Now displays the computation window
+                    m_attributesOptimizerWindow = settingsForm.OptimizationForm;
+                    m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+                    m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
+                    m_attributesOptimizerWindow.Show(this);
                 }
+                return;
             }
-            else
-            {
-                // Bring the window to front
-                m_attributesOptimizerWindow.Visible = true;
-                m_attributesOptimizerWindow.BringToFront();
-                m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
-            }
+
+            // Bring the window to front
+            m_attributesOptimizerWindow.Visible = true;
+            m_attributesOptimizerWindow.BringToFront();
+            m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
         }
 
         /// <summary>

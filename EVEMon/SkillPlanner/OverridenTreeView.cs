@@ -19,33 +19,34 @@ namespace EVEMon.SkillPlanner
         {
             if (m.Msg == WM_LBUTTONDBLCLK)
             {
-                handleDoubleClick(ref m);
+                HandleDoubleClick(ref m);
             }
             else
             {
                 base.WndProc(ref m);
-            };
+            }
         }
 
         /// <summary>
         /// Handles the double click.
         /// </summary>
-        /// <param name="m">The m.</param>
-        private void handleDoubleClick(ref Message m)
+        /// <param name="m">The message.</param>
+        private void HandleDoubleClick(ref Message m)
         {
             // Get mouse location from message.lparam
             // x is low order word, y is high order word
             string lparam = m.LParam.ToString("X08");
             int x = int.Parse(lparam.Substring(4, 4), NumberStyles.HexNumber);
             int y = int.Parse(lparam.Substring(0, 4), NumberStyles.HexNumber);
+
             // Test for a treenode at this location
-            TreeViewHitTestInfo info = this.HitTest(x, y);
-            if (info.Node != null)
-            {
-                // Raise NodeMouseDoubleClick event
-                TreeNodeMouseClickEventArgs e = new TreeNodeMouseClickEventArgs(info.Node, MouseButtons.Left, 2, x, y);
-                OnNodeMouseDoubleClick(e);
-            }
+            TreeViewHitTestInfo info = HitTest(x, y);
+
+            if (info.Node == null)
+                return;
+
+            // Raise NodeMouseDoubleClick event
+            OnNodeMouseDoubleClick(new TreeNodeMouseClickEventArgs(info.Node, MouseButtons.Left, 2, x, y));
         }
 
         /// <summary>

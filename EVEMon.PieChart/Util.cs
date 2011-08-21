@@ -2,21 +2,25 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 
-namespace EVEMon.PieChart {
+namespace EVEMon.PieChart
+{
 
     /// <summary>
     ///   Enumeration for different shadow styles
     /// </summary>
-    public enum ShadowStyle {
+    public enum ShadowStyle
+    {
         /// <summary>
         ///   No shadow. Sides are drawn in the same color as the top od the 
         ///   pie.
         /// </summary>
         NoShadow,
+
         /// <summary>
         ///   Uniform shadow. Sides are drawn somewhat darker.
         /// </summary>
         UniformShadow,
+
         /// <summary>
         ///   Gradual shadow is used to fully simulate 3-D shadow.
         /// </summary>
@@ -26,47 +30,57 @@ namespace EVEMon.PieChart {
     /// <summary>
     ///   Enumeration for edge color types.
     /// </summary>
-    public enum EdgeColorType {
+    public enum EdgeColorType
+    {
         /// <summary>
         ///   Edges are not drawn at all.
         /// </summary>
         NoEdge,
+
         /// <summary>
         ///   System (window text) color is used to draw edges.
         /// </summary>
         SystemColor,
+
         /// <summary>
         ///   Surface color is used for edges.
         /// </summary>
         SurfaceColor,
+
         /// <summary>
         ///   A color that is little darker than surface color is used for
         ///   edges.
         /// </summary>
         DarkerThanSurface,
+
         /// <summary>
         ///   A color that is significantly darker than surface color is used 
         ///   for edges.
         /// </summary>
         DarkerDarkerThanSurface,
+
         /// <summary>
         ///   A color that is little lighter than surface color is used for
         ///   edges.
         /// </summary>
         LighterThanSurface,
+
         /// <summary>
         ///   A color that is significantly lighter than surface color is used 
         ///   for edges.
         /// </summary>
         LighterLighterThanSurface,
+
         /// <summary>
         ///   Contrast color is used for edges.
         /// </summary>
         Contrast,
+
         /// <summary>
         ///   Enhanced contrast color is used for edges.
         /// </summary>
         EnhancedContrast,
+
         /// <summary>
         ///   Black color is used for light surfaces and white for dark 
         ///   surfaces.
@@ -77,68 +91,77 @@ namespace EVEMon.PieChart {
     /// <summary>
     ///   Structure representing edge color used for rendering.
     /// </summary>
-    public struct EdgeColor {
+    public struct EdgeColor
+    {
 
         /// <summary>
         ///   Gets the actual color used for rendering.
         /// </summary>
-        public static Color GetRenderingColor(EdgeColorType edgeColorType, Color color) {
+        public static Color GetRenderingColor(EdgeColorType edgeColorType, Color color)
+        {
             Debug.Assert(color != Color.Empty);
             if (edgeColorType == EdgeColorType.Contrast || edgeColorType == EdgeColorType.EnhancedContrast)
                 edgeColorType = GetContrastColorType(color, edgeColorType);
             float correctionFactor = 0;
-            switch (edgeColorType) {
-            case EdgeColorType.SystemColor:
-                return SystemColors.WindowText;
-            case EdgeColorType.SurfaceColor:
-                return color;
-            case EdgeColorType.FullContrast:
-                return GetFullContrastColor(color);
-            case EdgeColorType.DarkerThanSurface:
-                correctionFactor = -ColorUtil.BrightnessEnhancementFactor1;
-                break;
-            case EdgeColorType.DarkerDarkerThanSurface:
-                correctionFactor = -ColorUtil.BrightnessEnhancementFactor2;
-                break;
-            case EdgeColorType.LighterThanSurface:
-                correctionFactor = +ColorUtil.BrightnessEnhancementFactor1;
-                break;
-            case EdgeColorType.LighterLighterThanSurface:
-                correctionFactor = +ColorUtil.BrightnessEnhancementFactor2;
-                break;
-            case EdgeColorType.NoEdge:
-                return System.Drawing.Color.Transparent;
+            switch (edgeColorType)
+            {
+                case EdgeColorType.SystemColor:
+                    return SystemColors.WindowText;
+                case EdgeColorType.SurfaceColor:
+                    return color;
+                case EdgeColorType.FullContrast:
+                    return GetFullContrastColor(color);
+                case EdgeColorType.DarkerThanSurface:
+                    correctionFactor = -ColorUtil.BrightnessEnhancementFactor1;
+                    break;
+                case EdgeColorType.DarkerDarkerThanSurface:
+                    correctionFactor = -ColorUtil.BrightnessEnhancementFactor2;
+                    break;
+                case EdgeColorType.LighterThanSurface:
+                    correctionFactor = +ColorUtil.BrightnessEnhancementFactor1;
+                    break;
+                case EdgeColorType.LighterLighterThanSurface:
+                    correctionFactor = +ColorUtil.BrightnessEnhancementFactor2;
+                    break;
+                case EdgeColorType.NoEdge:
+                    return Color.Transparent;
             }
             return ColorUtil.CreateColorWithCorrectedLightness(color, correctionFactor);
         }
 
-        private static EdgeColorType GetContrastColorType(Color color, EdgeColorType colorType) {
+        /// <summary>
+        /// Gets the type of the contrast color.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="colorType">Type of the color.</param>
+        /// <returns></returns>
+        private static EdgeColorType GetContrastColorType(Color color, EdgeColorType colorType)
+        {
             Debug.Assert(colorType == EdgeColorType.Contrast || colorType == EdgeColorType.EnhancedContrast);
-            if (color.GetBrightness() > s_brightnessThreshold) {
-                if (colorType == EdgeColorType.Contrast)
-                    return EdgeColorType.DarkerThanSurface;
-                else 
-                    return EdgeColorType.DarkerDarkerThanSurface;
-            }
-            if (colorType == EdgeColorType.Contrast)
-                return EdgeColorType.LighterThanSurface;
-            else
-                return EdgeColorType.LighterLighterThanSurface;
+            if (color.GetBrightness() > BrightnessThreshold)
+                return colorType == EdgeColorType.Contrast ? EdgeColorType.DarkerThanSurface : EdgeColorType.DarkerDarkerThanSurface;
+
+            return colorType == EdgeColorType.Contrast ? EdgeColorType.LighterThanSurface : EdgeColorType.LighterLighterThanSurface;
         }
 
-        private static Color GetFullContrastColor(Color color) {
-            if (color.GetBrightness() > s_brightnessThreshold)
-                return Color.Black;
-            return Color.White;
+        /// <summary>
+        /// Gets the full color of the contrast.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <returns></returns>
+        private static Color GetFullContrastColor(Color color)
+        {
+            return color.GetBrightness() > BrightnessThreshold ? Color.Black : Color.White;
         }
 
-        private static readonly float s_brightnessThreshold = 0.4F;
+        private const float BrightnessThreshold = 0.4F;
     }
 
     /// <summary>
     ///   Color utility structure.
     /// </summary>
-    public struct ColorUtil {
+    public struct ColorUtil
+    {
         /// <summary>
         ///   Creates color with corrected lightness.
         /// </summary>
@@ -153,34 +176,38 @@ namespace EVEMon.PieChart {
         /// <returns>
         ///   Corrected <c>Color</c> structure.
         /// </returns>
-        public static Color CreateColorWithCorrectedLightness(Color color, float correctionFactor) {
+        public static Color CreateColorWithCorrectedLightness(Color color, float correctionFactor)
+        {
             Debug.Assert(correctionFactor <= 1 && correctionFactor >= -1);
-            if (correctionFactor == 0)
+            if (Math.Abs(correctionFactor) < float.Epsilon)
                 return color;
-            float red   = (float)color.R;
-            float green = (float)color.G;
-            float blue  = (float)color.B;
-            if (correctionFactor < 0) {
+            float red = color.R;
+            float green = color.G;
+            float blue = color.B;
+            if (correctionFactor < 0)
+            {
                 correctionFactor = 1 + correctionFactor;
-                red   *= correctionFactor;
+                red *= correctionFactor;
                 green *= correctionFactor;
-                blue  *= correctionFactor;
+                blue *= correctionFactor;
             }
-            else {
-                red   = (255 - red) * correctionFactor + red;
+            else
+            {
+                red = (255 - red) * correctionFactor + red;
                 green = (255 - green) * correctionFactor + green;
-                blue  = (255 - blue) * correctionFactor + blue;
+                blue = (255 - blue) * correctionFactor + blue;
             }
-            return System.Drawing.Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
+            return Color.FromArgb(color.A, (int) red, (int) green, (int) blue);
         }
 
         /// <summary>
         ///   Small brightness change factor.
         /// </summary>
-        public static readonly float BrightnessEnhancementFactor1 = 0.3F;
+        public const float BrightnessEnhancementFactor1 = 0.3F;
+
         /// <summary>
         ///   Large brightness change factor.
         /// </summary>
-        public static readonly float BrightnessEnhancementFactor2 = 0.5F;
+        public const float BrightnessEnhancementFactor2 = 0.5F;
     }
 }

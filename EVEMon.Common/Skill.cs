@@ -17,13 +17,13 @@ namespace EVEMon.Common
         private readonly StaticSkill m_staticData;
         private readonly SkillGroup m_skillGroup;
 
-        private List<SkillLevel> m_prereqs = new List<SkillLevel>();
+        private readonly List<SkillLevel> m_prereqs = new List<SkillLevel>();
         private int m_currentSkillPoints;
-        private int m_lastConfirmedLvl;
         private int m_skillLevel;
         private int m_level;
         private bool m_owned;
         private bool m_known;
+
 
         #region Construction, initialization, exportation, updates
 
@@ -59,7 +59,7 @@ namespace EVEMon.Common
             m_owned = src.OwnsBook;
             m_known = (fromCCP | src.IsKnown);
             m_currentSkillPoints = src.Skillpoints;
-            m_lastConfirmedLvl = src.Level;
+            LastConfirmedLvl = src.Level;
             m_level = src.Level;
         }
 
@@ -71,7 +71,7 @@ namespace EVEMon.Common
         {
             m_known = false;
             m_currentSkillPoints = 0;
-            m_lastConfirmedLvl = 0;
+            LastConfirmedLvl = 0;
             m_level = 0;
 
             // Are we reloading the settings ?
@@ -95,13 +95,15 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableCharacterSkill Export()
         {
-            var dest = new SerializableCharacterSkill();
-            dest.ID = m_staticData.ID;
-            dest.Name = m_staticData.Name;
-            dest.Level = Math.Min(m_level, 5);
-            dest.Skillpoints = m_currentSkillPoints;
-            dest.OwnsBook = m_owned;
-            dest.IsKnown = m_known;
+            var dest = new SerializableCharacterSkill
+                           {
+                               ID = m_staticData.ID,
+                               Name = m_staticData.Name,
+                               Level = Math.Min(m_level, 5),
+                               Skillpoints = m_currentSkillPoints,
+                               OwnsBook = m_owned,
+                               IsKnown = m_known
+                           };
 
             return dest;
         }
@@ -259,10 +261,10 @@ namespace EVEMon.Common
         /// </summary>
         public int Level
         {
-            get 
+            get
             {
-                m_skillLevel = m_lastConfirmedLvl;
-                int skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(m_lastConfirmedLvl + 1, 5));
+                m_skillLevel = LastConfirmedLvl;
+                int skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(LastConfirmedLvl + 1, 5));
 
                 for (int i = 0; m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5; i++)
                 {
@@ -277,30 +279,21 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the level gotten from CCP during the last update.
         /// </summary>
-        public int LastConfirmedLvl
-        {
-            get { return m_lastConfirmedLvl; }
-        }
+        public int LastConfirmedLvl { get; private set; }
 
         /// <summary>
         /// Gets the skill's prerequisites
         /// </summary>
         public IEnumerable<SkillLevel> Prerequisites
         {
-            get 
-            {
-                foreach (SkillLevel level in m_prereqs)
-                {
-                    yield return level;
-                }
-            }
+            get { return m_prereqs; }
         }
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>.
         /// The order matches the hierarchy.
         /// </summary>
-        /// <remarks>Please note they may be redundancies.</remarks>
+        /// <remarks>Please notice, they may be redundancies.</remarks>
         public IEnumerable<SkillLevel> AllPrerequisites
         {
             get { return m_staticData.AllPrerequisites.ToCharacter(m_character); }
@@ -314,7 +307,7 @@ namespace EVEMon.Common
             get
             {
                 float spPerHour = m_character.GetBaseSPPerHour(this);
-                return (int)Math.Round(spPerHour);
+                return (int) Math.Round(spPerHour);
             }
         }
 
@@ -328,7 +321,7 @@ namespace EVEMon.Common
         /// </summary>
         public string RomanLevel
         {
-            get { return GetRomanForInt(Level); }
+            get { return GetRomanFromInt(Level); }
         }
 
         /// <summary>
@@ -345,13 +338,7 @@ namespace EVEMon.Common
                     return false;
 
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                foreach (QueuedSkill skill in skillQueue.Where(x => x.Skill != null))
-                {
-                    if (m_staticData.ID == skill.Skill.ID)
-                        return true;
-                }
-
-                return false;
+                return skillQueue.Where(x => x.Skill != null).Any(skill => m_staticData.ID == skill.Skill.ID);
             }
         }
 
@@ -371,36 +358,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the level this skill is training to.
-        /// </summary>
-        public int TrainingToLevel
-        {
-            get 
-            {
-                if (!IsTraining)
-                    throw new InvalidOperationException("This character is not in training");
-
-                CCPCharacter ccpCharacter = m_character as CCPCharacter;
-                return ccpCharacter.CurrentlyTrainingSkill.Level;
-            }
-        }
-
-        /// <summary>
-        /// Gets the completion time.
-        /// </summary>
-        public DateTime EndTrainingTime
-        {
-            get 
-            {
-                if (!IsTraining)
-                    throw new InvalidOperationException("This character is not in training");
-
-                CCPCharacter ccpCharacter = m_character as CCPCharacter;
-                return ccpCharacter.CurrentlyTrainingSkill.EndTime;
-            }
-        }
-
-        /// <summary>
         /// Gets the current skill points of this skill (possibly estimated for skills in training).
         /// </summary>
         public int SkillPoints
@@ -411,7 +368,8 @@ namespace EVEMon.Common
                 if (IsTraining)
                 {
                     CCPCharacter ccpCharacter = m_character as CCPCharacter;
-                    return ccpCharacter.CurrentlyTrainingSkill.CurrentSP;
+                    if (ccpCharacter != null)
+                        return ccpCharacter.CurrentlyTrainingSkill.CurrentSP;
                 }
 
                 // Not in training
@@ -436,10 +394,10 @@ namespace EVEMon.Common
                     return 0.0f;
 
                 // Partially trained, let's compute the difference with the previous level
-                float nextLevelSp = (float)m_staticData.GetPointsRequiredForLevel(m_level + 1);
+                float nextLevelSp = m_staticData.GetPointsRequiredForLevel(m_level + 1);
                 float fraction = (SkillPoints - levelSp) / (nextLevelSp - levelSp);
 
-                return (fraction <= 1 ? fraction : fraction % 1); 
+                return (fraction <= 1 ? fraction : fraction % 1);
             }
         }
 
@@ -462,8 +420,8 @@ namespace EVEMon.Common
                     return false;
 
                 bool partialLevel = SkillPoints > m_staticData.GetPointsRequiredForLevel(Level),
-                    isNotFullyTrained = (GetLeftPointsRequiredToLevel(Level + 1) != 0),
-                    isPartiallyTrained = (partialLevel && isNotFullyTrained);
+                     isNotFullyTrained = (GetLeftPointsRequiredToLevel(Level + 1) != 0),
+                     isPartiallyTrained = (partialLevel && isNotFullyTrained);
                 return isPartiallyTrained;
             }
         }
@@ -481,7 +439,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="number">Number from 1 to 5.</param>
         /// <returns>Roman number string.</returns>
-        public static string GetRomanForInt(int number)
+        public static string GetRomanFromInt(int number)
         {
             switch (number)
             {
@@ -505,7 +463,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="r">Roman number from I to V.</param>
         /// <returns>Integer number.</returns>
-        public static int GetIntForRoman(string r)
+        public static int GetIntFromRoman(string r)
         {
             switch (r)
             {
@@ -551,9 +509,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Calculate the time it will take to train a certain amount of skill points.
         /// </summary>
-        /// <remarks>
-        /// As with Apocrypha 1.0 (10 March 2008) a 100% skill training bonus is  applied to skills completed below 1.6m skill points.
-        /// </remarks>
         /// <param name="points">The amount of skill points.</param>
         /// <returns>Time it will take.</returns>
         public TimeSpan GetTimeSpanForPoints(int points)
@@ -570,11 +525,8 @@ namespace EVEMon.Common
         public int GetLeftPointsRequiredToLevel(int level)
         {
             int result = m_staticData.GetPointsRequiredForLevel(level) - SkillPoints;
-            
-            if (result < 0)
-                return 0;
 
-            return result;
+            return result < 0 ? 0 : result;
         }
 
         /// <summary>
@@ -583,7 +535,7 @@ namespace EVEMon.Common
         /// <remarks>For a result not including the current SP, use the equivalent method on <see cref="StaticSkill"/>.</remarks>
         /// <param name="level">The level.</param>
         /// <returns>The required nr. of points.</returns>
-        public int GetLeftPointsRequiredForLevelOnly(int level)
+        private int GetLeftPointsRequiredForLevelOnly(int level)
         {
             if (level == 0)
                 return 0;
@@ -591,10 +543,7 @@ namespace EVEMon.Common
             int startSP = Math.Max(SkillPoints, m_staticData.GetPointsRequiredForLevel(level - 1));
             int result = m_staticData.GetPointsRequiredForLevel(level) - startSP;
 
-            if (result < 0)
-                return 0;
-
-            return result;
+            return result < 0 ? 0 : result;
         }
 
         /// <summary>
@@ -625,10 +574,7 @@ namespace EVEMon.Common
         /// <returns>Time it will take</returns>
         public TimeSpan GetLeftTrainingTimeToNextLevel()
         {
-            if (Level == 5)
-                return TimeSpan.Zero;
-
-            return GetLeftTrainingTimeToLevel(Level + 1);
+            return Level == 5 ? TimeSpan.Zero : GetLeftTrainingTimeToLevel(Level + 1);
         }
 
         #endregion
@@ -643,7 +589,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticSkill(Skill s)
         {
-            return s.m_staticData; 
+            return s.m_staticData;
         }
 
         #endregion

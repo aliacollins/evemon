@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -21,10 +20,10 @@ namespace EVEMon.SkillPlanner
         private const int CertificateIcon = 4;
         private const int SkillIcon = 5;
         private const int Planned = 6;
-        
+
         private Item m_object;
         private Plan m_plan;
-        TimeSpan trainTime;
+        private TimeSpan m_trainTime;
 
         #region Constructor
 
@@ -47,9 +46,10 @@ namespace EVEMon.SkillPlanner
             tvCertList.MouseDown += tvCertList_MouseDown;
 
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
         }
-        
+
         #endregion
 
 
@@ -63,6 +63,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
@@ -71,9 +72,19 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdateDisplay();
+        }
+
+        /// <summary>
+        /// Occurs when the settings change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            Refresh();
         }
 
         #endregion
@@ -93,6 +104,7 @@ namespace EVEMon.SkillPlanner
                 UpdateDisplay();
             }
         }
+
         /// <summary>
         /// The target Plan object to add any required skills.
         /// </summary>
@@ -116,7 +128,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateDisplay()
         {
-            trainTime = TimeSpan.Zero;
+            m_trainTime = TimeSpan.Zero;
 
             // Default all known flag to true. Will be set to false in UpdateNode() if a requirement is not met
             bool allCertsKnown = true;
@@ -132,7 +144,8 @@ namespace EVEMon.SkillPlanner
                 if (m_object != null && m_plan != null)
                 {
                     // Recursively create nodes
-                    foreach (var cert in StaticCertificates.AllCertificates.Where(x=> x.Recommendations.Contains(m_object)))
+                    foreach (StaticCertificate cert in StaticCertificates.AllCertificates
+                        .Where(x => x.Recommendations.Contains(m_object)))
                     {
                         tvCertList.Nodes.Add(GetCertNode(cert));
                     }
@@ -150,14 +163,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Set training time required label
-            if (allCertsKnown)
-            {
-                lblTimeRequired.Text = "No training required";
-            }
-            else
-            {
-                lblTimeRequired.Text = trainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-            }
+            lblTimeRequired.Text = allCertsKnown
+                                       ? "No training required"
+                                       : m_trainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
             // Set minimun control size
             Size timeRequiredTextSize = TextRenderer.MeasureText(lblTimeRequired.Text, Font);
@@ -168,7 +176,7 @@ namespace EVEMon.SkillPlanner
             // Enable / disable button
             btnAddCerts.Enabled = certsUnplanned;
         }
-        
+
         /// <summary>
         /// Recursive method to generate treenodes for tvCertList.
         /// </summary>
@@ -176,11 +184,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode GetCertNode(StaticCertificate certificate)
         {
-            var character = (Character)m_plan.Character;
+            Character character = (Character) m_plan.Character;
             Certificate cert = character.Certificates[certificate.ID];
 
-            TreeNode node = new TreeNode(cert.ToString());
-            node.Tag = cert;
+            TreeNode node = new TreeNode(cert.ToString()) {Tag = cert};
 
             // Generate child certificate nodes if required
             foreach (StaticCertificate childCert in cert.StaticData.PrerequisiteCertificates)
@@ -201,15 +208,14 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Recursive method to generate treenodes for tvCertList.
         /// </summary>
-        /// <param name="requiredSkill">An EntityRequiredSkill object</param>
+        /// <param name="prereq">The prereq.</param>
         /// <returns></returns>
         private TreeNode GetSkillNode(StaticSkillLevel prereq)
         {
-            var character = (Character)m_plan.Character;
+            Character character = (Character) m_plan.Character;
             Skill skill = character.Skills[prereq.Skill];
 
-            TreeNode node = new TreeNode(prereq.ToString());
-            node.Tag = new SkillLevel(skill, prereq.Level);
+            TreeNode node = new TreeNode(prereq.ToString()) {Tag = new SkillLevel(skill, prereq.Level)};
 
             // Generate child prerequisite skill nodes if required
             foreach (StaticSkillLevel childPrereq in skill.StaticData.Prerequisites)
@@ -223,7 +229,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the index image of the specified node and its children.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The node.</param>
+        /// <param name="allCertsKnown">if set to <c>true</c> [all certs known].</param>
+        /// <param name="certsUnplanned">if set to <c>true</c> [certs unplanned].</param>
         private void UpdateNode(TreeNode node, ref bool allCertsKnown, ref bool certsUnplanned)
         {
             Certificate cert = node.Tag as Certificate;
@@ -249,32 +257,32 @@ namespace EVEMon.SkillPlanner
                         throw new NotImplementedException();
                 }
             }
-            // The node represents a skill prerequisite
+                // The node represents a skill prerequisite
             else
             {
-                SkillLevel skillPrereq = (SkillLevel)node.Tag;
-                var character = (Character)m_plan.Character;
-                var skill = character.Skills[skillPrereq.Skill];
+                SkillLevel skillPrereq = (SkillLevel) node.Tag;
+                Character character = (Character) m_plan.Character;
+                Skill skill = character.Skills[skillPrereq.Skill];
 
                 // Skill requirement met
                 if (skillPrereq.IsTrained)
                 {
                     node.ImageIndex = GrantedIcon;
                 }
-                // Requirement not met, but planned
+                    // Requirement not met, but planned
                 else if (m_plan.IsPlanned(skill, skillPrereq.Level))
                 {
                     node.ImageIndex = Planned;
                     allCertsKnown = false;
                 }
-                // Requirement not met, but not planned
+                    // Requirement not met, but not planned
                 else if (skill.IsKnown)
-                { 
+                {
                     node.ImageIndex = UnknownButTrainableIcon;
                     allCertsKnown = false;
                     certsUnplanned = true;
                 }
-                // Requirement not met
+                    // Requirement not met
                 else
                 {
                     node.ImageIndex = UnknownIcon;
@@ -307,63 +315,60 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            string line = String.Empty;
-            int supIcon = -1;
+            string line;
+            int supIcon;
 
             // Is it a certificate ?
             Certificate cert = e.Node.Tag as Certificate;
             if (cert != null)
             {
-                var status = cert.Status;
+                CertificateStatus status = cert.Status;
                 line = cert.ToString();
                 supIcon = CertificateIcon;
 
                 // When not granted or claimable, let's calculate the training time
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
-                    trainTime += cert.GetTrainingTime();
+                    m_trainTime += cert.GetTrainingTime();
             }
-            // Or a skill prerequisite ?
+                // Or a skill prerequisite ?
             else
             {
-                var skillPrereq = (SkillLevel)e.Node.Tag;
+                SkillLevel skillPrereq = (SkillLevel) e.Node.Tag;
                 line = skillPrereq.ToString();
                 supIcon = SkillIcon;
 
                 // When not known to the require level, let's calculate the training time
-                var skill = skillPrereq.Skill;
+                Skill skill = skillPrereq.Skill;
                 if (!skillPrereq.IsTrained)
-                    trainTime += skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
+                    m_trainTime += skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
             }
 
             // Choose colors according to selection
             bool isSelected = ((e.State & TreeNodeStates.Selected) == TreeNodeStates.Selected);
-            var backColor = (isSelected ? SystemColors.Highlight : tvCertList.BackColor);
-            var foreColor = (isSelected ? SystemColors.HighlightText : tvCertList.ForeColor);
-            var lightForeColor = (isSelected ? SystemColors.HighlightText : SystemColors.GrayText);
+            Color backColor = (isSelected ? SystemColors.Highlight : tvCertList.BackColor);
+            Color foreColor = (isSelected ? SystemColors.HighlightText : tvCertList.ForeColor);
 
             // Draws the background
-            using (var background = new SolidBrush(backColor))
+            using (SolidBrush background = new SolidBrush(backColor))
             {
-                var width = tvCertList.ClientSize.Width - e.Bounds.Left;
+                int width = tvCertList.ClientSize.Width - e.Bounds.Left;
                 e.Graphics.FillRectangle(background, new Rectangle(e.Bounds.Left, e.Bounds.Top, width, e.Bounds.Height));
             }
 
             // Performs the drawing
-            using (var foreground = new SolidBrush(foreColor))
+            using (SolidBrush foreground = new SolidBrush(foreColor))
             {
-                var left = e.Bounds.Left + imageList.ImageSize.Width + 2;
+                int left = e.Bounds.Left + imageList.ImageSize.Width + 2;
                 e.Graphics.DrawString(line, Font, foreground, new PointF(left, e.Bounds.Top));
             }
 
             // Draws the icon for skill/cert on the far right
-            if (supIcon != -1)
-            {
-                var imgOfssetX = e.Bounds.Left;
-                var imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height) * 0.5f);
-                e.Graphics.DrawImageUnscaled(imageList.Images[supIcon],
-                    (int)(imgOfssetX),
-                    (int)(e.Bounds.Top + imgOffsetY));
-            }
+            if (Settings.UI.SafeForWork)
+                return;
+
+            int imgOfssetX = e.Bounds.Left;
+            float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height)*0.5f);
+            e.Graphics.DrawImageUnscaled(imageList.Images[supIcon], (imgOfssetX), (int) (e.Bounds.Top + imgOffsetY));
         }
 
         /// <summary>
@@ -377,20 +382,22 @@ namespace EVEMon.SkillPlanner
             TreeNode selection = null;
             for (TreeNode node = tvCertList.TopNode; node != null; node = node.NextVisibleNode)
             {
-                if (node.Bounds.Top <= e.Y && node.Bounds.Bottom >= e.Y)
-                {
-                    // If the user clicked the "arrow zone", we do not change the selection and just return
-                    if (e.X < (node.Bounds.Left - 32))
-                        return;
+                if (node.Bounds.Top > e.Y || node.Bounds.Bottom < e.Y)
+                    continue;
 
-                    selection = node;
-                    break;
-                }
+                // If the user clicked the "arrow zone", we do not change the selection and just return
+                if (e.X < (node.Bounds.Left - 32))
+                    return;
+
+                selection = node;
+                break;
             }
 
             // Updates the selection
-            if (selection != tvCertList.SelectedNode)
-                tvCertList.SelectedNode = selection;
+            if (selection == tvCertList.SelectedNode)
+                return;
+
+            tvCertList.SelectedNode = selection;
         }
 
         #endregion
@@ -407,14 +414,16 @@ namespace EVEMon.SkillPlanner
         {
             // Add Certificates to plan
             List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
-            foreach (TreeNode certificate in tvCertList.Nodes)
+            IEnumerable<IEnumerable<StaticSkillLevel>> certPrereqSkills =
+                (tvCertList.Nodes.Cast<TreeNode>().Select(certificate => certificate.Tag))
+                .OfType<Certificate>().Select(cert => cert.StaticData.AllTopPrerequisiteSkills);
+
+            foreach (IEnumerable<StaticSkillLevel> skills in certPrereqSkills)
             {
-                var cert = certificate.Tag as Certificate;
-                var skills = cert.StaticData.AllTopPrerequisiteSkills;
                 skillsToAdd.AddRange(skills);
             }
 
-            var operation = m_plan.TryAddSet(skillsToAdd, m_object.Name);
+            IPlanOperation operation = m_plan.TryAddSet(skillsToAdd, m_object.Name);
             PlanHelper.Perform(operation);
 
             // Refresh display to reflect plan changes
@@ -440,7 +449,7 @@ namespace EVEMon.SkillPlanner
         private void tvCertList_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             // Get selected node
-            TreeNode selectedNode = e.Node as TreeNode;
+            TreeNode selectedNode = e.Node;
 
             // Make sure we have a skill to use
             if (selectedNode.Tag == null)
@@ -449,14 +458,14 @@ namespace EVEMon.SkillPlanner
             if (selectedNode.Tag is Certificate)
             {
                 PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                Certificate cert = ((Certificate)selectedNode.Tag);
+                Certificate cert = ((Certificate) selectedNode.Tag);
                 pw.ShowCertInBrowser(cert);
             }
             else
             {
                 // Open skill browser tab for this skill
                 PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                Skill skill = ((SkillLevel)selectedNode.Tag).Skill;
+                Skill skill = ((SkillLevel) selectedNode.Tag).Skill;
                 pw.ShowSkillInBrowser(skill);
             }
         }
@@ -471,7 +480,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void contextMenu_Opening(object sender, CancelEventArgs e)
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
             if (tvCertList.SelectedNode == null)
             {
@@ -486,7 +495,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                var cert = tvCertList.SelectedNode.Tag as Certificate;
+                Certificate cert = tvCertList.SelectedNode.Tag as Certificate;
                 showInMenuSeparator.Visible = true;
                 showInBrowserMenu.Visible = true;
 
@@ -495,7 +504,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", cert.ToString());
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", cert);
 
                     // Update "show in..." menu
                     showInBrowserMenu.Text = "Show in Certificates";
@@ -503,14 +512,15 @@ namespace EVEMon.SkillPlanner
                     // Update "show in skill explorer"
                     showInExplorerMenu.Visible = false;
                 }
-                // When a skill is selected
+                    // When a skill is selected
                 else
                 {
                     // Update "add to" menu
-                    var prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
-                    var skill = prereq.Skill;
+                    SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
+                    Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill.ToString(), Skill.GetRomanForInt(prereq.Level));
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill,
+                                                      Skill.GetRomanFromInt(prereq.Level));
 
                     // Update "show in..." menu
                     showInBrowserMenu.Enabled = true;
@@ -540,10 +550,10 @@ namespace EVEMon.SkillPlanner
             {
                 npw.ShowCertInBrowser(cert);
             }
-            // When a skill is selected
+                // When a skill is selected
             else
             {
-                SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
+                SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
                 npw.ShowSkillInBrowser(prereq.Skill);
             }
         }
@@ -561,7 +571,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Open the skill explorer
-            SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
+            SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
             npw.ShowSkillInExplorer(prereq.Skill);
         }
 
@@ -592,16 +602,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmAddToPlan_Click(object sender, EventArgs e)
         {
-            var cert = tvCertList.SelectedNode.Tag as Certificate;
+            Certificate cert = tvCertList.SelectedNode.Tag as Certificate;
             if (cert != null)
             {
-                var operation = m_plan.TryPlanTo(cert);
+                IPlanOperation operation = m_plan.TryPlanTo(cert);
                 PlanHelper.SelectPerform(operation);
             }
             else
             {
-                var prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
-                var operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
+                SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
+                IPlanOperation operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
                 PlanHelper.SelectPerform(operation);
             }
         }

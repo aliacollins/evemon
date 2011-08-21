@@ -9,11 +9,11 @@ namespace EVEMon.Common
     /// </summary>
     public class SkillQueueToolTip
     {
-        ToolTip m_toolTip;
-        Control m_owner;
-        bool m_canceled = false;
-        Size m_size = new Size(0, 0);
-        string m_text = String.Empty;
+        private readonly ToolTip m_toolTip;
+        private readonly Control m_owner;
+        private bool m_canceled;
+        private Size m_size = new Size(0, 0);
+        private string m_text = String.Empty;
 
         /// <summary>
         /// Initializes <see cref="SkillQueueToolTip"/> instance.
@@ -22,9 +22,8 @@ namespace EVEMon.Common
         public SkillQueueToolTip(Control owner)
         {
             m_owner = owner;
-            m_toolTip = new ToolTip();
-            m_toolTip.UseFading = false;
-            m_toolTip.Popup += new PopupEventHandler(m_toolTip_Popup);
+            m_toolTip = new ToolTip {UseFading = false};
+            m_toolTip.Popup += m_toolTip_Popup;
         }
 
         /// <summary>
@@ -52,23 +51,29 @@ namespace EVEMon.Common
         /// Popup a tool tip for the provided skill, above the given point.
         /// </summary>
         /// <param name="skill">Skill to display</param>
+        /// <param name="pt">The pt.</param>
         public void Display(QueuedSkill skill, Point pt)
         {
-            string format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
+            const string Format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.SkillName;
-            string skillLevel = Skill.GetRomanForInt(skill.Level);
-            string skillStart = (skill.Owner.IsTraining ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local) : "Paused");
-            string skillEnd = (skill.Owner.IsTraining ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local) : "Paused");
+            string skillLevel = Skill.GetRomanFromInt(skill.Level);
+            string skillStart = (skill.Owner.IsTraining
+                                     ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
+                                     : "Paused");
+            string skillEnd = (skill.Owner.IsTraining
+                                   ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
+                                   : "Paused");
             string startText = (skill.StartTime < DateTime.UtcNow ? "ed" : "s");
-            string text = String.Format(CultureConstants.DefaultCulture, format, skillName, skillLevel, startText, skillStart, skillEnd);
+            string text = String.Format(CultureConstants.DefaultCulture, Format, skillName, skillLevel, startText, skillStart,
+                                        skillEnd);
             Display(text, pt);
         }
 
         /// <summary>
         /// Popups a tool tip with provided text, above the given point.
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="rect"></param>
+        /// <param name="text">The text.</param>
+        /// <param name="pt">The pt.</param>
         public void Display(string text, Point pt)
         {
             if (text == m_text)
@@ -78,11 +83,11 @@ namespace EVEMon.Common
             m_toolTip.Show(text, m_owner, pt.X - m_size.Width / 2, -m_size.Height);
 
             // Cancel means new height and new position
-            if (m_canceled)
-            {
-                m_toolTip.Hide(m_owner);
-                m_toolTip.Show(text, m_owner, pt.X - m_size.Width / 2, -m_size.Height);
-            }
+            if (!m_canceled)
+                return;
+
+            m_toolTip.Hide(m_owner);
+            m_toolTip.Show(text, m_owner, pt.X - m_size.Width / 2, -m_size.Height);
         }
 
         /// <summary>

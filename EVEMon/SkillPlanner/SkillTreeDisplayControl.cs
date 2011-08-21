@@ -19,7 +19,9 @@ namespace EVEMon.SkillPlanner
 
         private const int SkillboxMarginUd = 20;
         private const int SkillboxMarginLr = 10;
-        private const DescriptiveTextOptions TimeFormat = DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
+
+        private const DescriptiveTextOptions TimeFormat =
+            DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
 
         public event SkillClickedHandler SkillClicked;
 
@@ -27,7 +29,7 @@ namespace EVEMon.SkillPlanner
         private Skill m_rootSkill;
         private Cell m_rootCell;
         private Rectangle m_graphBounds = new Rectangle(0, 0, 10, 10);
-        
+
         #endregion
 
 
@@ -40,7 +42,7 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
         }
-        
+
         #endregion
 
 
@@ -55,8 +57,8 @@ namespace EVEMon.SkillPlanner
             base.OnLoad(e);
 
             SetStyle(ControlStyles.AllPaintingInWmPaint |
-                        ControlStyles.Opaque |
-                        ControlStyles.ResizeRedraw, true);
+                     ControlStyles.Opaque |
+                     ControlStyles.ResizeRedraw, true);
             UpdateStyles();
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
@@ -77,16 +79,16 @@ namespace EVEMon.SkillPlanner
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             Disposed -= OnDisposed;
         }
-        
+
         #endregion
 
 
-        #region Public Properties
+        #region Private Properties
 
         /// <summary>
-        /// Gets the cell width according to dpi (for font scaling support)
+        /// Gets the cell width according to dpi (for font scaling support).
         /// </summary>
-        public int CellWidth
+        private int CellWidth
         {
             get
             {
@@ -96,17 +98,14 @@ namespace EVEMon.SkillPlanner
                 if (dpi > 125)
                     return 353;
 
-                if (dpi > 96)
-                    return 295;
-
-                return 235;
+                return dpi > 96 ? 295 : 235;
             }
         }
 
         /// <summary>
-        /// Gets the cell height according to dpi (for font scaling support)
+        /// Gets the cell height according to dpi (for font scaling support).
         /// </summary>
-        public int CellHeight
+        private int CellHeight
         {
             get
             {
@@ -116,15 +115,17 @@ namespace EVEMon.SkillPlanner
                 if (dpi > 125)
                     return 110;
 
-                if (dpi > 96)
-                    return 92;
-
-                return 73;
+                return dpi > 96 ? 92 : 73;
             }
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
-        /// Gets or sets the plan this control is bound to
+        /// Gets or sets the plan this control is bound to.
         /// </summary>
         public Plan Plan
         {
@@ -144,21 +145,21 @@ namespace EVEMon.SkillPlanner
             get { return m_rootSkill; }
             set
             {
-                if (m_rootSkill != value)
-                {
-                    m_rootSkill = value;
-                    UpdateLayout();
-                }
+                if (m_rootSkill == value)
+                    return;
+
+                m_rootSkill = value;
+                UpdateLayout();
             }
         }
-        
+
         #endregion
 
 
         #region Layout and painting
 
         /// <summary>
-        /// Checks training data
+        /// Checks training data.
         /// </summary>
         private void CheckTraining()
         {
@@ -169,7 +170,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Build the layout
+        /// Build the layout.
         /// </summary>
         private void UpdateLayout()
         {
@@ -181,7 +182,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Arranges the graph position
+        /// Arranges the graph position.
         /// </summary>
         private void ArrangeGraph()
         {
@@ -194,12 +195,12 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Performs the painting
+        /// Performs the painting.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
 
             // Draws the background (solid or gradient, depending on safe mode or not)
             if (!Settings.UI.SafeForWork)
@@ -223,9 +224,9 @@ namespace EVEMon.SkillPlanner
             int ofsTop = AutoScrollPosition.Y;
 
             // Draw the lines
-            using(var linePen = new Pen((Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White), 5.0F))
+            using (Pen linePen = new Pen((Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White), 5.0F))
             {
-                foreach(var cell in m_rootCell.Cells)
+                foreach (Cell cell in m_rootCell.m_cells)
                 {
                     DrawLines(g, m_rootCell, cell, linePen, ofsLeft, ofsTop);
                 }
@@ -234,7 +235,7 @@ namespace EVEMon.SkillPlanner
             // Draw the cells
             using (Font boldFont = FontFactory.GetFont(Font, FontStyle.Bold))
             {
-                foreach (var cell in m_rootCell.AllCells)
+                foreach (Cell cell in m_rootCell.AllCells)
                 {
                     DrawCell(g, cell, boldFont, ofsLeft, ofsTop);
                 }
@@ -252,16 +253,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="ofsTop"></param>
         private void DrawLines(Graphics g, Cell startCell, Cell endCell, Pen pen, int ofsLeft, int ofsTop)
         {
-            var startRect = startCell.Rectangle;
-            var endRect = endCell.Rectangle;
+            Rectangle startRect = startCell.m_rectangle;
+            Rectangle endRect = endCell.m_rectangle;
 
             g.DrawLine(pen,
-                startRect.Location.X + ofsLeft + (startRect.Width >> 1), 
-                startRect.Location.Y + ofsTop + (startRect.Height >> 1),
-                endRect.Location.X + ofsLeft + (startRect.Width >> 1), 
-                endRect.Location.Y + ofsTop + (startRect.Height >> 1));
+                       startRect.Location.X + ofsLeft + (startRect.Width >> 1),
+                       startRect.Location.Y + ofsTop + (startRect.Height >> 1),
+                       endRect.Location.X + ofsLeft + (startRect.Width >> 1),
+                       endRect.Location.Y + ofsTop + (startRect.Height >> 1));
 
-            foreach (var child in endCell.Cells)
+            foreach (Cell child in endCell.m_cells)
             {
                 DrawLines(g, endCell, child, pen, ofsLeft, ofsTop);
             }
@@ -277,7 +278,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="ofsTop"></param>
         private void DrawCell(Graphics g, Cell cell, Font boldFont, int ofsLeft, int ofsTop)
         {
-            Rectangle rect = cell.Rectangle;
+            Rectangle rect = cell.m_rectangle;
             rect.Offset(ofsLeft, ofsTop);
 
             Color stdTextColor = !Settings.UI.SafeForWork ? Color.Black : SystemColors.ControlText;
@@ -288,38 +289,38 @@ namespace EVEMon.SkillPlanner
             try
             {
                 StringBuilder currentLevelText = new StringBuilder();
-                
+
                 // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
                 currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                    "Current Level: {0}",
-                    Skill.GetRomanForInt(cell.Skill.Level));
+                                              "Current Level: {0}",
+                                              Skill.GetRomanFromInt(cell.m_skill.Level));
 
-                if (m_plan.GetPlannedLevel(cell.Skill) > 0)
+                if (m_plan.GetPlannedLevel(cell.m_skill) > 0)
                 {
                     currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                        " (Planned To: {0})",
-                        Skill.GetRomanForInt(m_plan.GetPlannedLevel(cell.Skill)));
+                                                  " (Planned To: {0})",
+                                                  Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.m_skill)));
                 }
 
                 // Retrieves the output and colors for the lower lines
                 string thisRequiredTime = null;
                 string requiredLevel = null;
                 string prereqTime = null;
-                if (cell.RequiredLevel > 0)
+                if (cell.m_requiredLevel > 0)
                 {
                     // Third line : "Required Level : V"
                     requiredLevel = String.Format(CultureConstants.DefaultCulture, "Required Level: {0}",
-                        Skill.GetRomanForInt(cell.RequiredLevel));
+                                                  Skill.GetRomanFromInt(cell.m_requiredLevel));
 
-                    if (cell.RequiredLevel > cell.Skill.Level)
+                    if (cell.m_requiredLevel > cell.m_skill.Level)
                     {
                         // Fourth line : "This Time : 9H, 26M, 42S"
-                        TimeSpan ts = cell.Skill.GetLeftTrainingTimeToLevel(cell.RequiredLevel);
+                        TimeSpan ts = cell.m_skill.GetLeftTrainingTimeToLevel(cell.m_requiredLevel);
                         thisRequiredTime = String.Format(CultureConstants.DefaultCulture, "This Time: {0}",
-                            ts.ToDescriptiveText(TimeFormat));
+                                                         ts.ToDescriptiveText(TimeFormat));
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
-                        if (cell.Skill.ArePrerequisitesMet)
+                        if (cell.m_skill.ArePrerequisitesMet)
                         {
                             fillBrush = new LinearGradientBrush(rect, Color.LightPink, Color.DarkRed, 90.0F);
                         }
@@ -329,19 +330,19 @@ namespace EVEMon.SkillPlanner
                             stdTextColor = !Settings.UI.SafeForWork ? Color.White : SystemColors.ControlText;
                         }
                     }
-                    // Required level already met
+                        // Required level already met
                     else
                     {
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Black : SystemColors.ControlText;
                         fillBrush = new LinearGradientBrush(rect, Color.LightSeaGreen, Color.DarkGreen, 90.0F);
                     }
                 }
-                // Skill at level 0, prerequisites met
-                else if (cell.Skill.ArePrerequisitesMet)
+                    // Skill at level 0, prerequisites met
+                else if (cell.m_skill.ArePrerequisitesMet)
                 {
                     fillBrush = new LinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
                 }
-                // Skill unknown, not trainable
+                    // Skill unknown, not trainable
                 else
                 {
                     fillBrush = new LinearGradientBrush(rect, Color.Blue, Color.Black, 90.0F);
@@ -349,10 +350,11 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Last line : prerequisites time
-                if (!cell.Skill.ArePrerequisitesMet)
+                if (!cell.m_skill.ArePrerequisitesMet)
                 {
-                    TimeSpan pts = cell.Skill.Character.GetTrainingTimeToMultipleSkills(cell.Skill.Prerequisites);
-                    prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}", pts.ToDescriptiveText(TimeFormat));
+                    TimeSpan pts = cell.m_skill.Character.GetTrainingTimeToMultipleSkills(cell.m_skill.Prerequisites);
+                    prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}",
+                                               pts.ToDescriptiveText(TimeFormat));
                 }
 
 
@@ -368,7 +370,7 @@ namespace EVEMon.SkillPlanner
 
                 // Draw text (two to five lines)
                 Point drawPoint = new Point(rect.Left + 5, rect.Top + 5);
-                Size sz = MeasureAndDrawText(g, cell.Skill.Name, boldFont, drawPoint, stdTextColor);
+                Size sz = MeasureAndDrawText(g, cell.m_skill.Name, boldFont, drawPoint, stdTextColor);
                 drawPoint.Y += sz.Height;
 
                 sz = MeasureAndDrawText(g, currentLevelText.ToString(), Font, drawPoint, stdTextColor);
@@ -409,7 +411,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="p"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        private Size MeasureAndDrawText(Graphics g, string text, Font f, Point p, Color c)
+        private Size MeasureAndDrawText(IDeviceContext g, string text, Font f, Point p, Color c)
         {
             Size res = TextRenderer.MeasureText(g, text, f);
 
@@ -435,7 +437,8 @@ namespace EVEMon.SkillPlanner
         #region Other events
 
         /// <summary>
-        /// When the root skill or one of its prerequisites is in training , every 30s we invalidate the display.
+        /// When the root skill or one of its prerequisites is in training,
+        /// every 30s we invalidate the display.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -446,7 +449,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On click, we detect which skill is under the mouse location
+        /// On click, we detect which skill is under the mouse location.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseClick(MouseEventArgs e)
@@ -459,22 +462,18 @@ namespace EVEMon.SkillPlanner
 
             // Checks every cell
             Skill skill = null;
-            var mouseLocation = e.Location;
+            Point mouseLocation = e.Location;
             mouseLocation.Offset(ofsLeft, ofsTop);
-            foreach (var cell in m_rootCell.AllCells.Where(x => x.Rectangle.Contains(mouseLocation)))
+            foreach (Cell cell in m_rootCell.AllCells.Where(x => x.m_rectangle.Contains(mouseLocation)))
             {
-                skill = cell.Skill;
+                skill = cell.m_skill;
             }
 
             // Fires the event when skill not null
-            if (skill == null)
+            if (skill == null || SkillClicked == null)
                 return;
 
-            if (SkillClicked != null)
-            {
-                SkillClickedEventArgs se = new SkillClickedEventArgs(skill, e.Button, mouseLocation);
-                SkillClicked(this, se);
-            }
+            SkillClicked(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
         }
 
         /// <summary>
@@ -514,10 +513,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (m_plan == null) 
+            if (m_plan == null)
                 return;
 
-            if (e.Character != m_plan.Character) 
+            if (e.Character != m_plan.Character)
                 return;
 
             Invalidate();
@@ -538,28 +537,19 @@ namespace EVEMon.SkillPlanner
 
         #region Private Support Classes
 
-        #region Row
+        #region Private Class "Row"
+
         /// <summary>
-        /// Represents a cells' row
+        /// Represents a cells' row.
         /// </summary>
         private sealed class Row : List<Cell>
         {
-            private SkillTreeDisplayControl m_std = new SkillTreeDisplayControl();
-
             /// <summary>
-            /// Constructor
+            /// Constructor.
             /// </summary>
             public Row(Cell cell)
             {
                 Add(cell);
-            }
-
-            /// <summary>
-            /// Gets the row's width
-            /// </summary>
-            public int Width
-            {
-                get { return Count * m_std.CellWidth + (Count - 1) * SkillboxMarginLr; }
             }
 
             /// <summary>
@@ -572,52 +562,51 @@ namespace EVEMon.SkillPlanner
             public bool AreOverlapping(int leftIndex, int rightIndex, out int space)
             {
                 space = 0;
-                if (leftIndex == rightIndex || rightIndex >= Count || leftIndex >= Count || rightIndex < -1 || leftIndex < -1)
+                if (leftIndex == rightIndex || rightIndex >= Count || leftIndex >= Count || rightIndex < -1 ||
+                    leftIndex < -1)
                     return false;
 
-                var left = this[Math.Min(leftIndex, rightIndex)];
-                var right = this[Math.Max(leftIndex, rightIndex)];
+                Cell left = this[Math.Min(leftIndex, rightIndex)];
+                Cell right = this[Math.Max(leftIndex, rightIndex)];
 
-                space = right.Rectangle.Left - (left.Rectangle.Right + SkillboxMarginLr);
+                space = right.m_rectangle.Left - (left.m_rectangle.Right + SkillboxMarginLr);
                 return (space < 0);
             }
         }
+
         #endregion
 
 
-        #region Cell
+        #region Private Class "Cell"
+
         /// <summary>
         /// Helper class to store layout informations about a skill
         /// </summary>
         private sealed class Cell
         {
-            public Skill Skill;
-            public List<Cell> Cells = new List<Cell>();
-            public Rectangle Rectangle = Rectangle.Empty;
-            public int RequiredLevel = -1;
+            public readonly Skill m_skill;
+            public readonly List<Cell> m_cells = new List<Cell>();
+            public readonly int m_requiredLevel = -1;
 
-            private SkillTreeDisplayControl m_std = new SkillTreeDisplayControl();
+            private readonly SkillTreeDisplayControl m_std = new SkillTreeDisplayControl();
+
+            public Rectangle m_rectangle = Rectangle.Empty;
 
             /// <summary>
-            /// Constructor for root
+            /// Constructor for root.
             /// </summary>
             /// <param name="skill"></param>
             public Cell(Skill skill)
             {
-                Skill = skill;
+                m_skill = skill;
 
                 // Create the top row
-                var rows = new List<Row>();
-                rows.Add(new Row(this));
+                List<Row> rows = new List<Row> {new Row(this)};
 
                 // Create the children
-                foreach (var prereq in skill.Prerequisites)
+                foreach (SkillLevel prereq in skill.Prerequisites.Where(prereq => prereq.Skill != skill))
                 {
-                    // Ignore recursive prereqs, happens with non-public skills like Polaris
-                    if (prereq.Skill == skill)
-                        continue;
-
-                    Cells.Add(new Cell(prereq, rows, 1));
+                    m_cells.Add(new Cell(prereq, rows, 1));
                 }
 
                 // Perform the layout
@@ -626,15 +615,15 @@ namespace EVEMon.SkillPlanner
             }
 
             /// <summary>
-            /// Constructor for prerequisites
+            /// Constructor for prerequisites.
             /// </summary>
             /// <param name="rows"></param>
             /// <param name="level"></param>
             /// <param name="prereq"></param>
-            private Cell(SkillLevel prereq, List<Row> rows, int level)
+            private Cell(SkillLevel prereq, IList<Row> rows, int level)
             {
-                Skill = prereq.Skill;
-                RequiredLevel = prereq.Level;
+                m_skill = prereq.Skill;
+                m_requiredLevel = prereq.Level;
 
                 // Put on the appropriate row
                 if (rows.Count == level)
@@ -647,18 +636,17 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Create the children
-                foreach (var childPrereq in prereq.Skill.Prerequisites)
+                foreach (
+                    SkillLevel childPrereq in
+                        prereq.Skill.Prerequisites.Where(childPrereq => childPrereq.Skill != prereq.Skill))
                 {
-                    // Ignore recursive prereqs, happens with non-public skills like Polaris
-                    if (childPrereq.Skill == prereq.Skill)
-                        continue;
-
-                    Cells.Add(new Cell(childPrereq, rows, level + 1));
+                    m_cells.Add(new Cell(childPrereq, rows, level + 1));
                 }
             }
 
             /// <summary>
-            /// Arrange cells in a hierarchical order matching prerequisites, the first one being centered on x = 0.
+            /// Arrange cells in a hierarchical order matching prerequisites,
+            /// the first one being centered on x = 0.
             /// </summary>
             /// <param name="left"></param>
             /// <param name="top"></param>
@@ -666,14 +654,14 @@ namespace EVEMon.SkillPlanner
             private void FirstPassLayout(int left, int top)
             {
                 // Layout this cell
-                Rectangle = new Rectangle(left - m_std.CellWidth / 2, top, m_std.CellWidth, m_std.CellHeight);
+                m_rectangle = new Rectangle(left - m_std.CellWidth/2, top, m_std.CellWidth, m_std.CellHeight);
 
                 // Layout the children
                 int childrenTop = top + m_std.CellHeight + SkillboxMarginUd;
-                int childrenWidth = Cells.Count * m_std.CellWidth + (Cells.Count - 1) * SkillboxMarginLr;
+                int childrenWidth = m_cells.Count*m_std.CellWidth + (m_cells.Count - 1)*SkillboxMarginLr;
 
-                left += (m_std.CellWidth - childrenWidth) / 2;
-                foreach (var cell in Cells)
+                left += (m_std.CellWidth - childrenWidth)/2;
+                foreach (Cell cell in m_cells)
                 {
                     cell.FirstPassLayout(left, childrenTop);
                     left += m_std.CellWidth + SkillboxMarginLr;
@@ -681,17 +669,18 @@ namespace EVEMon.SkillPlanner
             }
 
             /// <summary>
-            /// The first pass may have created overlapping rectangles, so we check every row and shift boxes when required.
+            /// The first pass may have created overlapping rectangles,
+            /// so we check every row and shift boxes when required.
             /// </summary>
             /// <param name="rows"></param>
             /// <param name="level"></param>
-            private void SecondPassLayout(List<Row> rows, int level)
+            private void SecondPassLayout(IList<Row> rows, int level)
             {
                 // Gets the row for this level
                 if (level == rows.Count)
                     return;
 
-                var row = rows[level];
+                Row row = rows[level];
 
                 // Scan every cell and, when there is a conflict, shift all the other cells
                 for (int i = 0; i < row.Count - 1; i++)
@@ -732,10 +721,10 @@ namespace EVEMon.SkillPlanner
             /// </summary>
             /// <param name="x"></param>
             /// <param name="y"></param>
-            public void Offset(int x, int y)
+            private void Offset(int x, int y)
             {
-                Rectangle.Offset(x, y);
-                foreach (var cell in Cells)
+                m_rectangle.Offset(x, y);
+                foreach (Cell cell in m_cells)
                 {
                     cell.Offset(x, y);
                 }
@@ -749,10 +738,12 @@ namespace EVEMon.SkillPlanner
             public Rectangle Arrange(Size size)
             {
                 // Compute the global rect
-                int left = Rectangle.Left, right = Rectangle.Right, top = Rectangle.Top, bottom = Rectangle.Bottom;
-                foreach (var cell in AllCells)
+                int left = m_rectangle.Left,
+                    right = m_rectangle.Right,
+                    top = m_rectangle.Top,
+                    bottom = m_rectangle.Bottom;
+                foreach (Rectangle rect in AllCells.Select(cell => cell.m_rectangle))
                 {
-                    var rect = cell.Rectangle;
                     left = Math.Min(left, rect.Left);
                     right = Math.Max(right, rect.Right);
                     bottom = Math.Max(bottom, rect.Bottom);
@@ -764,9 +755,9 @@ namespace EVEMon.SkillPlanner
                 int yOrigin = Math.Max(10, size.Height - (bottom - top)) >> 1;
 
                 // Offset the cell's rectangles
-                foreach (var cell in AllCells)
+                foreach (Cell cell in AllCells)
                 {
-                    cell.Rectangle.Offset(xOrigin - left, yOrigin - top);
+                    cell.m_rectangle.Offset(xOrigin - left, yOrigin - top);
                 }
 
                 // Return the global rect
@@ -781,16 +772,14 @@ namespace EVEMon.SkillPlanner
                 get
                 {
                     yield return this;
-                    foreach (var child in Cells)
+                    foreach (Cell cell in m_cells.SelectMany(child => child.AllCells))
                     {
-                        foreach (var cell in child.AllCells)
-                        {
-                            yield return cell;
-                        }
+                        yield return cell;
                     }
                 }
             }
         }
+
         #endregion
 
         #endregion

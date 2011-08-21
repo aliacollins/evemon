@@ -1,18 +1,13 @@
 using System;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
-using EVEMon.Common.Data;
+using System.Linq;
+using System.Threading;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Controls;
-using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.SettingsObjects;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -22,241 +17,6 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class Plan : BasePlan
     {
-        #region PlanOperation
-        /// <summary>
-        /// This class is used to add entries. It enumerates the prerequisites to add, their lowest prioties, etc.
-        /// </summary>
-        private sealed class PlanOperation : IPlanOperation
-        {
-            private readonly Plan m_plan;
-            private readonly PlanOperations m_type;
-
-            // Addition
-            private readonly int m_highestPriorityForAddition;
-            private readonly List<ISkillLevel> m_skillsToAdd = new List<ISkillLevel>();
-            private readonly List<PlanEntry> m_allEntriesToAdd = new List<PlanEntry>();
-
-            // Suppression
-            private readonly List<ISkillLevel> m_skillsToRemove = new List<ISkillLevel>();
-            private readonly List<PlanEntry> m_allEntriesToRemove = new List<PlanEntry>();
-            private readonly List<PlanEntry> m_removablePrerequisites = new List<PlanEntry>();
-
-
-            /// <summary>
-            /// Constructor for an empty operation.
-            /// </summary>
-            /// <param name="plan"></param>
-            public PlanOperation(Plan plan)
-            {
-                m_plan = plan;
-            }
-
-            /// <summary>
-            /// Constructor for entries addition.
-            /// </summary>
-            /// <param name="plan"></param>
-            /// <param name="entries"></param>
-            /// <param name="lowestPrerequisitesPriority"></param>
-            public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToAdd, IEnumerable<PlanEntry> allEntriesToAdd, int lowestPrerequisitesPriority)
-            {
-                m_plan = plan;
-                m_type = (skillsToAdd.IsEmpty() ? PlanOperations.None : PlanOperations.Addition);
-
-                m_skillsToAdd.AddRange(skillsToAdd);
-                m_allEntriesToAdd.AddRange(allEntriesToAdd);
-                m_highestPriorityForAddition = lowestPrerequisitesPriority;
-            }
-
-            /// <summary>
-            /// Constructor for entries suppression.
-            /// </summary>
-            /// <param name="plan"></param>
-            /// <param name="entries"></param>
-            /// <param name="highestPriority"></param>
-            public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToRemove, IEnumerable<PlanEntry> allEntriesToRemove, IEnumerable<PlanEntry> removablePrerequisites)
-            {
-                m_plan = plan;
-                m_type = (skillsToRemove.IsEmpty() ? PlanOperations.None : PlanOperations.Suppression);
-
-                m_skillsToRemove.AddRange(skillsToRemove);
-                m_allEntriesToRemove.AddRange(allEntriesToRemove);
-                m_removablePrerequisites.AddRange(removablePrerequisites);
-            }
-
-            /// <summary>
-            /// Gets the type of operation to perform
-            /// </summary>
-            public PlanOperations Type
-            {
-                get { return m_type; }
-            }
-
-            /// <summary>
-            /// Gets the plan affected by this operation.
-            /// </summary>
-            public Plan Plan 
-            {
-                get { return m_plan; } 
-            }
-
-            /// <summary>
-            /// Gets the skill levels the user originally wanted to add.
-            /// </summary>
-            public ReadOnlyCollection<ISkillLevel> SkillsToAdd
-            {
-                get { return m_skillsToAdd.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets all the entries to add when an addition is performed, including the prerequisites.
-            /// </summary>
-            public ReadOnlyCollection<PlanEntry> AllEntriesToAdd
-            {
-                get { return m_allEntriesToAdd.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets the skill levels the user originally wanted to remove.
-            /// </summary>
-            public ReadOnlyCollection<ISkillLevel> SkillsToRemove
-            {
-                get { return m_skillsToRemove.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets all the entries to remove when a suppression is performed, including the dependencies.
-            /// </summary>
-            public ReadOnlyCollection<PlanEntry> AllEntriesToRemove
-            {
-                get { return m_allEntriesToRemove.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets the entries that can be optionally removed when a suppression is performed.
-            /// </summary>
-            public ReadOnlyCollection<PlanEntry> RemovablePrerequisites
-            {
-                get { return m_removablePrerequisites.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets the highest possible priority (lowest possible number) for new entries when an addition is performed. 
-            /// This limit is due to the prerequisites, since they cannot have a lower priority than the entries to add.
-            /// </summary>
-            public int HighestPriorityForAddition
-            {
-                get { return m_highestPriorityForAddition; }
-            }
-
-            /// <summary>
-            /// Performs the operation in the simplest possible way, using default priority for insertions and not removing useless prerequisites for 
-            /// suppressions (but still removing dependent entries !).
-            /// </summary>
-            public void Perform()
-            {
-                switch (m_type)
-                {
-                    case PlanOperations.Suppression:
-                        PerformSuppression(false);
-                        break;
-                    case PlanOperations.Addition:
-                        PerformAddition(PlanEntry.DefaultPriority);
-                        break;
-                    default:
-                        return;
-                }
-            }
-
-            /// <summary>
-            /// Suppress the entries.
-            /// </summary>
-            /// <param name="removePrerequisites">When true, also remove the prerequisites that are not used anymore.</param>
-            public void PerformSuppression(bool removePrerequisites)
-            {
-                // Checks this operation is an addition
-                if (m_type == PlanOperations.Addition)
-                    throw new InvalidOperationException("The represented operation is an addition.");
-
-                // No entries ? Quit
-                if (m_skillsToRemove.Count == 0)
-                    return;
-
-
-                using (m_plan.SuspendingEvents())
-                {
-                    // Remove the entries
-                    foreach (PlanEntry entry in m_allEntriesToRemove)
-                    {
-                        var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-                        if (existingEntry != null)
-                            m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
-                    }
-
-                    // Also remove the prerequisites if the caller requested it.
-                    if (removePrerequisites)
-                    {
-                        foreach (PlanEntry entry in m_removablePrerequisites)
-                        {
-                            var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-                            if (existingEntry != null)
-                                m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
-                        }
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Adds the entries.
-            /// </summary>
-            /// <param name="priority">The desired priority for the new entries, it is automatically adjusted to match the <see cref="HighestPriorityForAddition"/> property.</param>
-            public void PerformAddition(int priority)
-            {
-                // Checks this operation is an addition
-                if (m_type == PlanOperations.Suppression)
-                    throw new InvalidOperationException("The represented operation is a suppression.");
-
-                // No entries ? Quit
-                if (m_allEntriesToAdd.Count == 0)
-                    return;
-
-                // Fixes priority
-                priority = Math.Max(priority, m_highestPriorityForAddition);
-
-                using (m_plan.SuspendingEvents())
-                {
-                    foreach (PlanEntry entry in m_allEntriesToAdd)
-                    {
-                        var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-
-                        // Are we updating an existing entry ? Then just change the note
-                        if (existingEntry != null)
-                        {
-                            // If existing entry's notes is null, we replace it 
-                            if (String.IsNullOrEmpty(existingEntry.Notes))
-                            {
-                                existingEntry.Notes = entry.Notes;
-                            }
-                            // Else, we concatenate the notes
-                            else if (entry.Notes.Contains(entry.Notes))
-                            {
-                                existingEntry.Notes += (", " + entry.Notes);
-                            }
-
-                            // Update the priority
-                            if (existingEntry.Priority > priority)
-                                existingEntry.Priority = priority;
-                        }
-                        else
-                        {
-                            entry.Priority = priority;
-                            m_plan.AddCore(entry.Clone(m_plan));
-                        }
-                    }
-                }
-            }
-        }
-        #endregion
-
         private string m_name;
         private bool m_isConnected;
         private int m_changedNotificationSuppressions;
@@ -265,6 +25,7 @@ namespace EVEMon.Common
         private InvalidPlanEntry[] m_invalidEntries;
 
         #region Construction, importation, exportation
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -300,41 +61,36 @@ namespace EVEMon.Common
             // Update entries
             List<PlanEntry> entries = new List<PlanEntry>();
             List<InvalidPlanEntry> invalidEntries = new List<InvalidPlanEntry>();
-            foreach (var serialEntry in serial.Entries)
+            foreach (SerializablePlanEntry serialEntry in serial.Entries)
             {
                 PlanEntry entry = new PlanEntry(this, serialEntry);
 
-                if (entry.Skill != null)
-                {
-                    entries.Add(entry);
-                }
                 // There are buggy entries in the plan
-                else 
+                if (entry.Skill == null)
                 {
-                    var invalidEntry = new InvalidPlanEntry()
-                    {
-                        SkillName = serialEntry.SkillName,
-                        PlannedLevel = serialEntry.Level
-                    };
+                    InvalidPlanEntry invalidEntry = new InvalidPlanEntry
+                                                        {
+                                                            SkillName = serialEntry.SkillName,
+                                                            PlannedLevel = serialEntry.Level
+                                                        };
 
                     invalidEntries.Add(invalidEntry);
+                    continue;
                 }
+
+                entries.Add(entry);
             }
 
             RebuildPlanFrom(entries);
             FixPrerequisites();
 
-            foreach (var serialInvalidEntry in serial.InvalidEntries)
-            {
-                var invalidEntry = new InvalidPlanEntry()
-                {
-                    SkillName = serialInvalidEntry.SkillName,
-                    PlannedLevel = serialInvalidEntry.PlannedLevel,
-                    Acknowledged = serialInvalidEntry.Acknowledged
-                };
-
-                invalidEntries.Add(invalidEntry);
-            }
+            invalidEntries.AddRange(serial.InvalidEntries.Select(
+                serialInvalidEntry => new InvalidPlanEntry
+                                          {
+                                              SkillName = serialInvalidEntry.SkillName,
+                                              PlannedLevel = serialInvalidEntry.PlannedLevel,
+                                              Acknowledged = serialInvalidEntry.Acknowledged
+                                          }));
 
             m_invalidEntries = invalidEntries.ToArray();
 
@@ -350,24 +106,29 @@ namespace EVEMon.Common
         public SerializablePlan Export()
         {
             // Create serialization object
-            var character = (Character)m_character;
-            var serial = new SerializablePlan { Name = m_name, Owner = character.Guid, SortingPreferences = m_sortingPreferences.Clone() };
+            Character character = (Character) m_character;
+            SerializablePlan serial = new SerializablePlan
+                                          {
+                                              Name = m_name,
+                                              Owner = character.Guid,
+                                              SortingPreferences = m_sortingPreferences.Clone()
+                                          };
 
             // Add entries
-            foreach (var entry in m_items)
+            foreach (PlanEntry entry in m_items)
             {
-                var serialEntry = new SerializablePlanEntry
-                {
-                    ID = entry.Skill.ID,
-                    SkillName = entry.Skill.Name,
-                    Level = entry.Level,
-                    Type = entry.Type,
-                    Notes = entry.Notes, 
-                    Priority = entry.Priority
-                };
+                SerializablePlanEntry serialEntry = new SerializablePlanEntry
+                                                        {
+                                                            ID = entry.Skill.ID,
+                                                            SkillName = entry.Skill.Name,
+                                                            Level = entry.Level,
+                                                            Type = entry.Type,
+                                                            Notes = entry.Notes,
+                                                            Priority = entry.Priority
+                                                        };
 
                 // Add groups
-                foreach (var group in entry.PlanGroups)
+                foreach (string group in entry.PlanGroups)
                 {
                     serialEntry.PlanGroups.Add(group);
                 }
@@ -379,31 +140,39 @@ namespace EVEMon.Common
                 serial.Entries.Add(serialEntry);
             }
 
-            foreach (var entry in m_invalidEntries)
+            foreach (SerializableInvalidPlanEntry serialEntry in m_invalidEntries
+                .Select(entry => new SerializableInvalidPlanEntry
+                                     {
+                                         SkillName = entry.SkillName,
+                                         PlannedLevel = entry.PlannedLevel,
+                                         Acknowledged = entry.Acknowledged
+                                     }))
             {
-                var serialEntry = new SerializableInvalidPlanEntry
-                {
-                    SkillName = entry.SkillName,
-                    PlannedLevel = entry.PlannedLevel,
-                    Acknowledged = entry.Acknowledged
-                };
-
                 serial.InvalidEntries.Add(serialEntry);
             }
 
             return serial;
         }
+
         #endregion
 
 
+        #region Internal Properties
+
         /// <summary>
-        /// Gets or sets true if the plan is connected to a character and will send notifications. When false, it's just a computing helper.
+        /// Gets or sets true if the plan is connected to a character and will send notifications.
+        /// When false, it's just a computing helper.
         /// </summary>
         internal bool IsConnected
         {
             get { return m_isConnected; }
-            set { m_isConnected = true; }
+            set { m_isConnected = value; }
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the plan's name
@@ -411,8 +180,8 @@ namespace EVEMon.Common
         public string Name
         {
             get { return m_name; }
-            set 
-            { 
+            set
+            {
                 m_name = value;
                 if (m_isConnected)
                     EveMonClient.OnPlanNameChanged(this);
@@ -424,10 +193,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<InvalidPlanEntry> InvalidEntries
         {
-            get
-            {
-                return m_invalidEntries.Where(x => !x.Acknowledged);
-            }
+            get { return m_invalidEntries.Where(x => !x.Acknowledged); }
         }
 
         /// <summary>
@@ -435,10 +201,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool ContainsInvalidEntries
         {
-            get
-            {
-                return m_invalidEntries.Where(x => !x.Acknowledged).Count() != 0;
-            }
+            get { return m_invalidEntries.Where(x => !x.Acknowledged).Count() != 0; }
         }
 
         /// <summary>
@@ -449,7 +212,11 @@ namespace EVEMon.Common
             get { return m_sortingPreferences; }
         }
 
+        #endregion
+
+
         #region Event firing and suppression
+
         /// <summary>
         /// Returns an <see cref="IDisposable"/> object which suspends events notification and will resume them once disposed.
         /// </summary>
@@ -459,11 +226,13 @@ namespace EVEMon.Common
         {
             Interlocked.Increment(ref m_changedNotificationSuppressions);
 
-            return new DisposableWithCallback(() =>
-                {
-                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 && m_change != PlanChange.None)
-                        OnChanged(m_change);
-                });
+            return new DisposableWithCallback(
+                () =>
+                    {
+                        if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 &&
+                            m_change != PlanChange.None)
+                            OnChanged(m_change);
+                    });
         }
 
         /// <summary>
@@ -491,10 +260,12 @@ namespace EVEMon.Common
                 EveMonClient.OnPlanChanged(this);
 
         }
+
         #endregion
 
 
         #region Insertion and removal
+
         /// <summary>
         /// Set the planned level to the given one, lowering it if it's higher than the targetted one. 
         /// When the skill is not planned already, the prerequisites are automatically added.
@@ -569,7 +340,7 @@ namespace EVEMon.Common
         /// <param name="level">The level we want to train to</param>
         /// <param name="noteForNewEntries">The reason we want to train this skill</param>
         /// <returns></returns>
-        public IPlanOperation TryPlanTo(Skill skill, int level, string noteForNewEntries)
+        private IPlanOperation TryPlanTo(Skill skill, int level, string noteForNewEntries)
         {
             int plannedLevel = GetPlannedLevel(skill);
             if (level == plannedLevel)
@@ -579,7 +350,7 @@ namespace EVEMon.Common
             if (level > plannedLevel)
             {
                 // Get skill levels to add
-                var skillsToAdd = new List<StaticSkillLevel>();
+                List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
                 for (int i = plannedLevel + 1; i <= level; i++)
                 {
                     skillsToAdd.Add(new StaticSkillLevel(skill, level));
@@ -588,18 +359,16 @@ namespace EVEMon.Common
                 // Create the operation
                 return TryAddSet(skillsToAdd, noteForNewEntries);
             }
-            // Suppression
-            else
-            {
-                // Get skill levels to remove
-                var skillsToRemove = new List<StaticSkillLevel>();
-                for (int i = plannedLevel; i > level && i > skill.Level; i--)
-                {
-                    skillsToRemove.Add(new StaticSkillLevel(skill, i));
-                }
 
-                return TryRemoveSet(skillsToRemove);
+            // Suppression
+            // Get skill levels to remove
+            List<StaticSkillLevel> skillsToRemove = new List<StaticSkillLevel>();
+            for (int i = plannedLevel; i > level && i > skill.Level; i--)
+            {
+                skillsToRemove.Add(new StaticSkillLevel(skill, i));
             }
+
+            return TryRemoveSet(skillsToRemove);
         }
 
         /// <summary>
@@ -612,7 +381,7 @@ namespace EVEMon.Common
             where T : ISkillLevel
         {
             int lowestPrereqPriority;
-            var allEntriesToAdd = GetAllEntriesToAdd(skillsToAdd, note, out lowestPrereqPriority);
+            List<PlanEntry> allEntriesToAdd = GetAllEntriesToAdd(skillsToAdd, note, out lowestPrereqPriority);
 
             return new PlanOperation(this, skillsToAdd.Cast<ISkillLevel>(), allEntriesToAdd, lowestPrereqPriority);
 
@@ -626,82 +395,75 @@ namespace EVEMon.Common
         public IPlanOperation TryRemoveSet<T>(IEnumerable<T> skillsToRemove)
             where T : ISkillLevel
         {
-            var allEntriesToRemove = GetAllEntriesToRemove(skillsToRemove);
+            List<PlanEntry> allEntriesToRemove = GetAllEntriesToRemove(skillsToRemove);
 
             // Creates a plan where the entries and their dependencies have been removed
-            var freePlan = new PlanScratchpad(m_character);
+            PlanScratchpad freePlan = new PlanScratchpad(m_character);
             freePlan.RebuildPlanFrom(m_items);
-            foreach (var entry in allEntriesToRemove)
+            foreach (PlanEntry entry in allEntriesToRemove)
             {
                 freePlan.Remove(entry);
             }
 
             // Gather removables prerequisites now useless
-            var removablePrerequisites = new List<PlanEntry>();
-            foreach (var entryToRemove in allEntriesToRemove)
+            List<PlanEntry> removablePrerequisites = new List<PlanEntry>();
+            foreach (PlanEntry prereqEntry in allEntriesToRemove
+                .SelectMany(entryToRemove => m_items.Where(entryToRemove.IsDependentOf)
+                                                 .Where(prereq => freePlan.GetMinimumLevel(prereq.Skill) == 0)
+                                                 .Select(prereq => freePlan.GetEntry(prereq.Skill, prereq.Level))
+                                                 .Where(prereqEntry => prereqEntry != null &&
+                                                                       prereqEntry.Type == PlanEntryType.Prerequisite)))
             {
-                foreach (var prereq in m_items)
-                {
-                    // Skip if this skill was not dependent of the prereq.
-                    if (!entryToRemove.IsDependentOf(prereq))
-                        continue;
-
-                    // Skip if still required
-                    if (freePlan.GetMinimumLevel(prereq.Skill) != 0)
-                        continue;
-
-                    // Add the entry if its type is Prerequisite
-                    var prereqEntry = freePlan.GetEntry(prereq.Skill, prereq.Level);
-                    if (prereqEntry == null)
-                        continue;
-
-                    // Adds it as a removable prerequisite
-                    if (prereqEntry.Type == PlanEntryType.Prerequisite)
-                    {
-                        removablePrerequisites.Add(prereqEntry);
-                        freePlan.Remove(prereqEntry);
-                    }
-                }
+                removablePrerequisites.Add(prereqEntry);
+                freePlan.Remove(prereqEntry);
             }
 
             // Create the operation
-            return new PlanOperation(this, skillsToRemove.Cast<ISkillLevel>(), allEntriesToRemove, removablePrerequisites);
+            return new PlanOperation(this, skillsToRemove.Cast<ISkillLevel>(), allEntriesToRemove,
+                                     removablePrerequisites);
         }
+
         #endregion
 
 
         #region Certificates
+
         /// <summary>
         /// Adds the provided certificate's prerequisites to the plan
         /// </summary>
-        /// <param name="certificate"></param>
-        /// <param name="confirmationCallback">A callback to request the user a confirmation</param>
+        /// <param name="certificate">The certificate.</param>
+        /// <returns></returns>
         public IPlanOperation TryPlanTo(StaticCertificate certificate)
         {
             return TryAddSet(certificate.AllTopPrerequisiteSkills, certificate.ToString());
         }
+
         #endregion
 
 
         #region Priorities changes
+
         /// <summary>
         /// Try to set the priority of the given entries and cancel if a conflict arises.
         /// </summary>
+        /// <param name="displayPlan">The m_display plan.</param>
         /// <param name="entries">The list of entries to change priority of</param>
         /// <param name="priority">The new priority to set</param>
-        /// <returns>True when successful, false when a conflict arised.</returns>
-        public bool TrySetPriority(PlanScratchpad m_displayPlan, IEnumerable<PlanEntry> entries, int priority)
+        /// <returns>
+        /// True when successful, false when a conflict arised.
+        /// </returns>
+        public bool TrySetPriority(PlanScratchpad displayPlan, IEnumerable<PlanEntry> entries, int priority)
         {
             // Change priorities and make a backup
             Queue<int> oldPriorities = new Queue<int>();
-            foreach (var entry in entries)
+            foreach (PlanEntry entry in entries)
             {
                 oldPriorities.Enqueue(entry.Priority);
                 entry.Priority = priority;
             }
-            
+
             // We are rebuilding the plan with the new priorities in order to check them
-            RebuildPlanFrom(m_displayPlan, true);
+            RebuildPlanFrom(displayPlan, true);
 
             // Check priorities
             if (FixPrioritiesOrder(false, false))
@@ -712,34 +474,36 @@ namespace EVEMon.Common
             }
 
             // Failure, restore the priorities
-            foreach (var entry in entries)
+            foreach (PlanEntry entry in entries)
             {
                 entry.Priority = oldPriorities.Dequeue();
             }
 
             // We are rebuilding the plan from the old priorities
-            RebuildPlanFrom(m_displayPlan, true);
-            
+            RebuildPlanFrom(displayPlan, true);
+
             return false;
         }
+
         #endregion
 
 
+        #region Plan Cloning
+
         /// <summary>
-        /// Creates a clone for another character
+        /// Creates a clone for another character.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
         public Plan Clone(BaseCharacter character)
         {
-            Plan plan = new Plan(character);
-            plan.m_name = m_name;
+            Plan plan = new Plan(character) {Name = m_name};
             plan.RebuildPlanFrom(this);
             return plan;
         }
 
         /// <summary>
-        /// Creates a clone
+        /// Creates a clone.
         /// </summary>
         /// <returns></returns>
         public Plan Clone()
@@ -747,39 +511,291 @@ namespace EVEMon.Common
             return Clone(m_character);
         }
 
+        #endregion
+
+
+        #region InvalidEntries Helper Methods
+
         /// <summary>
-        /// Marks all Invalid Entries in the plan as Acknowledged
+        /// Marks all Invalid Entries in the plan as Acknowledged.
         /// </summary>
         public void AcknoledgeInvalidEntries()
         {
-            foreach (var entry in m_invalidEntries)
+            foreach (InvalidPlanEntry entry in m_invalidEntries)
             {
                 entry.Acknowledged = true;
             }
         }
 
         /// <summary>
-        /// Removes all Invalid Entries that have yet to be Acknowledged
+        /// Removes all Invalid Entries that have yet to be Acknowledged.
         /// </summary>
         public void ClearInvalidEntries()
         {
-            m_invalidEntries = m_invalidEntries.Where(x => x.Acknowledged == true).ToArray();
+            m_invalidEntries = m_invalidEntries.Where(x => x.Acknowledged).ToArray();
         }
 
+        #endregion
+
+
+        #region Plan & Character Skill Merging
+
         /// <summary>
-        /// Merges the characters skills with the plan entries
+        /// Merges the characters skills with the plan entries.
         /// </summary>
-        public SerializableCharacterSkill Merge(SerializableCharacterSkill skill)
+        public void Merge(SerializableCharacterSkill skill)
         {
-            foreach (PlanEntry entry in m_items)
+            foreach (PlanEntry entry in m_items.Where(entry => entry.Skill.ID == skill.ID))
             {
-                if (entry.Skill.ID == skill.ID)
+                skill.Level = entry.Level;
+                skill.Skillpoints = entry.Skill.GetPointsRequiredForLevel(entry.Level);
+            }
+        }
+
+        #endregion
+
+
+        #region Private Class "PlanOperation"
+
+        /// <summary>
+        /// This class is used to add entries. It enumerates the prerequisites to add, their lowest prioties, etc.
+        /// </summary>
+        private sealed class PlanOperation : IPlanOperation
+        {
+            private readonly Plan m_plan;
+            private readonly PlanOperations m_type;
+
+            // Addition
+            private readonly int m_highestPriorityForAddition;
+            private readonly List<ISkillLevel> m_skillsToAdd = new List<ISkillLevel>();
+            private readonly List<PlanEntry> m_allEntriesToAdd = new List<PlanEntry>();
+
+            // Suppression
+            private readonly List<ISkillLevel> m_skillsToRemove = new List<ISkillLevel>();
+            private readonly List<PlanEntry> m_allEntriesToRemove = new List<PlanEntry>();
+            private readonly List<PlanEntry> m_removablePrerequisites = new List<PlanEntry>();
+
+
+            /// <summary>
+            /// Constructor for an empty operation.
+            /// </summary>
+            /// <param name="plan"></param>
+            public PlanOperation(Plan plan)
+            {
+                m_plan = plan;
+            }
+
+            /// <summary>
+            /// Constructor for entries addition.
+            /// </summary>
+            /// <param name="plan">The plan.</param>
+            /// <param name="skillsToAdd">The skills to add.</param>
+            /// <param name="allEntriesToAdd">All entries to add.</param>
+            /// <param name="lowestPrerequisitesPriority">The lowest prerequisites priority.</param>
+            public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToAdd, IEnumerable<PlanEntry> allEntriesToAdd,
+                                 int lowestPrerequisitesPriority)
+            {
+                m_plan = plan;
+                m_type = (skillsToAdd.IsEmpty() ? PlanOperations.None : PlanOperations.Addition);
+
+                m_skillsToAdd.AddRange(skillsToAdd);
+                m_allEntriesToAdd.AddRange(allEntriesToAdd);
+                m_highestPriorityForAddition = lowestPrerequisitesPriority;
+            }
+
+            /// <summary>
+            /// Constructor for entries suppression.
+            /// </summary>
+            /// <param name="plan">The plan.</param>
+            /// <param name="skillsToRemove">The skills to remove.</param>
+            /// <param name="allEntriesToRemove">All entries to remove.</param>
+            /// <param name="removablePrerequisites">The removable prerequisites.</param>
+            public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToRemove,
+                                 IEnumerable<PlanEntry> allEntriesToRemove,
+                                 IEnumerable<PlanEntry> removablePrerequisites)
+            {
+                m_plan = plan;
+                m_type = (skillsToRemove.IsEmpty() ? PlanOperations.None : PlanOperations.Suppression);
+
+                m_skillsToRemove.AddRange(skillsToRemove);
+                m_allEntriesToRemove.AddRange(allEntriesToRemove);
+                m_removablePrerequisites.AddRange(removablePrerequisites);
+            }
+
+            /// <summary>
+            /// Gets the type of operation to perform
+            /// </summary>
+            public PlanOperations Type
+            {
+                get { return m_type; }
+            }
+
+            /// <summary>
+            /// Gets the plan affected by this operation.
+            /// </summary>
+            public Plan Plan
+            {
+                get { return m_plan; }
+            }
+
+            /// <summary>
+            /// Gets the skill levels the user originally wanted to add.
+            /// </summary>
+            public ReadOnlyCollection<ISkillLevel> SkillsToAdd
+            {
+                get { return m_skillsToAdd.AsReadOnly(); }
+            }
+
+            /// <summary>
+            /// Gets all the entries to add when an addition is performed, including the prerequisites.
+            /// </summary>
+            public ReadOnlyCollection<PlanEntry> AllEntriesToAdd
+            {
+                get { return m_allEntriesToAdd.AsReadOnly(); }
+            }
+
+            /// <summary>
+            /// Gets the skill levels the user originally wanted to remove.
+            /// </summary>
+            public ReadOnlyCollection<ISkillLevel> SkillsToRemove
+            {
+                get { return m_skillsToRemove.AsReadOnly(); }
+            }
+
+            /// <summary>
+            /// Gets all the entries to remove when a suppression is performed, including the dependencies.
+            /// </summary>
+            public ReadOnlyCollection<PlanEntry> AllEntriesToRemove
+            {
+                get { return m_allEntriesToRemove.AsReadOnly(); }
+            }
+
+            /// <summary>
+            /// Gets the entries that can be optionally removed when a suppression is performed.
+            /// </summary>
+            public ReadOnlyCollection<PlanEntry> RemovablePrerequisites
+            {
+                get { return m_removablePrerequisites.AsReadOnly(); }
+            }
+
+            /// <summary>
+            /// Gets the highest possible priority (lowest possible number) for new entries when an addition is performed. 
+            /// This limit is due to the prerequisites, since they cannot have a lower priority than the entries to add.
+            /// </summary>
+            public int HighestPriorityForAddition
+            {
+                get { return m_highestPriorityForAddition; }
+            }
+
+            /// <summary>
+            /// Performs the operation in the simplest possible way, using default priority for insertions
+            /// and not removing useless prerequisites for suppressions (but still removing dependent entries !).
+            /// </summary>
+            public void Perform()
+            {
+                switch (m_type)
                 {
-                    skill.Level = entry.Level;
-                    skill.Skillpoints = entry.Skill.GetPointsRequiredForLevel(entry.Level);
+                    case PlanOperations.Suppression:
+                        PerformSuppression(false);
+                        break;
+                    case PlanOperations.Addition:
+                        PerformAddition(PlanEntry.DefaultPriority);
+                        break;
+                    default:
+                        return;
                 }
             }
-            return skill;
+
+            /// <summary>
+            /// Suppress the entries.
+            /// </summary>
+            /// <param name="removePrerequisites">When true, also remove the prerequisites that are not used anymore.</param>
+            public void PerformSuppression(bool removePrerequisites)
+            {
+                // Checks this operation is an addition
+                if (m_type == PlanOperations.Addition)
+                    throw new InvalidOperationException("The represented operation is an addition.");
+
+                // No entries ? Quit
+                if (m_skillsToRemove.Count == 0)
+                    return;
+
+
+                using (m_plan.SuspendingEvents())
+                {
+                    // Remove the entries
+                    foreach (PlanEntry existingEntry in m_allEntriesToRemove
+                        .Select(entry => m_plan.GetEntry(entry.Skill, entry.Level))
+                        .Where(existingEntry => existingEntry != null))
+                    {
+                        m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
+                    }
+
+                    // Also remove the prerequisites if the caller requested it
+                    if (!removePrerequisites)
+                        return;
+
+                    foreach (PlanEntry existingEntry in m_removablePrerequisites
+                        .Select(entry => m_plan.GetEntry(entry.Skill, entry.Level))
+                        .Where(existingEntry => existingEntry != null))
+                    {
+                        m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Adds the entries.
+            /// </summary>
+            /// <param name="priority">The desired priority for the new entries,
+            /// it is automatically adjusted to match the <see cref="HighestPriorityForAddition"/> property.</param>
+            public void PerformAddition(int priority)
+            {
+                // Checks this operation is an addition
+                if (m_type == PlanOperations.Suppression)
+                    throw new InvalidOperationException("The represented operation is a suppression.");
+
+                // No entries ? Quit
+                if (m_allEntriesToAdd.Count == 0)
+                    return;
+
+                // Fixes priority
+                priority = Math.Max(priority, m_highestPriorityForAddition);
+
+                using (m_plan.SuspendingEvents())
+                {
+                    foreach (PlanEntry entry in m_allEntriesToAdd)
+                    {
+                        PlanEntry existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
+
+                        // Are we updating an existing entry ? Then just change the note
+                        if (existingEntry != null)
+                        {
+                            // If existing entry's notes is null, we replace it 
+                            if (String.IsNullOrEmpty(existingEntry.Notes))
+                            {
+                                existingEntry.Notes = entry.Notes;
+                            }
+                                // Else, we concatenate the notes
+                            else if (entry.Notes.Contains(entry.Notes))
+                            {
+                                existingEntry.Notes += (", " + entry.Notes);
+                            }
+
+                            // Update the priority
+                            if (existingEntry.Priority > priority)
+                                existingEntry.Priority = priority;
+                        }
+                        else
+                        {
+                            entry.Priority = priority;
+                            m_plan.AddCore(entry.Clone(m_plan));
+                        }
+                    }
+                }
+            }
         }
+
+        #endregion
     }
 }

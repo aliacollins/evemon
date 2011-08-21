@@ -192,10 +192,10 @@ namespace EVEMon.Common.Data
                 case 2:
                     switch (Rank)
                     {
-                        case 1: 
+                        case 1:
                             return 1415;
                         default:
-                            return (int)(Rank * 1414.3f + 0.5f);
+                            return (int) (Rank * 1414.3f + 0.5f);
                     }
                 case 3:
                     return 8000 * Rank;
@@ -248,42 +248,38 @@ namespace EVEMon.Common.Data
             string currentLine = String.Empty;
             bool inTag = false;
 
-            foreach (string currentWord in words)
+            foreach (string currentWord in words.Where(currentWord => currentWord.Length > 0))
             {
-                //Ignore html
-                if (currentWord.Length > 0)
+                if (currentWord.Substring(0, 1) == "<")
+                    inTag = true;
+
+                if (inTag)
                 {
-                    if (currentWord.Substring(0, 1) == "<")
-                        inTag = true;
-
-                    if (inTag)
+                    //Handle filenames inside html tags
+                    if (currentLine.EndsWith("."))
                     {
-                        //Handle filenames inside html tags
-                        if (currentLine.EndsWith("."))
-                        {
-                            currentLine += currentWord;
-                        }
-                        else
-                        {
-                            currentLine += " " + currentWord;
-                        }
-
-                        if (currentWord.IndexOf(">") > -1)
-                            inTag = false;
+                        currentLine += currentWord;
                     }
                     else
                     {
-                        if (currentLineLength + currentWord.Length + 1 < maxLength)
-                        {
-                            currentLine += " " + currentWord;
-                            currentLineLength += (currentWord.Length + 1);
-                        }
-                        else
-                        {
-                            lines.Add(currentLine);
-                            currentLine = currentWord;
-                            currentLineLength = currentWord.Length;
-                        }
+                        currentLine += " " + currentWord;
+                    }
+
+                    if (currentWord.IndexOf(">") > -1)
+                        inTag = false;
+                }
+                else
+                {
+                    if (currentLineLength + currentWord.Length + 1 < maxLength)
+                    {
+                        currentLine += " " + currentWord;
+                        currentLineLength += (currentWord.Length + 1);
+                    }
+                    else
+                    {
+                        lines.Add(currentLine);
+                        currentLine = currentWord;
+                        currentLineLength = currentWord.Length;
                     }
                 }
             }
@@ -295,7 +291,7 @@ namespace EVEMon.Common.Data
             lines.CopyTo(textLinesStr, 0);
 
             return textLinesStr.Aggregate(String.Empty,
-                (current, line) => string.Format("{0}{1}{2}", current, line, Environment.NewLine));
+                                          (current, line) => String.Format("{0}{1}{2}", current, line, Environment.NewLine));
         }
 
         #endregion
