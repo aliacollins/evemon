@@ -15,56 +15,20 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public abstract class Character : BaseCharacter
     {
-        protected readonly Guid m_guid;
-
-        protected CharacterIdentity m_identity;
-        protected long m_characterID;
+        // Attributes
+        private string m_name;
 
         // Attributes
-        protected decimal m_balance;
-        protected string m_name;
-        protected DateTime m_birthday;
-        protected string m_race;
-        protected string m_bloodLine;
-        protected string m_ancestry;
-        protected string m_gender;
-        protected string m_corporationName;
-        protected int m_corporationID;
-        protected string m_allianceName;
-        protected int m_allianceID;
-        protected string m_cloneName;
-        protected int m_cloneSkillPoints;
-        protected string m_shipName;
-        protected string m_shipTypeName;
-        protected string m_lastKnownLocation;
-        protected double m_securityStatus;
-
-        protected bool m_isUpdatingPortrait;
-
-        // Attributes
-        protected readonly CharacterAttribute[] m_attributes = new CharacterAttribute[5];
-
-        // These are the new replacements for m_attributeBonuses
-        protected readonly ImplantSetCollection m_implants;
+        private readonly CharacterAttribute[] m_attributes = new CharacterAttribute[5];
 
         // Certificates
-        protected readonly CertificateCategoryCollection m_certificateCategories;
-        protected readonly CertificateClassCollection m_certificateClasses;
-        protected readonly CertificateCollection m_certificates;
-
-        // Skills
-        protected readonly SkillGroupCollection m_skillGroups;
-        protected readonly SkillCollection m_skills;
-
-        // Plans
-        protected readonly PlanCollection m_plans;
-
-        // Settings
-        protected CharacterUISettings m_uiSettings;
+        private readonly CertificateCategoryCollection m_certificateCategories;
+        private readonly CertificateClassCollection m_certificateClasses;
+        private readonly CertificateCollection m_certificates;
 
         // Skill Point Caching
-        protected DateTime m_skillPointTotalUpdated = DateTime.MinValue;
-        protected int m_lastSkillPointTotal;
+        private DateTime m_skillPointTotalUpdated = DateTime.MinValue;
+        private int m_lastSkillPointTotal;
 
 
         #region Initialization
@@ -76,26 +40,27 @@ namespace EVEMon.Common
         /// <param name="guid"></param>
         protected Character(CharacterIdentity identity, Guid guid)
         {
-            m_characterID = identity.CharacterID;
+            CharacterID = identity.CharacterID;
             m_name = identity.Name;
-            m_identity = identity;
-            m_guid = guid;
+            Identity = identity;
+            Guid = guid;
 
-            m_skillGroups = new SkillGroupCollection(this);
-            m_skills = new SkillCollection(this);
+            SkillGroups = new SkillGroupCollection(this);
+            Skills = new SkillCollection(this);
 
+            EmploymentHistory = new EmploymentHistoryCollection(this);
             m_certificateCategories = new CertificateCategoryCollection(this);
             m_certificateClasses = new CertificateClassCollection(this);
             m_certificates = new CertificateCollection(this);
-            m_implants = new ImplantSetCollection(this);
-            m_plans = new PlanCollection(this);
+            ImplantSets = new ImplantSetCollection(this);
+            Plans = new PlanCollection(this);
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
                 m_attributes[i] = new CharacterAttribute(this, (EveAttribute)i);
             }
 
-            m_uiSettings = new CharacterUISettings();
+            UISettings = new CharacterUISettings();
         }
 
         #endregion
@@ -106,18 +71,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets a global identifier for this character.
         /// </summary>
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public Guid Guid { get; private set; }
 
         /// <summary>
         /// Gets the identity for this character.
         /// </summary>
-        public CharacterIdentity Identity
-        {
-            get { return m_identity; }
-        }
+        public CharacterIdentity Identity { get; protected set; }
 
         /// <summary>
         /// Gets or sets true if the character is monitored and displayed on the main window.
@@ -137,10 +96,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the ID for this character.
         /// </summary>
-        public long CharacterID
-        {
-            get { return m_identity.CharacterID; }
-        }
+        public long CharacterID { get; protected set; }
 
         /// <summary>
         /// Gets or sets the source's name.
@@ -151,11 +107,11 @@ namespace EVEMon.Common
             get { return m_name; }
             set
             {
-                if (m_name != value)
-                {
-                    m_name = value;
-                    EveMonClient.OnCharacterUpdated(this);
-                }
+                if (m_name == value)
+                    return;
+
+                m_name = value;
+                EveMonClient.OnCharacterUpdated(this);
             }
         }
 
@@ -170,109 +126,69 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the character's birthday.
         /// </summary>
-        public DateTime Birthday
-        {
-            get { return m_birthday; }
-        }
+        public DateTime Birthday { get; private set; }
 
         /// <summary>
         /// Gets the character's race.
         /// </summary>
-        public string Race
-        {
-            get { return m_race; }
-        }
+        public string Race { get; private set; }
 
         /// <summary>
         /// Gets the character's bloodline.
         /// </summary>
-        public string Bloodline
-        {
-            get { return m_bloodLine; }
-        }
+        public string Bloodline { get; private set; }
 
         /// <summary>
         /// Gets the character's ancestry.
         /// </summary>
-        public string Ancestry
-        {
-            get { return m_ancestry; }
-        }
+        public string Ancestry { get; private set; }
 
         /// <summary>
         /// Gets the character's gender.
         /// </summary>
-        public string Gender
-        {
-            get { return m_gender; }
-        }
+        public string Gender { get; private set; }
 
         /// <summary>
         /// Gets the name of the character's corporation.
         /// </summary>
-        public string CorporationName
-        {
-            get { return m_corporationName; }
-        }
+        public string CorporationName { get; private set; }
 
         /// <summary>
         /// Gets the id of the character's corporation.
         /// </summary>
-        public int CorporationID
-        {
-            get { return m_corporationID; }
-        }
+        public int CorporationID { get; private set; }
 
         /// <summary>
         /// Gets the name of the character's alliance.
         /// </summary>
-        public string AllianceName
-        {
-            get { return m_allianceName; }
-        }
+        public string AllianceName { get; private set; }
 
         /// <summary>
         /// Gets the id of the character's alliance.
         /// </summary>
-        public int AllianceID
-        {
-            get { return m_allianceID; }
-        }
+        public int AllianceID { get; private set; }
 
         /// <summary>
         /// Gets the name of the clone.
         /// </summary>
         /// <value>The name of the clone.</value>
-        public string CloneName
-        {
-            get { return m_cloneName; }
-        }
+        public string CloneName { get; private set; }
 
         /// <summary>
         /// Gets the clone's capacity.
         /// </summary>
         /// <value>The clone skill points.</value>
-        public int CloneSkillPoints
-        {
-            get { return m_cloneSkillPoints; }
-        }
+        public int CloneSkillPoints { get; private set; }
 
         /// <summary>
         /// Gets the current character's wallet balance.
         /// </summary>
-        public decimal Balance
-        {
-            get { return m_balance; }
-        }
+        public decimal Balance { get; private set; }
 
         /// <summary>
         /// Gets true whether the portrait is currently updating.
         /// </summary>
-        internal bool IsUpdatingPortrait
-        {
-            get { return m_isUpdatingPortrait; }
-            set { m_isUpdatingPortrait = value; }
-        }
+        internal bool IsUpdatingPortrait { get; set; }
 
         #endregion
 
@@ -282,34 +198,27 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the character's ship name.
         /// </summary>
-        public string ShipName
-        {
-            get { return m_shipName; }
-        }
+        public string ShipName { get; private set; }
 
         /// <summary>
         /// Gets the character's shipType name.
         /// </summary>
-        public string ShipTypeName
-        {
-            get { return m_shipTypeName; }
-        }
+        public string ShipTypeName { get; private set; }
 
         /// <summary>
         /// Gets the character's last known location.
         /// </summary>
-        public string LastKnownLocation
-        {
-            get { return m_lastKnownLocation; }
-        }
+        public string LastKnownLocation { get; private set; }
 
         /// <summary>
         /// Gets the character's security status.
         /// </summary>
-        public double SecurityStatus
-        {
-            get { return m_securityStatus; }
-        }
+        public double SecurityStatus { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the character's  employment history.
+        /// </summary>
+        public EmploymentHistoryCollection EmploymentHistory { get; set; } 
 
         #endregion
 
@@ -334,17 +243,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the implants sets of the character and its clones.
         /// </summary>
-        public ImplantSetCollection ImplantSets
-        {
-            get { return m_implants; }
-        }
+        public ImplantSetCollection ImplantSets { get; private set; }
 
         /// <summary>
         /// Gets the current implants' bonuses.
         /// </summary>
         public ImplantSet CurrentImplants
         {
-            get { return m_implants.Current; }
+            get { return ImplantSets.Current; }
         }
 
         #endregion
@@ -355,18 +261,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of skills.
         /// </summary>
-        public SkillCollection Skills
-        {
-            get { return m_skills; }
-        }
+        public SkillCollection Skills { get; private set; }
 
         /// <summary>
         /// Gets the collection of skill groups.
         /// </summary>
-        public SkillGroupCollection SkillGroups
-        {
-            get { return m_skillGroups; }
-        }
+        public SkillGroupCollection SkillGroups { get; private set; }
 
         /// <summary>
         /// Gets the total skill points for this character.
@@ -379,11 +279,7 @@ namespace EVEMon.Common
             if (m_skillPointTotalUpdated > DateTime.UtcNow.AddSeconds(-1))
                 return m_lastSkillPointTotal;
 
-            int sp = 0;
-            foreach (var skill in m_skills)
-            {
-                sp += skill.SkillPoints;
-            }
+            int sp = Skills.Sum(skill => skill.SkillPoints);
 
             m_lastSkillPointTotal = sp;
             m_skillPointTotalUpdated = DateTime.UtcNow;
@@ -396,16 +292,7 @@ namespace EVEMon.Common
         /// </summary>
         public int KnownSkillCount
         {
-            get
-            {
-                int count = 0;
-                foreach (var skill in m_skills)
-                {
-                    if (skill.IsKnown)
-                        count++;
-                }
-                return count;
-            }
+            get { return Skills.Count(skill => skill.IsKnown); }
         }
 
         /// <summary>
@@ -415,13 +302,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public int GetSkillCountAtLevel(int level)
         {
-            int count = 0;
-            foreach (var skill in m_skills.Where(x => x.IsKnown))
-            {
-                if (skill.LastConfirmedLvl == level)
-                    count++;
-            }
-            return count;
+            return Skills.Where(x => x.IsKnown).Count(skill => skill.LastConfirmedLvl == level);
         }
 
         /// <summary>
@@ -431,7 +312,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillLevel(StaticSkill skill)
         {
-            return m_skills[skill].Level;
+            return Skills[skill].Level;
         }
 
         /// <summary>
@@ -441,7 +322,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillPoints(StaticSkill skill)
         {
-            return m_skills[skill].SkillPoints;
+            return Skills[skill].SkillPoints;
         }
 
         #endregion
@@ -452,7 +333,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of certificate categories.
         /// </summary>
-        public CertificateCategoryCollection CertificateCategories
+        public IEnumerable<CertificateCategory> CertificateCategories
         {
             get { return m_certificateCategories; }
         }
@@ -481,10 +362,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of plans.
         /// </summary>
-        public PlanCollection Plans
-        {
-            get { return m_plans; }
-        }
+        public PlanCollection Plans { get; private set; }
 
         #endregion
 
@@ -509,7 +387,6 @@ namespace EVEMon.Common
 
         #endregion
 
-
         #region Importation / exportation
 
         /// <summary>
@@ -522,30 +399,33 @@ namespace EVEMon.Common
         /// <summary>
         /// Fetches the data to the given serialization object, used by inheritors.
         /// </summary>
-        /// <param name="ci"></param>
+        /// <param name="serial">The serial.</param>
         protected void Export(SerializableSettingsCharacter serial)
         {
-            serial.Guid = m_guid;
-            serial.ID = m_identity.CharacterID;
+            serial.Guid = Guid;
+            serial.ID = Identity.CharacterID;
             serial.Name = m_name;
-            serial.Birthday = m_birthday;
-            serial.Race = m_race;
-            serial.Ancestry = m_ancestry;
-            serial.Gender = m_gender;
-            serial.BloodLine = m_bloodLine;
-            serial.CorporationName = m_corporationName;
-            serial.CorporationID = m_corporationID;
-            serial.AllianceName = m_allianceName;
-            serial.AllianceID = m_allianceID;
-            serial.CloneSkillPoints = m_cloneSkillPoints;
-            serial.CloneName = m_cloneName;
-            serial.Balance = m_balance;
+            serial.Birthday = Birthday;
+            serial.Race = Race;
+            serial.Ancestry = Ancestry;
+            serial.Gender = Gender;
+            serial.BloodLine = Bloodline;
+            serial.CorporationName = CorporationName;
+            serial.CorporationID = CorporationID;
+            serial.AllianceName = AllianceName;
+            serial.AllianceID = AllianceID;
+            serial.CloneSkillPoints = CloneSkillPoints;
+            serial.CloneName = CloneName;
+            serial.Balance = Balance;
 
             // Info
-            serial.Info.ShipName = m_shipName;
-            serial.Info.ShipTypeName = m_shipTypeName;
-            serial.Info.SecurityStatus = m_securityStatus;
-            serial.Info.LastKnownLocation = m_lastKnownLocation;
+            serial.Info.ShipName = ShipName;
+            serial.Info.ShipTypeName = ShipTypeName;
+            serial.Info.SecurityStatus = SecurityStatus;
+            serial.Info.LastKnownLocation = LastKnownLocation;
+
+            // Employment History
+            serial.EmploymentHistory = EmploymentHistory.Export();
 
             // Attributes
             serial.Attributes.Intelligence = Intelligence.Base;
@@ -583,19 +463,19 @@ namespace EVEMon.Common
             Import((SerializableCharacterSheetBase)serial);
 
             // Implants
-            m_implants.Import(serial.ImplantSets);
+            ImplantSets.Import(serial.ImplantSets);
         }
 
         /// <summary>
         /// Imports data from the given character sheet informations.
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        protected void Import(SerializableAPICharacterSheet serial)
+        private void Import(SerializableAPICharacterSheet serial)
         {
             Import((SerializableCharacterSheetBase)serial);
 
             // Implants
-            m_implants.Import(serial.Implants);
+            ImplantSets.Import(serial.Implants);
         }
 
         /// <summary>
@@ -604,10 +484,12 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character info</param>
         protected void Import(SerializableAPICharacterInfo serial)
         {
-            m_shipName = serial.ShipName;
-            m_shipTypeName = serial.ShipTypeName;
-            m_securityStatus = serial.SecurityStatus;
-            m_lastKnownLocation = serial.LastKnownLocation;
+            ShipName = serial.ShipName;
+            ShipTypeName = serial.ShipTypeName;
+            SecurityStatus = serial.SecurityStatus;
+            LastKnownLocation = serial.LastKnownLocation;
+
+            EmploymentHistory.Import(serial.EmploymentHistory);
 
             EveMonClient.OnCharacterInfoUpdated(this);
         }
@@ -616,28 +498,31 @@ namespace EVEMon.Common
         /// Imports data from the given character sheet informations.
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        protected void Import(SerializableCharacterSheetBase serial)
+        private void Import(SerializableCharacterSheetBase serial)
         {
             // Bio
             m_name = serial.Name;
-            m_birthday = serial.Birthday;
-            m_race = serial.Race;
-            m_ancestry = serial.Ancestry;
-            m_gender = serial.Gender;
-            m_balance = serial.Balance;
-            m_bloodLine = serial.BloodLine;
-            m_corporationName = serial.CorporationName;
-            m_corporationID = serial.CorporationID;
-            m_allianceName = serial.AllianceName;
-            m_allianceID = serial.AllianceID;
-            m_cloneName = serial.CloneName;
-            m_cloneSkillPoints = serial.CloneSkillPoints;
+            Birthday = serial.Birthday;
+            Race = serial.Race;
+            Ancestry = serial.Ancestry;
+            Gender = serial.Gender;
+            Balance = serial.Balance;
+            Bloodline = serial.BloodLine;
+            CorporationName = serial.CorporationName;
+            CorporationID = serial.CorporationID;
+            AllianceName = serial.AllianceName;
+            AllianceID = serial.AllianceID;
+            CloneName = serial.CloneName;
+            CloneSkillPoints = serial.CloneSkillPoints;
 
             // Info
-            m_shipName = serial.Info.ShipName;
-            m_shipTypeName = serial.Info.ShipTypeName;
-            m_securityStatus = serial.Info.SecurityStatus;
-            m_lastKnownLocation = serial.Info.LastKnownLocation;
+            ShipName = serial.Info.ShipName;
+            ShipTypeName = serial.Info.ShipTypeName;
+            SecurityStatus = serial.Info.SecurityStatus;
+            LastKnownLocation = serial.Info.LastKnownLocation;
+
+            // Employment History
+            EmploymentHistory.Import(serial.EmploymentHistory);
 
             // Attributes
             m_attributes[(int)EveAttribute.Intelligence].Base = serial.Attributes.Intelligence;
@@ -647,7 +532,7 @@ namespace EVEMon.Common
             m_attributes[(int)EveAttribute.Memory].Base = serial.Attributes.Memory;
 
             // Skills
-            m_skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
+            Skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
 
             // Certificates
             m_certificates.Import(serial.Certificates);
@@ -659,7 +544,7 @@ namespace EVEMon.Common
         /// <param name="plans"></param>
         internal void ImportPlans(IEnumerable<SerializablePlan> plans)
         {
-            m_plans.Import(plans);
+            Plans.Import(plans);
         }
 
         /// <summary>
@@ -668,39 +553,15 @@ namespace EVEMon.Common
         /// <param name="list"></param>
         internal void ExportPlans(List<SerializablePlan> list)
         {
-            foreach (var plan in m_plans)
-            {
-                list.Add(plan.Export());
-            }
+            list.AddRange(Plans.Select(plan => plan.Export()));
         }
 
         #endregion
 
-
         /// <summary>
         /// Gets the UI settings for this character.
         /// </summary>
-        public CharacterUISettings UISettings
-        {
-            get { return m_uiSettings; }
-            internal set { m_uiSettings = value; }
-        }
-
-        /// <summary>
-        /// Updates the character on a timer tick.
-        /// </summary>
-        internal virtual void UpdateOnOneSecondTick() { }
-
-        /// <summary>
-        /// Clean the obsolete entries in the plan.
-        /// </summary>
-        internal void CleanObsoleteEntries(ObsoleteRemovalPolicy policy)
-        {
-            foreach (var plan in m_plans)
-            {
-                plan.CleanObsoleteEntries(policy);
-            }
-        }
+        public CharacterUISettings UISettings { get; internal set; }
 
         /// <summary>
         /// Gets a unique hashcode for this character.
@@ -708,7 +569,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return m_guid.GetHashCode();
+            return Guid.GetHashCode();
         }
 
         /// <summary>

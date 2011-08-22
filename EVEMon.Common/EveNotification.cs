@@ -9,7 +9,7 @@ namespace EVEMon.Common
 {
     public sealed class EveNotification : IEveMessage
     {
-        private CCPCharacter m_ccpCharacter;
+        private readonly CCPCharacter m_ccpCharacter;
         private bool m_queryPending;
 
 
@@ -18,7 +18,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="ccpCharacter">The CCP character.</param>
+        /// <param name="src">The source.</param>
         internal EveNotification(CCPCharacter ccpCharacter, SerializableNotificationsListItem src)
         {
             m_ccpCharacter = ccpCharacter;
@@ -90,31 +91,29 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the name of the ID.
         /// </summary>
-        /// <param name="ID">The ID.</param>
+        /// <param name="id">The ID.</param>
         /// <returns></returns>
-        private string GetIDToName(long ID)
+        private string GetIDToName(long id)
         {
-            if (ID == 0)
+            if (id == 0)
                 return "Unknown";
 
             // Look into EVEMon's data file if it's an NPC corporation
-            Station station =  StaticGeography.AllStations.FirstOrDefault(x => x.CorporationID == ID && !String.IsNullOrEmpty(x.CorporationName));
+            Station station =  StaticGeography.AllStations.FirstOrDefault(x => x.CorporationID == id && !String.IsNullOrEmpty(x.CorporationName));
             if (station != null)
                 return station.Name;
 
             // Look into EVEMon's data file if it's an agent
-            Agent agent = StaticGeography.AllAgents.FirstOrDefault(x => x.ID == ID && !String.IsNullOrEmpty(x.Name));
+            Agent agent = StaticGeography.AllAgents.FirstOrDefault(x => x.ID == id && !String.IsNullOrEmpty(x.Name));
             if (agent != null)
                 return agent.Name;
 
             // Lookup if it's a players null sec corporation
             // (while we have the data we can avoid unnecessary queries to the API)
-            Station conqStation = ConquerableStation.AllStations.FirstOrDefault(x => x.CorporationID == ID);
-            if (conqStation != null)
-                return conqStation.CorporationName;
+            Station conqStation = ConquerableStation.AllStations.FirstOrDefault(x => x.CorporationID == id);
 
             // Didn't found any ? Query the API
-            return EveIDtoName.GetIDToName(ID.ToString());
+            return conqStation != null ? conqStation.CorporationName : EveIDToName.GetIDToName(id);
         }
 
         /// <summary>
@@ -123,8 +122,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private List<string> GetRecipient()
         {
-            Recipient = new List<string>();
-            Recipient.Add(m_ccpCharacter.Name);
+            Recipient = new List<string> {m_ccpCharacter.Name};
 
             return Recipient;
         }

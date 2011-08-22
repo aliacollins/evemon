@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -15,6 +16,7 @@ namespace EVEMon.Common.Serialization.API
             Attributes = new SerializableCharacterAttributes();
             Skills = new List<SerializableCharacterSkill>();
             Certificates = new List<SerializableCharacterCertificate>();
+            EmploymentHistory = new List<SerializableEmploymentHistory>();
         }
 
         [XmlElement("characterID")]
@@ -121,6 +123,14 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlElement("info")]
         public SerializableAPICharacterInfo Info
+        {
+            get;
+            set;
+        }
+
+        [XmlArray("employmentHistory")]
+        [XmlArrayItem("record")]
+        public List<SerializableEmploymentHistory> EmploymentHistory
         {
             get;
             set;

@@ -90,6 +90,8 @@
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
+    <Compile Include="EmploymentHistoryCollection.cs" />
+    <Compile Include="EmploymentRecord.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
@@ -111,8 +113,10 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableEmploymentHistory.cs" />
     <Compile Include="Serialization\API\SerializableAgentStanding.cs" />
     <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
+    <Compile Include="Serialization\API\SerializableEmploymentHistoryListItem.cs" />
     <Compile Include="Serialization\API\SerializableFactionStanding.cs" />
     <Compile Include="Serialization\API\SerializableNPCCorporationStanding.cs" />
     <Compile Include="Serialization\API\SerializableStandings.cs">
@@ -190,7 +194,7 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="EveConstants.cs" />
     <Compile Include="EveMonClient.cs" />
-    <Compile Include="EveIDtoName.cs" />
+    <Compile Include="EveIDToName.cs" />
     <Compile Include="EveMailBody.cs" />
     <Compile Include="EveMailMessage.cs" />
     <Compile Include="EveMailMessagesComparer.cs" />
@@ -345,9 +349,6 @@
     <Compile Include="Serialization\API\SerializableCharacterSheetBase.cs" />
     <Compile Include="Controls\SplitButton.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SplitButton.Designer.cs">
-      <DependentUpon>SplitButton.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SplitContainerMinFixed.cs">
       <SubType>Component</SubType>
@@ -633,7 +634,7 @@
     <Compile Include="GlobalMonitoredCharacterCollection.cs" />
     <Compile Include="Serialization\API\ISerializableWithLocalClock.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProviders.cs" />
-    <Compile Include="Serialization\API\SerializableSkill.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterSkill.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
     <Compile Include="QueuedSkill.cs" />
@@ -677,10 +678,6 @@
       <SubType>Designer</SubType>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TreeView.resx">
-      <DependentUpon>TreeView.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -891,17 +888,9 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
-  <Target Name="GenerateSerializationAssembliesForAllTypes"
-  DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource"
-  Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)"
-  Outputs="$(OutputPath)$(_SGenDllName)">
-    <SGen BuildAssemblyName="$(TargetFileName)"
-      BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)"
-      ShouldGenerateSerializer="true" UseProxyTypes="false"
-      KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)"
-      DelaySign="$(DelaySign)" ToolPath="$(SGenToolPath)">
-        <Output TaskParameter="SerializationAssembly"
-          ItemName="SerializationAssembly" />
+  <Target Name="GenerateSerializationAssembliesForAllTypes" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
+    <SGen BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(SGenToolPath)">
+      <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
     </SGen>
   </Target>
   <Target Name="BeforeBuild">

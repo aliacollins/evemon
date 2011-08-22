@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -15,9 +16,10 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<long, Constellation> s_constellationsByID = new Dictionary<long, Constellation>();
         private static readonly Dictionary<long, SolarSystem> s_solarSystemsByID = new Dictionary<long, SolarSystem>();
         private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
+        private static readonly Dictionary<long, String> s_corporationsByID = new Dictionary<long, string>();
         private static readonly Dictionary<long, Agent> s_agentsByID = new Dictionary<long, Agent>();
         private static bool s_initialized;
-        
+
         #endregion
 
 
@@ -51,6 +53,7 @@ namespace EVEMon.Common.Data
                         foreach (Station station in solarSystem)
                         {
                             s_stationsByID[station.ID] = station;
+                            s_corporationsByID[station.CorporationID] = station.CorporationName;
 
                             foreach (Agent agent in station)
                             {
@@ -129,6 +132,18 @@ namespace EVEMon.Common.Data
             {
                 EnsureInitialized();
                 return s_stationsByID.Values;
+            }
+        }
+
+        /// <summary>
+        /// Gets an enumeration of all the NPCCorporations in the universe.
+        /// </summary>
+        public static IEnumerable<KeyValuePair<long, string>> AllNPCCorporations
+        {
+            get
+            {
+                EnsureInitialized();
+                return s_corporationsByID;
             }
         }
 

@@ -7,30 +7,18 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("agents")]
         [XmlArrayItem("agent")]
-        public List<SerializableAgentStanding> AgentStandings
-        {
-            get;
-            set;
-        }
+        public List<SerializableAgentStanding> AgentStandings { get; set; }
 
         [XmlArray("NPCCorporations")]
         [XmlArrayItem("NPCCorporation")]
-        public List<SerializableNPCCorporationStanding> NPCCorporationStandings
-        {
-            get;
-            set;
-        }
+        public List<SerializableNPCCorporationStanding> NPCCorporationStandings { get; set; }
 
         [XmlArray("factions")]
         [XmlArrayItem("faction")]
-        public List<SerializableFactionStanding> FactionStandings
-        {
-            get;
-            set;
-        }
+        public List<SerializableFactionStanding> FactionStandings { get; set; }
 
         [XmlIgnore]
-        public List<SerializableStandingsListItem> All
+        public IEnumerable<SerializableStandingsListItem> All
         {
             get
             {

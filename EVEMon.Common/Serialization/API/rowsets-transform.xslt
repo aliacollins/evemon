@@ -29,6 +29,13 @@
           <xsl:with-param name="rowName" select="'points'"/>
         </xsl:call-template>
       </xsl:when>
+      <!-- (employmentHistory, row) are transformed into (employmentHistory, record) -->
+      <xsl:when test="@name='employmentHistory'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'employmentHistory'"/>
+          <xsl:with-param name="rowName" select="'record'"/>
+        </xsl:call-template>
+      </xsl:when>
       <!-- By default behaviour, the rowset is a plural so we just remove the last character to get the row name-->
       <xsl:otherwise>
         <xsl:call-template name="rowsets">

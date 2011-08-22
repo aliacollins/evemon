@@ -25,10 +25,10 @@ namespace EVEMon.Common
                         EVEMailState.Inbox : EVEMailState.SentItem);
             MessageID = src.MessageID;
             Sender = src.ToListID.Any(x => x == src.SenderID.ToString()) ?
-                        GetMailingListIDToName(src.SenderID.ToString()) : EveIDtoName.GetIDToName(src.SenderID.ToString());
+                        GetMailingListIDToName(src.SenderID.ToString()) : EveIDToName.GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
             Title = src.Title;
-            ToCorpOrAlliance = EveIDtoName.GetIDToName(src.ToCorpOrAllianceID);
+            ToCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
             ToCharacters = GetIDsToNames(src.ToCharacterIDs);
             ToMailingLists = GetMailingListIDsToNames(src.ToListID);
             Recipient = GetRecipient();
@@ -141,7 +141,7 @@ namespace EVEMon.Common
 
             // We have IDs to query
             if (listOfIDsToQuery.Count > 0)
-                listOfNames.AddRange(EveIDtoName.GetIDsToNames(listOfIDsToQuery));
+                listOfNames.AddRange(EveIDToName.GetIDsToNames(listOfIDsToQuery));
 
             return listOfNames;
         }

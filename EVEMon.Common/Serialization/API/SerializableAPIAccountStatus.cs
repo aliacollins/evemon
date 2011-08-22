@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -10,14 +9,10 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPIAccountStatus
     {
         [XmlElement("userID")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlElement("paidUntil")]
-        public string paidUntilXml
+        public string PaidUntilXml
         {
             get { return PaidUntil.DateTimeToTimeString(); }
             set
@@ -28,7 +23,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("createDate")]
-        public string createDateXml
+        public string CreateDateXml
         {
             get { return CreateDate.DateTimeToTimeString(); }
             set
@@ -42,21 +37,13 @@ namespace EVEMon.Common.Serialization.API
         /// The date and time the account expires.
         /// </summary>
         [XmlIgnore]
-        public DateTime PaidUntil
-        {
-            get;
-            set;
-        }
+        public DateTime PaidUntil { get; private set; }
 
         /// <summary>
         /// The date and time the account was created.
         /// </summary>
         [XmlIgnore]
-        public DateTime CreateDate
-        {
-            get;
-            set;
-        }
+        public DateTime CreateDate { get; private set; }
 
     }
 }

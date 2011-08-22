@@ -12,7 +12,7 @@ namespace EVEMon.Common
 
         #region Fields
 
-        private Character m_character;
+        private readonly Character m_character;
         private Image m_image;
 
         #endregion
@@ -23,6 +23,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor from the API.
         /// </summary>
+        /// <param name="character"></param>
         /// <param name="src"></param>
         internal Standing(Character character, SerializableStandingsListItem src)
         {
@@ -37,6 +38,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor from the settings.
         /// </summary>
+        /// <param name="character"></param>
         /// <param name="src"></param>
         internal Standing(Character character, SerializableStanding src)
         {
@@ -172,18 +174,18 @@ namespace EVEMon.Common
         /// </summary>
         private void GetImage()
         {
-            ImageService.GetImageAsync(GetImageUrl(), true, (img) =>
+            ImageService.GetImageAsync(GetImageUrl(), true, img =>
             {
-                if (img != null)
-                {
-                    m_image = img;
+                if (img == null)
+                    return;
 
-                    // Notify the subscriber that we got the image
-                    // Note that if the image is in cache the event doesn't get fired
-                    // as the event object is null
-                    if (StandingImageUpdated != null)
-                        StandingImageUpdated(this, EventArgs.Empty);
-                }
+                m_image = img;
+
+                // Notify the subscriber that we got the image
+                // Note that if the image is in cache the event doesn't get fired
+                // as the event object is null
+                if (StandingImageUpdated != null)
+                    StandingImageUpdated(this, EventArgs.Empty);
             });
         }
 
@@ -197,12 +199,14 @@ namespace EVEMon.Common
         /// </summary>
         internal SerializableStanding Export()
         {
-            SerializableStanding serial = new SerializableStanding();
+            SerializableStanding serial = new SerializableStanding
+                                              {
+                                                  EntityID = EntityID,
+                                                  EntityName = EntityName,
+                                                  StandingValue = StandingValue,
+                                                  Group = Group
+                                              };
 
-            serial.EntityID = EntityID;
-            serial.EntityName = EntityName;
-            serial.StandingValue = StandingValue;
-            serial.Group = Group;
 
             return serial;
         }

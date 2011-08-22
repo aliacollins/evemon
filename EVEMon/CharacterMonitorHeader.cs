@@ -168,7 +168,7 @@ namespace EVEMon
             BalanceLabel.Text = String.Format(CultureConstants.DefaultCulture,
                 "Balance: {0:N} ISK", m_character.Balance);
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
                 return;
@@ -189,7 +189,7 @@ namespace EVEMon
         /// </summary>
         private void RefreshThrobber()
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
             {
@@ -337,16 +337,10 @@ namespace EVEMon
 
             StringBuilder output = new StringBuilder();
 
-            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
+            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
+                monitor => monitor.Method != APIMethods.CorporationMarketOrders
+                           && monitor.Method != APIMethods.CorporationIndustryJobs))
             {
-                // Skip character's corporation market orders and
-                // industry jobs monitor, cause there is no need to
-                // show them as they are bind with the character's 
-                // personal monitor
-                if (monitor.Method == APIMethods.CorporationMarketOrders ||
-                    monitor.Method == APIMethods.CorporationIndustryJobs)
-                    continue;
-
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
 
@@ -395,10 +389,9 @@ namespace EVEMon
             if (monitor.NextUpdate == DateTime.MaxValue)
                 return "(Never)";
 
-            if (timeToNextUpdate.TotalMinutes >= 60)
-                return String.Format(CultureConstants.DefaultCulture, "(~{0}h)", Math.Floor(timeToNextUpdate.TotalHours));
-
-            return String.Format(CultureConstants.DefaultCulture, "({0}m)", Math.Floor(timeToNextUpdate.TotalMinutes));
+            return timeToNextUpdate.TotalMinutes >= 60
+                       ? String.Format(CultureConstants.DefaultCulture, "(~{0}h)", Math.Floor(timeToNextUpdate.TotalHours))
+                       : String.Format(CultureConstants.DefaultCulture, "({0}m)", Math.Floor(timeToNextUpdate.TotalMinutes));
         }
 
 
@@ -453,7 +446,7 @@ namespace EVEMon
         private ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
             string menuText = String.Format(CultureConstants.DefaultCulture,
-                "Update {0} {1}", monitor.ToString(), GenerateTimeToNextUpdateText(monitor));
+                "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));
 
             ToolStripMenuItem menu = new ToolStripMenuItem(menuText)
             {
@@ -639,7 +632,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void UpdateThrobber_Click(object sender, EventArgs e)
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // This is not a CCP account, it can't be updated
             if (ccpCharacter == null)
@@ -680,11 +673,11 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void ThrobberContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            var contextMenu = sender as ContextMenuStrip;
+            ContextMenuStrip contextMenu = sender as ContextMenuStrip;
 
             RemoveMonitorMenuItems(contextMenu);
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // Exit for non-CCP characters or no associated account
             if (ccpCharacter == null || ccpCharacter.Identity.Account == null)
@@ -699,21 +692,13 @@ namespace EVEMon
             CreateNewToolStripSeparator();
 
             // Add monitor items
-            foreach (var monitor in ccpCharacter.QueryMonitors)
+            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Where(
+                monitor => !monitor.IsFullKeyNeeded
+                           || ccpCharacter.Identity.Account.KeyLevel == CredentialsLevel.Full).Where(
+                               monitor => monitor.Method != APIMethods.CorporationMarketOrders
+                                          && monitor.Method != APIMethods.CorporationIndustryJobs).Select(
+                                              CreateNewMonitorToolStripMenuItem))
             {
-                // Skip full api key related monitor, if api key is a limited one
-                if (monitor.IsFullKeyNeeded && ccpCharacter.Identity.Account.KeyLevel != CredentialsLevel.Full)
-                    continue;
-
-                // Skip character's corporation market orders and
-                // industry jobs monitor, cause there is no need to
-                // show them as they are bind with the character's
-                // personal monitor
-                if (monitor.Method == APIMethods.CorporationMarketOrders ||
-                    monitor.Method == APIMethods.CorporationIndustryJobs)
-                    continue;
-
-                var menu = CreateNewMonitorToolStripMenuItem(monitor);
                 ThrobberContextMenu.Items.Add(menu);
             }
         }
@@ -725,7 +710,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
         private void ThrobberContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
                 return;
@@ -736,7 +721,7 @@ namespace EVEMon
             if (!(e.ClickedItem.Tag is APIMethods))
                 return;
 
-            var method = (APIMethods)e.ClickedItem.Tag;
+            APIMethods method = (APIMethods)e.ClickedItem.Tag;
 
             SetThrobberUpdating();
 
@@ -768,7 +753,7 @@ namespace EVEMon
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel, count.ToString().PadLeft(5));
             }
 
-            ToolTip.SetToolTip(sender as Label, sb.ToString());
+            ToolTip.SetToolTip((Label)sender, sb.ToString());
         }
 
         /// <summary>
@@ -780,7 +765,7 @@ namespace EVEMon
         private void AttributeLabel_MouseHover(object sender, EventArgs e)
         {
             // Retrieve the attribute from the sender
-            Label attributeLabel = sender as Label;
+            Label attributeLabel = (Label)sender;
             EveAttribute eveAttribute = (EveAttribute)attributeLabel.Tag;
 
             // Format the values for the tooltip
@@ -800,7 +785,7 @@ namespace EVEMon
                 return;
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}", m_character.AllianceName);
-            ToolTip.SetToolTip(sender as Label, tooltipText);
+            ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
         /// <summary>
@@ -841,7 +826,7 @@ namespace EVEMon
             }
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);
-            ToolTip.SetToolTip(sender as Label, tooltipText);
+            ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
         /// <summary>

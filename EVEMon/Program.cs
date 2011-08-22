@@ -69,7 +69,7 @@ namespace EVEMon
             finally
             {
                 Settings.SaveImmediate();
-                EveIDtoName.Save();
+                EveIDToName.Save();
                 BCAPI.UploadSettingsFile();
                 EveMonClient.Trace("Closed");
                 EveMonClient.StopTraceLogging();

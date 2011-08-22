@@ -7,18 +7,17 @@ using System.Xml.Serialization;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
-    public static class EveIDtoName
+    public static class EveIDToName
     {
         private static readonly string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
 
         private static List<string> s_listOfIDs = new List<string>();
-        private static List<string> s_listOfNames = new List<string>();
         private static List<string> s_listOfIDsToQuery = new List<string>();
-        private static Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
+        private static readonly List<string> s_listOfNames = new List<string>();
+        private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
         private static bool s_isLoaded;
 
@@ -26,20 +25,29 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the owner name from its ID.
         /// </summary>
-        /// <param name="IDs">The ID.</param>
+        /// <param name="id">The id.</param>
         /// <returns></returns>
-        internal static string GetIDToName(string ID)
+        internal static string GetIDToName(long id)
+        {
+            return GetIDToName(id.ToString());
+        }
+
+        /// <summary>
+        /// Gets the owner name from its ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        internal static string GetIDToName(string id)
         {
             // If there is no ID to query return an empty string
-            if (String.IsNullOrEmpty(ID))
+            if (String.IsNullOrEmpty(id))
                 return String.Empty;
 
             // If it's a zero ID return "Unknown"
-            if (ID == "0")
+            if (id == "0")
                 return "Unknown";
 
-            List<string> list = new List<string>();
-            list.Add(ID);
+            List<string> list = new List<string> {id};
 
             List<string> name = GetIDsToNames(list);
             return name[0];
@@ -48,11 +56,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the owner name from its ID.
         /// </summary>
-        /// <param name="IDs">The IDs.</param>
+        /// <param name="ids">The ids.</param>
         /// <returns></returns>
-        internal static List<string> GetIDsToNames(List<string> IDs)
+        internal static List<string> GetIDsToNames(List<string> ids)
         {
-            s_listOfIDs = IDs;
+            s_listOfIDs = ids;
             s_listOfNames.Clear();
             s_listOfIDsToQuery.Clear();
 
@@ -79,10 +87,8 @@ namespace EVEMon.Common
         /// </summary>
         private static void TryDeserializeCacheFile()
         {
-            SerializableEveIDToName cache = null;
-
             // Deserialize the file
-            cache = Util.DeserializeXML<SerializableEveIDToName>(s_file);
+            SerializableEveIDToName cache = Util.DeserializeXML<SerializableEveIDToName>(s_file);
 
             // Reset the cache if anything went wrong
             if (cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x=> x.Name == String.Empty))
@@ -96,7 +102,7 @@ namespace EVEMon.Common
             }
 
             // Add the data to the dictionary
-            foreach (var entity in cache.Entities)
+            foreach (SerializableEveIDToNameListItem entity in cache.Entities)
             {
                 s_cacheList.Add(entity.ID, entity.Name);
             }
@@ -149,8 +155,8 @@ namespace EVEMon.Common
         /// </summary>
         private static void QueryAPICharacterName()
         {
-            string IDs = string.Join(",", s_listOfIDsToQuery);
-            var result = EveMonClient.APIProviders.CurrentProvider.QueryCharacterName(IDs);
+            string ids = string.Join(",", s_listOfIDsToQuery);
+            APIResult<SerializableAPICharacterName> result = EveMonClient.APIProviders.CurrentProvider.QueryCharacterName(ids);
             OnQueryAPICharacterNameUpdated(result);
         }
 
@@ -180,9 +186,9 @@ namespace EVEMon.Common
         /// Imports the data from the query result.
         /// </summary>
         /// <param name="entities">The entities.</param>
-        private static void Import(List<SerializableCharacterNameListItem> entities)
+        private static void Import(IEnumerable<SerializableCharacterNameListItem> entities)
         {
-            foreach (var entity in entities)
+            foreach (SerializableCharacterNameListItem entity in entities)
             {
                 // Add the name to the list of names
                 s_listOfNames.Add(entity.Name);
@@ -220,17 +226,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static SerializableEveIDToName Export()
         {
-            var serial = new SerializableEveIDToName();
-            var entitiesList = new List<SerializableEveIDToNameListItem>();
-
-            foreach (var item in s_cacheList)
-            {
-                entitiesList.Add(new SerializableEveIDToNameListItem()
-                                {
-                                    ID = item.Key,
-                                    Name = item.Value,
-                                });
-            }
+            SerializableEveIDToName serial = new SerializableEveIDToName();
+            List<SerializableEveIDToNameListItem> entitiesList =
+                s_cacheList.Select(item => new SerializableEveIDToNameListItem
+                                               {
+                                                   ID = item.Key,
+                                                   Name = item.Value,
+                                               }).ToList();
 
             serial.Entities.AddRange(entitiesList);
 

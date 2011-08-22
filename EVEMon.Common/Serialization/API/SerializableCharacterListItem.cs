@@ -7,39 +7,16 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableCharacterListItem : ISerializableCharacterIdentity
     {
-        /// <summary>
-        /// Default constructor for XML serialization
-        /// </summary>
-        public SerializableCharacterListItem()
-        {
-        }
-
         [XmlAttribute("characterID")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("corporationName")]
-        public string CorporationName
-        {
-            get;
-            set;
-        }
+        public string CorporationName { get; set; }
 
         [XmlAttribute("corporationID")]
-        public long CorporationID
-        {
-            get;
-            set;
-        }
+        public long CorporationID { get; set; }
     }
 }

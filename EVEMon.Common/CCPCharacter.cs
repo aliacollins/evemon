@@ -35,8 +35,8 @@ namespace EVEMon.Common
         private readonly SkillQueue m_queue;
         private readonly QueryMonitorCollection m_monitors;
 
-        private List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
-        private List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
+        private readonly List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
+        private readonly List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
         private APIMethods m_errorNotifiedMethod;
 
         private bool m_charOrdersUpdated;
@@ -116,7 +116,7 @@ namespace EVEMon.Common
             // We enable only the monitors that require a limited api key,
             // full api key required monitors will be enabled individually
             // through each character's enabled full api key feature
-            foreach (var monitor in m_monitors)
+            foreach (IQueryMonitor monitor in m_monitors)
             {
                 monitor.Enabled = !monitor.IsFullKeyNeeded;
             }
@@ -158,9 +158,9 @@ namespace EVEMon.Common
             get
             {
                 if (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError)
-                    return String.Format("{0} (cached)", m_name);
+                    return String.Format("{0} (cached)", Name);
 
-                return m_name;
+                return Name;
             }
         }
 
@@ -215,7 +215,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public EveMailingListsCollection EVEMailingLists
+        public IEnumerable<EveMailingList> EVEMailingLists
         {
             get { return m_eveMailingLists; }
         }
@@ -259,7 +259,7 @@ namespace EVEMon.Common
         {
             get
             {
-                var activeBuyOrdersIssuedForCharacter = m_marketOrders
+                IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = m_marketOrders
                     .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
                     && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
 
@@ -267,7 +267,7 @@ namespace EVEMon.Common
                 decimal activeEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
                 decimal additionalToCover = activeTotal - activeEscrow;
 
-                return m_balance >= additionalToCover;
+                return Balance >= additionalToCover;
             }
         }
 
@@ -290,7 +290,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override SerializableSettingsCharacter Export()
         {
-            var serial = new SerializableCCPCharacter();
+            SerializableCCPCharacter serial = new SerializableCCPCharacter();
             Export(serial);
 
             // Skill queue
@@ -315,14 +315,12 @@ namespace EVEMon.Common
             serial.EveNotificationsIDs = m_eveNotifications.Export();
 
             // Last API updates
-            foreach (var monitor in m_monitors)
+            foreach (SerializableAPIUpdate update in m_monitors.Select(monitor => new SerializableAPIUpdate
+                                                                                      {
+                                                                                          Method = monitor.Method,
+                                                                                          Time = monitor.LastUpdate
+                                                                                      }))
             {
-                var update = new SerializableAPIUpdate
-                {
-                    Method = monitor.Method,
-                    Time = monitor.LastUpdate
-                };
-
                 serial.LastUpdates.Add(update);
             }
 
@@ -333,7 +331,7 @@ namespace EVEMon.Common
         /// Imports data from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
-        public void Import(SerializableCCPCharacter serial)
+        private void Import(SerializableCCPCharacter serial)
         {
             Import((SerializableSettingsCharacter)serial);
 
@@ -360,9 +358,9 @@ namespace EVEMon.Common
             m_eveNotifications.Import(serial.EveNotificationsIDs);
 
             // Last API updates
-            foreach (var lastUpdate in serial.LastUpdates)
+            foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
             {
-                var monitor = m_monitors[lastUpdate.Method] as IQueryMonitorEx;
+                IQueryMonitorEx monitor = m_monitors[lastUpdate.Method] as IQueryMonitorEx;
                 if (monitor != null)
                     monitor.Reset(lastUpdate.Time);
             }
@@ -379,7 +377,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Updates the character on a timer tick.
         /// </summary>
-        internal override void UpdateOnOneSecondTick()
+        internal void UpdateOnOneSecondTick()
         {
             if (!Monitored)
                 return;
@@ -388,7 +386,7 @@ namespace EVEMon.Common
             m_queue.UpdateOnTimerTick();
 
             // Exit if API key is a limited one
-            Account account = m_identity.Account;
+            Account account = Identity.Account;
             if (account == null || account.KeyLevel != CredentialsLevel.Full)
                 return;
 
@@ -438,6 +436,7 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
+            // Query the Character's info
             QueryCharacterInfo();
 
             // Imports the data
@@ -502,7 +501,7 @@ namespace EVEMon.Common
             m_queue.Import(result.Result.Queue);
 
             // Check the account has a character in training
-            m_identity.Account.CharacterInTraining();
+            Identity.Account.CharacterInTraining();
 
             // Check the character has room in skill queue
             if (IsTraining && (SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
@@ -735,7 +734,8 @@ namespace EVEMon.Common
         public void ForceUpdate(IQueryMonitor queryMonitor)
         {
             IQueryMonitorEx monitor = m_monitors[queryMonitor.Method] as IQueryMonitorEx;
-            monitor.ForceUpdate(false);
+            if (monitor != null)
+                monitor.ForceUpdate(false);
         }
 
         /// <summary>
@@ -798,10 +798,10 @@ namespace EVEMon.Common
         /// Import the orders from both market orders querying.
         /// </summary>
         /// <param name="orders"></param>
-        private void Import(List<SerializableOrderListItem> orders)
+        private void Import(IEnumerable<SerializableOrderListItem> orders)
         {
             // Exclude orders that wheren't issued by this character
-            IEnumerable<SerializableOrderListItem> characterOrders = orders.Where(x => x.OwnerID == m_characterID);
+            IEnumerable<SerializableOrderListItem> characterOrders = orders.Where(x => x.OwnerID == CharacterID);
 
             List<MarketOrder> endedOrders = new List<MarketOrder>();
             m_marketOrders.Import(characterOrders, endedOrders);
@@ -856,10 +856,10 @@ namespace EVEMon.Common
         /// Import the jobs from both industry jobs querying.
         /// </summary>
         /// <param name="jobs"></param>
-        private void Import(List<SerializableJobListItem> jobs)
+        private void Import(IEnumerable<SerializableJobListItem> jobs)
         {
             // Exclude jobs that wheren't issued by this character
-            IEnumerable<SerializableJobListItem> characterJobs = jobs.Where(x => x.InstallerID == m_characterID);
+            IEnumerable<SerializableJobListItem> characterJobs = jobs.Where(x => x.InstallerID == CharacterID);
 
             m_industryJobs.Import(characterJobs);
 

@@ -30,7 +30,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="identity">The identitiy for this character</param>
         /// <param name="uri">The uri the provided deserialization object was acquired from</param>
-        /// <param name="source">A deserialization object for CcpCharacters</param>
+        /// <param name="serial">The serial.</param>
         internal UriCharacter(CharacterIdentity identity, Uri uri, SerializableCCPCharacter serial)
             : base(identity, Guid.NewGuid())
         {
@@ -54,10 +54,7 @@ namespace EVEMon.Common
         /// </summary>
         public override string AdornedName
         {
-            get 
-            {
-                return String.Format("{0} {1}", m_name, (m_uri.IsFile ? "(file)" : "(url)")); 
-            }
+            get { return String.Format("{0} {1}", Name, (m_uri.IsFile ? "(file)" : "(url)")); }
         }
 
         /// <summary>
@@ -70,11 +67,11 @@ namespace EVEMon.Common
             get { return m_uri; }
             set
             {
-                if (m_uri != value)
-                {
-                    m_uri = value;
-                    EveMonClient.OnCharacterUpdated(this);
-                }
+                if (m_uri == value)
+                    return;
+
+                m_uri = value;
+                EveMonClient.OnCharacterUpdated(this);
             }
         }
 
@@ -84,7 +81,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override SerializableSettingsCharacter Export()
         {
-            var serial = new SerializableUriCharacter();
+            SerializableUriCharacter serial = new SerializableUriCharacter();
             Export(serial);
 
             serial.Uri = m_uri.ToString();
@@ -97,7 +94,7 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public void Import(SerializableUriCharacter serial)
         {
-            Import((SerializableSettingsCharacter)serial);
+            Import((SerializableSettingsCharacter) serial);
 
             m_uri = new Uri(serial.Uri);
 
@@ -112,8 +109,8 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void Update(CharacterIdentity identity, Uri uri, APIResult<SerializableAPICharacterSheet> result)
         {
-            m_characterID = identity.CharacterID;
-            m_identity = identity;
+            CharacterID = identity.CharacterID;
+            Identity = identity;
             m_uri = uri;
             Import(result);
         }
@@ -126,8 +123,8 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void Update(CharacterIdentity identity, Uri uri, SerializableCCPCharacter result)
         {
-            m_characterID = identity.CharacterID;
-            m_identity = identity;
+            CharacterID = identity.CharacterID;
+            Identity = identity;
             m_uri = uri;
             Import(result);
         }

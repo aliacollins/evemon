@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -56,11 +57,7 @@ namespace EVEMon.Common
         internal List<SerializableStanding> Export()
         {
             List<SerializableStanding> serial = new List<SerializableStanding>(m_items.Count);
-
-            foreach (Standing standing in m_items)
-            {
-                serial.Add(standing.Export());
-            }
+            serial.AddRange(m_items.Select(standing => standing.Export()));
 
             return serial;
         }
