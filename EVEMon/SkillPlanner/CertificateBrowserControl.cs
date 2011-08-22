@@ -120,9 +120,10 @@ namespace EVEMon.SkillPlanner
         {
             set
             {
-                if (SelectedCertificateClass == value.Class)
+                if (SelectedCertificateClass == value.Class && certDisplayCtl.SelectedCertificate == value)
                     return;
 
+                SelectedCertificateClass = value.Class;
                 certDisplayCtl.ExpandCert(value);
             }
         }

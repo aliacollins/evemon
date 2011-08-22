@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class CertificateTreeDisplayControl
+    sealed partial class CertificateTreeDisplayControl
     {
         /// <summary> 
         /// Required designer variable.
