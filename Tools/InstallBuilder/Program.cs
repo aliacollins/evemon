@@ -1,31 +1,36 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace InstallBuilder
 {
-    public class Program
+    internal static class Program
     {
-        private static string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
-        private static string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
-        private static string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        private static readonly string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
+        private static readonly string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
+        private static readonly string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
         private static string s_projectDir;
         private static string s_version;
         private static string s_sourceFilesDir;
         private static string s_nsisExe;
 
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        /// <param name="args">The args.</param>
+        /// <returns></returns>
         public static int Main(string[] args)
         {
             CheckDebug();
 
-            bool NSISExist = PopulateEnvironment(args);
+            bool nsisExist = PopulateEnvironment(args);
 
-            if (!NSISExist)
+            if (!nsisExist)
                 return 0;
 
             // Create the installer folder if it doesn't exist
@@ -52,8 +57,10 @@ namespace InstallBuilder
                 BuildZip();
                 Console.WriteLine("Zip installer creation finished.");
                 Console.WriteLine("Done");
+
                 if (Debugger.IsAttached)
                     Console.ReadLine();
+
                 return 0;
             }
             catch (Exception ex)
@@ -67,39 +74,43 @@ namespace InstallBuilder
             }
         }
 
+        /// <summary>
+        /// Checks the debug.
+        /// </summary>
         [Conditional("DEBUG")]
         private static void CheckDebug()
         {
             Application.Exit();
         }
 
+        /// <summary>
+        /// Finds the 'makensis' executable.
+        /// </summary>
+        /// <returns></returns>
         private static string FindMakeNsisExe()
         {
             string[] locations = new string[3];
 
-            locations[0] = s_programFilesDir + @"\NSIS\makensis.exe";
+            locations[0] = String.Format("{0}\\NSIS\\makensis.exe", s_programFilesDir);
             locations[1] = @"D:\Program Files\NSIS\makensis.exe"; // Possible location in TeamCity server
             locations[2] = @"D:\Program Files (x86)\NSIS\makensis.exe"; // Possible location in TeamCity server
-            
-            foreach (string path in locations)
+
+            foreach (string path in locations.Where(File.Exists))
             {
-                if (File.Exists(path))
-                    return path;
+                return path;
             }
 
             return String.Empty;
         }
 
+        /// <summary>
+        /// Populates the environment.
+        /// </summary>
+        /// <param name="args">The args.</param>
+        /// <returns></returns>
         private static bool PopulateEnvironment(string[] args)
         {
-            if (args.Length == 0)
-            {
-                s_projectDir = Path.GetFullPath(@"..\..\..");
-            }
-            else
-            {
-                s_projectDir = String.Join(" ", args);
-            }
+            s_projectDir = args.Length == 0 ? Path.GetFullPath(@"..\..\..") : String.Join(" ", args);
 
             try
             {
@@ -123,16 +134,18 @@ namespace InstallBuilder
             Console.WriteLine();
 
             s_nsisExe = FindMakeNsisExe();
-            Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe) ? "Not Found - Installer will not be created." : s_nsisExe);
+            Console.WriteLine("NSIS : {0}",
+                              String.IsNullOrEmpty(s_nsisExe) ? "Not Found - Installer will not be created." : s_nsisExe);
             Console.WriteLine();
 
             return true;
         }
 
+        /// <summary>
+        /// Builds the zip.
+        /// </summary>
         private static void BuildZip()
         {
-            string formattedDate = DateTime.Now.ToString("yyyy-MM-dd");
-            string svnRevision = s_version.Substring(s_version.LastIndexOf('.') + 1, s_version.Length - (s_version.LastIndexOf('.') + 1));
             string zipFileName = String.Format("EVEMon-binaries-{0}.zip", s_version);
             zipFileName = Path.Combine(s_binariesDir, zipFileName);
 
@@ -156,9 +169,8 @@ namespace InstallBuilder
 
                     string entryName = String.Format("EVEMon{0}", file.Remove(0, s_sourceFilesDir.Length));
                     Console.WriteLine("Zipping {0}", entryName);
-                    ZipEntry entry = new ZipEntry(entryName);
+                    ZipEntry entry = new ZipEntry(entryName) {DateTime = DateTime.Now};
 
-                    entry.DateTime = DateTime.Now;
                     zipStream.PutNextEntry(entry);
 
                     using (FileStream fs = File.OpenRead(file))
@@ -176,6 +188,9 @@ namespace InstallBuilder
             }
         }
 
+        /// <summary>
+        /// Builds the installer.
+        /// </summary>
         private static void BuildInstaller()
         {
             try
@@ -192,10 +207,12 @@ namespace InstallBuilder
                 Console.WriteLine("NSIS script : {0}", nsisScript);
                 Console.WriteLine("Output directory : {0}", s_installerDir);
 
-                ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param);
-                psi.WorkingDirectory = s_projectDir;
-                psi.UseShellExecute = false;
-                psi.RedirectStandardOutput = true;
+                ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param)
+                                           {
+                                               WorkingDirectory = s_projectDir,
+                                               UseShellExecute = false,
+                                               RedirectStandardOutput = true
+                                           };
                 Process makensisProcess = Process.Start(psi);
                 Console.WriteLine(makensisProcess.StandardOutput.ReadToEnd());
                 makensisProcess.WaitForExit();

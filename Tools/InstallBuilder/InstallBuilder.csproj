@@ -8,7 +8,7 @@
     <ProjectGuid>{5CE8E302-3577-41BC-A35F-C88AC625F7A7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EVEMonInstallBuilder</RootNamespace>
+    <RootNamespace>InstallBuilder</RootNamespace>
     <AssemblyName>EVEMonInstallBuilder</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="EVEMon Installer Script.nsi">
+    <None Include="EVEMonInstallerScript.nsi">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="NETFrameworkCheck.nsh">
