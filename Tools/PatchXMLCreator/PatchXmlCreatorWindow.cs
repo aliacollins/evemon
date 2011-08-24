@@ -1,15 +1,13 @@
 using System;
-using System.IO;
-using System.Xml;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Reflection;
-using System.Globalization;
-using System.Windows.Forms;
-using System.Xml.Serialization;
 using System.Collections.Generic;
-
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
+using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Serialization.BattleClinic;
@@ -20,26 +18,26 @@ namespace PatchXmlCreator
     {
         #region Fields
 
-        private static Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
-        private static List<Datafile> s_datafiles = new List<Datafile>();
-        private static CultureInfo enUS_Culture = new CultureInfo("en-US");
+        private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
+        private static readonly List<Datafile> s_datafiles = new List<Datafile>();
+        private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
 
-        internal const string caption = "Patch Xml File Creator";
+        internal const string Caption = "Patch Xml File Creator";
         internal const string EVEMonExecFilename = "EVEMon.exe";
         internal const string EVEMonExecDir = @"..\..\..\..\..\EVEMon\bin\x86\Release";
 
-        private const string dateTimeFormat = "dd MMMM yyyy";
-        private const string datafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
-        private const string installerFilename = "EVEMon-install-{0}.exe";
+        private const string DateTimeFormat = "dd MMMM yyyy";
+        private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
+        private const string InstallerFilename = "EVEMon-install-{0}.exe";
 
-        private const string patchFilename = "patch.xml";
-        private const string patchDir = @"..\..\..\..\Website";
-        private const string datafileDir = @"..\..\..\..\..\EVEMon.Common\Resources";
-        private const string datafileHeader = "eve-";
-        private const string datafileTail = "-en-US.xml.gz";
+        private const string PatchFilename = "patch.xml";
+        private const string PatchDir = @"..\..\..\..\Website";
+        private const string DatafileDir = @"..\..\..\..\..\EVEMon.Common\Resources";
+        private const string DatafileHeader = "eve-";
+        private const string DatafileTail = "-en-US.xml.gz";
 
-        private const string installerArgs = "/S /AUTORUN /SKIPDOTNET";
-        private const string additionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
+        private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
+        private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
 
         private Control m_activeTextBox;
         private string m_text;
@@ -68,10 +66,7 @@ namespace PatchXmlCreator
         /// </summary>
         private static string AssemblyVersion
         {
-            get
-            {
-                return Assembly.LoadFrom(Path.Combine(EVEMonExecDir, EVEMonExecFilename)).GetName().Version.ToString();
-            }
+            get { return Assembly.LoadFrom(Path.Combine(EVEMonExecDir, EVEMonExecFilename)).GetName().Version.ToString(); }
         }
 
         #endregion
@@ -106,7 +101,7 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void OnClick(object sender, EventArgs e)
         {
-            ((Control)sender).Focus();
+            ((Control) sender).Focus();
             btnCreate.Focus();
         }
 
@@ -121,7 +116,7 @@ namespace PatchXmlCreator
         private void UpdateReleaseInfo()
         {
             string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string installerFile = String.Format(installerFilename, AssemblyVersion);
+            string installerFile = String.Format(InstallerFilename, AssemblyVersion);
             string installerPath = String.Format("{1}{0}{2}", Path.DirectorySeparatorChar, desktopDir, installerFile);
             FileInfo installerFileInfo = new FileInfo(installerPath);
 
@@ -135,9 +130,9 @@ namespace PatchXmlCreator
         /// </summary>
         private static void InitDatafiles()
         {
-            DirectoryInfo di = new DirectoryInfo(datafileDir);
-            FileInfo[] directoryFiles = di.GetFiles(String.Format("{0}*{1}", datafileHeader, datafileTail));
-            foreach (var datafile in directoryFiles)
+            DirectoryInfo di = new DirectoryInfo(DatafileDir);
+            FileInfo[] directoryFiles = di.GetFiles(String.Format("{0}*{1}", DatafileHeader, DatafileTail));
+            foreach (FileInfo datafile in directoryFiles)
             {
                 s_datafiles.Add(new Datafile(datafile.Name));
             }
@@ -149,7 +144,7 @@ namespace PatchXmlCreator
         private void CustomLayout()
         {
             int startLocation = 70;
-            int pad = 5;
+            const int Pad = 5;
 
             gbDatafiles.Controls.Remove(datafileControl);
             Height -= datafileControl.Height;
@@ -157,10 +152,10 @@ namespace PatchXmlCreator
             SuspendLayout();
             try
             {
-                foreach (var datafile in s_datafiles.OrderBy(x => x.Filename))
+                foreach (Datafile datafile in s_datafiles.OrderBy(x => x.Filename))
                 {
                     // Add a new datafile control
-                    var newDatafileControl = new DatafileControl();
+                    DatafileControl newDatafileControl = new DatafileControl();
                     gbDatafiles.Controls.Add(newDatafileControl);
 
                     // Control info
@@ -170,13 +165,16 @@ namespace PatchXmlCreator
                     newDatafileControl.Location = new Point(9, startLocation);
                     newDatafileControl.Font = new Font(Font, FontStyle.Regular);
                     newDatafileControl.Anchor |= AnchorStyles.Right;
-                    newDatafileControl.Size = new Size(gbDatafiles.Width - (pad * 3), newDatafileControl.Height);
+                    newDatafileControl.Size = new Size(gbDatafiles.Width - (Pad * 3), newDatafileControl.Height);
                     newDatafileControl.Name = String.Format("gbDatafile_{0}",
-                        newDatafileControl.gbDatafile.Text.Replace(datafileHeader, String.Empty).Replace(datafileTail, String.Empty));
+                                                            newDatafileControl.gbDatafile.Text.Replace(DatafileHeader,
+                                                                                                       String.Empty).Replace(
+                                                                                                           DatafileTail,
+                                                                                                           String.Empty));
 
                     // Calculate window height and next control point
-                    Height += datafileControl.Height + pad;
-                    startLocation += datafileControl.Height + pad;
+                    Height += datafileControl.Height + Pad;
+                    startLocation += datafileControl.Height + Pad;
 
                     // Subscribe Events
                     newDatafileControl.rtbDatafileMessage.Enter += Control_Enter;
@@ -203,7 +201,7 @@ namespace PatchXmlCreator
         private static void UpdateDatafileInfo(DatafileControl control, Datafile datafile)
         {
             // Data file info
-            FileInfo fileInfo = new FileInfo(Path.Combine(datafileDir, datafile.Filename));
+            FileInfo fileInfo = new FileInfo(Path.Combine(DatafileDir, datafile.Filename));
 
             // Assign info
             control.gbDatafile.Text = datafile.Filename;
@@ -216,24 +214,24 @@ namespace PatchXmlCreator
         /// </summary>
         private void UpdateDatafilesMessage()
         {
-            foreach (var datafile in s_datafiles)
+            foreach (Datafile datafile in s_datafiles)
             {
-                foreach (Control control in gbDatafiles.Controls.Cast<Control>()
-                    .Where(x => x is DatafileControl && ((DatafileControl)x).gbDatafile.Text == datafile.Filename))
+                foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>()
+                    .Where(x => x is DatafileControl && ((DatafileControl) x).gbDatafile.Text == datafile.Filename).Select(
+                        control => control as DatafileControl))
                 {
-                    var datafileControl = control as DatafileControl;
-                    datafileControl.rtbDatafileMessage.BackColor = SystemColors.Window;
-                    datafileControl.rtbDatafileMessage.ForeColor = SystemColors.WindowText;
+                    dfControl.rtbDatafileMessage.BackColor = SystemColors.Window;
+                    dfControl.rtbDatafileMessage.ForeColor = SystemColors.WindowText;
 
                     if (m_init)
                     {
-                        EnsureHeaderMessage(datafileControl.rtbDatafileMessage);
+                        EnsureHeaderMessage(dfControl.rtbDatafileMessage);
                     }
                     else
                     {
-                        datafileControl.rtbDatafileMessage.Text = String.Format(
-                            enUS_Culture, datafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text, tbExpRevision.Text,
-                            datafile.Filename.Replace(datafileHeader, String.Empty).Replace(datafileTail, String.Empty));
+                        dfControl.rtbDatafileMessage.Text = String.Format(
+                            s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text, tbExpRevision.Text,
+                            datafile.Filename.Replace(DatafileHeader, String.Empty).Replace(DatafileTail, String.Empty));
                     }
                 }
             }
@@ -248,13 +246,15 @@ namespace PatchXmlCreator
             StringBuilder sb = new StringBuilder();
 
             // Remove any existing header and text that is before the header
-            control.Text = (control.Text.Contains("\n") ?
-                control.Text.Remove(0, control.Text.IndexOf("\n") + 1) :
-                control.Text.Remove(0, control.Text.LastIndexOf("m") + 1));
+            control.Text = (control.Text.Contains("\n")
+                                ? control.Text.Remove(0, control.Text.IndexOf("\n") + 1)
+                                : control.Text.Remove(0, control.Text.LastIndexOf("m") + 1));
 
             // Create the new header text
-            string headerText = String.Format(enUS_Culture, datafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text, tbExpRevision.Text,
-                    control.Parent.Text.Replace(datafileHeader, String.Empty).Replace(datafileTail, String.Empty));
+            string headerText = String.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
+                                              tbExpRevision.Text,
+                                              control.Parent.Text.Replace(DatafileHeader, String.Empty).Replace(DatafileTail,
+                                                                                                                String.Empty));
 
             // Check if the new header text is already present and remove it
             if (control.Text.Contains(headerText))
@@ -299,7 +299,7 @@ namespace PatchXmlCreator
                     s_listOfInitMessages.Add(control, control.Text);
 
                 if (control is DatafileControl)
-                    s_listOfInitMessages.Add(control, ((DatafileControl)control).rtbDatafileMessage.Text);
+                    s_listOfInitMessages.Add(control, ((DatafileControl) control).rtbDatafileMessage.Text);
             }
         }
 
@@ -311,7 +311,7 @@ namespace PatchXmlCreator
             bool updateDatafilesText = true;
 
             // Look into datafiles controls
-            foreach (var control in gbDatafiles.Controls.Cast<Control>().Where(x => x is TextBox))
+            foreach (Control control in gbDatafiles.Controls.Cast<Control>().Where(x => x is TextBox))
             {
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
@@ -322,11 +322,11 @@ namespace PatchXmlCreator
                     updateDatafilesText = false;
                 }
 
-                if (control.Text.StartsWith(" ") || String.IsNullOrEmpty(control.Text))
-                {
-                    control.BackColor = SystemColors.Highlight;
-                    updateDatafilesText = false;
-                }
+                if (!control.Text.StartsWith(" ") && !String.IsNullOrEmpty(control.Text))
+                    continue;
+
+                control.BackColor = SystemColors.Highlight;
+                updateDatafilesText = false;
             }
 
             // If all conditions are met update the messages
@@ -342,7 +342,7 @@ namespace PatchXmlCreator
             bool buttonEnable = true;
 
             // Look into release controls
-            foreach (var control in gbRelease.Controls.Cast<Control>().Where(x => x is RichTextBox))
+            foreach (Control control in gbRelease.Controls.Cast<Control>().Where(x => x is RichTextBox))
             {
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
@@ -359,15 +359,16 @@ namespace PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (control != rtbReleaseMessage && (Path.GetInvalidPathChars().Any(x => control.Text.Contains(x)) || control.Text.Contains("#")))
-                {
-                    control.ForeColor = SystemColors.Highlight;
-                    buttonEnable = false;
-                }
+                if (control == rtbReleaseMessage ||
+                    (!Path.GetInvalidPathChars().Any(x => control.Text.Contains(x)) && !control.Text.Contains("#")))
+                    continue;
+
+                control.ForeColor = SystemColors.Highlight;
+                buttonEnable = false;
             }
 
             // Look into datafiles controls
-            foreach (var control in gbDatafiles.Controls.Cast<Control>().Where(x => x is TextBox || x is RichTextBox))
+            foreach (Control control in gbDatafiles.Controls.Cast<Control>().Where(x => x is TextBox || x is RichTextBox))
             {
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
@@ -383,31 +384,32 @@ namespace PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (control == rtbDatafileUrl && (Path.GetInvalidPathChars().Any(x => control.Text.Contains(x)) || control.Text.Contains("#")))
-                {
-                    control.ForeColor = SystemColors.Highlight;
-                    buttonEnable = false;
-                }
+                if (control != rtbDatafileUrl ||
+                    (!Path.GetInvalidPathChars().Any(x => control.Text.Contains(x)) && !control.Text.Contains("#")))
+                    continue;
+
+                control.ForeColor = SystemColors.Highlight;
+                buttonEnable = false;
             }
 
             // Look into datafileControl controls
-            foreach (var control in gbDatafiles.Controls.Cast<Control>().Where(x => x is DatafileControl))
+            foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>().Where(
+                x => x is DatafileControl).Select(control => control as DatafileControl))
             {
-                var datafileControl = control as DatafileControl;
-                datafileControl.rtbDatafileMessage.BackColor = SystemColors.Window;
-                datafileControl.rtbDatafileMessage.ForeColor = SystemColors.WindowText;
+                dfControl.rtbDatafileMessage.BackColor = SystemColors.Window;
+                dfControl.rtbDatafileMessage.ForeColor = SystemColors.WindowText;
 
-                if (datafileControl.rtbDatafileMessage.Text.Contains(s_listOfInitMessages.FirstOrDefault(x => x.Key == datafileControl).Value))
+                if (dfControl.rtbDatafileMessage.Text.Contains(s_listOfInitMessages.FirstOrDefault(x => x.Key == dfControl).Value))
                 {
-                    datafileControl.rtbDatafileMessage.ForeColor = SystemColors.Highlight;
+                    dfControl.rtbDatafileMessage.ForeColor = SystemColors.Highlight;
                     buttonEnable = false;
                 }
 
-                if (datafileControl.rtbDatafileMessage.Text.StartsWith(" ") || String.IsNullOrEmpty(datafileControl.rtbDatafileMessage.Text))
-                {
-                    datafileControl.rtbDatafileMessage.BackColor = SystemColors.Highlight;
-                    buttonEnable = false;
-                }
+                if (!dfControl.rtbDatafileMessage.Text.StartsWith(" ") && !String.IsNullOrEmpty(dfControl.rtbDatafileMessage.Text))
+                    continue;
+
+                dfControl.rtbDatafileMessage.BackColor = SystemColors.Highlight;
+                buttonEnable = false;
             }
 
             // Enable/Disable Create button
@@ -420,13 +422,9 @@ namespace PatchXmlCreator
         /// <returns></returns>
         private static SerializablePatch TryDeserializePatchXml()
         {
-            SerializablePatch xmlDoc;
-            String filePath = Path.Combine(patchDir, patchFilename);
+            String filePath = Path.Combine(PatchDir, PatchFilename);
 
-            if (File.Exists(filePath))
-                xmlDoc = Util.DeserializeXML<SerializablePatch>(filePath);
-            else
-                xmlDoc = null;
+            SerializablePatch xmlDoc = File.Exists(filePath) ? Util.DeserializeXML<SerializablePatch>(filePath) : null;
 
             return xmlDoc;
         }
@@ -442,7 +440,7 @@ namespace PatchXmlCreator
             ExportRelease(serial.Release);
             ExportDatafiles(serial.Datafiles);
 
-            var doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
+            XmlDocument doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
             return (doc != null ? Util.GetXMLStringRepresentation(doc) : String.Empty);
         }
 
@@ -451,17 +449,15 @@ namespace PatchXmlCreator
         /// </summary>
         /// <param name="serialRelease"></param>
         /// <returns></returns>
-        private SerializableRelease ExportRelease(SerializableRelease serialRelease)
+        private void ExportRelease(SerializableRelease serialRelease)
         {
-            serialRelease.Date = dtpRelease.Value.ToString(dateTimeFormat, enUS_Culture);
+            serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
             serialRelease.Version = lblEVEMonVersion.Text;
             serialRelease.TopicUrl = rtbTopicUrl.Text;
-            serialRelease.Url = String.Concat(rtbReleaseUrl.Text, String.Format(installerFilename, lblEVEMonVersion.Text));
-            serialRelease.InstallerArgs = installerArgs;
-            serialRelease.AdditionalArgs = additionalArgs;
+            serialRelease.Url = String.Concat(rtbReleaseUrl.Text, String.Format(InstallerFilename, lblEVEMonVersion.Text));
+            serialRelease.InstallerArgs = InstallerArgs;
+            serialRelease.AdditionalArgs = AdditionalArgs;
             serialRelease.Message = rtbReleaseMessage.Text;
-
-            return serialRelease;
         }
 
         /// <summary>
@@ -469,29 +465,27 @@ namespace PatchXmlCreator
         /// </summary>
         /// <param name="datafiles"></param>
         /// <returns></returns>
-        private List<SerializableDatafile> ExportDatafiles(List<SerializableDatafile> datafiles)
+        private void ExportDatafiles(List<SerializableDatafile> datafiles)
         {
             string url = String.Format("{1}{2}{0}{3}",
-                Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
+                                       Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
 
-            foreach (var datafile in s_datafiles)
+            foreach (Datafile datafile in s_datafiles)
             {
                 SerializableDatafile serialDatafile = new SerializableDatafile();
                 datafiles.Add(serialDatafile);
 
-                foreach (Control control in gbDatafiles.Controls.Cast<Control>()
-                    .Where(x => x is DatafileControl && ((DatafileControl)x).gbDatafile.Text == datafile.Filename))
+                foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>()
+                    .Where(x => x is DatafileControl && ((DatafileControl) x).gbDatafile.Text == datafile.Filename).Select(
+                        control => control as DatafileControl))
                 {
-                    var datafileControl = control as DatafileControl;
-                    serialDatafile.Name = datafileControl.gbDatafile.Text;
-                    serialDatafile.Date = datafileControl.dtpDatafiles.Value.ToString(dateTimeFormat, enUS_Culture);
-                    serialDatafile.MD5Sum = datafileControl.lblMD5Sum.Text;
+                    serialDatafile.Name = dfControl.gbDatafile.Text;
+                    serialDatafile.Date = dfControl.dtpDatafiles.Value.ToString(DateTimeFormat, s_enUsCulture);
+                    serialDatafile.MD5Sum = dfControl.lblMD5Sum.Text;
                     serialDatafile.Url = url;
-                    serialDatafile.Message = datafileControl.rtbDatafileMessage.Text;
+                    serialDatafile.Message = dfControl.rtbDatafileMessage.Text;
                 }
             }
-
-            return datafiles;
         }
 
         /// <summary>
@@ -500,25 +494,26 @@ namespace PatchXmlCreator
         private void SaveFile()
         {
             string patch = ExportPatchXml();
-            string filenamePath = Path.Combine(patchDir, patchFilename);
+            string filenamePath = Path.Combine(PatchDir, PatchFilename);
 
             try
             {
                 FileHelper.OverwriteOrWarnTheUser(filenamePath, fs =>
-                {
-                    using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                    {
-                        sw.Write(patch);
-                        sw.Flush();
-                        sw.Close();
-                    }
-                    return true;
-                });
+                                                                    {
+                                                                        using (
+                                                                            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                                                        {
+                                                                            sw.Write(patch);
+                                                                            sw.Flush();
+                                                                            sw.Close();
+                                                                        }
+                                                                        return true;
+                                                                    });
             }
             finally
             {
-                string text = "The file was created successfully.";
-                MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                const string MsgText = "The file was created successfully.";
+                MessageBox.Show(MsgText, Caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -561,7 +556,7 @@ namespace PatchXmlCreator
 
             if (m_activeTextBox.Parent.Parent is DatafileControl)
                 EnsureHeaderMessage(m_activeTextBox);
-            
+
             m_activeTextBox = null;
         }
 
@@ -610,30 +605,23 @@ namespace PatchXmlCreator
             string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
             string version = message.Remove((message.IndexOf("(") - 1), (message.Length - (message.IndexOf("(") - 1)));
 
-            foreach (var datafile in patch.Datafiles)
+            foreach (SerializableDatafile datafile in patch.Datafiles)
             {
-                if (url != rtbDatafileUrl.Text)
-                    rtbDatafileUrl.Text = url;
+                rtbDatafileUrl.Text = url;
+                tbExpansion.Text = expansionName;
+                tbExpVersion.Text = version;
+                tbExpRevision.Text = revision;
 
-                if (expansionName != tbExpansion.Text)
-                    tbExpansion.Text = expansionName;
-
-                if (version != tbExpVersion.Text)
-                    tbExpVersion.Text = version;
-
-                if (revision != tbExpRevision.Text)
-                    tbExpRevision.Text = revision;
-
-                foreach (Control control in gbDatafiles.Controls.Cast<Control>()
-                    .Where(x => x is DatafileControl && ((DatafileControl)x).gbDatafile.Text == datafile.Name))
+                foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>().Where(
+                    x => x is DatafileControl && ((DatafileControl) x).gbDatafile.Text == datafile.Name).Select(
+                        control => control as DatafileControl))
                 {
                     DateTime date;
                     DateTime.TryParse(datafile.Date, out date);
-                    var datafileControl = control as DatafileControl;
 
-                    datafileControl.dtpDatafiles.Value = date;
-                    datafileControl.lblMD5Sum.Text = datafile.MD5Sum;
-                    datafileControl.rtbDatafileMessage.Text = datafile.Message;
+                    dfControl.dtpDatafiles.Value = date;
+                    dfControl.lblMD5Sum.Text = datafile.MD5Sum;
+                    dfControl.rtbDatafileMessage.Text = datafile.Message;
                 }
             }
 
@@ -667,16 +655,16 @@ namespace PatchXmlCreator
             tbExpVersion.ResetText();
             tbExpRevision.ResetText();
 
-            foreach (var control in gbDatafiles.Controls.Cast<Control>().Where(x => x is DatafileControl))
+            foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>().Where(
+                x => x is DatafileControl).Select(control => control as DatafileControl))
             {
-                var datafileControl = control as DatafileControl;
-                var datafile = s_datafiles.First(x => x.Filename == datafileControl.gbDatafile.Text);
+                dfControl.dtpDatafiles.ResetText();
+                dfControl.rtbDatafileMessage.ResetText();
 
-                datafileControl.dtpDatafiles.ResetText();
-                datafileControl.rtbDatafileMessage.ResetText();
+                Datafile datafile = s_datafiles.First(x => x.Filename == dfControl.gbDatafile.Text);
 
                 if (datafile != null)
-                    UpdateDatafileInfo(datafileControl, datafile);
+                    UpdateDatafileInfo(dfControl, datafile);
             }
 
             UpdateCreateButtonEnabled();
@@ -689,18 +677,13 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void Control_DoubleClick(object sender, EventArgs e)
         {
-            Control control;
-
-            if (sender is DatafileControl)
-                control = ((DatafileControl)sender).rtbDatafileMessage;
-            else
-                control = null;
+            Control control = (sender is DatafileControl ? ((DatafileControl) sender).rtbDatafileMessage : null);
 
             if (sender is RichTextBox)
-                control = (RichTextBox)sender;
+                control = (RichTextBox) sender;
 
             if (sender is TextBox)
-                control = (TextBox)sender;
+                control = (TextBox) sender;
 
             if (control == null)
                 return;
@@ -718,10 +701,10 @@ namespace PatchXmlCreator
         private void Control_Enter(object sender, EventArgs e)
         {
             if (sender is TextBox)
-                ((TextBox)sender).ForeColor = SystemColors.WindowText;
+                ((TextBox) sender).ForeColor = SystemColors.WindowText;
 
             if (sender is RichTextBox)
-                ((RichTextBox)sender).ForeColor = SystemColors.WindowText;
+                ((RichTextBox) sender).ForeColor = SystemColors.WindowText;
         }
 
         /// <summary>
@@ -734,17 +717,20 @@ namespace PatchXmlCreator
             Control control;
 
             if (sender is RichTextBox)
-                control = (RichTextBox)sender;
+                control = (RichTextBox) sender;
             else
                 control = null;
 
             if (sender is TextBox)
-                control = (TextBox)sender;
+                control = (TextBox) sender;
 
             if (control == null)
                 return;
 
-            if (control == tbExpansion || control == tbExpVersion || control == tbExpRevision || control.Parent.Parent is DatafileControl)
+            if (control == tbExpansion
+                || control == tbExpVersion
+                || control == tbExpRevision
+                || control.Parent.Parent is DatafileControl)
                 UpdateDatafilesControls();
 
             if (control.Text == String.Empty)

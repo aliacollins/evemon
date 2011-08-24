@@ -20,7 +20,7 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void OnClick(object sender, EventArgs e)
         {
-            this.Parent.Focus();
+            Parent.Focus();
         }
     }
 }
