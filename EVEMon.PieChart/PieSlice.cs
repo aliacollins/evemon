@@ -13,6 +13,115 @@ namespace EVEMon.PieChart
     /// </summary>
     public sealed class PieSlice : IDisposable, ICloneable
     {
+        /// <summary>
+        ///   Actual start angle.
+        /// </summary>
+        private readonly float m_actualStartAngle;
+
+        /// <summary>
+        ///   Actual sweep angle.
+        /// </summary>
+        private readonly float m_actualSweepAngle;
+
+        /// <summary>
+        ///   Color of the surface.
+        /// </summary>
+        private readonly Color m_surfaceColor = Color.Empty;
+
+        /// <summary>
+        ///   Style used for shadow.
+        /// </summary>
+        private readonly ShadowStyle m_shadowStyle = ShadowStyle.NoShadow;
+
+        /// <summary>
+        ///   <c>EdgeColorType</c> used to draw pie sliece edges.
+        /// </summary>
+        private readonly EdgeColorType m_edgeColorType = EdgeColorType.NoEdge;
+
+        /// <summary>
+        ///   <c>Brush</c> used to render slice top surface.
+        /// </summary>
+        private Brush m_brushSurface;
+
+        /// <summary>
+        ///   <c>Brush</c> used to render slice top surface when highlighted.
+        /// </summary>
+        private Brush m_brushSurfaceHighlighted;
+
+        /// <summary>
+        ///   <c>Brush</c> used to render slice starting cut side.
+        /// </summary>
+        private Brush m_brushStartSide;
+
+        /// <summary>
+        ///   <c>Brush</c> used to render slice ending cut side.
+        /// </summary>
+        private Brush m_brushEndSide;
+
+        /// <summary>
+        ///   <c>Brush</c> used to render pie slice periphery (cylinder outer surface).
+        /// </summary>
+        private Brush m_brushPeripherySurface;
+
+        /// <summary>
+        ///   <c>Pen</c> object used to draw pie slice edges.
+        /// </summary>
+        private readonly Pen m_pen;
+
+        /// <summary>
+        ///   <c>PointF</c> corresponding to pie slice center.
+        /// </summary>
+        private PointF m_center;
+
+        /// <summary>
+        ///   <c>PointF</c> corresponding to the lower pie slice center.
+        /// </summary>
+        private PointF m_centerBelow;
+
+        /// <summary>
+        ///   <c>PointF</c> on the periphery corresponding to the start cut 
+        ///   side.
+        /// </summary>
+        private PointF m_pointStart;
+
+        /// <summary>
+        ///   <c>PointF</c> on the periphery corresponding to the start cut 
+        ///   side.
+        /// </summary>
+        private PointF m_pointStartBelow;
+
+        /// <summary>
+        ///   <c>PointF</c> on the periphery corresponding to the end cut 
+        ///   side.
+        /// </summary>
+        private PointF m_pointEnd;
+
+        /// <summary>
+        ///   <c>PointF</c> on the periphery corresponding to the end cut 
+        ///   side.
+        /// </summary>
+        private PointF m_pointEndBelow;
+
+        /// <summary>
+        ///   <c>Quadrilateral</c> representing the start side.
+        /// </summary>
+        private Quadrilateral m_startSide = Quadrilateral.Empty;
+
+        /// <summary>
+        ///   <c>Quadrilateral</c> representing the end side.
+        /// </summary>
+        private Quadrilateral m_endSide = Quadrilateral.Empty;
+
+        /// <summary>
+        ///   Flag indicating if object has been disposed.
+        /// </summary>
+        private bool m_disposed;
+
+        /// <summary>
+        ///   Angle offset used to define reference angle for gradual shadow.
+        /// </summary>
+        private const float ShadowAngle = 20F;
+
 
         /// <summary>
         ///   Initializes an empty instance of <c>PieSlice</c>.
@@ -302,7 +411,21 @@ namespace EVEMon.PieChart
             get { return (StartAngle + SweepAngle) % 360; }
         }
 
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>The text.</value>
         public string Text { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the bounding rectangle.
+        /// </summary>
+        internal RectangleF BoundingRectangle { get; private set; }
+
+        /// <summary>
+        ///   Gets or sets the slice height.
+        /// </summary>
+        internal float SliceHeight { get; private set; }
 
         /// <summary>
         ///   Draws the pie slice.
@@ -328,15 +451,10 @@ namespace EVEMon.PieChart
         /// </returns>
         public bool Contains(PointF point)
         {
-            if (PieSliceContainsPoint(point))
-                return true;
-            if (PeripheryContainsPoint(point))
-                return true;
-            if (m_startSide.Contains(point))
-                return true;
-            if (m_endSide.Contains(point))
-                return true;
-            return false;
+            return PieSliceContainsPoint(point)
+                   || PeripheryContainsPoint(point)
+                   || m_startSide.Contains(point)
+                   || m_endSide.Contains(point);
         }
 
         /// <summary>
@@ -350,6 +468,7 @@ namespace EVEMon.PieChart
             if (SweepAngle >= 180)
                 return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
                                        GetActualAngle(StartAngle) + SweepAngle / 2);
+
             float x = (m_pointStart.X + m_pointEnd.X) / 2;
             float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
             float angle = (float) (Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
@@ -368,22 +487,13 @@ namespace EVEMon.PieChart
             if (SweepAngle >= 180)
                 return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / div, BoundingRectangle.Height / div,
                                        GetActualAngle(StartAngle) + SweepAngle / 2);
+
             float x = (m_pointStart.X + m_pointEnd.X) / 2;
             float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
             float angle = (float) (Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
             return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / div, BoundingRectangle.Height / div,
                                    GetActualAngle(angle));
         }
-
-        /// <summary>
-        ///   Gets or sets the bounding rectangle.
-        /// </summary>
-        internal RectangleF BoundingRectangle { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the slice height.
-        /// </summary>
-        internal float SliceHeight { get; set; }
 
         /// <summary>
         ///   Draws pie slice sides.
@@ -470,7 +580,7 @@ namespace EVEMon.PieChart
         /// <param name="graphics">
         ///   <c>Graphics</c> used to draw the pie slice.
         /// </param>
-        internal void DrawStartSide(Graphics graphics)
+        private void DrawStartSide(Graphics graphics)
         {
             if (m_startSide == null)
                 return;
@@ -488,7 +598,7 @@ namespace EVEMon.PieChart
         /// <param name="graphics">
         ///   <c>Graphics</c> used to draw the pie slice.
         /// </param>
-        internal void DrawEndSide(Graphics graphics)
+        private void DrawEndSide(Graphics graphics)
         {
             if (m_endSide == null)
                 return;
@@ -506,7 +616,7 @@ namespace EVEMon.PieChart
         /// <param name="graphics">
         ///   <c>Graphics</c> used to draw the pie slice.
         /// </param>
-        internal void DrawVisiblePeriphery(Graphics graphics)
+        private void DrawVisiblePeriphery(Graphics graphics)
         {
             IEnumerable<PeripherySurfaceBounds> peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
             foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
@@ -522,7 +632,7 @@ namespace EVEMon.PieChart
         /// <param name="graphics">
         ///   <c>Graphics</c> used to draw the pie slice.
         /// </param>
-        internal void DrawHiddenPeriphery(Graphics graphics)
+        private void DrawHiddenPeriphery(Graphics graphics)
         {
             IEnumerable<PeripherySurfaceBounds> peripherySurfaceBounds = GetHiddenPeripherySurfaceBounds();
             foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
@@ -570,18 +680,23 @@ namespace EVEMon.PieChart
             RectangleF boundingRectangle = new RectangleF(m_pointStart.X, m_pointStart.Y, 0, 0);
             if ((Math.Abs(StartAngle) < float.Epsilon) || (StartAngle + SweepAngle >= 360))
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Right);
+
             if ((StartAngle <= 90) && (StartAngle + SweepAngle >= 90) || (StartAngle + SweepAngle >= 450))
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Bottom + SliceHeight);
+
             if ((StartAngle <= 180) && (StartAngle + SweepAngle >= 180) || (StartAngle + SweepAngle >= 540))
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Left);
+
             if ((StartAngle <= 270) && (StartAngle + SweepAngle >= 270) || (StartAngle + SweepAngle >= 630))
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Top);
+
             GraphicsUtil.IncludePoint(ref boundingRectangle, m_center);
             GraphicsUtil.IncludePoint(ref boundingRectangle, m_centerBelow);
             GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointStart);
             GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointStartBelow);
             GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointEnd);
             GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointEndBelow);
+
             return boundingRectangle;
         }
 
@@ -940,10 +1055,12 @@ namespace EVEMon.PieChart
         private void InitializeSides(bool startSideExists = true, bool endSideExists = true)
         {
             m_startSide = startSideExists
-                              ? new Quadrilateral(m_center, m_pointStart, m_pointStartBelow, m_centerBelow, Math.Abs(SweepAngle - 180) > float.Epsilon)
+                              ? new Quadrilateral(m_center, m_pointStart, m_pointStartBelow, m_centerBelow,
+                                                  Math.Abs(SweepAngle - 180) > float.Epsilon)
                               : Quadrilateral.Empty;
             m_endSide = endSideExists
-                            ? new Quadrilateral(m_center, m_pointEnd, m_pointEndBelow, m_centerBelow, Math.Abs(SweepAngle - 180) > float.Epsilon)
+                            ? new Quadrilateral(m_center, m_pointEnd, m_pointEndBelow, m_centerBelow,
+                                                Math.Abs(SweepAngle - 180) > float.Epsilon)
                             : Quadrilateral.Empty;
         }
 
@@ -1200,114 +1317,5 @@ namespace EVEMon.PieChart
 
             public PointF EndPoint { get; private set; }
         }
-
-        /// <summary>
-        ///   Actual start angle.
-        /// </summary>
-        private readonly float m_actualStartAngle;
-
-        /// <summary>
-        ///   Actual sweep angle.
-        /// </summary>
-        private readonly float m_actualSweepAngle;
-
-        /// <summary>
-        ///   Color of the surface.
-        /// </summary>
-        private readonly Color m_surfaceColor = Color.Empty;
-
-        /// <summary>
-        ///   Style used for shadow.
-        /// </summary>
-        private readonly ShadowStyle m_shadowStyle = ShadowStyle.NoShadow;
-
-        /// <summary>
-        ///   <c>EdgeColorType</c> used to draw pie sliece edges.
-        /// </summary>
-        private readonly EdgeColorType m_edgeColorType = EdgeColorType.NoEdge;
-
-        /// <summary>
-        ///   <c>Brush</c> used to render slice top surface.
-        /// </summary>
-        private Brush m_brushSurface;
-
-        /// <summary>
-        ///   <c>Brush</c> used to render slice top surface when highlighted.
-        /// </summary>
-        private Brush m_brushSurfaceHighlighted;
-
-        /// <summary>
-        ///   <c>Brush</c> used to render slice starting cut side.
-        /// </summary>
-        private Brush m_brushStartSide;
-
-        /// <summary>
-        ///   <c>Brush</c> used to render slice ending cut side.
-        /// </summary>
-        private Brush m_brushEndSide;
-
-        /// <summary>
-        ///   <c>Brush</c> used to render pie slice periphery (cylinder outer surface).
-        /// </summary>
-        private Brush m_brushPeripherySurface;
-
-        /// <summary>
-        ///   <c>Pen</c> object used to draw pie slice edges.
-        /// </summary>
-        private readonly Pen m_pen;
-
-        /// <summary>
-        ///   <c>PointF</c> corresponding to pie slice center.
-        /// </summary>
-        private PointF m_center;
-
-        /// <summary>
-        ///   <c>PointF</c> corresponding to the lower pie slice center.
-        /// </summary>
-        private PointF m_centerBelow;
-
-        /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the start cut 
-        ///   side.
-        /// </summary>
-        private PointF m_pointStart;
-
-        /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the start cut 
-        ///   side.
-        /// </summary>
-        private PointF m_pointStartBelow;
-
-        /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the end cut 
-        ///   side.
-        /// </summary>
-        private PointF m_pointEnd;
-
-        /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the end cut 
-        ///   side.
-        /// </summary>
-        private PointF m_pointEndBelow;
-
-        /// <summary>
-        ///   <c>Quadrilateral</c> representing the start side.
-        /// </summary>
-        private Quadrilateral m_startSide = Quadrilateral.Empty;
-
-        /// <summary>
-        ///   <c>Quadrilateral</c> representing the end side.
-        /// </summary>
-        private Quadrilateral m_endSide = Quadrilateral.Empty;
-
-        /// <summary>
-        ///   Flag indicating if object has been disposed.
-        /// </summary>
-        private bool m_disposed;
-
-        /// <summary>
-        ///   Angle offset used to define reference angle for gradual shadow.
-        /// </summary>
-        private const float ShadowAngle = 20F;
     }
 }

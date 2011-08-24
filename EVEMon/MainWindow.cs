@@ -25,6 +25,7 @@ using EVEMon.Common.Threading;
 using EVEMon.Controls;
 using EVEMon.ImplantControls;
 using EVEMon.LogitechG15;
+using EVEMon.PieChart;
 using EVEMon.Sales;
 using EVEMon.Schedule;
 using EVEMon.SettingsUI;

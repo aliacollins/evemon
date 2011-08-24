@@ -6,7 +6,6 @@ namespace EVEMon.Controls
     {
         public NoFlickerPanel()
         {
-            DoubleBuffered = true;
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.DoubleBuffer |
                      ControlStyles.UserPaint |

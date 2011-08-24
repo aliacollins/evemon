@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EVEMon.PieChart
@@ -9,28 +10,67 @@ namespace EVEMon.PieChart
     /// <summary>
     /// Summary description for PieChartControl.
     /// </summary>
-    public class PieChartControl : System.Windows.Forms.Panel
+    public class PieChartControl : Panel
     {
+        private float m_leftMargin;
+        private float m_topMargin;
+        private float m_rightMargin;
+        private float m_bottomMargin;
+        private bool m_fitChart;
+
+        private decimal[] m_values;
+        private Color[] m_colors;
+        private float m_sliceRelativeHeight;
+        private float[] m_relativeSliceDisplacements = new[] {0F};
+        private ShadowStyle m_shadowStyle = ShadowStyle.GradualShadow;
+        private EdgeColorType m_edgeColorType = EdgeColorType.SystemColor;
+        private float m_edgeLineWidth = 1F;
+        private float m_initialAngle;
+        private int m_highlightedIndex = -1;
+        private readonly ToolTip m_toolTip;
+
+        private int m_lastX = -1;
+        private int m_lastY = -1;
+
+        // These are used for the actual drawing. They are modified depending
+        // on wether sorting by size is on or off
+        private decimal[] m_drawValues;
+        private Color[] m_drawColors;
+        private float[] m_drawRelativeSliceDisplacements = new[] {0F};
+        private string[] m_drawToolTipTexts;
+        private string[] m_drawTexts;
+        private int[] m_sortOrder;
+
+        /// <summary>
+        ///   Default AutoPopDelay of the ToolTip control.
+        /// </summary>
+        private int m_defaultToolTipAutoPopDelay;
+
+        /// <summary>
+        ///   Flag indicating that object has been disposed.
+        /// </summary>
+        private bool m_disposed;
+
+        private bool m_mouseDown;
+
         /// <summary>
         ///   Initializes the <c>PieChartControl</c>.
         /// </summary>
         public PieChartControl()
-            : base()
         {
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.DoubleBuffer, true);
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            Texts = null;
+            ToolTips = null;
+            PieChart = null;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.DoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.AllPaintingInWmPaint, true);
+            UpdateStyles();
             m_toolTip = new ToolTip();
         }
 
-        public PieChart3D PieChart
-        {
-            get
-            {
-                return m_pieChart;
-            }
-        }
+        public PieChart3D PieChart { get; private set; }
 
         /// <summary>
         ///   Sets the left margin for the chart.
@@ -119,10 +159,7 @@ namespace EVEMon.PieChart
                 m_colors = value;
                 Invalidate();
             }
-            get
-            {
-                return m_colors;
-            }
+            get { return m_colors; }
         }
 
         /// <summary>
@@ -140,19 +177,12 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Gets or sets tooltip texts.
         /// </summary>
-        public string[] ToolTips
-        {
-            set { m_toolTipTexts = value; }
-            get { return m_toolTipTexts; }
-        }
+        public string[] ToolTips { private get; set; }
 
         /// <summary>
         ///   Sets texts appearing by each pie slice.
         /// </summary>
-        public string[] Texts
-        {
-            set { m_texts = value; }
-        }
+        public string[] Texts { private get; set; }
 
         /// <summary>
         ///   Sets pie slice reative height.
@@ -211,9 +241,10 @@ namespace EVEMon.PieChart
             {
                 float newAngle = value;
 
-                if(newAngle > 360.0f)
+                if (newAngle > 360.0f)
                     newAngle -= 360.0f;
-                if(newAngle < 0.0f)
+
+                if (newAngle < 0.0f)
                     newAngle += 360.0f;
 
                 OnAngleChange(new AngleChangeEventArgs(m_initialAngle, newAngle));
@@ -222,8 +253,6 @@ namespace EVEMon.PieChart
                 Invalidate();
             }
         }
-
-        protected bool mouseDown = false;
 
         /// <summary>
         ///   Handles <c>OnPaint</c> event.
@@ -235,9 +264,7 @@ namespace EVEMon.PieChart
         {
             base.OnPaint(args);
             if (HasAnyValue)
-            {
                 DoDraw(args.Graphics);
-            }
         }
 
         /// <summary>
@@ -246,41 +273,46 @@ namespace EVEMon.PieChart
         /// <param name="graphics">
         ///   Graphics object used for drawing.
         /// </param>
-        protected void DoDraw(Graphics graphics)
+        private void DoDraw(Graphics graphics)
         {
-            if (m_drawValues != null && m_drawValues.Length > 0)
-            {
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                float width = ClientSize.Width - m_leftMargin - m_rightMargin;
-                float height = ClientSize.Height - m_topMargin - m_bottomMargin;
-                // if the width or height if <=0 an exception would be thrown -> exit method..
-                if (width <= 0 || height <= 0)
-                    return;
-                if (m_pieChart != null)
-                    m_pieChart.Dispose();
-                if (m_drawColors != null && m_drawColors.Length > 0)
-                    m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_drawColors, m_sliceRelativeHeight, m_drawTexts);
-                else
-                    m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight, m_drawTexts);
-                m_pieChart.FitToBoundingRectangle = m_fitChart;
-                m_pieChart.InitialAngle = m_initialAngle;
-                m_pieChart.SliceRelativeDisplacements = m_drawRelativeSliceDisplacements;
-                m_pieChart.EdgeColorType = m_edgeColorType;
-                m_pieChart.EdgeLineWidth = m_edgeLineWidth;
-                m_pieChart.ShadowStyle = m_shadowStyle;
-                m_pieChart.HighlightedIndex = m_highlightedIndex;
-                m_pieChart.Draw(graphics);
-                m_pieChart.Font = this.Font;
-                m_pieChart.ForeColor = this.ForeColor;
-                m_pieChart.PlaceTexts(graphics);
-            }
+            if (m_drawValues == null || m_drawValues.Length <= 0)
+                return;
+
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            float width = ClientSize.Width - m_leftMargin - m_rightMargin;
+            float height = ClientSize.Height - m_topMargin - m_bottomMargin;
+
+            // if the width or height if <=0 an exception would be thrown -> exit method..
+            if (width <= 0 || height <= 0)
+                return;
+
+            if (PieChart != null)
+                PieChart.Dispose();
+
+            if (m_drawColors != null && m_drawColors.Length > 0)
+                PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_drawColors,
+                                          m_sliceRelativeHeight, m_drawTexts);
+            else
+                PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight,
+                                          m_drawTexts);
+            PieChart.FitToBoundingRectangle = m_fitChart;
+            PieChart.InitialAngle = m_initialAngle;
+            PieChart.SliceRelativeDisplacements = m_drawRelativeSliceDisplacements;
+            PieChart.EdgeColorType = m_edgeColorType;
+            PieChart.EdgeLineWidth = m_edgeLineWidth;
+            PieChart.ShadowStyle = m_shadowStyle;
+            PieChart.HighlightedIndex = m_highlightedIndex;
+            PieChart.Draw(graphics);
+            PieChart.Font = Font;
+            PieChart.ForeColor = ForeColor;
+            PieChart.PlaceTexts(graphics);
         }
 
         /// <summary>
         ///   Handles <c>MouseEnter</c> event to activate the tooltip.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnMouseEnter(System.EventArgs e)
+        protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
             m_defaultToolTipAutoPopDelay = m_toolTip.AutoPopDelay;
@@ -291,7 +323,7 @@ namespace EVEMon.PieChart
         ///   Handles <c>MouseLeave</c> event to disable tooltip.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnMouseLeave(System.EventArgs e)
+        protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
             m_toolTip.RemoveAll();
@@ -308,7 +340,7 @@ namespace EVEMon.PieChart
         {
             base.OnMouseDown(e);
 
-            this.mouseDown = true;
+            m_mouseDown = true;
         }
 
         /// <summary>
@@ -319,7 +351,7 @@ namespace EVEMon.PieChart
         {
             base.OnMouseUp(e);
 
-            this.mouseDown = false;
+            m_mouseDown = false;
         }
 
 
@@ -328,46 +360,49 @@ namespace EVEMon.PieChart
         ///   slice under pointer and to display slice in highlighted color.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (m_pieChart != null && m_values != null && m_values.Length > 0)
+            if (PieChart == null || m_values == null || m_values.Length <= 0)
+                return;
+
+            if (e.X == m_lastX && e.Y == m_lastY)
+                return;
+
+            if (m_mouseDown)
             {
-                if (e.X == m_lastX && e.Y == m_lastY) return;
+                InitialAngle = m_initialAngle - (e.X - m_lastX);
+            }
+            else
+            {
+                int index = PieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
 
-                if (this.mouseDown)
+                if (index != m_highlightedIndex)
                 {
-                    this.InitialAngle = m_initialAngle - (e.X - m_lastX);
+                    m_highlightedIndex = index;
+                    Refresh();
                 }
-                else
-                {
-                    int index = m_pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
 
-                    if (index != m_highlightedIndex)
+                if (m_highlightedIndex != -1)
+                {
+                    if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex ||
+                        m_drawToolTipTexts[m_highlightedIndex].Length == 0)
                     {
-                        m_highlightedIndex = index;
-                        Refresh();
-                    }
-                    if (m_highlightedIndex != -1)
-                    {
-                        if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex || m_drawToolTipTexts[m_highlightedIndex].Length == 0)
-                        {
-                            m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
-                        }
-                        else
-                        {
-                            m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
-                        }
+                        m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
                     }
                     else
                     {
-                        m_toolTip.RemoveAll();
+                        m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
                     }
                 }
-
-                m_lastX = e.X;
-                m_lastY = e.Y;
+                else
+                {
+                    m_toolTip.RemoveAll();
+                }
             }
+
+            m_lastX = e.X;
+            m_lastY = e.Y;
         }
 
         /// <summary>
@@ -375,21 +410,21 @@ namespace EVEMon.PieChart
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if (!m_disposed)
+            if (m_disposed)
+                return;
+
+            try
             {
-                try
+                if (disposing)
                 {
-                    if (disposing)
-                    {
-                        m_pieChart.Dispose();
-                        m_toolTip.Dispose();
-                    }
-                    m_disposed = true;
+                    PieChart.Dispose();
+                    m_toolTip.Dispose();
                 }
-                finally
-                {
-                    base.Dispose(disposing);
-                }
+                m_disposed = true;
+            }
+            finally
+            {
+                base.Dispose(disposing);
             }
         }
 
@@ -398,28 +433,21 @@ namespace EVEMon.PieChart
         /// </summary>
         private bool HasAnyValue
         {
-            get
-            {
-                if (m_values == null)
-                    return false;
-                foreach (decimal angle in m_values)
-                {
-                    if (angle != 0)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        public int GetIndex(int sliceIndex)
-        {
-            return this.m_sortOrder[sliceIndex];
+            get { return m_values != null && m_values.Any(angle => angle != 0); }
         }
 
         /// <summary>
-        /// Event for when the graph angle changes
+        /// Gets the index.
+        /// </summary>
+        /// <param name="sliceIndex">Index of the slice.</param>
+        /// <returns></returns>
+        public int GetIndex(int sliceIndex)
+        {
+            return m_sortOrder[sliceIndex];
+        }
+
+        /// <summary>
+        /// Event for when the graph angle changes.
         /// </summary>
         public event EventHandler AngleChange;
 
@@ -427,47 +455,51 @@ namespace EVEMon.PieChart
         /// Event for when the graph angle changes
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnAngleChange(AngleChangeEventArgs e)
+        private void OnAngleChange(AngleChangeEventArgs e)
         {
-            if(AngleChange != null)
+            if (AngleChange != null)
                 AngleChange(this, e);
         }
 
         /// <summary>
-        /// Will copy the original data to the vars used for drawing
-        /// The original is needed to use for ordering
+        /// Will copy the original data to the vars used for drawing.
+        /// The original is needed to use for ordering.
         /// </summary>
-        public void CopyDataToDrawVars()
+        private void CopyDataToDrawVars()
         {
-            this.m_drawValues = (decimal[])this.m_values.Clone();
-            this.m_drawColors = (Color[])this.m_colors.Clone();
-            this.m_drawRelativeSliceDisplacements = (float[])this.m_relativeSliceDisplacements.Clone();
-            this.m_drawToolTipTexts = (string[])this.m_toolTipTexts.Clone();
-            this.m_drawTexts = (string[])this.m_texts.Clone();
+            m_drawValues = (decimal[]) m_values.Clone();
+            m_drawColors = (Color[]) m_colors.Clone();
+            m_drawRelativeSliceDisplacements = (float[]) m_relativeSliceDisplacements.Clone();
+            m_drawToolTipTexts = (string[]) ToolTips.Clone();
+            m_drawTexts = (string[]) Texts.Clone();
 
 
             // fill the sort order to default:
-            this.m_sortOrder = new int[this.m_values.Length];
-            for (int i = 0; i < this.m_values.Length; i++)
+            m_sortOrder = new int[m_values.Length];
+            for (int i = 0; i < m_values.Length; i++)
             {
-                this.m_sortOrder[i] = i;
+                m_sortOrder[i] = i;
             }
         }
 
+        /// <summary>
+        /// Orders the slices.
+        /// </summary>
+        /// <param name="orderBySize">if set to <c>true</c> [order by size].</param>
         public void OrderSlices(bool orderBySize)
         {
-            if (orderBySize == true && this.m_values != null)
+            if (orderBySize && m_values != null)
             {
                 // prefill the draw vars
-                this.CopyDataToDrawVars();
+                CopyDataToDrawVars();
 
                 // take a copy of the original values
                 // then use it to do the calculations
-                decimal[] values = (decimal[])this.m_values.Clone();
-                Color[] colours = (Color[])this.m_colors.Clone();
-                float[] displacements = (float[])this.m_relativeSliceDisplacements.Clone();
-                string[] tooltips = (string[])this.m_toolTipTexts.Clone();
-                string[] texts = (string[])this.m_texts.Clone();
+                decimal[] values = (decimal[]) m_values.Clone();
+                Color[] colours = (Color[]) m_colors.Clone();
+                float[] displacements = (float[]) m_relativeSliceDisplacements.Clone();
+                string[] tooltips = (string[]) ToolTips.Clone();
+                string[] texts = (string[]) Texts.Clone();
 
                 // reordering the slices
                 for (int num = 0; num < values.Length; num++)
@@ -481,95 +513,29 @@ namespace EVEMon.PieChart
                             tempsp = values[y];
                             biggest = y;
                         }
-                        if (values[y] > tempsp && values[y] > 0)
-                        {
-                            tempsp = values[y];
-                            biggest = y;
-                        }
+                        if (values[y] <= tempsp || values[y] <= 0)
+                            continue;
 
+                        tempsp = values[y];
+                        biggest = y;
                     }
 
-                    this.m_drawValues[num] = values[biggest];
-                    this.m_drawTexts[num] = texts[biggest];
-                    this.m_drawRelativeSliceDisplacements[num] = displacements[biggest];
-                    this.m_drawToolTipTexts[num] = tooltips[biggest];
-                    this.m_drawColors[num] = colours[biggest];
-                    this.m_sortOrder[num] = biggest;
+                    m_drawValues[num] = values[biggest];
+                    m_drawTexts[num] = texts[biggest];
+                    m_drawRelativeSliceDisplacements[num] = displacements[biggest];
+                    m_drawToolTipTexts[num] = tooltips[biggest];
+                    m_drawColors[num] = colours[biggest];
+                    m_sortOrder[num] = biggest;
                     values[biggest] = 0;
                 }
             }
             else
             {
-                if (this.m_values != null)
-                {
-                    this.CopyDataToDrawVars();
-                }
+                if (m_values != null)
+                    CopyDataToDrawVars();
             }
 
-            this.Refresh();
-        }
-
-        private PieChart3D m_pieChart = null;
-        private float m_leftMargin;
-        private float m_topMargin;
-        private float m_rightMargin;
-        private float m_bottomMargin;
-        private bool m_fitChart = false;
-
-        private decimal[] m_values = null;
-        private Color[] m_colors = null;
-        private float m_sliceRelativeHeight;
-        private float[] m_relativeSliceDisplacements = new float[] { 0F };
-        private string[] m_texts = null;
-        private string[] m_toolTipTexts = null;
-        private ShadowStyle m_shadowStyle = ShadowStyle.GradualShadow;
-        private EdgeColorType m_edgeColorType = EdgeColorType.SystemColor;
-        private float m_edgeLineWidth = 1F;
-        private float m_initialAngle;
-        private int m_highlightedIndex = -1;
-        private ToolTip m_toolTip = null;
-
-        private int m_lastX = -1;
-        private int m_lastY = -1;
-
-        // These are used for the actual drawing. They are modified depending
-        // on wether sorting by size is on or off
-        private decimal[] m_drawValues = null;
-        private Color[] m_drawColors = null;
-        private float[] m_drawRelativeSliceDisplacements = new float[] { 0F };
-        private string[] m_drawToolTipTexts = null;
-        private string[] m_drawTexts = null;
-        private int[] m_sortOrder = null;
-
-        /// <summary>
-        ///   Default AutoPopDelay of the ToolTip control.
-        /// </summary>
-        private int m_defaultToolTipAutoPopDelay;
-        /// <summary>
-        ///   Flag indicating that object has been disposed.
-        /// </summary>
-        private bool m_disposed = false;
-    }
-
-    public class AngleChangeEventArgs : EventArgs
-    {
-        private float oldValue, newValue;
-
-        public AngleChangeEventArgs(float oldValue, float newValue)
-        {
-            this.oldValue = oldValue;
-            this.newValue = newValue;
-        }
-
-        public float NewAngle
-        {
-            get { return newValue; }
-        }
-
-        public float OldAngle
-        {
-            get { return oldValue; }
+            Refresh();
         }
     }
 }
-

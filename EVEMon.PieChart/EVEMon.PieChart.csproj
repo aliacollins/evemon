@@ -67,6 +67,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AngleChangeEventArgs.cs" />
+    <Compile Include="ColorUtil.cs" />
+    <Compile Include="EdgeColor.cs" />
     <Compile Include="GraphicsUtil.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -78,13 +81,28 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Quadrilateral.cs" />
-    <Compile Include="Util.cs">
+    <Compile Include="SkillsPieChart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillsPieChart.Designer.cs">
+      <DependentUpon>SkillsPieChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enumerations.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="PieChartControl.resx">
-      <DependentUpon>PieChartControl.cs</DependentUpon>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SkillsPieChart.resx">
+      <DependentUpon>SkillsPieChart.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
+      <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
+      <Name>EVEMon.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

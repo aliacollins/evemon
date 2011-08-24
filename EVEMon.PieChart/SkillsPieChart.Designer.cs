@@ -1,4 +1,4 @@
-namespace EVEMon
+namespace EVEMon.PieChart
 {
     partial class SkillsPieChart
     {

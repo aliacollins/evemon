@@ -1,11 +1,12 @@
-using System;
 using System.Drawing;
 
-namespace EVEMon.PieChart {
-	/// <summary>
-	///   Structure with graphics utility methods.
-	/// </summary>
-	public struct GraphicsUtil {
+namespace EVEMon.PieChart
+{
+    /// <summary>
+    ///   Structure with graphics utility methods.
+    /// </summary>
+    public struct GraphicsUtil
+    {
 
         /// <summary>
         ///   Checks if point is contained within <c>RectangleF</c> structure 
@@ -17,7 +18,8 @@ namespace EVEMon.PieChart {
         /// <param name="pointToInclude">
         ///   <c>PontF</c> object to include.
         /// </param>
-        public static void IncludePoint(ref RectangleF rect, PointF pointToInclude) {
+        public static void IncludePoint(ref RectangleF rect, PointF pointToInclude)
+        {
             IncludePointX(ref rect, pointToInclude.X);
             IncludePointY(ref rect, pointToInclude.Y);
         }
@@ -33,8 +35,10 @@ namespace EVEMon.PieChart {
         /// <param name="xToInclude">
         ///   x-coordinate to include.
         /// </param>
-        public static void IncludePointX(ref RectangleF rect, float xToInclude) {
-            if (xToInclude < rect.X) {
+        public static void IncludePointX(ref RectangleF rect, float xToInclude)
+        {
+            if (xToInclude < rect.X)
+            {
                 rect.Width = rect.Right - xToInclude;
                 rect.X = xToInclude;
             }
@@ -53,13 +57,15 @@ namespace EVEMon.PieChart {
         /// <param name="yToInclude">
         ///   y-coordinate to include.
         /// </param>
-        public static void IncludePointY(ref RectangleF rect, float yToInclude) {
-            if (yToInclude < rect.Y) {
+        public static void IncludePointY(ref RectangleF rect, float yToInclude)
+        {
+            if (yToInclude < rect.Y)
+            {
                 rect.Height = rect.Bottom - yToInclude;
                 rect.Y = yToInclude;
             }
             else if (yToInclude > rect.Bottom)
                 rect.Height = yToInclude - rect.Y;
         }
-	}
+    }
 }

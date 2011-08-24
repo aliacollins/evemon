@@ -699,12 +699,6 @@
     <Compile Include="Controls\SkillQueueControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SkillsPieChart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SkillsPieChart.Designer.cs">
-      <DependentUpon>SkillsPieChart.cs</DependentUpon>
-    </Compile>
     <Compile Include="TimeCheckNotification.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -917,10 +911,6 @@
     <EmbeddedResource Include="SkillPlanner\SkillTreeDisplayControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SkillTreeDisplayControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillsPieChart.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>SkillsPieChart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TimeCheckNotification.resx">
       <SubType>Designer</SubType>

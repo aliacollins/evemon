@@ -1,18 +1,41 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace EVEMon.PieChart {
-	/// <summary>
-	///  Quadrilateral object.
-	/// </summary>
-	public class Quadrilateral : IDisposable {
+namespace EVEMon.PieChart
+{
+    /// <summary>
+    ///  Quadrilateral object.
+    /// </summary>
+    public class Quadrilateral : IDisposable
+    {
+        /// <summary>
+        ///   <c>GraphicsPath</c> representing the quadrilateral.
+        /// </summary>
+        private readonly GraphicsPath m_path = new GraphicsPath();
+
+        private bool m_disposed;
+
+        public static readonly Quadrilateral Empty = new Quadrilateral();
+
+        /// <summary>
+        ///   <c>PathPointType</c>s decribing the <c>GraphicsPath</c> points.
+        /// </summary>
+        private static readonly byte[] s_quadrilateralPointTypes = new byte[]
+                                                                       {
+                                                                           (byte) PathPointType.Start,
+                                                                           (byte) PathPointType.Line,
+                                                                           (byte) PathPointType.Line,
+                                                                           (byte) PathPointType.Line |
+                                                                           (byte) PathPointType.CloseSubpath
+                                                                       };
+
         /// <summary>
         ///   Creates empty <c>Quadrilateral</c> object
         /// </summary>
-        protected Quadrilateral() {
-		}
+        private Quadrilateral()
+        {
+        }
 
         /// <summary>
         ///   Initilizes <c>Quadrilateral</c> object with given corner points.
@@ -32,24 +55,27 @@ namespace EVEMon.PieChart {
         /// <param name="toClose">
         ///   Indicator should the quadrilateral be closed by the line.
         /// </param>
-        public Quadrilateral(PointF point1, PointF point2, PointF point3, PointF point4, bool toClose) {
-            byte[] pointTypes = (byte[])s_quadrilateralPointTypes.Clone();
+        public Quadrilateral(PointF point1, PointF point2, PointF point3, PointF point4, bool toClose)
+        {
+            byte[] pointTypes = (byte[]) s_quadrilateralPointTypes.Clone();
             if (toClose)
-                pointTypes[3] |= (byte)PathPointType.CloseSubpath;
-            m_path = new GraphicsPath(new PointF[] { point1, point2, point3, point4 }, pointTypes);
+                pointTypes[3] |= (byte) PathPointType.CloseSubpath;
+            m_path = new GraphicsPath(new[] {point1, point2, point3, point4}, pointTypes);
         }
 
         /// <summary>
         ///   <c>Finalize</c> method.
         /// </summary>
-        ~Quadrilateral() {
+        ~Quadrilateral()
+        {
             Dispose(false);
         }
 
         /// <summary>
         ///   Implementation of <c>IDisposable</c> interface.
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -57,13 +83,16 @@ namespace EVEMon.PieChart {
         /// <summary>
         ///   Disposes of all pie slices.
         /// </summary>
-        protected virtual void Dispose(bool disposing) {
-            if (!m_disposed) {
-                if (disposing) {
-                    m_path.Dispose();
-                }
-                m_disposed = true;
+        private void Dispose(bool disposing)
+        {
+            if (m_disposed)
+                return;
+
+            if (disposing)
+            {
+                m_path.Dispose();
             }
+            m_disposed = true;
         }
 
         /// <summary>
@@ -78,7 +107,8 @@ namespace EVEMon.PieChart {
         /// <param name="brush">
         ///   <c>Brush</c> used to fill the inside. 
         /// </param>
-        public void Draw(Graphics graphics, Pen pen, Brush brush) {
+        public void Draw(Graphics graphics, Pen pen, Brush brush)
+        {
             graphics.FillPath(brush, m_path);
             graphics.DrawPath(pen, m_path);
         }
@@ -93,7 +123,8 @@ namespace EVEMon.PieChart {
         /// <returns>
         ///   <c>true</c> if the point is contained within the quadrilateral.
         /// </returns>
-        public bool Contains(PointF point) {
+        public bool Contains(PointF point)
+        {
             if (m_path.PointCount == 0 || m_path.PathPoints.Length == 0)
                 return false;
             return Contains(point, m_path.PathPoints);
@@ -113,9 +144,11 @@ namespace EVEMon.PieChart {
         /// <returns>
         ///   <c>true</c> if the point is contained within the quadrilateral.
         /// </returns>
-        public static bool Contains(PointF point, PointF[] cornerPoints) {
+        public static bool Contains(PointF point, PointF[] cornerPoints)
+        {
             int intersections = 0;
-            for (int i = 1; i < cornerPoints.Length; ++i) {
+            for (int i = 1; i < cornerPoints.Length; ++i)
+            {
                 if (DoesIntersect(point, cornerPoints[i], cornerPoints[i - 1]))
                     ++intersections;
             }
@@ -140,35 +173,18 @@ namespace EVEMon.PieChart {
         /// <returns>
         ///   <c>true</c> if lines intersect.
         /// </returns>
-        private static bool DoesIntersect(PointF point, PointF point1, PointF point2) {
+        private static bool DoesIntersect(PointF point, PointF point1, PointF point2)
+        {
             float x2 = point2.X;
             float y2 = point2.Y;
             float x1 = point1.X;
             float y1 = point1.Y;
-            if ((x2 < point.X && x1 >= point.X) || (x2 >= point.X && x1 < point.X)) {
+            if ((x2 < point.X && x1 >= point.X) || (x2 >= point.X && x1 < point.X))
+            {
                 float y = (y2 - y1) / (x2 - x1) * (point.X - x1) + y1;
                 return y > point.Y;
             }
             return false;
         }
-
-        /// <summary>
-        ///   <c>GraphicsPath</c> representing the quadrilateral.
-        /// </summary>
-        private GraphicsPath m_path = new GraphicsPath();
-
-        private bool m_disposed = false;
-
-        /// <summary>
-        ///   <c>PathPointType</c>s decribing the <c>GraphicsPath</c> points.
-        /// </summary>
-        private static byte[] s_quadrilateralPointTypes = new byte[]  {   
-                                                                          (byte)PathPointType.Start,
-                                                                          (byte)PathPointType.Line,
-                                                                          (byte)PathPointType.Line,
-                                                                          (byte)PathPointType.Line | (byte)PathPointType.CloseSubpath 
-                                                                      };
-        
-        public static readonly Quadrilateral Empty = new Quadrilateral();
     }
 }
