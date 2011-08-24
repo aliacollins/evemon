@@ -24,7 +24,7 @@ namespace EVEMon.WindowsApi
             SafeNativeMethods.SetCurrentProcessExplicitAppUserModelID(appId);
         }
     }
-    
+
     [SuppressUnmanagedCodeSecurity]
     internal static class SafeNativeMethods
     {

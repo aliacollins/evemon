@@ -29,10 +29,7 @@ namespace EVEMon.WindowsApi
         /// </summary>
         public static bool IsWindowsNT
         {
-            get
-            {
-                return Environment.OSVersion.Platform == PlatformID.Win32NT;
-            }
+            get { return Environment.OSVersion.Platform == PlatformID.Win32NT; }
         }
 
         /// <summary>
