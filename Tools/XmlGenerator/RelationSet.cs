@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace EVEMon.XmlGenerator
 {
@@ -7,48 +8,84 @@ namespace EVEMon.XmlGenerator
     {
         private readonly Dictionary<long, T> m_dictionary;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RelationSet&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="src">The SRC.</param>
         public RelationSet(IEnumerable<T> src)
         {
             m_dictionary = new Dictionary<long, T>();
-            foreach (var item in src)
+            foreach (T item in src)
             {
                 m_dictionary[GetKey(item)] = item;
             }
         }
 
+        /// <summary>
+        /// Determines whether [contains] [the specified left].
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// 	<c>true</c> if [contains] [the specified left]; otherwise, <c>false</c>.
+        /// </returns>
         public bool Contains(int left, int right)
         {
             return m_dictionary.ContainsKey(GetKey(left, right));
         }
 
+        /// <summary>
+        /// Gets the specified left.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns></returns>
         public T Get(int left, int right)
         {
-            T value = null;
+            T value;
             m_dictionary.TryGetValue(GetKey(left, right), out value);
             return value;
         }
 
-        public static long GetKey(IRelation relation)
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        /// <param name="relation">The relation.</param>
+        /// <returns></returns>
+        private static long GetKey(IRelation relation)
         {
             return GetKey(relation.Left, relation.Right);
         }
 
-        public static long GetKey(int left, int right)
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns></returns>
+        private static long GetKey(int left, int right)
         {
             return (((long)left) << 32) | (uint)right;
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var item in m_dictionary.Values)
-            {
-                yield return item;
-            }
+            return ((IEnumerable<T>) m_dictionary.Values).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+        /// </returns>
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return (System.Collections.IEnumerator)GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

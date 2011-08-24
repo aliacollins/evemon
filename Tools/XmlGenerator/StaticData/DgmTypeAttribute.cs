@@ -29,11 +29,19 @@ namespace EVEMon.XmlGenerator.StaticData
 
         #region IRelation Members
 
+        /// <summary>
+        /// Gets the left column value.
+        /// </summary>
+        /// <value>The left.</value>
         int IRelation.Left
         {
             get { return ItemID; }
         }
 
+        /// <summary>
+        /// Gets the right column value.
+        /// </summary>
+        /// <value>The right.</value>
         int IRelation.Right
         {
             get { return AttributeID; }

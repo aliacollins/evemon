@@ -6,11 +6,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmAttributeTypes : IHasID
     {
         [XmlElement("attributeID")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("description")]
         public string Description;
@@ -25,16 +21,16 @@ namespace EVEMon.XmlGenerator.StaticData
         public string DefaultValue;
 
         [XmlElement("iconID")]
-        public Nullable<int> IconID;
+        public int? IconID;
 
         [XmlElement("published")]
         public bool Published;
 
         [XmlElement("unitID")]
-        public Nullable<int> UnitID;
+        public int? UnitID;
 
         [XmlElement("categoryID")]
-        public Nullable<int> CategoryID;
+        public int? CategoryID;
 
         [XmlElement("highIsGood")]
         public bool HigherIsBetter;

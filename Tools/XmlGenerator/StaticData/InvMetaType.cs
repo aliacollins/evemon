@@ -13,16 +13,27 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("metaGroupID")]
         public int MetaGroupID;
 
+
         #region IRelation Members
+
+        /// <summary>
+        /// Gets the left column value.
+        /// </summary>
+        /// <value>The left.</value>
         int IRelation.Left
         {
             get { return ItemID; }
         }
 
+        /// <summary>
+        /// Gets the right.
+        /// </summary>
+        /// <value>The right column value.</value>
         int IRelation.Right
         {
             get { return MetaGroupID; }
         }
+
         #endregion
 
     }

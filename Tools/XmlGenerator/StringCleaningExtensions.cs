@@ -17,9 +17,7 @@ namespace EVEMon.XmlGenerator
         /// <returns>cleaned <c>string</c></returns>
         public static string Clean(this string input)
         {
-            string output;
-
-            output = input.TrimWhitespace();
+            string output = input.TrimWhitespace();
             output = output.ReplaceTabs();
             output = output.CleanXmlTags();
             output = output.CollapseSpaces();
@@ -31,9 +29,9 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Colapses any sequence of spaces into a single space.
         /// </summary>
-        /// <param name="output"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static string CollapseSpaces(this string input)
+        private static string CollapseSpaces(this string input)
         {
             Regex collapseSpace = new Regex(@"[ ]{2,}", RegexOptions.Compiled);
             return collapseSpace.Replace(input, @" ");
@@ -42,9 +40,9 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Removes any text between opposing angle brackets (i.e. XML or HTML tags).
         /// </summary>
-        /// <param name="output"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static string CleanXmlTags(this string input)
+        private static string CleanXmlTags(this string input)
         {
             // Remove markup
             Regex htmlClean = new Regex("<.+?>", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -56,7 +54,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string ReplaceTabs(this string input)
+        private static string ReplaceTabs(this string input)
         {
             // Replace tab characters with spaces
             return input.Replace('\t', ' ');
@@ -67,7 +65,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string TrimWhitespace(this string input)
+        private static string TrimWhitespace(this string input)
         {
             // Remove whitespace from the beginning and end of a string
             return input.Trim();
@@ -84,9 +82,10 @@ namespace EVEMon.XmlGenerator
                 return property.ValueInt.ToString();
 
             // Is it actually an integer stored as a float?
-            if (Math.Truncate(property.ValueFloat.Value) == property.ValueFloat.Value)
+            if (property.ValueFloat.HasValue &&
+                Math.Abs(Math.Truncate(property.ValueFloat.Value) - property.ValueFloat.Value) < float.Epsilon)
                 return Convert.ToInt32(property.ValueFloat.Value).ToString();
-            
+
             return property.ValueFloat.ToString();
         }
 
@@ -98,10 +97,7 @@ namespace EVEMon.XmlGenerator
         public static string FormatDecimal(this decimal input)
         {
             // Is it actually an integer stored as a double?
-            if (Math.Truncate(input) == input)
-                return Convert.ToInt64(input).ToString();
-
-            return input.ToString();
+            return Math.Truncate(input) == input ? Convert.ToInt64(input).ToString() : input.ToString();
         }
     }
 }

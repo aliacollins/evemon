@@ -6,23 +6,18 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class CrtRelationships : IHasID
     {
         [XmlElement("relationshipID")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("parentID")]
-        public Nullable<int> ParentID;
+        public int? ParentID;
 
         [XmlElement("parentTypeID")]
-        public Nullable<int> ParentTypeID;
+        public int? ParentTypeID;
 
         [XmlElement("parentLevel")]
-        public Nullable<int> ParentLevel;
+        public int? ParentLevel;
 
         [XmlElement("childID")]
         public int ChildID;
     }
-
 }

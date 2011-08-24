@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace EVEMon.XmlGenerator
 {
@@ -9,27 +10,38 @@ namespace EVEMon.XmlGenerator
     public sealed class Bag<T> : IEnumerable<T>
         where T : IHasID
     {
-        private Dictionary<int, T> m_items;
+        private readonly Dictionary<int, T> m_items;
 
-        public Bag()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bag&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        public Bag(IndexedList<T> list)
         {
             m_items = new Dictionary<int, T>();
-        }
 
-        public Bag(IndexedList<T> list)
-            : this()
-        {
-            foreach (var item in list.Items)
+            foreach (T item in list.Items)
             {
                 m_items[item.ID] = item;
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified id has value.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified id has value; otherwise, <c>false</c>.
+        /// </returns>
         public bool HasValue(int id)
         {
             return m_items.ContainsKey(id);
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="T"/> with the specified id.
+        /// </summary>
+        /// <value></value>
         public T this[int id]
         {
             get
@@ -42,15 +54,22 @@ namespace EVEMon.XmlGenerator
             }
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var T in m_items.Values)
-            {
-                yield return T;
-            }
+            return ((IEnumerable<T>) m_items.Values).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+        /// </returns>
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }

@@ -3,17 +3,13 @@ using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class InvBlueprintTypes :IHasID
+    public sealed class InvBlueprintTypes : IHasID
     {
         [XmlElement("blueprintTypeID")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("parentBlueprintTypeID")]
-        public Nullable<short> ParentID;
+        public short? ParentID;
 
         [XmlElement("productTypeID")]
         public short ProductTypeID;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.EntityClient;
 using System.Data.SqlClient;
+using System.Linq;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
@@ -21,28 +22,31 @@ namespace EVEMon.XmlGenerator
                 if (s_entities == null)
                 {
                     // Initialize the connection string builder for the underlying provider
-                    SqlConnectionStringBuilder sqlBuilder = new SqlConnectionStringBuilder()
-                    {
-                        // Set the properties for the data source
-                        DataSource = @".\SQLEXPRESS",
-                        InitialCatalog = "EveStaticData",
-                        IntegratedSecurity = true,
-                        MultipleActiveResultSets = true,
-                        ApplicationName = "EntityFramework",
-                    };
+                    SqlConnectionStringBuilder sqlBuilder =
+                        new SqlConnectionStringBuilder
+                            {
+                                // Set the properties for the data source
+                                DataSource = @".\SQLEXPRESS",
+                                InitialCatalog = "EveStaticData",
+                                IntegratedSecurity = true,
+                                MultipleActiveResultSets = true,
+                                ApplicationName = "EntityFramework",
+                            };
 
                     // Initialize the EntityConnectionStringBuilder
-                    EntityConnectionStringBuilder entityBuilder = new EntityConnectionStringBuilder()
-                        {
-                            // Set the Metadata location
-                            Metadata = @"res://*/EveStaticData.csdl|res://*/EveStaticData.ssdl|res://*/EveStaticData.msl",
+                    EntityConnectionStringBuilder entityBuilder =
+                        new EntityConnectionStringBuilder
+                            {
+                                // Set the Metadata location
+                                Metadata =
+                                    @"res://*/EveStaticData.csdl|res://*/EveStaticData.ssdl|res://*/EveStaticData.msl",
 
-                            //Set the provider name
-                            Provider = "System.Data.SqlClient",
+                                //Set the provider name
+                                Provider = "System.Data.SqlClient",
 
-                            // Set the provider-specific connection string
-                            ProviderConnectionString = sqlBuilder.ToString(),
-                        };
+                                // Set the provider-specific connection string
+                                ProviderConnectionString = sqlBuilder.ToString(),
+                            };
 
                     // Initialize the EntityConnection
                     EntityConnection connection = new EntityConnection(entityBuilder.ToString());
@@ -64,9 +68,9 @@ namespace EVEMon.XmlGenerator
             foreach (agtAgents agent in Context.agtAgents)
             {
                 AgtAgents item = new AgtAgents
-                                {
-                                    ID = agent.agentID,
-                                };
+                                     {
+                                         ID = agent.agentID,
+                                     };
 
                 if (agent.divisionID.HasValue)
                     item.DivisionID = agent.divisionID.Value;
@@ -97,14 +101,13 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<AgtAgentTypes> list = new IndexedList<AgtAgentTypes>();
 
-            foreach (agtAgentTypes agentType in Context.agtAgentTypes)
+            foreach (AgtAgentTypes item in Context.agtAgentTypes.Select(
+                agentType => new AgtAgentTypes
+                                 {
+                                     ID = agentType.agentTypeID,
+                                     AgentType = agentType.agentType
+                                 }))
             {
-                AgtAgentTypes item = new AgtAgentTypes
-                                {
-                                    ID = agentType.agentTypeID,
-                                    AgentType = agentType.agentType
-                                };
-
                 list.Items.Add(item);
             }
 
@@ -117,22 +120,15 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>List</c> of EVE Agent Config.</returns>
         internal static List<AgtConfig> AgentConfig()
         {
-            List<AgtConfig> list = new List<AgtConfig>();
-
-            foreach (agtConfig agentConfig in Context.agtConfig)
-            {
-                AgtConfig item = new AgtConfig
-                                {
-                                    ID = agentConfig.agentID,
-                                    Key = agentConfig.k,
-                                    Value = Convert.ToInt32(agentConfig.v)
-                                };
-
-                list.Add(item);
-            }
-
-            return list;
+            return Context.agtConfig.Select(
+                agentConfig => new AgtConfig
+                                   {
+                                       ID = agentConfig.agentID,
+                                       Key = agentConfig.k,
+                                       Value = Convert.ToInt32(agentConfig.v)
+                                   }).ToList();
         }
+
         /// <summary>
         /// EVE Research Agents.
         /// </summary>
@@ -141,14 +137,15 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<AgtResearchAgents> list = new IndexedList<AgtResearchAgents>();
 
-            foreach (agtResearchAgents researchAgent in Context.agtResearchAgents)
+            foreach (AgtResearchAgents item in Context.agtResearchAgents.Select(
+                researchAgent => new AgtResearchAgents
+                                     {
+                                         ID =
+                                             researchAgent.agentID,
+                                         ResearchSkillID =
+                                             researchAgent.typeID
+                                     }))
             {
-                AgtResearchAgents item = new AgtResearchAgents
-                                {
-                                    ID = researchAgent.agentID,
-                                    ResearchSkillID = researchAgent.typeID
-                                };
-
                 list.Items.Add(item);
             }
 
@@ -163,14 +160,14 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<CrpNPCDivisions> list = new IndexedList<CrpNPCDivisions>();
 
-            foreach (crpNPCDivisions npcDivision in Context.crpNPCDivisions)
+            foreach (CrpNPCDivisions item in Context.crpNPCDivisions.Select(
+                npcDivision => new CrpNPCDivisions
+                                   {
+                                       ID = npcDivision.divisionID,
+                                       DivisionName =
+                                           npcDivision.divisionName
+                                   }))
             {
-                CrpNPCDivisions item = new CrpNPCDivisions
-                                {
-                                    ID = npcDivision.divisionID,
-                                    DivisionName = npcDivision.divisionName
-                                };
-
                 list.Items.Add(item);
             }
 
@@ -185,14 +182,13 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<EveNames> list = new IndexedList<EveNames>();
 
-            foreach (eveNames name in Context.eveNames)
+            foreach (EveNames item in Context.eveNames.Select(
+                name => new EveNames
+                            {
+                                ID = name.itemID,
+                                Name = name.itemName
+                            }))
             {
-                EveNames item = new EveNames
-                               {
-                                   ID = name.itemID,
-                                   Name = name.itemName
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -207,16 +203,15 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<EveUnit> list = new IndexedList<EveUnit>();
 
-            foreach (eveUnits unit in Context.eveUnits)
+            foreach (EveUnit item in Context.eveUnits.Select(
+                unit => new EveUnit
+                            {
+                                Description = unit.description.Clean(),
+                                DisplayName = unit.displayName.Clean(),
+                                ID = unit.unitID,
+                                Name = unit.unitName
+                            }))
             {
-                EveUnit item = new EveUnit
-                               {
-                                   Description = unit.description.Clean(),
-                                   DisplayName = unit.displayName.Clean(),
-                                   ID = unit.unitID,
-                                   Name = unit.unitName
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -231,14 +226,13 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<EveIcons> list = new IndexedList<EveIcons>();
 
-            foreach (eveIcons icon in Context.eveIcons)
+            foreach (EveIcons item in Context.eveIcons.Select(
+                icon => new EveIcons
+                            {
+                                ID = icon.iconID,
+                                Icon = icon.iconFile
+                            }))
             {
-                EveIcons item = new EveIcons
-                               {
-                                   ID = icon.iconID,
-                                   Icon = icon.iconFile
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -256,15 +250,15 @@ namespace EVEMon.XmlGenerator
             foreach (dgmAttributeTypes attribute in Context.dgmAttributeTypes)
             {
                 DgmAttributeTypes item = new DgmAttributeTypes
-                               {
-                                   ID = attribute.attributeID,
-                                   CategoryID = attribute.categoryID,
-                                   Description = attribute.description.Clean(),
-                                   DisplayName = attribute.displayName.Clean(),
-                                   IconID = attribute.iconID,
-                                   Name = attribute.attributeName.Clean(),
-                                   UnitID = attribute.unitID,
-                               };
+                                             {
+                                                 ID = attribute.attributeID,
+                                                 CategoryID = attribute.categoryID,
+                                                 Description = attribute.description.Clean(),
+                                                 DisplayName = attribute.displayName.Clean(),
+                                                 IconID = attribute.iconID,
+                                                 Name = attribute.attributeName.Clean(),
+                                                 UnitID = attribute.unitID,
+                                             };
 
                 if (attribute.defaultValue.HasValue)
                     item.DefaultValue = attribute.defaultValue.Value.ToString();
@@ -289,15 +283,22 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<DgmAttributeCategory> list = new IndexedList<DgmAttributeCategory>();
 
-            foreach (dgmAttributeCategories category in Context.dgmAttributeCategories)
+            foreach (DgmAttributeCategory item in Context.dgmAttributeCategories.Select(
+                category => new DgmAttributeCategory
+                                {
+                                    ID =
+                                        category.
+                                        categoryID,
+                                    Description =
+                                        category.
+                                        categoryDescription
+                                        .Clean(),
+                                    Name =
+                                        category.
+                                        categoryName.Clean
+                                        ()
+                                }))
             {
-                DgmAttributeCategory item = new DgmAttributeCategory
-                               {
-                                   ID = category.categoryID,
-                                   Description = category.categoryDescription.Clean(),
-                                   Name = category.categoryName.Clean()
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -312,15 +313,14 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<MapRegion> list = new IndexedList<MapRegion>();
 
-            foreach (mapRegions region in Context.mapRegions)
+            foreach (MapRegion item in Context.mapRegions.Select(
+                region => new MapRegion
+                              {
+                                  ID = region.regionID,
+                                  Name = region.regionName,
+                                  FactionID = region.factionID
+                              }))
             {
-                MapRegion item = new MapRegion
-                               {
-                                   ID = region.regionID,
-                                   Name = region.regionName,
-                                   FactionID = region.factionID
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -338,10 +338,10 @@ namespace EVEMon.XmlGenerator
             foreach (mapConstellations constellation in Context.mapConstellations)
             {
                 MapConstellation item = new MapConstellation
-                               {
-                                   ID = constellation.constellationID,
-                                   Name = constellation.constellationName,
-                               };
+                                            {
+                                                ID = constellation.constellationID,
+                                                Name = constellation.constellationName,
+                                            };
 
                 if (constellation.regionID.HasValue)
                     item.RegionID = constellation.regionID.Value;
@@ -363,10 +363,10 @@ namespace EVEMon.XmlGenerator
             foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
             {
                 MapSolarSystem item = new MapSolarSystem
-                               {
-                                   ID = solarsystem.solarSystemID,
-                                   Name = solarsystem.solarSystemName
-                               };
+                                          {
+                                              ID = solarsystem.solarSystemID,
+                                              Name = solarsystem.solarSystemName
+                                          };
 
                 if (solarsystem.constellationID.HasValue)
                     item.ConstellationID = solarsystem.constellationID.Value;
@@ -400,10 +400,10 @@ namespace EVEMon.XmlGenerator
             foreach (staStations station in Context.staStations)
             {
                 StaStation item = new StaStation
-                               {
-                                   ID = station.stationID,
-                                   Name = station.stationName,
-                               };
+                                      {
+                                          ID = station.stationID,
+                                          Name = station.stationName,
+                                      };
 
                 if (station.reprocessingEfficiency.HasValue)
                     item.ReprocessingEfficiency = (float) station.reprocessingEfficiency.Value;
@@ -432,20 +432,12 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>List</c> of jumps between SolarSystems in EVE.</returns>
         internal static List<MapSolarSystemJump> Jumps()
         {
-            List<MapSolarSystemJump> list = new List<MapSolarSystemJump>();
-
-            foreach (mapSolarSystemJumps jump in Context.mapSolarSystemJumps)
-            {
-                MapSolarSystemJump item = new MapSolarSystemJump
-                               {
-                                   A = jump.fromSolarSystemID,
-                                   B = jump.toSolarSystemID
-                               };
-
-                list.Add(item);
-            }
-
-            return list;
+            return Context.mapSolarSystemJumps.Select(
+                jump => new MapSolarSystemJump
+                            {
+                                A = jump.fromSolarSystemID,
+                                B = jump.toSolarSystemID
+                            }).ToList();
         }
 
         /// <summary>
@@ -459,10 +451,10 @@ namespace EVEMon.XmlGenerator
             foreach (invBlueprintTypes blueprint in Context.invBlueprintTypes)
             {
                 InvBlueprintTypes item = new InvBlueprintTypes
-                               {
-                                   ID = blueprint.blueprintTypeID,
-                                   ParentID = blueprint.parentBlueprintTypeID,
-                               };
+                                             {
+                                                 ID = blueprint.blueprintTypeID,
+                                                 ParentID = blueprint.parentBlueprintTypeID,
+                                             };
 
                 if (blueprint.productTypeID.HasValue)
                     item.ProductTypeID = blueprint.productTypeID.Value;
@@ -508,17 +500,20 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<InvMarketGroup> list = new IndexedList<InvMarketGroup>();
 
-            foreach (invMarketGroups marketGroup in Context.invMarketGroups)
+            foreach (InvMarketGroup item in Context.invMarketGroups.Select(
+                marketGroup => new InvMarketGroup
+                                   {
+                                       ID = marketGroup.marketGroupID,
+                                       Description =
+                                           marketGroup.description.
+                                           Clean(),
+                                       IconID = marketGroup.iconID,
+                                       Name =
+                                           marketGroup.marketGroupName,
+                                       ParentID =
+                                           marketGroup.parentGroupID
+                                   }))
             {
-                InvMarketGroup item = new InvMarketGroup
-                               {
-                                   ID = marketGroup.marketGroupID,
-                                   Description = marketGroup.description.Clean(),
-                                   IconID = marketGroup.iconID,
-                                   Name = marketGroup.marketGroupName,
-                                   ParentID = marketGroup.parentGroupID
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -536,11 +531,13 @@ namespace EVEMon.XmlGenerator
             foreach (invGroups group in Context.invGroups)
             {
                 InvGroup item = new InvGroup
-                               {
-                                   ID = group.groupID,
-                                   Name = group.groupName,
-                                   Published = group.published.Value
-                               };
+                                    {
+                                        ID = group.groupID,
+                                        Name = group.groupName,
+                                    };
+
+                if (group.published.HasValue)
+                    item.Published = group.published.Value;
 
                 if (group.categoryID.HasValue)
                     item.CategoryID = group.categoryID.Value;
@@ -562,14 +559,14 @@ namespace EVEMon.XmlGenerator
             foreach (invTypes type in Context.invTypes)
             {
                 InvType item = new InvType
-                               {
-                                   ID = type.typeID,
-                                   Description = type.description.Clean(),
-                                   IconID = type.iconID,
-                                   MarketGroupID = type.marketGroupID,
-                                   Name = type.typeName,
-                                   RaceID = type.raceID
-                               };
+                                   {
+                                       ID = type.typeID,
+                                       Description = type.description.Clean(),
+                                       IconID = type.iconID,
+                                       MarketGroupID = type.marketGroupID,
+                                       Name = type.typeName,
+                                       RaceID = type.raceID
+                                   };
 
                 if (type.basePrice.HasValue)
                     item.BasePrice = type.basePrice.Value;
@@ -609,11 +606,11 @@ namespace EVEMon.XmlGenerator
             foreach (ramTypeRequirements requirement in Context.ramTypeRequirements)
             {
                 RamTypeRequirements item = new RamTypeRequirements
-                               {
-                                   TypeID = requirement.typeID,
-                                   ActivityID = requirement.activityID,
-                                   RequiredTypeID = requirement.requiredTypeID
-                               };
+                                               {
+                                                   TypeID = requirement.typeID,
+                                                   ActivityID = requirement.activityID,
+                                                   RequiredTypeID = requirement.requiredTypeID
+                                               };
 
                 if (requirement.quantity.HasValue)
                     item.Quantity = requirement.quantity.Value;
@@ -636,21 +633,13 @@ namespace EVEMon.XmlGenerator
         /// <returns>List of Materials.</returns>
         internal static List<InvTypeMaterials> TypeMaterials()
         {
-            List<InvTypeMaterials> list = new List<InvTypeMaterials>();
-
-            foreach (invTypeMaterials material in Context.invTypeMaterials)
-            {
-                InvTypeMaterials item = new InvTypeMaterials
-                               {
-                                   TypeID = material.typeID,
-                                   MaterialTypeID = material.materialTypeID,
-                                   Quantity = material.quantity
-                               };
-
-                list.Add(item);
-            }
-
-            return list;
+            return Context.invTypeMaterials.Select(
+                material => new InvTypeMaterials
+                                {
+                                    TypeID = material.typeID,
+                                    MaterialTypeID = material.materialTypeID,
+                                    Quantity = material.quantity
+                                }).ToList();
         }
 
         /// <summary>
@@ -661,15 +650,15 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<CrtCategories> list = new IndexedList<CrtCategories>();
 
-            foreach (crtCategories category in Context.crtCategories)
+            foreach (CrtCategories item in Context.crtCategories.Select(
+                category => new CrtCategories
+                                {
+                                    ID = category.categoryID,
+                                    CategoryName = category.categoryName,
+                                    Description =
+                                        category.description.Clean()
+                                }))
             {
-                CrtCategories item = new CrtCategories
-                               {
-                                   ID = category.categoryID,
-                                   CategoryName = category.categoryName,
-                                   Description = category.description.Clean()
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -684,15 +673,14 @@ namespace EVEMon.XmlGenerator
         {
             IndexedList<CrtClasses> list = new IndexedList<CrtClasses>();
 
-            foreach (crtClasses cClass in Context.crtClasses)
+            foreach (CrtClasses item in Context.crtClasses.Select(
+                cClass => new CrtClasses
+                              {
+                                  ID = cClass.classID,
+                                  ClassName = cClass.className,
+                                  Description = cClass.description.Clean()
+                              }))
             {
-                CrtClasses item = new CrtClasses
-                               {
-                                   ID = cClass.classID,
-                                   ClassName = cClass.className,
-                                   Description = cClass.description.Clean()
-                               };
-
                 list.Items.Add(item);
             }
 
@@ -710,10 +698,10 @@ namespace EVEMon.XmlGenerator
             foreach (crtCertificates certificate in Context.crtCertificates)
             {
                 CrtCertificates item = new CrtCertificates
-                               {
-                                   ID = certificate.certificateID,
-                                   Description = certificate.description.Clean()
-                               };
+                                           {
+                                               ID = certificate.certificateID,
+                                               Description = certificate.description.Clean()
+                                           };
 
                 if (certificate.categoryID.HasValue)
                     item.CategoryID = certificate.categoryID.Value;
@@ -741,10 +729,10 @@ namespace EVEMon.XmlGenerator
             foreach (crtRecommendations recommendation in Context.crtRecommendations)
             {
                 CrtRecommendations item = new CrtRecommendations
-                               {
-                                   ID = recommendation.recommendationID,
-                                   Level = recommendation.recommendationLevel,
-                               };
+                                              {
+                                                  ID = recommendation.recommendationID,
+                                                  Level = recommendation.recommendationLevel,
+                                              };
 
                 if (recommendation.certificateID.HasValue)
                     item.CertificateID = recommendation.certificateID.Value;
@@ -769,11 +757,11 @@ namespace EVEMon.XmlGenerator
             foreach (crtRelationships relationship in Context.crtRelationships)
             {
                 CrtRelationships item = new CrtRelationships
-                               {
-                                   ID = relationship.relationshipID,
-                                   ParentID = relationship.parentID,
-                                   ParentLevel = relationship.parentLevel,
-                               };
+                                            {
+                                                ID = relationship.relationshipID,
+                                                ParentID = relationship.parentID,
+                                                ParentLevel = relationship.parentLevel,
+                                            };
 
                 if (relationship.parentTypeID != 0)
                     item.ParentTypeID = relationship.parentTypeID;
@@ -793,20 +781,17 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
         internal static RelationSet<DgmTypeAttribute> TypeAttributes()
         {
-            List<DgmTypeAttribute> list = new List<DgmTypeAttribute>();
-
-            foreach (dgmTypeAttributes typeAttribute in Context.dgmTypeAttributes)
-            {
-                DgmTypeAttribute item = new DgmTypeAttribute
-                               {
-                                   AttributeID = typeAttribute.attributeID,
-                                   ItemID = typeAttribute.typeID,
-                                   ValueFloat = typeAttribute.valueFloat,
-                                   ValueInt = typeAttribute.valueInt
-                               };
-
-                list.Add(item);
-            }
+            List<DgmTypeAttribute> list = Context.dgmTypeAttributes.Select(
+                typeAttribute => new DgmTypeAttribute
+                                     {
+                                         AttributeID =
+                                             typeAttribute.attributeID,
+                                         ItemID = typeAttribute.typeID,
+                                         ValueFloat =
+                                             typeAttribute.valueFloat,
+                                         ValueInt =
+                                             typeAttribute.valueInt
+                                     }).ToList();
 
             return new RelationSet<DgmTypeAttribute>(list);
         }
@@ -817,19 +802,15 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>RelationSet</c> parent-child relationships between types.</returns>
         internal static RelationSet<InvMetaType> MetaTypes()
         {
-            List<InvMetaType> list = new List<InvMetaType>();
-
-            foreach (invMetaTypes metaType in Context.invMetaTypes)
-            {
-                InvMetaType item = new InvMetaType
-                               {
-                                   ItemID = metaType.typeID,
-                                   MetaGroupID = Convert.ToInt32(metaType.metaGroupID),
-                                   ParentItemID = Convert.ToInt32(metaType.parentTypeID)
-                               };
-
-                list.Add(item);
-            }
+            List<InvMetaType> list = Context.invMetaTypes.Select(
+                metaType => new InvMetaType
+                                {
+                                    ItemID = metaType.typeID,
+                                    MetaGroupID =
+                                        Convert.ToInt32(metaType.metaGroupID),
+                                    ParentItemID =
+                                        Convert.ToInt32(metaType.parentTypeID)
+                                }).ToList();
 
             return new RelationSet<InvMetaType>(list);
         }
@@ -840,18 +821,12 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>RelationSet</c> of Types and Effects.</returns>
         internal static RelationSet<DgmTypeEffect> TypeEffects()
         {
-            List<DgmTypeEffect> list = new List<DgmTypeEffect>();
-
-            foreach (dgmTypeEffects typeEffect in Context.dgmTypeEffects)
-            {
-                DgmTypeEffect item = new DgmTypeEffect
-                               {
-                                   EffectID = typeEffect.effectID,
-                                   ItemID = typeEffect.typeID
-                               };
-
-                list.Add(item);
-            }
+            List<DgmTypeEffect> list = Context.dgmTypeEffects.Select(
+                typeEffect => new DgmTypeEffect
+                                  {
+                                      EffectID = typeEffect.effectID,
+                                      ItemID = typeEffect.typeID
+                                  }).ToList();
 
             return new RelationSet<DgmTypeEffect>(list);
         }

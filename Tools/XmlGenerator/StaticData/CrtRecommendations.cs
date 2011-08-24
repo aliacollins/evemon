@@ -5,11 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class CrtRecommendations : IHasID
     {
         [XmlElement("recommendationID")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("shipTypeID")]
         public int ShipTypeID;

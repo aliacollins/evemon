@@ -6,20 +6,16 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvMarketGroup : IHasID
     {
         [XmlElement("marketGroupID")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("marketGroupName")]
         public string Name;
 
         [XmlElement("parentGroupID")]
-        public Nullable<int> ParentID;
+        public int? ParentID;
 
         [XmlElement("iconID")]
-        public Nullable<int> IconID;
+        public int? IconID;
 
         [XmlElement("description")]
         public string Description;

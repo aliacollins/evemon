@@ -69,11 +69,15 @@ namespace EVEMon.XmlGenerator
             doc.Load(path);
 
             // Load XSLT 
-            var asm = Assembly.GetExecutingAssembly();
+            Assembly asm = Assembly.GetExecutingAssembly();
             XslCompiledTransform xslt = new XslCompiledTransform();
-            using (var reader = XmlReader.Create(asm.GetManifestResourceStream(asm.GetName().Name + ".Zofu.MySQLDumpImport.xslt")))
+            Stream input = asm.GetManifestResourceStream(String.Format("{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
+            if (input != null)
             {
-                xslt.Load(reader);
+                using (XmlReader reader = XmlReader.Create(input))
+                {
+                    xslt.Load(reader);
+                }
             }
 
             // Apply trasnform and deserialize
@@ -93,19 +97,18 @@ namespace EVEMon.XmlGenerator
                         stream.Seek(0, SeekOrigin.Begin);
                         XmlDocument doc2 = new XmlDocument();
                         doc2.Load(stream);
-                        string xmlstr = GetXMLStringRepresentation(doc2);
+                        Trace.Write(GetXMLStringRepresentation(doc2));
 #endif
 
                         // Deserialize from the given stream
                         stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
-                        var result = (T)xs.Deserialize(stream);
+                        XmlSerializer xs = new XmlSerializer(typeof (T));
+                        T result = (T) xs.Deserialize(stream);
 
                         // XML deserialization creates a lot of garbage so we cleans up now to avoid wasting hundreds of MB 
                         // and OOM exceptions.
                         GC.Collect();
                         return result;
-
                     }
                 }
             }
@@ -115,13 +118,13 @@ namespace EVEMon.XmlGenerator
         /// Serializes a XML file to EVEMon.Common\Resources.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="filename"></param>
+        /// <param name="datafile">The datafile.</param>
+        /// <param name="filename">The filename.</param>
         internal static void SerializeXML<T>(T datafile, string filename)
         {
             string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
 
-            using(var stream = File.Open(path, FileMode.Create, FileAccess.Write))
+            using(FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
             {
                 using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
                 {
@@ -142,7 +145,7 @@ namespace EVEMon.XmlGenerator
             Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon\bin\x86\Release\Resources", filename));
 
             // Update the file in the settings directory
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             Copy(path, Path.Combine(appData, Path.Combine("EVEMon", filename)));
 
             Console.WriteLine();
@@ -155,18 +158,17 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">Filename of resource .xml.gz</param>
         internal static void CreateMD5SumsFile(string filename)
         {
-            StreamWriter MD5file;
-            string path = @"..\..\..\..\..\EVEMon.Common\Resources";
-            string file = Path.Combine(path, filename);
+            const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
+            string file = Path.Combine(ResourcesPath, filename);
 
-            MD5file = File.CreateText(file);
+            StreamWriter md5File = File.CreateText(file);
 
-            foreach (var datafile in Directory.GetFiles(path, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            foreach (string datafile in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
             {
-                MD5file.WriteLine(CreateMD5From(datafile));
+                md5File.WriteLine(CreateMD5From(datafile));
             }
             
-            MD5file.Close();
+            md5File.Close();
                 
             Console.WriteLine("MD5Sums File Created Successfully");
             Console.WriteLine();
@@ -178,26 +180,24 @@ namespace EVEMon.XmlGenerator
         private static string CreateMD5From(string filename)
         {
             FileInfo datafile = new FileInfo(filename);
-            if (datafile.Exists)
-            {
-                StringBuilder sb = new StringBuilder();
-
-                MD5 md5 = MD5.Create();
-                using (FileStream fs = File.Open(datafile.FullName, FileMode.Open))
-                {
-                    foreach (byte b in md5.ComputeHash(fs))
-                        sb.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
-                }
-
-                // Constract the fileline
-                string fileline = String.Format("{0} *{1}", sb, datafile.Name);
-
-                return fileline;
-            }
-            else
-            {
+            if (!datafile.Exists)
                 throw new ApplicationException(datafile + " not found!");
+            
+            StringBuilder sb = new StringBuilder();
+
+            MD5 md5 = MD5.Create();
+            using (FileStream fs = File.Open(datafile.FullName, FileMode.Open))
+            {
+                foreach (byte b in md5.ComputeHash(fs))
+                {
+                    sb.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
+                }
             }
+
+            // Constract the fileline
+            string fileline = String.Format("{0} *{1}", sb, datafile.Name);
+
+            return fileline;
         }
 
         /// <summary>
@@ -210,18 +210,21 @@ namespace EVEMon.XmlGenerator
             try
             {
                 FileInfo fi = new FileInfo(destFile);
-
-                if (fi.Directory.Exists)
+                if (fi.Directory != null)
                 {
-                    File.Copy(srcFile, destFile, true);
-                    Console.WriteLine(String.Format(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name, fi.Directory.Parent.Name, fi.Directory.Name));
-                }
-                else
-                {
-                    Trace.WriteLine("{0} doesn't exist, copy failed", fi.Directory.FullName);
+                    if (fi.Directory.Exists && fi.Directory.Parent != null && fi.Directory.Parent.Parent != null)
+                    {
+                        File.Copy(srcFile, destFile, true);
+                        Console.WriteLine(String.Format(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name,
+                                                        fi.Directory.Parent.Name, fi.Directory.Name));
+                    }
+                    else
+                    {
+                        Trace.WriteLine("{0} doesn't exist, copy failed", fi.Directory.FullName);
+                    }
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Trace.WriteLine(exc.ToString());
             }
@@ -232,12 +235,10 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GetXMLStringRepresentation(XmlDocument doc)
+        private static string GetXMLStringRepresentation(XmlDocument doc)
         {
             // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.NewLineHandling = NewLineHandling.Replace;
+            XmlWriterSettings settings = new XmlWriterSettings {Indent = true, NewLineHandling = NewLineHandling.Replace};
 
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();

@@ -6,17 +6,13 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvType : IHasID
     {
         [XmlElement("typeID")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("groupID")]
         public int GroupID;
 
         [XmlElement("iconID")]
-        public Nullable<int> IconID;
+        public int? IconID;
 
         [XmlElement("typeName")]
         public string Name;
@@ -37,10 +33,10 @@ namespace EVEMon.XmlGenerator.StaticData
         public int PortionSize;
 
         [XmlElement("raceID")]
-        public Nullable<int> RaceID;
+        public int? RaceID;
 
         [XmlElement("marketGroupID")]
-        public Nullable<int> MarketGroupID;
+        public int? MarketGroupID;
 
         [XmlElement("basePrice")]
         public decimal BasePrice;
