@@ -13,12 +13,24 @@ namespace EVEMon.Sales
         public event EventHandler<EventArgs> SubtotalChanged;
         public event EventHandler<EventArgs> MineralPriceChanged;
 
+        private string m_mineralName;
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MineralTile"/> class.
+        /// </summary>
         public MineralTile()
         {
+            Subtotal = 0;
             InitializeComponent();
         }
 
-        private string m_mineralName;
+        #endregion
+
+
+        #region Public Properties
 
         public String MineralName
         {
@@ -33,8 +45,9 @@ namespace EVEMon.Sales
                 {
                     Assembly asm = Assembly.GetExecutingAssembly();
                     s = asm.GetManifestResourceStream("EVEMon.Sales.icons." + value + ".png");
-                    i = Image.FromStream(s, true, true);
-                    icon.Image = i;
+                    if (s != null)
+                        i = Image.FromStream(s, true, true);
+                    Icon.Image = i;
                 }
                 catch (Exception e)
                 {
@@ -45,45 +58,65 @@ namespace EVEMon.Sales
                     if (s != null)
                         s.Dispose();
 
-                    icon.Image = null;
+                    Icon.Image = null;
                 }
             }
         }
 
-        public PictureBox Icon
-        {
-            get { return icon; }
-        }
+        /// <summary>
+        /// Gets or sets the icon.
+        /// </summary>
+        /// <value>The icon.</value>
+        public PictureBox Icon { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the quantity.
+        /// </summary>
+        /// <value>The quantity.</value>
         public int Quantity
         {
             get { return Int32.Parse(txtStock.Text); }
             set { txtStock.Text = value.ToString(); }
         }
 
+        /// <summary>
+        /// Gets or sets the price per unit.
+        /// </summary>
+        /// <value>The price per unit.</value>
         public Decimal PricePerUnit
         {
             get { return Decimal.Parse(txtLastSell.Text); }
             set { txtLastSell.Text = value.ToString("N"); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [price locked].
+        /// </summary>
+        /// <value><c>true</c> if [price locked]; otherwise, <c>false</c>.</value>
         public bool PriceLocked
         {
             get { return txtLastSell.ReadOnly; }
             set
             {
-                this.txtLastSell.TabStop = !value;
+                txtLastSell.TabStop = !value;
                 txtLastSell.ReadOnly = value;
             }
         }
 
-        private Decimal m_subtotal = 0;
+        /// <summary>
+        /// Gets or sets the subtotal.
+        /// </summary>
+        /// <value>The subtotal.</value>
+        public decimal Subtotal { get; private set; }
 
-        public Decimal Subtotal
-        {
-            get { return m_subtotal; }
-        }
+        #endregion
 
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates the subtotal.
+        /// </summary>
         private void UpdateSubtotal()
         {
             try
@@ -91,19 +124,29 @@ namespace EVEMon.Sales
                 Decimal pricePerUnit = Decimal.Parse(txtLastSell.Text);
                 int quantity = Int32.Parse(txtStock.Text);
 
-                m_subtotal = pricePerUnit * quantity;
+                Subtotal = pricePerUnit * quantity;
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, true);
-                m_subtotal = 0;
+                Subtotal = 0;
             }
-            tbSubtotal.Text = m_subtotal.ToString("N");
+            tbSubtotal.Text = Subtotal.ToString("N");
 
             if (SubtotalChanged != null)
                 SubtotalChanged(this, new EventArgs());
         }
 
+        #endregion
+
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handles the TextChanged event of the txtLastSell control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void txtLastSell_TextChanged(object sender, EventArgs e)
         {
             UpdateSubtotal();
@@ -111,9 +154,16 @@ namespace EVEMon.Sales
                 MineralPriceChanged(this, new EventArgs());
         }
 
+        /// <summary>
+        /// Handles the TextChanged event of the txtStock control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void txtStock_TextChanged(object sender, EventArgs e)
         {
             UpdateSubtotal();
         }
+
+        #endregion
     }
 }

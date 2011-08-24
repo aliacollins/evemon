@@ -10,7 +10,7 @@ namespace EVEMon.Sales
         /// <summary>
         /// Initializes a new instance of the <see cref="MineralParserException"/> class.
         /// </summary>
-        /// <param name="msg">The message.</param>
+        /// <param name="message">The message.</param>
         public MineralParserException(string message)
             : base(message)
         {

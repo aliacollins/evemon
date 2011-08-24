@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EVEMon.Common;
 
@@ -10,28 +11,25 @@ namespace EVEMon.Sales
     /// </summary>
     public static class MineralDataRequest
     {
+        private static readonly Dictionary<string, IMineralParser> s_parsers = new Dictionary<string, IMineralParser>();
+
         /// <summary>
         /// Initializes the <see cref="MineralDataRequest"/> class.
         /// </summary>
         static MineralDataRequest()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
-            foreach (Type tt in asm.GetTypes())
+            foreach (Type type in asm.GetTypes())
             {
-                foreach (
-                    DefaultMineralParserAttribute dmpa in
-                        tt.GetCustomAttributes(typeof(DefaultMineralParserAttribute), false))
+                foreach (DefaultMineralParserAttribute dmpa in type.GetCustomAttributes(
+                    typeof (DefaultMineralParserAttribute), false))
                 {
-                    IMineralParser mp = Activator.CreateInstance(tt) as IMineralParser;
+                    IMineralParser mp = Activator.CreateInstance(type) as IMineralParser;
                     if (mp != null)
-                    {
                         RegisterDataSource(dmpa.Name, mp);
-                    }
                 }
             }
         }
-
-        private static Dictionary<string, IMineralParser> s_parsers = new Dictionary<string, IMineralParser>();
 
         /// <summary>
         /// Gets the parsers.
@@ -39,13 +37,7 @@ namespace EVEMon.Sales
         /// <value>The parsers.</value>
         public static IEnumerable<Pair<string, IMineralParser>> Parsers
         {
-            get
-            {
-                foreach (KeyValuePair<string, IMineralParser> kvp in s_parsers)
-                {
-                    yield return new Pair<string, IMineralParser>(kvp.Key, kvp.Value);
-                }
-            }
+            get { return s_parsers.Select(kvp => new Pair<string, IMineralParser>(kvp.Key, kvp.Value)); }
         }
 
         /// <summary>
@@ -53,7 +45,7 @@ namespace EVEMon.Sales
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="parser">The parser.</param>
-        public static void RegisterDataSource(string name, IMineralParser parser)
+        private static void RegisterDataSource(string name, IMineralParser parser)
         {
             s_parsers.Add(name, parser);
         }
@@ -66,9 +58,7 @@ namespace EVEMon.Sales
         public static IEnumerable<Pair<string, Decimal>> GetPrices(string source)
         {
             if (!s_parsers.ContainsKey(source))
-            {
-                throw new ArgumentException("that is not a registered mineraldatasource", "source");
-            }
+                throw new ArgumentException("That is not a registered mineraldatasource.", "source");
 
             IMineralParser p = s_parsers[source];
             return p.GetPrices();
@@ -82,9 +72,7 @@ namespace EVEMon.Sales
         public static string GetCourtesyText(string source)
         {
             if (!s_parsers.ContainsKey(source))
-            {
-                throw new ArgumentException("that is not a registered mineraldatasource", "source");
-            }
+                throw new ArgumentException("That is not a registered mineraldatasource.", "source");
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyText;
@@ -98,9 +86,7 @@ namespace EVEMon.Sales
         public static string GetCourtesyUrl(string source)
         {
             if (!s_parsers.ContainsKey(source))
-            {
-                throw new ArgumentException("that is not a registered mineraldatasource", "source");
-            }
+                throw new ArgumentException("That is not a registered mineraldatasource.", "source");
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyUrl;
