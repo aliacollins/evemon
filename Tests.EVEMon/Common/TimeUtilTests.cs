@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
 using EVEMon.Common;
+using NUnit.Framework;
 
 namespace Tests.EVEMon.Common
 {
@@ -42,7 +39,7 @@ namespace Tests.EVEMon.Common
         {
             get
             {
-                return new DateTime(2010, 05, 07, 18, 23, 32);;
+                return new DateTime(2010, 05, 07, 18, 23, 32);
             }
         }
 
@@ -81,11 +78,8 @@ namespace Tests.EVEMon.Common
         public void ConvertInvalidCCPDateTimeToDateTime()
         {
             Assert.Throws<FormatException>
-                (delegate()
-                {
-                    InvalidCcpDateTime.TimeStringToDateTime();
-                }
-            );
+                (() => InvalidCcpDateTime.TimeStringToDateTime()
+                );
         }
 
         /// <summary>

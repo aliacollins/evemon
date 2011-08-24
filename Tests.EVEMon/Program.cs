@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Tests.EVEMon
@@ -11,11 +10,11 @@ namespace Tests.EVEMon
     internal static class Program
     {
         // Some constants we are going to use
-        private static readonly string[] m_programsPath = new string[2] { @"C:\Program Files\", @"C:\Program Files (x86)\" };
-        private static readonly string m_executableName = "nunit-x86.exe"; // must be the x86 version of nUnit because this is a x86 Project
-        private static readonly string m_searchPattern = "nunit *";
-        private static readonly string m_binFolder = "bin/net-2.0";
-        private static readonly string m_arguments = "/run \"{0}\"";
+        private static readonly string[] s_programsPath = new[] { @"C:\Program Files\", @"C:\Program Files (x86)\" };
+        private const string ExecutableName = "nunit-x86.exe"; // must be the x86 version of nUnit because this is a x86 Project
+        private const string SearchPattern = "nunit *";
+        private const string BinFolder = "bin/net-2.0";
+        private const string Arguments = "/run \"{0}\"";
 
         [STAThread]
         public static void Main()
@@ -26,16 +25,15 @@ namespace Tests.EVEMon
             {
                 // Could not any version of nUnit
                 Console.WriteLine("****");
-                Console.WriteLine("Did not find {0}, check it is installed.", m_executableName);
+                Console.WriteLine("Did not find {0}, check it is installed.", ExecutableName);
                 Console.ReadKey();
                 return;
             }
 
             // Great we found nUnit now lets start it
-            ProcessStartInfo psi = new ProcessStartInfo(executable);
-            psi.Arguments = String.Format(m_arguments, Assembly.GetEntryAssembly().Location);
-            Process proc = new Process();
-            proc.StartInfo = psi;
+            ProcessStartInfo psi = new ProcessStartInfo(executable)
+                                       {Arguments = String.Format(Arguments, Assembly.GetEntryAssembly().Location)};
+            Process proc = new Process {StartInfo = psi};
             proc.Start();
         }
 
@@ -45,8 +43,6 @@ namespace Tests.EVEMon
         /// <returns></returns>
         private static string GetNUnitExecutable()
         {
-            string executable;
-
             List<PathVersion> versions = GetAllNUnitInstalls();
 
             if (versions.IsEmpty())
@@ -56,9 +52,8 @@ namespace Tests.EVEMon
 
             string newestInstall = versions.Where(x => x.Version == verMax).First().Path;
 
-            string binPath = Path.Combine(newestInstall, m_binFolder);
-            executable = Path.Combine(binPath, m_executableName);
-            return executable;
+            string binPath = Path.Combine(newestInstall, BinFolder);
+            return Path.Combine(binPath, ExecutableName);
         }
 
         /// <summary>
@@ -67,53 +62,18 @@ namespace Tests.EVEMon
         /// <returns></returns>
         private static List<PathVersion> GetAllNUnitInstalls()
         {
-            List<PathVersion> versions = new List<PathVersion>();
+            return (s_programsPath.Where(Directory.Exists).Select(
+                path => Directory.GetDirectories(path, SearchPattern)).Where(
+                    matchingFolders => matchingFolders.Length != 0).SelectMany(
+                        matchingFolders => matchingFolders,
+                        (matchingFolders, matchingFolder) => new {matchingFolders, matchingFolder}).Select(
+                            folder => new {folder, fileName = Path.GetFileName(folder.matchingFolder)}).Where(
+                                folder => folder.fileName != null).Select(
+                                    fileName => new {fileName, versionName = fileName.fileName.Remove(0, 6)}).Select(
+                                        fileVersion => new {fileVersion, version = new Version(fileVersion.versionName)}).Select(
+                                            file => new PathVersion(file.fileVersion.fileName.folder.matchingFolder, file.version)))
+                .ToList();
 
-            foreach (var path in m_programsPath)
-            {
-                if (!Directory.Exists(path))
-                    continue;
-
-                var matchingFolders = Directory.GetDirectories(path, m_searchPattern);
-
-                if (matchingFolders.Length == 0)
-                    continue;
-
-                foreach (var folder in matchingFolders)
-                {
-                    string versionName = Path.GetFileName(folder).Remove(0, 6);
-
-                    Version version = new Version(versionName);
-
-                    versions.Add(new PathVersion(folder, version));
-                }
-            }
-
-            return versions;
-        }
-    }
-
-    /// <summary>
-    /// Relationship class for Paths and Versions.
-    /// </summary>
-    internal class PathVersion
-    {
-        internal PathVersion(String path, Version version)
-        {
-            Path = path;
-            Version = version;
-        }
-
-        internal String Path
-        {
-            get;
-            private set;
-        }
-
-        internal Version Version
-        {
-            get;
-            private set;
         }
     }
 }
