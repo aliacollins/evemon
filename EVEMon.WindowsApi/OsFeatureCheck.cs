@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.WindowsApi
 {
@@ -22,10 +20,7 @@ namespace EVEMon.WindowsApi
                 if (Environment.OSVersion.Platform == PlatformID.Win32S)
                     return true;
 
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    return true;
-
-                return false;
+                return Environment.OSVersion.Platform == PlatformID.Win32NT;
             }
         }
 
@@ -36,10 +31,7 @@ namespace EVEMon.WindowsApi
         {
             get
             {
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    return true;
-
-                return false;
+                return Environment.OSVersion.Platform == PlatformID.Win32NT;
             }
         }
 
@@ -59,10 +51,7 @@ namespace EVEMon.WindowsApi
                 if (winVer.Major < 6)
                     return false;
 
-                if (winVer.Major == 6 && winVer.Minor < 1)
-                    return false;
-
-                return true;
+                return winVer.Major != 6 || winVer.Minor >= 1;
             }
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Security;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace EVEMon.WindowsApi
 {
@@ -14,7 +12,7 @@ namespace EVEMon.WindowsApi
         /// <summary>
         /// Calls SetCurrentProcessExplicitAppUserModelID() to set the current process AppID.
         /// </summary>
-        /// <param name="appId">128 character or smaller Applcation ID.</param>
+        /// <param name="appId">128 character or smaller Application ID.</param>
         public static void SetProcessAppID(string appId)
         {
             if (!OsFeatureCheck.TaskbarSupported)
@@ -33,8 +31,8 @@ namespace EVEMon.WindowsApi
         /// <summary>
         /// http://msdn.microsoft.com/en-us/library/dd378422%28VS.85%29.aspx
         /// </summary>
-        /// <param name="AppID">AppID string</param>
+        /// <param name="appID">appID string</param>
         [DllImport("shell32.dll")]
-        internal static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
+        internal static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string appID);
     }
 }
