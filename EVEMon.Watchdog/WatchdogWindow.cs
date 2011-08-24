@@ -11,8 +11,8 @@ namespace EVEMon.Watchdog
     /// </summary>
     public partial class WatchdogWindow : Form
     {
-        private string[] m_args;
-        private bool m_executableLaunched = false;
+        private readonly string[] m_args;
+        private bool m_executableLaunched;
 
         /// <summary>
         /// Creates the Watchdog Window.
@@ -76,6 +76,9 @@ namespace EVEMon.Watchdog
             // Find the expected path for EVEMon.exe
             Assembly assembly = Assembly.GetEntryAssembly();
             string path = Path.GetDirectoryName(assembly.Location);
+            if (path == null)
+                return;
+
             string executable = Path.Combine(path, "EVEMon.exe");
 
             // If EVEMon.exe doesn't exist we don't have anything to do
@@ -92,17 +95,17 @@ namespace EVEMon.Watchdog
         /// <param name="arguments">Arguments to pass to the executable.</param>
         private void StartProcess(string executable, string[] arguments)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo()
-            {
-                FileName = executable,
-                Arguments = String.Join(" ", arguments),
-                UseShellExecute = false
-            };
+            ProcessStartInfo startInfo = new ProcessStartInfo
+                                             {
+                                                 FileName = executable,
+                                                 Arguments = String.Join(" ", arguments),
+                                                 UseShellExecute = false
+                                             };
 
-            Process evemonProc = new Process()
-            {
-                StartInfo = startInfo
-            };
+            Process evemonProc = new Process
+                                     {
+                                         StartInfo = startInfo
+                                     };
 
             evemonProc.Start();
         }
