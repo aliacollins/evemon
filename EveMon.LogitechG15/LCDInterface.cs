@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace lgLcdClassLibrary
 {
-    public delegate int ButtonDelegate(int device, int dwButtons, System.IntPtr pContext);
-    public delegate int ConfigureDelegate(int connection, System.IntPtr pContext);
+    public delegate int ButtonDelegate(int device, int dwButtons, IntPtr pContext);
+    public delegate int ConfigureDelegate(int connection, IntPtr pContext);
 
     /// <summary>
     /// Logitech LCD class.  This class simply exposes the constants
@@ -21,13 +21,13 @@ namespace lgLcdClassLibrary
     /// </summary>
     public static class LCDInterface
     {
-        private static bool s_LCDAvailable;
-        private static bool s_LCDInterfaceInitialized;
+        private static bool s_lcdAvailable;
+        private static bool s_lcdInterfaceInitialized;
         private static int s_result;
                 
-        private static lgLcdConnectContext s_connectContext = new lgLcdConnectContext();
-        private static lgLcdOpenContext s_openContext = new lgLcdOpenContext();
-        private static lgLcdBitmap160x43x1 s_lcdBitmap = new lgLcdBitmap160x43x1();
+        private static lgLcdConnectContext s_connectContext;
+        private static lgLcdOpenContext s_openContext;
+        private static lgLcdBitmap160x43x1 s_lcdBitmap;
         private static lgLcdOnConfigureCB s_configCallback;
         private static lgLcdOnSoftButtonsCB s_buttonCallback;
 
@@ -72,10 +72,10 @@ namespace lgLcdClassLibrary
         {
             try
             {
-                if (!s_LCDAvailable)
+                if (!s_lcdAvailable)
                 {
                     // Initialize interface to LCD library if needed
-                    if (!s_LCDInterfaceInitialized)
+                    if (!s_lcdInterfaceInitialized)
                     {
                         // Initialize the library
                         s_result = lgLcdInit();
@@ -94,7 +94,7 @@ namespace lgLcdClassLibrary
                         // Connect
                         s_result = lgLcdConnect(ref s_connectContext);
 
-                        s_LCDInterfaceInitialized = true;
+                        s_lcdInterfaceInitialized = true;
                     }
 
                     // Is an LCD available?
@@ -115,7 +115,7 @@ namespace lgLcdClassLibrary
                         s_result = lgLcdOpen(ref s_openContext);
 
                         if (s_result == 0)
-                            s_LCDAvailable = true;
+                            s_lcdAvailable = true;
                     }
                 }
             }
@@ -126,7 +126,7 @@ namespace lgLcdClassLibrary
                 Console.WriteLine(ex.Message);
             }
 
-            return s_LCDAvailable;
+            return s_lcdAvailable;
         }
 
         /// <summary>
@@ -146,16 +146,16 @@ namespace lgLcdClassLibrary
                 // Shutdown the library
                 s_result = lgLcdDeInit();
 
-                s_LCDAvailable = false;
-                s_LCDInterfaceInitialized = false;
+                s_lcdAvailable = false;
+                s_lcdInterfaceInitialized = false;
             }
             catch (Exception ex)
             {
                 // This might happen for a number of reasons .. most likely missing the lgLcd library (lgLcd.dll)
                 Console.Write("Close Caught Exception: ");
                 Console.WriteLine(ex.Message);
-                s_LCDAvailable = false;
-                s_LCDInterfaceInitialized = false;
+                s_lcdAvailable = false;
+                s_lcdInterfaceInitialized = false;
             }
 
             return true;
@@ -171,11 +171,11 @@ namespace lgLcdClassLibrary
         {
             try
             {
-                if (!s_LCDAvailable && s_LCDInterfaceInitialized)
+                if (!s_lcdAvailable && s_lcdInterfaceInitialized)
                     Open(s_connectContext.appFriendlyName, s_connectContext.isAutostartable);
 
                 // Display bitmap if LCD is found
-                if (s_LCDAvailable)
+                if (s_lcdAvailable)
                 {
                     s_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
                     s_lcdBitmap.pixels = samplebitmap;
@@ -186,7 +186,7 @@ namespace lgLcdClassLibrary
                     {
                         // Close the device
                         s_result = lgLcdClose(s_openContext.device);
-                        s_LCDAvailable = false;
+                        s_lcdAvailable = false;
                     }
                 }
             }
@@ -195,10 +195,10 @@ namespace lgLcdClassLibrary
                 // This might happen for a number of reasons .. most likely missing the lgLcd library (lgLcd.dll)
                 Console.Write("DisplayBitmap Caught Exception: ");
                 Console.WriteLine(ex.Message);
-                s_LCDAvailable = false;
+                s_lcdAvailable = false;
             }
 
-            return s_LCDAvailable;
+            return s_lcdAvailable;
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace lgLcdClassLibrary
             try
             {
                 // Display bitmap if LCD is found
-                if (s_LCDAvailable)
+                if (s_lcdAvailable)
                 {
                     s_result = lgLcdReadSoftButtons(s_openContext.device, out buttons);
 
@@ -220,7 +220,7 @@ namespace lgLcdClassLibrary
                     {
                         // Close the device
                         s_result = lgLcdClose(s_openContext.device);
-                        s_LCDAvailable = false;
+                        s_lcdAvailable = false;
                     }
                 }
             }
@@ -229,10 +229,10 @@ namespace lgLcdClassLibrary
                 // This might happen for a number of reasons .. most likely missing the lgLcd library (lgLcd.dll)
                 Console.Write("ReadSoftButtons Caught Exception: ");
                 Console.WriteLine(ex.Message);
-                s_LCDAvailable = false;
+                s_lcdAvailable = false;
             }
 
-            return s_LCDAvailable;
+            return s_lcdAvailable;
         }
         
         #endregion

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common;
@@ -17,8 +16,6 @@ namespace EVEMon.LogitechG15
         private static Lcdisplay s_lcd;
         private static bool s_running;
         private static bool s_startupError;
-
-        private static Object s_syncLock = new Object();
 
 
         #region Initialize
@@ -67,11 +64,11 @@ namespace EVEMon.LogitechG15
             }
 
             // Run
-            if (s_running)
-            {
-                UpdateG15Data();
-                s_lcd.Paint();
-            }
+            if (!s_running)
+                return;
+
+            UpdateG15Data();
+            s_lcd.Paint();
         }
 
         #endregion
@@ -90,7 +87,7 @@ namespace EVEMon.LogitechG15
                 s_lcd.SwitchState(LcdState.SplashScreen);
                 s_running = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 EveMonClient.Trace(ex.Message);
                 s_startupError = true;
@@ -132,24 +129,18 @@ namespace EVEMon.LogitechG15
             s_lcd.ShowEVETime = Settings.G15.ShowEVETime;
 
             // Characters names
-            List<CCPCharacter> lcdCharacters = new List<CCPCharacter>();
-
-            foreach (Character character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
-            {
-                lcdCharacters.Add(character as CCPCharacter);
-            }
-
-            s_lcd.Characters = lcdCharacters.ToArray();
+            s_lcd.Characters =
+                EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter).Select(character => character as CCPCharacter).
+                    ToArray();
 
             // First character to complete a skill
-            var nextChar = EveMonClient.MonitoredCharacters.Where(x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
+            Character nextChar = EveMonClient.MonitoredCharacters.Where(
+                x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
+
             if (nextChar != null)
-            {
-                s_lcd.FirstSkillCompletionRemaingTime = nextChar.CurrentlyTrainingSkill.RemainingTime;
                 s_lcd.FirstCharacterToCompleteSkill = nextChar;
-            }
         }
-        
+
         #endregion
 
 
@@ -160,7 +151,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void EveMonClient_TimerTick(object sender, EventArgs e)
+        private static void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateOnTimerTick();
         }
@@ -172,16 +163,16 @@ namespace EVEMon.LogitechG15
         /// <param name="e"></param>
         private static void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
-            if (s_running)
+            if (!s_running)
+                return;
+
+            if (e.CompletedSkills.Count == 1)
             {
-                if (e.CompletedSkills.Count == 1)
-                {
-                    s_lcd.SkillCompleted(e.Character);
-                }
-                else
-                {
-                    s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
-                }
+                s_lcd.SkillCompleted(e.Character);
+            }
+            else
+            {
+                s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
             }
         }
 
@@ -193,28 +184,28 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Occurs whenever the current character changed (because of a button press or cycling).
         /// </summary>
-        static void Lcdisplay_CurrentCharacterChanged(Character character)
+        private static void Lcdisplay_CurrentCharacterChanged(Character character)
         {
-            Dispatcher.Invoke(() => UpdateOnTimerTick());
+            Dispatcher.Invoke(UpdateOnTimerTick);
         }
 
         /// <summary>
         /// Occurs whenever a G15 button has been pressed which requires EVEMon to requery the API for the specified character.
         /// </summary>
-        static void Lcdisplay_APIUpdateRequested(Character character)
+        private static void Lcdisplay_APIUpdateRequested(Character character)
         {
             Dispatcher.Invoke(() =>
-                {
-                    var ccpCharacter = character as CCPCharacter;
-                    if (ccpCharacter != null)
-                        ccpCharacter.QueryMonitors.QueryEverything();
-                });
+                                  {
+                                      CCPCharacter ccpCharacter = character as CCPCharacter;
+                                      if (ccpCharacter != null)
+                                          ccpCharacter.QueryMonitors.QueryEverything();
+                                  });
         }
 
         /// <summary>
         /// Occurs whenever the auto cycle should change (because of a button press).
         /// </summary>
-        static void Lcdisplay_AutoCycleChanged(bool cycle)
+        private static void Lcdisplay_AutoCycleChanged(bool cycle)
         {
             Settings.G15.UseCharactersCycle = cycle;
         }
