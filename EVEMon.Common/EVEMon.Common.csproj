@@ -87,6 +87,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\NativeMethods.cs" />
+    <Compile Include="CustomEventArgs\AccountCreationEventArgs.cs" />
+    <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
+    <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\DataUpdateAvailableEventArgs.cs" />
+    <Compile Include="CustomEventArgs\EveServerEventArgs.cs" />
+    <Compile Include="CustomEventArgs\IndustryJobsEventArgs.cs" />
+    <Compile Include="CustomEventArgs\PlanChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\QueuedSkillsEventArgs.cs" />
+    <Compile Include="CustomEventArgs\UpdateAvailableEventArgs.cs" />
+    <Compile Include="CustomEventArgs\UriCharacterEventArgs.cs" />
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
@@ -96,7 +107,6 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
-    <Compile Include="EventArgs\BCAPIEventArgs.cs" />
     <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
@@ -200,14 +210,6 @@
     <Compile Include="EveMailBody.cs" />
     <Compile Include="EveMailMessage.cs" />
     <Compile Include="EveMailMessagesComparer.cs" />
-    <Compile Include="EventArgs\CharacterChangedEventArgs.cs" />
-    <Compile Include="EventArgs\CharacterIdentityChangedEventArgs.cs" />
-    <Compile Include="EventArgs\DataUpdateAvailableEventArgs.cs" />
-    <Compile Include="EventArgs\EveServerEventArgs.cs" />
-    <Compile Include="EventArgs\IndustryJobsEventArgs.cs" />
-    <Compile Include="EventArgs\PlanChangedEventArgs.cs" />
-    <Compile Include="EventArgs\QueuedSkillsEventArgs.cs" />
-    <Compile Include="EventArgs\UpdateAvailableEventArgs.cs" />
     <Compile Include="FontFactory.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="EveMailMessagesCollection.cs" />
@@ -376,7 +378,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountComparer.cs" />
-    <Compile Include="EventArgs\AccountCreationEventArgs.cs" />
     <Compile Include="AccountIgnoreList.cs" />
     <Compile Include="AccountQueryMonitor.cs" />
     <Compile Include="Attributes\EnforceUIThreadAffinity.cs" />
@@ -640,7 +641,6 @@
     <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
     <Compile Include="QueuedSkill.cs" />
-    <Compile Include="EventArgs\UriCharacterEventArgs.cs" />
     <None Include="Diagrams\Certificates.cd" />
     <None Include="Diagrams\Characters - accounting.cd" />
     <None Include="Diagrams\Settings.cd" />
