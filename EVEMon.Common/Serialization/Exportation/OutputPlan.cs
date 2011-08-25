@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Serialization.Exportation
@@ -10,10 +7,6 @@ namespace EVEMon.Common.Serialization.Exportation
     public sealed class OutputPlan : SerializablePlan
     {
         [XmlAttribute("revision")]
-        public int Revision
-        {
-            get;
-            set;
-        }
+        public int Revision { get; set; }
     }
 }

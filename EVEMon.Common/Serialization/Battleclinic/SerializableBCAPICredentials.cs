@@ -5,6 +5,6 @@ namespace EVEMon.Common.Serialization.BattleClinic
     public sealed class SerializableBCAPICredentials
     {
         [XmlElement("userID")]
-        public uint UserID;
+        public uint UserID { get; set; }
     }
 }

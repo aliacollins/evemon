@@ -6,10 +6,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
     public sealed class SerializableFilesListItem
     {
         [XmlAttribute("id")]
-        public int FileID;
+        public int FileID { get; set; }
 
         [XmlAttribute("name")]
-        public string FileName;
+        public string FileName { get; set; }
 
         [XmlAttribute("updated")]
         public string FileUpdatedXml
@@ -23,12 +23,12 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
 
         [XmlAttribute("revision")]
-        public int FileRevision;
+        public int FileRevision { get; set; }
 
         [XmlText]
-        public string FileContent;
+        public string FileContent { get; set; }
 
         [XmlIgnore]
-        public DateTime FileUpdated;
+        public DateTime FileUpdated { get; set; }
     }
 }

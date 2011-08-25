@@ -7,6 +7,6 @@ namespace EVEMon.Common.Serialization.BattleClinic
     {
         [XmlArray("files")]
         [XmlArrayItem("file")]
-        public List<SerializableFilesListItem> Files;
+        public List<SerializableFilesListItem> Files { get; set; }
     }
 }

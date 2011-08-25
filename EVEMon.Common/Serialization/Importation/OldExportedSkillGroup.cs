@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Importation
@@ -15,29 +14,18 @@ namespace EVEMon.Common.Serialization.Importation
     [XmlRoot("skillGroup")]
     public sealed class OldExportedSkillGroup
     {
-        private string m_name = String.Empty;
-        private int m_id;
-        private List<OldExportedSkill> m_skills = new List<OldExportedSkill>();
+        public OldExportedSkillGroup()
+        {
+            Skills = new List<OldExportedSkill>();
+        }
 
         [XmlAttribute("groupName")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("groupID")]
-        public int Id
-        {
-            get { return m_id; }
-            set { m_id = value; }
-        }
+        public int Id { get; set; }
 
         [XmlElement("skill")]
-        public List<OldExportedSkill> Skills
-        {
-            get { return m_skills; }
-            set { m_skills = value; }
-        }
+        public List<OldExportedSkill> Skills { get; set; }
     }
 }

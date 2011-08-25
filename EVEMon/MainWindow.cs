@@ -47,7 +47,7 @@ namespace EVEMon
         private bool m_isUpdatingTabOrder;
         private bool m_isUpdateEventsSubscribed;
 
-        private readonly List<Notification> m_popupNotifications = new List<Notification>();
+        private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
         private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
 
@@ -537,7 +537,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_NotificationSent(object sender, Notification e)
+        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
             // Updates the notifications list of the main window
             UpdateNotifications();
@@ -545,14 +545,14 @@ namespace EVEMon
             // Takes care of the tooltip
             NotificationCategorySettings catSettings = Settings.Notifications.Categories[e.Category];
             ToolTipNotificationBehaviour behaviour = catSettings.ToolTipBehaviour;
-            if (e.UserValidated || behaviour == ToolTipNotificationBehaviour.Never)
+            if (behaviour == ToolTipNotificationBehaviour.Never)
                 return;
 
             // Add and reorder by account and character
             m_popupNotifications.Add(e);
 
             // Group by account
-            IGrouping<long, Notification>[] groups = m_popupNotifications.GroupBy(x =>
+            IGrouping<long, NotificationEventArgs>[] groups = m_popupNotifications.GroupBy(x =>
                                                                                       {
                                                                                           if (x.Sender == null)
                                                                                               return 0;
@@ -569,8 +569,8 @@ namespace EVEMon
                                                                                       }).ToArray();
 
             // Add every group, order by character's name, accounts being on top
-            List<Notification> newList = new List<Notification>();
-            foreach (IGrouping<long, Notification> group in groups)
+            List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
+            foreach (IGrouping<long, NotificationEventArgs> group in groups)
             {
                 newList.AddRange(group.OrderBy(x => x.SenderCharacter == null ? "" : x.SenderCharacter.Name));
             }
@@ -623,7 +623,7 @@ namespace EVEMon
             StringBuilder builder = new StringBuilder();
 
             // We build the tooltip notification text
-            foreach (Notification notification in m_popupNotifications)
+            foreach (NotificationEventArgs notification in m_popupNotifications)
             {
                 // Tooltip notification text space is limited 
                 // so we apply restrains in how many notifications will be shown
@@ -1942,7 +1942,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Notification notification = new Notification(NotificationCategory.TestNofitication, null)
+            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.TestNofitication, null)
                                             {
                                                 Priority = NotificationPriority.Information,
                                                 Behaviour = NotificationBehaviour.Overwrite,

@@ -8,38 +8,18 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableImplantSet
     {
         [XmlElement("intelligenceBonus")]
-        public SerializableImplant Intelligence
-        {
-            get;
-            set;
-        }
+        public SerializableImplant Intelligence { get; set; }
 
         [XmlElement("memoryBonus")]
-        public SerializableImplant Memory
-        {
-            get;
-            set;
-        }
+        public SerializableImplant Memory { get; set; }
 
         [XmlElement("willpowerBonus")]
-        public SerializableImplant Willpower
-        {
-            get;
-            set;
-        }
+        public SerializableImplant Willpower { get; set; }
 
         [XmlElement("perceptionBonus")]
-        public SerializableImplant Perception
-        {
-            get;
-            set;
-        }
+        public SerializableImplant Perception { get; set; }
 
         [XmlElement("charismaBonus")]
-        public SerializableImplant Charisma
-        {
-            get;
-            set;
-        }
+        public SerializableImplant Charisma { get; set; }
     }
 }

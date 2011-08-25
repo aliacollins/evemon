@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common.Scheduling
 {
 
     /// <summary>
-    /// Describes the frequency at which a schedule entry occurs
+    /// Describes the frequency at which a schedule entry occurs.
     /// </summary>
     public enum RecurringFrequency
     {
@@ -18,7 +16,7 @@ namespace EVEMon.Common.Scheduling
     }
 
     /// <summary>
-    /// Describes the options of a schedule entry
+    /// Describes the options of a schedule entry.
     /// </summary>
     [Flags]
     public enum ScheduleEntryOptions
@@ -39,7 +37,7 @@ namespace EVEMon.Common.Scheduling
     }
 
     /// <summary>
-    /// Describes the behaviour when a month is overflowed
+    /// Describes the behaviour when a month is overflowed.
     /// </summary>
     public enum MonthlyOverflowResolution
     {
@@ -52,7 +50,7 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         Drop,
         /// <summary>
-        /// Apris 31 becomes May 1
+        /// April 31 becomes May 1
         /// </summary>
         OverlapForward
     }

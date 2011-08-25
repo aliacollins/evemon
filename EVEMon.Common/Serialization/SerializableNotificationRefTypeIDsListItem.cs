@@ -5,17 +5,9 @@ namespace EVEMon.Common.Serialization
     public sealed class SerializableNotificationRefTypeIDsListItem
     {
         [XmlAttribute("refTypeID")]
-        public int TypeID
-        {
-            get;
-            set;
-        }
+        public int TypeID { get; set; }
 
         [XmlAttribute("refTypeName")]
-        public string TypeName
-        {
-            get;
-            set;
-        }
+        public string TypeName { get; set; }
     }
 }

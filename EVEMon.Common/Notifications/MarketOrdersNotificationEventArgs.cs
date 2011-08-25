@@ -3,35 +3,24 @@ using System.Collections.Generic;
 
 namespace EVEMon.Common.Notifications
 {
-    public sealed class MarketOrdersNotification : Notification
+    public sealed class MarketOrdersNotificationEventArgs : NotificationEventArgs
     {
-        private readonly List<MarketOrder> m_orders;
-
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="sender"></param>
-        public MarketOrdersNotification(Object sender, IEnumerable<MarketOrder> orders)
+        /// <param name="sender">The sender.</param>
+        /// <param name="orders">The orders.</param>
+        public MarketOrdersNotificationEventArgs(Object sender, IEnumerable<MarketOrder> orders)
             : base(NotificationCategory.MarketOrdersEnding, sender)
         {
-            m_orders = new List<MarketOrder>(orders);
+            Orders = new List<MarketOrder>(orders);
             UpdateDescription();
         }
 
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public IEnumerable<MarketOrder> Orders
-        {
-            get 
-            {
-                foreach (var order in m_orders)
-                {
-                    yield return order;
-                }
-            }
-        }
+        public List<MarketOrder> Orders { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.
@@ -45,10 +34,9 @@ namespace EVEMon.Common.Notifications
         /// Enqueue the orders from the given notification at the end of this notification.
         /// </summary>
         /// <param name="other"></param>
-        public override void Append(Notification other)
+        public override void Append(NotificationEventArgs other)
         {
-            var orders = ((MarketOrdersNotification)other).m_orders;
-            m_orders.AddRange(orders);
+            Orders.AddRange(((MarketOrdersNotificationEventArgs) other).Orders);
             UpdateDescription();
         }
 
@@ -57,7 +45,8 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            m_description = String.Format(CultureConstants.DefaultCulture, "{0} market order{1} canceled, expired or fulfilled.", m_orders.Count, (m_orders.Count > 1 ? "s" : String.Empty));
+            Description = String.Format(CultureConstants.DefaultCulture, "{0} market order{1} canceled, expired or fulfilled.",
+                                        Orders.Count, (Orders.Count > 1 ? "s" : String.Empty));
         }
     }
 }

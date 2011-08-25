@@ -9,17 +9,9 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableAPIMethod
     {
         [XmlAttribute("code")]
-        public APIMethods Method
-        {
-            get;
-            set;
-        }
+        public APIMethods Method { get; set; }
 
         [XmlAttribute("path")]
-        public string Path
-        {
-            get;
-            set;
-        }
+        public string Path { get; set; }
     }
 }

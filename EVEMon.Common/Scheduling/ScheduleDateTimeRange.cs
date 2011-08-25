@@ -1,28 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common.Scheduling
 {
     public class ScheduleDateTimeRange
     {
-        private DateTime m_from;
-        private DateTime m_to;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleDateTimeRange"/> class.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
         public ScheduleDateTimeRange(DateTime start, DateTime end)
         {
-            m_from = start;
-            m_to = end;
+            From = start;
+            To = end;
         }
 
-        public DateTime From
-        {
-            get { return m_from; }
-        }
+        /// <summary>
+        /// Gets or sets from.
+        /// </summary>
+        /// <value>From.</value>
+        public DateTime From { get; private set; }
 
-        public DateTime To
-        {
-            get { return m_to; }
-        }
+        /// <summary>
+        /// Gets or sets to.
+        /// </summary>
+        /// <value>To.</value>
+        public DateTime To { get; private set; }
     }
 }

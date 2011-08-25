@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -7,5 +9,9 @@ namespace EVEMon.Common.Serialization.API
         {
             GroupType = "NPC Corporations";
         }
+
+        [XmlArray("NPCCorporations")]
+        [XmlArrayItem("NPCCorporation")]
+        public List<SerializableNPCCorporationStanding> NPCCorporationStandings { get; set; }
     }
 }

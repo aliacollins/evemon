@@ -6,17 +6,9 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableNotificationTextsListItem
     {
         [XmlAttribute("notificationID")]
-        public long NotificationID
-        {
-            get;
-            set;
-        }
+        public long NotificationID { get; set; }
 
         [XmlText]
-        public string NotificationText
-        {
-            get;
-            set;
-        }
+        public string NotificationText { get; set; }
     }
 }

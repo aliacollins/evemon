@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
@@ -18,151 +19,96 @@ namespace EVEMon.Common.Serialization.Importation
     public sealed class OldExportedCharacter
     {
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("characterID")]
-        public int CharacterId
-        {
-            get;
-            set;
-        }
+        public int CharacterId { get; set; }
 
         [XmlElement("race")]
-        public string Race
-        {
-            get;
-            set;
-        }
+        public string Race { get; set; }
 
         [XmlElement("bloodLine")]
-        public string BloodLine
-        {
-            get;
-            set;
-        }
+        public string BloodLine { get; set; }
 
         [XmlElement("gender")]
-        public string Gender
-        {
-            get;
-            set;
-        }
+        public string Gender { get; set; }
 
         [XmlElement("corporationName")]
-        public string CorpName
-        {
-            get;
-            set;
-        }
+        public string CorpName { get; set; }
 
         [XmlElement("cloneName")]
-        public string CloneName
-        {
-            get;
-            set;
-        }
+        public string CloneName { get; set; }
 
         [XmlElement("cloneSkillPoints")]
-        public int CloneSkillPoints
-        {
-            get;
-            set;
-        }
+        public int CloneSkillPoints { get; set; }
 
         [XmlElement("balance")]
-        public Decimal Balance
-        {
-            get;
-            set;
-        }
+        public Decimal Balance { get; set; }
 
         [XmlElement("attributes")]
-        public OldAttributes Attributes
-        {
-            get;
-            set;
-        }
+        public OldAttributes Attributes { get; set; }
 
         [XmlElement("attributeEnhancers")]
-        public OldExportedAttributeEnhancers AttributeEnhancers
-        {
-            get;
-            set;
-        }
+        public OldExportedAttributeEnhancers AttributeEnhancers { get; set; }
 
         [XmlArray("skills")]
         [XmlArrayItem("skillGroup")]
-        public List<OldExportedSkillGroup> SkillGroups
-        {
-            get;
-            set;
-        }
+        public List<OldExportedSkillGroup> SkillGroups { get; set; }
 
         [XmlArray("certificates")]
-        public List<OldExportedCertificate> Certificates
-        {
-            get;
-            set;
-        }
+        public List<OldExportedCertificate> Certificates { get; set; }
 
+        /// <summary>
+        /// Toes the serializable CCP character.
+        /// </summary>
+        /// <returns></returns>
         public SerializableCCPCharacter ToSerializableCCPCharacter()
         {
-            var ccpCharacter = new SerializableCCPCharacter();
-            ccpCharacter.Name = Name;
-            ccpCharacter.ID = CharacterId;
-            ccpCharacter.Race = Race;
-            ccpCharacter.BloodLine = BloodLine;
-            ccpCharacter.Gender = Gender;
-            ccpCharacter.CorporationName = CorpName;
-            ccpCharacter.CorporationID = 0;
-            ccpCharacter.CloneName = CloneName;
-            ccpCharacter.CloneSkillPoints = CloneSkillPoints;
-            ccpCharacter.Balance = Balance;
-            ccpCharacter.Attributes = Attributes.ToSerializableAttributes();
-            ccpCharacter.ImplantSets.API = AttributeEnhancers.ToSerializableImplantSet();
-            ccpCharacter.Skills = CreateSerializableCharacterSkillList();
-            ccpCharacter.Certificates = CreateSerializableCharacterCertificateList();
-
-            return ccpCharacter;
+            return new SerializableCCPCharacter
+                       {
+                           Name = Name,
+                           ID = CharacterId,
+                           Race = Race,
+                           BloodLine = BloodLine,
+                           Gender = Gender,
+                           CorporationName = CorpName,
+                           CorporationID = 0,
+                           CloneName = CloneName,
+                           CloneSkillPoints = CloneSkillPoints,
+                           Balance = Balance,
+                           Attributes = Attributes.ToSerializableAttributes(),
+                           ImplantSets = {API = AttributeEnhancers.ToSerializableImplantSet()},
+                           Skills = CreateSerializableCharacterSkillList(),
+                           Certificates = CreateSerializableCharacterCertificateList()
+                       };
         }
 
+        /// <summary>
+        /// Creates the serializable character skill list.
+        /// </summary>
+        /// <returns></returns>
         private List<SerializableCharacterSkill> CreateSerializableCharacterSkillList()
         {
-            var ccpSkills = new List<SerializableCharacterSkill>();
-
-            foreach (var group in SkillGroups)
-            {
-                foreach (var skill in group.Skills)
-                {
-                    var ccpSkill = new SerializableCharacterSkill();
-                    ccpSkill.ID = skill.Id;
-                    ccpSkill.IsKnown = true;
-                    ccpSkill.Level = skill.Level;
-                    ccpSkill.OwnsBook = true;
-                    ccpSkill.Skillpoints = skill.SkillPoints;
-                    ccpSkills.Add(ccpSkill);
-                }
-            }
-
-            return ccpSkills;
+            return (SkillGroups.SelectMany(group => group.Skills,
+                                           (group, skill) => new SerializableCharacterSkill
+                                                                 {
+                                                                     ID = skill.Id,
+                                                                     IsKnown = true,
+                                                                     Level = skill.Level,
+                                                                     OwnsBook = true,
+                                                                     Skillpoints = skill.SkillPoints
+                                                                 })).ToList();
         }
-        
+
+        /// <summary>
+        /// Creates the serializable character certificate list.
+        /// </summary>
+        /// <returns></returns>
         private List<SerializableCharacterCertificate> CreateSerializableCharacterCertificateList()
         {
-            var ccpCertificates = new List<SerializableCharacterCertificate>();
-
-            foreach (var certificate in Certificates)
-            {
-                var ccpCertificate = new SerializableCharacterCertificate();
-                ccpCertificate.CertificateID = certificate.CertificateID;
-                ccpCertificates.Add(ccpCertificate);
-            }
-
-            return ccpCertificates;
+            return
+                Certificates.Select(
+                    certificate => new SerializableCharacterCertificate {CertificateID = certificate.CertificateID}).ToList();
         }
     }
 }

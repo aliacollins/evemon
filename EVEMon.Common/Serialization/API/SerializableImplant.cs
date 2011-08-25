@@ -8,17 +8,9 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableImplant
     {
         [XmlElement("augmentatorName")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("augmentatorValue")]
-        public int Amount
-        {
-            get;
-            set;
-        }
+        public int Amount { get; set; }
     }
 }

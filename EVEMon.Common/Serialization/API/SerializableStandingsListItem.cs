@@ -14,6 +14,6 @@ namespace EVEMon.Common.Serialization.API
         public double StandingValue { get; set; }
 
         [XmlIgnore]
-        public string GroupType { get; set; }
+        public string GroupType { get; protected set; }
     }
 }

@@ -10,17 +10,9 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("messages")]
         [XmlArrayItem("message")]
-        public List<SerializableMailBodiesListItem> Bodies
-        {
-            get;
-            set;
-        }
+        public List<SerializableMailBodiesListItem> Bodies { get; set; }
 
         [XmlElement("missingMessageIDs")]
-        public string MissingMessageIDs
-        {
-            get;
-            set;
-        }
+        public string MissingMessageIDs { get; set; }
     }
 }

@@ -10,10 +10,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("notifications")]
         [XmlArrayItem("notification")]
-        public List<SerializableNotificationsListItem> Notifications
-        {
-            get;
-            set;
-        }
+        public List<SerializableNotificationsListItem> Notifications { get; set; }
     }
 }

@@ -7,11 +7,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("characters")]
         [XmlArrayItem("character")]
-        public List<SerializableCharacterNameListItem> Entities
-        {
-            get;
-            set;
-        }
-
+        public List<SerializableCharacterNameListItem> Entities { get; set; }
     }
 }

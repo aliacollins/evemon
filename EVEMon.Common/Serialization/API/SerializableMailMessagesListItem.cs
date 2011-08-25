@@ -14,18 +14,10 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("messageID")]
-        public long MessageID
-        {
-            get;
-            set;
-        }
+        public long MessageID { get; set; }
 
         [XmlAttribute("senderID")]
-        public long SenderID
-        {
-            get;
-            set;
-        }
+        public long SenderID { get; set; }
 
         [XmlAttribute("sentDate")]
         public string SentDateXml
@@ -39,18 +31,10 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("title")]
-        public string Title
-        {
-            get;
-            set;
-        }
+        public string Title { get; set; }
 
         [XmlAttribute("toCorpOrAllianceID")]
-        public string ToCorpOrAllianceID
-        {
-            get;
-            set;
-        }
+        public string ToCorpOrAllianceID { get; set; }
 
         [XmlAttribute("toCharacterIDs")]
         public string ToCharacterIDsXml
@@ -75,24 +59,12 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlIgnore]
-        public DateTime SentDate
-        {
-            get;
-            set;
-        }
+        public DateTime SentDate { get; set; }
 
         [XmlIgnore]
-        public List<string> ToCharacterIDs
-        {
-            get;
-            set;
-        }
+        public List<string> ToCharacterIDs { get; set; }
 
         [XmlIgnore]
-        public List<string> ToListID
-        {
-            get;
-            set;
-        }
+        public List<string> ToListID { get; set; }
     }
 }

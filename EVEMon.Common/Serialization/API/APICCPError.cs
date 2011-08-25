@@ -8,7 +8,6 @@ namespace EVEMon.Common.Serialization.API
     [XmlRoot("error")]
     public sealed class APICCPError
     {
-        [XmlAttribute("code")]
         /// <summary>
         /// If this is non 0 then an error has occurred
         /// </summary>
@@ -17,13 +16,13 @@ namespace EVEMon.Common.Serialization.API
         /// <value>202</value> Invalid API Key
         /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
         /// This is the variable that needs checking to see if the thing has worked.
+        [XmlAttribute("code")]
         public int ErrorCode
         {
             get;
             set;
         }
 
-        [XmlText]
         /// <summary>
         /// If this is non 0 length or not null then an error has occurred and will this will be the only value in the entire class other than "current time
         /// </summary>
@@ -32,6 +31,7 @@ namespace EVEMon.Common.Serialization.API
         /// <value>"Cached API key authentication failure"</value>
         /// <value>"Character does not belong to account"</value>
         /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
+        [XmlText]
         public string ErrorMessage
         {
             get;

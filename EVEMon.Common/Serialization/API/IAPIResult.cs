@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.API
         bool EVEBackendDatabaseDisabled { get; }
 
         /// <summary>
-        /// Gets the type of the error or <see cref="APIErrors.None"/> when there was no error.
+        /// Gets the type of the error or <see cref="APIEnumerations.APIErrors.None"/> when there was no error.
         /// </summary>
         /// <value>The type of the error.</value>
         APIEnumerations.APIErrors ErrorType { get; }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Serialization.Settings
 {
@@ -15,72 +13,46 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("id")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlAttribute("key")]
-        public string Key
-        {
-            get;
-            set;
-        }
+        public string Key { get; set; }
 
         [XmlAttribute("keyLevel")]
-        public CredentialsLevel KeyLevel
-        {
-            get;
-            set;
-        }
+        public CredentialsLevel KeyLevel { get; set; }
 
         [XmlElement("paidUntil")]
-        public DateTime PaidUntil
-        {
-            get;
-            set;
-        }
+        public DateTime PaidUntil { get; set; }
 
         [XmlElement("createDate")]
-        public DateTime CreateDate
-        {
-            get;
-            set;
-        }
+        public DateTime CreateDate { get; set; }
 
         [XmlElement("lastAccountStatusUpdate")]
-        public DateTime LastAccountStatusUpdate
-        {
-            get;
-            set;
-        }
+        public DateTime LastAccountStatusUpdate { get; set; }
 
         [XmlElement("lastCharacterListUpdate")]
-        public DateTime LastCharacterListUpdate
-        {
-            get;
-            set;
-        }
+        public DateTime LastCharacterListUpdate { get; set; }
 
         [XmlElement("ignored")]
-        public List<SerializableCharacterIdentity> IgnoreList
-        {
-            get;
-            set;
-        }
+        public List<SerializableCharacterIdentity> IgnoreList { get; set; }
 
-        internal object Clone()
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
+        internal SerializableAccount Clone()
         {
-            var clone = new SerializableAccount();
-            clone.ID = this.ID;
-            clone.Key = this.Key;
-            clone.KeyLevel = this.KeyLevel;
-            clone.PaidUntil = this.PaidUntil;
-            clone.CreateDate = this.CreateDate;
-            clone.LastAccountStatusUpdate = this.LastAccountStatusUpdate;
-            clone.LastCharacterListUpdate = this.LastCharacterListUpdate;
-            clone.IgnoreList.AddRange(this.IgnoreList.Select(x => x.Clone()));
+            SerializableAccount clone = new SerializableAccount
+                                            {
+                                                ID = ID,
+                                                Key = Key,
+                                                KeyLevel = KeyLevel,
+                                                PaidUntil = PaidUntil,
+                                                CreateDate = CreateDate,
+                                                LastAccountStatusUpdate = LastAccountStatusUpdate,
+                                                LastCharacterListUpdate = LastCharacterListUpdate
+                                            };
+            clone.IgnoreList.AddRange(IgnoreList.Select(x => x.Clone()));
             return clone;
         }
     }

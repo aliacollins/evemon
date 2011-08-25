@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
 {
@@ -9,22 +8,18 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableCharacterIdentity
     {
         [XmlElement("id")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlElement("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal SerializableCharacterIdentity Clone()
         {
-            return (SerializableCharacterIdentity)this.MemberwiseClone();
+            return (SerializableCharacterIdentity) MemberwiseClone();
         }
     }
 }

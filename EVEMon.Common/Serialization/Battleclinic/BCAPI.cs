@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Windows.Forms;
 using System.Xml;
@@ -11,9 +12,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
 {
     public static class BCAPI
     {
-        private static List<BCAPIMethod> s_methods = new List<BCAPIMethod>(BCAPIMethod.CreateDefaultSet());
+        private static readonly List<BCAPIMethod> s_methods = new List<BCAPIMethod>(BCAPIMethod.CreateDefaultSet());
         private static string s_apiKey;
-        private static bool m_queryPending;
+        private static bool s_queryPending;
 
 
         #region Properties
@@ -49,7 +50,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             get
             {
-                var settingsFileContent = File.ReadAllText(EveMonClient.SettingsFileNameFullPath);
+                string settingsFileContent = File.ReadAllText(EveMonClient.SettingsFileNameFullPath);
                 return HttpUtility.UrlEncode(settingsFileContent);
             }
         }
@@ -83,16 +84,14 @@ namespace EVEMon.Common.Serialization.BattleClinic
             BCAPISettings.Default.Upgrade();
 
             // Delete all old settings files
-            foreach (string directory in Directory.GetDirectories(configFileParentParentDir))
+            foreach (string directory in Directory.GetDirectories(configFileParentParentDir).Where(
+                directory => directory != configFileParentDir))
             {
-                if (directory == configFileParentDir)
-                    continue;
-
                 // Delete the folder recursively
-                Directory.Delete(directory, true);                        
+                Directory.Delete(directory, true);
             }
         }
-        
+
 
         /// <summary>
         /// Returns the request method.
@@ -100,10 +99,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="requestMethod">A BCAPIMethods enumeration member specfying the method for which the URL is required.</param>
         public static BCAPIMethod GetMethod(BCAPIMethods requestMethod)
         {
-            foreach (BCAPIMethod method in s_methods)
+            foreach (BCAPIMethod method in s_methods.Where(method => method.Method == requestMethod))
             {
-                if (method.Method == requestMethod)
-                    return method;
+                return method;
             }
 
             throw new InvalidOperationException();
@@ -114,15 +112,15 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="requestMethod">A BCAPIMethods enumeration member specfying the method for which the URL is required.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        public static string GetMethodUrl(BCAPIMethods requestMethod)
+        private static string GetMethodUrl(BCAPIMethods requestMethod)
         {
             // Gets the proper data
-            var url = NetworkConstants.BCAPIBase;
-            var path = GetMethod(requestMethod).Path;
+            string url = NetworkConstants.BCAPIBase;
+            string path = GetMethod(requestMethod).Path;
 
             // Build the uri
-            var baseUri = new Uri(url);
-            var uriBuilder = new UriBuilder(baseUri);
+            Uri baseUri = new Uri(url);
+            UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
             return uriBuilder.Uri.ToString();
         }
@@ -134,10 +132,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="apiKey">The API key.</param>
         public static void CheckAPICredentials(uint userID, string apiKey)
         {
-            if (m_queryPending)
+            if (s_queryPending)
                 return;
 
-            m_queryPending = true;
+            s_queryPending = true;
             IsAuthenticated = false;
 
             s_apiKey = apiKey;
@@ -209,7 +207,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}",
                 userID, apiKey, BCAPISettings.Default.BCApplicationKey));
 
-            QueryMethodAsync<SerializableBCAPICredentials>(BCAPIMethods.CheckCredentials, postData, callback);
+            QueryMethodAsync(BCAPIMethods.CheckCredentials, postData, callback);
         }
 
         /// <summary>
@@ -222,7 +220,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey, BCAPISettings.Default.BCApplicationKey,
                 EveMonClient.SettingsFileName, SettingsFileContent));
 
-            QueryMethodAsync<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData, callback);
+            QueryMethodAsync(BCAPIMethods.FileSave, postData, callback);
         }
 
         /// <summary>
@@ -235,7 +233,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                 BCAPISettings.Default.BCApplicationKey, EveMonClient.SettingsFileName));
 
-            QueryMethodAsync<SerializableBCAPIFiles>(BCAPIMethods.FileGetByName, postData, callback);
+            QueryMethodAsync(BCAPIMethods.FileGetByName, postData, callback);
         }
 
         #endregion
@@ -265,10 +263,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             // Check callback not null
             if (callback == null)
-                throw new ArgumentNullException("The callback cannot be null.", "callback");
+                throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             string url = GetMethodUrl(method);
-            Util.DownloadXMLAsync<BCAPIResult<T>>(url, postData, callback);
+            Util.DownloadXMLAsync(url, postData, callback);
         }
 
         /// <summary>
@@ -278,7 +276,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="errorMessage">The error message.</param>
         private static void OnCredentialsQueried(BCAPIResult<SerializableBCAPICredentials> result, string errorMessage)
         {
-            m_queryPending = false;
+            s_queryPending = false;
 
             if (!String.IsNullOrEmpty(errorMessage))
             {
@@ -339,12 +337,12 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 saveFileDialog.FilterIndex = 1;
 
                 // Save current directory
-                var currentDirectory = Directory.GetCurrentDirectory();
+                string currentDirectory = Directory.GetCurrentDirectory();
 
                 // Prompts the user for a location
                 saveFileDialog.FileName = String.Format("{0}.bak", settingsFile.FileName);
-                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
-                var result = saveFileDialog.ShowDialog();
+                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                DialogResult result = saveFileDialog.ShowDialog();
 
                 // Restore current directory
                 Directory.SetCurrentDirectory(currentDirectory);

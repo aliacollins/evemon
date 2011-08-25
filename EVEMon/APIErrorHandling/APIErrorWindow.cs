@@ -20,7 +20,7 @@ namespace EVEMon.ApiErrorHandling
     /// </summary>
     public partial class APIErrorWindow : EVEMonForm
     {
-        private APIErrorNotification m_notification;
+        private APIErrorNotificationEventArgs m_notification;
         private ApiErrorTroubleshooter m_troubleshooter;
         private bool m_troubleshooterUsed;
 
@@ -36,7 +36,7 @@ namespace EVEMon.ApiErrorHandling
         /// Gets or sets the notification for this error.
         /// </summary>
         [Browsable(false)]
-        public APIErrorNotification Notification
+        public APIErrorNotificationEventArgs NotificationEventArgs
         {
             get { return m_notification; }
             set
@@ -141,7 +141,7 @@ namespace EVEMon.ApiErrorHandling
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>String representing the error.</returns>
-        private static string GetErrorLabelText(APIErrorNotification value)
+        private static string GetErrorLabelText(APIErrorNotificationEventArgs value)
         {
             if (value == null)
                 return "No error selected.";
@@ -226,9 +226,9 @@ namespace EVEMon.ApiErrorHandling
 
             builder.AppendFormat("EVEMon {0} API Error:{1}", version, Environment.NewLine);
             builder.AppendLine();
-            builder.AppendLine(GetErrorLabelText(Notification));
+            builder.AppendLine(GetErrorLabelText(NotificationEventArgs));
             builder.AppendLine();
-            builder.AppendLine(GetXmlData(Notification.Result));
+            builder.AppendLine(GetXmlData(NotificationEventArgs.Result));
 
             if (m_troubleshooter != null)
             {

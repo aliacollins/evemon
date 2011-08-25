@@ -5,17 +5,9 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableMailingListsListItem
     {
         [XmlAttribute("listID")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlAttribute("displayName")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
     }
 }

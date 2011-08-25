@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Scheduling;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -14,13 +11,9 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlArray("entries")]
-        [XmlArrayItem("simple", typeof(SerializableSimpleScheduleEntry))]
-        [XmlArrayItem("recurring", typeof(SerializableRecurringScheduleEntry))]
-        public List<SerializableScheduleEntry> Entries
-        {
-            get;
-            set;
-        }
+        [XmlArrayItem("simple", typeof (SerializableSimpleScheduleEntry))]
+        [XmlArrayItem("recurring", typeof (SerializableRecurringScheduleEntry))]
+        public List<SerializableScheduleEntry> Entries { get; set; }
     }
 
     public class SerializableScheduleEntry

@@ -8,24 +8,12 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAccountBalanceListItem
     {
         [XmlAttribute("accountID")]
-        public long AccountID
-        {
-            get;
-            set;
-        }
+        public long AccountID { get; set; }
 
         [XmlAttribute("accountKey")]
-        public long AccountKey
-        {
-            get;
-            set;
-        }
+        public long AccountKey { get; set; }
 
         [XmlAttribute("balance")]
-        public decimal Balance
-        {
-            get;
-            set;
-        }
+        public decimal Balance { get; set; }
     }
 }

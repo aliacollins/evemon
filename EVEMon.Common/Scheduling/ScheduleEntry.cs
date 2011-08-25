@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Scheduling
@@ -10,53 +9,40 @@ namespace EVEMon.Common.Scheduling
     /// </summary>
     public abstract class ScheduleEntry
     {
-        protected string m_title = String.Empty;
-        protected DateTime m_startDate = DateTime.MinValue;
-        protected DateTime m_endDate = DateTime.MinValue;
-        protected ScheduleEntryOptions m_options = ScheduleEntryOptions.None;
+        protected ScheduleEntry()
+        {
+            Title = String.Empty;
+            Options = ScheduleEntryOptions.None;
+            EndDate = DateTime.MinValue;
+            StartDate = DateTime.MinValue;
+        }
 
         /// <summary>
         /// Gets or sets the start date for the validity of this schedule entry
         /// </summary>
-        public DateTime StartDate
-        {
-            get { return m_startDate; }
-            set { m_startDate = value; }
-        }
+        public DateTime StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end date for the validity of this schedule entry
         /// </summary>
-        public DateTime EndDate
-        {
-            get { return m_endDate; }
-            set { m_endDate = value; }
-        }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets this entry's options
         /// </summary>
-        public ScheduleEntryOptions Options
-        {
-            get { return m_options; }
-            set { m_options = value; }
-        }
+        public ScheduleEntryOptions Options { get; set; }
 
         /// <summary>
         /// Gets or sets this entry's title
         /// </summary>
-        public string Title
-        {
-            get { return m_title; }
-            set { m_title = value; }
-        }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets true if it is expired.
         /// </summary>
         public bool Expired
         {
-            get { return (DateTime.UtcNow > m_endDate.ToUniversalTime()); }
+            get { return (DateTime.UtcNow > EndDate.ToUniversalTime()); }
         }
 
         /// <summary>
@@ -66,11 +52,7 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public bool Silent(DateTime timeToTest)
         {
-            if ((m_options & ScheduleEntryOptions.Quiet) != 0)
-            {
-                return Clash(timeToTest);
-            }
-            return false;
+            return (Options & ScheduleEntryOptions.Quiet) != 0 && Clash(timeToTest);
         }
 
         /// <summary>
@@ -80,11 +62,7 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public bool Blocking(DateTime timeToTest)
         {
-            if ((m_options & ScheduleEntryOptions.Blocking) != 0)
-            {
-                return Clash(timeToTest);
-            }
-            return false;
+            return (Options & ScheduleEntryOptions.Blocking) != 0 && Clash(timeToTest);
         }
 
         /// <summary>
@@ -128,9 +106,7 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public override string ToString()
         {
-            return m_title;
+            return Title;
         }
     }
-
-
 }

@@ -22,7 +22,7 @@ namespace EVEMon
         private readonly Color m_warningColor = Color.LightGoldenrodYellow;
         private readonly Color m_errorColor = Color.LavenderBlush;
         private readonly Color m_infoColor = Color.AliceBlue;
-        private readonly List<Notification> m_notifications = new List<Notification>();
+        private readonly List<NotificationEventArgs> m_notifications = new List<NotificationEventArgs>();
 
         private const int TextLeft = 20;
         private const int LeftPadding = 2;
@@ -60,8 +60,8 @@ namespace EVEMon
             if (!DesignMode && !this.IsDesignModeHosted())
                 return;
 
-            List<Notification> list = new List<Notification>();
-            Notification notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+            List<NotificationEventArgs> list = new List<NotificationEventArgs>();
+            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
                                             {
                                                 Priority = NotificationPriority.Information,
                                                 Description = "Some information"
@@ -69,11 +69,11 @@ namespace EVEMon
                 
             list.Add(notification);
 
-            notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+            notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
                                {Priority = NotificationPriority.Warning, Description = "Some warning"};
             list.Add(notification);
 
-            notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+            notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
                                {Priority = NotificationPriority.Error, Description = "Some error"};
             list.Add(notification);
 
@@ -83,7 +83,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the displayed notifications.
         /// </summary>
-        public IEnumerable<Notification> Notifications
+        public IEnumerable<NotificationEventArgs> Notifications
         {
             get { return m_notifications; }
             set
@@ -91,7 +91,7 @@ namespace EVEMon
                 m_notifications.Clear();
                 if (value != null)
                 {
-                    IEnumerable<Notification> notificationsToAdd = value.Where(x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
+                    IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
                     m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int) x.Priority));
                 }
                 UpdateContent();
@@ -128,7 +128,7 @@ namespace EVEMon
             float fontSize = font.Size;
 
             // Check for magnifier icon
-            Notification itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
+            NotificationEventArgs itemWithDetails = listBox.Items.OfType<NotificationEventArgs>().FirstOrDefault(x => x.HasDetails);
             int magnifierIconSize = itemWithDetails != null ? IconMagnifierPositionFromRight : 0;
 
             // Calculates the available text space
@@ -168,7 +168,7 @@ namespace EVEMon
             try
             {
                 listBox.Items.Clear();
-                foreach (Notification notification in m_notifications)
+                foreach (NotificationEventArgs notification in m_notifications)
                 {
                     listBox.Items.Add(notification);
                 }
@@ -205,7 +205,7 @@ namespace EVEMon
 
             Graphics g = e.Graphics;
 
-            Notification notification = listBox.Items[e.Index] as Notification;
+            NotificationEventArgs notification = listBox.Items[e.Index] as NotificationEventArgs;
             if (notification == null)
                 return;
 
@@ -289,7 +289,7 @@ namespace EVEMon
                 if (oldHoveredIndex != m_hoveredIndex)
                 {
                     listBox.Invalidate();
-                    DisplayTooltip((Notification)listBox.Items[i]);
+                    DisplayTooltip((NotificationEventArgs)listBox.Items[i]);
                 }
                 return;
             }
@@ -311,7 +311,7 @@ namespace EVEMon
                 if (!rect.Contains(e.Location))
                     continue;
 
-                Notification notification = listBox.Items[i] as Notification;
+                NotificationEventArgs notification = listBox.Items[i] as NotificationEventArgs;
 
                 // Did he click on the "magnifier" icon ?
                 if (notification != null && notification.HasDetails)
@@ -340,36 +340,36 @@ namespace EVEMon
         /// Show the details for the given notification.
         /// </summary>
         /// <param name="notification"></param>
-        private static void ShowDetails(Notification notification)
+        private static void ShowDetails(NotificationEventArgs notification)
         {
             // API error ?
-            if (notification is APIErrorNotification)
+            if (notification is APIErrorNotificationEventArgs)
             {
                 APIErrorWindow window = WindowsFactory<APIErrorWindow>.ShowUnique();
-                window.Notification = (APIErrorNotification)notification;
+                window.NotificationEventArgs = (APIErrorNotificationEventArgs)notification;
                 return;
             }
 
             // Skills Completion ?
-            if (notification is SkillCompletionNotification)
+            if (notification is SkillCompletionNotificationEventArgs)
             {
                 SkillCompletionWindow window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
-                window.Notification = (SkillCompletionNotification)notification;
+                window.NotificationEventArgs = (SkillCompletionNotificationEventArgs)notification;
                 return;
             }
 
             // Claimable certificate ?
-            if (notification is ClaimableCertificateNotification)
+            if (notification is ClaimableCertificateNotificationEventArgs)
             {
                 ClaimableCertificateWindow window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
-                window.Notification = (ClaimableCertificateNotification)notification;
+                window.NotificationEventArgs = (ClaimableCertificateNotificationEventArgs)notification;
                 return;
             }
 
             // Market orders ?
-            if (notification is MarketOrdersNotification)
+            if (notification is MarketOrdersNotificationEventArgs)
             {
-                MarketOrdersNotification ordersNotification = (MarketOrdersNotification)notification;
+                MarketOrdersNotificationEventArgs ordersNotification = (MarketOrdersNotificationEventArgs)notification;
                 MarketOrdersWindow window = WindowsFactory<MarketOrdersWindow>.ShowUnique();
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
@@ -379,9 +379,9 @@ namespace EVEMon
             }
 
             // Industry jobs ?
-            if (notification is IndustryJobsNotification)
+            if (notification is IndustryJobsNotificationEventArgs)
             {
-                IndustryJobsNotification jobsNotification = (IndustryJobsNotification)notification;
+                IndustryJobsNotificationEventArgs jobsNotification = (IndustryJobsNotificationEventArgs)notification;
                 IndustryJobsWindow window = WindowsFactory<IndustryJobsWindow>.ShowUnique();
                 window.Jobs = jobsNotification.Jobs;
                 window.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
@@ -394,7 +394,7 @@ namespace EVEMon
         /// <summary>
         /// Displays the tooltip for the hovered item
         /// </summary>
-        private void DisplayTooltip(Notification notification)
+        private void DisplayTooltip(NotificationEventArgs notification)
         {
             // No details ?
             if (!notification.HasDetails)
@@ -404,20 +404,20 @@ namespace EVEMon
             }
 
             // API error ?
-            if (notification is APIErrorNotification)
+            if (notification is APIErrorNotificationEventArgs)
             {
-                APIErrorNotification errorNotification = (APIErrorNotification)notification;
+                APIErrorNotificationEventArgs errorNotification = (APIErrorNotificationEventArgs)notification;
                 toolTip.SetToolTip(listBox, errorNotification.Result.ErrorMessage);
                 toolTip.Active = true;
                 return;
             }
 
             // Skills Completion ?
-            if (notification is SkillCompletionNotification)
+            if (notification is SkillCompletionNotificationEventArgs)
             {
-                SkillCompletionNotification skillNotifications = (SkillCompletionNotification)notification;
+                SkillCompletionNotificationEventArgs skillNotifications = (SkillCompletionNotificationEventArgs)notification;
                 StringBuilder builder = new StringBuilder();
-                foreach (QueuedSkill skill in skillNotifications.Skills.Reverse())
+                foreach (QueuedSkill skill in skillNotifications.Skills)
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture,
                         "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine();
@@ -428,9 +428,9 @@ namespace EVEMon
             }
 
             // Claimable certificate ?
-            if (notification is ClaimableCertificateNotification)
+            if (notification is ClaimableCertificateNotificationEventArgs)
             {
-                ClaimableCertificateNotification certNotifications = (ClaimableCertificateNotification)notification;
+                ClaimableCertificateNotificationEventArgs certNotifications = (ClaimableCertificateNotificationEventArgs)notification;
                 StringBuilder builder = new StringBuilder();
                 foreach (Certificate cert in certNotifications.Certificates)
                 {
@@ -443,9 +443,9 @@ namespace EVEMon
             }
 
             // Market orders ?
-            if (notification is MarketOrdersNotification)
+            if (notification is MarketOrdersNotificationEventArgs)
             {
-                MarketOrdersNotification ordersNotification = (MarketOrdersNotification)notification;
+                MarketOrdersNotificationEventArgs ordersNotification = (MarketOrdersNotificationEventArgs)notification;
 
                 StringBuilder builder = new StringBuilder();
                 foreach (IGrouping<OrderState, MarketOrder> orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
@@ -474,9 +474,9 @@ namespace EVEMon
             }
 
             // Industry jobs ?
-            if (notification is IndustryJobsNotification)
+            if (notification is IndustryJobsNotificationEventArgs)
             {
-                IndustryJobsNotification jobsNotification = (IndustryJobsNotification)notification;
+                IndustryJobsNotificationEventArgs jobsNotification = (IndustryJobsNotificationEventArgs)notification;
 
                 StringBuilder builder = new StringBuilder();
                 foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))

@@ -11,17 +11,9 @@ namespace EVEMon.Common.Serialization.Settings
     public class SerializableSettingsCharacter : SerializableCharacterSheetBase
     {
         [XmlAttribute("guid")]
-        public Guid Guid
-        {
-            get;
-            set;
-        }
+        public Guid Guid { get; set; }
 
         [XmlElement("implants")]
-        public SerializableImplantSetCollection ImplantSets
-        {
-            get;
-            set;
-        }
+        public SerializableImplantSetCollection ImplantSets { get; set; }
     }
 }

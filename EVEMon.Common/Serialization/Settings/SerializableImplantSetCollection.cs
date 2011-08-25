@@ -16,32 +16,15 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlElement("api")]
-        public SerializableSettingsImplantSet API
-        {
-            get;
-            set;
-        }
+        public SerializableSettingsImplantSet API { get; set; }
 
         [XmlElement("oldApi")]
-        public SerializableSettingsImplantSet OldAPI
-        {
-            get;
-            set;
-        }
+        public SerializableSettingsImplantSet OldAPI { get; set; }
 
         [XmlElement("customSet")]
-        public List<SerializableSettingsImplantSet> CustomSets
-        {
-            get;
-            set;
-        }
+        public List<SerializableSettingsImplantSet> CustomSets { get; set; }
 
         [XmlElement("selectedIndex")]
-        public int SelectedIndex
-        {
-            get;
-            set;
-        }
+        public int SelectedIndex { get; set; }
     }
-
 }

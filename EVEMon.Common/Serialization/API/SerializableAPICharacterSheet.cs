@@ -8,10 +8,6 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPICharacterSheet : SerializableCharacterSheetBase
     {
         [XmlElement("attributeEnhancers")]
-        public SerializableImplantSet Implants
-        {
-            get;
-            set;
-        }
+        public SerializableImplantSet Implants { get; set; }
     }
 }

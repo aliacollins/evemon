@@ -7,35 +7,24 @@ namespace EVEMon.Common.Notifications
     /// <summary>
     /// Provides notification services for IndustryJobs.
     /// </summary>
-    public sealed class IndustryJobsNotification : Notification
+    public sealed class IndustryJobsNotificationEventArgs : NotificationEventArgs
     {
-        private readonly List<IndustryJob> m_jobs;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="jobs">The jobs.</param>
-        public IndustryJobsNotification(Object sender, IEnumerable<IndustryJob> jobs)
+        public IndustryJobsNotificationEventArgs(Object sender, IEnumerable<IndustryJob> jobs)
             : base(NotificationCategory.IndustryJobsCompletion, sender)
         {
-            m_jobs = new List<IndustryJob>(jobs);
+            Jobs = new List<IndustryJob>(jobs);
             UpdateDescription();
         }
 
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public IEnumerable<IndustryJob> Jobs
-        {
-            get
-            {
-                foreach (var job in m_jobs)
-                {
-                    yield return job;
-                }
-            }
-        }
+        public List<IndustryJob> Jobs { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.
@@ -49,10 +38,9 @@ namespace EVEMon.Common.Notifications
         /// Enqueue the jobs from the given notification at the end of this notification.
         /// </summary>
         /// <param name="other"></param>
-        public override void Append(Notification other)
+        public override void Append(NotificationEventArgs other)
         {
-            var jobs = ((IndustryJobsNotification)other).m_jobs;
-            m_jobs.AddRange(jobs);
+            Jobs.AddRange(((IndustryJobsNotificationEventArgs) other).Jobs);
             UpdateDescription();
         }
 
@@ -61,7 +49,8 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            m_description = String.Format(CultureConstants.DefaultCulture, "{0} industry job{1} completed.", m_jobs.Count, (m_jobs.Count > 1 ? "s" : String.Empty));
+            Description = String.Format(CultureConstants.DefaultCulture, "{0} industry job{1} completed.", Jobs.Count,
+                                        (Jobs.Count > 1 ? "s" : String.Empty));
         }
     }
 }

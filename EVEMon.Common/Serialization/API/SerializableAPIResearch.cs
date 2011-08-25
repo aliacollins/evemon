@@ -10,10 +10,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("research")]
         [XmlArrayItem("points")]
-        public List<SerializableResearchListItem> ResearchPoints
-        {
-            get;
-            set;
-        }
+        public List<SerializableResearchListItem> ResearchPoints { get; set; }
     }
 }

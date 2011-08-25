@@ -193,7 +193,7 @@ namespace EVEMon.SkillPlanner
                 ListViewItem lvi = new ListViewItem(loadout.LoadoutName);
                 lvi.Text = loadout.LoadoutName;
                 lvi.SubItems.Add(loadout.Author);
-                lvi.SubItems.Add(loadout.rating.ToString());
+                lvi.SubItems.Add(loadout.Rating.ToString());
                 lvi.SubItems.Add(loadout.SubmissionDate.ToString());
                 lvi.Tag = loadout;
                 lvLoadouts.Items.Add(lvi);
@@ -661,11 +661,11 @@ namespace EVEMon.SkillPlanner
                         compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text);
                         break;
                     case 2:  // Rating
-                        if (sla.rating < slb.rating)
+                        if (sla.Rating < slb.Rating)
                         {
                             compareResult = -1;
                         }
-                        else if (sla.rating > slb.rating)
+                        else if (sla.Rating > slb.Rating)
                         {
                             compareResult = 1;
                         }

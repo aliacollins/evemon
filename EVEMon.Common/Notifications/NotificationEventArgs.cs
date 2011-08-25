@@ -5,24 +5,17 @@ namespace EVEMon.Common.Notifications
     /// <summary>
     /// Represents an argument for a notification invalidation.
     /// </summary>
-    public class Notification : EventArgs
+    public class NotificationEventArgs : EventArgs
     {
-        protected readonly NotificationCategory m_category;
-        protected readonly Object m_sender;
-
-        protected NotificationBehaviour m_behaviour;
-        protected NotificationPriority m_priority;
-        protected string m_description;
-
-        protected bool m_userValidated;
-
+        private readonly NotificationCategory m_category;
+        private readonly Object m_sender;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="category"></param>
         /// <param name="sender"></param>
-        public Notification(NotificationCategory category, Object sender)
+        public NotificationEventArgs(NotificationCategory category, Object sender)
         {
             m_category = category;
             m_sender = sender;
@@ -63,38 +56,17 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-            set { m_description = value; }
-        }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the priority for this notification.
         /// </summary>
-        public NotificationPriority Priority
-        {
-            get { return m_priority; }
-            set { m_priority = value; }
-        }
+        public NotificationPriority Priority { get; set; }
 
         /// <summary>
         /// Gets or sets the behaviour of this notification regarding other notifications with the same validation key.
         /// </summary>
-        public NotificationBehaviour Behaviour
-        {
-            get { return m_behaviour; }
-            set { m_behaviour = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets true whether the user checked that notification.
-        /// </summary>
-        public bool UserValidated
-        {
-            get { return m_userValidated; }
-            set { m_userValidated = value; }
-        }
+        public NotificationBehaviour Behaviour { get; set; }
 
         /// <summary>
         /// Gets true if the notification has details.
@@ -107,7 +79,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets a key, identifying a category/sender pair, that will be used for invalidation.
         /// </summary>
-        public virtual long InvalidationKey
+        public long InvalidationKey
         {
             get { return GetKey(m_sender, m_category); }
         }
@@ -120,16 +92,16 @@ namespace EVEMon.Common.Notifications
         /// <returns></returns>
         public static long GetKey(Object sender, NotificationCategory category)
         {
-            var left = ((long)category) << 32;
-            var right = (sender == null ? 0 : sender.GetHashCode());
+            long left = ((long)category) << 32;
+            int right = (sender == null ? 0 : sender.GetHashCode());
             return left | unchecked((uint)right);
         }
 
         /// <summary>
         /// Appends a given notification to this one.
         /// </summary>
-        /// <param name="?"></param>
-        public virtual void Append(Notification other)
+        /// <param name="other"></param>
+        public virtual void Append(NotificationEventArgs other)
         {
             // Must have to be implemented by inheritors.
             throw new NotImplementedException();
@@ -141,7 +113,7 @@ namespace EVEMon.Common.Notifications
         /// <returns></returns>
         public override string ToString()
         {
-            return m_description;
+            return Description;
         }
     }
 }

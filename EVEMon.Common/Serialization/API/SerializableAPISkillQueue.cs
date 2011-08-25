@@ -11,13 +11,11 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("queue")]
         [XmlArrayItem("skill")]
-        public List<SerializableQueuedSkill> Queue
-        {
-            get;
-            set;
-        }
+        public List<SerializableQueuedSkill> Queue { get; set; }
+
 
         #region ISynchronizableWithLocalClock Members
+
         /// <summary>
         /// Synchronizes the stored times with local clock
         /// </summary>
@@ -29,6 +27,7 @@ namespace EVEMon.Common.Serialization.API
                 synch.SynchronizeWithLocalClock(drift);
             }
         }
+
         #endregion
     }
 }

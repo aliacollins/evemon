@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -16,64 +15,32 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("skillID")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlAttribute("skill")]
-        public string SkillName
-        {
-            get;
-            set;
-        }
+        public string SkillName { get; set; }
 
         [XmlAttribute("level")]
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; set; }
 
         [XmlAttribute("priority")]
-        public int Priority
-        {
-            get;
-            set;
-        }
+        public int Priority { get; set; }
 
         [XmlAttribute("type")]
-        public PlanEntryType Type
-        {
-            get;
-            set;
-        }
+        public PlanEntryType Type { get; set; }
 
         [XmlElement("notes")]
-        public string Notes
-        {
-            get;
-            set;
-        }
+        public string Notes { get; set; }
 
         [XmlElement("group")]
-        public List<string> PlanGroups
-        {
-            get;
-            set;
-        }
+        public List<string> PlanGroups { get; set; }
 
         [XmlElement("remapping")]
-        public SerializableRemappingPoint Remapping
-        {
-            get;
-            set;
-        }
+        public SerializableRemappingPoint Remapping { get; set; }
 
         internal SerializablePlanEntry Clone()
         {
-            var clone = (SerializablePlanEntry)MemberwiseClone();
+            SerializablePlanEntry clone = (SerializablePlanEntry) MemberwiseClone();
             clone.PlanGroups = new List<string>(PlanGroups);
             clone.Remapping = Remapping.Clone();
             return clone;

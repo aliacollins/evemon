@@ -10,10 +10,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("outposts")]
         [XmlArrayItem("outpost")]
-        public List<SerializableOutpost> Outposts
-        {
-            get;
-            set;
-        }
+        public List<SerializableOutpost> Outposts { get; set; }
     }
 }

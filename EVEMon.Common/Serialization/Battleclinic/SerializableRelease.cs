@@ -6,46 +6,22 @@ namespace EVEMon.Common.Serialization.BattleClinic
     public sealed class SerializableRelease
     {
         [XmlElement("date")]
-        public string Date
-        {
-            get;
-            set;
-        }
+        public string Date { get; set; }
 
         [XmlElement("version")]
-        public string Version
-        {
-            get;
-            set;
-        }
+        public string Version { get; set; }
 
         [XmlElement("url")]
-        public string TopicUrl
-        {
-            get;
-            set;
-        }
+        public string TopicUrl { get; set; }
 
         [XmlElement("autopatchurl")]
-        public string Url
-        {
-            get;
-            set;
-        }
+        public string Url { get; set; }
 
         [XmlElement("autopatchargs")]
-        public string InstallerArgs
-        {
-            get;
-            set;
-        }
+        public string InstallerArgs { get; set; }
 
         [XmlElement("additionalargs")]
-        public string AdditionalArgs
-        {
-            get;
-            set;
-        }
+        public string AdditionalArgs { get; set; }
 
         [XmlElement("message")]
         public XmlCDataSection MessageXml
@@ -55,10 +31,6 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
 
         [XmlIgnore]
-        public string Message
-        {
-            get;
-            set;
-        }
+        public string Message { get; set; }
     }
 }

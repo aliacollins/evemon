@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.Settings
+namespace EVEMon.Common.Serialization
 {
     [XmlRoot("EveIDToName")]
     public sealed class SerializableEveIDToName
@@ -13,10 +13,6 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("entities")]
         [XmlArrayItem("entity")]
-        public List<SerializableEveIDToNameListItem> Entities
-        {
-            get;
-            set;
-        }
+        public List<SerializableEveIDToNameListItem> Entities { get; set; }
     }
 }

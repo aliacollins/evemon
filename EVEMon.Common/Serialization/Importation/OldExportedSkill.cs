@@ -14,38 +14,18 @@ namespace EVEMon.Common.Serialization.Importation
     public sealed class OldExportedSkill
     {
         [XmlAttribute("typeName")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("typeID")]
-        public int Id
-        {
-            get;
-            set;
-        }
+        public int Id { get; set; }
 
         [XmlElement("skillpoints")]
-        public int SkillPoints
-        {
-            get;
-            set;
-        }
+        public int SkillPoints { get; set; }
 
         [XmlElement("level")]
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; set; }
 
         [XmlElement("lastconfirmedlevel")]
-        public int LastConfirmedLevel
-        {
-            get;
-            set;
-        }
+        public int LastConfirmedLevel { get; set; }
     }
 }

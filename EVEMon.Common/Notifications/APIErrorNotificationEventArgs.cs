@@ -3,28 +3,23 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Notifications
 {
-    public sealed class APIErrorNotification : Notification
+    public sealed class APIErrorNotificationEventArgs : NotificationEventArgs
     {
-        private readonly IAPIResult m_result;
-
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="sender"></param>
-        public APIErrorNotification(Object sender, IAPIResult result)
+        /// <param name="sender">The sender.</param>
+        /// <param name="result">The result.</param>
+        public APIErrorNotificationEventArgs(Object sender, IAPIResult result)
             : base(NotificationCategory.QueryingError, sender)
         {
-            m_result = result;
+            Result = result;
         }
 
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public IAPIResult Result
-        {
-            get { return m_result; }
-        }
+        public IAPIResult Result { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.

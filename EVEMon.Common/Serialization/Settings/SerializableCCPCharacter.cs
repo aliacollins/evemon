@@ -22,65 +22,33 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("queue")]
         [XmlArrayItem("skill")]
-        public List<SerializableQueuedSkill> SkillQueue
-        {
-            get;
-            set;
-        }
+        public List<SerializableQueuedSkill> SkillQueue { get; set; }
 
         [XmlArray("standings")]
         [XmlArrayItem("standing")]
-        public List<SerializableStanding> Standings
-        {
-            get;
-            set;
-        }
+        public List<SerializableStanding> Standings { get; set; }
 
         [XmlArray("marketOrders")]
-        [XmlArrayItem("buy", typeof(SerializableBuyOrder))]
-        [XmlArrayItem("sell", typeof(SerializableSellOrder))]
-        public List<SerializableOrderBase> MarketOrders
-        {
-            get;
-            set;
-        }
+        [XmlArrayItem("buy", typeof (SerializableBuyOrder))]
+        [XmlArrayItem("sell", typeof (SerializableSellOrder))]
+        public List<SerializableOrderBase> MarketOrders { get; set; }
 
         [XmlArray("industryJobs")]
         [XmlArrayItem("job")]
-        public List<SerializableJob> IndustryJobs
-        {
-            get;
-            set;
-        }
+        public List<SerializableJob> IndustryJobs { get; set; }
 
         [XmlArray("researchPoints")]
         [XmlArrayItem("researchPoint")]
-        public List<SerializableResearchPoint> ResearchPoints
-        {
-            get;
-            set;
-        }
+        public List<SerializableResearchPoint> ResearchPoints { get; set; }
 
         [XmlElement("eveMailMessages")]
-        public string EveMailMessagesIDs
-        {
-            get;
-            set;
-        }
+        public string EveMailMessagesIDs { get; set; }
 
         [XmlElement("eveNotifications")]
-        public string EveNotificationsIDs
-        {
-            get;
-            set;
-        }
+        public string EveNotificationsIDs { get; set; }
 
         [XmlArray("lastUpdates")]
         [XmlArrayItem("apiUpdate")]
-        public List<SerializableAPIUpdate> LastUpdates
-        {
-            get;
-            set;
-        }
+        public List<SerializableAPIUpdate> LastUpdates { get; set; }
     }
 }

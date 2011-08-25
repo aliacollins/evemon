@@ -19,46 +19,28 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("owner")]
-        public Guid Owner
-        {
-            get;
-            set;
-        }
+        public Guid Owner { get; set; }
 
         [XmlElement("sorting")]
-        public PlanSorting SortingPreferences
-        {
-            get;
-            set;
-        }
+        public PlanSorting SortingPreferences { get; set; }
 
         [XmlElement("entry")]
-        public List<SerializablePlanEntry> Entries
-        {
-            get;
-            set;
-        }
+        public List<SerializablePlanEntry> Entries { get; set; }
 
         [XmlElement("invalidEntry")]
-        public List<SerializableInvalidPlanEntry> InvalidEntries
-        {
-            get;
-            set;
-        }
-  
+        public List<SerializableInvalidPlanEntry> InvalidEntries { get; set; }
+
         internal SerializablePlan Clone()
         {
-            var clone = new SerializablePlan();
-            clone.Name = Name;
-            clone.Owner = Owner;
-            clone.SortingPreferences = SortingPreferences.Clone();
+            SerializablePlan clone = new SerializablePlan
+                                         {
+                                             Name = Name,
+                                             Owner = Owner,
+                                             SortingPreferences = SortingPreferences.Clone()
+                                         };
             clone.Entries.AddRange(Entries.Select(x => x.Clone()));
             clone.InvalidEntries.AddRange(InvalidEntries.Select(x => x.Clone()));
             return clone;

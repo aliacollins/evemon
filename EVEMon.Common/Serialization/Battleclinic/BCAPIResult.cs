@@ -20,14 +20,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
 
         [XmlElement("result")]
-        public T Result;
+        public T Result { get; set; }
 
         [XmlElement("error")]
-        public BCAPIError Error
-        {
-            get;
-            set;
-        }
+        public BCAPIError Error { get; set; }
 
         [XmlIgnore]
         public DateTime CacheExpires;

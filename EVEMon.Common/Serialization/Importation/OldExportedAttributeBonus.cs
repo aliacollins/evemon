@@ -12,30 +12,13 @@ namespace EVEMon.Common.Serialization.Importation
     /// </remarks>
     public sealed class OldExportedAttributeBonus
     {
-        private string m_name;
-        private int m_amount;
-
         [XmlElement("augmentatorName")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public string Name { get; set; }
 
         [XmlElement("augmentatorValue")]
-        public int Amount
-        {
-            get { return m_amount; }
-            set { m_amount = value; }
-        }
-
-        private bool m_manual = false;
+        public int Amount { get; set; }
 
         [XmlAttribute]
-        public bool Manual
-        {
-            get { return m_manual; }
-            set { m_manual = value; }
-        }
+        public bool Manual { get; set; }
     }
 }

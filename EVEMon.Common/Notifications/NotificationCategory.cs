@@ -3,7 +3,7 @@
 namespace EVEMon.Common.Notifications
 {
     /// <summary>
-    /// Represents the categories a <see cref="Notification"/> can have.
+    /// Represents the categories a <see cref="NotificationEventArgs"/> can have.
     /// </summary>
     public enum NotificationCategory
     {

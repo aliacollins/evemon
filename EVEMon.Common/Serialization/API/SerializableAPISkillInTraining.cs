@@ -9,60 +9,28 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPISkillInTraining : ISynchronizableWithLocalClock
     {
         [XmlElement("currentTQTime")]
-        public string CurrentTQTime
-        {
-            get;
-            set;
-        }
+        public string CurrentTQTime { get; set; }
 
         [XmlElement("trainingEndTime")]
-        public string TrainingEndTime
-        {
-            get;
-            set;
-        }
+        public string TrainingEndTime { get; set; }
 
         [XmlElement("trainingStartTime")]
-        public string TrainingStartTime
-        {
-            get;
-            set;
-        }
+        public string TrainingStartTime { get; set; }
 
         [XmlElement("trainingTypeID")]
-        public short TrainingTypeID
-        {
-            get;
-            set;
-        }
+        public short TrainingTypeID { get; set; }
 
         [XmlElement("trainingStartSP")]
-        public int TrainingStartSP
-        {
-            get;
-            set;
-        }
+        public int TrainingStartSP { get; set; }
 
         [XmlElement("trainingDestinationSP")]
-        public int TrainingDestinationSP
-        {
-            get;
-            set;
-        }
+        public int TrainingDestinationSP { get; set; }
 
         [XmlElement("trainingToLevel")]
-        public byte TrainingToLevel
-        {
-            get;
-            set;
-        }
+        public byte TrainingToLevel { get; set; }
 
         [XmlElement("skillInTraining")]
-        public byte SkillInTraining
-        {
-            get;
-            set;
-        }
+        public byte SkillInTraining { get; set; }
 
         [XmlIgnore]
         public DateTime CurrentServerTime
@@ -84,6 +52,7 @@ namespace EVEMon.Common.Serialization.API
             get { return TrainingEndTime.TimeStringToDateTime(); }
             set { TrainingEndTime = value.DateTimeToTimeString(); }
         }
+
 
         #region ISynchronizableWithLocalClock Members
 

@@ -48,10 +48,13 @@ namespace EVEMon.Common.Serialization.Importation
             set;
         }
 
+        /// <summary>
+        /// Returns a serializable implant set.
+        /// </summary>
+        /// <returns></returns>
         internal SerializableSettingsImplantSet ToSerializableImplantSet()
         {
-            var ccpImplantSet = new SerializableSettingsImplantSet();
-            return ccpImplantSet;
+            return new SerializableSettingsImplantSet();
         }
     }
 }

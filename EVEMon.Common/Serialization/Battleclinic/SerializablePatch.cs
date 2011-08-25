@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
@@ -6,52 +7,38 @@ namespace EVEMon.Common.Serialization.BattleClinic
     [XmlRoot("evemon")]
     public sealed class SerializablePatch
     {
-        private List<SerializableDatafile> m_changedDataFiles = new List<SerializableDatafile>();
-
         public SerializablePatch()
         {
             Release = new SerializableRelease();
             Datafiles = new List<SerializableDatafile>();
-        }
-        
-        internal List<SerializableDatafile> ChangedDataFiles
-        {
-            get { return m_changedDataFiles; }
+            ChangedDataFiles = new List<SerializableDatafile>();
         }
 
         [XmlElement("newest")]
-        public SerializableRelease Release
-        {
-            get;
-            set;
-        }
+        public SerializableRelease Release { get; set; }
 
         [XmlArray("datafiles")]
         [XmlArrayItem("datafile")]
-        public List<SerializableDatafile> Datafiles
-        {
-            get;
-            set;
-        }
+        public List<SerializableDatafile> Datafiles { get; set; }
+
+        [XmlIgnore]
+        internal List<SerializableDatafile> ChangedDataFiles { get; private set; }
 
         [XmlIgnore]
         internal bool FilesHaveChanged
         {
             get
             {
-                m_changedDataFiles.Clear();
+                ChangedDataFiles.Clear();
 
                 foreach (SerializableDatafile dfv in Datafiles)
                 {
-                    foreach (var datafile in EveMonClient.Datafiles)
+                    foreach (Datafile datafile in EveMonClient.Datafiles.Where(datafile => datafile.Filename == dfv.Name))
                     {
-                        if (datafile.Filename == dfv.Name)
-                        {
-                            if (datafile.MD5Sum != dfv.MD5Sum)
-                                m_changedDataFiles.Add(dfv);
+                        if (datafile.MD5Sum != dfv.MD5Sum)
+                            ChangedDataFiles.Add(dfv);
 
-                            break;
-                        }
+                        break;
                     }
                 }
 

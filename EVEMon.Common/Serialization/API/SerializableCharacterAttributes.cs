@@ -13,38 +13,18 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("intelligence")]
-        public int Intelligence
-        {
-            get;
-            set;
-        }
+        public int Intelligence { get; set; }
 
         [XmlElement("memory")]
-        public int Memory
-        {
-            get;
-            set;
-        }
+        public int Memory { get; set; }
 
         [XmlElement("perception")]
-        public int Perception
-        {
-            get;
-            set;
-        }
+        public int Perception { get; set; }
 
         [XmlElement("willpower")]
-        public int Willpower
-        {
-            get;
-            set;
-        }
+        public int Willpower { get; set; }
 
         [XmlElement("charisma")]
-        public int Charisma
-        {
-            get;
-            set;
-        }
+        public int Charisma { get; set; }
     }
 }

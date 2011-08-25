@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Scheduling
@@ -23,10 +22,10 @@ namespace EVEMon.Common.Scheduling
         /// <param name="serial"></param>
         internal SimpleScheduleEntry(SerializableSimpleScheduleEntry serial)
         {
-            m_startDate = serial.StartDateTime;
-            m_endDate = serial.EndDateTime;
-            m_title = serial.Title;
-            m_options = serial.Options;
+            StartDate = serial.StartDateTime;
+            EndDate = serial.EndDateTime;
+            Title = serial.Title;
+            Options = serial.Options;
         }
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public override bool Contains(DateTime checkDateTime)
         {
-            return (checkDateTime >= m_startDate && checkDateTime < m_endDate);
+            return (checkDateTime >= StartDate && checkDateTime < EndDate);
         }
 
         /// <summary>
@@ -47,9 +46,9 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public override IEnumerable<ScheduleDateTimeRange> GetRangesInPeriod(DateTime fromDt, DateTime toDt)
         {
-            if ((m_startDate < fromDt && m_endDate > fromDt) || (m_startDate >= fromDt && m_startDate <= toDt))
+            if ((StartDate < fromDt && EndDate > fromDt) || (StartDate >= fromDt && StartDate <= toDt))
             {
-                yield return new ScheduleDateTimeRange(m_startDate, m_endDate);
+                yield return new ScheduleDateTimeRange(StartDate, EndDate);
             }
         }
 
@@ -60,20 +59,8 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         protected override bool Clash(DateTime timeToTest)
         {
-            DateTime testtime;
-            if ((m_options & ScheduleEntryOptions.EVETime) != 0)
-            {
-                testtime = timeToTest.ToUniversalTime();
-            }
-            else
-            {
-                testtime = timeToTest;
-            }
-
-            if (m_startDate <= testtime && testtime <= m_endDate)
-                return true;
-
-            return false;
+            DateTime testtime = (Options & ScheduleEntryOptions.EVETime) != 0 ? timeToTest.ToUniversalTime() : timeToTest;
+            return StartDate <= testtime && testtime <= EndDate;
         }
 
         /// <summary>
@@ -83,13 +70,8 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public override bool IsToday(DateTime timeToTest)
         {
-            if (m_startDate.DayOfYear <= timeToTest.DayOfYear && m_endDate.DayOfYear >= timeToTest.DayOfYear &&
-                m_startDate.Year <= timeToTest.Year && m_endDate.Year >= timeToTest.Year)
-            {
-                return true;
-            }
-
-            return false;
+            return StartDate.DayOfYear <= timeToTest.DayOfYear && EndDate.DayOfYear >= timeToTest.DayOfYear &&
+                   StartDate.Year <= timeToTest.Year && EndDate.Year >= timeToTest.Year;
         }
 
         /// <summary>
@@ -98,12 +80,13 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         internal override SerializableScheduleEntry Export()
         {
-            SerializableSimpleScheduleEntry serial = new SerializableSimpleScheduleEntry();
-            serial.StartDateTime = m_startDate;
-            serial.EndDateTime = m_endDate;
-            serial.Title = m_title;
-            serial.Options = m_options;
-            return serial;
+            return new SerializableSimpleScheduleEntry
+                       {
+                           StartDateTime = StartDate,
+                           EndDateTime = EndDate,
+                           Title = Title,
+                           Options = Options
+                       };
         }
     }
 }

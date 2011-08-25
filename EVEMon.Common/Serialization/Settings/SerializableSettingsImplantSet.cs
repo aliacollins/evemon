@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -27,86 +24,41 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("intelligence")]
-        public string Intelligence
-        {
-            get;
-            set;
-        }
+        public string Intelligence { get; set; }
 
         [XmlElement("memory")]
-        public string Memory
-        {
-            get;
-            set;
-        }
+        public string Memory { get; set; }
 
         [XmlElement("willpower")]
-        public string Willpower
-        {
-            get;
-            set;
-        }
+        public string Willpower { get; set; }
 
         [XmlElement("perception")]
-        public string Perception
-        {
-            get;
-            set;
-        }
+        public string Perception { get; set; }
 
         [XmlElement("charisma")]
-        public string Charisma
-        {
-            get;
-            set;
-        }
+        public string Charisma { get; set; }
 
         [XmlElement("slot6")]
-        public string Slot6
-        {
-            get;
-            set;
-        }
+        public string Slot6 { get; set; }
 
         [XmlElement("slot7")]
-        public string Slot7
-        {
-            get;
-            set;
-        }
+        public string Slot7 { get; set; }
 
         [XmlElement("slot8")]
-        public string Slot8
-        {
-            get;
-            set;
-        }
+        public string Slot8 { get; set; }
 
         [XmlElement("slot9")]
-        public string Slot9
-        {
-            get;
-            set;
-        }
+        public string Slot9 { get; set; }
 
         [XmlElement("slot10")]
-        public string Slot10
-        {
-            get;
-            set;
-        }
+        public string Slot10 { get; set; }
 
         public override string ToString()
         {
             return Name;
         }
     }
-
 }

@@ -14,7 +14,9 @@ namespace EVEMon.Common.Serialization.API
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 
+
         #region Constructors
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -87,6 +89,7 @@ namespace EVEMon.Common.Serialization.API
             m_errorMessage = message;
             m_exception = null;
         }
+
         #endregion
 
 
@@ -112,10 +115,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public bool IsOutdated
         {
-            get
-            {
-                return DateTime.UtcNow > CachedUntil;
-            }
+            get { return DateTime.UtcNow > CachedUntil; }
         }
 
         /// <summary>
@@ -123,27 +123,21 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public bool HasError
         {
-            get 
+            get
             {
                 if (CCPError != null)
                     return true;
 
-                return m_error != APIEnumerations.APIErrors.None; 
+                return m_error != APIEnumerations.APIErrors.None;
             }
         }
 
         /// <summary>
-        /// Gets the type of the error or <see cref="APIErrors.None"/> when there was no error.
+        /// Gets the type of the error or <see cref="APIEnumerations.APIErrors.None"/> when there was no error.
         /// </summary>
         public APIEnumerations.APIErrors ErrorType
         {
-            get 
-            {
-                if (CCPError != null)
-                    return APIEnumerations.APIErrors.CCP;
-
-                return m_error; 
-            }
+            get { return CCPError != null ? APIEnumerations.APIErrors.CCP : m_error; }
         }
 
         /// <summary>
@@ -160,24 +154,14 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public string ErrorMessage
         {
-            get 
-            {
-                if (CCPError != null)
-                    return CCPError.ErrorMessage;
-
-                return m_errorMessage; 
-            }
+            get { return CCPError != null ? CCPError.ErrorMessage : m_errorMessage; }
         }
 
         /// <summary>
         /// Gets / sets the XML document when there's no HTTP error.
         /// </summary>
         [XmlIgnore]
-        public XmlDocument XmlDocument
-        {
-            get;
-            set;
-        }
+        public XmlDocument XmlDocument { get; set; }
 
         /// <summary>
         /// Gets the time left before a new version is available.
@@ -186,16 +170,14 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return CachedUntil.Subtract(DateTime.UtcNow); }
         }
+
         #endregion
 
 
         #region CCP Mapping
+
         [XmlAttribute("version")]
-        public int APIVersion
-        {
-            get;
-            set;
-        }
+        public int APIVersion { get; set; }
 
         [XmlElement("currentTime")]
         public string CurrentTimeXml
@@ -206,7 +188,7 @@ namespace EVEMon.Common.Serialization.API
                 if (String.IsNullOrEmpty(value))
                     return;
 
-                CurrentTime = value.TimeStringToDateTime(); 
+                CurrentTime = value.TimeStringToDateTime();
             }
         }
 
@@ -224,36 +206,22 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlIgnore]
-        public DateTime CurrentTime
-        {
-            get;
-            set;
-        }
+        public DateTime CurrentTime { get; set; }
 
         [XmlIgnore]
-        public DateTime CachedUntil
-        {
-            get;
-            set;
-        }
+        public DateTime CachedUntil { get; set; }
 
         [XmlElement("error")]
-        public APICCPError CCPError
-        {
-            get;
-            set;
-        }
+        public APICCPError CCPError { get; set; }
 
         [XmlElement("result")]
-        public T Result
-        {
-            get;
-            set;
-        }
+        public T Result { get; set; }
+
         #endregion
 
 
         #region Time fixing
+
         /// <summary>
         /// Fixup the currentTime and cachedUntil time to match the user's clock.
         /// This should ONLY be called when the xml is first received from CCP
@@ -278,15 +246,17 @@ namespace EVEMon.Common.Serialization.API
             // Now fix the server time to align with local time
             if (CurrentTime != DateTime.MinValue)
                 CurrentTime -= drift;
+
             if (CachedUntil != DateTime.MinValue)
                 CachedUntil -= drift;
 
             // Fix the TQ start/end times first
             ISynchronizableWithLocalClock synchronizable = ((Object)Result) as ISynchronizableWithLocalClock;
-            
+
             if (synchronizable != null)
                 synchronizable.SynchronizeWithLocalClock(drift);
         }
+
         #endregion
     }
 }

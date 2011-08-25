@@ -6,52 +6,24 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableResearchPoint
     {
         [XmlAttribute("agentID")]
-        public int AgentID
-        {
-            get;
-            set;
-        }
+        public int AgentID { get; set; }
 
         [XmlAttribute("agentName")]
-        public string AgentName
-        {
-            get;
-            set;
-        }
+        public string AgentName { get; set; }
 
         [XmlAttribute("skillID")]
-        public int SkillID
-        {
-            get;
-            set;
-        }
+        public int SkillID { get; set; }
 
         [XmlAttribute("skillName")]
-        public string SkillName
-        {
-            get;
-            set;
-        }
+        public string SkillName { get; set; }
 
         [XmlAttribute("startDate")]
-        public DateTime StartDate
-        {
-            get;
-            set;
-        }
+        public DateTime StartDate { get; set; }
 
         [XmlAttribute("pointsPerDay")]
-        public double PointsPerDay
-        {
-            get;
-            set;
-        }
+        public double PointsPerDay { get; set; }
 
         [XmlAttribute("remainderPoints")]
-        public float RemainderPoints
-        {
-            get;
-            set;
-        }
+        public float RemainderPoints { get; set; }
     }
 }

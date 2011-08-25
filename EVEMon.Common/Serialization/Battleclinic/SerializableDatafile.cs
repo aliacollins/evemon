@@ -6,32 +6,16 @@ namespace EVEMon.Common.Serialization.BattleClinic
     public sealed class SerializableDatafile
     {
         [XmlElement("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("date")]
-        public string Date
-        {
-            get;
-            set;
-        }
+        public string Date { get; set; }
 
         [XmlElement("md5")]
-        public string MD5Sum
-        {
-            get;
-            set;
-        }
+        public string MD5Sum { get; set; }
 
         [XmlElement("url")]
-        public string Url
-        {
-            get;
-            set;
-        }
+        public string Url { get; set; }
 
         [XmlElement("message")]
         public XmlCDataSection MessageXml
@@ -41,10 +25,6 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
 
         [XmlIgnore]
-        public string Message
-        {
-            get;
-            set;
-        }
+        public string Message { get; set; }
     }
 }

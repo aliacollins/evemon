@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -7,5 +9,9 @@ namespace EVEMon.Common.Serialization.API
         {
             GroupType = "Agents";
         }
+
+        [XmlArray("agents")]
+        [XmlArrayItem("agent")]
+        public List<SerializableStandingsListItem> AgentStandings { get; set; }
     }
 }

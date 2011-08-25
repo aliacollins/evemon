@@ -14,10 +14,6 @@ namespace EVEMon.Common.Serialization.Importation
     public sealed class OldExportedCertificate
     {
         [XmlAttribute("certificateID")]
-        public int CertificateID
-        {
-            get;
-            set;
-        }
+        public int CertificateID { get; set; }
     }
 }

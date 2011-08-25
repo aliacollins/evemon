@@ -19,14 +19,7 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         public static IEnumerable<ScheduleEntry> Entries
         {
-            get
-            {
-                foreach (ScheduleEntry entry in s_schedule)
-                {
-                    if (!entry.Expired)
-                        yield return entry;
-                }
-            }
+            get { return s_schedule.Where(entry => !entry.Expired); }
         }
 
         /// <summary>
@@ -82,13 +75,10 @@ namespace EVEMon.Common.Scheduling
             }
 
             // Checks schedule entries to see if they overlap the imput time
-            foreach (ScheduleEntry entry in s_schedule)
+            foreach (ScheduleEntry entry in s_schedule.Where(entry => entry.Blocking(time)))
             {
-                if (entry.Blocking(time))
-                {
-                    blockingEntry = entry.Title;
-                    return true;
-                }
+                blockingEntry = entry.Title;
+                return true;
             }
 
             return false;
@@ -123,11 +113,10 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         internal static SerializableScheduler Export()
         {
-            var serial = new SerializableScheduler();
-            foreach (ScheduleEntry entry in s_schedule)
+            SerializableScheduler serial = new SerializableScheduler();
+            foreach (ScheduleEntry entry in s_schedule.Where(entry => !entry.Expired))
             {
-                if (!entry.Expired)
-                    serial.Entries.Add(entry.Export());
+                serial.Entries.Add(entry.Export());
             }
             return serial;
         }

@@ -20,24 +20,12 @@ namespace EVEMon.Common.Serialization.Importation
         }
 
         [XmlAttribute("character")]
-        public string Owner
-        {
-            get;
-            set;
-        }
+        public string Owner { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("entry")]
-        public List<SerializablePlanEntry> Entries
-        {
-            get;
-            set;
-        }
+        public List<SerializablePlanEntry> Entries { get; set; }
     }
 }

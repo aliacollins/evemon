@@ -10,7 +10,7 @@ namespace EVEMon
 {
     public partial class ClaimableCertificateWindow : EVEMonForm
     {
-        private ClaimableCertificateNotification m_notification;
+        private ClaimableCertificateNotificationEventArgs m_notification;
 
         /// <summary>
         /// Constructor
@@ -25,7 +25,7 @@ namespace EVEMon
         /// Gets or sets the list of completed skills.
         /// </summary> 
         [Browsable(false)]
-        public ClaimableCertificateNotification Notification
+        public ClaimableCertificateNotificationEventArgs NotificationEventArgs
         {
             get { return m_notification; }
             set

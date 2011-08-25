@@ -10,10 +10,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("jobs")]
         [XmlArrayItem("job")]
-        public List<SerializableJobListItem> Jobs
-        {
-            get;
-            set;
-        }
+        public List<SerializableJobListItem> Jobs { get; set; }
     }
 }

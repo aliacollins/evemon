@@ -6,102 +6,46 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableJobListItem
     {
         [XmlAttribute("jobID")]
-        public long JobID
-        {
-            get;
-            set;
-        }
+        public long JobID { get; set; }
 
         [XmlAttribute("installedItemLocationID")]
-        public long InstalledItemLocationID
-        {
-            get;
-            set;
-        }
+        public long InstalledItemLocationID { get; set; }
 
         [XmlAttribute("outputLocationID")]
-        public long OutputLocationID
-        {
-            get;
-            set;
-        }
+        public long OutputLocationID { get; set; }
 
         [XmlAttribute("installedInSolarSystemID")]
-        public long SolarSystemID
-        {
-            get;
-            set;
-        }
+        public long SolarSystemID { get; set; }
 
         [XmlAttribute("installedItemProductivityLevel")]
-        public int InstalledItemProductivityLevel
-        {
-            get;
-            set;
-        }
+        public int InstalledItemProductivityLevel { get; set; }
 
         [XmlAttribute("installedItemMaterialLevel")]
-        public int InstalledItemMaterialLevel
-        {
-            get;
-            set;
-        }
+        public int InstalledItemMaterialLevel { get; set; }
 
         [XmlAttribute("installerID")]
-        public int InstallerID
-        {
-            get;
-            set;
-        }
+        public int InstallerID { get; set; }
 
         [XmlAttribute("runs")]
-        public int Runs
-        {
-            get;
-            set;
-        }
+        public int Runs { get; set; }
 
         [XmlAttribute("installedItemTypeID")]
-        public long InstalledItemTypeID
-        {
-            get;
-            set;
-        }
+        public long InstalledItemTypeID { get; set; }
 
         [XmlAttribute("outputTypeID")]
-        public long OutputTypeID
-        {
-            get;
-            set;
-        }
+        public long OutputTypeID { get; set; }
 
         [XmlAttribute("installedItemCopy")]
-        public int InstalledItemCopy
-        {
-            get;
-            set;
-        }
+        public int InstalledItemCopy { get; set; }
 
         [XmlAttribute("completed")]
-        public int Completed
-        {
-            get;
-            set;
-        }
+        public int Completed { get; set; }
 
         [XmlAttribute("activityID")]
-        public int ActivityID
-        {
-            get;
-            set;
-        }
+        public int ActivityID { get; set; }
 
         [XmlAttribute("completedStatus")]
-        public int CompletedStatus
-        {
-            get;
-            set;
-        }
+        public int CompletedStatus { get; set; }
 
         [XmlAttribute("installTime")]
         public string InstallTimeXml
@@ -151,50 +95,30 @@ namespace EVEMon.Common.Serialization.API
         /// The time this job was installed.
         /// </summary>
         [XmlIgnore]
-        public DateTime InstallTime
-        {
-            get;
-            set;
-        }
+        public DateTime InstallTime { get; set; }
 
         /// <summary>
         /// The time this job began.
         /// </summary>
         [XmlIgnore]
-        public DateTime BeginProductionTime
-        {
-            get;
-            set;
-        }
+        public DateTime BeginProductionTime { get; set; }
 
         /// <summary>
         /// The time this job will finish.
         /// </summary>
         [XmlIgnore]
-        public DateTime EndProductionTime
-        {
-            get;
-            set;
-        }
+        public DateTime EndProductionTime { get; set; }
 
         /// <summary>
         /// The time this job was paused.
         /// </summary>
         [XmlIgnore]
-        public DateTime PauseProductionTime
-        {
-            get;
-            set;
-        }
+        public DateTime PauseProductionTime { get; set; }
 
         /// <summary>
         /// Which this job was issued for.
         /// </summary>
         [XmlIgnore]
-        public IssuedFor IssuedFor
-        {
-            get;
-            set;
-        }
+        public IssuedFor IssuedFor { get; set; }
     }
 }

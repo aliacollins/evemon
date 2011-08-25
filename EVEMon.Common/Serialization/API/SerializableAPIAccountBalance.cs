@@ -12,10 +12,6 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         [XmlArray("accounts")]
         [XmlArrayItem("account")]
-        public SerializableAccountBalanceListItem[] Accounts
-        {
-            get;
-            set;
-        }
+        public SerializableAccountBalanceListItem[] Accounts { get; set; }
     }
 }

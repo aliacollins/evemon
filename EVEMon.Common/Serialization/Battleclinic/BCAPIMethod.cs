@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
@@ -9,9 +10,6 @@ namespace EVEMon.Common.Serialization.BattleClinic
     /// </summary>
     public class BCAPIMethod
     {
-        private BCAPIMethods m_method;
-        private string m_path;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -19,26 +17,19 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="path"></param>
         public BCAPIMethod(BCAPIMethods method, string path)
         {
-            m_method = method;
-            m_path = path;
+            Method = method;
+            Path = path;
         }
 
         /// <summary>
         /// Returns the BCAPIMethods enumeration member for this Battleclinic's APIMethod.
         /// </summary>
-        public BCAPIMethods Method
-        {
-            get { return m_method; }
-        }
+        public BCAPIMethods Method { get; private set; }
 
         /// <summary>
         /// Returns the defined URL suffix path for this BCAPIMethod.
         /// </summary>
-        public string Path
-        {
-            get { return m_path; }
-            set { m_path = value; }
-        }
+        public string Path { get; set; }
 
         /// <summary>
         /// Creates a set of Battleclinic's API methods with their default urls.
@@ -46,12 +37,15 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <returns></returns>
         public static IEnumerable<BCAPIMethod> CreateDefaultSet()
         {
-            foreach (string methodName in Enum.GetNames(typeof(BCAPIMethods)))
-            {
-                BCAPIMethods methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName);
-                string methodURL = NetworkConstants.ResourceManager.GetString(String.Format("BCAPI{0}", methodName));
-                yield return new BCAPIMethod(methodEnum, methodURL);
-            }
+            return Enum.GetNames(typeof(BCAPIMethods)).Select(
+                methodName => new {methodName, methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName)}).
+                Select(method => new
+                                     {
+                                         method,
+                                         methodURL = NetworkConstants.ResourceManager.GetString(
+                                             String.Format("BCAPI{0}", method.methodName))
+                                     }).Select(
+                                         bcAPIMethod => new BCAPIMethod(bcAPIMethod.method.methodEnum, bcAPIMethod.methodURL));
         }
     }
 }

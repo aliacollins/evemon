@@ -6,25 +6,13 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableNotificationsListItem
     {
         [XmlAttribute("notificationID")]
-        public long NotificationID
-        {
-            get;
-            set;
-        }
+        public long NotificationID { get; set; }
 
         [XmlAttribute("typeID")]
-        public int TypeID
-        {
-            get;
-            set;
-        }
+        public int TypeID { get; set; }
 
         [XmlAttribute("senderID")]
-        public long SenderID
-        {
-            get;
-            set;
-        }
+        public long SenderID { get; set; }
 
         [XmlAttribute("sentDate")]
         public string SentDateXml
@@ -38,17 +26,9 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("read")]
-        public bool Read
-        {
-            get;
-            set;
-        }
+        public bool Read { get; set; }
 
         [XmlIgnore]
-        public DateTime SentDate
-        {
-            get;
-            set;
-        }
+        public DateTime SentDate { get; set; }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-using EVEMon.Common.Serialization.Settings;
-
-namespace EVEMon.Common.Serialization
+namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
     /// Represents a buy order.
@@ -13,22 +11,18 @@ namespace EVEMon.Common.Serialization
         /// How much ISK is in escrow.
         /// </summary>
         [XmlAttribute("escrow")]
-        public decimal Escrow
-        {
-            get;
-            set;
-        }
+        public decimal Escrow { get; set; }
 
         /// <summary>
         /// -1 = station, 0 = solar system, 1 = 1 jump, 2 = 2 jumps, ..., 32767 = region.
         /// </summary>
         [XmlAttribute("range")]
-        public int Range
-        {
-            get;
-            set;
-        }
+        public int Range { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public SerializableBuyOrder Clone()
         {
             return (SerializableBuyOrder)MemberwiseClone();

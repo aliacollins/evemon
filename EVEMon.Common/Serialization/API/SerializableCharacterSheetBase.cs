@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -10,7 +9,7 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public class SerializableCharacterSheetBase : ISerializableCharacterIdentity
     {
-        public SerializableCharacterSheetBase()
+        protected SerializableCharacterSheetBase()
         {
             Info = new SerializableAPICharacterInfo();
             Attributes = new SerializableCharacterAttributes();
@@ -20,18 +19,10 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("characterID")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlElement("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("DoB")]
         public string BirthdayXml
@@ -45,128 +36,60 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("race")]
-        public string Race
-        {
-            get;
-            set;
-        }
+        public string Race { get; set; }
 
         [XmlElement("bloodLine")]
-        public string BloodLine
-        {
-            get;
-            set;
-        }
+        public string BloodLine { get; set; }
 
         [XmlElement("ancestry")]
-        public string Ancestry
-        {
-            get;
-            set;
-        }
+        public string Ancestry { get; set; }
 
         [XmlElement("gender")]
-        public string Gender
-        {
-            get;
-            set;
-        }
+        public string Gender { get; set; }
 
         [XmlElement("corporationName")]
-        public string CorporationName
-        {
-            get;
-            set;
-        }
+        public string CorporationName { get; set; }
 
         [XmlElement("corporationID")]
-        public int CorporationID
-        {
-            get;
-            set;
-        }
+        public int CorporationID { get; set; }
 
         [XmlElement("allianceName")]
-        public string AllianceName
-        {
-            get;
-            set;
-        }
+        public string AllianceName { get; set; }
 
         [XmlElement("allianceID")]
-        public int AllianceID
-        {
-            get;
-            set;
-        }
+        public int AllianceID { get; set; }
 
         [XmlElement("cloneName")]
-        public string CloneName
-        {
-            get;
-            set;
-        }
+        public string CloneName { get; set; }
 
         [XmlElement("cloneSkillPoints")]
-        public int CloneSkillPoints
-        {
-            get;
-            set;
-        }
+        public int CloneSkillPoints { get; set; }
 
         [XmlElement("balance")]
-        public Decimal Balance
-        {
-            get;
-            set;
-        }
+        public Decimal Balance { get; set; }
 
         [XmlElement("info")]
-        public SerializableAPICharacterInfo Info
-        {
-            get;
-            set;
-        }
+        public SerializableAPICharacterInfo Info { get; set; }
 
         [XmlArray("employmentHistory")]
         [XmlArrayItem("record")]
-        public List<SerializableEmploymentHistory> EmploymentHistory
-        {
-            get;
-            set;
-        }
+        public List<SerializableEmploymentHistory> EmploymentHistory { get; set; }
 
         [XmlElement("attributes")]
-        public SerializableCharacterAttributes Attributes
-        {
-            get;
-            set;
-        }
+        public SerializableCharacterAttributes Attributes { get; set; }
 
         [XmlArray("skills")]
         [XmlArrayItem("skill")]
-        public List<SerializableCharacterSkill> Skills
-        {
-            get;
-            set;
-        }
+        public List<SerializableCharacterSkill> Skills { get; set; }
 
         [XmlArray("certificates")]
         [XmlArrayItem("certificate")]
-        public List<SerializableCharacterCertificate> Certificates
-        {
-            get;
-            set;
-        }
+        public List<SerializableCharacterCertificate> Certificates { get; set; }
 
         /// <summary>
         /// The date and time the character was created.
         /// </summary>
         [XmlIgnore]
-        public DateTime Birthday
-        {
-            get;
-            set;
-        }
+        public DateTime Birthday { get; set; }
     }
 }

@@ -13,17 +13,9 @@ namespace EVEMon.Common.Serialization.Importation
     public sealed class OldSettingsCharacter
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
     }
 }

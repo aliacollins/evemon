@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -9,57 +8,29 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableRemappingPoint
     {
         [XmlAttribute("status")]
-        public RemappingPoint.PointStatus Status
-        {
-            get;
-            set;
-        }
+        public RemappingPoint.PointStatus Status { get; set; }
 
         [XmlAttribute("per")]
-        public int Perception
-        {
-            get;
-            set;
-        }
+        public int Perception { get; set; }
 
         [XmlAttribute("int")]
-        public int Intelligence
-        {
-            get;
-            set;
-        }
+        public int Intelligence { get; set; }
 
         [XmlAttribute("mem")]
-        public int Memory
-        {
-            get;
-            set;
-        }
+        public int Memory { get; set; }
 
         [XmlAttribute("wil")]
-        public int Willpower
-        {
-            get;
-            set;
-        }
+        public int Willpower { get; set; }
 
         [XmlAttribute("cha")]
-        public int Charisma
-        {
-            get;
-            set;
-        }
+        public int Charisma { get; set; }
 
         [XmlAttribute("description")]
-        public string Description
-        {
-            get;
-            set;
-        }
+        public string Description { get; set; }
 
         public SerializableRemappingPoint Clone()
         {
-            return (SerializableRemappingPoint)this.MemberwiseClone();
+            return (SerializableRemappingPoint) MemberwiseClone();
         }
     }
 }

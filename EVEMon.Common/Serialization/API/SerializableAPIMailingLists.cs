@@ -10,10 +10,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("mailingLists")]
         [XmlArrayItem("mailingList")]
-        public List<SerializableMailingListsListItem> MailingLists
-        {
-            get;
-            set;
-        }
+        public List<SerializableMailingListsListItem> MailingLists { get; set; }
     }
 }

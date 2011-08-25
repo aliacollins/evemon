@@ -11,7 +11,7 @@ namespace EVEMon.Common.Serialization.API
         /// Fixup the currentTime and cachedUntil time to match the user's clock.
         /// This should ONLY be called when the xml is first recieved from CCP
         /// </summary>
-        /// <param name="millisecondsDrift">The time span the stored times should be susbtracted with</param>
+        /// <param name="drift">The time span the stored times should be susbtracted with</param>
         void SynchronizeWithLocalClock(TimeSpan drift);
     }
 }

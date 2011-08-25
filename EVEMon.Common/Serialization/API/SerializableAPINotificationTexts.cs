@@ -7,17 +7,9 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("notifications")]
         [XmlArrayItem("notification")]
-        public List<SerializableNotificationTextsListItem> Texts
-        {
-            get;
-            set;
-        }
+        public List<SerializableNotificationTextsListItem> Texts { get; set; }
 
         [XmlElement("missingIDs")]
-        public string MissingMessageIDs
-        {
-            get;
-            set;
-        }
+        public string MissingMessageIDs { get; set; }
     }
 }

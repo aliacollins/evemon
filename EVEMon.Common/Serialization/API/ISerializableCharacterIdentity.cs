@@ -1,4 +1,4 @@
-namespace EVEMon.Common.Serialization
+namespace EVEMon.Common.Serialization.API
 {
     /// <summary>
     /// Represents a set of informations required to create an identity

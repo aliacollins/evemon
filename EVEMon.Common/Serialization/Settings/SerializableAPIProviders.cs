@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -15,24 +14,21 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlElement("currentProvider")]
-        public string CurrentProviderName
-        {
-            get;
-            set;
-        }
+        public string CurrentProviderName { get; set; }
 
         [XmlArray("customProviders")]
         [XmlArrayItem("provider")]
-        public List<SerializableAPIProvider> CustomProviders
-        {
-            get;
-            set;
-        }
+        public List<SerializableAPIProvider> CustomProviders { get; set; }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return CurrentProviderName;
         }
     }
-
 }

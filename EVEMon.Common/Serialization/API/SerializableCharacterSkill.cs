@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -9,45 +8,21 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableCharacterSkill
     {
         [XmlAttribute("typeID")]
-        public long ID
-        {
-            get;
-            set;
-        }
+        public long ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("level")]
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; set; }
 
         [XmlAttribute("skillpoints")]
-        public int Skillpoints
-        {
-            get;
-            set;
-        }
+        public int Skillpoints { get; set; }
 
         [XmlAttribute("ownsBook")]
-        public bool OwnsBook
-        {
-            get;
-            set;
-        }
+        public bool OwnsBook { get; set; }
 
         [XmlAttribute("isKnown")]
-        public bool IsKnown
-        {
-            get;
-            set;
-        }
+        public bool IsKnown { get; set; }
     }
 }

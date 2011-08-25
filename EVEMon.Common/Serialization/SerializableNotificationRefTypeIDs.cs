@@ -13,10 +13,6 @@ namespace EVEMon.Common.Serialization
 
         [XmlArray("refTypes")]
         [XmlArrayItem("refType")]
-        public List<SerializableNotificationRefTypeIDsListItem> Types
-        {
-            get;
-            set;
-        }
+        public List<SerializableNotificationRefTypeIDsListItem> Types { get; set; }
     }
 }

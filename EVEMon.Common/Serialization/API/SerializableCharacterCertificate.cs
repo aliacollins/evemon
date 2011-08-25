@@ -8,10 +8,6 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableCharacterCertificate
     {
         [XmlAttribute("certificateID")]
-        public long CertificateID
-        {
-            get;
-            set;
-        }
+        public long CertificateID { get; set; }
     }
 }

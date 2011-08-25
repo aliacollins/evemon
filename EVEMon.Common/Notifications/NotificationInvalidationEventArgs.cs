@@ -7,8 +7,6 @@ namespace EVEMon.Common.Notifications
     /// </summary>
     public sealed class NotificationInvalidationEventArgs : EventArgs
     {
-        private long m_key;
-
         /// <summary>
         /// Constructor with a key identifying a sender/category pair.
         /// </summary>
@@ -16,25 +14,21 @@ namespace EVEMon.Common.Notifications
         /// <param name="category"></param>
         public NotificationInvalidationEventArgs(Object sender, NotificationCategory category)
         {
-            m_key = Notification.GetKey(sender, category);
+            Key = NotificationEventArgs.GetKey(sender, category);
         }
 
         /// <summary>
         /// Constructor with a key gotten from a notification.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="category"></param>
-        public NotificationInvalidationEventArgs(Notification notification)
+        /// <param name="notification">The notification.</param>
+        public NotificationInvalidationEventArgs(NotificationEventArgs notification)
         {
-            m_key = notification.InvalidationKey;
+            Key = notification.InvalidationKey;
         }
 
         /// <summary>
         /// Gets a key identifying the notifications to invalidate.
         /// </summary>
-        public long Key
-        {
-            get { return m_key; }
-        }
+        public long Key { get; private set; }
     }
 }

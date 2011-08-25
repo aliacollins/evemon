@@ -583,7 +583,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Fired every time a notification (API errors, skill completed) is sent.
         /// </summary>
-        public static event EventHandler<Notification> NotificationSent;
+        public static event EventHandler<NotificationEventArgs> NotificationSent;
 
         /// <summary>
         /// Fired every time a notification (API errors, skill completed) is invalidated.
@@ -924,7 +924,7 @@ namespace EVEMon.Common
         /// Called when a notification is sent.
         /// </summary>
         /// <param name="notification">The notification.</param>
-        internal static void OnNotificationSent(Notification notification)
+        internal static void OnNotificationSent(NotificationEventArgs notification)
         {
             Trace("EveMonClient.OnNotificationSent - {0}", notification);
             if (NotificationSent != null)

@@ -10,10 +10,6 @@ namespace EVEMon.Common.Serialization.API
     {
         [XmlArray("orders")]
         [XmlArrayItem("order")]
-        public List<SerializableOrderListItem> Orders
-        {
-            get;
-            set;
-        }
+        public List<SerializableOrderListItem> Orders { get; set; }
     }
 }

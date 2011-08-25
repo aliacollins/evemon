@@ -24,26 +24,14 @@ namespace EVEMon.Common.Serialization.Importation
 
         [XmlArray("accounts")]
         [XmlArrayItem("account")]
-        public List<SerializableAccount> Accounts
-        {
-            get;
-            set;
-        }
+        public List<SerializableAccount> Accounts { get; set; }
 
         [XmlArray("characters")]
         [XmlArrayItem("character")]
-        public List<OldSettingsCharacter> Characters
-        {
-            get;
-            set;
-        }
+        public List<OldSettingsCharacter> Characters { get; set; }
 
         [XmlArray("plans")]
         [XmlArrayItem("plan")]
-        public List<OldSettingsPlan> Plans
-        {
-            get;
-            set;
-        }
+        public List<OldSettingsPlan> Plans { get; set; }
     }
 }

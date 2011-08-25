@@ -118,8 +118,42 @@
     <Compile Include="EveNotificationText.cs" />
     <Compile Include="IGroupingListView.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
-    <Compile Include="Notifications\ClaimableCertificateNotification.cs" />
-    <Compile Include="Notifications\NewEveNotificationNotification.cs" />
+    <Compile Include="Notifications\APIErrorNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\IndustryJobsNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\MarketOrdersNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NewEveMailMessageNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NewEveNotificationNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationBehaviour.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationCategory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationInvalidationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationPriority.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
       <DependentUpon>IconSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -151,6 +185,8 @@
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableLoadout.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableLoadoutSlot.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprintMarketGroup.cs" />
@@ -178,6 +214,9 @@
     <Compile Include="Serialization\Datafiles\SerializableSkillPrerequisite.cs" />
     <Compile Include="Serialization\Datafiles\SerializableSolarSystem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableStation.cs" />
+    <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
+    <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
+    <Compile Include="Serialization\Exportation\OutputSkill.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
@@ -215,7 +254,6 @@
     <Compile Include="EveMailMessagesCollection.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="ListViewExporter.cs" />
-    <Compile Include="Notifications\NewEveMailMessageNotification.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanSorter.cs" />
@@ -479,15 +517,6 @@
     <Compile Include="Collections\ReadonlyKeyedCollection.cs" />
     <Compile Include="Collections\ReadonlyVirtualCollection.cs" />
     <Compile Include="IPlanOperation.cs" />
-    <Compile Include="Notifications\APIErrorNotification.cs" />
-    <Compile Include="Notifications\IndustryJobsNotification.cs" />
-    <Compile Include="Notifications\SkillCompletionNotification.cs" />
-    <Compile Include="Notifications\MarketOrdersNotification.cs" />
-    <Compile Include="Notifications\Notification.cs" />
-    <Compile Include="Notifications\NotificationBehaviour.cs" />
-    <Compile Include="Notifications\NotificationCategory.cs" />
-    <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
-    <Compile Include="Notifications\NotificationPriority.cs" />
     <Compile Include="ObsoleteRemovalPolicy.cs" />
     <Compile Include="PlanEntryExtensions.cs" />
     <Compile Include="PlanScratchpad.cs" />

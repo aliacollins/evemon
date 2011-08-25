@@ -10,7 +10,7 @@ namespace EVEMon
 {
     public partial class SkillCompletionWindow : EVEMonForm
     {
-        private SkillCompletionNotification m_notification;
+        private SkillCompletionNotificationEventArgs m_notification;
 
         /// <summary>
         /// Constructor
@@ -25,14 +25,14 @@ namespace EVEMon
         /// Gets or sets the list of completed skills.
         /// </summary> 
         [Browsable(false)]
-        public SkillCompletionNotification Notification
+        public SkillCompletionNotificationEventArgs NotificationEventArgs
         {
             get { return m_notification; }
             set 
             { 
                 m_notification = value;
                 StringBuilder text = new StringBuilder();
-                foreach (var skill in m_notification.Skills.Reverse())
+                foreach (var skill in m_notification.Skills)
                 {
                     text.AppendLine(skill.ToString());
                 }

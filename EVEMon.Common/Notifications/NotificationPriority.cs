@@ -2,7 +2,7 @@
 namespace EVEMon.Common.Notifications
 {
     /// <summary>
-    /// Represents the priority of a <see cref="Notification"/>.
+    /// Represents the priority of a <see cref="NotificationEventArgs"/>.
     /// </summary>
     public enum NotificationPriority
     {

@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -9,37 +8,21 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableInvalidPlanEntry
     {
         [XmlAttribute("skill")]
-        public string SkillName
-        {
-            get;
-            set;
-        }
+        public string SkillName { get; set; }
 
         [XmlAttribute("level")]
-        public int PlannedLevel
-        {
-            get;
-            set;
-        }
+        public int PlannedLevel { get; set; }
 
         [XmlAttribute("acknowledged")]
-        public bool Acknowledged
-        {
-            get;
-            set;
-        }
+        public bool Acknowledged { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal SerializableInvalidPlanEntry Clone()
         {
-            // We need a skill for the plan's character
-            SerializableInvalidPlanEntry clone = new SerializableInvalidPlanEntry()
-            {
-                SkillName = SkillName,
-                PlannedLevel = PlannedLevel,
-                Acknowledged = Acknowledged
-            };
-
-            return clone;
+            return (SerializableInvalidPlanEntry) MemberwiseClone();
         }
     }
 }

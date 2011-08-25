@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -9,10 +8,6 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPIStandings
     {
         [XmlElement("characterNPCStandings")]
-        public SerializableStandings CharacterNPCStandings
-        {
-            get;
-            set;
-        }
+        public SerializableStandings CharacterNPCStandings { get; set; }
     }
 }

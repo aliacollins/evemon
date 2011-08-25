@@ -653,7 +653,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void EveMonClient_NotificationSent(object sender, Notification e)
+        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
             UpdateNotifications();
         }
@@ -1301,7 +1301,7 @@ namespace EVEMon
         /// </summary>
         internal void TestCharacterNotification()
         {
-            var notification = new Notification(NotificationCategory.TestNofitication, m_character)
+            var notification = new NotificationEventArgs(NotificationCategory.TestNofitication, m_character)
             {
                 Priority = NotificationPriority.Warning,
                 Behaviour = NotificationBehaviour.Overwrite,
