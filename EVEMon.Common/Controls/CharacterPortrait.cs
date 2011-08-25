@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -60,12 +61,12 @@ namespace EVEMon.Common.Controls
             get { return m_id; }
             set
             {
-                if (m_id != value)
-                {
-                    m_id = value;
-                    m_character = null;
-                    UpdateContent();
-                }
+                if (m_id == value)
+                    return;
+
+                m_id = value;
+                m_character = null;
+                UpdateContent();
             }
         }
 
@@ -77,12 +78,12 @@ namespace EVEMon.Common.Controls
             get { return m_character; }
             set
             {
-                if (m_character != value)
-                {
-                    m_id = value.CharacterID;
-                    m_character = value;
-                    UpdateContent();
-                }
+                if (m_character == value)
+                    return;
+
+                m_id = value.CharacterID;
+                m_character = value;
+                UpdateContent();
             }
         }
 
@@ -96,10 +97,7 @@ namespace EVEMon.Common.Controls
                 if (m_updatingPortrait)
                     return true;
 
-                if (m_character != null)
-                    return m_character.IsUpdatingPortrait;
-                
-                return false;
+                return m_character != null && m_character.IsUpdatingPortrait;
             }
             set
             {
@@ -140,7 +138,7 @@ namespace EVEMon.Common.Controls
             }
 
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\Cache)
-            var image = GetPortraitFromCache();
+            Image image = GetPortraitFromCache();
             if (image != null)
             {
                 pictureBox.Image = image;
@@ -209,14 +207,14 @@ namespace EVEMon.Common.Controls
 
             IsUpdating = true;
 
-            ImageService.GetCharacterImageAsync(m_id, new GetImageCallback(OnGotCharacterImageFromCCP));
+            ImageService.GetCharacterImageAsync(m_id, OnGotCharacterImageFromCCP);
         }
 
         /// <summary>
         /// We retrieve a portrait from the ImageService's cache or from the CCP url.
         /// We then save it to the portraits' cache (%APPDATA%\Cache).
         /// </summary>
-        /// <param name="i">The retrieved image.</param>
+        /// <param name="newImage">The retrieved image.</param>
         private void OnGotCharacterImageFromCCP(Image newImage)
         {
             // Restore cursor, then quit if download failed
@@ -287,13 +285,13 @@ namespace EVEMon.Common.Controls
             IsUpdating = true;
             try
             {
+                if (EveMonClient.EvePortraitCacheFolders == null)
+                    return;
+
                 // If we don't have the game's portraits cache already, prompt the user
-                if (EveMonClient.EvePortraitCacheFolders == null || EveMonClient.EvePortraitCacheFolders.Length == 0)
-                {
-                    // Return if the user canceled
-                    if (!ChangeEVEPortraitCache())
-                        return;
-                }
+                // Return if the user canceled
+                if (EveMonClient.EvePortraitCacheFolders.Length == 0 && !ChangeEVEPortraitCache())
+                    return;
 
                 // Now, search in the game folder all matching files 
                 // (different resolutions are available for every character)
@@ -302,9 +300,9 @@ namespace EVEMon.Common.Controls
                     // Retrieve all files in the EVE cache directory which matches "<characterId>*"
                     List<FileInfo> filesInEveCache = new List<FileInfo>();
                     List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
-                    foreach (var evePortraitCacheFolder in EveMonClient.EvePortraitCacheFolders)
+                    foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
+                        evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
                     {
-                        DirectoryInfo di = new DirectoryInfo(evePortraitCacheFolder);
                         filesInEveCache.AddRange(di.GetFiles(String.Format("{0}*", m_id)));
                         
                         // Look up for an image file and add it to the list
@@ -312,11 +310,7 @@ namespace EVEMon.Common.Controls
                         // as part of new character portraits creator,
                         // so I added an image file check method to provide compatibility
                         // with all image formats (Jimi))
-                        foreach (var file in filesInEveCache)
-                        {
-                            if (IsImageFile(file))
-                                imageFilesInEveCache.Add(file);
-                        }
+                        imageFilesInEveCache.AddRange(filesInEveCache.Where(IsImageFile));
                     }
 
                     // Displays an error message if none found.
@@ -345,15 +339,15 @@ namespace EVEMon.Common.Controls
                         int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
                         int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
 
-                        if (imageSize > bestSize)
-                        {
-                            bestFile = file.FullName;
-                            bestSize = imageSize;
-                        }
+                        if (imageSize <= bestSize)
+                            continue;
+
+                        bestFile = file.FullName;
+                        bestSize = imageSize;
                     }
 
                     // Open the largest image and save it
-                    var image = Image.FromFile(bestFile);
+                    Image image = Image.FromFile(bestFile);
                     SavePortraitToCache(image);
                 }
                 catch (Exception e)
@@ -379,7 +373,7 @@ namespace EVEMon.Common.Controls
         {
             try
             {
-                var image = Image.FromFile(file.FullName);
+                Image.FromFile(file.FullName);
             }
             catch (OutOfMemoryException)
             {
@@ -421,8 +415,8 @@ namespace EVEMon.Common.Controls
                 return;
             }
 
-            var image = GetPortraitFromCache();
-            pictureBox.Image = (image != null ? image : pictureBox.InitialImage);
+            Image image = GetPortraitFromCache();
+            pictureBox.Image = (image ?? pictureBox.InitialImage);
         }
 
         /// <summary>

@@ -164,7 +164,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ListViewHelper.cs" />
-    <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\ColumnSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>

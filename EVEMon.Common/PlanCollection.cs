@@ -30,7 +30,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var plan in m_items)
+                foreach (var plan in Items)
                 {
                     if (plan.Name == name) return plan;
                 }
@@ -97,10 +97,10 @@ namespace EVEMon.Common
             }
 
             // We now add the new plans
-            m_items.Clear();
+            Items.Clear();
             foreach (var plan in newPlanList)
             {
-                m_items.Add(plan);
+                Items.Add(plan);
                 plan.IsConnected = true;
             }
 

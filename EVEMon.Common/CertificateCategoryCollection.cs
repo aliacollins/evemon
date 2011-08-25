@@ -23,7 +23,7 @@ namespace EVEMon.Common
             foreach (StaticCertificateCategory srcCategory in StaticCertificates.Categories)
             {
                 CertificateCategory category = new CertificateCategory(character, srcCategory);
-                m_items[category.ID] = category;
+                Items[category.ID] = category;
             }
         }
     }

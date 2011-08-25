@@ -7,8 +7,8 @@ namespace EVEMon.Common.Controls
     /// </summary>
     public sealed class ApiErrorTroubleshooterEventArgs : EventArgs
     {
-        private bool m_resolved;
-        private ResolutionAction m_action;
+        private readonly bool m_resolved;
+        private readonly ResolutionAction m_action;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiErrorTroubleshooterEventArgs"/> class with the error unresolved.
@@ -34,10 +34,7 @@ namespace EVEMon.Common.Controls
         /// <value><c>true</c> if resolved; otherwise, <c>false</c>.</value>
         public bool Resolved
         {
-            get
-            {
-                return m_resolved;
-            }
+            get { return m_resolved; }
         }
 
         /// <summary>
@@ -46,10 +43,7 @@ namespace EVEMon.Common.Controls
         /// <value>The action.</value>
         public ResolutionAction Action
         {
-            get
-            {
-                return m_action;
-            }
+            get { return m_action; }
         }
     }
 }

@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common.Attributes
 {
     public sealed class HeaderAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeaderAttribute"/> class.
+        /// </summary>
+        /// <param name="header">The header.</param>
         public HeaderAttribute(string header)
         {
-            this.Header = header;
+            Header = header;
         }
 
-        public string Header
-        {
-            get;
-            set;
-        }
+        /// <summary>
+        /// Gets or sets the header.
+        /// </summary>
+        /// <value>The header.</value>
+        public string Header { get; private set; }
     }
 }

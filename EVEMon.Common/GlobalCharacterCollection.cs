@@ -29,7 +29,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var character in m_items)
+                foreach (var character in Items)
                 {
                     if (character.Guid == guid)
                         return character;
@@ -45,7 +45,7 @@ namespace EVEMon.Common
         /// <param name="notify"></param>
         internal void Add(Character character, bool notify)
         {
-            m_items.Add(character);
+            Items.Add(character);
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
         }
@@ -68,7 +68,7 @@ namespace EVEMon.Common
         /// <param name="notify"></param>
         internal void Remove(Character character, bool notify)
         {
-            m_items.Remove(character);
+            Items.Remove(character);
             character.Monitored = false;
 
             // For CCP characters, also put it on the account's ignore list.
@@ -151,7 +151,7 @@ namespace EVEMon.Common
             }
 
             // Import the characters, their identies, etc
-            m_items.Clear();
+            Items.Clear();
             foreach (var serialCharacter in serial)
             {
                 // Gets the identity or create it
@@ -163,12 +163,12 @@ namespace EVEMon.Common
                 var ccpCharacter = serialCharacter as SerializableCCPCharacter;
                 if (ccpCharacter != null)
                 {
-                    m_items.Add(new CCPCharacter(id, ccpCharacter));
+                    Items.Add(new CCPCharacter(id, ccpCharacter));
                 }
                 else
                 {
                     var uriCharacter = serialCharacter as SerializableUriCharacter;
-                    m_items.Add(new UriCharacter(id, uriCharacter));
+                    Items.Add(new UriCharacter(id, uriCharacter));
                 }
             }
 
@@ -184,7 +184,7 @@ namespace EVEMon.Common
         {
             var serial = new List<SerializableSettingsCharacter>();
 
-            foreach (var character in m_items)
+            foreach (var character in Items)
             {
                 serial.Add(character.Export());
             }
@@ -198,7 +198,7 @@ namespace EVEMon.Common
         /// <param name="list"></param>
         internal void ImportPlans(List<SerializablePlan> serial)
         {
-            foreach (var character in m_items)
+            foreach (var character in Items)
             {
                 character.ImportPlans(serial);
             }
@@ -211,7 +211,7 @@ namespace EVEMon.Common
         internal List<SerializablePlan> ExportPlans()
         {
             var serial = new List<SerializablePlan>();
-            foreach (var character in m_items)
+            foreach (var character in Items)
             {
                 character.ExportPlans(serial);
             }

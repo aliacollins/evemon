@@ -20,7 +20,7 @@ namespace EVEMon.Common
             {
                 foreach (CertificateClass certClass in category)
                 {
-                    m_items[certClass.ID] = certClass;
+                    Items[certClass.ID] = certClass;
                 }
             }
         }

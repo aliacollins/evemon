@@ -1,29 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Collections
 {
+
+
     #region EmptyEnumerator<T>
+
     /// <summary>
-    /// Implémente un énumérateur sur un ensemble vide.
+    /// Implements an enumerator on a empty set.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public sealed class EmptyEnumerator<T> : IEnumerator<T>
     {
-        /// <summary>
-        /// Singleton implementation
-        /// </summary>
-        public static readonly EmptyEnumerator<T> Instance = new EmptyEnumerator<T>();
-
         private EmptyEnumerator()
         {
         }
 
         /// <summary>
-        /// Throws an exception
+        /// Singleton implementation.
+        /// </summary>
+        public static EmptyEnumerator<T> Instance
+        {
+            get { return new EmptyEnumerator<T>(); }
+        }
+
+        /// <summary>
+        /// Throws an exception.
         /// </summary>
         public T Current
         {
@@ -31,22 +35,22 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Dispose the class (do nothing)
+        /// Dispose the class (do nothing).
         /// </summary>
         public void Dispose()
         {
         }
 
         /// <summary>
-        /// Throws an exception
+        /// Throws an exception.
         /// </summary>
-        object System.Collections.IEnumerator.Current
+        object IEnumerator.Current
         {
             get { throw new InvalidOperationException("The enumerator is empty"); }
         }
 
         /// <summary>
-        /// Move to the next element, always return false
+        /// Move to the next element, always return false.
         /// </summary>
         /// <returns>false</returns>
         public bool MoveNext()
@@ -55,26 +59,23 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Resets the enumerator (do nothing)
+        /// Resets the enumerator (do nothing).
         /// </summary>
         public void Reset()
         {
         }
     }
+
     #endregion
 
 
     #region EmptyEnumerable<T>
+
     /// <summary>
     /// Cette classe implémente une collection vide et immuable.
     /// </summary>
-    public class EmptyEnumerable<T> : IEnumerable<T>, IEnumerable
+    public class EmptyEnumerable<T> : IEnumerable<T>
     {
-        /// <summary>
-        /// Singleton implementation
-        /// </summary>
-        public static readonly EmptyEnumerable<T> Instance = new EmptyEnumerable<T>();
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -83,7 +84,15 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Gets an empty enumerator
+        /// Singleton implementation.
+        /// </summary>
+        public static EmptyEnumerable<T> Instance
+        {
+            get { return new EmptyEnumerable<T>(); }
+        }
+
+        /// <summary>
+        /// Gets an empty enumerator.
         /// </summary>
         /// <returns>An empty enumerator</returns>
         public IEnumerator<T> GetEnumerator()
@@ -92,14 +101,14 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Gets an empty enumerator
+        /// Gets an empty enumerator.
         /// </summary>
         /// <returns>An empty enumerator</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return EmptyEnumerator<T>.Instance;
         }
     }
-    #endregion
 
+    #endregion
 }

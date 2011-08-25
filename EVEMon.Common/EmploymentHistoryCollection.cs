@@ -28,12 +28,12 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serializable objects from the API.</param>
         internal void Import(IEnumerable<SerializableEmploymentHistoryListItem> src)
         {
-            m_items.Clear();
+            Items.Clear();
 
             // Import the standings from the API
             foreach (SerializableEmploymentHistoryListItem srcEmploymentRecord in src)
             {
-                m_items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));
+                Items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));
             }
         }
 
@@ -43,11 +43,11 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serializable standings from the API.</param>
         internal void Import(IEnumerable<SerializableEmploymentHistory> src)
         {
-            m_items.Clear();
+            Items.Clear();
 
             foreach (SerializableEmploymentHistory srcEmploymentRecord in src)
             {
-                m_items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));
+                Items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));
             }
         }
 
@@ -57,8 +57,8 @@ namespace EVEMon.Common
         /// <returns>List of serializable research points.</returns>
         internal List<SerializableEmploymentHistory> Export()
         {
-            List<SerializableEmploymentHistory> serial = new List<SerializableEmploymentHistory>(m_items.Count);
-            serial.AddRange(m_items.Select(employmentRecord => employmentRecord.Export()));
+            List<SerializableEmploymentHistory> serial = new List<SerializableEmploymentHistory>(Items.Count);
+            serial.AddRange(Items.Select(employmentRecord => employmentRecord.Export()));
             return serial;
         }
 

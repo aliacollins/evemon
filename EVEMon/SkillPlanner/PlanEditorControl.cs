@@ -1535,10 +1535,10 @@ namespace EVEMon.SkillPlanner
                     // Shows the custom dialog box
                     MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
                     DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                    Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = msgBoxCustom.cbUnchecked;
+                    Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = msgBoxCustom.CbUnchecked;
 
                     // When the checkbox is checked we store the dialog result
-                    if (!msgBoxCustom.cbUnchecked)
+                    if (!msgBoxCustom.CbUnchecked)
                         Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
 
                     if (drb == DialogResult.Yes)

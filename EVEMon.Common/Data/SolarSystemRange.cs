@@ -53,7 +53,7 @@ namespace EVEMon.Common.Data
             SolarSystemRange lastRange = new SolarSystemRange(system, 0);
 
             collectedSystems.Add(system.ID, system);
-            lastRange.m_items.Add(system);
+            lastRange.Items.Add(system);
 
             for (int i = 1; i <= maxInclusiveNumberOfJumps; i++)
             {
@@ -72,14 +72,14 @@ namespace EVEMon.Common.Data
         {
             SolarSystemRange nextRange = new SolarSystemRange(Source, Range + 1);
 
-            foreach (var system in m_items)
+            foreach (var system in Items)
             {
                 foreach (var child in system.Neighbors)
                 {
                     if (!collectedSystems.ContainsKey(child.ID))
                     {
                         collectedSystems.Add(child.ID, child);
-                        nextRange.m_items.Add(child);
+                        nextRange.Items.Add(child);
                     }
                 }
             }

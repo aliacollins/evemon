@@ -17,7 +17,7 @@ namespace EVEMon.Common
         {
             get 
             {
-                foreach (var monitor in m_items)
+                foreach (var monitor in Items)
                 {
                     if (monitor.Method == method) return monitor;
                 }
@@ -32,7 +32,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_items.Any(x => x.IsUpdating);
+                return Items.Any(x => x.IsUpdating);
             }
         }
 
@@ -43,7 +43,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_items.Any(x => x.LastResult != null && x.LastResult.HasError);
+                return Items.Any(x => x.LastResult != null && x.LastResult.HasError);
             }
         }
 
@@ -54,7 +54,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_items.Where(x => x.LastResult != null).Select(x => x.LastResult);
+                return Items.Where(x => x.LastResult != null).Select(x => x.LastResult);
             }
         }
 
@@ -66,8 +66,8 @@ namespace EVEMon.Common
             get
             {
                 // Caches the times and sort
-                var times = m_items.Select(x => x.NextUpdate).ToArray();
-                var monitors = m_items.ToArray();
+                var times = Items.Select(x => x.NextUpdate).ToArray();
+                var monitors = Items.ToArray();
                 Array.Sort(times, monitors);
 
                 // Returns the monitors which are planned for an autoupdate
@@ -102,7 +102,7 @@ namespace EVEMon.Common
             {
                 DateTime nextTime = DateTime.MaxValue;
                 IQueryMonitor nextMonitor = null;
-                foreach (IQueryMonitorEx monitor in m_items)
+                foreach (IQueryMonitorEx monitor in Items)
                 {
                     if (monitor.Status == QueryStatus.Pending || monitor.Status == QueryStatus.Updating)
                     {
@@ -133,7 +133,7 @@ namespace EVEMon.Common
         /// </summary>
         public void QueryEverything()
         {
-            foreach (IQueryMonitorEx monitor in m_items)
+            foreach (IQueryMonitorEx monitor in Items)
             {
                 monitor.ForceUpdate(false);
             }
@@ -145,7 +145,7 @@ namespace EVEMon.Common
         /// <param name="monitor"></param>
         internal void UpdateOnOneSecondTick()
         {
-            foreach (IQueryMonitorEx monitor in m_items)
+            foreach (IQueryMonitorEx monitor in Items)
             {
                 monitor.UpdateOnOneSecondTick();
             }
@@ -157,7 +157,7 @@ namespace EVEMon.Common
         /// <param name="monitor"></param>
         internal void Add(IQueryMonitorEx monitor)
         {
-            m_items.Add(monitor);
+            Items.Add(monitor);
         }
     }
 }

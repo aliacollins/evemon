@@ -21,7 +21,7 @@ namespace EVEMon.Common.Data
         /// <param name="item"></param>
         internal void Add(T item)
         {
-            m_items.Add(item);
+            Items.Add(item);
         }
     }
 }

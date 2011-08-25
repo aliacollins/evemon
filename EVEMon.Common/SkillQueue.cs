@@ -35,7 +35,7 @@ namespace EVEMon.Common
                 if (IsPaused)
                     return false;
 
-                return m_items.Count != 0;
+                return Items.Count != 0;
             }
         }
 
@@ -49,7 +49,7 @@ namespace EVEMon.Common
         /// </summary>
         public DateTime EndTime
         {
-            get { return m_items.IsEmpty() ? DateTime.UtcNow : m_items[m_items.Count - 1].EndTime; }
+            get { return Items.IsEmpty() ? DateTime.UtcNow : Items[Items.Count - 1].EndTime; }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace EVEMon.Common
         /// </summary>
         public QueuedSkill CurrentlyTraining
         {
-            get { return m_items.Count == 0 ? null : m_items[0]; }
+            get { return Items.Count == 0 ? null : Items[0]; }
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace EVEMon.Common
             List<QueuedSkill> skillsCompleted = new List<QueuedSkill>();
 
             // Pops all the completed skills
-            while (m_items.Count != 0)
+            while (Items.Count != 0)
             {
-                QueuedSkill skill = m_items[0];
+                QueuedSkill skill = Items[0];
 
                 // If the skill is not completed, we jump out of the loop
                 if (skill.EndTime > DateTime.UtcNow)
@@ -90,11 +90,11 @@ namespace EVEMon.Common
 
                 skillsCompleted.Add(skill);
                 LastCompleted = skill;
-                m_items.RemoveAt(0);
+                Items.RemoveAt(0);
 
                 // Sends an email alert
                 if (!Settings.IsRestoringSettings && Settings.Notifications.SendMailAlert)
-                    Emailer.SendSkillCompletionMail(m_items, skill, m_character);
+                    Emailer.SendSkillCompletionMail(Items, skill, m_character);
 
                 // Sends a notification
                 EveMonClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
@@ -111,7 +111,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableQueuedSkill> Export()
         {
-            return m_items.Select(skill => skill.Export()).ToList();
+            return Items.Select(skill => skill.Export()).ToList();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace EVEMon.Common
             DateTime startTimeWhenPaused = m_startTime;
 
             // Imports the queued skills and checks whether they are paused
-            m_items.Clear();
+            Items.Clear();
             foreach (SerializableQueuedSkill serialSkill in serial)
             {
                 // When the skill queue is paused, startTime and endTime are empty in the XML document.
@@ -136,7 +136,7 @@ namespace EVEMon.Common
                     IsPaused = true;
 
                 // Creates the skill queue
-                m_items.Add(new QueuedSkill(m_character, serialSkill, IsPaused, ref startTimeWhenPaused));
+                Items.Add(new QueuedSkill(m_character, serialSkill, IsPaused, ref startTimeWhenPaused));
             }
 
             // Fires the event regarding the character skill queue update.

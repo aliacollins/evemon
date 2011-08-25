@@ -28,7 +28,7 @@ namespace EVEMon.Common
             {
                 foreach (var skill in group)
                 {
-                    m_items[skill.ID] = skill;
+                    Items[skill.ID] = skill;
                     m_itemsByName[skill.Name] = skill;
                     m_itemsArray[skill.ArrayIndex] = skill;
                 }
@@ -93,7 +93,7 @@ namespace EVEMon.Common
         internal List<SerializableCharacterSkill> Export()
         {
             List<SerializableCharacterSkill> skills = new List<SerializableCharacterSkill>();
-            foreach (Skill skill in m_items.Values.Where(x => x.IsKnown || x.IsOwned))
+            foreach (Skill skill in Items.Values.Where(x => x.IsKnown || x.IsOwned))
             {
                 skills.Add(skill.Export());
             }
@@ -105,7 +105,7 @@ namespace EVEMon.Common
         internal void Import(List<SerializableCharacterSkill> skills, bool fromCCP)
         {
             // Skills : reset all > update all
-            foreach (Skill skill in m_items.Values)
+            foreach (Skill skill in Items.Values)
             {
                 skill.Reset(fromCCP);
             }
@@ -114,7 +114,7 @@ namespace EVEMon.Common
             {
                 // Take care of the new skills not in our datafiles yet
                 // Update if it exists
-                m_items[serialSkill.ID].Import(serialSkill, fromCCP);
+                Items[serialSkill.ID].Import(serialSkill, fromCCP);
             }
         }
     }

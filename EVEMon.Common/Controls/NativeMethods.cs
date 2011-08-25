@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public static class NativeMethods
     {
@@ -58,7 +58,7 @@ namespace EVEMon.Controls
 
         // All definitions taken from http://pinvoke.net
         [DllImport("shell32.dll")]
-        public static extern IntPtr SHAppBarMessage(uint dwMessage, ref APPBARDATA pData);
+        public static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
 
         [DllImport("user32.dll")]
@@ -67,12 +67,12 @@ namespace EVEMon.Controls
         public const string TaskbarClass = "Shell_TrayWnd";
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct APPBARDATA
+        public struct AppBarData
         {
-            public static APPBARDATA Create()
+            public static AppBarData Create()
             {
-                APPBARDATA appBarData = new APPBARDATA();
-                appBarData.cbSize = Marshal.SizeOf(typeof (APPBARDATA));
+                AppBarData appBarData = new AppBarData();
+                appBarData.cbSize = Marshal.SizeOf(typeof (AppBarData));
                 return appBarData;
             }
 
@@ -163,6 +163,22 @@ namespace EVEMon.Controls
 
         }
 
+        #endregion
+        
+        
+        #region Custom Message Box
+
+        public const int SC_CLOSE = 0xF060;
+        public const int MF_BYCOMMAND = 0x0;
+        public const int MF_GRAYED = 0x1;
+        public const int MF_ENABLED = 0x0;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
+        
         #endregion
     }
 }

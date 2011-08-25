@@ -23,14 +23,14 @@ namespace EVEMon.Common
         {
             try
             {
-                m_items.Clear();
-                m_items.Add(new Datafile(DatafileConstants.PropertiesDatafile));
-                m_items.Add(new Datafile(DatafileConstants.ItemsDatafile));
-                m_items.Add(new Datafile(DatafileConstants.SkillsDatafile));
-                m_items.Add(new Datafile(DatafileConstants.CertificatesDatafile));
-                m_items.Add(new Datafile(DatafileConstants.GeographyDatafile));
-                m_items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
-                m_items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
+                Items.Clear();
+                Items.Add(new Datafile(DatafileConstants.PropertiesDatafile));
+                Items.Add(new Datafile(DatafileConstants.ItemsDatafile));
+                Items.Add(new Datafile(DatafileConstants.SkillsDatafile));
+                Items.Add(new Datafile(DatafileConstants.CertificatesDatafile));
+                Items.Add(new Datafile(DatafileConstants.GeographyDatafile));
+                Items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
+                Items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
             }
             // Don't worry if we cant create MD5 maybe they have FIPS enforced.
             catch (Exception)

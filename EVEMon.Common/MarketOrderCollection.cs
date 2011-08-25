@@ -30,16 +30,16 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal void Import(IEnumerable<SerializableOrderBase> src)
         {
-            m_items.Clear();
+            Items.Clear();
             foreach (SerializableOrderBase srcOrder in src)
             {
                 if (srcOrder is SerializableBuyOrder)
                 {
-                    m_items.Add(new BuyOrder((SerializableBuyOrder)srcOrder));
+                    Items.Add(new BuyOrder((SerializableBuyOrder)srcOrder));
                 }
                 else
                 {
-                    m_items.Add(new SellOrder((SerializableSellOrder)srcOrder));
+                    Items.Add(new SellOrder((SerializableSellOrder)srcOrder));
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace EVEMon.Common
             // Mark all orders for deletion 
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
-            foreach (MarketOrder order in m_items)
+            foreach (MarketOrder order in Items)
             {
                 order.MarkedForDeletion = true;
             }
@@ -70,7 +70,7 @@ namespace EVEMon.Common
 
                 // First check whether it is an existing order
                 // If it is, update it and remove the deletion candidate flag
-                if (m_items.Any(x => x.TryImport(srcOrder, endedOrders)))
+                if (Items.Any(x => x.TryImport(srcOrder, endedOrders)))
                     continue;
 
                 // It's a new order, let's add it
@@ -89,15 +89,15 @@ namespace EVEMon.Common
             }
 
             // Add the items that are no longer marked for deletion
-            newOrders.AddRange(m_items.Where(x => !x.MarkedForDeletion));
+            newOrders.AddRange(Items.Where(x => !x.MarkedForDeletion));
 
             // Add the items that are no longer present in the API
             // (a.k.a. Canceled, Expired, Fulfilled)
-            endedOrders.AddRange(m_items.Except(newOrders)); // This code line is to remain till CCP fixes the market orders API
+            endedOrders.AddRange(Items.Except(newOrders)); // This code line is to remain till CCP fixes the market orders API
 
             // Replace the old list with the new one
-            m_items.Clear();
-            m_items.AddRange(newOrders);
+            Items.Clear();
+            Items.AddRange(newOrders);
 
             // Fires the event regarding market orders update
             EveMonClient.OnCharacterMarketOrdersUpdated(m_character);
@@ -109,9 +109,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableOrderBase> Export()
         {
-            List<SerializableOrderBase> serial = new List<SerializableOrderBase>(m_items.Count);
+            List<SerializableOrderBase> serial = new List<SerializableOrderBase>(Items.Count);
 
-            foreach (MarketOrder order in m_items)
+            foreach (MarketOrder order in Items)
             {
                 serial.Add(order.Export());
             }

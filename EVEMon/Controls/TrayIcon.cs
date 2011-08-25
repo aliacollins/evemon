@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.Controls
 {
@@ -241,7 +242,7 @@ namespace EVEMon.Controls
         public static void SetToolTipLocation(Form tooltipForm)
         {
             Point mp = Control.MousePosition;
-            NativeMethods.APPBARDATA appBarData = NativeMethods.APPBARDATA.Create();
+            NativeMethods.AppBarData appBarData = NativeMethods.AppBarData.Create();
             NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
             NativeMethods.RECT taskBarLocation = appBarData.rc;
 

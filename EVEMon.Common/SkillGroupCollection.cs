@@ -25,7 +25,7 @@ namespace EVEMon.Common
             foreach (var srcGroup in StaticSkills.AllGroups)
             {
                 var group = new SkillGroup(character, srcGroup);
-                m_items[group.Name] = group;
+                Items[group.Name] = group;
             }
         }
 

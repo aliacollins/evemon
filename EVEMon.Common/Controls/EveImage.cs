@@ -26,13 +26,13 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Holds configuration data for different image types.
         /// </summary>
-        private Dictionary<ImageType, ImageTypeData> m_ImageTypeAttributes;
+        private Dictionary<ImageType, ImageTypeData> m_imageTypeAttributes;
 
         private bool m_popUpEnabled;
         private bool m_popUpActive;
         private EveImageSize m_imageSize;
         private EveImageSizeMode m_sizeMode;
-        private Item m_item = null;
+        private Item m_item;
 
 
         #region Constructor
@@ -62,14 +62,8 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public bool PopUpEnabled
         {
-            get
-            {
-                return m_popUpEnabled;
-            }
-            set
-            {
-                m_popUpEnabled = value;
-            }
+            get { return m_popUpEnabled; }
+            set { m_popUpEnabled = value; }
         }
 
         /// <summary>
@@ -77,10 +71,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public Item EveItem
         {
-            get
-            {
-                return m_item;
-            }
+            get { return m_item; }
             set
             {
                 m_item = value;
@@ -94,17 +85,14 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public EveImageSize ImageSize
         {
-            get
-            {
-                return m_imageSize;
-            }
+            get { return m_imageSize; }
             set
             {
                 m_imageSize = value;
 
                 if (m_sizeMode == EveImageSizeMode.AutoSize)
                 {
-                    pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
+                    pbImage.Size = new Size((int) m_imageSize, (int) m_imageSize);
                     Size = pbImage.Size;
                 }
             }
@@ -113,16 +101,14 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets or sets the size of the image in pixels.
         /// </summary>
-        new public Size Size
+        public new Size Size
         {
-            get
-            {
-                return base.Size;
-            }
+            get { return base.Size; }
             set
             {
-                base.Size = (m_sizeMode == EveImageSizeMode.AutoSize ?
-                    new Size((int)m_imageSize, (int)m_imageSize) : value);
+                base.Size = (m_sizeMode == EveImageSizeMode.AutoSize
+                                 ? new Size((int) m_imageSize, (int) m_imageSize)
+                                 : value);
             }
         }
 
@@ -130,12 +116,9 @@ namespace EVEMon.Common.Controls
         /// Gets or sets the size mode.
         /// </summary>
         /// <value>The size mode.</value>
-        public  EveImageSizeMode SizeMode
+        public EveImageSizeMode SizeMode
         {
-            get
-            {
-                return m_sizeMode;
-            }
+            get { return m_sizeMode; }
             set
             {
                 m_sizeMode = value;
@@ -146,7 +129,7 @@ namespace EVEMon.Common.Controls
                         pbImage.SizeMode = PictureBoxSizeMode.Normal;
                         break;
                     case EveImageSizeMode.AutoSize:
-                        pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
+                        pbImage.Size = new Size((int) m_imageSize, (int) m_imageSize);
                         Size = pbImage.Size;
                         pbImage.SizeMode = PictureBoxSizeMode.AutoSize;
                         break;
@@ -167,50 +150,32 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void SetImageTypeAttributes()
         {
-            ArrayList validSizes;
-            m_ImageTypeAttributes = new Dictionary<ImageType, ImageTypeData>();
-            
+            m_imageTypeAttributes = new Dictionary<ImageType, ImageTypeData>();
+
             // Ships
-            validSizes = new ArrayList();
-            validSizes.Add(EveImageSize.x32);
-            validSizes.Add(EveImageSize.x64);
-            validSizes.Add(EveImageSize.x128);
-            validSizes.Add(EveImageSize.x256);
-            m_ImageTypeAttributes.Add(ImageType.Ship,
-                new ImageTypeData("Ships", "icons", ImageNameFrom.TypeID, validSizes));
-            
+            ArrayList validSizes = new ArrayList {EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256};
+            m_imageTypeAttributes.Add(ImageType.Ship,
+                                      new ImageTypeData("Ships", "icons", ImageNameFrom.TypeID, validSizes));
+
             // Items
-            validSizes = new ArrayList();
-            validSizes.Add(EveImageSize.x16);
-            validSizes.Add(EveImageSize.x32);
-            validSizes.Add(EveImageSize.x64);
-            validSizes.Add(EveImageSize.x128);
-            m_ImageTypeAttributes.Add(ImageType.Item,
-                new ImageTypeData("Items", "icons", ImageNameFrom.Icon, validSizes));
-            
+            validSizes = new ArrayList {EveImageSize.x16, EveImageSize.x32, EveImageSize.x64, EveImageSize.x128};
+            m_imageTypeAttributes.Add(ImageType.Item,
+                                      new ImageTypeData("Items", "icons", ImageNameFrom.Icon, validSizes));
+
             // Drones
-            validSizes = new ArrayList();
-            validSizes.Add(EveImageSize.x32);
-            validSizes.Add(EveImageSize.x64);
-            validSizes.Add(EveImageSize.x128);
-            validSizes.Add(EveImageSize.x256);
-            m_ImageTypeAttributes.Add(ImageType.Drone,
-                new ImageTypeData("Drones", "icons", ImageNameFrom.TypeID, validSizes));
-            
+            validSizes = new ArrayList {EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256};
+            m_imageTypeAttributes.Add(ImageType.Drone,
+                                      new ImageTypeData("Drones", "icons", ImageNameFrom.TypeID, validSizes));
+
             // Structures
-            validSizes = new ArrayList();
-            validSizes.Add(EveImageSize.x32);
-            validSizes.Add(EveImageSize.x64);
-            validSizes.Add(EveImageSize.x128);
-            validSizes.Add(EveImageSize.x256);
-            m_ImageTypeAttributes.Add(ImageType.Structure,
-                new ImageTypeData("", "icons", ImageNameFrom.TypeID, validSizes));
+            validSizes = new ArrayList {EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256};
+            m_imageTypeAttributes.Add(ImageType.Structure,
+                                      new ImageTypeData("", "icons", ImageNameFrom.TypeID, validSizes));
 
             // Blueprints
-            validSizes = new ArrayList();
-            validSizes.Add(EveImageSize.x64);
-            m_ImageTypeAttributes.Add(ImageType.Blueprint,
-                new ImageTypeData("Blueprints", "icons", ImageNameFrom.TypeID, validSizes));
+            validSizes = new ArrayList {EveImageSize.x64};
+            m_imageTypeAttributes.Add(ImageType.Blueprint,
+                                      new ImageTypeData("Blueprints", "icons", ImageNameFrom.TypeID, validSizes));
         }
 
         /// <summary>
@@ -262,14 +227,14 @@ namespace EVEMon.Common.Controls
                 return;
 
             ImageType imageType = GetImageType(m_item);
-            ImageTypeData typeData = m_ImageTypeAttributes[imageType];
+            ImageTypeData typeData = m_imageTypeAttributes[imageType];
 
             // Only display an image if the correct size is available
-            if (!typeData.validSizes.Contains(m_imageSize))
+            if (!typeData.ValidSizes.Contains(m_imageSize))
                 return;
 
             // Enable pop up if required
-            if (m_popUpEnabled && typeData.validSizes.Contains(EveImageSize.x256))
+            if (m_popUpEnabled && typeData.ValidSizes.Contains(EveImageSize.x256))
             {
                 toolTip.Active = true;
                 m_popUpActive = true;
@@ -289,21 +254,21 @@ namespace EVEMon.Common.Controls
             string urlPath = "type";
             bool drawOverlayIcon = false;
 
-            if ((int)m_imageSize > 64)
+            if ((int) m_imageSize > 64)
             {
                 urlPath = "render";
                 drawOverlayIcon = true;
             }
 
-            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize);
+            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int) m_imageSize);
 
-            ImageService.GetImageAsync(imageURL, true, (img) =>
-                                        {
-                                            GotImage(m_item.ID, img, drawOverlayIcon);
-                                            
-                                            if (img == null)
-                                                GetImageFromAlternativeSource(typeData);
-                                        });
+            ImageService.GetImageAsync(imageURL, true, img =>
+                                                           {
+                                                               GotImage(m_item.ID, img, drawOverlayIcon);
+
+                                                               if (img == null)
+                                                                   GetImageFromAlternativeSource(typeData);
+                                                           });
         }
 
         /// <summary>
@@ -313,12 +278,12 @@ namespace EVEMon.Common.Controls
         private void GetImageFromAlternativeSource(ImageTypeData typeData)
         {
             // Set file & pathname variables
-            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int)m_imageSize);
+            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int) m_imageSize);
 
             string imageWebName;
             string imageResourceName;
 
-            if (typeData.imageNameFrom == ImageNameFrom.TypeID)
+            if (typeData.NameFrom == ImageNameFrom.TypeID)
             {
                 imageWebName = m_item.ID.ToString();
                 imageResourceName = String.Format("_{0}", imageWebName);
@@ -331,18 +296,19 @@ namespace EVEMon.Common.Controls
 
             // Try and get image from a local optional resources file (probably don't used anymore, not sure)
             string localResources = String.Format("{1}Resources{0}Optional{0}{2}{3}.resources",
-                Path.DirectorySeparatorChar, AppDomain.CurrentDomain.BaseDirectory, typeData.localComponent, eveSize);
+                                                  Path.DirectorySeparatorChar, AppDomain.CurrentDomain.BaseDirectory,
+                                                  typeData.LocalComponent, eveSize);
 
             // Try to get image from web (or local cache located in %APPDATA%\EVEMon if not found yet)
-            if (!FetchImageResource(imageResourceName, localResources))
-            {
-                // Result should be like :
-                // http://eve.no-ip.de/icons/32_32/icon22_08.png
-                // http://eve.no-ip.de/icons/32_32/7538.png
-                string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.urlPath, eveSize, imageWebName);
+            if (FetchImageResource(imageResourceName, localResources))
+                return;
 
-                ImageService.GetImageAsync(imageURL, true, (img) => GotImage(m_item.ID, img, true));
-            }
+            // Result should be like :
+            // http://eve.no-ip.de/icons/32_32/icon22_08.png
+            // http://eve.no-ip.de/icons/32_32/7538.png
+            string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName);
+
+            ImageService.GetImageAsync(imageURL, true, img => GotImage(m_item.ID, img, true));
         }
 
         /// <summary>
@@ -362,11 +328,11 @@ namespace EVEMon.Common.Controls
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
-                    if (basicx.Key.ToString() == imageResourceName)
-                    {
-                        pbImage.Image = (Image)basicx.Value;
-                        return true;
-                    }
+                    if (basicx.Key.ToString() != imageResourceName)
+                        continue;
+
+                    pbImage.Image = (Image) basicx.Value;
+                    return true;
                 }
             }
             catch (Exception ex)
@@ -381,6 +347,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="id">EveObject id for retrieved image</param>
         /// <param name="image">Image object retrieved</param>
+        /// <param name="drawOverlayIcon">if set to <c>true</c> draw overlay icon.</param>
         private void GotImage(long id, Image image, bool drawOverlayIcon)
         {
             // Only display the image if the id matches the current EveObject
@@ -392,7 +359,7 @@ namespace EVEMon.Common.Controls
                 if (drawOverlayIcon)
                     DrawOverlayIcon();
             }
-            else 
+            else
             {
                 ShowBlankImage();
             }
@@ -428,7 +395,7 @@ namespace EVEMon.Common.Controls
 
             using (Graphics graph = Graphics.FromImage(pbImage.Image))
             {
-                graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
+                graph.DrawImage(overlayIcon, 0, 0, (int) m_imageSize / 4, (int) m_imageSize / 4);
             }
         }
 
@@ -448,41 +415,58 @@ namespace EVEMon.Common.Controls
             if (!m_popUpActive)
                 return;
 
-            WindowsFactory<EveImagePopUp>.ShowUnique(()=> new EveImagePopUp(m_item));
+            WindowsFactory<EveImagePopUp>.ShowUnique(() => new EveImagePopUp(m_item));
         }
+
         #endregion
 
 
         #region Private Enumerations and Structs
 
-        public enum EveImageSizeMode { Normal, AutoSize, StretchImage };
+        public enum EveImageSizeMode
+        {
+            Normal,
+            AutoSize,
+            StretchImage
+        };
 
         /// <summary>
         /// Identifies the image type being handled.
         /// </summary>
-        private enum ImageType { Ship, Drone, Structure, Item, Blueprint, None }
+        private enum ImageType
+        {
+            Ship,
+            Drone,
+            Structure,
+            Item,
+            Blueprint
+        }
 
         /// <summary>
         /// Indicates the source of the .png image name.
         /// </summary>
-        private enum ImageNameFrom { TypeID, Icon };
+        private enum ImageNameFrom
+        {
+            TypeID,
+            Icon
+        };
 
         /// <summary>
         /// Defines configuration data for a specific ImageType.
         /// </summary>
         private struct ImageTypeData
         {
-            public string localComponent;
-            public string urlPath;
-            public ImageNameFrom imageNameFrom;
-            public ArrayList validSizes;
+            public readonly string LocalComponent;
+            public readonly string URLPath;
+            public readonly ImageNameFrom NameFrom;
+            public readonly ArrayList ValidSizes;
 
             public ImageTypeData(string local, string url, ImageNameFrom name, ArrayList sizes)
             {
-                localComponent = local;
-                urlPath = url;
-                imageNameFrom = name;
-                validSizes = sizes;
+                LocalComponent = local;
+                URLPath = url;
+                NameFrom = name;
+                ValidSizes = sizes;
             }
         }
 

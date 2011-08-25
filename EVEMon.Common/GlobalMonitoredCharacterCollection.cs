@@ -27,8 +27,8 @@ namespace EVEMon.Common
         /// <param name="order"></param>
         public void Update(IEnumerable<Character> order)
         {
-            m_items.Clear();
-            m_items.AddRange(order);
+            Items.Clear();
+            Items.AddRange(order);
 
             // Notify the change
             EveMonClient.OnMonitoredCharactersChanged();
@@ -45,12 +45,12 @@ namespace EVEMon.Common
         /// <param name="targetIndex"></param>
         public void MoveTo(Character item, int targetIndex)
         {
-            int oldIndex = m_items.IndexOf(item);
+            int oldIndex = Items.IndexOf(item);
             if (oldIndex == -1) throw new InvalidOperationException("The item was not found in the collection.");
 
             if (oldIndex < targetIndex) targetIndex--;
-            m_items.RemoveAt(oldIndex);
-            m_items.Insert(targetIndex, item);
+            Items.RemoveAt(oldIndex);
+            Items.Insert(targetIndex, item);
 
             EveMonClient.OnMonitoredCharactersChanged();
         }
@@ -63,17 +63,17 @@ namespace EVEMon.Common
         {
             if (value)
             {
-                if (!m_items.Contains(character))
+                if (!Items.Contains(character))
                 {
-                    m_items.Add(character);
+                    Items.Add(character);
                     EveMonClient.OnMonitoredCharactersChanged();
                 }
             }
             else
             {
-                if (m_items.Contains(character))
+                if (Items.Contains(character))
                 {
-                    m_items.Remove(character);
+                    Items.Remove(character);
                     EveMonClient.OnMonitoredCharactersChanged();
                 }
             }
@@ -85,13 +85,13 @@ namespace EVEMon.Common
         /// <param name="characterGuids"></param>
         internal void Import(List<MonitoredCharacterSettings> monitoredCharacters)
         {
-            m_items.Clear();
+            Items.Clear();
             foreach (var characterSettings in monitoredCharacters)
             {
                 var character = EveMonClient.Characters[characterSettings.CharacterGuid];
                 if (character != null)
                 {
-                    m_items.Add(character);
+                    Items.Add(character);
                     character.Monitored = true;
                     character.UISettings = characterSettings.Settings;
                 }
@@ -107,7 +107,7 @@ namespace EVEMon.Common
         internal List<MonitoredCharacterSettings> Export()
         {
             List<MonitoredCharacterSettings> serial = new List<MonitoredCharacterSettings>();
-            foreach (var character in m_items)
+            foreach (var character in Items)
             {
                 serial.Add(new MonitoredCharacterSettings { CharacterGuid = character.Guid, Settings = character.UISettings.Clone() });
             }

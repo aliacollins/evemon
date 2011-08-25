@@ -70,7 +70,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var account in m_items.Values)
+                foreach (var account in Items.Values)
                 {
                     if (account.UserID == userID)
                         return account;
@@ -115,7 +115,7 @@ namespace EVEMon.Common
             }
 
             // Remove the account
-            if (!m_items.Remove(account.UserID))
+            if (!Items.Remove(account.UserID))
             {
                 throw new InvalidOperationException("This account does not exist in the list.");
             }
@@ -130,7 +130,7 @@ namespace EVEMon.Common
         /// <param name="notify"></param>
         internal void Add(Account account, bool notify)
         {
-            m_items.Add(account.UserID, account);
+            Items.Add(account.UserID, account);
             if (notify)
                 EveMonClient.OnAccountCollectionChanged();
         }
@@ -141,12 +141,12 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableAccount> serial)
         {
-            m_items.Clear();
+            Items.Clear();
             foreach (var serialAccount in serial)
             {
                 try
                 {
-                    m_items.Add(serialAccount.ID, new Account(serialAccount));
+                    Items.Add(serialAccount.ID, new Account(serialAccount));
                 }
                 catch (ArgumentException ex)
                 {
@@ -166,7 +166,7 @@ namespace EVEMon.Common
         {
             var serial = new List<SerializableAccount>();
 
-            foreach (var account in m_items.Values)
+            foreach (var account in Items.Values)
             {
                 serial.Add(account.Export());
             }

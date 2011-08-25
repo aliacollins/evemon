@@ -26,13 +26,13 @@ namespace EVEMon.Common.Data
                 switch (item.Family)
                 {
                     default:
-                        m_items.Add(new Item(group, item));
+                        Items.Add(new Item(group, item));
                         break;
                     case ItemFamily.Implant:
-                        m_items.Add(new Implant(group, item));
+                        Items.Add(new Implant(group, item));
                         break;
                     case ItemFamily.Ship:
-                        m_items.Add(new Ship(group, item));
+                        Items.Add(new Ship(group, item));
                         break;
                 }
             }

@@ -42,7 +42,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public Implant this[string name]
         {
-            get { return m_items.FirstOrDefault(implant => implant.Name == name); }
+            get { return Items.FirstOrDefault(implant => implant.Name == name); }
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace EVEMon.Common.Data
         /// <param name="implant"></param>
         internal void Add(Implant implant)
         {
-            m_items.Add(implant);
+            Items.Add(implant);
         }
 
         #endregion

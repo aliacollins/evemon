@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />

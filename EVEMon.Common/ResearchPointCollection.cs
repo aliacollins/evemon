@@ -24,11 +24,11 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal void Import(IEnumerable<SerializableResearchPoint> src)
         {
-            m_items.Clear();
+            Items.Clear();
 
             foreach (SerializableResearchPoint srcResearchPoint in src)
             {
-                m_items.Add(new ResearchPoint(srcResearchPoint));
+                Items.Add(new ResearchPoint(srcResearchPoint));
             }
         }
 
@@ -38,12 +38,12 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serializable research points from the API.</param>
         internal void Import(IEnumerable<SerializableResearchListItem> src)
         {            
-            m_items.Clear();
+            Items.Clear();
 
             // Import the research points from the API
             foreach (SerializableResearchListItem srcResearchPoint in src)
             {
-                m_items.Add(new ResearchPoint(srcResearchPoint));
+                Items.Add(new ResearchPoint(srcResearchPoint));
             }
 
             // Fires the event regarding research points update
@@ -56,9 +56,9 @@ namespace EVEMon.Common
         /// <returns>List of serializable research points.</returns>
         internal List<SerializableResearchPoint> Export()
         {
-            List<SerializableResearchPoint> serial = new List<SerializableResearchPoint>(m_items.Count);
+            List<SerializableResearchPoint> serial = new List<SerializableResearchPoint>(Items.Count);
 
-            foreach (ResearchPoint researchPoint in m_items)
+            foreach (ResearchPoint researchPoint in Items)
             {
                 serial.Add(researchPoint.Export());
             }

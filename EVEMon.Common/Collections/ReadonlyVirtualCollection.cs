@@ -1,6 +1,6 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace EVEMon.Common.Collections
 {
@@ -9,13 +9,6 @@ namespace EVEMon.Common.Collections
     /// </summary>
     public abstract class ReadonlyVirtualCollection<T> : IReadonlyCollection<T>
     {
-        /// <summary>
-        /// Protected default constructor
-        /// </summary>
-        protected ReadonlyVirtualCollection()
-        {
-        }
-
         /// <summary>
         /// The core method to implement : all other methods rely on this one.
         /// </summary>
@@ -27,24 +20,22 @@ namespace EVEMon.Common.Collections
         /// </summary>
         public int Count
         {
-            get
-            {
-                int count = 0;
-                foreach (var item in Enumerate()) count++;
-                return count;
-            }
+            get { return Enumerate().Count(); }
         }
 
+
         #region Enumerators
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return Enumerate().GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return Enumerate().GetEnumerator();
         }
+
         #endregion
     }
 }

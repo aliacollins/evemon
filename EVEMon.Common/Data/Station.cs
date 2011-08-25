@@ -47,7 +47,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableAgent agent in src.Agents)
             {
-                m_items.Add(new Agent(this, agent));
+                Items.Add(new Agent(this, agent));
             }
         }
         

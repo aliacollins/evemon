@@ -53,7 +53,7 @@ namespace EVEMon.Common
             foreach (string id in ids)
             {
                 long ID = long.Parse(id);
-                m_items.Add(new EveMailMessage(m_ccpCharacter,
+                Items.Add(new EveMailMessage(m_ccpCharacter,
                                                 new SerializableMailMessagesListItem()
                                                 {
                                                     MessageID = ID
@@ -83,7 +83,7 @@ namespace EVEMon.Common
                 if (m_ccpCharacter.CharacterID != srcEVEMailMessage.SenderID)
                 {
                     // If it's a newly mail message and not an old mail message added to the API list, increase the counter
-                    EveMailMessage message = m_items.FirstOrDefault(x => x.MessageID == srcEVEMailMessage.MessageID);
+                    EveMailMessage message = Items.FirstOrDefault(x => x.MessageID == srcEVEMailMessage.MessageID);
                     if (message == null && srcEVEMailMessage.MessageID > m_highestID)
                     {
                         NewMessages++;
@@ -94,8 +94,8 @@ namespace EVEMon.Common
                 newMessages.Add(new EveMailMessage(m_ccpCharacter, srcEVEMailMessage));
             }
 
-            m_items.Clear();
-            m_items.AddRange(newMessages);
+            Items.Clear();
+            Items.AddRange(newMessages);
 
             // Fires the event regarding EVE mail messages update
             EveMonClient.OnCharacterEVEMailMessagesUpdated(m_ccpCharacter);
@@ -110,7 +110,7 @@ namespace EVEMon.Common
             List<string> serial = new List<string>();
 
             // Store only the mail messages IDs from the inbox in a descending order
-            foreach (var message in m_items
+            foreach (var message in Items
                                     .Where(x => x.Sender != m_ccpCharacter.Name)
                                     .OrderByDescending(x=> x.MessageID))
             {

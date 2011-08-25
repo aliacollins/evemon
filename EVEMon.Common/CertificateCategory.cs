@@ -29,7 +29,7 @@ namespace EVEMon.Common
             foreach (StaticCertificateClass srcClass in src)
             {
                 CertificateClass certClass = new CertificateClass(character, srcClass, this);
-                m_items[certClass.Name] = certClass;
+                Items[certClass.Name] = certClass;
             }
         }
 

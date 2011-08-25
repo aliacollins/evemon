@@ -43,7 +43,7 @@ namespace EVEMon.Common
         {
             // If the id was not in list, returns the existing character or null if it does not exist.
             var ccpCharacter = id.CCPCharacter;
-            if (!m_items.Remove(id))
+            if (!Items.Remove(id))
                 return ccpCharacter;
 
             // If character exists, returns it.
@@ -64,10 +64,10 @@ namespace EVEMon.Common
         public void Add(CCPCharacter character)
         {
             var id = character.Identity;
-            if (m_items.Contains(id))
+            if (Items.Contains(id))
                 return;
 
-            m_items.Add(id);
+            Items.Add(id);
 
             // If the identity was belonging to this account, remove the character (won't be serialized anymore !)
             if (id.Account == m_owner)
@@ -82,7 +82,7 @@ namespace EVEMon.Common
         /// <param name="serialIDList"></param>
         internal void Import(List<SerializableCharacterIdentity> serialIDList)
         {
-            m_items.Clear();
+            Items.Clear();
             foreach (var serialID in serialIDList)
             {
                 var id = EveMonClient.CharacterIdentities[serialID.ID];
@@ -90,7 +90,7 @@ namespace EVEMon.Common
                 {
                     id = EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
                 }
-                m_items.Add(id);
+                Items.Add(id);
             }
         }
 
@@ -101,7 +101,7 @@ namespace EVEMon.Common
         internal List<SerializableCharacterIdentity> Export()
         {
             var serial = new List<SerializableCharacterIdentity>();
-            foreach (var id in m_items)
+            foreach (var id in Items)
             {
                 serial.Add(new SerializableCharacterIdentity { ID = id.CharacterID, Name = id.Name });
             }

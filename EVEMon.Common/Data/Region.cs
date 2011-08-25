@@ -23,7 +23,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableConstellation srcConstellation in src.Constellations)
             {
-                m_items.Add(new Constellation(this, srcConstellation));
+                Items.Add(new Constellation(this, srcConstellation));
             }
         }
                 #endregion

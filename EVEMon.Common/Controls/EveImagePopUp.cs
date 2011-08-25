@@ -1,35 +1,40 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using EVEMon.Common;
-using System.IO;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Controls
 {
     /// <summary>
-    /// Displays 256 x 256 image of specified EveObject in a separate window
+    /// Displays 256 x 256 image of specified EveObject in a separate window.
     /// </summary>
     public partial class EveImagePopUp : EVEMonForm
     {
-        private const string titleBase = "EVEMon Image Viewer";
-        private Item m_imageSource = null;
+        private const string TitleBase = "EVEMon Image Viewer";
+        private readonly Item m_imageSource;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EveImagePopUp"/> class.
+        /// </summary>
+        /// <param name="imageSource">The image source.</param>
         public EveImagePopUp(Item imageSource)
         {
             InitializeComponent();
             m_imageSource = imageSource;
-            Text = titleBase;
+        }
+
+        /// <summary>
+        /// On load, restores the window rectangle from the settings.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            Text = TitleBase;
 
             if (m_imageSource == null)
                 return;
 
             // Set window title
-            Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_imageSource.Name, titleBase);
+            Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_imageSource.Name, TitleBase);
             eveImage.EveItem = m_imageSource;
         }
     }

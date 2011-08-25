@@ -21,7 +21,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableMarketGroup subCat in src)
             {
-                m_items.Add(new MarketGroup(group, subCat));
+                Items.Add(new MarketGroup(group, subCat));
             }
         }
     }

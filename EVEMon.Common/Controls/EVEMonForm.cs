@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common.SettingsObjects;
@@ -15,17 +16,14 @@ namespace EVEMon.Common.Controls
     {
         protected const int MaxTitleLength = 259;
 
-        private delegate void OnLayoutCallback(LayoutEventArgs levent);
-
         private bool m_loaded;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public EVEMonForm()
+        protected EVEMonForm()
         {
             InitializeComponent();
-            Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
         }
 
         /// <summary>
@@ -33,7 +31,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         [Category("Behavior")]
         [Description("A key used to store and restore the position and size of the window. When null or empty, the position won't be persisted.")]
-        public string RememberPositionKey { get; set; }
+        protected string RememberPositionKey { private get; set; }
 
         /// <summary>
         /// On load, restores the window rectangle from the settings.
@@ -42,6 +40,7 @@ namespace EVEMon.Common.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
             RestoreLocation();
             m_loaded = true;
             SaveLocation();
@@ -90,10 +89,7 @@ namespace EVEMon.Common.Controls
 
             Rectangle r = new Rectangle(Location, Size);
             if (WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
-            {
-                Settings.UI.WindowLocations[RememberPositionKey] = 
-                    (SerializableRectangle)new Rectangle(Location, Size);
-            }
+                Settings.UI.WindowLocations[RememberPositionKey] = (SerializableRectangle) new Rectangle(Location, Size);
         }
 
         /// <summary>
@@ -104,25 +100,20 @@ namespace EVEMon.Common.Controls
             if (String.IsNullOrEmpty(RememberPositionKey))
                 return;
 
-            List<Form> formList = new List<Form>();
-            foreach (Form form in Application.OpenForms)
+            List<Form> formList = Application.OpenForms.Cast<Form>().Where(form => form.GetType() == GetType()).ToList();
+
+            if (!Settings.UI.WindowLocations.ContainsKey(RememberPositionKey))
+                return;
+
+            Rectangle r = (Rectangle)Settings.UI.WindowLocations[RememberPositionKey];
+            if (formList.Count > 1)
             {
-                if (form.GetType() == GetType())
-                    formList.Add(form);
+                Point pfl = formList[formList.Count - 2].Location;
+                r.Location = new Point(pfl.X + 20, pfl.Y + 20);
             }
 
-            if (Settings.UI.WindowLocations.ContainsKey(RememberPositionKey))
-            {
-                Rectangle r = (Rectangle)Settings.UI.WindowLocations[RememberPositionKey];
-                if (formList.Count > 1)
-                {
-                    Point pfl = formList[formList.Count - 2].Location;
-                    r.Location = new Point(pfl.X + 20, pfl.Y + 20);
-                }
-
-                r = VerifyValidWindowLocation(r);
-                SetBounds(r.X, r.Y, r.Width, r.Height);
-            }
+            r = VerifyValidWindowLocation(r);
+            SetBounds(r.X, r.Y, r.Width, r.Height);
         }
 
         /// <summary>
@@ -142,12 +133,12 @@ namespace EVEMon.Common.Controls
                 if (ts.WorkingArea.Contains(inRect))
                     return inRect;
 
-                if (ts.WorkingArea.Contains(p))
-                {
-                    p.X = ts.WorkingArea.Left + 50;
-                    p.Y = ts.WorkingArea.Top + 100;
-                    return new Rectangle(p, s);
-                }
+                if (!ts.WorkingArea.Contains(p))
+                    continue;
+
+                p.X = ts.WorkingArea.Left + 50;
+                p.Y = ts.WorkingArea.Top + 100;
+                return new Rectangle(p, s);
             }
 
             p.X = Screen.PrimaryScreen.WorkingArea.X + 5;

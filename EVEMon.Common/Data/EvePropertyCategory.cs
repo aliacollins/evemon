@@ -19,7 +19,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableProperty serialProp in serial.Properties)
             {
-                m_items.Add(new EveProperty(this, serialProp));
+                Items.Add(new EveProperty(this, serialProp));
             }
 
             // Sets the display name

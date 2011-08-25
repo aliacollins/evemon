@@ -8,7 +8,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiErrorTroubleshooter"/> class.
         /// </summary>
-        public ApiErrorTroubleshooter()
+        protected ApiErrorTroubleshooter()
         {
             InitializeComponent();
         }

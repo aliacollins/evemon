@@ -115,7 +115,7 @@ namespace EVEMon.Common
                                           };
 
             // Add entries
-            foreach (PlanEntry entry in m_items)
+            foreach (PlanEntry entry in Items)
             {
                 SerializablePlanEntry serialEntry = new SerializablePlanEntry
                                                         {
@@ -314,7 +314,7 @@ namespace EVEMon.Common
                         if (entry == null)
                             continue;
 
-                        RemoveCore(m_items.IndexOf(entry));
+                        RemoveCore(Items.IndexOf(entry));
                     }
                 }
             }
@@ -399,7 +399,7 @@ namespace EVEMon.Common
 
             // Creates a plan where the entries and their dependencies have been removed
             PlanScratchpad freePlan = new PlanScratchpad(m_character);
-            freePlan.RebuildPlanFrom(m_items);
+            freePlan.RebuildPlanFrom(Items);
             foreach (PlanEntry entry in allEntriesToRemove)
             {
                 freePlan.Remove(entry);
@@ -408,7 +408,7 @@ namespace EVEMon.Common
             // Gather removables prerequisites now useless
             List<PlanEntry> removablePrerequisites = new List<PlanEntry>();
             foreach (PlanEntry prereqEntry in allEntriesToRemove
-                .SelectMany(entryToRemove => m_items.Where(entryToRemove.IsDependentOf)
+                .SelectMany(entryToRemove => Items.Where(entryToRemove.IsDependentOf)
                                                  .Where(prereq => freePlan.GetMinimumLevel(prereq.Skill) == 0)
                                                  .Select(prereq => freePlan.GetEntry(prereq.Skill, prereq.Level))
                                                  .Where(prereqEntry => prereqEntry != null &&
@@ -545,7 +545,7 @@ namespace EVEMon.Common
         /// </summary>
         public void Merge(SerializableCharacterSkill skill)
         {
-            foreach (PlanEntry entry in m_items.Where(entry => entry.Skill.ID == skill.ID))
+            foreach (PlanEntry entry in Items.Where(entry => entry.Skill.ID == skill.ID))
             {
                 skill.Level = entry.Level;
                 skill.Skillpoints = entry.Skill.GetPointsRequiredForLevel(entry.Level);

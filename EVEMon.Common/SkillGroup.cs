@@ -33,7 +33,7 @@ namespace EVEMon.Common
 
             foreach (var srcSkill in src)
             {
-                m_items[srcSkill.Name] = new Skill(character, this, srcSkill);
+                Items[srcSkill.Name] = new Skill(character, this, srcSkill);
             }
         }
 
@@ -78,7 +78,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(string skillName)
         {
-            return m_items.ContainsKey(skillName);
+            return Items.ContainsKey(skillName);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace EVEMon.Common
             get
             {
                 int result = 0;
-                foreach (Skill gs in m_items.Values)
+                foreach (Skill gs in Items.Values)
                 {
                     result += gs.SkillPoints;
                 }

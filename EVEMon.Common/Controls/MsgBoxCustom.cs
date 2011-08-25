@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace EVEMon.Common.Controls
 {
@@ -11,7 +10,7 @@ namespace EVEMon.Common.Controls
     public partial class MessageBoxCustom : Form
     {
         private DialogResult m_dialogResult;
-        public bool cbUnchecked = true;
+        public bool CbUnchecked = true;
 
         /// <summary>
         /// Creates a new instance of <see cref="MessageBoxCustom"/>.
@@ -34,31 +33,35 @@ namespace EVEMon.Common.Controls
         /// <param name="owner">Owner window.</param>
         /// <param name="text">Text to display.</param>
         /// <param name="caption">Text to display in the title bar.</param>
-        /// <param name="cdText">Text to display near check box.</param>
+        /// <param name="cbText">Text to display near check box.</param>
         /// <param name="buttons">Buttons to display in the message box.</param>
         /// <param name="icon">Icon to display in the mesage box.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public DialogResult Show(IWin32Window owner, string text, string caption, string cdText, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public DialogResult Show(IWin32Window owner, string text, string caption, string cbText,
+                                 MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None)
         {
-            button1.Click += new EventHandler(OnButtonClick);
-            button2.Click += new EventHandler(OnButtonClick);
-            button3.Click += new EventHandler(OnButtonClick);
+            button1.Click += OnButtonClick;
+            button2.Click += OnButtonClick;
+            button3.Click += OnButtonClick;
 
-            this.Text = caption;
+            Text = caption;
             msgText.Text = text;
-            cbOption.Text = cdText;
+            cbOption.Text = cbText;
 
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                NativeMethods.EnableMenuItem(NativeMethods.GetSystemMenu(this.Handle, false), 
-                    NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
+                NativeMethods.EnableMenuItem(NativeMethods.GetSystemMenu(Handle, false),
+                                             NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
             }
-            else this.ControlBox = false;
+            else
+            {
+                ControlBox = false;
+            }
 
             SetButtonsToDisplay(buttons);
 
             SetIconToDisplay(icon);
-            
+
             MessageBeep(icon);
 
             ShowDialog(owner);
@@ -72,37 +75,10 @@ namespace EVEMon.Common.Controls
         /// <param name="owner">Owner window.</param>
         /// <param name="text">Text to display.</param>
         /// <param name="caption">Text to display in the title bar.</param>
-        /// <param name="cdText">Text to display near check box.</param>
-        /// <param name="buttons">Buttons to display in the message box.</param>
-        /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public DialogResult Show(IWin32Window owner, string text, string caption, string cbText, MessageBoxButtons buttons)
-        {
-            return Show(owner, text, caption, cbText, buttons, MessageBoxIcon.None);
-        }
-
-        /// <summary>
-        /// Displays a message box.
-        /// </summary>
-        /// <param name="owner">Owner window.</param>
-        /// <param name="text">Text to display.</param>
-        /// <param name="caption">Text to display in the title bar.</param>
-        /// <param name="cdText">Text to display near check box.</param>
-        /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public DialogResult Show(IWin32Window owner, string text, string caption, string cbText)
-        {
-            return Show(owner, text, caption, cbText, MessageBoxButtons.OK, MessageBoxIcon.None);
-        }
-
-        /// <summary>
-        /// Displays a message box.
-        /// </summary>
-        /// <param name="owner">Owner window.</param>
-        /// <param name="text">Text to display.</param>
-        /// <param name="caption">Text to display in the title bar.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         public DialogResult Show(IWin32Window owner, string text, string caption)
         {
-            return Show(owner, text, caption, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
+            return Show(owner, text, caption, String.Empty);
         }
 
         /// <summary>
@@ -113,31 +89,43 @@ namespace EVEMon.Common.Controls
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         public DialogResult Show(IWin32Window owner, string text)
         {
-            return Show(owner, text, String.Empty, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
+            return Show(owner, text, String.Empty, String.Empty);
         }
+
 
         # region EventHandlers
 
+        /// <summary>
+        /// Called when [button click].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnButtonClick(object sender, EventArgs e)
         {
-            string buttonText = ((ButtonBase)sender).Text;
+            string buttonText = ((ButtonBase) sender).Text;
             m_dialogResult = GetDialogResult(buttonText);
-            this.Close();
+            Close();
         }
 
+        /// <summary>
+        /// Handles the CheckedChanged event of the cbOption control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cbOption_CheckedChanged(object sender, EventArgs e)
         {
-            cbUnchecked = !cbOption.Checked;
+            CbUnchecked = !cbOption.Checked;
         }
 
         # endregion
+
 
         # region Help Methods
 
         /// <summary>
         /// Sets buttons for the message box.
         /// </summary>
-        /// <param name="icon">Which buttons to display.</param>
+        /// <param name="buttons">Which buttons to display.</param>
         private void SetButtonsToDisplay(MessageBoxButtons buttons)
         {
             switch (buttons)
@@ -210,11 +198,11 @@ namespace EVEMon.Common.Controls
         {
             switch (icon.GetHashCode())
             {
-                
-                 case 0:
+
+                case 0:
                     System.Media.SystemSounds.Beep.Play();
                     break;
-               
+
                 case 16:
                     System.Media.SystemSounds.Hand.Play();
                     break;
@@ -226,7 +214,7 @@ namespace EVEMon.Common.Controls
                 case 48:
                     System.Media.SystemSounds.Exclamation.Play();
                     break;
-                
+
                 case 64:
                     System.Media.SystemSounds.Asterisk.Play();
                     break;
@@ -263,24 +251,5 @@ namespace EVEMon.Common.Controls
         }
 
         # endregion
-
-        #region Native Stuff
-
-        internal class NativeMethods
-        {
-            public const int SC_CLOSE = 0xF060;
-            public const int MF_BYCOMMAND = 0x0;
-            public const int MF_GRAYED = 0x1;
-            public const int MF_ENABLED = 0x0;
-
-            [DllImport("user32.dll", CharSet = CharSet.Auto)]
-            public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert); 
-
-            [DllImport("user32.dll", CharSet = CharSet.Auto)]
-            public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable); 
-
-        }
-
-        #endregion
     }
 }

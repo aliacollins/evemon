@@ -25,12 +25,12 @@ namespace EVEMon.Common
         /// <param name="src">The SRC.</param>
         internal void Import(IEnumerable<SerializableMailingListsListItem> src)
         {
-            m_items.Clear();
+            Items.Clear();
 
             // Import the mail messages from the API
             foreach (var srcEVEMailingList in src)
             {
-                m_items.Add(new EveMailingList(srcEVEMailingList));
+                Items.Add(new EveMailingList(srcEVEMailingList));
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-
+﻿
 namespace System.Windows.Forms
 {
     public static class ControlExtensions
@@ -18,7 +14,8 @@ namespace System.Windows.Forms
         {
             while (control != null)
             {
-                if (control.Site != null && control.Site.DesignMode) return true;
+                if (control.Site != null && control.Site.DesignMode)
+                    return true;
                 control = control.Parent;
             }
             return false;

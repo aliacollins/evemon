@@ -23,7 +23,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableBlueprint blueprint in src)
             {
-                m_items.Add(new Blueprint(group, blueprint));
+                Items.Add(new Blueprint(group, blueprint));
             }
         }
 

@@ -24,12 +24,12 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serializable standings from the API.</param>
         internal void Import(IEnumerable<SerializableStandingsListItem> src)
         {
-            m_items.Clear();
+            Items.Clear();
 
             // Import the standings from the API
             foreach (SerializableStandingsListItem srcStanding in src)
             {
-                m_items.Add(new Standing(m_character, srcStanding));
+                Items.Add(new Standing(m_character, srcStanding));
             }
 
             // Fires the event regarding standings update
@@ -42,11 +42,11 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serializable standings from the API.</param>
         internal void Import(IEnumerable<SerializableStanding> src)
         {
-            m_items.Clear();
+            Items.Clear();
 
             foreach (SerializableStanding srcStanding in src)
             {
-                m_items.Add(new Standing(m_character, srcStanding));
+                Items.Add(new Standing(m_character, srcStanding));
             }
         }
 
@@ -56,8 +56,8 @@ namespace EVEMon.Common
         /// <returns>List of serializable research points.</returns>
         internal List<SerializableStanding> Export()
         {
-            List<SerializableStanding> serial = new List<SerializableStanding>(m_items.Count);
-            serial.AddRange(m_items.Select(standing => standing.Export()));
+            List<SerializableStanding> serial = new List<SerializableStanding>(Items.Count);
+            serial.AddRange(Items.Select(standing => standing.Export()));
 
             return serial;
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace System.Linq
 {
@@ -13,17 +11,16 @@ namespace System.Linq
         /// <param name="src"></param>
         public static bool IsEmpty<T>(this IEnumerable<T> src)
         {
-            foreach (var item in src) return false;
-            return true;
+            return !src.Any();
         }
 
         /// <summary>
         /// Uses an insertion sort algorithm to perform a stable sort (keep the initial order of the keys with equal values).
         /// </summary>
-        /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
         /// <typeparam name="T"></typeparam>
-        /// <param name="src"></param>
-        /// <param name="comparison"></param>
+        /// <param name="list">The list.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
         public static void StableSort<T>(this IList<T> list, IComparer<T> comparer)
         {
             list.StableSort(comparer.Compare);
@@ -32,16 +29,16 @@ namespace System.Linq
         /// <summary>
         /// Uses an insertion sort algorithm to perform a stable sort (keep the initial order of the keys with equal values).
         /// </summary>
-        /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
         /// <typeparam name="T"></typeparam>
-        /// <param name="src"></param>
-        /// <param name="comparison"></param>
+        /// <param name="list">The list.</param>
+        /// <param name="comparison">The comparison.</param>
+        /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
         public static void StableSort<T>(this IList<T> list, Comparison<T> comparison)
         {
             // For every key
             for (int i = 1; i < list.Count; i++)
             {
-                var value = list[i];
+                T value = list[i];
                 int j = i - 1;
 
                 // Move the key backward while the previous items are lesser than it, shifting those items to the right
@@ -66,9 +63,10 @@ namespace System.Linq
         public static int IndexOf<T>(this IEnumerable<T> src, T item)
         {
             int index = 0;
-            foreach (var srcItem in src)
+            foreach (T srcItem in src)
             {
-                if (Object.Equals((object)item, (object)srcItem)) return index;
+                if (Equals(item, srcItem))
+                    return index;
                 index++;
             }
             return -1;

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Attributes
@@ -42,10 +40,10 @@ namespace EVEMon.Common.Attributes
         /// <param name="cacheStyle">Cache style.</param>
         private void CreateUpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod min, UpdatePeriod max, CacheStyle cacheStyle)
         {
-            this.DefaultPeriod = defaultPeriod;
-            this.Minimum = min;
-            this.Maximum = max;
-            this.CacheStyle = cacheStyle;
+            DefaultPeriod = defaultPeriod;
+            Minimum = min;
+            Maximum = max;
+            CacheStyle = cacheStyle;
         }
 
         #endregion
@@ -53,29 +51,13 @@ namespace EVEMon.Common.Attributes
 
         #region Public Properties
 
-        public UpdatePeriod DefaultPeriod
-        {
-            get;
-            set;
-        }
+        public UpdatePeriod DefaultPeriod { get; private set; }
 
-        public UpdatePeriod Minimum
-        {
-            get;
-            set;
-        }
+        public UpdatePeriod Minimum { get; private set; }
 
-        public UpdatePeriod Maximum
-        {
-            get;
-            set;
-        }
+        public UpdatePeriod Maximum { get; private set; }
 
-        public CacheStyle CacheStyle
-        {
-            get;
-            set;
-        }
+        public CacheStyle CacheStyle { get; private set; }
 
         #endregion
 

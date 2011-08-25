@@ -18,14 +18,14 @@ namespace EVEMon.Common.Data
             if (src == null)
                 return;
 
-            m_items.Capacity = src.Length;
+            Items.Capacity = src.Length;
             foreach (var srcProp in src)
             {
                 EvePropertyValue prop = new EvePropertyValue(srcProp);
                 if (prop.Property != null)
-                    m_items.Add(prop);
+                    Items.Add(prop);
             }
-            m_items.Trim();
+            Items.Trim();
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (EvePropertyValue prop in m_items.TakeWhile(prop => prop.Property != null)
+                foreach (EvePropertyValue prop in Items.TakeWhile(prop => prop.Property != null)
                     .Where(prop => prop.Property == property))
                 {
                     return prop;
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (EvePropertyValue prop in m_items.TakeWhile(prop => prop.Property != null)
+                foreach (EvePropertyValue prop in Items.TakeWhile(prop => prop.Property != null)
                     .Where(prop => prop.Property.ID == id))
                 {
                     return prop;

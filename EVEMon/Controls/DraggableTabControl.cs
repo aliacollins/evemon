@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.Controls
 {

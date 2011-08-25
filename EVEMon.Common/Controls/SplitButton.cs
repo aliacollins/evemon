@@ -1,29 +1,26 @@
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Windows.Forms.VisualStyles;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 /* Code from http://blogs.msdn.com/jfoscoding/articles/491523.aspx */
 
 namespace EVEMon.Common.Controls
 {
-    public partial class SplitButton : Button
+    public sealed class SplitButton : Button
     {
-        private PushButtonState _state;
+        private PushButtonState m_state;
         private const int PushButtonWidth = 14;
-        private static int BorderSize = SystemInformation.Border3DSize.Width * 2;
-        private bool skipNextOpen = false;
-        private Rectangle dropDownRectangle = new Rectangle();
-        private bool showSplit = true;
+        private static readonly int s_borderSize = SystemInformation.Border3DSize.Width * 2;
+        private bool m_skipNextOpen;
+        private Rectangle m_dropDownRectangle;
+        private bool m_showSplit = true;
         public event EventHandler ContextMenuShowing;
 
         public SplitButton()
         {
-            this.AutoSize = true;
+            AutoSize = true;
         }
 
         [DefaultValue(true)]
@@ -31,85 +28,70 @@ namespace EVEMon.Common.Controls
         {
             set
             {
-                if (value != showSplit)
-                {
-                    showSplit = value;
-                    Invalidate();
-                    if (this.Parent != null)
-                    {
-                        this.Parent.PerformLayout();
-                    }
-                }
+                if (value == m_showSplit)
+                    return;
+
+                m_showSplit = value;
+                Invalidate();
+                if (Parent != null)
+                    Parent.PerformLayout();
             }
         }
 
 
         private PushButtonState State
         {
-            get
-            {
-                return _state;
-            }
+            get { return m_state; }
 
             set
             {
-                if (!_state.Equals(value))
-                {
-                    _state = value;
-                    Invalidate();
-                }
+                if (m_state.Equals(value))
+                    return;
+
+                m_state = value;
+                Invalidate();
             }
         }
 
         public override Size GetPreferredSize(Size proposedSize)
         {
             Size preferredSize = base.GetPreferredSize(proposedSize);
-            if (showSplit && !string.IsNullOrEmpty(Text) && TextRenderer.MeasureText(Text, Font).Width + PushButtonWidth > preferredSize.Width)
-            {
-                return preferredSize + new Size(PushButtonWidth + BorderSize * 2, 0);
-            }
+            if (m_showSplit && !string.IsNullOrEmpty(Text) &&
+                TextRenderer.MeasureText(Text, Font).Width + PushButtonWidth > preferredSize.Width)
+                return preferredSize + new Size(PushButtonWidth + s_borderSize * 2, 0);
+
             return preferredSize;
         }
 
         protected override bool IsInputKey(Keys keyData)
         {
-            if (keyData.Equals(Keys.Down) && showSplit)
-            {
+            if (keyData.Equals(Keys.Down) && m_showSplit)
                 return true;
-            }
-            else
-            {
-                return base.IsInputKey(keyData);
-            }
+
+            return base.IsInputKey(keyData);
         }
 
         protected override void OnGotFocus(EventArgs e)
         {
-            if (!showSplit)
+            if (!m_showSplit)
             {
                 base.OnGotFocus(e);
                 return;
             }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
-            {
                 State = PushButtonState.Default;
-            }
         }
 
         protected override void OnKeyDown(KeyEventArgs kevent)
         {
-            if (showSplit)
+            if (m_showSplit)
             {
                 if (kevent.KeyCode.Equals(Keys.Down))
-                {
                     ShowContextMenuStrip();
-                }
 
-                else if (kevent.KeyCode.Equals(Keys.Space) && kevent.Modifiers == Keys.None)
-                {
+                if (kevent.KeyCode.Equals(Keys.Space) && kevent.Modifiers == Keys.None)
                     State = PushButtonState.Pressed;
-                }
             }
 
             base.OnKeyDown(kevent);
@@ -119,37 +101,33 @@ namespace EVEMon.Common.Controls
         {
             if (kevent.KeyCode.Equals(Keys.Space))
             {
-                if (Control.MouseButtons == MouseButtons.None)
-                {
+                if (MouseButtons == MouseButtons.None)
                     State = PushButtonState.Normal;
-                }
             }
             base.OnKeyUp(kevent);
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
-            if (!showSplit)
+            if (!m_showSplit)
             {
                 base.OnLostFocus(e);
                 return;
             }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
-            {
                 State = PushButtonState.Normal;
-            }
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (!showSplit)
+            if (!m_showSplit)
             {
                 base.OnMouseDown(e);
                 return;
             }
 
-            if (dropDownRectangle.Contains(e.Location))
+            if (m_dropDownRectangle.Contains(e.Location))
             {
                 ShowContextMenuStrip();
             }
@@ -161,68 +139,53 @@ namespace EVEMon.Common.Controls
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (!showSplit)
+            if (!m_showSplit)
             {
                 base.OnMouseEnter(e);
                 return;
             }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
-            {
                 State = PushButtonState.Hot;
-            }
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!showSplit)
+            if (!m_showSplit)
             {
                 base.OnMouseLeave(e);
                 return;
             }
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
-            {
-                if (Focused)
-                {
-                    State = PushButtonState.Default;
-                }
-                else
-                {
-                    State = PushButtonState.Normal;
-                }
-            }
+                State = Focused ? PushButtonState.Default : PushButtonState.Normal;
         }
 
         protected override void OnMouseUp(MouseEventArgs mevent)
         {
-            if (!showSplit)
+            if (!m_showSplit)
             {
                 base.OnMouseUp(mevent);
                 return;
             }
 
-            if (ContextMenuStrip == null || !ContextMenuStrip.Visible)
-            {
-                SetButtonDrawState();
-                if (Bounds.Contains(Parent.PointToClient(Cursor.Position)) && !dropDownRectangle.Contains(mevent.Location))
-                {
-                    OnClick(new EventArgs());
-                }
-            }
+            if (ContextMenuStrip != null && ContextMenuStrip.Visible)
+                return;
+
+            SetButtonDrawState();
+            if (Bounds.Contains(Parent.PointToClient(Cursor.Position)) && !m_dropDownRectangle.Contains(mevent.Location))
+                OnClick(new EventArgs());
         }
 
         protected override void OnPaint(PaintEventArgs pevent)
         {
             base.OnPaint(pevent);
 
-            if (!showSplit)
-            {
+            if (!m_showSplit)
                 return;
-            }
 
             Graphics g = pevent.Graphics;
-            Rectangle bounds = this.ClientRectangle;
+            Rectangle bounds = ClientRectangle;
 
             // draw the button background as according to the current state.
             if (State != PushButtonState.Pressed && IsDefault && !Application.RenderWithVisualStyles)
@@ -241,83 +204,86 @@ namespace EVEMon.Common.Controls
             }
 
             // calculate the current dropdown rectangle.
-            dropDownRectangle = new Rectangle(bounds.Right - PushButtonWidth - 1, BorderSize, PushButtonWidth, bounds.Height - BorderSize * 2);
-            int internalBorder = BorderSize;
+            m_dropDownRectangle = new Rectangle(bounds.Right - PushButtonWidth - 1, s_borderSize, PushButtonWidth,
+                                                bounds.Height - s_borderSize * 2);
+            int internalBorder = s_borderSize;
             Rectangle focusRect =
                 new Rectangle(internalBorder,
                               internalBorder,
-                              bounds.Width - dropDownRectangle.Width - internalBorder,
+                              bounds.Width - m_dropDownRectangle.Width - internalBorder,
                               bounds.Height - (internalBorder * 2));
 
-            bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles);
+            bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed ||
+                                  !Application.RenderWithVisualStyles);
 
             if (RightToLeft == RightToLeft.Yes)
             {
-                dropDownRectangle.X = bounds.Left + 1;
-                focusRect.X = dropDownRectangle.Right;
+                m_dropDownRectangle.X = bounds.Left + 1;
+                focusRect.X = m_dropDownRectangle.Right;
                 if (drawSplitLine)
                 {
                     // draw two lines at the edge of the dropdown button
-                    g.DrawLine(SystemPens.ButtonShadow, bounds.Left + PushButtonWidth, BorderSize, bounds.Left + PushButtonWidth, bounds.Bottom - BorderSize);
-                    g.DrawLine(SystemPens.ButtonFace, bounds.Left + PushButtonWidth + 1, BorderSize, bounds.Left + PushButtonWidth + 1, bounds.Bottom - BorderSize);
+                    g.DrawLine(SystemPens.ButtonShadow, bounds.Left + PushButtonWidth, s_borderSize, bounds.Left + PushButtonWidth,
+                               bounds.Bottom - s_borderSize);
+                    g.DrawLine(SystemPens.ButtonFace, bounds.Left + PushButtonWidth + 1, s_borderSize,
+                               bounds.Left + PushButtonWidth + 1, bounds.Bottom - s_borderSize);
                 }
             }
-
             else
             {
                 if (drawSplitLine)
                 {
                     // draw two lines at the edge of the dropdown button
-                    g.DrawLine(SystemPens.ButtonShadow, bounds.Right - PushButtonWidth, BorderSize, bounds.Right - PushButtonWidth, bounds.Bottom - BorderSize);
-                    g.DrawLine(SystemPens.ButtonFace, bounds.Right - PushButtonWidth - 1, BorderSize, bounds.Right - PushButtonWidth - 1, bounds.Bottom - BorderSize);
+                    g.DrawLine(SystemPens.ButtonShadow, bounds.Right - PushButtonWidth, s_borderSize,
+                               bounds.Right - PushButtonWidth, bounds.Bottom - s_borderSize);
+                    g.DrawLine(SystemPens.ButtonFace, bounds.Right - PushButtonWidth - 1, s_borderSize,
+                               bounds.Right - PushButtonWidth - 1, bounds.Bottom - s_borderSize);
                 }
             }
+
             // Draw an arrow in the correct location
-            PaintArrow(g, dropDownRectangle);
+            PaintArrow(g, m_dropDownRectangle);
 
             // Figure out how to draw the text
             TextFormatFlags formatFlags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
 
             // If we dont' use mnemonic, set formatFlag to NoPrefix as this will show ampersand.
             if (!UseMnemonic)
-            {
                 formatFlags = formatFlags | TextFormatFlags.NoPrefix;
-            }
 
-            else if (!ShowKeyboardCues)
-            {
+            if (!ShowKeyboardCues)
                 formatFlags = formatFlags | TextFormatFlags.HidePrefix;
-            }
 
-            if (!string.IsNullOrEmpty(this.Text))
-            {
+            if (!string.IsNullOrEmpty(Text))
                 TextRenderer.DrawText(g, Text, Font, focusRect, SystemColors.ControlText, formatFlags);
-            }
 
             // draw the focus rectangle.
             if (State != PushButtonState.Pressed && Focused)
-            {
                 ControlPaint.DrawFocusRectangle(g, focusRect);
-            }
         }
 
         private void PaintArrow(Graphics g, Rectangle dropDownRect)
         {
-            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + dropDownRect.Width / 2), Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));
+            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + dropDownRect.Width / 2),
+                                     Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));
 
             //if the width is odd - favor pushing it over one pixel right.
             middle.X += (dropDownRect.Width % 2);
-            Point[] arrow = new Point[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
+            Point[] arrow = new[]
+                                {
+                                    new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1),
+                                    new Point(middle.X, middle.Y + 2)
+                                };
             g.FillPolygon(SystemBrushes.ControlText, arrow);
         }
 
         private void ShowContextMenuStrip()
         {
-            if (skipNextOpen)
+            if (m_skipNextOpen)
             {
                 // we were called because we're closing the context menu strip
                 // when clicking the dropdown button.
-                skipNextOpen = false;
+                m_skipNextOpen = false;
                 return;
             }
 
@@ -325,25 +291,23 @@ namespace EVEMon.Common.Controls
             ContextMenuShowing(this, null);
 
             State = PushButtonState.Pressed;
-            if (ContextMenuStrip != null)
-            {
-                ContextMenuStrip.Closing += new ToolStripDropDownClosingEventHandler(ContextMenuStrip_Closing);
-                ContextMenuStrip.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
-            }
+            if (ContextMenuStrip == null)
+                return;
+
+            ContextMenuStrip.Closing += ContextMenuStrip_Closing;
+            ContextMenuStrip.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
         }
 
-        void ContextMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        private void ContextMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             ContextMenuStrip cms = sender as ContextMenuStrip;
             if (cms != null)
-            {
-                cms.Closing -= new ToolStripDropDownClosingEventHandler(ContextMenuStrip_Closing);
-            }
+                cms.Closing -= ContextMenuStrip_Closing;
+
             SetButtonDrawState();
+
             if (e.CloseReason == ToolStripDropDownCloseReason.AppClicked)
-            {
-                skipNextOpen = (dropDownRectangle.Contains(this.PointToClient(Cursor.Position)));
-            }
+                m_skipNextOpen = (m_dropDownRectangle.Contains(PointToClient(Cursor.Position)));
         }
 
         private void SetButtonDrawState()

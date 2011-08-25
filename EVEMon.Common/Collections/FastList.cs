@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EVEMon.Common.Collections
 {
@@ -18,14 +16,15 @@ namespace EVEMon.Common.Collections
     public struct FastList<T> : IList<T>
     {
         #region Enumerator
+
         /// <summary>
-        /// An enumerator for the FastList
+        /// An enumerator for the FastList.
         /// </summary>
         private struct Enumerator : IEnumerator<T>
         {
             private T[] m_items;
-            private int m_count;
             private int m_index;
+            private readonly int m_count;
 
             /// <summary>
             /// Constructor
@@ -34,40 +33,63 @@ namespace EVEMon.Common.Collections
             /// <param name="count"></param>
             public Enumerator(T[] items, int count)
             {
-                this.m_items = items;
-                this.m_count = count;
-                this.m_index = -1;
+                m_items = items;
+                m_count = count;
+                m_index = -1;
             }
 
+            /// <summary>
+            /// Gets the current.
+            /// </summary>
+            /// <value>The current.</value>
             public T Current
             {
-                get { return this.m_items[this.m_index]; }
+                get { return m_items[m_index]; }
             }
 
+            /// <summary>
+            /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            /// </summary>
             public void Dispose()
             {
-                this.m_items = null;
+                m_items = null;
             }
 
-            object System.Collections.IEnumerator.Current
+            /// <summary>
+            /// Gets the current.
+            /// </summary>
+            /// <value>The current.</value>
+            object IEnumerator.Current
             {
-                get { return (object)this.m_items[m_index]; }
+                get { return m_items[m_index]; }
             }
 
+            /// <summary>
+            /// Advances the enumerator to the next element of the collection.
+            /// </summary>
+            /// <returns>
+            /// true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
+            /// </returns>
+            /// <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             public bool MoveNext()
             {
-                this.m_index++;
-                return (this.m_index < m_count);
+                m_index++;
+                return (m_index < m_count);
             }
 
+            /// <summary>
+            /// Sets the enumerator to its initial position, which is before the first element in the collection.
+            /// </summary>
+            /// <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             public void Reset()
             {
-                this.m_index = -1;
+                m_index = -1;
             }
         }
+
         #endregion
 
-        private int m_count;
+
         private T[] m_items;
 
         /// <summary>
@@ -75,18 +97,16 @@ namespace EVEMon.Common.Collections
         /// </summary>
         /// <param name="capacity">Initial capacity of the list</param>
         public FastList(int capacity)
+            : this()
         {
             m_items = new T[capacity];
-            m_count = 0;
+            Count = 0;
         }
 
         /// <summary>
-        /// Gets the number of items within this list
+        /// Gets the number of items within this list.
         /// </summary>
-        public int Count
-        {
-            get { return m_count; }
-        }
+        public int Count { get; private set; }
 
         /// <summary>
         /// Gets or sets the current capacity of the list.
@@ -96,16 +116,15 @@ namespace EVEMon.Common.Collections
             get { return m_items.Length; }
             set
             {
-                if (value < m_count)
-                {
+                if (value < Count)
                     throw new ArgumentException("The given count is lesser than the items in the list.");
-                }
+
                 Array.Resize(ref m_items, value);
             }
         }
 
         /// <summary>
-        /// Gets / sets the item at the given index
+        /// Gets / sets the item at the given index.
         /// </summary>
         /// <param name="index">The index where the item is located</param>
         /// <returns>The item found at the given index</returns>
@@ -116,7 +135,7 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Gets the index of an item within the list
+        /// Gets the index of an item within the list.
         /// </summary>
         /// <param name="item">The item to search for</param>
         /// <returns>The index where the item was found, -1 otherwise</returns>
@@ -124,35 +143,36 @@ namespace EVEMon.Common.Collections
         {
             var comparer = EqualityComparer<T>.Default;
 
-            for (int i = 0; i < m_count; i++)
+            for (int i = 0; i < Count; i++)
             {
-                if (comparer.Equals(m_items[i], item)) return i;
+                if (comparer.Equals(m_items[i], item))
+                    return i;
             }
             return -1;
         }
 
         /// <summary>
-        /// Adds an item at the end of the list
+        /// Adds an item at the end of the list.
         /// </summary>
         /// <param name="item">The item to add</param>
         public void Add(T item)
         {
             // We ensure the capacity is high enough
-            if (m_count == m_items.Length)
+            if (Count == m_items.Length)
             {
-                int newSize = Math.Max(1, m_count + 1);
-                this.Capacity = newSize;
+                int newSize = Math.Max(1, Count + 1);
+                Capacity = newSize;
             }
 
             // We add the item
-            m_items[m_count] = item;
+            m_items[Count] = item;
 
             // Finally, we increase the count
-            m_count++;
+            Count++;
         }
 
         /// <summary>
-        /// Add items at the end of the list
+        /// Add items at the end of the list.
         /// </summary>
         /// <param name="enumerable">The enumeration containing the items to add</param>
         public void AddRange(IEnumerable<T> enumerable)
@@ -161,96 +181,96 @@ namespace EVEMon.Common.Collections
             foreach (var item in enumerable)
             {
                 // Ensure size is enough
-                if (m_count == m_items.Length)
+                if (Count == m_items.Length)
                 {
-                    int newSize = Math.Max(1, m_count + 1);
+                    int newSize = Math.Max(1, Count + 1);
                     Array.Resize(ref m_items, newSize);
                 }
 
                 // We add the item
-                m_items[m_count] = item;
+                m_items[Count] = item;
 
                 // Finally, we increase the count
-                m_count++;
+                Count++;
             }
         }
 
         /// <summary>
-        /// Add items at the end of the list
+        /// Add items at the end of the list.
         /// </summary>
         /// <param name="list">The list containing the items to add</param>
         public void AddRange(FastList<T> list)
         {
-            this.AddRange(list.m_items, list.m_count);
+            AddRange(list.m_items, list.Count);
         }
 
         /// <summary>
-        /// Add items at the end of the list
+        /// Add items at the end of the list.
         /// </summary>
         /// <param name="newItems">The array containing the items to add</param>
         /// <param name="newCount">The number of items to add</param>
-        public void AddRange(T[] newItems, int newCount)
+        private void AddRange(T[] newItems, int newCount)
         {
             // We ensure the capacity is high enough
-            if (m_count + newCount > m_items.Length)
+            if (Count + newCount > m_items.Length)
             {
-                int newSize = Math.Max(m_count + newCount, m_count + 1);
+                int newSize = Math.Max(Count + newCount, Count + 1);
                 Array.Resize(ref m_items, newSize);
             }
 
             // Append items
-            Array.Copy(newItems, 0, m_items, m_count, newCount);
+            Array.Copy(newItems, 0, m_items, Count, newCount);
 
             // Finally, we increase the count
-            this.m_count += newCount;
+            Count += newCount;
         }
 
         /// <summary>
-        /// Insert an item at the given index
+        /// Insert an item at the given index.
         /// </summary>
         /// <param name="index">The item to insert</param>
         /// <param name="item">The index to insert the item in</param>
         public void Insert(int index, T item)
         {
             // We ensure the capacity is high enough
-            if (m_count == m_items.Length)
+            if (Count == m_items.Length)
             {
-                int newSize = Math.Max(1, m_count + 1);
+                int newSize = Math.Max(1, Count + 1);
                 Array.Resize(ref m_items, newSize);
             }
 
             // Do we need to shift items before ? (insertion rather than addition)
-            if (index < m_count)
+            if (index < Count)
             {
-                Array.Copy(this.m_items, index, this.m_items, index + 1, this.m_count - index);
+                Array.Copy(m_items, index, m_items, index + 1, Count - index);
             }
             m_items[index] = item;
 
             // Finally, we increase the count
-            m_count++;
+            Count++;
         }
 
         /// <summary>
-        /// Removes the item located at the specified index
+        /// Removes the item located at the specified index.
         /// </summary>
         /// <param name="index">The index to remove the item from</param>
         public void RemoveAt(int index)
         {
             // When item is not the last item, shift the items after it to the left
-            if (index < m_count - 1)
+            if (index < Count - 1)
             {
-                Array.Copy(m_items, index + 1, m_items, index, m_count - (index + 1));
+                Array.Copy(m_items, index + 1, m_items, index, Count - (index + 1));
             }
 
             // Make sure we don't hold a reference anymore over the left item
-            m_items[m_count - 1] = default(T);
+            m_items[Count - 1] = default(T);
 
             // Updates the count
-            m_count--;
+            Count--;
         }
 
         /// <summary>
-        /// Removes the specified item from the list
+        /// Removes the specified item from the list.
         /// </summary>
         /// <param name="item">The item to remove</param>
         /// <returns>True if the item was found, false otherwise</returns>
@@ -258,7 +278,7 @@ namespace EVEMon.Common.Collections
         {
             var comparer = EqualityComparer<T>.Default;
 
-            for (int i = 0; i < m_count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (comparer.Equals(m_items[i], item))
                 {
@@ -274,12 +294,12 @@ namespace EVEMon.Common.Collections
         /// </summary>
         public void Clear()
         {
-            m_count = 0;
-            Array.Clear(m_items, 0, m_count);
+            Count = 0;
+            Array.Clear(m_items, 0, Count);
         }
 
         /// <summary>
-        /// Checks whether a given item is present in the list
+        /// Checks whether a given item is present in the list.
         /// </summary>
         /// <param name="item">The item to search for</param>
         /// <returns>True if the item was found in this list, false otherwise</returns>
@@ -287,25 +307,26 @@ namespace EVEMon.Common.Collections
         {
             var comparer = EqualityComparer<T>.Default;
 
-            for (int i = 0; i < m_count; i++)
+            for (int i = 0; i < Count; i++)
             {
-                if (comparer.Equals(m_items[i], item)) return true;
+                if (comparer.Equals(m_items[i], item))
+                    return true;
             }
             return false;
         }
 
         /// <summary>
-        /// Copy those list's items in the specified array
+        /// Copy those list's items in the specified array.
         /// </summary>
         /// <param name="array">The destination array</param>
         /// <param name="arrayIndex">The starynig index in the destination array</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            Array.Copy(m_items, 0, array, arrayIndex, m_count);
+            Array.Copy(m_items, 0, array, arrayIndex, Count);
         }
 
         /// <summary>
-        /// Reverses the list
+        /// Reverses the list.
         /// </summary>
         public void Reverse()
         {
@@ -313,27 +334,29 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Gets an enumerator over this list
+        /// Gets an enumerator over this list.
         /// </summary>
         /// <returns>The enumerator over this list</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            if (m_items == null || m_count == 0) return EmptyEnumerator<T>.Instance;
-            return new Enumerator(m_items, m_count);
+            if (m_items == null || Count == 0)
+                return EmptyEnumerator<T>.Instance;
+            return new Enumerator(m_items, Count);
         }
 
         /// <summary>
-        /// Gets a non-generic enumerator over this list
+        /// Gets a non-generic enumerator over this list.
         /// </summary>
         /// <returns>The enumerator over this list</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            if (m_items == null || m_count == 0) return EmptyEnumerator<T>.Instance;
-            return new Enumerator(m_items, m_count);
+            if (m_items == null || Count == 0)
+                return EmptyEnumerator<T>.Instance;
+            return new Enumerator(m_items, Count);
         }
 
         /// <summary>
-        /// Gets false, since the list is not readonly
+        /// Gets false, since the list is not readonly.
         /// </summary>
         bool ICollection<T>.IsReadOnly
         {
@@ -345,7 +368,7 @@ namespace EVEMon.Common.Collections
         /// </summary>
         internal void Trim()
         {
-            Array.Resize(ref m_items, m_count);
+            Array.Resize(ref m_items, Count);
         }
     }
 }

@@ -33,26 +33,26 @@ namespace EVEMon.Common
             switch (notification.Behaviour)
             {
                 case NotificationBehaviour.Cohabitate:
-                    m_items.Add(notification);
+                    Items.Add(notification);
                     break;
 
                 case NotificationBehaviour.Overwrite:
                     // Replace the previous notifications with the same invalidation key
                     InvalidateCore(notification.InvalidationKey);
-                    m_items.Add(notification);
+                    Items.Add(notification);
                     break;
 
                 case NotificationBehaviour.Merge:
                     // Merge the notifications with the same key
                     var key = notification.InvalidationKey;
-                    foreach (var other in m_items.Where(x => x.InvalidationKey == key))
+                    foreach (var other in Items.Where(x => x.InvalidationKey == key))
                     {
                         notification.Append(other);
                     }
 
                     // Replace the previous notifications with the same invalidation key
                     InvalidateCore(key);
-                    m_items.Add(notification);
+                    Items.Add(notification);
                     break;
             }
 
@@ -79,15 +79,15 @@ namespace EVEMon.Common
             bool foundAny = false;
 
             // Removes all the notifications with the given key
-            while (index < m_items.Count)
+            while (index < Items.Count)
             {
-                if (m_items[index].InvalidationKey != key)
+                if (Items[index].InvalidationKey != key)
                 {
                     index++;
                 }
                 else
                 {
-                    m_items.RemoveAt(index);
+                    Items.RemoveAt(index);
                     foundAny = true;
                 }
             }

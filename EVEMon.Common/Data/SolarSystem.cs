@@ -40,7 +40,7 @@ namespace EVEMon.Common.Data
                 return;
             foreach (var srcStation in src.Stations)
             {
-                m_items.Add(new Station(this, srcStation));
+                Items.Add(new Station(this, srcStation));
             }
         }
 

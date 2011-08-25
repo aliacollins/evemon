@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableCertificateClass srcClass in src.Classes)
             {
-                m_items.Add(new StaticCertificateClass(this, srcClass));
+                Items.Add(new StaticCertificateClass(this, srcClass));
             }
         }
         

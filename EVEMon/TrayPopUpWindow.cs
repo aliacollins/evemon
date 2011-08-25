@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
+using EVEMon.Common.Controls;
 
 namespace EVEMon
 {
@@ -225,35 +226,35 @@ namespace EVEMon
             }
 
             // Add controls for characters
-			if (Settings.UI.SystemTrayPopup.GroupBy == TrayPopupGrouping.Account && Settings.UI.SystemTrayPopup.IndentGroupedAccounts)
-			{
-				long PrevUserID = 0;
-				foreach (Character character in characters)
-				{
-					if (character.Identity.Account.UserID != PrevUserID)
-					{
-						mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
-						PrevUserID = character.Identity.Account.UserID;
-					}
-					else
-					{
-						FlowLayoutPanel AccountGroupPanel = new FlowLayoutPanel();
-						AccountGroupPanel.AutoSize = true;
-						AccountGroupPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-						AccountGroupPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-						AccountGroupPanel.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-						OverviewItem charpanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
-						charpanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-						AccountGroupPanel.Controls.Add(charpanel);
-						mainPanel.Controls.Add(AccountGroupPanel);
-						PrevUserID = character.Identity.Account.UserID;
-					}
-				}
-			}
-			else
-			{
-				mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
-			}
+            if (Settings.UI.SystemTrayPopup.GroupBy == TrayPopupGrouping.Account && Settings.UI.SystemTrayPopup.IndentGroupedAccounts)
+            {
+                long PrevUserID = 0;
+                foreach (Character character in characters)
+                {
+                    if (character.Identity.Account.UserID != PrevUserID)
+                    {
+                        mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
+                        PrevUserID = character.Identity.Account.UserID;
+                    }
+                    else
+                    {
+                        FlowLayoutPanel AccountGroupPanel = new FlowLayoutPanel();
+                        AccountGroupPanel.AutoSize = true;
+                        AccountGroupPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+                        AccountGroupPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+                        AccountGroupPanel.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+                        OverviewItem charpanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
+                        charpanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
+                        AccountGroupPanel.Controls.Add(charpanel);
+                        mainPanel.Controls.Add(AccountGroupPanel);
+                        PrevUserID = character.Identity.Account.UserID;
+                    }
+                }
+            }
+            else
+            {
+                mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
+            }
 
             // Return if the user do not want to be warned about accounts not in training
             if (Settings.UI.SystemTrayPopup.ShowWarning)
@@ -315,10 +316,10 @@ namespace EVEMon
                 case TrayPopupGrouping.None:
                     newCharacters.AddRange(charactersList);
                     return newCharacters;
-                
+
                 case TrayPopupGrouping.Account:
-					newCharacters.AddRange(charactersList.Where(x => x.Identity.Account != null));
-					return newCharacters.GroupBy(x => x.Identity.Account).SelectMany(y => y);
+                    newCharacters.AddRange(charactersList.Where(x => x.Identity.Account != null));
+                    return newCharacters.GroupBy(x => x.Identity.Account).SelectMany(y => y);
 
                 case TrayPopupGrouping.TrainingAtTop:
                     newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
@@ -421,23 +422,5 @@ namespace EVEMon
         }
         #endregion
 
-
-        #region Native Stuff
-        internal class NativeMethods
-        {
-            public const Int32 HWND_TOPMOST = -1;
-            public const Int32 SWP_NOACTIVATE = 0x0010;
-            public const Int32 SWP_NOSIZE = 0x0001;
-            public const Int32 SWP_NOMOVE = 0x0002;
-            public const Int32 SW_SHOWNOACTIVATE = 4;
-
-            [DllImport("user32.dll")]
-            public static extern bool ShowWindow(IntPtr hWnd, Int32 flags);
-            [DllImport("user32.dll")]
-            public static extern bool SetWindowPos(IntPtr hWnd,
-                Int32 hWndInsertAfter, Int32 X, Int32 Y, Int32 cx, Int32 cy, uint uFlags);
-
-        }
-        #endregion
     }
 }

@@ -65,9 +65,9 @@ namespace EVEMon.Common
             {
                 using (SuspendingEvents())
                 {
-                    for (int i = 0; i < m_items.Count; i++)
+                    for (int i = 0; i < Items.Count; i++)
                     {
-                        PlanEntry pe = m_items[i];
+                        PlanEntry pe = Items[i];
                         if (m_character.GetSkillLevel(pe.Skill) >= pe.Level)
                         {
                             return true;
@@ -87,9 +87,9 @@ namespace EVEMon.Common
             {
                 using (SuspendingEvents())
                 {
-                    for (int i = 0; i < m_items.Count; i++)
+                    for (int i = 0; i < Items.Count; i++)
                     {
-                        PlanEntry pe = m_items[i];
+                        PlanEntry pe = Items[i];
                         if (m_character.GetSkillLevel(pe.Skill) >= pe.Level)
                         {
                             yield return pe;
@@ -136,7 +136,7 @@ namespace EVEMon.Common
 
             // Train entries
             TimeSpan time = TimeSpan.Zero;
-            scratchpad.TrainEntries(m_items, applyRemappingPoints);
+            scratchpad.TrainEntries(Items, applyRemappingPoints);
             return scratchpad.TrainingTime - time;
         }
 
@@ -145,7 +145,7 @@ namespace EVEMon.Common
         /// </summary>
         public int UniqueSkillsCount
         {
-            get { return m_items.GetUniqueSkillsCount(); }
+            get { return Items.GetUniqueSkillsCount(); }
         }
         
         /// <summary>
@@ -153,7 +153,7 @@ namespace EVEMon.Common
         /// </summary>
         public int NotKnownSkillsCount
         {
-            get { return m_items.GetNotKnownSkillsCount(); }
+            get { return Items.GetNotKnownSkillsCount(); }
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace EVEMon.Common
         /// </summary>
         public long TotalBooksCost
         {
-            get { return m_items.GetTotalBooksCost(); }
+            get { return Items.GetTotalBooksCost(); }
         }
         
         /// <summary>
@@ -169,7 +169,7 @@ namespace EVEMon.Common
         /// </summary>
         public long NotKnownSkillBooksCost
         {
-            get { return m_items.GetNotKnownSkillBooksCost(); }
+            get { return Items.GetNotKnownSkillBooksCost(); }
         }
 
         #endregion
@@ -203,7 +203,7 @@ namespace EVEMon.Common
         /// <param name="entry"></param>
         protected void AddCore(PlanEntry entry)
         {
-            m_items.Add(entry);
+            Items.Add(entry);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = entry;
             OnChanged(PlanChange.All);
         }
@@ -214,7 +214,7 @@ namespace EVEMon.Common
         /// <param name="entry"></param>
         protected void InsertCore(int index, PlanEntry entry)
         {
-            m_items.Insert(index, entry);
+            Items.Insert(index, entry);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = entry;
             OnChanged(PlanChange.All);
         }
@@ -225,8 +225,8 @@ namespace EVEMon.Common
         /// <param name="entry"></param>
         protected void RemoveCore(int index)
         {
-            var entry = m_items[index];
-            m_items.RemoveAt(index);
+            var entry = Items[index];
+            Items.RemoveAt(index);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = null;
             OnChanged(PlanChange.All);
         }
@@ -238,9 +238,9 @@ namespace EVEMon.Common
         /// <param name="targetIndex"></param>
         protected void MoveCore(int startIndex, int targetIndex)
         {
-            var entry = m_items[startIndex];
-            m_items.RemoveAt(startIndex);
-            m_items.Insert(targetIndex, entry);
+            var entry = Items[startIndex];
+            Items.RemoveAt(startIndex);
+            Items.Insert(targetIndex, entry);
             OnChanged(PlanChange.All);
         }
 
@@ -255,7 +255,7 @@ namespace EVEMon.Common
             var entry = GetEntry(skill, level);
             if (entry == null)
                 return -1;
-            return m_items.IndexOf(entry);
+            return Items.IndexOf(entry);
         }
 
         /// <summary>
@@ -310,9 +310,9 @@ namespace EVEMon.Common
         protected void FixPrerequisites()
         {
             // Scroll through entries
-            for (int i = 0; i < m_items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                PlanEntry entry = m_items[i];
+                PlanEntry entry = Items[i];
                 bool jumpBack = false;
 
                 // Scroll through prerequisites
@@ -395,9 +395,9 @@ namespace EVEMon.Common
             bool planOK = true;
 
             // Check all plan entries
-            for (int i = 0; i < m_items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                PlanEntry pe = m_items[i];
+                PlanEntry pe = Items[i];
                 int highestDepPriority = GetHighestDependencyPriority(i);
 
                 // Find all dependants on this skill and get the highest priority
@@ -423,12 +423,12 @@ namespace EVEMon.Common
         private int GetHighestDependencyPriority(int posSkillToCheck)
         {
             int highestDepPriority = 99;
-            PlanEntry pEntry = m_items[posSkillToCheck];
+            PlanEntry pEntry = Items[posSkillToCheck];
 
             // Scroll through successive skills
-            for (int j = posSkillToCheck + 1; j < m_items.Count; j++)
+            for (int j = posSkillToCheck + 1; j < Items.Count; j++)
             {
-                PlanEntry entry = m_items[j];
+                PlanEntry entry = Items[j];
 
                 // Is it either a prerequisite or a previous level ?
                 if (entry.IsDependentOf(pEntry))
@@ -447,12 +447,12 @@ namespace EVEMon.Common
         /// <param name="posSkill">Position of parent skill</param>
         private void LowerDependenciesPriorities(int posSkill)
         {
-            PlanEntry entry = m_items[posSkill];
+            PlanEntry entry = Items[posSkill];
 
             // Scroll through successive skills
-            for (int j = posSkill + 1; j < m_items.Count; ++j)
+            for (int j = posSkill + 1; j < Items.Count; ++j)
             {
-                PlanEntry pEntry = m_items[j];
+                PlanEntry pEntry = Items[j];
 
                 // Is it either a prerequisite or a previous level ?
                 if (pEntry.IsDependentOf(entry))
@@ -471,7 +471,7 @@ namespace EVEMon.Common
         {
             // Search the minimum level this skill is required by other entries
             int minNeeded = 0;
-            foreach (PlanEntry pe in m_items)
+            foreach (PlanEntry pe in Items)
             {
                 int required;
                 StaticSkill tSkill = pe.Skill;
@@ -515,7 +515,7 @@ namespace EVEMon.Common
         {
             using (SuspendingEvents())
             {
-                m_items.Clear();
+                Items.Clear();
                 for (int i = 0; i < m_lookup.Length; i++) m_lookup[i] = null;
 
                 foreach (var entry in entries)
@@ -545,11 +545,11 @@ namespace EVEMon.Common
             {
                 // Save the old entries
                 var set = new SkillLevelSet<PlanEntry>();
-                foreach (var entry in m_items)
+                foreach (var entry in Items)
                     set[entry.Skill, entry.Level] = entry;
 
                 // Clear items
-                m_items.Clear();
+                Items.Clear();
                 for (int i = 0; i < m_lookup.Length; i++)
                     m_lookup[i] = null;
 
@@ -592,7 +592,7 @@ namespace EVEMon.Common
                     continue;
 
                 // Let's first gather dependencies
-                foreach (var dependencyEntry in m_items)
+                foreach (var dependencyEntry in Items)
                 {
                     // Already in the "entries to remove" list ? We skip it.
                     if (entriesSet.Contains(dependencyEntry))
@@ -739,9 +739,9 @@ namespace EVEMon.Common
         public void CleanObsoleteEntries(ObsoleteRemovalPolicy policy)
         {
             using (SuspendingEvents())
-            for (int i = 0; i < m_items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                PlanEntry pe = m_items[i];
+                PlanEntry pe = Items[i];
                 if (m_character.GetSkillLevel(pe.Skill) >= pe.Level)
                 {
                     // Confirmed by API?
@@ -749,7 +749,7 @@ namespace EVEMon.Common
                         pe.CharacterSkill.LastConfirmedLvl < pe.Level)
                         continue;
 
-                    m_items.RemoveAt(i);
+                    Items.RemoveAt(i);
                     i--;
                 }
             }
@@ -800,7 +800,7 @@ namespace EVEMon.Common
         /// <param name="groupByPriority"></param>
         public void Sort(PlanEntrySort sort, bool reverseOrder, bool groupByPriority)
         {
-            var sorter = new PlanSorter(m_character, m_items, sort, reverseOrder, groupByPriority);
+            var sorter = new PlanSorter(m_character, Items, sort, reverseOrder, groupByPriority);
 
             // Perform the sort
             var entries = sorter.Sort();
@@ -843,7 +843,7 @@ namespace EVEMon.Common
             DateTime time = DateTime.Now;
 
             // Update the statistics
-            foreach (var entry in m_items)
+            foreach (var entry in Items)
             {
                 // Apply the remapping
                 if (applyRemappingPoints && entry.Remapping != null && entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate)
@@ -881,7 +881,7 @@ namespace EVEMon.Common
         public void UpdateOldTrainingTimes(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
             // Update the statistics
-            foreach (var entry in m_items)
+            foreach (var entry in Items)
             {
                 // Apply the remapping
                 if (applyRemappingPoints && entry.Remapping != null && entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate)

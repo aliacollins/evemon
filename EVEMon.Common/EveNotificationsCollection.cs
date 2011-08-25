@@ -50,7 +50,7 @@ namespace EVEMon.Common
             foreach (var id in ids)
             {
                 long ID = long.Parse(id);
-                m_items.Add(new EveNotification(m_ccpCharacter,
+                Items.Add(new EveNotification(m_ccpCharacter,
                                                 new SerializableNotificationsListItem()
                                                 {
                                                     NotificationID = ID
@@ -72,15 +72,15 @@ namespace EVEMon.Common
             foreach (var srcEVENotification in src)
             {
                 // If it's a new notification increase the counter
-                var notification = m_items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
+                var notification = Items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
                 if (notification == null)
                     NewNotifications++;
 
                 newNotifications.Add(new EveNotification(m_ccpCharacter, srcEVENotification));
             }
 
-            m_items.Clear();
-            m_items.AddRange(newNotifications);
+            Items.Clear();
+            Items.AddRange(newNotifications);
 
             // Fires the event regarding EVE mail messages update
             EveMonClient.OnCharacterEVENotificationsUpdated(m_ccpCharacter);
@@ -94,7 +94,7 @@ namespace EVEMon.Common
         {
             List<string> serial = new List<string>();
 
-            foreach (var notification in m_items)
+            foreach (var notification in Items)
             {
                 serial.Add(notification.NotificationID.ToString());
             }

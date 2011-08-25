@@ -111,60 +111,60 @@ namespace EVEMon.Common
             switch (sort)
             {
                 case PlanEntrySort.Name:
-                    m_items.StableSort(PlanSorter.CompareByName);
+                    Items.StableSort(PlanSorter.CompareByName);
                     break;
                 case PlanEntrySort.Cost:
-                    m_items.StableSort(PlanSorter.CompareByCost);
+                    Items.StableSort(PlanSorter.CompareByCost);
                     break;
                 case PlanEntrySort.PrimaryAttribute:
-                    m_items.StableSort(PlanSorter.CompareByPrimaryAttribute);
+                    Items.StableSort(PlanSorter.CompareByPrimaryAttribute);
                     break;
                 case PlanEntrySort.SecondaryAttribute:
-                    m_items.StableSort(PlanSorter.CompareBySecondaryAttribute);
+                    Items.StableSort(PlanSorter.CompareBySecondaryAttribute);
                     break;
                 case PlanEntrySort.Priority:
-                    m_items.StableSort(PlanSorter.CompareByPriority);
+                    Items.StableSort(PlanSorter.CompareByPriority);
                     break;
                 case PlanEntrySort.PlanGroup:
-                    m_items.StableSort(PlanSorter.CompareByPlanGroup);
+                    Items.StableSort(PlanSorter.CompareByPlanGroup);
                     break;
                 case PlanEntrySort.PercentCompleted:
-                    m_items.StableSort(PlanSorter.CompareByPercentCompleted);
+                    Items.StableSort(PlanSorter.CompareByPercentCompleted);
                     break;
                 case PlanEntrySort.Rank:
-                    m_items.StableSort(PlanSorter.CompareByRank);
+                    Items.StableSort(PlanSorter.CompareByRank);
                     break;
                 case PlanEntrySort.Notes:
-                    m_items.StableSort(PlanSorter.CompareByNotes);
+                    Items.StableSort(PlanSorter.CompareByNotes);
                     break;
                 case PlanEntrySort.PlanType:
-                    m_items.StableSort(PlanSorter.CompareByPlanType);
+                    Items.StableSort(PlanSorter.CompareByPlanType);
                     break;
                 case PlanEntrySort.TimeDifference:
-                    m_items.StableSort(PlanSorter.CompareByTimeDifference);
+                    Items.StableSort(PlanSorter.CompareByTimeDifference);
                     break;
                 case PlanEntrySort.TrainingTime:
-                    m_items.StableSort(PlanSorter.CompareByTrainingTime);
+                    Items.StableSort(PlanSorter.CompareByTrainingTime);
                     break;
                 case PlanEntrySort.TrainingTimeNatural:
-                    m_items.StableSort(PlanSorter.CompareByTrainingTimeNatural);
+                    Items.StableSort(PlanSorter.CompareByTrainingTimeNatural);
                     break;
                 case PlanEntrySort.SkillGroupDuration:
                     var skillGroupsDurations = new Dictionary<StaticSkillGroup, TimeSpan>();
-                    m_items.StableSort((x, y) => PlanSorter.CompareBySkillGroupDuration(x, y, m_items, skillGroupsDurations));
+                    Items.StableSort((x, y) => PlanSorter.CompareBySkillGroupDuration(x, y, Items, skillGroupsDurations));
                     break;
                 case PlanEntrySort.SPPerHour:
-                    m_items.StableSort(PlanSorter.CompareBySPPerHour);
+                    Items.StableSort(PlanSorter.CompareBySPPerHour);
                     break;
                 case PlanEntrySort.SkillPointsRequired:
-                    m_items.StableSort(PlanSorter.CompareBySkillPointsRequired);
+                    Items.StableSort(PlanSorter.CompareBySkillPointsRequired);
                     break;
                 default:
                     break;
             }
 
             // Reverse order
-            if (reverseOrder) m_items.Reverse();
+            if (reverseOrder) Items.Reverse();
         }
         #endregion
     }

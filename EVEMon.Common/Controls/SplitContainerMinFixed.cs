@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
@@ -12,21 +10,22 @@ namespace EVEMon.Common.Controls
     {
         #region Fields
 
-        private bool m_sizeSet = false;
+        private bool m_sizeSet;
         private int m_panel2MinSize;
 
         #endregion
 
+
         #region Constructor
 
         public SplitContainerMinFixed()
-            : base()
         {
             // Default value
             m_panel2MinSize = base.Panel2MinSize;
         }
 
         #endregion
+
 
         #region Public Properties
 
@@ -35,12 +34,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public new int Panel2MinSize
         {
-            get
-            {
-                if (m_sizeSet)
-                    return base.Panel2MinSize;
-                return m_panel2MinSize;
-            }
+            get { return m_sizeSet ? base.Panel2MinSize : m_panel2MinSize; }
             set
             {
                 m_panel2MinSize = value;
@@ -58,12 +52,12 @@ namespace EVEMon.Common.Controls
             set
             {
                 base.Size = value;
-                if (!m_sizeSet)
-                {
-                    m_sizeSet = true;
-                    if (m_panel2MinSize != 0)
-                        Panel2MinSize = m_panel2MinSize;
-                }
+                if (m_sizeSet)
+                    return;
+
+                m_sizeSet = true;
+                if (m_panel2MinSize != 0)
+                    Panel2MinSize = m_panel2MinSize;
             }
         }
 

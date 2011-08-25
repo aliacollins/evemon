@@ -29,10 +29,10 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal void Import(IEnumerable<SerializableJob> src)
         {
-            m_items.Clear();
+            Items.Clear();
             foreach (var srcJob in src)
             {
-                m_items.Add(new IndustryJob(srcJob));
+                Items.Add(new IndustryJob(srcJob));
             }
         }
 
@@ -45,7 +45,7 @@ namespace EVEMon.Common
             // Mark all jobs for deletion 
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
-            foreach (var job in m_items)
+            foreach (var job in Items)
             {
                 job.MarkedForDeletion = true;
             }
@@ -61,7 +61,7 @@ namespace EVEMon.Common
 
                 // First check whether it is an existing job
                 // If it is, update it and remove the deletion candidate flag
-                if (m_items.Any(x => x.TryImport(srcJob)))
+                if (Items.Any(x => x.TryImport(srcJob)))
                     continue;
 
                 var job = new IndustryJob(srcJob);
@@ -70,11 +70,11 @@ namespace EVEMon.Common
             }
 
             // Add the items that are no longer marked for deletion
-            newJobs.AddRange(m_items.Where(x => !x.MarkedForDeletion));
+            newJobs.AddRange(Items.Where(x => !x.MarkedForDeletion));
 
             // Replace the old list with the new one
-            m_items.Clear();
-            m_items.AddRange(newJobs);
+            Items.Clear();
+            Items.AddRange(newJobs);
 
             // Fires the event regarding industry jobs update
             EveMonClient.OnCharacterIndustryJobsUpdated(m_character);
@@ -86,9 +86,9 @@ namespace EVEMon.Common
         /// <returns>List of serializable jobs.</returns>
         internal List<SerializableJob> Export()
         {
-            List<SerializableJob> serial = new List<SerializableJob>(m_items.Count);
+            List<SerializableJob> serial = new List<SerializableJob>(Items.Count);
 
-            foreach (var job in m_items)
+            foreach (var job in Items)
             {
                 serial.Add(job.Export());
             }
@@ -102,13 +102,13 @@ namespace EVEMon.Common
         internal void UpdateOnTimerTick()
         {
             // We exit if there are no jobs
-            if (m_items.IsEmpty())
+            if (Items.IsEmpty())
                 return;
 
             List<IndustryJob> jobsCompleted = new List<IndustryJob>();
 
             // Add the not notified "Ready" jobs to the completed list
-            foreach (var job in m_items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
+            foreach (var job in Items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
             {
                 jobsCompleted.Add(job);
                 job.NotificationSend = true;

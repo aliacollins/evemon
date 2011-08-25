@@ -35,13 +35,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal CharacterIdentity Add(long id, string name)
         {
-            if (m_items.ContainsKey(id))
+            if (Items.ContainsKey(id))
             {
                 throw new ArgumentException("An identity with the same ID already exists.");
             }
 
             var identity = new CharacterIdentity(id, name);
-            m_items[id] = identity;
+            Items[id] = identity;
             return identity;
         }
     }

@@ -28,15 +28,15 @@ namespace EVEMon.Common
                 {
                     foreach (Certificate cert in certClass)
                     {
-                        m_items[cert.ID] = cert;
+                        Items[cert.ID] = cert;
                     }
                 }
             }
 
             // Builds the prerequisites certificates list
-            foreach (Certificate cert in m_items.Values)
+            foreach (Certificate cert in Items.Values)
             {
-                cert.CompleteInitialization(m_items);
+                cert.CompleteInitialization(Items);
             }
         }
 
@@ -57,7 +57,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public IEnumerable<Certificate> FilterByStatus(CertificateStatus status)
         {
-            foreach (Certificate cert in m_items.Values)
+            foreach (Certificate cert in Items.Values)
             {
                 if (cert.Status == status) 
                     yield return cert;
@@ -82,7 +82,7 @@ namespace EVEMon.Common
         internal List<SerializableCharacterCertificate> Export()
         {
             List < SerializableCharacterCertificate > certificates = new List<SerializableCharacterCertificate>();
-            foreach (var cert in m_items.Values.Where(x => x.IsGranted))
+            foreach (var cert in Items.Values.Where(x => x.IsGranted))
             {
                 certificates.Add(new SerializableCharacterCertificate { CertificateID = cert.ID });
             }
@@ -96,7 +96,7 @@ namespace EVEMon.Common
         internal void Import(List<SerializableCharacterCertificate> certificates)
         {
             // Certificates : reset > mark the granted ones > update the other ones
-            foreach (Certificate cert in m_items.Values)
+            foreach (Certificate cert in Items.Values)
             {
                 cert.Reset();
             }
@@ -105,13 +105,13 @@ namespace EVEMon.Common
             {
                 // Take care of the new certs not in our datafiles yet
                 // Mark as granted if it exists
-                m_items[serialCert.CertificateID].MarkAsGranted();
+                Items[serialCert.CertificateID].MarkAsGranted();
             }
 
             while (true)
             {
                 bool updatedAnything = false;
-                foreach (Certificate cert in m_items.Values)
+                foreach (Certificate cert in Items.Values)
                 {
                     updatedAnything |= cert.TryUpdateCertificateStatus();
                 }

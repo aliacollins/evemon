@@ -22,7 +22,7 @@ namespace EVEMon.Common.Data
             Name = src.Name;
             foreach (SerializableSkill srcSkill in src.Skills)
             {
-                m_items[srcSkill.ID] = new StaticSkill(this, srcSkill, skillArrayIndex);
+                Items[srcSkill.ID] = new StaticSkill(this, srcSkill, skillArrayIndex);
                 skillArrayIndex++;
             }
         }
@@ -69,7 +69,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public bool Contains(int skillID)
         {
-            return m_items.ContainsKey(skillID);
+            return Items.ContainsKey(skillID);
         }
 
         #endregion
@@ -83,7 +83,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public IEnumerator<StaticSkill> GetEnumerator()
         {
-            return m_items.Values.GetEnumerator();
+            return Items.Values.GetEnumerator();
         }
 
         #endregion

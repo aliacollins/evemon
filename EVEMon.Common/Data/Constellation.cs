@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableSolarSystem srcSystem in src.Systems)
             {
-                m_items.Add(new SolarSystem(this, srcSystem));
+                Items.Add(new SolarSystem(this, srcSystem));
             }
         }
 

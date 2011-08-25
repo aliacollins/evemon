@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.Collections
 {
@@ -11,14 +8,14 @@ namespace EVEMon.Common.Collections
     /// </summary>
     public abstract class ReadonlyCollection<T> : IReadonlyCollection<T>
     {
-        protected FastList<T> m_items;
+        protected FastList<T> Items;
 
         /// <summary>
         /// Protected default constructor with an initial capacity.
         /// </summary>
         protected ReadonlyCollection(int capacity)
         {
-            m_items = new FastList<T>(capacity);
+            Items = new FastList<T>(capacity);
         }
 
         /// <summary>
@@ -26,7 +23,7 @@ namespace EVEMon.Common.Collections
         /// </summary>
         protected ReadonlyCollection()
         {
-            m_items = new FastList<T>(0);
+            Items = new FastList<T>(0);
         }
 
         /// <summary>
@@ -34,7 +31,7 @@ namespace EVEMon.Common.Collections
         /// </summary>
         public int Count
         {
-            get { return m_items.Count; }
+            get { return Items.Count; }
         }
 
         /// <summary>
@@ -44,19 +41,22 @@ namespace EVEMon.Common.Collections
         /// <returns></returns>
         public bool Contains(T item)
         {
-            return m_items.Contains(item);
+            return Items.Contains(item);
         }
 
+
         #region Enumerators
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return m_items.GetEnumerator();
+            return Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return m_items.GetEnumerator();
+            return Items.GetEnumerator();
         }
+
         #endregion
     }
 }
