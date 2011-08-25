@@ -1,6 +1,6 @@
 using System;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class CharacterChangedEventArgs : EventArgs
     {

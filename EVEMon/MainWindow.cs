@@ -14,6 +14,7 @@ using EVEMon.Accounting;
 using EVEMon.BlankCharacter;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.IgbService;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;

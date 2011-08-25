@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Controls;
 
@@ -35,7 +36,7 @@ namespace EVEMon.SettingsUI
         /// When BattleClinic API credentials get checked, informs the user.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.BCAPIEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="BCAPIEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
         {
             throbber.State = ThrobberState.Stopped;

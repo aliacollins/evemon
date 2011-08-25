@@ -7,7 +7,7 @@ namespace EVEMon.Common.Net
     public delegate void DownloadImageCompletedCallback(DownloadImageAsyncResult e, object userState);
 
     /// <summary>
-    /// HttpWebService Image download implementation
+    /// HttpWebService Image download implementation.
     /// </summary>
     partial class HttpWebService
     {
@@ -23,16 +23,17 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
+
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 request.GetResponse(url, new MemoryStream(), IMAGE_ACCEPT);
                 return GetImage(request);
             }
-            catch (Exception)
+            finally
             {
-                if (request.ResponseStream != null) request.ResponseStream.Close();
-                throw;
+                if (request.ResponseStream != null)
+                    request.ResponseStream.Close();
             }
         }
 
@@ -43,15 +44,15 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public object DownloadImageAsync(string url, DownloadImageCompletedCallback callback, object userState)
+        public void DownloadImageAsync(string url, DownloadImageCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
+
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new MemoryStream(), IMAGE_ACCEPT, null, state);
-            return request;
         }
 
         /// <summary>
@@ -64,40 +65,36 @@ namespace EVEMon.Common.Net
             try
             {
                 if (!requestState.Request.Cancelled && requestState.Error == null)
-                {
                     imageResult = GetImage(requestState.Request);
-                }
             }
             catch(HttpWebServiceException ex)
             {
                 requestState.Error = ex;
-                if (requestState.Request.ResponseStream != null)
-                {
-                    requestState.Request.ResponseStream.Close();
-                }
             }
+
+            if (requestState.Request.ResponseStream != null)
+                requestState.Request.ResponseStream.Close();
+
             requestState.DownloadImageCompleted(new DownloadImageAsyncResult(imageResult, requestState.Error), requestState.UserState);
         }
 
         /// <summary>
-        /// Helper method to return an Image from the completed request
+        /// Helper method to return an Image from the completed request.
         /// </summary>
         private Image GetImage(HttpWebServiceRequest request)
         {
-            Image result = null;
-            if (request.ResponseStream != null)
+            if (request.ResponseStream == null)
+                return null;
+
+            request.ResponseStream.Seek(0, SeekOrigin.Begin);
+            try
             {
-                request.ResponseStream.Seek(0, SeekOrigin.Begin);
-                try
-                {
-                    result = Image.FromStream(request.ResponseStream, true);
-                }
-                catch (ArgumentException ex)
-                {
-                    throw HttpWebServiceException.ImageException(request.BaseUrl, ex);
-                }
+                return Image.FromStream(request.ResponseStream, true);
             }
-            return result;
+            catch (ArgumentException ex)
+            {
+                throw HttpWebServiceException.ImageException(request.BaseUrl, ex);
+            }
         }
 
         /// <summary>
@@ -105,25 +102,30 @@ namespace EVEMon.Common.Net
         /// </summary>
         private class ImageRequestAsyncState : WebRequestAsyncState
         {
-            private readonly DownloadImageCompletedCallback _downloadImageCompleted;
-            private readonly object _userState;
-
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ImageRequestAsyncState"/> class.
+            /// </summary>
+            /// <param name="callback">The callback.</param>
+            /// <param name="webRequestCallback">The web request callback.</param>
+            /// <param name="userState">State of the user.</param>
             public ImageRequestAsyncState(DownloadImageCompletedCallback callback, WebRequestAsyncCallback webRequestCallback, object userState)
                 :base(webRequestCallback)
             {
-                _downloadImageCompleted = callback;
-                _userState = userState;
+                DownloadImageCompleted = callback;
+                UserState = userState;
             }
 
-            public DownloadImageCompletedCallback DownloadImageCompleted
-            {
-                get { return _downloadImageCompleted; }
-            }
+            /// <summary>
+            /// Gets the download image completed.
+            /// </summary>
+            /// <value>The download image completed.</value>
+            public DownloadImageCompletedCallback DownloadImageCompleted { get; private set; }
 
-            public object UserState
-            {
-                get { return _userState; }
-            }
+            /// <summary>
+            /// Gets the state of the user.
+            /// </summary>
+            /// <value>The state of the user.</value>
+            public object UserState { get; private set; }
         }
     }
 }

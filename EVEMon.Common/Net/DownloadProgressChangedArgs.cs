@@ -5,30 +5,35 @@ namespace EVEMon.Common.Net
     /// </summary>
     public class DownloadProgressChangedArgs
     {
-        private readonly long _totalBytesToReceive;
-        private readonly long _bytesReceived;
-        private readonly int _progressPercentage;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DownloadProgressChangedArgs"/> class.
+        /// </summary>
+        /// <param name="totalBytesToReceive">The total bytes to receive.</param>
+        /// <param name="bytesReceived">The bytes received.</param>
+        /// <param name="progressPercentage">The progress percentage.</param>
         internal DownloadProgressChangedArgs(long totalBytesToReceive, long bytesReceived, int progressPercentage)
         {
-            _totalBytesToReceive = totalBytesToReceive;
-            _progressPercentage = progressPercentage;
-            _bytesReceived = bytesReceived;
+            TotalBytesToReceive = totalBytesToReceive;
+            ProgressPercentage = progressPercentage;
+            BytesReceived = bytesReceived;
         }
 
-        public long TotalBytesToReceive
-        {
-            get { return _totalBytesToReceive; }
-        }
+        /// <summary>
+        /// Gets or sets the total bytes to receive.
+        /// </summary>
+        /// <value>The total bytes to receive.</value>
+        public long TotalBytesToReceive { get; private set; }
 
-        public long BytesReceived
-        {
-            get { return _bytesReceived; }
-        }
+        /// <summary>
+        /// Gets or sets the bytes received.
+        /// </summary>
+        /// <value>The bytes received.</value>
+        public long BytesReceived { get; private set; }
 
-        public int ProgressPercentage
-        {
-            get { return _progressPercentage; }
-        }
+        /// <summary>
+        /// Gets or sets the progress percentage.
+        /// </summary>
+        /// <value>The progress percentage.</value>
+        public int ProgressPercentage { get; private set; }
     }
 }

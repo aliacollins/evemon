@@ -110,36 +110,28 @@ namespace EVEMon.Common.Data
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Collect all top prerequisites from certificates
-                foreach (StaticCertificate certPrereq in m_prerequisiteCertificates)
+                foreach (StaticSkillLevel certSkillPrereq in m_prerequisiteCertificates.SelectMany(
+                    certPrereq => certPrereq.AllTopPrerequisiteSkills.Where(
+                        certSkillPrereq => highestLevels[certSkillPrereq.Skill.ArrayIndex] < certSkillPrereq.Level)))
                 {
-                    foreach (StaticSkillLevel certSkilPrereq in certPrereq.AllTopPrerequisiteSkills)
-                    {
-                        if (highestLevels[certSkilPrereq.Skill.ArrayIndex] < certSkilPrereq.Level)
-                        {
-                            highestLevels[certSkilPrereq.Skill.ArrayIndex] = certSkilPrereq.Level;
-                            list.Add(certSkilPrereq);
-                        }
-                    }
+                    highestLevels[certSkillPrereq.Skill.ArrayIndex] = certSkillPrereq.Level;
+                    list.Add(certSkillPrereq);
                 }
 
                 // Collect all prerequisites from skills
-                foreach (StaticSkillLevel skillPrereq in m_prerequisiteSkills)
+                foreach (StaticSkillLevel skillPrereq in m_prerequisiteSkills.Where(
+                    skillPrereq => highestLevels[skillPrereq.Skill.ArrayIndex] < skillPrereq.Level))
                 {
-                    if (highestLevels[skillPrereq.Skill.ArrayIndex] < skillPrereq.Level)
-                    {
-                        highestLevels[skillPrereq.Skill.ArrayIndex] = skillPrereq.Level;
-                        list.Add(skillPrereq);
-                    }
+                    highestLevels[skillPrereq.Skill.ArrayIndex] = skillPrereq.Level;
+                    list.Add(skillPrereq);
                 }
 
                 // Return the result
-                foreach (StaticSkillLevel newItem in list)
+                foreach (StaticSkillLevel newItem in list.Where(
+                    newItem => highestLevels[newItem.Skill.ArrayIndex] != 0))
                 {
-                    if (highestLevels[newItem.Skill.ArrayIndex] != 0)
-                    {
-                        yield return new StaticSkillLevel(newItem.Skill, highestLevels[newItem.Skill.ArrayIndex]);
-                        highestLevels[newItem.Skill.ArrayIndex] = 0;
-                    }
+                    yield return new StaticSkillLevel(newItem.Skill, highestLevels[newItem.Skill.ArrayIndex]);
+                    highestLevels[newItem.Skill.ArrayIndex] = 0;
                 }
             }
         }

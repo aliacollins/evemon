@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Collections;
+﻿using System.Collections.Generic;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -13,8 +14,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="group">The group.</param>
         /// <param name="src">The SRC.</param>
-        internal MarketGroupCollection(MarketGroup group, SerializableMarketGroup[] src)
-            : base(src == null ? 0 : src.Length)
+        internal MarketGroupCollection(MarketGroup group, ICollection<SerializableMarketGroup> src)
+            : base(src == null ? 0 : src.Count)
         {
             if (src == null)
                 return;

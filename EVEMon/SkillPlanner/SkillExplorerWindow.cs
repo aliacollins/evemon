@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using EVEMon;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner

@@ -31,10 +31,10 @@ namespace EVEMon.Common.Data
             Description = src.Description;
             Category = category;
 
-            foreach (SerializableCertificate srcCert in src.Certificates)
+            foreach (StaticCertificate cert in src.Certificates.Select(
+                srcCert => new StaticCertificate(this, srcCert)))
             {
-                StaticCertificate cert = new StaticCertificate(this, srcCert);
-                m_certificates[(int)cert.Grade] = cert;
+                m_certificates[(int) cert.Grade] = cert;
             }
         }
 

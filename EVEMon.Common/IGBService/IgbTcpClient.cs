@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using EVEMon.Common;
 
 namespace EVEMon.Common.IgbService
 {
@@ -12,21 +11,21 @@ namespace EVEMon.Common.IgbService
     /// </summary>
     public class IgbTcpClient
     {
+        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<IgbClientDataReadEventArgs> DataRead;
+
         private readonly Object m_syncLock = new Object();
+        private readonly TcpClient m_client;
+
+        private const int BufferSize = 4096;
 
         private byte[] m_buffer;
-        private int m_bufferSize = 4096;
-        private bool m_running = false;
-        private TcpClient m_client;
+        private bool m_running;
         private NetworkStream m_stream;
 
-        public int BufferSize
-        {
-            get { return m_bufferSize; }
-            set { m_bufferSize = value; }
-        }
 
         #region Constructor and Close
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -36,35 +35,40 @@ namespace EVEMon.Common.IgbService
             m_client = client;
         }
 
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
         public void Close()
         {
-            if (m_running)
+            if (!m_running)
+                return;
+
+            m_running = false;
+            try
             {
-                m_running = false;
-                try
-                {
-                    m_client.Close();
-                }
-                catch (SocketException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-                OnClosed();
+                m_client.Close();
             }
+            catch (SocketException e)
+            {
+                ExceptionHandler.LogException(e, false);
+            }
+            OnClosed();
         }
 
+        /// <summary>
+        /// Called when [closed].
+        /// </summary>
         private void OnClosed()
         {
             if (Closed != null)
-            {
                 Closed(this, new EventArgs());
-            }
         }
 
-        public event EventHandler<EventArgs> Closed;
         #endregion
 
+
         #region Reading
+
         /// <summary>
         /// Start reading from the client
         /// </summary>
@@ -74,7 +78,7 @@ namespace EVEMon.Common.IgbService
             {
                 m_running = true;
                 m_stream = m_client.GetStream();
-                m_buffer = new byte[m_bufferSize];
+                m_buffer = new byte[BufferSize];
                 BeginRead(false);
             }
         }
@@ -86,9 +90,8 @@ namespace EVEMon.Common.IgbService
         private void BeginRead(bool acquireLock)
         {
             if (acquireLock)
-            {
                 Monitor.Enter(m_syncLock);
-            }
+
             try
             {
                 IAsyncResult ar;
@@ -96,17 +99,13 @@ namespace EVEMon.Common.IgbService
                 {
                     ar = null;
                     if (m_running)
-                    {
-                        ar = m_stream.BeginRead(m_buffer, 0, m_buffer.Length, new AsyncCallback(EndRead), null);
-                    }
+                        ar = m_stream.BeginRead(m_buffer, 0, m_buffer.Length, EndRead, null);
                 } while (ar != null && ar.CompletedSynchronously);
             }
             finally
             {
                 if (acquireLock)
-                {
                     Monitor.Exit(m_syncLock);
-                }
             }
         }
 
@@ -127,9 +126,7 @@ namespace EVEMon.Common.IgbService
                 {
                     OnDataRead(m_buffer, 0, bytesRead);
                     if (!ar.CompletedSynchronously)
-                    {
                         BeginRead(true);
-                    }
                 }
             }
             catch (Exception e)
@@ -148,20 +145,25 @@ namespace EVEMon.Common.IgbService
         private void OnDataRead(byte[] buffer, int offset, int count)
         {
             if (DataRead != null)
-            {
                 DataRead(this, new IgbClientDataReadEventArgs(buffer, offset, count));
-            }
         }
 
-        public event EventHandler<IgbClientDataReadEventArgs> DataRead;
+
         #endregion
 
+
         #region Writing
+
+        /// <summary>
+        /// Writes the specified string.
+        /// </summary>
+        /// <param name="str">The string.</param>
         public void Write(string str)
         {
             byte[] outbuf = Encoding.UTF8.GetBytes(str);
             m_stream.Write(outbuf, 0, outbuf.Length);
         }
+
         #endregion
     }
 }

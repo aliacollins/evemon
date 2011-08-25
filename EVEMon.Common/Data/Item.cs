@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="group">The group.</param>
         /// <param name="src">The source.</param>
-        internal Item(BlueprintMarketGroup group, SerializableBlueprint src)
+        internal Item(MarketGroup group, SerializableBlueprint src)
             : this(src.ID, src.Name)
         {
             Icon = src.Icon;
@@ -181,7 +181,7 @@ namespace EVEMon.Common.Data
                     return StaticSkills.GetSkillByID(DBConstants.ScrapMetalProcessingSkillID);
 
                 // Returns the reprocessing skill specified by the property
-                int id = property.Value.IValue;
+                int id = property.Value.IntValue;
                 return StaticSkills.GetSkillByID(id);
             }
         }

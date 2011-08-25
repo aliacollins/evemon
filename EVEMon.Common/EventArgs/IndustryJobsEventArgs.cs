@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class IndustryJobsEventArgs : EventArgs
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="industryJobs">The industry jobs.</param>
         public IndustryJobsEventArgs(Character character, IEnumerable<IndustryJob> industryJobs)
         {
             Character = character;

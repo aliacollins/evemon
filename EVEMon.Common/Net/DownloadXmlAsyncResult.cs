@@ -7,24 +7,27 @@ namespace EVEMon.Common.Net
     /// </summary>
     public class DownloadXmlAsyncResult
     {
-        private readonly XmlDocument _result;
-        private readonly HttpWebServiceException _error;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DownloadXmlAsyncResult"/> class.
+        /// </summary>
+        /// <param name="xdoc">The xdoc.</param>
+        /// <param name="error">The error.</param>
         public DownloadXmlAsyncResult(XmlDocument xdoc, HttpWebServiceException error)
         {
-            _error = error;
-            _result = xdoc;
+            Error = error;
+            Result = xdoc;
         }
 
-        public XmlDocument Result
-        {
-            get { return _result; }
-        }
+        /// <summary>
+        /// Gets or sets the result.
+        /// </summary>
+        /// <value>The result.</value>
+        public XmlDocument Result { get; private set; }
 
-        public HttpWebServiceException Error
-        {
-            get { return _error; }
-        }
-
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>The error.</value>
+        public HttpWebServiceException Error { get; private set; }
     }
 }

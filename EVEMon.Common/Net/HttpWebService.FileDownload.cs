@@ -10,7 +10,7 @@ namespace EVEMon.Common.Net
         private const string FILE_ACCEPT = "*/*;q=0.5";
 
         /// <summary>
-        /// Downloads an file from the specified url to the specified path
+        /// Downloads an file from the specified url to the specified path.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="filePath"></param>
@@ -20,6 +20,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
+
             HttpWebServiceRequest request = GetRequest();
             try
             {
@@ -37,12 +38,13 @@ namespace EVEMon.Common.Net
             }
             finally
             {
-                if (request.ResponseStream != null) request.ResponseStream.Close();
+                if (request.ResponseStream != null)
+                    request.ResponseStream.Close();
             }
         }
 
         /// <summary>
-        /// Asynchronously downloads file from the specified url to the specified path
+        /// Asynchronously downloads file from the specified url to the specified path.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="filePath"></param>
@@ -54,6 +56,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
+
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback, DownloadFileAsyncCompleted);
             HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None), IMAGE_ACCEPT, null, state);
@@ -61,7 +64,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Callback method for asynchronous requests
+        /// Callback method for asynchronous requests.
         /// </summary>
         private void DownloadFileAsyncCompleted(WebRequestAsyncState state)
         {
@@ -78,37 +81,43 @@ namespace EVEMon.Common.Net
                     requestState.Error = HttpWebServiceException.FileError(requestState.Request.BaseUrl, ex);
                 }
             }
+
             if (requestState.Request.ResponseStream != null)
-            {
                 requestState.Request.ResponseStream.Close();
-            }
+
             requestState.DownloadFileCompleted(new DownloadFileAsyncResult(fileResult, requestState.Error, requestState.Request.Cancelled));
         }
 
         /// <summary>
-        /// Helper class to retain the original callback and return data for asynchronous requests
+        /// Helper class to retain the original callback and return data for asynchronous requests.
         /// </summary>
         private class FileRequestAsyncState : WebRequestAsyncState
         {
-            private readonly DownloadFileCompletedCallback _downloadFileCompleted;
-            private readonly string _filePath;
-
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FileRequestAsyncState"/> class.
+            /// </summary>
+            /// <param name="filepath">The filepath.</param>
+            /// <param name="callback">The callback.</param>
+            /// <param name="progressCallback">The progress callback.</param>
+            /// <param name="webRequestCallback">The web request callback.</param>
             public FileRequestAsyncState(string filepath, DownloadFileCompletedCallback callback, DownloadProgressChangedCallback progressCallback, WebRequestAsyncCallback webRequestCallback)
                 : base(webRequestCallback, progressCallback)
             {
-                _filePath = filepath;
-                _downloadFileCompleted = callback;
+                FilePath = filepath;
+                DownloadFileCompleted = callback;
             }
 
-            public DownloadFileCompletedCallback DownloadFileCompleted
-            {
-                get { return _downloadFileCompleted; }
-            }
+            /// <summary>
+            /// Gets or sets the download file completed.
+            /// </summary>
+            /// <value>The download file completed.</value>
+            public DownloadFileCompletedCallback DownloadFileCompleted { get; private set; }
 
-            public string FilePath
-            {
-                get { return _filePath; }
-            }
+            /// <summary>
+            /// Gets or sets the file path.
+            /// </summary>
+            /// <value>The file path.</value>
+            public string FilePath { get; private set; }
         }
     }
 }

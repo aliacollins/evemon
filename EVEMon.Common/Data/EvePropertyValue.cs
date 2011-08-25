@@ -40,7 +40,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the integer value.
         /// </summary>
-        public int IValue
+        public int IntValue
         {
             get { return Int32.Parse(Value); }
         }
@@ -48,7 +48,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the floating point value.
         /// </summary>
-        public float FValue
+        public float FloatValue
         {
             get { return Single.Parse(Value); }
         }

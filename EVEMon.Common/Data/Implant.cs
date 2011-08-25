@@ -29,7 +29,7 @@ namespace EVEMon.Common.Data
         {
             // Gets the slot
             EvePropertyValue? slotProperty = Properties[DBConstants.ImplantSlotPropertyID];
-            Slot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IValue - 1));
+            Slot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IntValue - 1));
 
             // Sets the implant bonus
             SetImplantBonus();
@@ -84,27 +84,27 @@ namespace EVEMon.Common.Data
                 case ImplantSlots.Charisma:
                     eveProperty = Properties[DBConstants.CharismaModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IValue;
+                        Bonus = eveProperty.Value.IntValue;
                     break;
                 case ImplantSlots.Intelligence:
                     eveProperty = Properties[DBConstants.IntelligenceModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IValue;
+                        Bonus = eveProperty.Value.IntValue;
                     break;
                 case ImplantSlots.Memory:
                     eveProperty = Properties[DBConstants.MemoryModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IValue;
+                        Bonus = eveProperty.Value.IntValue;
                     break;
                 case ImplantSlots.Perception:
                     eveProperty = Properties[DBConstants.PerceptionModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IValue;
+                        Bonus = eveProperty.Value.IntValue;
                     break;
                 case ImplantSlots.Willpower:
                     eveProperty = Properties[DBConstants.WillpowerModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IValue;
+                        Bonus = eveProperty.Value.IntValue;
                     break;
                 default:
                     Bonus = 0;

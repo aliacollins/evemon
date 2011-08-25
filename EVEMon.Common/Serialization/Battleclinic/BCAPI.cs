@@ -4,7 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Web;
 using System.Windows.Forms;
-
+using System.Xml;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.BattleClinic
@@ -189,13 +189,13 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <summary>
         /// Gets the file content by the file name.
         /// </summary>
-        public static void FileGetByName()
+        public static XmlDocument FileGetByName()
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                 BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                 BCAPISettings.Default.BCApplicationKey, EveMonClient.SettingsFileName));
 
-            QueryMethod(BCAPIMethods.FileGetByName, postData);
+            return QueryMethod(BCAPIMethods.FileGetByName, postData);
         }
 
         /// <summary>
@@ -248,10 +248,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
-        private static void QueryMethod(BCAPIMethods method, HttpPostData postData)
+        private static XmlDocument QueryMethod(BCAPIMethods method, HttpPostData postData)
         {
             string url = GetMethodUrl(method);
-            EveMonClient.HttpWebService.DownloadXml(url, postData);
+            return EveMonClient.HttpWebService.DownloadXml(url, postData);
         }
 
         /// <summary>

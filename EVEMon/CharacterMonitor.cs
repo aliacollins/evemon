@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
@@ -468,7 +469,7 @@ namespace EVEMon
         /// Updates the page controls on market orders change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -481,7 +482,7 @@ namespace EVEMon
         /// Updates the page controls on industry jobs change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -494,7 +495,7 @@ namespace EVEMon
         /// Updates the page controls on research points change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -507,7 +508,7 @@ namespace EVEMon
         /// Updates the page controls on EVE mail messages change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -520,7 +521,7 @@ namespace EVEMon
         /// Updates the page controls on EVE notifications change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -533,7 +534,7 @@ namespace EVEMon
         /// Occur when the character changed. We update all the controls' content.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)

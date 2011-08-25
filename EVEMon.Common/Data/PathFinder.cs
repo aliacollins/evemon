@@ -122,11 +122,11 @@ namespace EVEMon.Common.Data
                 bestDepthes.TryGetValue(neighbor, out bestDepth);
 
                 // Enumerates it
-                if (bestDepth == 0 || depth < bestDepth)
-                {
-                    bestDepthes[neighbor] = depth;
-                    yield return new PathFinder(this, neighbor);
-                }
+                if (bestDepth != 0 && depth >= bestDepth)
+                    continue;
+
+                bestDepthes[neighbor] = depth;
+                yield return new PathFinder(this, neighbor);
             }
         }
 

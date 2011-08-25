@@ -1,6 +1,6 @@
 using System;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     /// <summary>
     /// Represents an argument for server changes

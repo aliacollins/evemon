@@ -688,7 +688,7 @@ namespace EVEMon.SkillPlanner
 
             double bonus =
                 implant.Properties.FirstOrDefault(
-                    x => Array.IndexOf(DBConstants.IndustryModifyingPropertyIDs, x.Property.ID) != -1).IValue;
+                    x => Array.IndexOf(DBConstants.IndustryModifyingPropertyIDs, x.Property.ID) != -1).IntValue;
             double multiplier = 1.0d + (bonus / 100);
 
             return multiplier;

@@ -7,24 +7,27 @@ namespace EVEMon.Common.Net
     /// </summary>
     public class DownloadImageAsyncResult
     {
-        private readonly Image _result;
-        private readonly HttpWebServiceException _error;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DownloadImageAsyncResult"/> class.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <param name="error">The error.</param>
         public DownloadImageAsyncResult(Image image, HttpWebServiceException error)
         {
-            _error = error;
-            _result = image;
+            Error = error;
+            Result = image;
         }
 
-        public Image Result
-        {
-            get { return _result; }
-        }
+        /// <summary>
+        /// Gets or sets the result.
+        /// </summary>
+        /// <value>The result.</value>
+        public Image Result { get; private set; }
 
-        public HttpWebServiceException Error
-        {
-            get { return _error; }
-        }
-
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>The error.</value>
+        public HttpWebServiceException Error { get; private set; }
     }
 }

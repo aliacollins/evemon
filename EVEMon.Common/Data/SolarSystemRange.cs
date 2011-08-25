@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
@@ -72,16 +73,11 @@ namespace EVEMon.Common.Data
         {
             SolarSystemRange nextRange = new SolarSystemRange(Source, Range + 1);
 
-            foreach (var system in Items)
+            foreach (SolarSystem child in Items.SelectMany(system => system.Neighbors.Where(
+                child => !collectedSystems.ContainsKey(child.ID))))
             {
-                foreach (var child in system.Neighbors)
-                {
-                    if (!collectedSystems.ContainsKey(child.ID))
-                    {
-                        collectedSystems.Add(child.ID, child);
-                        nextRange.Items.Add(child);
-                    }
-                }
+                collectedSystems.Add(child.ID, child);
+                nextRange.Items.Add(child);
             }
 
             return nextRange;

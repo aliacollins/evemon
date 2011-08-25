@@ -67,10 +67,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Constellation other)
         {
-            if (Region != other.Region)
-                return Region.CompareTo(other.Region);
-
-            return Name.CompareTo(other.Name);
+            return Region != other.Region ? Region.CompareTo(other.Region) : Name.CompareTo(other.Name);
         }
 
         #endregion

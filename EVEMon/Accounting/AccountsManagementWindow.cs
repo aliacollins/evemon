@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Controls;
 using EVEMon.Controls;

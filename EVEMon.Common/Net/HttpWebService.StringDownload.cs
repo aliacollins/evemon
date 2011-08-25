@@ -23,6 +23,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
+
             HttpWebServiceRequest request = GetRequest();
             try
             {
@@ -40,9 +41,11 @@ namespace EVEMon.Common.Net
             }
             finally
             {
-                if (request.ResponseStream != null) request.ResponseStream.Close();
+                if (request.ResponseStream != null)
+                    request.ResponseStream.Close();
             }
         }
+
         /// <summary>
         /// Asynchronously downloads a string from the specified url
         /// </summary>
@@ -50,15 +53,15 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public object DownloadStringAsync(string url, DownloadStringCompletedCallback callback, object userState)
+        public void DownloadStringAsync(string url, DownloadStringCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
+
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new MemoryStream(), STRING_ACCEPT, null, state);
-            return request;
         }
 
         /// <summary>
@@ -66,7 +69,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         private void DownloadStringAsyncCompleted(WebRequestAsyncState state)
         {
-            StringRequestAsyncState requestState = (StringRequestAsyncState)state;
+            StringRequestAsyncState requestState = (StringRequestAsyncState) state;
             string result = String.Empty;
             if (!requestState.Request.Cancelled && requestState.Error == null && requestState.Request.ResponseStream != null)
             {
@@ -76,10 +79,10 @@ namespace EVEMon.Common.Net
                     result = reader.ReadToEnd();
                 }
             }
+
             if (requestState.Request.ResponseStream != null)
-            {
                 requestState.Request.ResponseStream.Close();
-            }
+
             requestState.DownloadStringCompleted(new DownloadStringAsyncResult(result, requestState.Error), requestState.UserState);
         }
 
@@ -88,25 +91,31 @@ namespace EVEMon.Common.Net
         /// </summary>
         private class StringRequestAsyncState : WebRequestAsyncState
         {
-            private readonly DownloadStringCompletedCallback _downloadStringCompleted;
-            private readonly object _userState;
-
-            public StringRequestAsyncState(DownloadStringCompletedCallback callback, WebRequestAsyncCallback webRequestCallback, object userState)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="StringRequestAsyncState"/> class.
+            /// </summary>
+            /// <param name="callback">The callback.</param>
+            /// <param name="webRequestCallback">The web request callback.</param>
+            /// <param name="userState">State of the user.</param>
+            public StringRequestAsyncState(DownloadStringCompletedCallback callback, WebRequestAsyncCallback webRequestCallback,
+                                           object userState)
                 : base(webRequestCallback)
             {
-                _downloadStringCompleted = callback;
-                _userState = userState;
+                DownloadStringCompleted = callback;
+                UserState = userState;
             }
 
-            public DownloadStringCompletedCallback DownloadStringCompleted
-            {
-                get { return _downloadStringCompleted; }
-            }
+            /// <summary>
+            /// Gets the download string completed.
+            /// </summary>
+            /// <value>The download string completed.</value>
+            public DownloadStringCompletedCallback DownloadStringCompleted { get; private set; }
 
-            public object UserState
-            {
-                get { return _userState; }
-            }
+            /// <summary>
+            /// Gets the state of the user.
+            /// </summary>
+            /// <value>The state of the user.</value>
+            public object UserState { get; private set; }
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Google.GData.Calendar;
-using Google.GData.Client;
 using Google.GData.Extensions;
 
 namespace EVEMon.Common.ExternalCalendar
@@ -16,7 +16,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// The maximum of minutes google accepts.
         /// </summary>
-        private const int maxGoogleMinutes = 40320;
+        private const int MaxGoogleMinutes = 40320;
 
         /// <summary>
         /// The type of Google reminder required (SMS, EMail etc).
@@ -36,7 +36,6 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleAppointmentFilter"/> class.
         /// </summary>
-        /// <param name="serviceName">The service name.</param>
         internal GoogleAppointmentFilter()
         {
             m_service = new CalendarService("serviceName");
@@ -99,7 +98,6 @@ namespace EVEMon.Common.ExternalCalendar
         public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition)
         {
             Exception googleProblem = null;
-            int defaultMinutes = Minutes;
 
             EventEntry appointmentItem = (appointmentExists ?
                                             (EventEntry)AppointmentArray[0] :
@@ -210,11 +208,9 @@ namespace EVEMon.Common.ExternalCalendar
             AppointmentArray.Clear();
 
             EventFeed myResultsFeed = m_service.Query(myQuery);
-            foreach (AtomEntry atomEntry in myResultsFeed.Entries)
+            foreach (EventEntry eventEntry in myResultsFeed.Entries.OfType<EventEntry>())
             {
-                EventEntry eventEntry = atomEntry as EventEntry;
-                if (eventEntry != null)
-                    AppointmentArray.Add(eventEntry);
+                AppointmentArray.Add(eventEntry);
             }
         }
 
@@ -252,7 +248,7 @@ namespace EVEMon.Common.ExternalCalendar
         private void SetGoogleReminder(EventEntry appointmentItem)
         {
             appointmentItem.Reminder = (appointmentItem.Reminder ?? new Reminder());
-            appointmentItem.Reminder.Minutes = Math.Min(Minutes, maxGoogleMinutes);
+            appointmentItem.Reminder.Minutes = Math.Min(Minutes, MaxGoogleMinutes);
             appointmentItem.Reminder.Method = (Reminder.ReminderMethod)m_googleReminders[ReminderMethod];
         }
 

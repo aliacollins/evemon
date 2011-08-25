@@ -1,23 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Net.NetworkInformation;
-using System.Net;
+using System.Text;
 
 namespace EVEMon.Common.Net
 {
-    /// <summary>
-    /// This interface allows implementers to register to the <see cref="NetworkMonitor"/> class to track network avilability changes.
-    /// </summary>
-    public interface INetworkChangeSubscriber
-    {
-        /// <summary>
-        /// Notifies the network availability changed.
-        /// </summary>
-        /// <param name="isAvailable"></param>
-        void SetNetworkStatus(bool isAvailable);
-    }
-
     /// <summary>
     /// This class notifies subscribers about the change and the status of an network interface
     /// </summary>
@@ -27,7 +14,7 @@ namespace EVEMon.Common.Net
 
         private static List<WeakReference<INetworkChangeSubscriber>> s_subscribers;
         private static bool s_networkAvailable;
-        private static bool s_manualTestRequired = false;
+        private static bool s_manualTestRequired;
 
         /// <summary>
         /// Initializer.
@@ -36,14 +23,15 @@ namespace EVEMon.Common.Net
         {
             lock (s_syncLock)
             {
-                if (s_subscribers != null) return;
+                if (s_subscribers != null)
+                    return;
 
                 // Subscribe to network changes
                 s_subscribers = new List<WeakReference<INetworkChangeSubscriber>>();
                 try
                 {
                     s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
-                    NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(OnNetworkAvailabilityChanged);
+                    NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
                 }
                 catch (ArgumentException ex)
                 {
@@ -67,11 +55,11 @@ namespace EVEMon.Common.Net
             Ping pingSender = new Ping();
             PingOptions options = new PingOptions(50, false);
             byte[] buffer = Encoding.ASCII.GetBytes("EVEMon Network Status Ping");
-            int timeout = 120;
-            string host = "www.google.com";
-            PingReply reply = pingSender.Send(host, timeout, buffer, options);
+            const int Timeout = 120;
+            const string Host = "www.google.com";
+            PingReply reply = pingSender.Send(Host, Timeout, buffer, options);
 
-            return (reply.Status == IPStatus.Success);
+            return reply != null && (reply.Status == IPStatus.Success);
         }
 
         /// <summary>
@@ -85,10 +73,7 @@ namespace EVEMon.Common.Net
                 if (Settings.Updates.IgnoreNetworkStatus)
                     return true;
 
-                if (!s_manualTestRequired)
-                    return s_networkAvailable;
-
-                return IsNetworkAvailableManual();
+                return !s_manualTestRequired ? s_networkAvailable : IsNetworkAvailableManual();
             }
         }
 

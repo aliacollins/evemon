@@ -12,22 +12,19 @@ namespace EVEMon.Common.Net
     /// </summary>
     internal class HttpWebServiceRequest
     {
-        private int m_timeout;
-
+        private readonly int m_timeout;
         private readonly object m_syncLock = new object();
-
         private readonly HttpWebServiceState m_webServiceState;
+
         private WebRequestAsyncState m_asyncState;
         private HttpPostData m_postData;
-        private Stream m_responseStream;
 
-        private string m_baseUrl;
         private string m_accept;
         private string m_url;
         private string m_referer = String.Empty;
 
         private int m_redirectsRemaining;
-        private bool m_cancelled = false;
+        private bool m_cancelled;
 
         /// <summary>
         /// Initialises a new instance of HttpWebServiceRequest to be submitted as a POST request.
@@ -41,31 +38,20 @@ namespace EVEMon.Common.Net
             // Pull the timeout from the settings
             TimeSpan timeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
 
-            if (timeoutSetting < TimeSpan.FromSeconds(1) || timeoutSetting > TimeSpan.FromMinutes(5))
-            {
-                m_timeout = 20000;
-            }
-            else
-            {
-                m_timeout = (int)timeoutSetting.TotalMilliseconds;
-            }
+            m_timeout = (timeoutSetting < TimeSpan.FromSeconds(1) || timeoutSetting > TimeSpan.FromMinutes(5)
+                             ? 20000
+                             : (int) timeoutSetting.TotalMilliseconds);
         }
 
         /// <summary>
         /// The <see cref="Stream"/> to which the response is written.
         /// </summary>
-        internal Stream ResponseStream
-        {
-            get { return m_responseStream; }
-        }
+        internal Stream ResponseStream { get; private set; }
 
         /// <summary>
         /// The original url for the request.
         /// </summary>
-        public string BaseUrl
-        {
-            get { return m_baseUrl; }
-        }
+        public string BaseUrl { get; private set; }
 
         /// <summary>
         /// Returns true if an asynchronous request was cancelled. When set to true, cancels the current asynchronous request.
@@ -85,14 +71,6 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Retrieve the response from the requested URL to the specified response stream as a GET request.
-        /// </summary>
-        internal void GetResponse(string url, Stream responseStream, string accept)
-        {
-             GetResponse(url, responseStream, accept, null);
-        }
-
-        /// <summary>
         /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
         private delegate void GetResponseDelegate(string url, Stream responseStream, string accept, HttpPostData postData);
@@ -102,14 +80,14 @@ namespace EVEMon.Common.Net
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
-        internal void GetResponse(string url, Stream responseStream, string accept, HttpPostData postData)
+        internal void GetResponse(string url, Stream responseStream, string accept, HttpPostData postData = null)
         {
             // Store params
             m_url = url;
-            m_baseUrl = url;
+            BaseUrl = url;
             m_accept = accept;
             m_postData = postData;
-            m_responseStream = responseStream;
+            ResponseStream = responseStream;
 
             Stream webResponseStream = null;
             HttpWebResponse webResponse = null;
@@ -117,24 +95,26 @@ namespace EVEMon.Common.Net
             {
                 webResponse = GetHttpResponse();
                 webResponseStream = webResponse.GetResponseStream();
-                int bytesRead;
+                int bytesRead = 0;
                 long totalBytesRead = 0;
                 long rawBufferSize = webResponse.ContentLength / 100;
                 int bufferSize = (int)(rawBufferSize > m_webServiceState.MaxBufferSize  ? m_webServiceState.MaxBufferSize : (rawBufferSize < m_webServiceState.MinBufferSize ? m_webServiceState.MinBufferSize : rawBufferSize));
                 do
                 {
                     byte[] buffer = new byte[bufferSize];
-                    bytesRead = webResponseStream.Read(buffer, 0, bufferSize);
-                    if (bytesRead > 0)
-                    {
-                        m_responseStream.Write(buffer, 0, bytesRead);
-                        if (m_asyncState != null && m_asyncState.ProgressCallback != null)
-                        {
-                            totalBytesRead += bytesRead;
-                            int progressPercentage = webResponse.ContentLength == 0 ? 0 : (int)((totalBytesRead * 100)/webResponse.ContentLength);
-                            m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead, progressPercentage));
-                        }
-                    }
+                    if (webResponseStream != null)
+                        bytesRead = webResponseStream.Read(buffer, 0, bufferSize);
+                    
+                    if (bytesRead <= 0)
+                        continue;
+
+                    ResponseStream.Write(buffer, 0, bytesRead);
+                    if (m_asyncState == null || m_asyncState.ProgressCallback == null)
+                        continue;
+
+                    totalBytesRead += bytesRead;
+                    int progressPercentage = webResponse.ContentLength == 0 ? 0 : (int)((totalBytesRead * 100)/webResponse.ContentLength);
+                    m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead, progressPercentage));
                 } while (bytesRead > 0 && !Cancelled);
             }
             catch (HttpWebServiceException)
@@ -242,23 +222,19 @@ namespace EVEMon.Common.Net
         /// </summary>
         private HttpWebResponse GetRedirectedHttpResponse(string target)
         {
-            if (m_redirectsRemaining-- > 0)
-            {
-                Uri referer = new Uri(m_url);
-                m_referer = referer.ToString();
-                m_url = new Uri(referer, target).ToString();
-                return GetHttpResponse();
-            }
-            else
-            {
+            if (m_redirectsRemaining-- <= 0)
                 throw HttpWebServiceException.RedirectsExceededException(BaseUrl);
-            }
+
+            Uri referer = new Uri(m_url);
+            m_referer = referer.ToString();
+            m_url = new Uri(referer, target).ToString();
+            return GetHttpResponse();
         }
 
         /// <summary>
         /// Constructs an HttpWebRequest for the specified url and referer.
         /// </summary>
-        public HttpWebRequest GetHttpWebRequest(string url, string referer)
+        private HttpWebRequest GetHttpWebRequest(string url, string referer)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.AllowAutoRedirect = false;
@@ -272,12 +248,14 @@ namespace EVEMon.Common.Net
 
             if (referer != null)
                 request.Referer = referer;
+
             if (m_postData != null)
             {
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = m_postData.Length;
             }
+
             if (m_webServiceState.Proxy.Enabled)
             {
                 WebProxy proxy = new WebProxy(m_webServiceState.Proxy.Host, m_webServiceState.Proxy.Port);

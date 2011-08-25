@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.SkillPlanner
 {

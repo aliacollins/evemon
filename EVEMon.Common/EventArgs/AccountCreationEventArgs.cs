@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-
 using EVEMon.Common.Serialization.API;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     /// <summary>
     /// Event arguments for the creation of a new account.
@@ -41,10 +40,10 @@ namespace EVEMon.Common
             if (CharacterList.HasError)
                 return;
 
-            foreach (var serialID in CharacterList.Result.Characters)
+            foreach (SerializableCharacterListItem serialID in CharacterList.Result.Characters)
             {
                 // Look for an existing char ID and update its name
-                var id = EveMonClient.CharacterIdentities[serialID.ID];
+                CharacterIdentity id = EveMonClient.CharacterIdentities[serialID.ID];
                 if (id != null)
                 {
                     id.Name = serialID.Name;
@@ -99,13 +98,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<CharacterIdentity> Identities
         {
-            get
-            {
-                foreach (var id in m_identities)
-                {
-                    yield return id;
-                }
-            }
+            get { return m_identities; }
         }
 
         /// <summary>
@@ -115,7 +108,7 @@ namespace EVEMon.Common
         public Account CreateOrUpdate()
         {
             // Checks whether this account already exists to update it.
-            var account = EveMonClient.Accounts[UserID];
+            Account account = EveMonClient.Accounts[UserID];
             if (account != null)
             {
                 account.UpdateAPIKey(this);

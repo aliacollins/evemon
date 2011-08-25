@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common.Attributes;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;

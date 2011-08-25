@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using EVEMon.Common;
-
+using EVEMon.Common.CustomEventArgs;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace EVEMon.Controls

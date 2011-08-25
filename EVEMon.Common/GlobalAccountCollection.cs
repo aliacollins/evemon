@@ -5,6 +5,7 @@ using System.Linq;
 
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Threading;

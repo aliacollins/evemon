@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
 using EVEMon.Common.Controls;

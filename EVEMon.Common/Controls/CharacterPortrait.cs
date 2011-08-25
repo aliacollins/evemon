@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Common.Controls
 {
@@ -406,7 +407,7 @@ namespace EVEMon.Common.Controls
         /// Handles the CharacterPortraitUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterPortraitUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (!Visible)

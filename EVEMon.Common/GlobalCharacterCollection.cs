@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using EVEMon.Common.Collections;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Importation;

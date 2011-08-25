@@ -7,30 +7,35 @@ namespace EVEMon.Common.Net
     /// </summary>
     public class DownloadFileAsyncResult
     {
-        private readonly FileInfo _result;
-        private readonly HttpWebServiceException _error;
-        private readonly bool _cancelled;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DownloadFileAsyncResult"/> class.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <param name="error">The error.</param>
+        /// <param name="cancelled">if set to <c>true</c> [cancelled].</param>
         public DownloadFileAsyncResult(FileInfo file, HttpWebServiceException error, bool cancelled)
         {
-            _error = error;
-            _cancelled = cancelled;
-            _result = file;
+            Error = error;
+            Cancelled = cancelled;
+            Result = file;
         }
 
-        public FileInfo Result
-        {
-            get { return _result; }
-        }
+        /// <summary>
+        /// Gets or sets the result.
+        /// </summary>
+        /// <value>The result.</value>
+        public FileInfo Result { get; private set; }
 
-        public HttpWebServiceException Error
-        {
-            get { return _error; }
-        }
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>The error.</value>
+        public HttpWebServiceException Error { get; private set; }
 
-        public bool Cancelled
-        {
-            get { return _cancelled; }
-        }
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="DownloadFileAsyncResult"/> is cancelled.
+        /// </summary>
+        /// <value><c>true</c> if cancelled; otherwise, <c>false</c>.</value>
+        public bool Cancelled { get; private set; }
     }
 }

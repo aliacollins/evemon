@@ -3,8 +3,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-using EVEMon.Common;
-
 namespace EVEMon.Common.IgbService
 {
     /// <summary>
@@ -12,13 +10,17 @@ namespace EVEMon.Common.IgbService
     /// </summary>
     public class IgbTcpListener
     {
+        public event EventHandler<ClientConnectedEventArgs> ClientConnected;
+
         private readonly Object m_syncLock = new Object();
+        private readonly IPEndPoint m_listenEndpoint;
 
         private bool m_running;
-        private IPEndPoint m_listenEndpoint;
         private TcpListener m_listener;
 
+
         #region Constructor, Start and Stop
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -35,22 +37,22 @@ namespace EVEMon.Common.IgbService
         {
             lock (m_syncLock)
             {
-                if (!m_running)
+                if (m_running)
+                    return;
+
+                m_running = true;
+                m_listener = new TcpListener(m_listenEndpoint);
+                try
                 {
-                    m_running = true;
-                    m_listener = new TcpListener(m_listenEndpoint);
-                    try
-                    {
-                        m_listener.Start();
-                        BeginAcceptTcpClient(false);
-                    }
-                    catch (SocketException ex)
-                    {
-                        // Null out the listener then notify the trace file and the user
-                        m_listener = null;
-                        EveMonClient.Trace(String.Format("{0} - {1} - {2}", ex.SocketErrorCode, ex.Message, ex.ErrorCode));
-                        EveMonClient.Notifications.NotifyIgbServiceException(m_listenEndpoint.Port);
-                    }
+                    m_listener.Start();
+                    BeginAcceptTcpClient(false);
+                }
+                catch (SocketException ex)
+                {
+                    // Null out the listener then notify the trace file and the user
+                    m_listener = null;
+                    EveMonClient.Trace(String.Format("{0} - {1} - {2}", ex.SocketErrorCode, ex.Message, ex.ErrorCode));
+                    EveMonClient.Notifications.NotifyIgbServiceException(m_listenEndpoint.Port);
                 }
             }
         }
@@ -65,20 +67,23 @@ namespace EVEMon.Common.IgbService
         {
             lock (m_syncLock)
             {
-                if (m_running)
-                {
-                    m_running = false;
-                    if (m_listener != null)
-                    {
-                        m_listener.Stop();
-                        m_listener = null;
-                    }
-                }
+                if (!m_running)
+                    return;
+
+                m_running = false;
+                if (m_listener == null)
+                    return;
+
+                m_listener.Stop();
+                m_listener = null;
             }
         }
+
         #endregion
 
+
         #region Client Connected
+
         /// <summary>
         /// Begin accepting a client connection
         /// </summary>
@@ -95,7 +100,7 @@ namespace EVEMon.Common.IgbService
                 {
                     ar = null;
                     if (m_running)
-                        ar = m_listener.BeginAcceptTcpClient(new AsyncCallback(EndAcceptTcpClient), null);
+                        ar = m_listener.BeginAcceptTcpClient(EndAcceptTcpClient, null);
 
                 } while (ar != null && ar.CompletedSynchronously);
             }
@@ -137,8 +142,8 @@ namespace EVEMon.Common.IgbService
         /// <summary>
         /// Triggered on client connection
         /// </summary>
-        /// <param name="newClient">the client</param>
-        /// <param name="acquireLock">require lock on object</param>
+        /// <param name="client">The client.</param>
+        /// <param name="acquireLock">Require lock on object</param>
         private void OnClientConnected(TcpClient client, bool acquireLock)
         {
             if (acquireLock)
@@ -169,7 +174,6 @@ namespace EVEMon.Common.IgbService
             }
         }
 
-        public event EventHandler<ClientConnectedEventArgs> ClientConnected;
         #endregion
     }
 }

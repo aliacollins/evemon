@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using EVEMon.Accounting;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Net;
 using EVEMon.Controls;
 using EVEMon.Common.Data;
@@ -586,7 +587,7 @@ namespace EVEMon
         /// Handles the CharacterUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
@@ -600,7 +601,7 @@ namespace EVEMon
         /// Handles the CharacterInfoUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
@@ -614,7 +615,7 @@ namespace EVEMon
         /// Handles the MarketOrdersChanged event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible

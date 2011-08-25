@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class QueuedSkillsEventArgs : EventArgs
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="queuedSkills">The queued skills.</param>
         public QueuedSkillsEventArgs(Character character, IEnumerable<QueuedSkill> queuedSkills)
         {
             Character = character;

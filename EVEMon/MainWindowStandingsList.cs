@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 
 using CommonProperties = EVEMon.Common.Properties;

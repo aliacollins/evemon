@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 

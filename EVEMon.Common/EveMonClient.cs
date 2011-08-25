@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
 using EVEMon.Common.Attributes;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
@@ -20,7 +22,7 @@ namespace EVEMon.Common
     /// See it as the entry point of the library and its collections as databases with stored procedures (the public ones).
     /// </summary>
     [EnforceUIThreadAffinity]
-    public static partial class EveMonClient
+    public static class EveMonClient
     {
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
@@ -31,7 +33,6 @@ namespace EVEMon.Common
         private static readonly Object s_initializationLock = new Object();
         private static bool s_initialized;
         private static bool s_running;
-        private static string s_settingsFile;
         private static string s_traceFile;
 
 
@@ -127,7 +128,7 @@ namespace EVEMon.Common
         /// Gets or sets the EVE Online application data folder.
         /// </summary>
         public static string EVEApplicationDataDir { get; private set; }
-        
+
         /// <summary>
         /// Returns the current data storage directory.
         /// </summary>
@@ -161,17 +162,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the name of the current settings file.
         /// </summary>
-        public static string SettingsFileName
-        {
-            get { return s_settingsFile; }
-        }
+        public static string SettingsFileName { get; private set; }
 
         /// <summary>
         /// Gets the fully qualified path to the current settings file.
         /// </summary>
         public static string SettingsFileNameFullPath
         {
-            get { return Path.Combine(EVEMonDataDir, s_settingsFile); }
+            get { return Path.Combine(EVEMonDataDir, SettingsFileName); }
         }
 
         /// <summary>
@@ -190,14 +188,14 @@ namespace EVEMon.Common
             lock (s_pathsInitializationLock)
             {
                 // Ensure it is made once only
-                if (!String.IsNullOrEmpty(s_settingsFile))
+                if (!String.IsNullOrEmpty(SettingsFileName))
                     return;
 
 #if DEBUG
-                s_settingsFile = "settings-debug.xml";
+                SettingsFileName = "settings-debug.xml";
                 s_traceFile = "trace-debug.txt";
 #else
-                s_settingsFile = "settings.xml";
+                SettingsFileName = "settings.xml";
                 s_traceFile = "trace.txt";
 #endif
 
@@ -212,14 +210,11 @@ namespace EVEMon.Common
                     catch (UnauthorizedAccessException exc)
                     {
                         string msg = String.Format("An error occurred while EVEMon was looking for its data directory. " +
-                        "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
-                            Environment.NewLine, exc.Message);
+                                                   "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
+                                                   Environment.NewLine, exc.Message);
 
-                        var result = MessageBox.Show(
-                            msg,
-                            "EVEMon Error",
-                            MessageBoxButtons.RetryCancel,
-                            MessageBoxIcon.Error);
+                        DialogResult result = MessageBox.Show(msg, "EVEMon Error", MessageBoxButtons.RetryCancel,
+                                                              MessageBoxIcon.Error);
 
                         if (result == DialogResult.Cancel)
                         {
@@ -238,16 +233,16 @@ namespace EVEMon.Common
         {
             // If settings.xml exists in the app's directory, we use this one
             EVEMonDataDir = Directory.GetCurrentDirectory();
-            var settingsFile = Path.Combine(EVEMonDataDir, s_settingsFile);
+            string settingsFile = Path.Combine(EVEMonDataDir, SettingsFileName);
 
             // Else, we use %APPDATA%\EVEMon
             if (!File.Exists(settingsFile))
                 EVEMonDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
-            
+
             // Create the directory if it does not exist already
             if (!Directory.Exists(EVEMonDataDir))
                 Directory.CreateDirectory(EVEMonDataDir);
-            
+
             // Create the cache subfolder
             EVEMonCacheDir = Path.Combine(EVEMonDataDir, "cache");
             if (!Directory.Exists(EVEMonCacheDir))
@@ -274,9 +269,10 @@ namespace EVEMon.Common
         /// </summary>
         private static void InitializeDefaultEvePortraitCachePath()
         {
-            DefaultEvePortraitCacheFolders = new string[] { };
-            string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
+            DefaultEvePortraitCacheFolders = new string[] {};
+            string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE",
+                                                  Path.DirectorySeparatorChar, localApplicationData);
 
             // Check folder exists
             if (!Directory.Exists(EVEApplicationDataDir))
@@ -290,20 +286,11 @@ namespace EVEMon.Common
             if (filesInEveCache.Length == 0)
                 return;
 
-            var evePortraitCacheFolders = new List<string>();
+            EvePortraitCacheFolders = filesInEveCache.Select(
+                eveDataPath => eveDataPath.Name).Select(
+                    portraitCache => String.Format(CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
+                                                   Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).ToArray();
 
-            foreach (var eveDataPath in filesInEveCache)
-            {
-                string PortraitCache = eveDataPath.Name;
-                string evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, 
-                                                    "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
-                                                    Path.DirectorySeparatorChar, 
-                                                    PortraitCache,
-                                                    EVEApplicationDataDir);
-                evePortraitCacheFolders.Add(evePortraitCacheFolder);
-            }
-
-            EvePortraitCacheFolders = evePortraitCacheFolders.ToArray();
             DefaultEvePortraitCacheFolders = EvePortraitCacheFolders;
         }
 
@@ -334,10 +321,10 @@ namespace EVEMon.Common
         /// </summary>
         public static GlobalDatafileCollection Datafiles
         {
-            get 
+            get
             {
                 s_datafiles.Refresh();
-                return s_datafiles; 
+                return s_datafiles;
             }
             private set { s_datafiles = value; }
         }
@@ -356,7 +343,7 @@ namespace EVEMon.Common
         /// Gets the EVE server's informations.
         /// </summary>
         public static EveServer EVEServer { get; private set; }
-        
+
         /// <summary>
         /// Apply some settings changes.
         /// </summary>
@@ -386,7 +373,7 @@ namespace EVEMon.Common
                 InitializeEVEMonPaths();
             }
         }
-        
+
         #endregion
 
 
@@ -403,7 +390,7 @@ namespace EVEMon.Common
         public static GlobalCharacterCollection Characters { get; private set; }
 
         /// <summary>
-        /// Gets the collection of all known character identities. For monitored character sources, see <see cref="MonitoredCharacterSources"/>.
+        /// Gets the collection of all known character identities. For monitored character, see <see cref="MonitoredCharacters"/>.
         /// </summary>
         public static GlobalCharacterIdentityCollection CharacterIdentities { get; private set; }
 
@@ -429,17 +416,15 @@ namespace EVEMon.Common
             EVEServer.UpdateOnOneSecondTick();
 
             // Updates the accounts
-            foreach(var account in Accounts)
+            foreach (Account account in Accounts)
             {
                 account.UpdateOnOneSecondTick();
             }
 
             // Updates the characters
-            foreach(var character in Characters)
+            foreach (CCPCharacter ccpCharacter in Characters.OfType<CCPCharacter>())
             {
-                var ccpCharacter = character as CCPCharacter;
-                if (ccpCharacter != null)
-                    ccpCharacter.UpdateOnOneSecondTick();
+                ccpCharacter.UpdateOnOneSecondTick();
             }
 
             // Fires the event for subscribers
@@ -917,7 +902,6 @@ namespace EVEMon.Common
         /// Called when all account characters 'skill in training' check has been updated.
         /// </summary>
         /// <param name="account">The account.</param>
-        /// <param name="character">The character.</param>
         internal static void OnAccountCharactersSkillInTrainingUpdated(Account account)
         {
             Trace("EveMonClient.OnAccountCharactersSkillInTrainingUpdated - {0}", account);
@@ -969,14 +953,14 @@ namespace EVEMon.Common
         /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
         /// <param name="installArgs">The install args.</param>
         internal static void OnUpdateAvailable(string forumUrl, string installerUrl, string updateMessage,
-                                                Version currentVersion, Version newestVersion,
-                                                bool canAutoInstall, string installArgs)
+                                               Version currentVersion, Version newestVersion,
+                                               bool canAutoInstall, string installArgs)
         {
             Trace("EveMonClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
-                                        currentVersion, newestVersion, canAutoInstall, installArgs);
+                  currentVersion, newestVersion, canAutoInstall, installArgs);
             if (UpdateAvailable != null)
                 UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage,
-                                        currentVersion, newestVersion, canAutoInstall, installArgs));
+                                                                   currentVersion, newestVersion, canAutoInstall, installArgs));
         }
 
         /// <summary>
@@ -1002,7 +986,7 @@ namespace EVEMon.Common
                 BCAPICredentialsUpdated(null, new BCAPIEventArgs(errorMessage));
         }
 
-        #endregion 
+        #endregion
 
 
         #region Diagnostics
@@ -1013,9 +997,9 @@ namespace EVEMon.Common
         /// <param name="message">message to trace</param>
         public static void Trace(string message)
         {
-            var time = DateTime.UtcNow - s_startTime;
+            TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
             string timeStr = String.Format(CultureConstants.DefaultCulture,
-                "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
+                                           "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
             System.Diagnostics.Trace.WriteLine(timeStr + message);
         }
 
@@ -1024,7 +1008,7 @@ namespace EVEMon.Common
         /// startup, in addition to argument inserting into the format.
         /// </summary>
         /// <param name="format"></param>
-        /// <param name="arg0"></param>
+        /// <param name="args"></param>
         public static void Trace(string format, params object[] args)
         {
             Trace(String.Format(format, args));
@@ -1036,11 +1020,11 @@ namespace EVEMon.Common
         /// </summary>
         public static void Trace()
         {
-            var stackTrace = new StackTrace();
-            var frame = stackTrace.GetFrame(1);
-            var method = frame.GetMethod();
-            var parameters = FormatParameters(method.GetParameters());
-            var declaringType = method.DeclaringType.ToString().Replace("EVEMon.", String.Empty);
+            StackTrace stackTrace = new StackTrace();
+            StackFrame frame = stackTrace.GetFrame(1);
+            MethodBase method = frame.GetMethod();
+            string parameters = FormatParameters(method.GetParameters());
+            string declaringType = method.DeclaringType.ToString().Replace("EVEMon.", String.Empty);
 
             Trace("{0}.{1}({2})", declaringType, method.Name, parameters);
         }
@@ -1050,11 +1034,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns>A comma seperated string of paramater types and names.</returns>
-        private static string FormatParameters(ParameterInfo[] parameters)
+        private static string FormatParameters(IEnumerable<ParameterInfo> parameters)
         {
-            var paramDetail = new StringBuilder();
+            StringBuilder paramDetail = new StringBuilder();
 
-            foreach (var param in parameters)
+            foreach (ParameterInfo param in parameters)
             {
                 if (paramDetail.Length != 0)
                     paramDetail.Append(", ");
@@ -1073,15 +1057,15 @@ namespace EVEMon.Common
             try
             {
                 System.Diagnostics.Trace.AutoFlush = true;
-                s_traceStream = File.CreateText(EveMonClient.TraceFileNameFullPath);
+                s_traceStream = File.CreateText(TraceFileNameFullPath);
                 s_traceListener = new TextWriterTraceListener(s_traceStream);
                 System.Diagnostics.Trace.Listeners.Add(s_traceListener);
             }
             catch (IOException e)
             {
                 string text = String.Format("EVEMon has encountered an error and needs to terminate.{0}" +
-                    "The error message is:{0}{0}\"{1}\"",
-                    Environment.NewLine, e.Message);
+                                            "The error message is:{0}{0}\"{1}\"",
+                                            Environment.NewLine, e.Message);
                 MessageBox.Show(text, "EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }

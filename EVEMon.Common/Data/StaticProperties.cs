@@ -30,9 +30,9 @@ namespace EVEMon.Common.Data
                 Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile);
 
             // Fetch deserialized data
-            foreach (SerializablePropertyCategory srcCategory in datafile.Categories)
+            foreach (EvePropertyCategory category in datafile.Categories.Select(
+                srcCategory => new EvePropertyCategory(srcCategory)))
             {
-                EvePropertyCategory category = new EvePropertyCategory(srcCategory);
                 s_categoriesByName[category.Name] = category;
 
                 // Store properties
@@ -44,16 +44,16 @@ namespace EVEMon.Common.Data
             }
 
             // Set visibility in ships browser
-            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs
-                .Where(propertyID => s_propertiesByID.ContainsKey(propertyID)))
+            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs.Where(
+                propertyID => s_propertiesByID.ContainsKey(propertyID)))
             {
                 s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
             }
 
             // Set hide if default for properties
             // we want to hide in browser if they just show their default value
-            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs
-                .Where(propertyID => s_propertiesByID.ContainsKey(propertyID)))
+            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs.Where(
+                propertyID => s_propertiesByID.ContainsKey(propertyID)))
             {
                 s_propertiesByID[propertyID].HideIfDefault = true;
             }

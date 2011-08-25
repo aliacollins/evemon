@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.BattleClinic;
 using System.Runtime.InteropServices;

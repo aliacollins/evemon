@@ -2,10 +2,15 @@ using System;
 using System.Collections.Generic;
 using EVEMon.Common.Serialization.BattleClinic;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class DataUpdateAvailableEventArgs : EventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataUpdateAvailableEventArgs"/> class.
+        /// </summary>
+        /// <param name="updateUrl">The update URL.</param>
+        /// <param name="changedFiles">The changed files.</param>
         public DataUpdateAvailableEventArgs(string updateUrl, List<SerializableDatafile> changedFiles)
         {
             UpdateUrl = updateUrl;

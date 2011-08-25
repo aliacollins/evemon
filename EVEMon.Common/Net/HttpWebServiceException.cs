@@ -10,36 +10,52 @@ namespace EVEMon.Common.Net
     /// </summary>
     public sealed class HttpWebServiceException : ApplicationException
     {
-        private readonly HttpWebServiceExceptionStatus _status;
-        private readonly string _url;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// </summary>
+        /// <param name="status">The status.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="message">The message.</param>
         private HttpWebServiceException(HttpWebServiceExceptionStatus status, string url, string message)
             : base(message)
         {
-            _status = status;
-            _url = url;
+            Status = status;
+            Url = url;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// </summary>
+        /// <param name="status">The status.</param>
+        /// <param name="ex">The ex.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="message">The message.</param>
         private HttpWebServiceException(HttpWebServiceExceptionStatus status, Exception ex, string url, string message)
             : base(message, ex)
         {
-            _status = status;
-            _url = url;
+            Status = status;
+            Url = url;
         }
 
-        public HttpWebServiceExceptionStatus Status
-        {
-            get { return _status; }
-        }
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>The status.</value>
+        public HttpWebServiceExceptionStatus Status { get; private set; }
 
-        public string Url
-        {
-            get { return _url; }
-        }
+        /// <summary>
+        /// Gets or sets the URL.
+        /// </summary>
+        /// <value>The URL.</value>
+        public string Url { get; private set; }
 
+        /// <summary>
+        /// Gets the name of the host.
+        /// </summary>
+        /// <value>The name of the host.</value>
         public string HostName
         {
-            get { return new Uri(_url).Host; }
+            get { return new Uri(Url).Host; }
         }
 
         /// <summary>
@@ -84,19 +100,11 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException WebException(string url, HttpWebServiceState webServiceState, WebException ex)
         {
-            string proxyHost;
-            if (webServiceState.Proxy.Enabled)
-            {
-                proxyHost = webServiceState.Proxy.Host;
-            }
-            else
-            {
-                proxyHost = HttpWebRequest.DefaultWebProxy.GetProxy(new Uri(url)).Host;
-            }
+            string proxyHost = webServiceState.Proxy.Enabled ? webServiceState.Proxy.Host : WebRequest.DefaultWebProxy.GetProxy(new Uri(url)).Host;
 
             HttpWebServiceExceptionStatus status;
 
-            var msg = ParseWebException(ex, url, proxyHost, out status);
+            string msg = ParseWebException(ex, url, proxyHost, out status);
             return new HttpWebServiceException(status, ex, url, msg);
         }
 
@@ -108,9 +116,9 @@ namespace EVEMon.Common.Net
         /// <param name="proxyHost"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public static string ParseWebException(WebException ex, string url, string proxyHost, out HttpWebServiceExceptionStatus status)
+        private static string ParseWebException(WebException ex, string url, string proxyHost, out HttpWebServiceExceptionStatus status)
         {
-            var messageBuilder = new StringBuilder();
+            StringBuilder messageBuilder = new StringBuilder();
             switch (ex.Status)
             {
                 case WebExceptionStatus.ProtocolError:

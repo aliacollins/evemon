@@ -1,18 +1,16 @@
 using System;
-
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
-namespace EVEMon.Common
+namespace EVEMon.Common.CustomEventArgs
 {
     /// <summary>
     /// Represents the argument for the callback for uri characters addition
     /// </summary>
     public sealed class UriCharacterEventArgs : EventArgs
     {
-        private Uri m_uri;
-        private APIResult<SerializableAPICharacterSheet> m_apiResult;
-        private SerializableCharacterSheetBase m_result;
+        private readonly APIResult<SerializableAPICharacterSheet> m_apiResult;
+        private readonly SerializableCharacterSheetBase m_result;
 
         /// <summary>
         /// Constructor for API Characters.
@@ -21,7 +19,7 @@ namespace EVEMon.Common
         /// <param name="result">API Result</param>
         public UriCharacterEventArgs(Uri uri, APIResult<SerializableAPICharacterSheet> result)
         {
-            m_uri = uri;
+            Uri = uri;
             m_apiResult = result;
             m_result = m_apiResult.Result;
             HasError = m_apiResult.HasError;
@@ -35,7 +33,7 @@ namespace EVEMon.Common
         /// <param name="result">Serialized Result</param>
         public UriCharacterEventArgs(Uri uri, SerializableCCPCharacter result)
         {
-            m_uri = uri;
+            Uri = uri;
             m_result = result;
             HasError = false;
             Error = String.Empty;
@@ -48,7 +46,7 @@ namespace EVEMon.Common
         /// <param name="error"></param>
         public UriCharacterEventArgs(Uri uri, string error)
         {
-            m_uri = uri;
+            Uri = uri;
             HasError = true;
             Error = error;
         }
@@ -56,10 +54,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the created Uri character.
         /// </summary>
-        public Uri Uri
-        {
-            get { return m_uri; }
-        }
+        public Uri Uri { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating if there was an error.
@@ -92,18 +87,18 @@ namespace EVEMon.Common
         /// </summary>
         public UriCharacter CreateCharacter()
         {
-            var identity = GetIdentity(m_result);
+            CharacterIdentity identity = GetIdentity(m_result);
 
             // Instantiates characters, adds, notify
             UriCharacter uriCharacter;
             if (m_apiResult != null)
             {
-                uriCharacter = new UriCharacter(identity, m_uri, m_apiResult);
+                uriCharacter = new UriCharacter(identity, Uri, m_apiResult);
             }
             else
             {
-                var ccpCharacter = m_result as SerializableCCPCharacter;
-                uriCharacter = new UriCharacter(identity, m_uri, ccpCharacter);
+                SerializableCCPCharacter ccpCharacter = m_result as SerializableCCPCharacter;
+                uriCharacter = new UriCharacter(identity, Uri, ccpCharacter);
             }
 
             EveMonClient.Characters.Add(uriCharacter, true);
@@ -116,17 +111,17 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public void UpdateCharacter(UriCharacter character)
         {
-            var identity = GetIdentity(m_result);
+            CharacterIdentity identity = GetIdentity(m_result);
 
             // Updates
             if (m_apiResult != null)
             {
-                character.Update(identity, m_uri, m_apiResult);
+                character.Update(identity, Uri, m_apiResult);
             }
             else
             {
-                var ccpCharacter = m_result as SerializableCCPCharacter;
-                character.Update(identity, m_uri, ccpCharacter);
+                SerializableCCPCharacter ccpCharacter = m_result as SerializableCCPCharacter;
+                character.Update(identity, Uri, ccpCharacter);
             }
         }
 
@@ -138,12 +133,8 @@ namespace EVEMon.Common
         private CharacterIdentity GetIdentity(SerializableCharacterSheetBase character)
         {
             // Retrieve the identity and create one if needed
-            var identity = EveMonClient.CharacterIdentities[character.ID];
-            if (identity == null)
-            {
-                identity = EveMonClient.CharacterIdentities.Add(character.ID, character.Name);
-            }
-            return identity;
+            return EveMonClient.CharacterIdentities[character.ID] ??
+                   EveMonClient.CharacterIdentities.Add(character.ID, character.Name);
         }
     }
 }

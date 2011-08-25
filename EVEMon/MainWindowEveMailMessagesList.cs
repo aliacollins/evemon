@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
@@ -741,7 +742,7 @@ namespace EVEMon
         /// When the mail message body gets downloaded update the reading pane.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVEMailBodyDownloaded(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = Character as CCPCharacter;

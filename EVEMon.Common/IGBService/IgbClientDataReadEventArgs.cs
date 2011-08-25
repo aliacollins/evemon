@@ -4,30 +4,35 @@ namespace EVEMon.Common.IgbService
 {
     public class IgbClientDataReadEventArgs : EventArgs
     {
-        private byte[] m_buffer;
-        private int m_offset;
-        private int m_count;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IgbClientDataReadEventArgs"/> class.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="count">The count.</param>
         public IgbClientDataReadEventArgs(byte[] buffer, int offset, int count)
         {
-            m_buffer = buffer;
-            m_offset = offset;
-            m_count = count;
+            Buffer = buffer;
+            Offset = offset;
+            Count = count;
         }
 
-        public byte[] Buffer
-        {
-            get { return m_buffer; }
-        }
+        /// <summary>
+        /// Gets or sets the buffer.
+        /// </summary>
+        /// <value>The buffer.</value>
+        public byte[] Buffer { get; private set; }
 
-        public int Offset
-        {
-            get { return m_offset; }
-        }
+        /// <summary>
+        /// Gets or sets the offset.
+        /// </summary>
+        /// <value>The offset.</value>
+        public int Offset { get; private set; }
 
-        public int Count
-        {
-            get { return m_count; }
-        }
+        /// <summary>
+        /// Gets or sets the count.
+        /// </summary>
+        /// <value>The count.</value>
+        public int Count { get; private set; }
     }
 }

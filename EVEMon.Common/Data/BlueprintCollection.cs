@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Collections;
+﻿using System.Collections.Generic;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -15,8 +16,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="group">Blueprint Market Group that the blueprint will contain.</param>
         /// <param name="src">One or more serializable blueprints.</param>
-        internal BlueprintCollection(BlueprintMarketGroup group, SerializableBlueprint[] src)
-            : base(src == null ? 0 : src.Length)
+        internal BlueprintCollection(BlueprintMarketGroup group, ICollection<SerializableBlueprint> src)
+            : base(src == null ? 0 : src.Count)
         {
             if (src == null)
                 return;

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon
