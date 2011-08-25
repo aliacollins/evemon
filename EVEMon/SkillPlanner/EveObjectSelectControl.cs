@@ -13,12 +13,10 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler SelectionChanged;
 
-        protected Func<Item, Boolean> m_usabilityPredicate;
-        protected ObjectActivityFilter m_activityFilter;
-        protected BlueprintActivity m_activity;
-        protected bool m_allExpanded;
-
-        private List<Item> m_selectedObjects;
+        protected Func<Item, Boolean> UsabilityPredicate;
+        protected ObjectActivityFilter ActivityFilter;
+        protected BlueprintActivity Activity;
+        protected bool AllExpanded;
 
         /// <summary>
         /// Constructor.
@@ -40,7 +38,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected virtual void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
-            m_usabilityPredicate = SelectAll;
+            UsabilityPredicate = SelectAll;
 
             if (DesignMode || this.IsDesignModeHosted())
                 return;
@@ -50,7 +48,7 @@ namespace EVEMon.SkillPlanner
             Disposed += OnDisposed;
 
             // Update the controls
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -60,7 +58,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            pbSearchImage.Visible = !Settings.UI.SafeForWork;
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -73,6 +71,15 @@ namespace EVEMon.SkillPlanner
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
+
+        /// <summary>
+        /// Updates the control visibility.
+        /// </summary>
+        private void UpdateControlVisibility()
+        {
+            pbSearchImage.Visible = !Settings.UI.SafeForWork;
+        }
+
 
         #region Search
 
@@ -210,13 +217,8 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// All the selected objects (through multi-select).
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [DefaultValue(null)]
-        [Browsable(false)]
-        public List<Item> SelectedObjects
-        {
-            get { return m_selectedObjects; }
-        }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), DefaultValue(null), Browsable(false)]
+        public List<Item> SelectedObjects { get; private set; }
 
         /// <summary>
         /// The primary selected object.
@@ -226,10 +228,10 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (m_selectedObjects == null || m_selectedObjects.Count == 0)
+                if (SelectedObjects == null || SelectedObjects.Count == 0)
                     return null;
 
-                return m_selectedObjects[0];
+                return SelectedObjects[0];
             }
             set
             {
@@ -248,13 +250,13 @@ namespace EVEMon.SkillPlanner
         private void SetSelectedObjects(IEnumerable<Item> s)
         {
             // Updates selection
-            m_selectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
+            SelectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
 
             // Selects the proper nodes
-            if (m_selectedObjects.Count == 1)
+            if (SelectedObjects.Count == 1)
             {
                 // If the object is not already selected
-                Item obj = m_selectedObjects[0];
+                Item obj = SelectedObjects[0];
                 tvItems.SelectNodeWithTag(obj);
             }
 
@@ -270,7 +272,8 @@ namespace EVEMon.SkillPlanner
         {
             if (tvItems.SelectedNodes.Count != 0)
             {
-                List<Item> selectedObjects = (tvItems.SelectedNodes.Cast<TreeNode>().Select(node => node.Tag)).OfType<Item>().ToList();
+                List<Item> selectedObjects =
+                    (tvItems.SelectedNodes.Cast<TreeNode>().Select(node => node.Tag)).OfType<Item>().ToList();
                 SetSelectedObjects(selectedObjects);
                 return;
             }
@@ -318,7 +321,7 @@ namespace EVEMon.SkillPlanner
         private void cmiExpandAll_Click(object sender, EventArgs e)
         {
             tvItems.ExpandAll();
-            m_allExpanded = true;
+            AllExpanded = true;
         }
 
         /// <summary>
@@ -329,7 +332,7 @@ namespace EVEMon.SkillPlanner
         private void cmiCollapseAll_Click(object sender, EventArgs e)
         {
             tvItems.CollapseAll();
-            m_allExpanded = false;
+            AllExpanded = false;
         }
 
         /// <summary>
@@ -367,13 +370,15 @@ namespace EVEMon.SkillPlanner
             cmiExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
             cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
 
-            cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded ?
-                String.Format("Expand \"{0}\"", node.Text.Replace("&", "&&")) : String.Empty);
-            cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded ?
-                String.Format("Collapse \"{0}\"", node.Text.Replace("&", "&&")) : String.Empty);
+            cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
+                                          ? String.Format("Expand \"{0}\"", node.Text.Replace("&", "&&"))
+                                          : String.Empty);
+            cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
+                                            ? String.Format("Collapse \"{0}\"", node.Text.Replace("&", "&&"))
+                                            : String.Empty);
 
             // "Expand All" and "Collapse All" menu
-            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = AllExpanded;
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
         }
 
@@ -399,23 +404,24 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CanUse(Item eo)
         {
-            IEnumerable<StaticSkillLevel> prerequisites = eo.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+            IEnumerable<StaticSkillLevel> prerequisites =
+                eo.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
             bool bpBrowserControl = this is BlueprintSelectControl;
 
             // Is item a blueprint and supports the selected activity ?  
             if (bpBrowserControl)
             {
-                bool hasSelectedActivity = prerequisites.Any(x => x.Activity == m_activity)
-                                           || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == m_activity);
+                bool hasSelectedActivity = prerequisites.Any(x => x.Activity == Activity)
+                                           || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == Activity);
 
                 // Can not be used when item doesn't support the selected activity
-                if ((m_activityFilter == ObjectActivityFilter.Manufacturing || m_activityFilter == ObjectActivityFilter.Invention)
+                if ((ActivityFilter == ObjectActivityFilter.Manufacturing || ActivityFilter == ObjectActivityFilter.Invention)
                     && !hasSelectedActivity)
                     return false;
 
                 // Enumerates the prerequisites skills to the selected activity 
-                if (m_activityFilter != ObjectActivityFilter.All && m_activityFilter != ObjectActivityFilter.Any)
-                    prerequisites = prerequisites.Where(x => x.Activity == m_activity);
+                if (ActivityFilter != ObjectActivityFilter.All && ActivityFilter != ObjectActivityFilter.Any)
+                    prerequisites = prerequisites.Where(x => x.Activity == Activity);
             }
 
             // Item doesn't have prerequisites skills
@@ -424,7 +430,7 @@ namespace EVEMon.SkillPlanner
 
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
             List<Boolean> prereqTrained = new List<Boolean>();
-            if (bpBrowserControl && m_activityFilter == ObjectActivityFilter.Any)
+            if (bpBrowserControl && ActivityFilter == ObjectActivityFilter.Any)
             {
                 List<BlueprintActivity> prereqActivity = new List<BlueprintActivity>();
 
@@ -439,25 +445,31 @@ namespace EVEMon.SkillPlanner
                 {
                     prereqTrained.Clear();
 
-                    prereqTrained.AddRange(
-                        prerequisites.Where(x => x.Activity == activity).Select(
-                            prereq => new {prereq, level = Plan.Character.GetSkillLevel(prereq.Skill)}).Select(
-                                y => y.level >= y.prereq.Level));
+                    prereqTrained.AddRange(prerequisites.Where(x => x.Activity == activity).Select(
+                        prereq => new
+                                      {
+                                          prereq,
+                                          level = Plan.Character.GetSkillLevel(prereq.Skill)
+                                      }).Select(y => y.level >= y.prereq.Level));
 
                     // Has the character trained all prereq skills for this activity ?
-                    if (prerequisites.IsEmpty() || prereqTrained.All(x => true))
+                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x))
                         return true;
                 }
                 return false;
             }
 
             // Do a simple predication and create a list with each prereq skill trained status
-            prereqTrained.AddRange(
-                prerequisites.Select(prereq => new {prereq, level = Plan.Character.GetSkillLevel(prereq.Skill)}).
-                    Select(y => y.level >= y.prereq.Level));
+            prereqTrained.AddRange(prerequisites.Select(
+                prereq => new
+                              {
+                                  prereq,
+                                  level = Plan.Character.GetSkillLevel(prereq.Skill)
+                              }).Select(y => y.level >= y.prereq.Level));
 
             // Has the character trained all prereq skills ?
-            return (prereqTrained.All(x => true));
+            bool d = (prereqTrained.All(x => x));
+            return d;
         }
 
         /// <summary>

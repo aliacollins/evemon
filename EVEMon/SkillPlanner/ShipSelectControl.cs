@@ -87,15 +87,15 @@ namespace EVEMon.SkillPlanner
             switch (Settings.UI.ShipBrowser.UsabilityFilter)
             {
                 case ObjectUsabilityFilter.All:
-                    m_usabilityPredicate = SelectAll;
+                    UsabilityPredicate = SelectAll;
                     break;
 
                 case ObjectUsabilityFilter.Usable:
-                    m_usabilityPredicate = CanUse;
+                    UsabilityPredicate = CanUse;
                     break;
 
                 case ObjectUsabilityFilter.Unusable:
-                    m_usabilityPredicate = CannotUse;
+                    UsabilityPredicate = CannotUse;
                     break;
 
                 default:
@@ -221,13 +221,13 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvItems.EndUpdate();
-                m_allExpanded = false;
+                AllExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
                 if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
                 {
                     tvItems.ExpandAll();
-                    m_allExpanded = true;
+                    AllExpanded = true;
                 }
             }
         }
@@ -248,9 +248,9 @@ namespace EVEMon.SkillPlanner
             {
                 TreeNode node = new TreeNode
                                     {
-                    Text = childGroup.Name,
-                    Tag = childGroup
-                };
+                                        Text = childGroup.Name,
+                                        Tag = childGroup
+                                    };
 
                 // Add this subcategory's items count
                 result += BuildSubtree(childGroup, node.Nodes);
@@ -261,14 +261,14 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all items
-            foreach (Item childItem in group.Items.Where(x => m_usabilityPredicate(x) && m_racePredicate(x)))
+            foreach (TreeNode node in group.Items.Where(x => UsabilityPredicate(x)
+                                                             && m_racePredicate(x)).Select(
+                                                                 childItem => new TreeNode
+                                                                                  {
+                                                                                      Text = childItem.Name,
+                                                                                      Tag = childItem
+                                                                                  }))
             {
-                TreeNode node = new TreeNode
-                                    {
-                    Text = childItem.Name,
-                    Tag = childItem
-                };
-
                 nodeCollection.Add(node);
                 result++;
             }

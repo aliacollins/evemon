@@ -94,15 +94,15 @@ namespace EVEMon.SkillPlanner
             switch (Settings.UI.BlueprintBrowser.UsabilityFilter)
             {
                 case ObjectUsabilityFilter.All:
-                    m_usabilityPredicate = SelectAll;
+                    UsabilityPredicate = SelectAll;
                     break;
 
                 case ObjectUsabilityFilter.Usable:
-                    m_usabilityPredicate = CanUse;
+                    UsabilityPredicate = CanUse;
                     break;
 
                 case ObjectUsabilityFilter.Unusable:
-                    m_usabilityPredicate = CannotUse;
+                    UsabilityPredicate = CannotUse;
                     break;
 
                 default:
@@ -122,32 +122,32 @@ namespace EVEMon.SkillPlanner
         {
             // Update settings
             Settings.UI.BlueprintBrowser.ActivityFilter = (ObjectActivityFilter) cbActivityFilter.SelectedIndex;
-            m_activityFilter = Settings.UI.BlueprintBrowser.ActivityFilter;
+            ActivityFilter = Settings.UI.BlueprintBrowser.ActivityFilter;
 
-            switch (m_activityFilter)
+            switch (ActivityFilter)
             {
                 case ObjectActivityFilter.Manufacturing:
-                    m_activity = BlueprintActivity.Manufacturing;
+                    Activity = BlueprintActivity.Manufacturing;
                     break;
 
                 case ObjectActivityFilter.Copying:
-                    m_activity = BlueprintActivity.Copying;
+                    Activity = BlueprintActivity.Copying;
                     break;
 
                 case ObjectActivityFilter.ResearchingMaterialProductivity:
-                    m_activity = BlueprintActivity.ResearchingMaterialProductivity;
+                    Activity = BlueprintActivity.ResearchingMaterialProductivity;
                     break;
 
                 case ObjectActivityFilter.ResearchingTimeProductivity:
-                    m_activity = BlueprintActivity.ResearchingTimeProductivity;
+                    Activity = BlueprintActivity.ResearchingTimeProductivity;
                     break;
 
                 case ObjectActivityFilter.Invention:
-                    m_activity = BlueprintActivity.Invention;
+                    Activity = BlueprintActivity.Invention;
                     break;
 
                 default:
-                    m_activity = BlueprintActivity.None;
+                    Activity = BlueprintActivity.None;
                     break;
             }
 
@@ -250,13 +250,10 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes())
+                    foreach (TreeNode node in tvItems.GetAllNodes().Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
-                        if (node.Tag.GetHashCode() == selectedItemHash)
-                        {
-                            tvItems.SelectNodeWithTag(node.Tag);
-                            selectedNode = node;
-                        }
+                        tvItems.SelectNodeWithTag(node.Tag);
+                        selectedNode = node;
                     }
                 }
 
@@ -270,13 +267,13 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvItems.EndUpdate();
-                m_allExpanded = false;
+                AllExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height/tvItems.ItemHeight))
+                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
                 {
                     tvItems.ExpandAll();
-                    m_allExpanded = true;
+                    AllExpanded = true;
                 }
             }
         }
@@ -310,15 +307,14 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all blueprints
-            foreach (
-                Blueprint childItem in group.Blueprints.Where(x => m_usabilityPredicate(x) && m_metaGroupPredicate(x)))
+            foreach (TreeNode node in group.Blueprints.Where(x => UsabilityPredicate(x)
+                                                                  && m_metaGroupPredicate(x)).Select(
+                                                                      childItem => new TreeNode
+                                                                                       {
+                                                                                           Text = childItem.Name,
+                                                                                           Tag = childItem
+                                                                                       }))
             {
-                TreeNode node = new TreeNode
-                                    {
-                                        Text = childItem.Name,
-                                        Tag = childItem
-                                    };
-
                 nodeCollection.Add(node);
                 result++;
             }
