@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -8,7 +6,7 @@ namespace EVEMon.Common.SettingsObjects
     public sealed class MonitoredCharacterSettings
     {
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         public MonitoredCharacterSettings()
         {
@@ -16,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// Creation for new settings for this character
+        /// Creation for new settings for this character.
         /// </summary>
         public MonitoredCharacterSettings(Character character)
         {
@@ -25,17 +23,9 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("characterGuid")]
-        public Guid CharacterGuid
-        {
-            get;
-            set;
-        }
+        public Guid CharacterGuid { get; set; }
 
         [XmlElement("settings")]
-        public CharacterUISettings Settings
-        {
-            get;
-            set;
-        }
+        public CharacterUISettings Settings { get; set; }
     }
 }

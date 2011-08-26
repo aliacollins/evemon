@@ -11,7 +11,7 @@ namespace EVEMon.Common.SettingsObjects
         #region Constructors
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public BlueprintBrowserSettings()
         {
@@ -26,59 +26,35 @@ namespace EVEMon.Common.SettingsObjects
         #region Public Properties
 
         [XmlElement("textSearch")]
-        public string TextSearch
-        {
-            get;
-            set;
-        }
+        public string TextSearch { get; set; }
 
         [XmlElement("usabilityFilter")]
-        public ObjectUsabilityFilter UsabilityFilter
-        {
-            get;
-            set;
-        }
+        public ObjectUsabilityFilter UsabilityFilter { get; set; }
 
         [XmlElement("activityFilter")]
-        public ObjectActivityFilter ActivityFilter
-        {
-            get;
-            set;
-        }
+        public ObjectActivityFilter ActivityFilter { get; set; }
 
         [XmlElement("metaGroupFilter")]
-        public ItemMetaGroup MetagroupFilter
-        {
-            get;
-            set;
-        }
+        public ItemMetaGroup MetagroupFilter { get; set; }
 
         [XmlElement("productionFacilityIndex")]
-        public int ProductionFacilityIndex
-        {
-            get;
-            set;
-        }
+        public int ProductionFacilityIndex { get; set; }
 
         [XmlElement("researchFacilityIndex")]
-        public int ResearchFacilityIndex
-        {
-            get;
-            set;
-        }
+        public int ResearchFacilityIndex { get; set; }
 
         [XmlElement("implantSetIndex")]
-        public int ImplantSetIndex
-        {
-            get;
-            set;
-        }
+        public int ImplantSetIndex { get; set; }
 
         #endregion
 
 
         #region Helper Methods
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal BlueprintBrowserSettings Clone()
         {
             return (BlueprintBrowserSettings)MemberwiseClone();

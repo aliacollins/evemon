@@ -4,7 +4,7 @@ using System.Threading;
 namespace EVEMon.Common.Threading
 {
     /// <summary>
-    /// Encapsulates an action, also providing synchronization services
+    /// Encapsulates an action, also providing synchronization services.
     /// </summary>
     public struct Message
     {
@@ -12,26 +12,14 @@ namespace EVEMon.Common.Threading
         private readonly EventWaitHandle m_waitHandle;
 
         /// <summary>
-        /// Constructor for an message without waiting mechanism
-        /// </summary>
-        /// <param name="action"></param>
-        public Message(Action action)
-        {
-            this.m_action = action;
-            this.m_waitHandle = null;
-        }
-
-        /// <summary>
-        /// Constructor for a message with or without waiting mechanism
+        /// Constructor for a message with or without waiting mechanism.
         /// </summary>
         /// <param name="action"></param>
         /// <param name="waitForInvocation">When true, the message creator requires a waiting mechanism</param>
         public Message(Action action, bool waitForInvocation)
         {
-            this.m_action = action;
-
-            if (waitForInvocation) this.m_waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-            else this.m_waitHandle = null;
+            m_action = action;
+            m_waitHandle = waitForInvocation ? new EventWaitHandle(false, EventResetMode.AutoReset) : null;
         }
 
         /// <summary>
@@ -39,8 +27,9 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public void Invoke()
         {
-            this.m_action();
-            if (this.m_waitHandle != null) m_waitHandle.Set();
+            m_action();
+            if (m_waitHandle != null)
+                m_waitHandle.Set();
         }
 
         /// <summary>
@@ -48,7 +37,8 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public void Wait()
         {
-            if (this.m_waitHandle != null) this.m_waitHandle.WaitOne();
+            if (m_waitHandle != null)
+                m_waitHandle.WaitOne();
         }
 
         /// <summary>
@@ -56,7 +46,8 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public void Cancel()
         {
-            if (this.m_waitHandle != null) m_waitHandle.Set();
+            if (m_waitHandle != null)
+                m_waitHandle.Set();
         }
     }
 }

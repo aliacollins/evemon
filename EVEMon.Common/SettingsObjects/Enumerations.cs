@@ -76,6 +76,99 @@ namespace EVEMon.Common.SettingsObjects
         MinimizeToTaskbar = 2
     }
 
+    public enum TrayPopupGrouping
+    {
+        None = 0,
+        TrainingAtTop = 1,
+        TrainingAtBottom = 2,
+        Account = 3
+    }
+
+    public enum TrayPopupSort
+    {
+        TrainingCompletionTimeDESC = 0,
+        TrainingCompletionTimeASC = 1,
+        NameASC = 2,
+        NameDESC = 3
+    }
+
+    public enum PortraitSizes
+    {
+        x16 = 0,
+        x24 = 1,
+        x32 = 2,
+        x48 = 3,
+        x64 = 4,
+        x80 = 5,
+        x96 = 6
+    }
+
+    public enum TrayPopupStyles
+    {
+        PopupForm = 0,
+        WindowsTooltip = 1,
+        Disabled = 2
+    }
+
+    public enum ThreeStateSortOrder
+    {
+        None = 0,
+        Ascending = 1,
+        Descending = 2
+    };
+
+    public enum MarkupType
+    {
+        Undefined,
+        None,
+        Forum,
+        Html
+    }
+
+    /// <summary>
+    /// Represents what is displayed in the main window title.
+    /// </summary>
+    public enum MainWindowTitleFormat
+    {
+        Default = 0,
+        NextCharToFinish = 1,
+        SelectedChar = 2,
+        AllCharacters = 3,
+        AllCharactersButSelectedOneAhead = 4
+    }
+
+    public enum CalendarProvider
+    {
+        Outlook,
+        Google
+    }
+
+    public enum GoogleCalendarReminder
+    {
+        Alert = 0,
+        All = 1,
+        Email = 2,
+        None = 3,
+        Sms = 4,
+        Unspecified = 5
+    }
+
+    public enum CertificateFilter
+    {
+        All = 0,
+        Claimable = 1,
+        HideElite = 2,
+        NextGradeTrainable = 3,
+        NextGradeUntrainable = 4
+    }
+
+    public enum CertificateSort
+    {
+        Name = 0,
+        TimeToNextGrade = 1,
+        TimeToEliteGrade = 2
+    }
+
     #endregion
 
 

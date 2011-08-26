@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Xml.Serialization;
-
-using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -19,40 +14,41 @@ namespace EVEMon.Common.SettingsObjects
         public IndustryJobSettings()
         {
             // Add default columns
-            var defaultColumns = new IndustryJobColumn[]
-            { 
-                IndustryJobColumn.State,
-                IndustryJobColumn.TTC,
-                IndustryJobColumn.InstalledItem,
-                IndustryJobColumn.OutputItem,
-            };
+            IndustryJobColumn[] defaultColumns = new[]
+                                                     {
+                                                         IndustryJobColumn.State,
+                                                         IndustryJobColumn.TTC,
+                                                         IndustryJobColumn.InstalledItem,
+                                                         IndustryJobColumn.OutputItem,
+                                                     };
 
-            Columns = EnumExtensions.GetValues<IndustryJobColumn>().Where(x => x != IndustryJobColumn.None).Select(x =>
-                new IndustryJobColumnSettings { Column = x, Visible = defaultColumns.Contains(x), Width = -1 }).ToArray();
+            Columns = EnumExtensions.GetValues<IndustryJobColumn>().Where(
+                x => x != IndustryJobColumn.None).Select(x =>
+                                                         new IndustryJobColumnSettings
+                                                             {
+                                                                 Column = x,
+                                                                 Visible = defaultColumns.Contains(x),
+                                                                 Width = -1
+                                                             }).ToArray();
 
             HideInactiveJobs = true;
         }
 
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public IndustryJobColumnSettings[] Columns
-        {
-            get;
-            set;
-        }
+        public IndustryJobColumnSettings[] Columns { get; set; }
 
         [XmlElement("hideInactiveJobs")]
-        public bool HideInactiveJobs
-        {
-            get;
-            set;
-        }
+        public bool HideInactiveJobs { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public IndustryJobSettings Clone()
         {
             IndustryJobSettings clone = (IndustryJobSettings)MemberwiseClone();
             clone.Columns = Columns.Select(x => x.Clone()).ToArray();
-            clone.HideInactiveJobs = HideInactiveJobs;
             return clone;
         }
     }

@@ -1,4 +1,3 @@
-using System;
 
 namespace EVEMon.Common.SettingsObjects
 {

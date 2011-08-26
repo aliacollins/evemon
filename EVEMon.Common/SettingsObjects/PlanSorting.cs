@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -14,36 +11,21 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("criteria")]
-        public PlanEntrySort Criteria
-        {
-            get;
-            set;
-        }
+        public PlanEntrySort Criteria { get; set; }
 
         [XmlAttribute("order")]
-        public ThreeStateSortOrder Order
-        {
-            get;
-            set;
-        }
+        public ThreeStateSortOrder Order { get; set; }
 
         [XmlAttribute("groupByPriority")]
-        public bool GroupByPriority
-        {
-            get;
-            set;
-        }
+        public bool GroupByPriority { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal PlanSorting Clone()
         {
             return (PlanSorting)MemberwiseClone();
         }
     }
-
-    public enum ThreeStateSortOrder
-    {
-        None = 0,
-        Ascending = 1,
-        Descending = 2
-    };
 }

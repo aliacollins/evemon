@@ -11,7 +11,7 @@ namespace EVEMon.Common.Threading
     /// </summary>
     public sealed class UIActor : IActor
     {
-        private Form m_applicationForm;
+        private readonly Form m_applicationForm;
         private volatile int m_shutdown;
 
         /// <summary>
@@ -23,9 +23,10 @@ namespace EVEMon.Common.Threading
             m_applicationForm = mainApplicationForm;
 
             m_applicationForm.Invoke((Action)(() =>
-            {
-                if (Actor.CurrentActor != null) Actor.CurrentActor = this;
-            }));
+                                                  {
+                                                      if (Actor.CurrentActor != null)
+                                                          Actor.CurrentActor = this;
+                                                  }));
         }
 
         /// <summary>
@@ -37,10 +38,10 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Invoke the provided delegate on the bound thread and wait for completion
+        /// Invoke the provided delegate on the bound thread and wait for completion.
         /// </summary>
         /// <param name="action">The action to invoke</param>
-        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="Initialize()"/> yet.</exception>
+        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
         public bool Invoke(Action action)
         {
@@ -64,10 +65,11 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Invoke the provided delegate on the bound thread and immediately returns without waiting for the completion. Note that, when the calling thread and the bound thread are the same, we execute the action immediately without waiting.
+        /// Invoke the provided delegate on the bound thread and immediately returns without waiting for the completion.
+        /// Note that, when the calling thread and the bound thread are the same, we execute the action immediately without waiting.
         /// </summary>
         /// <param name="action">The action to invoke</param>
-        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="Initialize()"/> yet.</exception>
+        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
         public bool BeginInvoke(Action action)
         {
@@ -91,14 +93,15 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Asserts the calling thread is this actor's underlying thread or throws an exception
+        /// Asserts the calling thread is this actor's underlying thread or throws an exception.
         /// </summary>
         /// <exception cref="AccessViolationException">The calling thread is different from the underlying thread</exception>
         public void AssertAccess()
         {
             try
             {
-                if (!m_applicationForm.InvokeRequired) return;
+                if (!m_applicationForm.InvokeRequired)
+                    return;
             }
             catch (ObjectDisposedException exc)
             {
@@ -117,52 +120,49 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Forces the bound thread to shutdown in a clean way (no thread abortion)
+        /// Forces the bound thread to shutdown in a clean way (no thread abortion).
         /// </summary>
-        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="Initialize()"/> yet.</exception>
+        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         public void Shutdown()
         {
-            if (Interlocked.Increment(ref m_shutdown) == 1)
+            if (Interlocked.Increment(ref m_shutdown) != 1)
+                return;
+
+            try
             {
-                try
-                {
-                    m_applicationForm.Close();
-                }
-                catch (ObjectDisposedException exc)
-                {
-                    ExceptionHandler.LogException(exc, true);
-                    Interlocked.Increment(ref m_shutdown);
-                    return;
-                }
-                catch (AccessViolationException exc)
-                {
-                    ExceptionHandler.LogException(exc, true);
-                    Interlocked.Increment(ref m_shutdown);
-                    return;
-                }
+                m_applicationForm.Close();
+            }
+            catch (ObjectDisposedException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                Interlocked.Increment(ref m_shutdown);
+                return;
+            }
+            catch (AccessViolationException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                Interlocked.Increment(ref m_shutdown);
+                return;
             }
         }
 
         /// <summary>
-        /// Gets true if the actor has been shutdown
+        /// Gets true if the actor has been shutdown.
         /// </summary>
-        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="Initialize()"/> yet.</exception>
+        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         public bool IsShutdown
         {
-            get 
-            {
-                return m_shutdown != 0 || m_applicationForm.IsDisposed;
-            }
+            get { return m_shutdown != 0 || m_applicationForm.IsDisposed; }
         }
 
         /// <summary>
         /// Gets true if the calling thread is the underlying thread and is living; false otherwise.
         /// When false, operations on this actor have to be done through <see cref="Invoke"/> or <see cref="BeginInvoke"/>.
         /// </summary>
-        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="Initialize()"/> yet.</exception>
+        /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         public bool HasAccess
         {
-            get 
+            get
             {
                 try
                 {
@@ -192,7 +192,7 @@ namespace EVEMon.Common.Threading
         /// <returns>The created timer.</returns>
         public IActorTimer GetTimer(Action callback, int period, bool start)
         {
-            return new UIActorTimer(m_applicationForm, callback, period, start);
+            return new UIActorTimer(callback, period, start);
         }
     }
 }

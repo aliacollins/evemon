@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -13,26 +10,18 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("igbServerEnabled")]
-        public bool IGBServerEnabled
-        {
-            get;
-            set;
-        }
+        public bool IGBServerEnabled { get; set; }
 
         [XmlElement("igbServerPublic")]
-        public bool IGBServerPublic
-        {
-            get;
-            set;
-        }
+        public bool IGBServerPublic { get; set; }
 
         [XmlElement("igbServerPort")]
-        public int IGBServerPort
-        {
-            get;
-            set;
-        }
+        public int IGBServerPort { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal IGBSettings Clone()
         {
             return (IGBSettings)MemberwiseClone();

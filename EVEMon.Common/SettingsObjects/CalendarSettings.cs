@@ -19,111 +19,51 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("enabled")]
-        public bool Enabled
-        {
-            get;
-            set;
-        }
+        public bool Enabled { get; set; }
 
         [XmlElement("provider")]
-        public CalendarProvider Provider
-        {
-            get;
-            set;
-        }
+        public CalendarProvider Provider { get; set; }
 
         [XmlElement("useReminding")]
-        public bool UseReminding
-        {
-            get;
-            set;
-        }
+        public bool UseReminding { get; set; }
 
         /// <summary>
         /// Interval between remindings, in minutes
         /// </summary>
         [XmlElement("remindingInterval")]
-        public int RemindingInterval
-        {
-            get;
-            set;
-        }
+        public int RemindingInterval { get; set; }
 
         [XmlElement("remindingRange")]
-        public bool UseRemindingRange
-        {
-            get;
-            set;
-        }
+        public bool UseRemindingRange { get; set; }
 
         [XmlElement("earlyReminding")]
-        public DateTime EarlyReminding
-        {
-            get;
-            set;
-        }
+        public DateTime EarlyReminding { get; set; }
 
         [XmlElement("lateReminding")]
-        public DateTime LateReminding
-        {
-            get;
-            set;
-        }
+        public DateTime LateReminding { get; set; }
 
         [XmlElement("googleEmail")]
-        public string GoogleEmail
-        {
-            get;
-            set;
-        }
+        public string GoogleEmail { get; set; }
 
         [XmlElement("googlePassword")]
-        public string GooglePassword
-        {
-            get;
-            set;
-        }
+        public string GooglePassword { get; set; }
 
         [XmlElement("googleUrl")]
-        public string GoogleURL
-        {
-            get;
-            set;
-        }
+        public string GoogleURL { get; set; }
 
         [XmlElement("googleReminder")]
-        public GoogleCalendarReminder GoogleReminder
-        {
-            get;
-            set;
-        }
+        public GoogleCalendarReminder GoogleReminder { get; set; }
 
         [XmlElement("lastQueuedSkillOnly")]
-        public bool LastQueuedSkillOnly
-        {
-            get;
-            set;
-        }
+        public bool LastQueuedSkillOnly { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal CalendarSettings Clone()
         {
-            return (CalendarSettings)this.MemberwiseClone();
+            return (CalendarSettings)MemberwiseClone();
         }
-    }
-
-    public enum CalendarProvider
-    {
-        Outlook,
-        Google
-    }
-
-    public enum GoogleCalendarReminder
-    {
-        Alert = 0,
-        All = 1,
-        Email = 2,
-        None = 3,
-        Sms = 4,
-        Unspecified = 5
     }
 }

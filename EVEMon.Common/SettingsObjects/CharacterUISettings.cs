@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
-using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -19,53 +17,25 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("selectedPage")]
-        public string SelectedPage
-        {
-            get;
-            set;
-        }
+        public string SelectedPage { get; set; }
 
         [XmlElement("collapsedGroup")]
-        public List<String> CollapsedGroups
-        {
-            get;
-            set;
-        }
+        public List<String> CollapsedGroups { get; set; }
 
         [XmlElement("fullAPIKeyEnabledPage")]
-        public List<String> FullAPIKeyEnabledPages
-        {
-            get;
-            set;
-        }
+        public List<String> FullAPIKeyEnabledPages { get; set; }
 
         [XmlElement("ordersGroupBy")]
-        public MarketOrderGrouping OrdersGroupBy
-        {
-            get;
-            set;
-        }
+        public MarketOrderGrouping OrdersGroupBy { get; set; }
 
         [XmlElement("jobsGroupBy")]
-        public IndustryJobGrouping JobsGroupBy
-        {
-            get;
-            set;
-        }
+        public IndustryJobGrouping JobsGroupBy { get; set; }
 
         [XmlElement("mailMessagesGroupBy")]
-        public EVEMailMessagesGrouping EVEMailMessagesGroupBy
-        {
-            get;
-            set;
-        }
+        public EVEMailMessagesGrouping EVEMailMessagesGroupBy { get; set; }
 
         [XmlElement("eveNotificationsGroupBy")]
-        public EVENotificationsGrouping EVENotificationsGroupBy
-        {
-            get;
-            set;
-        }
+        public EVENotificationsGrouping EVENotificationsGroupBy { get; set; }
 
         /// <summary>
         /// Clones this serialization object.

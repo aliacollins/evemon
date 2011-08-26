@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -14,25 +11,13 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("usabilityFilter")]
-        public ObjectUsabilityFilter UsabilityFilter
-        {
-            get;
-            set;
-        }
+        public ObjectUsabilityFilter UsabilityFilter { get; set; }
 
         [XmlElement("racesFilter")]
-        public Race RacesFilter
-        {
-            get;
-            set;
-        }
+        public Race RacesFilter { get; set; }
 
         [XmlElement("textSearch")]
-        public string TextSearch
-        {
-            get;
-            set;
-        }
+        public string TextSearch { get; set; }
 
         internal ShipBrowserSettings Clone()
         {

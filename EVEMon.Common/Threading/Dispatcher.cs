@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading;
-using System.Reflection;
+using System.Linq;
 
 namespace EVEMon.Common.Threading
 {
@@ -16,18 +12,17 @@ namespace EVEMon.Common.Threading
     /// </summary>
     public static class Dispatcher
     {
-        private static readonly Object m_syncLock = new Object();
+        private static readonly Object s_syncLock = new Object();
 
-        private static IActor m_actor;
-        private static IActorTimer m_oneSecondTimer;
-        private static readonly SortedList<DateTime, Action> m_delayedOperations = new SortedList<DateTime,Action>();
+        private static IActorTimer s_oneSecondTimer;
+        private static readonly SortedList<DateTime, Action> s_delayedOperations = new SortedList<DateTime, Action>();
 
         /// <summary>
         /// Gets true whether the threading model uses many threads, false otherwise.
         /// </summary>
         public static bool IsMultiThreaded
         {
-            get { return m_actor != null; }
+            get { return Actor != null; }
         }
 
         /// <summary>
@@ -36,13 +31,10 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public static bool HasAccess
         {
-            get 
+            get
             {
-                var actor = m_actor;
-                if (actor == null)
-                    return true;
-
-                return actor.HasAccess;
+                IActor actor = Actor;
+                return actor == null || actor.HasAccess;
             }
         }
 
@@ -50,10 +42,7 @@ namespace EVEMon.Common.Threading
         /// Gets the underlying actor of the dispatcher.
         /// When null, the dispatcher will run in single-threaded mode.
         /// </summary>
-        public static IActor Actor
-        {
-            get { return m_actor; }
-        }
+        public static IActor Actor { get; private set; }
 
         /// <summary>
         /// Starts the dispatcher with the given actor.
@@ -66,17 +55,17 @@ namespace EVEMon.Common.Threading
             Enforce.ArgumentNotNull(actor, "actor");
 
             // Double-check pattern (1)
-            if (m_actor != null)
+            if (Actor != null)
                 return;
 
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 // Double-check pattern (2)
-                if (m_actor != null)
+                if (Actor != null)
                     return;
 
-                m_actor = actor;
-                m_oneSecondTimer = actor.GetTimer(OnOneSecondTimerTick, 1000, true);
+                Actor = actor;
+                s_oneSecondTimer = actor.GetTimer(OnOneSecondTimerTick, 1000, true);
             }
         }
 
@@ -86,7 +75,7 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void Invoke(Action action)
         {
-            var actor = m_actor;
+            IActor actor = Actor;
             if (HasAccess || (actor == null))
             {
                 action();
@@ -104,7 +93,7 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void BeginInvoke(Action action)
         {
-            var actor = m_actor;
+            IActor actor = Actor;
             if (HasAccess || (actor == null))
             {
                 action();
@@ -125,7 +114,7 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The callback to execute.</param>
         public static void Schedule(TimeSpan delay, Action action)
         {
-            var dateTime = DateTime.UtcNow.Add(delay);
+            DateTime dateTime = DateTime.UtcNow.Add(delay);
             Schedule(dateTime, action);
         }
 
@@ -137,7 +126,7 @@ namespace EVEMon.Common.Threading
         /// <para>If the time is already elasped, the execution will occur now.</para></remarks>
         /// <param name="action">The callback to execute.</param>
         /// <param name="time">The time at which the delay will be executed.</param>
-        public static void Schedule(DateTime time, Action action)
+        private static void Schedule(DateTime time, Action action)
         {
             time = time.ToUniversalTime();
 
@@ -149,16 +138,16 @@ namespace EVEMon.Common.Threading
             }
 
             // Plan
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 // Add one tick until we get a unique key
-                while (m_delayedOperations.ContainsKey(time))
+                while (s_delayedOperations.ContainsKey(time))
                 {
                     time = time.AddTicks(1);
                 }
 
-                // Stores it in a sorted list.
-                m_delayedOperations.Add(time, action);
+                // Stores it in a sorted list
+                s_delayedOperations.Add(time, action);
             }
         }
 
@@ -203,7 +192,7 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public static void AssertAccess()
         {
-            var actor = m_actor;
+            IActor actor = Actor;
             if (actor != null)
                 actor.AssertAccess();
         }
@@ -218,27 +207,20 @@ namespace EVEMon.Common.Threading
 
             // Check for scheduled operations before now
             List<Action> actionsToInvoke = new List<Action>();
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 // Collect all the actions scheduled before now
-                var now = DateTime.UtcNow;
-                foreach(var pair in m_delayedOperations)
-                {
-                    if (pair.Key > now)
-                        break;
-
-                    actionsToInvoke.Add(pair.Value);
-                }
+                actionsToInvoke.AddRange(s_delayedOperations.TakeWhile(pair => pair.Key <= DateTime.UtcNow).Select(pair => pair.Value));
 
                 // Remove those actions
-                for(int i=0; i<actionsToInvoke.Count; i++)
+                for (int i = 0; i < actionsToInvoke.Count; i++)
                 {
-                    m_delayedOperations.RemoveAt(0);
+                    s_delayedOperations.RemoveAt(0);
                 }
             }
 
             // Execute the entries (we're already on the proper thread)
-            foreach (var action in actionsToInvoke)
+            foreach (Action action in actionsToInvoke)
             {
                 action.Invoke();
             }
@@ -250,11 +232,11 @@ namespace EVEMon.Common.Threading
         internal static void Shutdown()
         {
 
-            if (m_oneSecondTimer == null)
+            if (s_oneSecondTimer == null)
                 return;
 
-            m_oneSecondTimer.Stop();
-            m_oneSecondTimer = null;
+            s_oneSecondTimer.Stop();
+            s_oneSecondTimer = null;
         }
     }
 }

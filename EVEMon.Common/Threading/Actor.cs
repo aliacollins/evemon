@@ -12,13 +12,14 @@ namespace EVEMon.Common.Threading
     public sealed class Actor : IActor
     {
         /// <summary>
-        /// Holds a reference to the actor currently associated with this thread
+        /// Holds a reference to the actor currently associated with this thread.
         /// </summary>
-        [ThreadStatic] private static IActor m_currentActor;
+        [ThreadStatic]
+        private static IActor s_currentActor;
 
-        private Thread m_thread;
-        private Queue<Message> m_messageQueue;
-        private AutoResetEvent m_waitHandle;
+        private readonly Thread m_thread;
+        private readonly Queue<Message> m_messageQueue;
+        private readonly AutoResetEvent m_waitHandle;
         private volatile int m_shutdown;
 
 
@@ -31,15 +32,14 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Constructor with a custom thread priority
+        /// Constructor with a custom thread priority.
         /// </summary>
         /// <param name="priority">The underlying thread's priority</param>
         public Actor(ThreadPriority priority)
         {
             m_messageQueue = new Queue<Message>();
             m_waitHandle = new AutoResetEvent(false);
-            m_thread = new Thread(MessagePump);
-            m_thread.Priority = priority;
+            m_thread = new Thread(MessagePump) { Priority = priority };
             m_thread.Start();
         }
 
@@ -49,17 +49,17 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public static IActor CurrentActor
         {
-            get { return m_currentActor; }
-            internal set { m_currentActor = value; }
+            get { return s_currentActor; }
+            internal set { s_currentActor = value; }
         }
 
         /// <summary>
-        /// The thread's main method
+        /// The thread's main method.
         /// </summary>
         private void DoWork()
         {
             // Sets the current actor for this thread
-            m_currentActor = this;
+            s_currentActor = this;
 
             // Pumps the messages until the abortion is fired
             MessagePump();
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// The main loop running on the underlying thread
+        /// The main loop running on the underlying thread.
         /// </summary>
         private void MessagePump()
         {
@@ -88,7 +88,7 @@ namespace EVEMon.Common.Threading
                 {
                     m_waitHandle.WaitOne(5000, false);
                 }
-                // Should never occur since this thread should be the one waiting for handle
+                    // Should never occur since this thread should be the one waiting for handle
                 catch (AbandonedMutexException)
                 {
                     m_shutdown = 1;
@@ -99,24 +99,28 @@ namespace EVEMon.Common.Threading
                 while (true)
                 {
                     // Returns if aborted
-                    if (m_shutdown != 0) return;
+                    if (m_shutdown != 0)
+                        return;
 
                     // Pumps the next message in queue - require locking
-                    Nullable<Message> message = null;
+                    Message? message = null;
                     lock (m_messageQueue)
                     {
                         // Dequeues the message
-                        if (m_messageQueue.Count != 0) message = m_messageQueue.Dequeue();
+                        if (m_messageQueue.Count != 0)
+                            message = m_messageQueue.Dequeue();
 
                         // If a thread has signaled the thread since the last time, we need to reset now
                         m_waitHandle.Reset();
                     }
 
                     // Quit if the pumpin and go to sleep if the queue was empty
-                    if (message == null) break;
+                    if (message == null)
+                        break;
 
                     // Returns if aborted
-                    if (m_shutdown != 0) return;
+                    if (m_shutdown != 0)
+                        return;
 
                     // Invoke the next action in queue
                     message.Value.Invoke();
@@ -125,7 +129,7 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Invoke the provided delegate on the bound thread and wait for completion
+        /// Invoke the provided delegate on the bound thread and wait for completion.
         /// </summary>
         /// <param name="action">The action to invoke</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
@@ -135,30 +139,33 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Invoke the provided delegate on the bound thread and immediately returns without waiting for the completion. Note that, when the calling thread and the bound thread are the same, we execute the action immediately without waiting.
+        /// Invoke the provided delegate on the bound thread and immediately returns without waiting for the completion.
+        /// Note that, when the calling thread and the bound thread are the same, we execute the action immediately without waiting.
         /// </summary>
         /// <param name="action">The action to invoke</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
         public bool BeginInvoke(Action action)
         {
-            return Invoke(action, false);
+            return Invoke(action);
         }
 
         /// <summary>
-        /// Performs the invocation, waiting or not for completion
+        /// Performs the invocation, waiting or not for completion.
         /// </summary>
         /// <param name="action"></param>
         /// <param name="waitForCompletion">When true, will wait for the completion</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        private bool Invoke(Action action, bool waitForCompletion)
+        private bool Invoke(Action action, bool waitForCompletion = false)
         {
             // Already on the bound thread, execute immediately
             if (Thread.CurrentThread == m_thread)
             {
-                if (IsShutdown) return false;
+                if (IsShutdown)
+                    return false;
+
                 action();
             }
-            // Different thread, push to the invocation queue
+                // Different thread, push to the invocation queue
             else
             {
                 Message msg = new Message(action, waitForCompletion);
@@ -168,47 +175,49 @@ namespace EVEMon.Common.Threading
                 {
                     m_messageQueue.Enqueue(msg);
                     m_waitHandle.Set();
-                    if (IsShutdown) return false;
+                    if (IsShutdown)
+                        return false;
                 }
 
                 // Wait for the action to be executed
-                if (waitForCompletion) msg.Wait();
-                if (IsShutdown) return false;
+                if (waitForCompletion)
+                    msg.Wait();
+
+                if (IsShutdown)
+                    return false;
             }
 
             return true;
         }
 
         /// <summary>
-        /// Asserts the calling thread is this actor's underlying thread or throws an exception
+        /// Asserts the calling thread is this actor's underlying thread or throws an exception.
         /// </summary>
         /// <exception cref="AccessViolationException">The calling thread is different from the underlying thread</exception>
         public void AssertAccess()
         {
             if (Thread.CurrentThread != m_thread)
-            {
                 throw new AccessViolationException("The calling thread is different from the underlying thread");
-            }
         }
 
         /// <summary>
-        /// Forces the bound thread to shutdown in a clean way (no thread abortion)
+        /// Forces the bound thread to shutdown in a clean way (no thread abortion).
         /// </summary>
         public void Shutdown()
         {
             // If currently 0, set to 1 and shutdown
-            if (Interlocked.Increment(ref m_shutdown) == 1)
+            if (Interlocked.Increment(ref m_shutdown) != 1)
+                return;
+
+            lock (m_messageQueue)
             {
-                lock (m_messageQueue)
-                {
-                    // Wakes up the thread to force it to quit
-                    m_waitHandle.Set();
-                }
+                // Wakes up the thread to force it to quit
+                m_waitHandle.Set();
             }
         }
 
         /// <summary>
-        /// Gets true if the actor has been shut down
+        /// Gets true if the actor has been shut down.
         /// </summary>
         public bool IsShutdown
         {
@@ -223,7 +232,8 @@ namespace EVEMon.Common.Threading
         {
             get
             {
-                if (IsShutdown) return false;
+                if (IsShutdown)
+                    return false;
                 return Thread.CurrentThread == m_thread;
             }
         }

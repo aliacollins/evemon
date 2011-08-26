@@ -224,6 +224,7 @@
     <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
     <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
+    <Compile Include="SettingsObjects\IColumnSettings.cs" />
     <Compile Include="SettingsObjects\UpdatePeriodExtensions.cs" />
     <Compile Include="Standing.cs" />
     <Compile Include="StandingCollection.cs" />

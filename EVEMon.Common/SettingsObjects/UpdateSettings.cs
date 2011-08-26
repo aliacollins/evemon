@@ -30,31 +30,19 @@ namespace EVEMon.Common.SettingsObjects
         /// When true, EVEMon will check its version from BattleClinic
         /// </summary>
         [XmlElement("checkEVEMonVersion")]
-        public bool CheckEVEMonVersion
-        {
-            get;
-            set;
-        }
+        public bool CheckEVEMonVersion { get; set; }
 
         /// <summary>
         /// When true, EVEMon will check its version from BattleClinic
         /// </summary>
         [XmlElement("checkTimeOnStartup")]
-        public bool CheckTimeOnStartup
-        {
-            get;
-            set;
-        }
+        public bool CheckTimeOnStartup { get; set; }
 
         /// <summary>
         /// Gets or sets the latest upgrade version the user choose to reject.
         /// </summary>
         [XmlElement("mostRecentDeniedUpdgrade")]
-        public string MostRecentDeniedUpgrade
-        {
-            get;
-            set;
-        }
+        public string MostRecentDeniedUpgrade { get; set; }
 
         /// <summary>
         /// Gets or sets the length of time between updates in minutes.
@@ -65,25 +53,12 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("updateFrequency")]
         public int UpdateFrequency
         {
-            get
-            {
-                if (m_updateFrequency < 240)
-                    return 240;
-
-                return m_updateFrequency;
-            }
-            set
-            {
-                m_updateFrequency = value;
-            }
+            get { return m_updateFrequency < 240 ? 240 : m_updateFrequency; }
+            set { m_updateFrequency = value; }
         }
 
         [XmlElement("useCustomUpdatesUrl")]
-        public bool UseCustomUpdatesUrl
-        {
-            get;
-            set;
-        }
+        public bool UseCustomUpdatesUrl { get; set; }
 
         /// <summary>
         /// Url to patch.xml
@@ -104,30 +79,16 @@ namespace EVEMon.Common.SettingsObjects
 
                 // We don't want this to be abused, so we lock the custom update url to localhost.
                 // For convenience any localhost path can be used on any port. file:// does not work anyway.
-                if (!m_updatesUrl.StartsWith("http://localhost:"))
-                    return NetworkConstants.BattleclinicUpdates;
-                
-                return m_updatesUrl;
+                return !m_updatesUrl.StartsWith("http://localhost:") ? NetworkConstants.BattleclinicUpdates : m_updatesUrl;
             }
-            set
-            {
-                m_updatesUrl = value;
-            }
+            set { m_updatesUrl = value; }
         }
 
         [XmlElement("periods")]
-        public SerializableDictionary<APIMethods, UpdatePeriod> Periods
-        {
-            get;
-            set;
-        }
+        public SerializableDictionary<APIMethods, UpdatePeriod> Periods { get; set; }
 
         [XmlElement("httpTimeout")]
-        public int HttpTimeout
-        {
-            get;
-            set;
-        }
+        public int HttpTimeout { get; set; }
 
         /// <summary>
         /// Short circuit the check for network connectivity and try and connect anyway.
@@ -136,29 +97,15 @@ namespace EVEMon.Common.SettingsObjects
         /// Hidden setting, no UI. Used for the hand full of people using Wine/Darwine with a broken .NET Network Stack.
         /// </remarks>
         [XmlElement("ignoreNetworkStatus")]
-        public bool IgnoreNetworkStatus
-        {
-            get;
-            set;
-        }
+        public bool IgnoreNetworkStatus { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal UpdateSettings Clone()
         {
-            UpdateSettings clone = new UpdateSettings();
-            clone.CheckEVEMonVersion = CheckEVEMonVersion;
-            clone.CheckTimeOnStartup = CheckTimeOnStartup;
-            clone.MostRecentDeniedUpgrade = MostRecentDeniedUpgrade;
-            clone.HttpTimeout = HttpTimeout;
-            clone.IgnoreNetworkStatus = IgnoreNetworkStatus;
-            clone.UpdateFrequency = UpdateFrequency;
-            clone.UseCustomUpdatesUrl = UseCustomUpdatesUrl;
-            clone.UpdatesUrl = UpdatesUrl;
-
-            foreach (KeyValuePair<APIMethods, UpdatePeriod> pair in Periods)
-            {
-                clone.Periods.Add(pair.Key, pair.Value);
-            }
-            return clone;
+            return (UpdateSettings)MemberwiseClone();
         }
     }
 }

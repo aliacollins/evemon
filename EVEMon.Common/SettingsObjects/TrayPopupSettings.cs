@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -24,170 +21,67 @@ namespace EVEMon.Common.SettingsObjects
             IndentGroupedAccounts = true;
         }
 
-
         [XmlElement("style")]
-        public TrayPopupStyles Style
-        {
-            get;
-            set;
-        }
+        public TrayPopupStyles Style { get; set; }
 
         [XmlElement("groupBy")]
-        public TrayPopupGrouping GroupBy
-        {
-            get;
-            set;
-        }
+        public TrayPopupGrouping GroupBy { get; set; }
 
         [XmlElement("primarySortOrder")]
-        public TrayPopupSort PrimarySortOrder
-        {
-            get;
-            set;
-        }
+        public TrayPopupSort PrimarySortOrder { get; set; }
 
         [XmlElement("secondarySortOrder")]
-        public TrayPopupSort SecondarySortOrder
-        {
-            get;
-            set;
-        }
+        public TrayPopupSort SecondarySortOrder { get; set; }
 
         [XmlElement("portraitSize")]
-        public PortraitSizes PortraitSize
-        {
-            get;
-            set;
-        }
+        public PortraitSizes PortraitSize { get; set; }
 
         [XmlElement("showCharNotTraining")]
-        public bool ShowCharNotTraining
-        {
-            get;
-            set;
-        }
+        public bool ShowCharNotTraining { get; set; }
 
         [XmlElement("showSkillInTraining")]
-        public bool ShowSkillInTraining
-        {
-            get;
-            set;
-        }
+        public bool ShowSkillInTraining { get; set; }
 
         [XmlElement("showRemainingTime")]
-        public bool ShowRemainingTime
-        {
-            get;
-            set;
-        }
+        public bool ShowRemainingTime { get; set; }
 
         [XmlElement("showTimeToCompletion")]
-        public bool ShowCompletionTime
-        {
-            get;
-            set;
-        }
+        public bool ShowCompletionTime { get; set; }
 
         [XmlElement("showWallet")]
-        public bool ShowWallet
-        {
-            get;
-            set;
-        }
+        public bool ShowWallet { get; set; }
 
         [XmlElement("showPortrait")]
-        public bool ShowPortrait
-        {
-            get;
-            set;
-        }
+        public bool ShowPortrait { get; set; }
 
         [XmlElement("showSkillQueueTrainingTime")]
-        public bool ShowSkillQueueTrainingTime
-        {
-            get;
-            set;
-        }
+        public bool ShowSkillQueueTrainingTime { get; set; }
 
         [XmlElement("showWarning")]
-        public bool ShowWarning
-        {
-            get;
-            set;
-        }
+        public bool ShowWarning { get; set; }
 
         [XmlElement("showServerStatus")]
-        public bool ShowServerStatus
-        {
-            get;
-            set;
-        }
+        public bool ShowServerStatus { get; set; }
 
         [XmlElement("showEveTime")]
-        public bool ShowEveTime
-        {
-            get;
-            set;
-        }
+        public bool ShowEveTime { get; set; }
 
         [XmlElement("highlightConflicts")]
-        public bool HighlightConflicts
-        {
-            get;
-            set;
-        }
+        public bool HighlightConflicts { get; set; }
 
-		[XmlElement("indentGroupedAccounts")]
-		public bool IndentGroupedAccounts
-		{
-			get;
-			set;
-		}
+        [XmlElement("indentGroupedAccounts")]
+        public bool IndentGroupedAccounts { get; set; }
 
         [XmlElement("useIncreasedContrast")]
-        public bool UseIncreasedContrast
-        {
-            get;
-            set;
-        }
+        public bool UseIncreasedContrast { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public TrayPopupSettings Clone()
         {
-            return this.MemberwiseClone() as TrayPopupSettings;
+            return (TrayPopupSettings)MemberwiseClone();
         }
-    }
-
-    public enum TrayPopupGrouping
-    {
-        None = 0,
-        TrainingAtTop = 1,
-        TrainingAtBottom = 2,
-        Account = 3
-    }
-
-    public enum TrayPopupSort
-    {
-        TrainingCompletionTimeDESC = 0,
-        TrainingCompletionTimeASC = 1,
-        NameASC = 2,
-        NameDESC = 3
-    }
-
-    public enum PortraitSizes
-    {
-        x16 = 0,
-        x24 = 1,
-        x32 = 2,
-        x48 = 3,
-        x64 = 4,
-        x80 = 5,
-        x96 = 6
-    }
-
-    public enum TrayPopupStyles
-    {
-        PopupForm = 0,
-        WindowsTooltip = 1,
-        Disabled = 2
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace EVEMon.Common.Threading
 {
     /// <summary>

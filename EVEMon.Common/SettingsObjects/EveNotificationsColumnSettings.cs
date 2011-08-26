@@ -10,45 +10,37 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("column")]
-        public EveNotificationsColumn Column
-        {
-            get;
-            set;
-        }
+        public EveNotificationsColumn Column { get; set; }
 
         [XmlAttribute("visible")]
-        public bool Visible
-        {
-            get;
-            set;
-        }
+        public bool Visible { get; set; }
 
         [XmlAttribute("width")]
-        public int Width
-        {
-            get;
-            set;
-        }
+        public int Width { get; set; }
 
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        /// <value>The key.</value>
         int IColumnSettings.Key
         {
             get { return (int)Column; }
         }
 
         /// <summary>
-        /// ShallowClones this instance.
+        /// Clones this instance.
         /// </summary>
         /// <returns></returns>
         public EveNotificationsColumnSettings Clone()
         {
-            return new EveNotificationsColumnSettings { Column = Column, Visible = Visible, Width = Width };
+            return (EveNotificationsColumnSettings)MemberwiseClone();
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="System.String"/> that represents the column's header text.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
+        /// A <see cref="System.String"/> that represents the column's header text.
         /// </returns>
         public override string ToString()
         {

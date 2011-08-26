@@ -16,7 +16,6 @@ namespace EVEMon.Common.Serialization.Settings
             Accounts = new List<SerializableAccount>();
             Characters = new List<SerializableSettingsCharacter>();
             MonitoredCharacters = new List<MonitoredCharacterSettings>();
-
             APIProviders = new SerializableAPIProviders();
             Notifications = new NotificationSettings();
             Exportation = new ExportationSettings();

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -11,15 +9,18 @@ namespace EVEMon.Common.SettingsObjects
             PlanToText = new PlanExportSettings();
         }
 
-        public PlanExportSettings PlanToText
-        {
-            get;
-            set;
-        }
+        [XmlElement("planToText")]
+        public PlanExportSettings PlanToText { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal ExportationSettings Clone()
         {
-            return new ExportationSettings { PlanToText = this.PlanToText.Clone() };
+            ExportationSettings clone = (ExportationSettings)MemberwiseClone();
+            clone.PlanToText = PlanToText.Clone();
+            return clone;
         }
     }
 }

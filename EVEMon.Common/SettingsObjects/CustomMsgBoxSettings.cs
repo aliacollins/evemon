@@ -1,8 +1,5 @@
-using System;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using System.Collections.Generic;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -14,19 +11,15 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("showDialogBox")]
-        public bool ShowDialogBox
-        {
-            get;
-            set;
-        }
+        public bool ShowDialogBox { get; set; }
 
         [XmlAttribute("dialogResult")]
-        public DialogResult DialogResult
-        {
-            get;
-            set;
-        }
+        public DialogResult DialogResult { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal CustomMsgBoxSettings Clone()
         {
             return (CustomMsgBoxSettings)MemberwiseClone();

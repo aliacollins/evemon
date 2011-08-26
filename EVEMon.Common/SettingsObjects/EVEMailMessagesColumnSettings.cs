@@ -10,25 +10,13 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("column")]
-        public EveMailMessagesColumn Column
-        {
-            get;
-            set;
-        }
+        public EveMailMessagesColumn Column { get; set; }
 
         [XmlAttribute("visible")]
-        public bool Visible
-        {
-            get;
-            set;
-        }
+        public bool Visible { get; set; }
 
         [XmlAttribute("width")]
-        public int Width
-        {
-            get;
-            set;
-        }
+        public int Width { get; set; }
 
         int IColumnSettings.Key
         {
@@ -36,12 +24,12 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// ShallowClones this instance.
+        /// Clones this instance.
         /// </summary>
         /// <returns></returns>
         public EveMailMessagesColumnSettings Clone()
         {
-            return new EveMailMessagesColumnSettings { Column = Column, Visible = Visible, Width = Width };
+            return (EveMailMessagesColumnSettings)MemberwiseClone();
         }
 
         /// <summary>

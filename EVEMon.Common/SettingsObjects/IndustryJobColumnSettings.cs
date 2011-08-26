@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
-
-using EVEMon.Common;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -15,45 +10,37 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("column")]
-        public IndustryJobColumn Column
-        {
-            get;
-            set;
-        }
+        public IndustryJobColumn Column { get; set; }
 
         [XmlAttribute("visible")]
-        public bool Visible
-        {
-            get;
-            set;
-        }
+        public bool Visible { get; set; }
 
         [XmlAttribute("width")]
-        public int Width
-        {
-            get;
-            set;
-        }
+        public int Width { get; set; }
 
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        /// <value>The key.</value>
         int IColumnSettings.Key
         {
             get { return (int)Column; }
         }
 
         /// <summary>
-        /// ShallowClones this instance.
+        /// Clones this instance.
         /// </summary>
         /// <returns></returns>
         public IndustryJobColumnSettings Clone()
         {
-            return new IndustryJobColumnSettings { Column = this.Column, Visible = this.Visible, Width = this.Width };
+            return (IndustryJobColumnSettings)MemberwiseClone();
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="System.String"/> that represents the column's header text.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
+        /// A <see cref="System.String"/> that represents the column's header text.
         /// </returns>
         public override string ToString()
         {

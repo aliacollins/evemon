@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization;
+﻿using System.Drawing;
 using System.Xml.Serialization;
-using System.Drawing;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -20,57 +16,38 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("textColor")]
-        public SerializableColor TextColor
-        {
-            get;
-            set;
-        }
+        public SerializableColor TextColor { get; set; }
 
         [XmlElement("blockColor")]
-        public SerializableColor BlockingColor
-        {
-            get;
-            set;
-        }
+        public SerializableColor BlockingColor { get; set; }
 
         [XmlElement("recurringEventGradientStart")]
-        public SerializableColor RecurringEventGradientStart
-        {
-            get;
-            set;
-        }
+        public SerializableColor RecurringEventGradientStart { get; set; }
 
         [XmlElement("recurringEventGradientEnd")]
-        public SerializableColor RecurringEventGradientEnd
-        {
-            get;
-            set;
-        }
+        public SerializableColor RecurringEventGradientEnd { get; set; }
 
         [XmlElement("simpleEventGradientStart")]
-        public SerializableColor SimpleEventGradientStart
-        {
-            get;
-            set;
-        }
+        public SerializableColor SimpleEventGradientStart { get; set; }
 
         [XmlElement("simpleEventGradientEnd")]
-        public SerializableColor SimpleEventGradientEnd
-        {
-            get;
-            set;
-        }
+        public SerializableColor SimpleEventGradientEnd { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal SchedulerUISettings Clone()
         {
-            var clone = new SchedulerUISettings();
-            clone.TextColor = this.TextColor.Clone();
-            clone.BlockingColor = this.BlockingColor.Clone();
-            clone.SimpleEventGradientStart = this.SimpleEventGradientStart.Clone();
-            clone.SimpleEventGradientEnd = this.SimpleEventGradientEnd.Clone();
-            clone.RecurringEventGradientStart = this.RecurringEventGradientStart.Clone();
-            clone.RecurringEventGradientEnd = this.RecurringEventGradientEnd.Clone();
-            return clone;
+            return new SchedulerUISettings
+                       {
+                           TextColor = TextColor.Clone(),
+                           BlockingColor = BlockingColor.Clone(),
+                           SimpleEventGradientStart = SimpleEventGradientStart.Clone(),
+                           SimpleEventGradientEnd = SimpleEventGradientEnd.Clone(),
+                           RecurringEventGradientStart = RecurringEventGradientStart.Clone(),
+                           RecurringEventGradientEnd = RecurringEventGradientEnd.Clone()
+                       };
         }
     }
 }

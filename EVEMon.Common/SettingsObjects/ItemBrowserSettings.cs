@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -15,40 +12,24 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("showAllGroups")]
-        public bool ShowAllGroups
-        {
-            get;
-            set;
-        }
+        public bool ShowAllGroups { get; set; }
 
         [XmlElement("textSearch")]
-        public string TextSearch
-        {
-            get;
-            set;
-        }
+        public string TextSearch { get; set; }
 
         [XmlElement("usabilityFilter")]
-        public ObjectUsabilityFilter UsabilityFilter
-        {
-            get;
-            set;
-        }
+        public ObjectUsabilityFilter UsabilityFilter { get; set; }
 
         [XmlElement("slotFilter")]
-        public ItemSlot SlotFilter
-        {
-            get;
-            set;
-        }
+        public ItemSlot SlotFilter { get; set; }
 
         [XmlElement("metaGroupFilter")]
-        public ItemMetaGroup MetagroupFilter
-        {
-            get;
-            set;
-        }
+        public ItemMetaGroup MetagroupFilter { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal ItemBrowserSettings Clone()
         {
             return (ItemBrowserSettings)MemberwiseClone();

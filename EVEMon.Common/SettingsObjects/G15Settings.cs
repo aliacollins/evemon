@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -14,54 +11,30 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("enabled")]
-        public bool Enabled
-        {
-            get;
-            set;
-        }
+        public bool Enabled { get; set; }
 
         [XmlElement("useCharsCycle")]
-        public bool UseCharactersCycle
-        {
-            get;
-            set;
-        }
+        public bool UseCharactersCycle { get; set; }
 
         [XmlElement("charsCycleInterval")]
-        public int CharactersCycleInterval
-        {
-            get;
-            set;
-        }
+        public int CharactersCycleInterval { get; set; }
 
         [XmlElement("useTimeFormatsCycle")]
-        public bool UseTimeFormatsCycle
-        {
-            get;
-            set;
-        }
+        public bool UseTimeFormatsCycle { get; set; }
 
         [XmlElement("timeFormatsCycleInterval")]
-        public int TimeFormatsCycleInterval
-        {
-            get;
-            set;
-        }
+        public int TimeFormatsCycleInterval { get; set; }
 
         [XmlElement("showSystemTime")]
-        public bool ShowSystemTime
-        {
-            get;
-            set;
-        }
+        public bool ShowSystemTime { get; set; }
 
         [XmlElement("showEVETime")]
-        public bool ShowEVETime
-        {
-            get;
-            set;
-        }
+        public bool ShowEVETime { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal G15Settings Clone()
         {
             return (G15Settings)MemberwiseClone();

@@ -7,103 +7,53 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public class PlanExportSettings
     {
-        [XmlAttribute]
-        public bool IncludeHeader
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("includeHeader")]
+        public bool IncludeHeader { get; set; }
 
-        [XmlAttribute]
-        public bool EntryNumber
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("entryNumber")]
+        public bool EntryNumber { get; set; }
 
-        [XmlAttribute]
-        public bool EntryTrainingTimes
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("entryTrainingTimes")]
+        public bool EntryTrainingTimes { get; set; }
 
-        [XmlAttribute]
-        public bool EntryStartDate
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("entryStartDate")]
+        public bool EntryStartDate { get; set; }
 
-        [XmlAttribute]
-        public bool EntryFinishDate
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("entryFinishDate")]
+        public bool EntryFinishDate { get; set; }
 
-        [XmlAttribute]
-        public bool EntryNotes
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("entryNotes")]
+        public bool EntryNotes { get; set; }
 
-        [XmlAttribute]
-        public bool EntryCost
-        {
-            get;
-            set;
-        }
-	
-        [XmlAttribute]
-        public bool FooterCount
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("entryCost")]
+        public bool EntryCost { get; set; }
 
-        [XmlAttribute]
-        public bool FooterTotalTime
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("footerCount")]
+        public bool FooterCount { get; set; }
 
-        [XmlAttribute]
-        public bool FooterDate
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("footerTotalTime")]
+        public bool FooterTotalTime { get; set; }
 
-        [XmlAttribute]
-        public bool FooterCost
-        {
-            get;
-            set;
-        }
+        [XmlAttribute("footerDate")]
+        public bool FooterDate { get; set; }
+
+        [XmlAttribute("footerCost")]
+        public bool FooterCost { get; set; }
 
         /// <summary>
         /// Output markup type.
         /// </summary>
-        public MarkupType Markup
-        {
-            get;
-            set;
-        }
+        [XmlElement("markup")]
+        public MarkupType Markup { get; set; }
 
         /// <summary>
         /// If <code>true</code>, known skills are filtered out.
         /// </summary>
-        public bool ShoppingList
-        {
-            get;
-            set;
-        }
+        [XmlElement("shoppingList")]
+        public bool ShoppingList { get; set; }
 
         /// <summary>
-        /// Cloning
+        /// Clones this instance.
         /// </summary>
         /// <returns></returns>
         public PlanExportSettings Clone()
@@ -111,16 +61,4 @@ namespace EVEMon.Common.SettingsObjects
             return (PlanExportSettings)MemberwiseClone();
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum MarkupType
-    {
-        Undefined,
-        None,
-        Forum,
-        Html
-    }
-
 }

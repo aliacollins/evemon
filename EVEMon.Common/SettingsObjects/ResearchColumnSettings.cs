@@ -10,25 +10,13 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("column")]
-        public ResearchColumn Column
-        {
-            get;
-            set;
-        }
+        public ResearchColumn Column { get; set; }
 
         [XmlAttribute("visible")]
-        public bool Visible
-        {
-            get;
-            set;
-        }
+        public bool Visible { get; set; }
 
         [XmlAttribute("width")]
-        public int Width
-        {
-            get;
-            set;
-        }
+        public int Width { get; set; }
 
         int IColumnSettings.Key
         {
@@ -36,12 +24,12 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// ShallowClones this instance.
+        /// Clones this instance.
         /// </summary>
         /// <returns></returns>
         public ResearchColumnSettings Clone()
         {
-            return new ResearchColumnSettings { Column = this.Column, Visible = this.Visible, Width = this.Width };
+            return (ResearchColumnSettings)MemberwiseClone();
         }
 
         /// <summary>

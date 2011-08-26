@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -21,19 +20,15 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute("toolTipBehaviour")]
-        public ToolTipNotificationBehaviour ToolTipBehaviour
-        {
-            get;
-            set;
-        }
+        public ToolTipNotificationBehaviour ToolTipBehaviour { get; set; }
 
         [XmlAttribute("showOnMainWindow")]
-        public bool ShowOnMainWindow
-        {
-            get;
-            set;
-        }
+        public bool ShowOnMainWindow { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public NotificationCategorySettings Clone()
         {
             return (NotificationCategorySettings)MemberwiseClone();

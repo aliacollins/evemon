@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -9,50 +6,45 @@ namespace EVEMon.Common.SettingsObjects
     {
         public PlanColumnSettings()
         {
-            this.Width = -1;
+            Width = -1;
         }
 
         [XmlAttribute("column")]
-        public PlanColumn Column
-        {
-            get;
-            set;
-        }
+        public PlanColumn Column { get; set; }
 
         [XmlAttribute("visible")]
-        public bool Visible
-        {
-            get;
-            set;
-        }
+        public bool Visible { get; set; }
 
         [XmlAttribute("width")]
-        public int Width
-        {
-            get;
-            set;
-        }
+        public int Width { get; set; }
 
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        /// <value>The key.</value>
         int IColumnSettings.Key
         {
             get { return (int)Column; }
         }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public PlanColumnSettings Clone()
         {
-            return new PlanColumnSettings { Column = this.Column, Visible = this.Visible, Width = this.Width };
+            return (PlanColumnSettings)MemberwiseClone();
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return Column.GetHeader();
         }
-    }
-
-
-    public interface IColumnSettings
-    {
-        bool Visible { get; set; }
-        int Key { get; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 
 namespace EVEMon.Common.Threading
 {
@@ -9,7 +8,7 @@ namespace EVEMon.Common.Threading
     /// </summary>
     public sealed class ActorTimer : IActorTimer
     {
-        private System.Threading.Timer m_timer;
+        private readonly Timer m_timer;
         private bool m_isRunning;
         private int m_period;
 
@@ -24,11 +23,7 @@ namespace EVEMon.Common.Threading
             m_period = period;
             m_isRunning = start;
 
-            m_timer = new System.Threading.Timer(
-                (state) => { Dispatcher.BeginInvoke(callback); }, 
-                null, 
-                (start ? 0 : System.Threading.Timeout.Infinite), 
-                period);
+            m_timer = new Timer(state => Dispatcher.BeginInvoke(callback), null, (start ? 0 : Timeout.Infinite), period);
         }
 
         /// <summary>
@@ -36,11 +31,11 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public void Start()
         {
-            if (!m_isRunning) 
-            {
-                m_isRunning = true;
-                Update();
-            }
+            if (m_isRunning)
+                return;
+
+            m_isRunning = true;
+            Update();
         }
 
         /// <summary>
@@ -48,11 +43,11 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public void Stop()
         {
-            if (m_isRunning) 
-            {
-                m_isRunning = false;
-                Update();
-            }
+            if (!m_isRunning)
+                return;
+
+            m_isRunning = false;
+            Update();
         }
 
         /// <summary>
@@ -63,11 +58,11 @@ namespace EVEMon.Common.Threading
             get { return m_period; }
             set
             {
-                if (m_period != value)
-                {
-                    m_period = value;
-                    Update();
-                }
+                if (m_period == value)
+                    return;
+
+                m_period = value;
+                Update();
             }
         }
 
@@ -76,7 +71,7 @@ namespace EVEMon.Common.Threading
         /// </summary>
         private void Update()
         {
-            m_timer.Change((m_isRunning ? 0 : System.Threading.Timeout.Infinite), m_period);
+            m_timer.Change((m_isRunning ? 0 : Timeout.Infinite), m_period);
         }
 
         /// <summary>

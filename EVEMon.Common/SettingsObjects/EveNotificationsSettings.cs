@@ -11,39 +11,40 @@ namespace EVEMon.Common.SettingsObjects
         public EveNotificationsSettings()
         {
             // Add default columns
-            var defaultColumns = new EveNotificationsColumn[]
-            {
-                EveNotificationsColumn.SenderName,
-                EveNotificationsColumn.Type,
-                EveNotificationsColumn.SentDate,
-            };
+            EveNotificationsColumn[] defaultColumns = new[]
+                                                          {
+                                                              EveNotificationsColumn.SenderName,
+                                                              EveNotificationsColumn.Type,
+                                                              EveNotificationsColumn.SentDate,
+                                                          };
 
-            Columns = EnumExtensions.GetValues<EveNotificationsColumn>().Where(x => x != EveNotificationsColumn.None).Select(x =>
-                new EveNotificationsColumnSettings { Column = x, Visible = defaultColumns.Contains(x), Width = -1 }).ToArray();
+            Columns = EnumExtensions.GetValues<EveNotificationsColumn>().Where(
+                x => x != EveNotificationsColumn.None).Select(x =>
+                                                              new EveNotificationsColumnSettings
+                                                                  {
+                                                                      Column = x,
+                                                                      Visible = defaultColumns.Contains(x),
+                                                                      Width = -1
+                                                                  }).ToArray();
 
             ReadingPanePosition = ReadingPanePositioning.Off;
         }
 
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public EveNotificationsColumnSettings[] Columns
-        {
-            get;
-            set;
-        }
+        public EveNotificationsColumnSettings[] Columns { get; set; }
 
         [XmlElement("readingPanePosition")]
-        public ReadingPanePositioning ReadingPanePosition
-        {
-            get;
-            set;
-        }
+        public ReadingPanePositioning ReadingPanePosition { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public EveNotificationsSettings Clone()
         {
             EveNotificationsSettings clone = (EveNotificationsSettings)MemberwiseClone();
             clone.Columns = Columns.Select(x => x.Clone()).ToArray();
-            clone.ReadingPanePosition = ReadingPanePosition;
             return clone;
         }
     }

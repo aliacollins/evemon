@@ -32,18 +32,5 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlElement("invalidEntry")]
         public List<SerializableInvalidPlanEntry> InvalidEntries { get; set; }
-
-        internal SerializablePlan Clone()
-        {
-            SerializablePlan clone = new SerializablePlan
-                                         {
-                                             Name = Name,
-                                             Owner = Owner,
-                                             SortingPreferences = SortingPreferences.Clone()
-                                         };
-            clone.Entries.AddRange(Entries.Select(x => x.Clone()));
-            clone.InvalidEntries.AddRange(InvalidEntries.Select(x => x.Clone()));
-            return clone;
-        }
     }
 }

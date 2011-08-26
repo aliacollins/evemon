@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -15,102 +13,67 @@ namespace EVEMon.Common.SettingsObjects
             PrioritiesMsgBox = new CustomMsgBoxSettings();
             ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
 
-            var displayedColumns = new PlanColumn[] { 
-                PlanColumn.Priority, 
-                PlanColumn.SkillName, 
-                PlanColumn.TrainingTime, 
-                PlanColumn.SkillRank, 
-                PlanColumn.PrimaryAttribute,
-                PlanColumn.SecondaryAttribute,
-                PlanColumn.SkillGroup,
-                PlanColumn.SPPerHour };
+            PlanColumn[] displayedColumns = new[]
+                                                {
+                                                    PlanColumn.Priority,
+                                                    PlanColumn.SkillName,
+                                                    PlanColumn.TrainingTime,
+                                                    PlanColumn.SkillRank,
+                                                    PlanColumn.PrimaryAttribute,
+                                                    PlanColumn.SecondaryAttribute,
+                                                    PlanColumn.SkillGroup,
+                                                    PlanColumn.SPPerHour
+                                                };
 
-            Columns = EnumExtensions.GetValues<PlanColumn>().Where(x => x != PlanColumn.None).Select(x => 
-                new PlanColumnSettings { Column = x, Visible = displayedColumns.Contains(x), Width = -1 }).ToArray();
+            Columns = EnumExtensions.GetValues<PlanColumn>().Where(
+                x => x != PlanColumn.None).Select(x =>
+                                                  new PlanColumnSettings
+                                                      {Column = x, Visible = displayedColumns.Contains(x), Width = -1}).ToArray();
         }
 
         [XmlElement("highlightPlannedSkills")]
-        public bool HighlightPlannedSkills
-        {
-            get;
-            set;
-        }
+        public bool HighlightPlannedSkills { get; set; }
 
         [XmlElement("highlightPrerequisites")]
-        public bool HighlightPrerequisites
-        {
-            get;
-            set;
-        }
+        public bool HighlightPrerequisites { get; set; }
 
         [XmlElement("highlightConflicts")]
-        public bool HighlightConflicts
-        {
-            get;
-            set;
-        }
+        public bool HighlightConflicts { get; set; }
 
         [XmlElement("highlightPartialSkills")]
-        public bool HighlightPartialSkills
-        {
-            get;
-            set;
-        }
+        public bool HighlightPartialSkills { get; set; }
 
         [XmlElement("highlightQueuedSkills")]
-        public bool HighlightQueuedSkills
-        {
-            get;
-            set;
-        }
+        public bool HighlightQueuedSkills { get; set; }
 
         [XmlElement("onlyShowSelectionSummaryOnMultiSelect")]
-        public bool OnlyShowSelectionSummaryOnMultiSelect
-        {
-            get;
-            set;
-        }
+        public bool OnlyShowSelectionSummaryOnMultiSelect { get; set; }
 
         [XmlElement("useAdvanceEntryAddition")]
-        public bool UseAdvanceEntryAddition
-        {
-            get;
-            set;
-        }
+        public bool UseAdvanceEntryAddition { get; set; }
 
         [XmlElement("dimUntrainable")]
-        public bool DimUntrainable
-        {
-            get;
-            set;
-        }
+        public bool DimUntrainable { get; set; }
 
         [XmlElement("prioritiesMsgBox")]
-        public CustomMsgBoxSettings PrioritiesMsgBox
-        {
-            get;
-            set;
-        }
+        public CustomMsgBoxSettings PrioritiesMsgBox { get; set; }
 
         [XmlElement("obsoleteEntryRemovalBehaviour")]
-        public ObsoleteEntryRemovalBehaviour ObsoleteEntryRemovalBehaviour
-        {
-            get;
-            set;
-        }
+        public ObsoleteEntryRemovalBehaviour ObsoleteEntryRemovalBehaviour { get; set; }
 
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public PlanColumnSettings[] Columns
-        {
-            get;
-            set;
-        }
+        public PlanColumnSettings[] Columns { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public PlanWindowSettings Clone()
         {
             PlanWindowSettings clone = (PlanWindowSettings)MemberwiseClone();
-            clone.Columns = this.Columns.Select(x => x.Clone()).ToArray();
+            clone.Columns = Columns.Select(x => x.Clone()).ToArray();
+            clone.PrioritiesMsgBox = PrioritiesMsgBox.Clone();
             return clone;
         }
     }

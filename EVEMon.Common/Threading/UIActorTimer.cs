@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Threading
@@ -16,15 +14,15 @@ namespace EVEMon.Common.Threading
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="period"></param>
-        /// <param name="start"></param>
-        internal UIActorTimer(Form form, Action callback, int period, bool start)
+        /// <param name="callback">The callback.</param>
+        /// <param name="period">The period.</param>
+        /// <param name="start">if set to <c>true</c> [start].</param>
+        internal UIActorTimer(Action callback, int period, bool start)
         {
             m_callback = callback;
 
             m_timer = new Timer();
-            m_timer.Tick += new EventHandler(m_timer_Tick);
+            m_timer.Tick += m_timer_Tick;
             m_timer.Interval = period;
             if (start) m_timer.Start();
         }

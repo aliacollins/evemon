@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>
-    /// Settings for Research
+    /// Settings for Research.
     /// </summary>
     public sealed class ResearchSettings
     {
@@ -14,27 +14,33 @@ namespace EVEMon.Common.SettingsObjects
         public ResearchSettings()
         {
             // Add default columns
-            var defaultColumns = new ResearchColumn[]
-            {
-                ResearchColumn.Agent,
-                ResearchColumn.Field,
-                ResearchColumn.CurrentRP,
-                ResearchColumn.PointsPerDay,
-                ResearchColumn.Station
-            };
+            ResearchColumn[] defaultColumns = new[]
+                                                  {
+                                                      ResearchColumn.Agent,
+                                                      ResearchColumn.Field,
+                                                      ResearchColumn.CurrentRP,
+                                                      ResearchColumn.PointsPerDay,
+                                                      ResearchColumn.Station
+                                                  };
 
-            Columns = EnumExtensions.GetValues<ResearchColumn>().Where(x => x != ResearchColumn.None).Select(x =>
-                new ResearchColumnSettings { Column = x, Visible = defaultColumns.Contains(x), Width = -1 }).ToArray();
+            Columns = EnumExtensions.GetValues<ResearchColumn>().Where(
+                x => x != ResearchColumn.None).Select(x =>
+                                                      new ResearchColumnSettings
+                                                          {
+                                                              Column = x,
+                                                              Visible = defaultColumns.Contains(x),
+                                                              Width = -1
+                                                          }).ToArray();
         }
 
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public ResearchColumnSettings[] Columns
-        {
-            get;
-            set;
-        }
+        public ResearchColumnSettings[] Columns { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public ResearchSettings Clone()
         {
             ResearchSettings clone = (ResearchSettings)MemberwiseClone();

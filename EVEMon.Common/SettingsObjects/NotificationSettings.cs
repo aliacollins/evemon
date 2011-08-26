@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using EVEMon.Common.Notifications;
 
@@ -9,102 +10,58 @@ namespace EVEMon.Common.SettingsObjects
         public NotificationSettings()
         {
             Categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
-            Categories[NotificationCategory.AccountNotInTraining] = 
+            Categories[NotificationCategory.AccountNotInTraining] =
                 new NotificationCategorySettings(ToolTipNotificationBehaviour.RepeatUntilClicked);
             EmailPortNumber = 25;
         }
 
         [XmlElement("categories")]
-        public SerializableDictionary<NotificationCategory, NotificationCategorySettings> Categories
-        {
-            get;
-            set;
-        }
+        public SerializableDictionary<NotificationCategory, NotificationCategorySettings> Categories { get; set; }
 
         [XmlElement("playSoundOnSkillCompletion")]
-        public bool PlaySoundOnSkillCompletion
-        {
-            get;
-            set;
-        }
+        public bool PlaySoundOnSkillCompletion { get; set; }
 
         [XmlElement("sendMailAlert")]
-        public bool SendMailAlert
-        {
-            get;
-            set;
-        }
+        public bool SendMailAlert { get; set; }
 
         [XmlElement("useEmailShortFormat")]
-        public bool UseEmailShortFormat
-        {
-            get;
-            set;
-        }
+        public bool UseEmailShortFormat { get; set; }
 
         [XmlElement("emailFromAddress")]
-        public string EmailFromAddress
-        {
-            get;
-            set;
-        }
+        public string EmailFromAddress { get; set; }
 
         [XmlElement("emailToAddress")]
-        public string EmailToAddress
-        {
-            get;
-            set;
-        }
+        public string EmailToAddress { get; set; }
 
         [XmlElement("emailSmtpServer")]
-        public string EmailSmtpServer
-        {
-            get;
-            set;
-        }
+        public string EmailSmtpServer { get; set; }
 
         [XmlElement("emailPortNumber")]
-        public int EmailPortNumber
-        {
-            get;
-            set;
-        }
+        public int EmailPortNumber { get; set; }
 
         [XmlElement("emailAuthenticationRequired")]
-        public bool EmailAuthenticationRequired
-        {
-            get;
-            set;
-        }
+        public bool EmailAuthenticationRequired { get; set; }
 
         [XmlElement("emailAuthenticationUserName")]
-        public string EmailAuthenticationUserName
-        {
-            get;
-            set;
-        }
+        public string EmailAuthenticationUserName { get; set; }
 
         [XmlElement("emailAuthenticationPassword")]
-        public string EmailAuthenticationPassword
-        {
-            get;
-            set;
-        }
+        public string EmailAuthenticationPassword { get; set; }
 
         [XmlElement("emailServerRequiresSSL")]
-        public bool EmailServerRequiresSSL
-        {
-            get;
-            set;
-        }
+        public bool EmailServerRequiresSSL { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal NotificationSettings Clone()
         {
-            var clone = (NotificationSettings)MemberwiseClone();
+            NotificationSettings clone = (NotificationSettings)MemberwiseClone();
 
             // Add copy of behaviors
             clone.Categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
-            foreach (var pair in Categories) 
+            foreach (KeyValuePair<NotificationCategory, NotificationCategorySettings> pair in Categories)
             {
                 clone.Categories[pair.Key] = pair.Value.Clone();
             }

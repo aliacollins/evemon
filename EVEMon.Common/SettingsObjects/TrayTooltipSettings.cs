@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -13,22 +10,18 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("format")]
-        public string Format
-        {
-            get;
-            set;
-        }
+        public string Format { get; set; }
 
         [XmlElement("DisplayOrder")]
-        public bool DisplayOrder
-        {
-            get;
-            set;
-        }
+        public bool DisplayOrder { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public TrayTooltipSettings Clone()
         {
-            return this.MemberwiseClone() as TrayTooltipSettings;
+            return (TrayTooltipSettings)MemberwiseClone();
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -15,48 +12,34 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("sortBySize")]
-        public bool SortBySize
-        {
-            get;
-            set;
-        }
+        public bool SortBySize { get; set; }
 
         [XmlElement("mergeMinorGroups")]
-        public bool MergeMinorGroups
-        {
-            get;
-            set;
-        }
+        public bool MergeMinorGroups { get; set; }
 
         [XmlElement("sliceHeight")]
-        public float SliceHeight
-        {
-            get;
-            set;
-        }
+        public float SliceHeight { get; set; }
 
         [XmlElement("initialAngle")]
-        public float InitialAngle
-        {
-            get;
-            set;
-        }
+        public float InitialAngle { get; set; }
 
         [XmlElement("colors")]
-        public List<SerializableColor> Colors
-        {
-            get;
-            set;
-        }
+        public List<SerializableColor> Colors { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         internal SkillPieChartSettings Clone()
         {
-            var clone = new SkillPieChartSettings();
-            clone.Colors.AddRange(this.Colors.Select(x => x.Clone()));
-            clone.MergeMinorGroups = this.MergeMinorGroups;
-            clone.InitialAngle = this.InitialAngle;
-            clone.SliceHeight = this.SliceHeight;
-            clone.SortBySize = this.SortBySize;
+            SkillPieChartSettings clone = new SkillPieChartSettings
+                                              {
+                                                  MergeMinorGroups = MergeMinorGroups,
+                                                  InitialAngle = InitialAngle,
+                                                  SliceHeight = SliceHeight,
+                                                  SortBySize = SortBySize
+                                              };
+            clone.Colors.AddRange(Colors.Select(x => x.Clone()));
             return clone;
         }
     }

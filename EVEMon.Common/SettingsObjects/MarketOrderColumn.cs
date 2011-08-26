@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 using EVEMon.Common.Attributes;
 
@@ -86,6 +83,5 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Escrow")]
         [Description("Escrow")]
         Escrow = 18
-
     }
 }
