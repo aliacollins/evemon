@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -15,15 +13,14 @@ namespace EVEMon.Common
     public sealed class Certificate
     {
         private readonly Character m_character;
-        private readonly CertificateClass m_class;
-        private readonly StaticCertificate m_staticData;
         private readonly List<SkillLevel> m_prereqSkills;
         private readonly List<Certificate> m_prereqCertificates;
 
-        private CertificateStatus m_status;
         private bool m_initialized;
 
+
         #region Initialization, importation, exportation and update
+
         /// <summary>
         /// Constructor at character's initialization time.
         /// </summary>
@@ -32,10 +29,10 @@ namespace EVEMon.Common
         /// <param name="certClass"></param>
         internal Certificate(Character character, StaticCertificate src, CertificateClass certClass)
         {
-            m_staticData = src;
-            m_class = certClass;
+            StaticData = src;
+            Class = certClass;
             m_character = character;
-            m_status = CertificateStatus.Untrained;
+            Status = CertificateStatus.Untrained;
 
             m_prereqSkills = new List<SkillLevel>(src.PrerequisiteSkills.ToCharacter(character));
             m_prereqCertificates = new List<Certificate>();
@@ -46,33 +43,29 @@ namespace EVEMon.Common
         /// </summary>
         internal void CompleteInitialization(Dictionary<long, Certificate> dictionary)
         {
-            m_prereqCertificates.AddRange(m_staticData.PrerequisiteCertificates.Select(x => dictionary[x.ID]));
+            m_prereqCertificates.AddRange(StaticData.PrerequisiteCertificates.Select(x => dictionary[x.ID]));
         }
 
         /// <summary>
         /// Gets the static data associated with this certificate.
         /// </summary>
-        public StaticCertificate StaticData
-        {
-            get { return m_staticData; }
-        }
+        public StaticCertificate StaticData { get; private set; }
 
         /// <summary>
         /// Marks the certificate as granted.
         /// </summary>
         internal void MarkAsGranted()
         {
-            m_status = CertificateStatus.Granted;
+            Status = CertificateStatus.Granted;
             m_initialized = true;
         }
 
         /// <summary>
         /// Resets the data before we import a deserialization object.
         /// </summary>
-        /// <param name="fromCCP"></param>
         internal void Reset()
         {
-            m_status = CertificateStatus.Untrained;
+            Status = CertificateStatus.Untrained;
             m_initialized = false;
         }
 
@@ -117,29 +110,31 @@ namespace EVEMon.Common
             // Updates status
             if (claimable)
             {
-                m_status = CertificateStatus.Claimable;
+                Status = CertificateStatus.Claimable;
             }
             else if (noPrereq)
             {
-                m_status = CertificateStatus.Untrained;
+                Status = CertificateStatus.Untrained;
             }
             else
             {
-                m_status = CertificateStatus.PartiallyTrained;
+                Status = CertificateStatus.PartiallyTrained;
             }
             m_initialized = true;
             return true;
         }
+
         #endregion
 
 
         #region Core properties
+
         /// <summary>
         /// Gets this certificate's id.
         /// </summary>
         public long ID
         {
-            get { return m_staticData.ID; }
+            get { return StaticData.ID; }
         }
 
         /// <summary>
@@ -147,7 +142,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Name
         {
-            get { return m_staticData.Name; }
+            get { return StaticData.Name; }
         }
 
         /// <summary>
@@ -155,7 +150,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Description
         {
-            get { return m_staticData.Description; }
+            get { return StaticData.Description; }
         }
 
         /// <summary>
@@ -163,45 +158,33 @@ namespace EVEMon.Common
         /// </summary>
         public CertificateGrade Grade
         {
-            get { return m_staticData.Grade; }
+            get { return StaticData.Grade; }
         }
 
         /// <summary>
         /// Gets the class for this certificate.
         /// </summary>
-        public CertificateClass Class
-        {
-            get { return m_class; }
-        }
+        public CertificateClass Class { get; private set; }
 
         /// <summary>
         /// Gets the ships this certificate is recommended for.
         /// </summary>
-        public StaticRecommendations<Item> Recommendations
+        public IEnumerable<Item> Recommendations
         {
-            get { return m_staticData.Recommendations; }
+            get { return StaticData.Recommendations; }
         }
 
         /// <summary>
         /// Gets the current certificate status this character has.
         /// </summary>
-        public CertificateStatus Status
-        {
-            get { return m_status; }
-        }
+        public CertificateStatus Status { get; private set; }
 
         /// <summary>
         /// Gets the immediate prerequisite skills.
         /// </summary>
         public IEnumerable<SkillLevel> PrerequisiteSkills
         {
-            get 
-            {
-                foreach (SkillLevel item in m_prereqSkills)
-                {
-                    yield return item;
-                }
-            }
+            get { return m_prereqSkills; }
         }
 
         /// <summary>
@@ -211,16 +194,18 @@ namespace EVEMon.Common
         {
             get { return m_prereqCertificates; }
         }
+
         #endregion
 
 
         #region Helper methods and properties
+
         /// <summary>
         /// Gets true whether the certificate is granted.
         /// </summary>
         public bool IsGranted
         {
-            get { return m_status == CertificateStatus.Granted; }
+            get { return Status == CertificateStatus.Granted; }
         }
 
         /// <summary>
@@ -228,10 +213,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<SkillLevel> AllTopPrerequisiteSkills
         {
-            get
-            {
-                return m_staticData.AllTopPrerequisiteSkills.ToCharacter(m_character);
-            }
+            get { return StaticData.AllTopPrerequisiteSkills.ToCharacter(m_character); }
         }
 
         /// <summary>
@@ -241,8 +223,8 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_status == CertificateStatus.Claimable |
-                        (m_status == CertificateStatus.PartiallyTrained &&
+                return Status == CertificateStatus.Claimable |
+                       (Status == CertificateStatus.PartiallyTrained &&
                         AllTopPrerequisiteSkills.All(x => x.Skill.Level >= x.Level));
             }
         }
@@ -250,7 +232,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
-        /// <param name="character"></param>
         /// <returns></returns>
         public TimeSpan GetTrainingTime()
         {
@@ -280,13 +261,14 @@ namespace EVEMon.Common
 
         #endregion
 
+
         /// <summary>
         /// Gets a string representation of this certificate.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return m_staticData.ToString();
+            return StaticData.ToString();
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common
 {
@@ -9,7 +7,7 @@ namespace EVEMon.Common
     /// </summary>
     public struct DisposableWithCallback : IDisposable
     {
-        private Action action;
+        private readonly Action m_action;
 
         /// <summary>
         /// Constructor
@@ -17,7 +15,7 @@ namespace EVEMon.Common
         /// <param name="action">The callback used when this structure will be disposed</param>
         public DisposableWithCallback(Action action)
         {
-            this.action = action;
+            m_action = action;
         }
 
         /// <summary>
@@ -25,7 +23,7 @@ namespace EVEMon.Common
         /// </summary>
         public void Dispose()
         {
-            this.action();
+            m_action();
         }
 
         /// <summary>

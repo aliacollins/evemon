@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -19,7 +16,7 @@ namespace EVEMon.Common
         /// 1) improve the display time of the traybar popup.
         /// 2) remove the 50+ TrueType exceptions which SystemFonts.DefaultFont generates (at least on WinXP).
         /// </remarks>
-        private static Font s_CachedDefaultFont = null;
+        private static Font s_cachedDefaultFont;
         
         /// <summary>
         /// Gets the default font.
@@ -27,12 +24,7 @@ namespace EVEMon.Common
         /// <value>The default font.</value>
         private static Font DefaultFont
         {
-            get
-            {
-                if (s_CachedDefaultFont == null)
-                    s_CachedDefaultFont = SystemFonts.DefaultFont;
-                return s_CachedDefaultFont;
-            }
+            get { return s_cachedDefaultFont ?? (s_cachedDefaultFont = SystemFonts.DefaultFont); }
         }
 
         #region Helpers for default font
@@ -42,17 +34,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetDefaultFont()
         {
-            return FontFactory.DefaultFont;
-        }
-
-        /// <summary>
-        /// Gets the default font.
-        /// </summary>
-        /// <param name="emSize">Size of the em.</param>
-        /// <returns></returns>
-        public static Font GetDefaultFont(float emSize)
-        {
-            return FontFactory.GetDefaultFont(emSize, FontStyle.Regular);
+            return DefaultFont;
         }
 
         /// <summary>
@@ -62,19 +44,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetDefaultFont(FontStyle style)
         {
-            return FontFactory.GetDefaultFont(SystemFonts.DefaultFont.Size, style);
-        }
-
-        /// <summary>
-        /// Gets the default font.
-        /// </summary>
-        /// <param name="emSize">Size of the em, in points.</param>
-        /// <param name="style">The style.</param>
-        /// <param name="unit">Units for the size : pixels, points, etc. Default should be point.</param>
-        /// <returns></returns>
-        public static Font GetDefaultFont(float emSize, FontStyle style)
-        {
-            return FontFactory.GetDefaultFont(emSize, style, GraphicsUnit.Point);
+            return GetDefaultFont(SystemFonts.DefaultFont.Size, style);
         }
 
         /// <summary>
@@ -84,24 +54,14 @@ namespace EVEMon.Common
         /// <param name="style">The style.</param>
         /// <param name="unit">Units for the size : pixels, points, etc. Default should be point.</param>
         /// <returns></returns>
-        public static Font GetDefaultFont(float emSize, FontStyle style, GraphicsUnit unit)
+        public static Font GetDefaultFont(float emSize, FontStyle style = FontStyle.Regular, GraphicsUnit unit = GraphicsUnit.Point)
         {
-            return FontFactory.GetFont(FontFactory.DefaultFont.FontFamily.Name, emSize, style, unit);
+            return GetFont(DefaultFont.FontFamily.Name, emSize, style, unit);
         }
         #endregion
 
 
         #region Helpers for non-default font
-        /// <summary>
-        /// Gets the specified font.
-        /// </summary>
-        /// <param name="fontName">The font's name</param>
-        /// <param name="emSize">The font's size, in points</param>
-        /// <returns></returns>
-        public static Font GetFont(string fontName, float emSize)
-        {
-            return FontFactory.GetFont(fontName, emSize, FontStyle.Regular, GraphicsUnit.Point);
-        }
 
         /// <summary>
         /// Gets the specified font.
@@ -111,7 +71,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(string fontName, FontStyle style)
         {
-            return FontFactory.GetFont(fontName, FontFactory.DefaultFont.Size, style, FontFactory.DefaultFont.Unit);
+            return GetFont(fontName, DefaultFont.Size, style, DefaultFont.Unit);
         }
 
         /// <summary>
@@ -123,19 +83,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(string fontName, float emSize, GraphicsUnit unit)
         {
-            return FontFactory.GetFont(fontName, emSize, FontStyle.Regular, unit);
-        }
-
-        /// <summary>
-        /// Gets the specified font.
-        /// </summary>
-        /// <param name="fontName">The font's name</param>
-        /// <param name="emSize">The font's size, in points</param>
-        /// <param name="style">The overriden style.</param>
-        /// <returns></returns>
-        public static Font GetFont(string fontName, float emSize, FontStyle style)
-        {
-            return FontFactory.GetFont(fontName, emSize, style, GraphicsUnit.Point);
+            return GetFont(fontName, emSize, FontStyle.Regular, unit);
         }
 
         /// <summary>
@@ -146,7 +94,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(Font prototype, FontStyle style)
         {
-            return FontFactory.GetFont(prototype.FontFamily.Name, prototype.Size, style, prototype.Unit);
+            return GetFont(prototype.FontFamily.Name, prototype.Size, style, prototype.Unit);
         }
 
         /// <summary>
@@ -158,7 +106,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(FontFamily family, float emSize, FontStyle style)
         {
-            return FontFactory.GetFont(family.Name, emSize, style, GraphicsUnit.Point);
+            return GetFont(family.Name, emSize, style);
         }
 
         /// <summary>
@@ -171,19 +119,19 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(FontFamily family, float emSize, FontStyle style, GraphicsUnit unit)
         {
-            return FontFactory.GetFont(family.Name, emSize, style, unit);
+            return GetFont(family.Name, emSize, style, unit);
         }
         #endregion
 
         /// <summary>
         /// Gets the specified font.
         /// </summary>
-        /// <param name="family">The font's family</param>
+        /// <param name="familyName">The font's family</param>
         /// <param name="emSize">Size of the font, in the given unit.</param>
         /// <param name="style">The font's style.</param>
         /// <param name="unit">Units for the size : pixels, points, etc. Default is point.</param>
         /// <returns></returns>
-        public static Font GetFont(string familyName, float emSize, FontStyle style, GraphicsUnit unit)
+        public static Font GetFont(string familyName, float emSize, FontStyle style = FontStyle.Regular, GraphicsUnit unit = GraphicsUnit.Point)
         {
             FontFamily family = null;
             try
@@ -192,7 +140,7 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        // Inital try
+                        // Initial try
                         family = new FontFamily(familyName); // Will accept anything and won't throw an error
                         return new Font(familyName, emSize, style, unit);
                     }
@@ -200,7 +148,7 @@ namespace EVEMon.Common
                     {
                         // First fallback : default family
                         ExceptionHandler.LogException(e, true);
-                        family = FontFactory.DefaultFont.FontFamily;
+                        family = DefaultFont.FontFamily;
                         return new Font(family, emSize, style, unit);
                     }
                 }
@@ -208,7 +156,8 @@ namespace EVEMon.Common
                 {
                     // Second fallback : default family and style
                     ExceptionHandler.LogException(e, true);
-                    style = FontFactory.DefaultFont.Style;
+                    family = family ?? DefaultFont.FontFamily;
+                    style = DefaultFont.Style;
                     return new Font(family, emSize, style, unit);
                 }
             }
@@ -216,7 +165,7 @@ namespace EVEMon.Common
             {
                 // Fourth fallback : all to default
                 ExceptionHandler.LogException(e, true);
-                return FontFactory.DefaultFont;
+                return DefaultFont;
             }
         }
     }

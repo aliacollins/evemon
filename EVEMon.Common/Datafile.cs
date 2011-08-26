@@ -1,41 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Security.Cryptography;
-using EVEMon.Common.Collections;
+using System.Text;
 
 namespace EVEMon.Common
 {
+
+
     #region Datafile class
+
     /// <summary>
     /// Represents a datafile
     /// </summary>
     public sealed class Datafile
     {
-        private string m_fileName;
-        private string m_sum;
-
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="filename"></param>
         public Datafile(string filename)
         {
             // The file may be in local directory, %APPDATA%, etc.
-            m_fileName = filename;
-            
+            Filename = filename;
+
             // Compute the MD5 sum
             var fullpath = GetFullPath(filename);
             MD5 md5 = MD5.Create();
             StringBuilder builder = new StringBuilder();
-            byte[] hash;
 
             using (Stream fileStream = new FileStream(fullpath, FileMode.Open))
             {
                 using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
                 {
-                    hash = md5.ComputeHash(bufferedStream);
+                    byte[] hash = md5.ComputeHash(bufferedStream);
                     foreach (byte b in hash)
                     {
                         builder.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
@@ -43,24 +40,18 @@ namespace EVEMon.Common
                 }
             }
 
-            m_sum = builder.ToString();
+            MD5Sum = builder.ToString();
         }
 
         /// <summary>
         /// Gets or sets the datafile name
         /// </summary>
-        public string Filename
-        {
-            get { return m_fileName; }
-        }
+        public string Filename { get; private set; }
 
         /// <summary>
         /// Gets or sets the MD5 sum
         /// </summary>
-        public string MD5Sum
-        {
-            get { return m_sum; }
-        }
+        public string MD5Sum { get; private set; }
 
         /// <summary>
         /// Gets the fuly-qualified path of the provided datafile name
@@ -73,26 +64,18 @@ namespace EVEMon.Common
         /// <exception cref="ApplicationException">The file does not exist or it cannot be copied</exception>
         internal static string GetFullPath(string filename)
         {
-            string evemonDataDir = EveMonClient.EVEMonDataDir == null ?
-                            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon") :
-                            EveMonClient.EVEMonDataDir;
+            string evemonDataDir = EveMonClient.EVEMonDataDir ??
+                                   Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
 
             // Look in the %APPDATA% folder
-            string filepath = String.Format(
-                "{0}{1}{2}",
-                evemonDataDir,
-                Path.DirectorySeparatorChar,
-                filename);
+            string filepath = String.Format("{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
 
             if (File.Exists(filepath))
                 return filepath;
 
             // File isn't in the current folder, look in installation directory ("resources" subdirectory)
-            string baseFile = String.Format(
-                "{1}Resources{0}{2}",
-                Path.DirectorySeparatorChar,
-                System.AppDomain.CurrentDomain.BaseDirectory,
-                filename);
+            string baseFile = String.Format("{1}Resources{0}{2}", Path.DirectorySeparatorChar,
+                                            AppDomain.CurrentDomain.BaseDirectory, filename);
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
@@ -105,5 +88,6 @@ namespace EVEMon.Common
             return baseFile;
         }
     }
+
     #endregion
 }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Attributes;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Notifications;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization;
+using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -27,6 +25,7 @@ namespace EVEMon.Common
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
         private bool m_updatePending;
         private bool m_characterListUpdated;
+
 
         #region Constructors
 
@@ -118,14 +117,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities
         {
-            get
-            {
-                foreach (CharacterIdentity characterID in EveMonClient.CharacterIdentities)
-                {
-                    if (characterID.Account == this)
-                        yield return characterID;
-                }
-            }
+            get { return EveMonClient.CharacterIdentities.Where(characterID => characterID.Account == this); }
         }
 
         /// <summary>
@@ -135,13 +127,8 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (CharacterIdentity id in CharacterIdentities)
-                {
-                    CCPCharacter ccpCharacter = id.CCPCharacter;
-                    if (ccpCharacter != null && ccpCharacter.Monitored)
-                        return true;
-                }
-                return false;
+                return CharacterIdentities.Select(id => id.CCPCharacter).Any(
+                    ccpCharacter => ccpCharacter != null && ccpCharacter.Monitored);
             }
         }
 
@@ -154,13 +141,8 @@ namespace EVEMon.Common
             get
             {
                 // Scroll through owned identities
-                foreach (CharacterIdentity id in CharacterIdentities)
-                {
-                    CCPCharacter ccpCharacter = id.CCPCharacter;
-                    if (ccpCharacter != null && ccpCharacter.IsTraining)
-                        return ccpCharacter;
-                }
-                return null;
+                return CharacterIdentities.Select(id => id.CCPCharacter).FirstOrDefault(
+                    ccpCharacter => ccpCharacter != null && ccpCharacter.IsTraining);
             }
         }
 
@@ -206,23 +188,23 @@ namespace EVEMon.Common
         internal void UpdateOnOneSecondTick()
         {
             m_charactersListMonitor.UpdateOnOneSecondTick();
-            
+
             // We trigger the account status check when we have the character list of the account
             // in order to have better acccount related info in the trace file
             if (m_characterListUpdated)
                 m_accountStatusMonitor.UpdateOnOneSecondTick();
 
             // While the key status is unknown, every five minutes, we try to update it
-            if (KeyLevel == CredentialsLevel.Unknown && DateTime.UtcNow >= m_lastKeyLevelUpdate.AddMinutes(5))
-            {
-                // Quits if no network
-                if (!NetworkMonitor.IsNetworkAvailable)
-                    return;
+            if (KeyLevel != CredentialsLevel.Unknown || DateTime.UtcNow < m_lastKeyLevelUpdate.AddMinutes(5))
+                return;
 
-                // Query the account status
-                EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountStatus>(
-                    APIMethods.AccountStatus, UserID, APIKey, OnKeyLevelUpdated);
-            }
+            // Quits if no network
+            if (!NetworkMonitor.IsNetworkAvailable)
+                return;
+
+            // Query the account status
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountStatus>(
+                APIMethods.AccountStatus, UserID, APIKey, OnKeyLevelUpdated);
         }
 
         /// <summary>
@@ -247,16 +229,9 @@ namespace EVEMon.Common
         /// Updates the characters list with the given CCP data.
         /// </summary>
         /// <param name="result"></param>
-        internal void Import(APIResult<SerializableAPICharacters> result)
+        private void Import(APIResult<SerializableAPICharacters> result)
         {
-            if (result.HasError)
-            {
-                ImportIdentities(null);
-            }
-            else
-            {
-                ImportIdentities(result.Result.Characters);
-            }
+            ImportIdentities(result.HasError ? null : result.Result.Characters);
 
             // Fires the event regarding the account character list update
             EveMonClient.OnCharacterListUpdated(this);
@@ -327,11 +302,10 @@ namespace EVEMon.Common
             }
 
             // Notify characters changed
-            foreach (CharacterIdentity id in CharacterIdentities)
+            foreach (CCPCharacter ccpCharacter in CharacterIdentities.Select(
+                id => id.CCPCharacter).Where(ccpCharacter => ccpCharacter != null))
             {
-                CCPCharacter ccpCharacter = id.CCPCharacter;
-                if (ccpCharacter != null)
-                    EveMonClient.OnCharacterUpdated(ccpCharacter);
+                EveMonClient.OnCharacterUpdated(ccpCharacter);
             }
         }
 
@@ -339,7 +313,7 @@ namespace EVEMon.Common
         /// Called when character's skill in training gets updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="character">The character's name.</param>
+        /// <param name="characterName">The character's name.</param>
         private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string characterName)
         {
             CCPCharacter ccpCharacter = EveMonClient.Characters.FirstOrDefault(x => x.Name == characterName) as CCPCharacter;
@@ -350,10 +324,10 @@ namespace EVEMon.Common
                 // Checks if EVE Backend Database is temporarily disabled
                 if (result.EVEBackendDatabaseDisabled)
                     return;
-                
+
                 if (ccpCharacter != null)
                     EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
-                
+
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
                 return;
             }
@@ -362,8 +336,8 @@ namespace EVEMon.Common
                 EveMonClient.Notifications.InvalidateCharacterAPIError(ccpCharacter);
 
             m_skillInTrainingCache[characterName].State = result.Result.SkillInTraining == 1
-                                                     ? ResponseState.Training
-                                                     : ResponseState.NotTraining;
+                                                              ? ResponseState.Training
+                                                              : ResponseState.NotTraining;
 
             // In the event this becomes a very long running process because of latency
             // and characters have been removed from the account since they were queried
@@ -380,7 +354,7 @@ namespace EVEMon.Common
             // or there was an error in any responce,
             // we are not sure so wait until next time
             if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Unknown
-                                             || x.Value.State == ResponseState.InError))
+                                                || x.Value.State == ResponseState.InError))
                 return;
 
             // We have successful responces from all characters in account,
@@ -406,7 +380,7 @@ namespace EVEMon.Common
                 // Checks if EVE Backend Database is temporarily disabled
                 if (result.EVEBackendDatabaseDisabled)
                     return;
-                
+
                 EveMonClient.Notifications.NotifyAccountStatusError(this, result);
                 return;
             }
@@ -435,10 +409,9 @@ namespace EVEMon.Common
         private void ImportIdentities(IEnumerable<ISerializableCharacterIdentity> identities)
         {
             // Clear the accounts on this character
-            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.Account == this))
             {
-                if (id.Account == this)
-                    id.Account = null;
+                id.Account = null;
             }
 
             // Return if there were errors in the query
@@ -446,12 +419,10 @@ namespace EVEMon.Common
                 return;
 
             // Assign owned identities to this account
-            foreach (ISerializableCharacterIdentity serialID in identities)
+            foreach (CharacterIdentity id in identities.Select(serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
+                                                                           EveMonClient.CharacterIdentities.Add(serialID.ID,
+                                                                                                                serialID.Name)))
             {
-                CharacterIdentity id = EveMonClient.CharacterIdentities[serialID.ID];
-                if (id == null)
-                    id = EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
-
                 id.Account = this;
             }
         }
@@ -514,10 +485,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Updates the account with the informations extracted from the API by <see cref="AccountCreationEventArgs"/>.
         /// </summary>
-        /// <param name="apiKey"></param>
-        /// <param name="keyLevel"></param>
-        /// <param name="identities"></param>
-        /// <param name="charListQueryResult"></param>
+        /// <param name="args"></param>
         internal void UpdateAPIKey(AccountCreationEventArgs args)
         {
             APIKey = args.ApiKey;
@@ -526,10 +494,9 @@ namespace EVEMon.Common
             m_accountStatusMonitor.UpdateWith(args.AccountStatus);
 
             // Clear the account for the currently associated identities
-            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.Account == this))
             {
-                if (id.Account == this)
-                    id.Account = null;
+                id.Account = null;
             }
 
             // Assign this account to the new identities and create CCP characters
@@ -542,12 +509,12 @@ namespace EVEMon.Common
 
                 // Retrieves the ccp character and create one if none
                 CCPCharacter ccpCharacter = id.CCPCharacter;
-                if (ccpCharacter == null)
-                {
-                    ccpCharacter = new CCPCharacter(id);
-                    EveMonClient.Characters.Add(ccpCharacter, true);
-                    ccpCharacter.Monitored = true;
-                }
+                if (ccpCharacter != null)
+                    continue;
+
+                ccpCharacter = new CCPCharacter(id);
+                EveMonClient.Characters.Add(ccpCharacter, true);
+                ccpCharacter.Monitored = true;
             }
         }
 
@@ -581,6 +548,7 @@ namespace EVEMon.Common
 
         #region Helper Class
 
+
         #region Nested type: ResponseState
 
         private enum ResponseState
@@ -598,28 +566,16 @@ namespace EVEMon.Common
 
         private class SkillInTrainingResponse
         {
-            private ResponseState m_state;
-
             public SkillInTrainingResponse()
             {
                 State = ResponseState.Unknown;
-                Timestamp = DateTime.MinValue;
             }
 
-            public ResponseState State
-            {
-                get { return m_state; }
-                set
-                {
-                    Timestamp = DateTime.Now;
-                    m_state = value;
-                }
-            }
-
-            public DateTime Timestamp { get; set; }
+            public ResponseState State { get; set; }
         }
 
         #endregion
+
 
         #endregion
     }

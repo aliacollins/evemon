@@ -8,7 +8,7 @@ namespace EVEMon.Common
 {
     public sealed class EveMailMessage : IEveMessage
     {
-        private CCPCharacter m_ccpCharacter;
+        private readonly CCPCharacter m_ccpCharacter;
         private bool m_queryPending;
 
 
@@ -17,6 +17,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor from the API.
         /// </summary>
+        /// <param name="ccpCharacter"></param>
         /// <param name="src"></param>
         internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
@@ -127,7 +128,7 @@ namespace EVEMon.Common
             List<string> listOfNames = new List<string>();
             List<string> listOfIDsToQuery = new List<string>();
 
-            foreach (var id in src)
+            foreach (string id in src)
             {
                 if (id == m_ccpCharacter.CharacterID.ToString())
                 {
@@ -161,8 +162,7 @@ namespace EVEMon.Common
             if (mailingListID == "0")
                 return "Unknown";
 
-            List<string> list = new List<string>();
-            list.Add(mailingListID);
+            List<string> list = new List<string> { mailingListID };
             List<string> name = GetMailingListIDsToNames(list);
             return name[0];
         }
@@ -181,20 +181,8 @@ namespace EVEMon.Common
                 return mailingListIDs;
             }
 
-            List<string> listOfNames = new List<string>();
-
-            foreach (var listID in mailingListIDs)
-            {
-                var mailingList = m_ccpCharacter.EVEMailingLists.FirstOrDefault(x => x.ID.ToString() == listID);
-                if (mailingList != null)
-                {
-                    listOfNames.Add(mailingList.Name);
-                }
-                else
-                {
-                    listOfNames.Add("Unknown");
-                }
-            }
+            List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
+                x => x.ID.ToString() == listID)).Select(mailingList => mailingList != null ? mailingList.Name : "Unknown").ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (listOfNames.Count == 0)

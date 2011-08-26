@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common
 {
     public sealed class AccountComparer : IComparer<Account>
     {
-        private AccountSortCriteria m_criteria;
-        private SortOrder m_order;
-
         #region Constructors
+
         /// <summary>
         /// Constructor for an ascending sort along the given criteria.
         /// </summary>
         public AccountComparer(AccountSortCriteria criteria)
         {
-            m_criteria = criteria;
-            m_order = SortOrder.Ascending;
+            Criteria = criteria;
+            Order = SortOrder.Ascending;
         }
 
         /// <summary>
@@ -24,29 +21,22 @@ namespace EVEMon.Common
         /// </summary>
         public AccountComparer(AccountSortCriteria criteria, SortOrder order)
         {
-            m_criteria = criteria;
-            m_order = order;
+            Criteria = criteria;
+            Order = order;
         }
+
         #endregion
 
 
         /// <summary>
         /// Gets or sets the sort order
         /// </summary>
-        public SortOrder Order
-        {
-            get { return m_order; }
-            set { m_order = value; }
-        }
+        public SortOrder Order { get; set; }
 
         /// <summary>
         /// Gets or sets the sort criteria
         /// </summary>
-        public AccountSortCriteria Criteria
-        {
-            get { return m_criteria; }
-            set { m_criteria = value; }
-        }
+        public AccountSortCriteria Criteria { get; set; }
 
         /// <summary>
         /// Performs the comparison
@@ -57,15 +47,15 @@ namespace EVEMon.Common
         public int Compare(Account x, Account y)
         {
             // Exchange items when descending sort
-            if (m_order == SortOrder.Descending)
+            if (Order == SortOrder.Descending)
             {
-                var temp = x;
+                Account temp = x;
                 x = y;
                 y = temp;
             }
 
             // Deal with the criteria
-            switch (m_criteria)
+            switch (Criteria)
             {
                 case AccountSortCriteria.TrainingCompletion:
                     return CompareByCompletionTime(x, y);
@@ -88,16 +78,22 @@ namespace EVEMon.Common
             // Get CCP characters
             CCPCharacter cx = x.TrainingCharacter;
             CCPCharacter cy = y.TrainingCharacter;
-            if (cx == null && cy == null) return CompareByID(x, y);
-            if (cx == null) return -1;
-            if (cy == null) return +1;
+            if (cx == null && cy == null)
+                return CompareByID(x, y);
+            if (cx == null)
+                return -1;
+            if (cy == null)
+                return +1;
 
             // Get their training skills
-            var skillX = cx.CurrentlyTrainingSkill;
-            var skillY = cy.CurrentlyTrainingSkill;
-            if (skillX == null && skillY == null) return CompareByID(x, y);
-            if (skillX == null) return -1;
-            if (skillY == null) return +1;
+            QueuedSkill skillX = cx.CurrentlyTrainingSkill;
+            QueuedSkill skillY = cy.CurrentlyTrainingSkill;
+            if (skillX == null && skillY == null)
+                return CompareByID(x, y);
+            if (skillX == null)
+                return -1;
+            if (skillY == null)
+                return +1;
 
             // Compare end time
             return DateTime.Compare(skillX.EndTime, skillY.EndTime);
@@ -110,24 +106,12 @@ namespace EVEMon.Common
         /// <param name="y"></param>
         public static int CompareByID(Account x, Account y)
         {
-            if (x.UserID > y.UserID) return +1;
-            if (x.UserID < y.UserID) return -1;
+            if (x.UserID > y.UserID)
+                return +1;
+            if (x.UserID < y.UserID)
+                return -1;
             return 0;
         }
     }
-
-
-
-    public enum AccountSortCriteria
-    {
-        /// <summary>
-        /// Accounts are sorted by their ids
-        /// </summary>
-        ID = 0,
-        /// <summary>
-        /// Accounts are sorted by their training completion time or, when not in training, their ids.
-        /// </summary>
-        TrainingCompletion = 1,
-    };
 
 }

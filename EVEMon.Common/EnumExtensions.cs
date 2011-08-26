@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -71,13 +69,11 @@ namespace EVEMon.Common
             where TAttribute : Attribute
         {
             MemberInfo[] members = item.GetType().GetMember(item.ToString());
-            if (members != null && members.Length > 0)
+            if (members.Length > 0)
             {
                 object[] attrs = members[0].GetCustomAttributes(typeof(TAttribute), false);
-                if (attrs != null && attrs.Length > 0)
-                {
+                if (attrs.Length > 0)
                     return (TAttribute)attrs[0];
-                }
             }
             return null;
         }
@@ -86,7 +82,6 @@ namespace EVEMon.Common
         /// Gets the values for this enum.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="item"></param>
         /// <returns></returns>
         public static IEnumerable<T> GetValues<T>()
         {
@@ -97,27 +92,27 @@ namespace EVEMon.Common
         /// Gets the values that are powers of two for this flag enum, excluding the one for zero.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="item"></param>
         /// <returns></returns>
         public static IEnumerable<T> GetBaseValues<T>()
         {
-            foreach (var value in Enum.GetValues(typeof(T)))
+            foreach (object value in Enum.GetValues(typeof(T)))
             {
                 // Check it matches a power of two 
                 bool found = false;
                 for (int i = 0; i < 32; i++)
                 {
-                    if ((int)value == (1 << i))
-                    {
-                        found = !found;
+                    if ((int)value != (1 << i))
+                        continue;
+                    found = !found;
 
-                        // If two bits matched, found is false again and value is not a power of two.
-                        if (!found) break;
-                    }
+                    // If two bits matched, found is false again and value is not a power of two.
+                    if (!found)
+                        break;
                 }
 
                 // Is it a power of two ?
-                if (found) yield return (T)value;
+                if (found)
+                    yield return (T)value;
             }
         }
 

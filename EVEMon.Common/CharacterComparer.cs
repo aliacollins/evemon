@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -10,26 +9,25 @@ namespace EVEMon.Common
     /// </summary>
     public struct CharacterComparer : IComparer<Character>
     {
-        private CharacterSortCriteria m_criteria;
-        private SortOrder m_order;
-
         #region Constructors
         /// <summary>
         /// Constructor for an ascending sort along the given criteria.
         /// </summary>
         public CharacterComparer(CharacterSortCriteria criteria)
+            : this()
         {
-            m_criteria = criteria;
-            m_order = SortOrder.Ascending;
+            Criteria = criteria;
+            Order = SortOrder.Ascending;
         }
 
         /// <summary>
         /// Constructor with custom parameters.
         /// </summary>
         public CharacterComparer(CharacterSortCriteria criteria, SortOrder order)
+            : this()
         {
-            m_criteria = criteria;
-            m_order = order;
+            Criteria = criteria;
+            Order = order;
         }
         
         /// <summary>
@@ -37,24 +35,25 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="criteria"></param>
         public CharacterComparer(TrayPopupSort criteria)
+            : this()
         {
             switch (criteria)
             {
                 case TrayPopupSort.NameASC:
-                    m_criteria = CharacterSortCriteria.Name;
-                    m_order = SortOrder.Ascending;
+                    Criteria = CharacterSortCriteria.Name;
+                    Order = SortOrder.Ascending;
                     break;
                 case TrayPopupSort.NameDESC:
-                    m_criteria = CharacterSortCriteria.Name;
-                    m_order = SortOrder.Descending;
+                    Criteria = CharacterSortCriteria.Name;
+                    Order = SortOrder.Descending;
                     break;
                 case TrayPopupSort.TrainingCompletionTimeASC:
-                    m_criteria = CharacterSortCriteria.TrainingCompletion;
-                    m_order = SortOrder.Ascending;
+                    Criteria = CharacterSortCriteria.TrainingCompletion;
+                    Order = SortOrder.Ascending;
                     break;
                 case TrayPopupSort.TrainingCompletionTimeDESC:
-                    m_criteria = CharacterSortCriteria.TrainingCompletion;
-                    m_order = SortOrder.Descending;
+                    Criteria = CharacterSortCriteria.TrainingCompletion;
+                    Order = SortOrder.Descending;
                     break;
                 default:
                     throw new NotImplementedException();
@@ -66,20 +65,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the sort order
         /// </summary>
-        public SortOrder Order
-        {
-            get { return m_order; }
-            set { m_order = value; }
-        }
+        public SortOrder Order { get; set; }
 
         /// <summary>
         /// Gets or sets the sort criteria
         /// </summary>
-        public CharacterSortCriteria Criteria
-        {
-            get { return m_criteria; }
-            set { m_criteria = value; }
-        }
+        public CharacterSortCriteria Criteria { get; set; }
 
         /// <summary>
         /// Performs the comparison
@@ -90,15 +81,15 @@ namespace EVEMon.Common
         public int Compare(Character x, Character y)
         {
             // Exchange items when descending sort
-            if (m_order == SortOrder.Descending)
+            if (Order == SortOrder.Descending)
             {
-                var temp = x;
+                Character temp = x;
                 x = y;
                 y = temp;
             }
 
             // Deal with the criteria
-            switch (m_criteria)
+            switch (Criteria)
             {
                 case CharacterSortCriteria.TrainingCompletion:
                     return CompareByCompletionTime(x, y);
@@ -119,11 +110,14 @@ namespace EVEMon.Common
         public static int CompareByCompletionTime(Character x, Character y)
         {
             // Get their training skills
-            var skillX = x.CurrentlyTrainingSkill;
-            var skillY = y.CurrentlyTrainingSkill;
-            if (skillX == null && skillY == null) return String.Compare(x.Name, y.Name);
-            if (skillX == null) return -1;
-            if (skillY == null) return +1;
+            QueuedSkill skillX = x.CurrentlyTrainingSkill;
+            QueuedSkill skillY = y.CurrentlyTrainingSkill;
+            if (skillX == null && skillY == null)
+                return String.Compare(x.Name, y.Name);
+            if (skillX == null)
+                return -1;
+            if (skillY == null)
+                return +1;
 
             // Compare end time
             return DateTime.Compare(skillX.EndTime, skillY.EndTime);
@@ -139,22 +133,4 @@ namespace EVEMon.Common
             return String.Compare(x.Name, y.Name);
         }
     }
-
-    public enum SortOrder 
-    { 
-        Ascending = 0, 
-        Descending = 1 
-    };
-
-    public enum CharacterSortCriteria
-    {
-        /// <summary>
-        /// Characters are sorted by their names
-        /// </summary>
-        Name = 0,
-        /// <summary>
-        /// Characters are sorted by their training completion time or, when not in training, their names.
-        /// </summary>
-        TrainingCompletion = 1,
-    };
 }

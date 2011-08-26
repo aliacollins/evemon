@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -8,21 +6,21 @@ namespace EVEMon.Common
 {
     public static class FileHelper
     {
-        private static Nullable<bool> s_removeReadOnlyAttributes;
-        private static object s_removeReadOnlyAttributesLock = new object();    // Nullable<T> assignment is not atomic
+        private static bool? s_removeReadOnlyAttributes;
+        private static readonly object s_removeReadOnlyAttributesLock = new object(); // Nullable<T> assignment is not atomic
 
         /// <summary>
-        /// Opens a file, offering the user to retry if an exception occurs
+        /// Opens a file, offering the user to retry if an exception occurs.
         /// </summary>
         /// <param name="filename"></param>
+        /// <param name="allowIgnore"></param>
         /// <returns></returns>
         public static Stream OpenRead(string filename, bool allowIgnore)
         {
             string normalizedFilename = filename;
             if (filename.StartsWith("file:///"))
-            {
                 normalizedFilename = filename.Remove(0, 8);
-            }
+
             if (!File.Exists(normalizedFilename))
                 return null;
 
@@ -38,10 +36,15 @@ namespace EVEMon.Common
                     ExceptionHandler.LogException(exc, true);
 
                     string message = exc.Message;
-                    message += "\r\n\r\nEVEMon failed to read a file. You may have insufficient rights or a synchronization may be occuring. Choosing to " + (allowIgnore ? "abort" : "cancel") + " will make EVEMon quit.";
-                    var result = MessageBox.Show(message, "Failed to read a file", 
-                        (allowIgnore ? MessageBoxButtons.AbortRetryIgnore : MessageBoxButtons.RetryCancel), 
-                        MessageBoxIcon.Error);
+                    message += "\r\n\r\nEVEMon failed to read a file. " +
+                               "You may have insufficient rights or a synchronization may be occuring. Choosing to " +
+                               (allowIgnore ? "abort" : "cancel") + " will make EVEMon quit.";
+
+                    DialogResult result = MessageBox.Show(message, "Failed to read a file",
+                                                          (allowIgnore
+                                                               ? MessageBoxButtons.AbortRetryIgnore
+                                                               : MessageBoxButtons.RetryCancel),
+                                                          MessageBoxIcon.Error);
 
                     // On abort, we quit the application
                     if (result == DialogResult.Abort || result == DialogResult.Cancel)
@@ -126,8 +129,13 @@ namespace EVEMon.Common
                     ExceptionHandler.LogException(exc, true);
 
                     string message = exc.Message;
-                    message += "\r\n\r\nEVEMon failed to save to a file. You may have insufficient rights or a synchronization may be occuring. Choosing to abort will make EVEMon quit.";
-                    var result = MessageBox.Show(message, "Failed to write over a file", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+                    message += "\r\n\r\nEVEMon failed to save to a file. " +
+                               "You may have insufficient rights or a synchronization may be occuring. " +
+                               "Choosing to abort will make EVEMon quit.";
+
+                    DialogResult result = MessageBox.Show(message, "Failed to write over a file",
+                                                          MessageBoxButtons.AbortRetryIgnore,
+                                                          MessageBoxIcon.Error);
 
                     // On abort, we quit the application
                     if (result == DialogResult.Abort)
@@ -146,11 +154,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Ensures the given file is writable.
         /// </summary>
-        /// <param name="file">The file to make writable.</param>
+        /// <param name="filename">The file to make writable.</param>
         /// <returns>False if file exists, is readonly and the user denied permission to make it writable; true otherwise.</returns>
         public static bool EnsureWritable(string filename)
         {
-            var file = new FileInfo(filename);
+            FileInfo file = new FileInfo(filename);
             return EnsureWritable(file);
         }
 
@@ -161,10 +169,7 @@ namespace EVEMon.Common
         /// <returns>False if file exists, is readonly and the user denied permission to make it writable; true otherwise.</returns>
         private static bool EnsureWritable(FileInfo file)
         {
-            if (!file.Exists)
-                return true;
-
-            return TryMakeWritable(file);
+            return !file.Exists || TryMakeWritable(file);
         }
 
         /// <summary>
@@ -202,17 +207,22 @@ namespace EVEMon.Common
                     if (!s_removeReadOnlyAttributes.HasValue)
                     {
                         // Prepare caption and text
-                        string message = "EVEMon detected that some of its files are read-only, preventing it to save its datas.\r\n\r\n";
-                        message += "Choosing YES will allow EVEMon to remove the read-only attributes on its own files (only).\r\n";
-                        message += "Choosing NO will force EVEMon to continue without writing its files. This can cause unexpected behaviours.\r\n\r\n";
-                        message += "Note : if you restart EVEMon and it still encounters read-only files, you will be prompted again.";
+                        string message = "EVEMon detected that some of its files are read-only, " +
+                                         "preventing it to save its datas.\r\n\r\n";
+                        message +=
+                            "Choosing YES will allow EVEMon to remove the read-only attributes on its own files (only).\r\n";
+                        message += "Choosing NO will force EVEMon to continue without writing its files. " +
+                                   "This can cause unexpected behaviours.\r\n\r\n";
+                        message += "Note : if you restart EVEMon and it still encounters read-only files, " +
+                                   "you will be prompted again.";
 
                         // Display the message box
-                        var result = MessageBox.Show(message, "Allow EVEMon to make its files writable", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        DialogResult result = MessageBox.Show(message, "Allow EVEMon to make its files writable",
+                                                              MessageBoxButtons.YesNo,
+                                                              MessageBoxIcon.Error);
 
                         // User denied us the permission to make files writeable
-                        if (result == DialogResult.No) s_removeReadOnlyAttributes = false;
-                        else s_removeReadOnlyAttributes = true;
+                        s_removeReadOnlyAttributes = result != DialogResult.No;
                     }
 
                     // Returns the permission granted by the user

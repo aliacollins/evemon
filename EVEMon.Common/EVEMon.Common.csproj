@@ -437,7 +437,6 @@
     <Compile Include="CharacterAttributeScratchpad.cs" />
     <Compile Include="CharacterComparer.cs" />
     <Compile Include="CharacterExporter.cs" />
-    <Compile Include="CharacterExtensions.cs" />
     <Compile Include="CharacterQueryMonitor.cs" />
     <Compile Include="Collections\FastList.cs" />
     <Compile Include="Controls\ApiErrorTroubleshooter.cs">

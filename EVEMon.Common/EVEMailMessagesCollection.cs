@@ -50,17 +50,16 @@ namespace EVEMon.Common
 
 
             List<string> ids = eveMailMessagesIDs.Split(',').ToList();
-            foreach (string id in ids)
+            foreach (long id in ids.Select(long.Parse))
             {
-                long ID = long.Parse(id);
                 Items.Add(new EveMailMessage(m_ccpCharacter,
-                                                new SerializableMailMessagesListItem()
-                                                {
-                                                    MessageID = ID
-                                                }));
+                                             new SerializableMailMessagesListItem
+                                                 {
+                                                     MessageID = id
+                                                 }));
                 
                 // Find the last received ID 
-                m_highestID = Math.Max(m_highestID, ID);
+                m_highestID = Math.Max(m_highestID, id);
             }
         }
 
@@ -105,19 +104,13 @@ namespace EVEMon.Common
         /// Exports the eve mail messages IDs to a serializable object.
         /// </summary>
         /// <returns></returns>
-        internal string Export()
+        internal String Export()
         {
-            List<string> serial = new List<string>();
-
             // Store only the mail messages IDs from the inbox in a descending order
-            foreach (var message in Items
-                                    .Where(x => x.Sender != m_ccpCharacter.Name)
-                                    .OrderByDescending(x=> x.MessageID))
-            {
-                serial.Add(message.MessageID.ToString());
-            }
+            List<String> serial = Items.Where(x => x.Sender != m_ccpCharacter.Name).OrderByDescending(
+                x => x.MessageID).Select(message => message.MessageID.ToString()).ToList();
 
-            return string.Join(",", serial);
+            return String.Join(",", serial);
         }
         
         #endregion

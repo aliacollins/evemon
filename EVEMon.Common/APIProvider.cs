@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 
@@ -65,15 +66,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Returns the request method
+        /// Returns the request method.
         /// </summary>
         /// <param name="requestMethod">An APIMethods enumeration member specfying the method for which the URL is required.</param>
         public APIMethod GetMethod(APIMethods requestMethod)
         {
-            foreach (APIMethod method in m_methods)
+            foreach (APIMethod method in m_methods.Where(method => method.Method == requestMethod))
             {
-                if (method.Method == requestMethod)
-                    return method;
+                return method;
             }
 
             throw new InvalidOperationException();
@@ -84,7 +84,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="requestMethod">An APIMethods enumeration member specfying the method for which the URL is required.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        public string GetMethodUrl(APIMethods requestMethod)
+        private string GetMethodUrl(APIMethods requestMethod)
         {
             // Gets the proper data
             string url = Url;

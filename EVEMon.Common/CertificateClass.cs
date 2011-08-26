@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -12,24 +13,22 @@ namespace EVEMon.Common
     public sealed class CertificateClass : ReadonlyVirtualCollection<Certificate>
     {
         private readonly Character m_character;
-        private readonly StaticCertificateClass m_staticData;
         private readonly Certificate[] m_items = new Certificate[4];
-        private readonly CertificateCategory m_category;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="src"></param>
+        /// <param name="category"></param>
         internal CertificateClass(Character character, StaticCertificateClass src, CertificateCategory category)
         {
             m_character = character;
-            m_category = category;
-            m_staticData = src;
+            Category = category;
+            StaticData = src;
 
-            foreach (var srcCert in src)
+            foreach (Certificate cert in src.Select(srcCert => new Certificate(character, srcCert, this)))
             {
-                Certificate cert = new Certificate(character, srcCert, this);
                 m_items[(int)cert.Grade] = cert;
             }
         }
@@ -40,35 +39,25 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override IEnumerable<Certificate> Enumerate()
         {
-            foreach (Certificate cert in m_items)
-            {
-                if (cert != null) 
-                    yield return cert;
-            }
+            return m_items.Where(cert => cert != null);
         }
 
         /// <summary>
         /// Gets the static data associated with this object.
         /// </summary>
-        public StaticCertificateClass StaticData
-        {
-            get { return m_staticData; }
-        }
+        public StaticCertificateClass StaticData { get; private set; }
 
         /// <summary>
         /// Gets the category for this certificate class.
         /// </summary>
-        public CertificateCategory Category
-        {
-            get { return m_category; }
-        }
+        public CertificateCategory Category { get; private set; }
 
         /// <summary>
         /// Gets this skill's id.
         /// </summary>
         public long ID
         {
-            get { return m_staticData.ID; }
+            get { return StaticData.ID; }
         }
 
         /// <summary>
@@ -76,7 +65,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Name
         {
-            get { return m_staticData.Name; }
+            get { return StaticData.Name; }
         }
 
         /// <summary>
@@ -84,7 +73,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Description
         {
-            get { return m_staticData.Description; }
+            get { return StaticData.Description; }
         }
 
         /// <summary>
@@ -105,7 +94,7 @@ namespace EVEMon.Common
         {
             get
             {
-                StaticCertificate scert = m_staticData.LowestGradeCertificate;
+                StaticCertificate scert = StaticData.LowestGradeCertificate;
                 return m_items[(int)scert.Grade];
             }
         }
@@ -118,7 +107,7 @@ namespace EVEMon.Common
         {
             get
             {
-                StaticCertificate scert = m_staticData.HighestGradeCertificate;
+                StaticCertificate scert = StaticData.HighestGradeCertificate;
                 return m_items[(int)scert.Grade];
             }
         }
@@ -131,15 +120,8 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var cert in m_items)
-                {
-                    if (cert != null)
-                    {
-                        if (cert.Status != CertificateStatus.Claimable && cert.Status != CertificateStatus.Granted)
-                            return cert;
-                    }
-                }
-                return null;
+                return m_items.Where(cert => cert != null).FirstOrDefault(
+                    cert => cert.Status != CertificateStatus.Claimable && cert.Status != CertificateStatus.Granted);
             }
         }
 
@@ -152,14 +134,11 @@ namespace EVEMon.Common
             get
             {
                 Certificate lastCert = null;
-                foreach (Certificate cert in m_items)
+                foreach (Certificate cert in m_items.Where(cert => cert != null))
                 {
-                    if (cert != null)
-                    {
-                        if (cert.Status != CertificateStatus.Granted) 
-                            return lastCert;
-                        lastCert = cert;
-                    }
+                    if (cert.Status != CertificateStatus.Granted)
+                        return lastCert;
+                    lastCert = cert;
                 }
                 return lastCert;
             }
@@ -168,43 +147,28 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true if the provided character has completed this class.
         /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
         public bool IsCompleted
         {
-            get
-            {
-                foreach (Certificate cert in m_items)
-                {
-                    if (cert != null && cert.Status != CertificateStatus.Granted) 
-                        return false;
-                }
-                return true;
-            }
+            get { return m_items.All(cert => cert == null || cert.Status == CertificateStatus.Granted); }
         }
 
         /// <summary>
         /// Gets true if the provided character can train to the next grade,
         /// false if the class has already been completed or if the next grade is untrainable.
         /// </summary>
-        /// <param name="character"></param>
         /// <returns></returns>
         public bool IsFurtherTrainable
         {
             get
             {
-                foreach (Certificate cert in m_items)
+                foreach (Certificate cert in m_items.Where(cert => cert != null))
                 {
-                    if (cert != null)
+                    switch (cert.Status)
                     {
-                        if (cert.Status == CertificateStatus.PartiallyTrained)
-                        {
+                        case CertificateStatus.PartiallyTrained:
                             return true;
-                        }
-                        else if (cert.Status == CertificateStatus.Untrained)
-                        {
+                        case CertificateStatus.Untrained:
                             return false;
-                        }
                     }
                 }
                 return false;
@@ -217,7 +181,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return m_staticData.Name;
+            return StaticData.Name;
         }
     }
 }

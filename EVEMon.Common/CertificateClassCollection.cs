@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Collections;
+﻿using System.Linq;
+using EVEMon.Common.Collections;
 
 namespace EVEMon.Common
 {
@@ -16,12 +17,9 @@ namespace EVEMon.Common
         {
             m_character = character;
 
-            foreach (CertificateCategory category in character.CertificateCategories)
+            foreach (CertificateClass certClass in character.CertificateCategories.SelectMany(category => category))
             {
-                foreach (CertificateClass certClass in category)
-                {
-                    Items[certClass.ID] = certClass;
-                }
+                Items[certClass.ID] = certClass;
             }
         }
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.API;
-using EVEMon.Common.SettingsObjects;
-
+﻿
 namespace EVEMon.Common
 {
     /// <summary>
@@ -18,6 +13,7 @@ namespace EVEMon.Common
         /// Constructor.
         /// </summary>
         /// <param name="character"></param>
+        /// <param name="method"></param>
         internal CharacterQueryMonitor(Character character, APIMethods method)
             : base(method)
         {
@@ -30,7 +26,7 @@ namespace EVEMon.Common
         /// <returns>False if an account was required and not found.</returns>
         protected override bool CheckAccount()
         {
-            var account = m_character.Identity.Account;
+            Account account = m_character.Identity.Account;
             return account != null;
         }
 
@@ -40,7 +36,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override bool HasFullKey()
         {
-            var account = m_character.Identity.Account;
+            Account account = m_character.Identity.Account;
             return account != null && account.KeyLevel == CredentialsLevel.Full;
         }
 
@@ -51,8 +47,8 @@ namespace EVEMon.Common
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            var account = m_character.Identity.Account;
-            provider.QueryMethodAsync<T>(m_method, account.UserID, account.APIKey, m_character.CharacterID, callback);
+            Account account = m_character.Identity.Account;
+            provider.QueryMethodAsync(m_method, account.UserID, account.APIKey, m_character.CharacterID, callback);
         }
     }
 }

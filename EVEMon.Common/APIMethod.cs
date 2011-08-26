@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common
 {
@@ -8,36 +9,26 @@ namespace EVEMon.Common
     /// </summary>
     public class APIMethod
     {
-        private APIMethods m_method;
-        private string m_path;
-
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="method"></param>
         /// <param name="path"></param>
         public APIMethod(APIMethods method, string path)
         {
-            m_method = method;
-            m_path = path;
+            Method = method;
+            Path = path;
         }
 
         /// <summary>
         /// Returns the APIMethods enumeration member for this APIMethod.
         /// </summary>
-        public APIMethods Method
-        {
-            get { return m_method; }
-        }
+        public APIMethods Method { get; private set; }
 
         /// <summary>
         /// Returns the defined URL suffix path for this APIMethod.
         /// </summary>
-        public string Path
-        {
-            get { return m_path; }
-            set { m_path = value; }
-        }
+        public string Path { get; set; }
 
         /// <summary>
         /// Creates a set of API methods with their default urls.
@@ -45,12 +36,15 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static IEnumerable<APIMethod> CreateDefaultSet()
         {
-            foreach (string methodName in Enum.GetNames(typeof(APIMethods)))
-            {
-                APIMethods methodEnum = (APIMethods)Enum.Parse(typeof(APIMethods), methodName);
-                string methodURL = NetworkConstants.ResourceManager.GetString(String.Format("API{0}", methodName));
-                yield return new APIMethod(methodEnum, methodURL);
-            }
+            return Enum.GetNames(typeof(APIMethods)).Select(
+                methodName => new { methodName, methodEnum = (APIMethods)Enum.Parse(typeof(APIMethods), methodName) }).Select(
+                    methodName => new
+                                      {
+                                          methodName,
+                                          methodURL = NetworkConstants.ResourceManager.GetString(
+                                              String.Format("API{0}", methodName.methodName))
+                                      }).Select(
+                                          methodName => new APIMethod(methodName.methodName.methodEnum, methodName.methodURL));
         }
     }
 }

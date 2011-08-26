@@ -22,15 +22,11 @@ namespace EVEMon.Common
             m_character = character;
 
             // Builds the list
-            foreach (CertificateCategory category in character.CertificateCategories)
+            foreach (Certificate cert in character.CertificateCategories.SelectMany(
+                category => category, (category, certClass) => new { category, certClass }).SelectMany(
+                    category => category.certClass))
             {
-                foreach (CertificateClass certClass in category)
-                {
-                    foreach (Certificate cert in certClass)
-                    {
-                        Items[cert.ID] = cert;
-                    }
-                }
+                Items[cert.ID] = cert;
             }
 
             // Builds the prerequisites certificates list
@@ -57,11 +53,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public IEnumerable<Certificate> FilterByStatus(CertificateStatus status)
         {
-            foreach (Certificate cert in Items.Values)
-            {
-                if (cert.Status == status) 
-                    yield return cert;
-            }
+            return Items.Values.Where(cert => cert.Status == status);
         }
 
         /// <summary>
@@ -69,10 +61,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<Certificate> GrantedCertificates
         {
-            get
-            {
-                return FilterByStatus(CertificateStatus.Granted);
-            }
+            get { return FilterByStatus(CertificateStatus.Granted); }
         }
 
         /// <summary>
@@ -81,19 +70,15 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableCharacterCertificate> Export()
         {
-            List < SerializableCharacterCertificate > certificates = new List<SerializableCharacterCertificate>();
-            foreach (var cert in Items.Values.Where(x => x.IsGranted))
-            {
-                certificates.Add(new SerializableCharacterCertificate { CertificateID = cert.ID });
-            }
-            return certificates;
+            return Items.Values.Where(x => x.IsGranted).Select(
+                cert => new SerializableCharacterCertificate { CertificateID = cert.ID }).ToList();
         }
 
         /// <summary>
         /// Imports data from a serialization object.
         /// </summary>
-        /// <param name="serial">The serial.</param>
-        internal void Import(List<SerializableCharacterCertificate> certificates)
+        /// <param name="certificates">The serial.</param>
+        internal void Import(IEnumerable<SerializableCharacterCertificate> certificates)
         {
             // Certificates : reset > mark the granted ones > update the other ones
             foreach (Certificate cert in Items.Values)
@@ -110,11 +95,8 @@ namespace EVEMon.Common
 
             while (true)
             {
-                bool updatedAnything = false;
-                foreach (Certificate cert in Items.Values)
-                {
-                    updatedAnything |= cert.TryUpdateCertificateStatus();
-                }
+                bool updatedAnything = Items.Values.Aggregate(
+                    false, (current, cert) => current | cert.TryUpdateCertificateStatus());
 
                 if (!updatedAnything)
                     break;

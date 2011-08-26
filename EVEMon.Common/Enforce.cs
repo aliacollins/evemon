@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 
 namespace EVEMon.Common
@@ -20,9 +18,7 @@ namespace EVEMon.Common
         public static void Argument(bool check, string argumentName, string checkName)
         {
             if (!check)
-            {
-                throw new ArgumentException("Check: " + checkName + " failed", argumentName);
-            }
+                throw new ArgumentException(String.Format("Check: {0} failed", checkName), argumentName);
         }
 
         /// <summary>
@@ -33,9 +29,7 @@ namespace EVEMon.Common
         public static void ArgumentNotNull(object argument, string argumentName)
         {
             if (argument == null)
-            {
                 throw new ArgumentNullException(argumentName);
-            }
         }
 
         /// <summary>
@@ -46,9 +40,7 @@ namespace EVEMon.Common
         public static void ArgumentNotNullOrEmpty(string argument, string argumentName)
         {
             if (String.IsNullOrEmpty(argument))
-            {
                 throw new ArgumentNullException(argumentName);
-            }
         }
 
         /// <summary>
@@ -58,9 +50,7 @@ namespace EVEMon.Common
         public static void NotNull(object value)
         {
             if (value == null)
-            {
                 throw new InvalidOperationException("value is null");
-            }
         }
 
         /// <summary>
@@ -71,9 +61,7 @@ namespace EVEMon.Common
         public static void NotNull(object value, string message)
         {
             if (value == null)
-            {
                 throw new InvalidOperationException(message);
-            }
         }
 
         /// <summary>
@@ -84,9 +72,7 @@ namespace EVEMon.Common
         public static void NotNullOrEmpty(string value, string name)
         {
             if (String.IsNullOrEmpty(value))
-            {
                 throw new InvalidOperationException(name + " is null");
-            }
         }
 
         /// <summary>
@@ -96,9 +82,7 @@ namespace EVEMon.Common
         public static void NotNullOrEmpty(string value)
         {
             if (String.IsNullOrEmpty(value))
-            {
                 throw new InvalidOperationException("value is null");
-            }
         }
 
 
@@ -110,9 +94,7 @@ namespace EVEMon.Common
         public static void That(bool check, string checkName)
         {
             if (!check)
-            {
                 throw new InvalidOperationException("Check: " + checkName + " failed");
-            }
         }
 
         /// <summary>
@@ -121,9 +103,10 @@ namespace EVEMon.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">The obj.</param>
         /// <returns></returns>
-        public static T Implementation<T>(object obj) where T : class
+        public static T Implementation<T>(object obj)
+            where T : class
         {
-            return Enforce.Implementation<T>(obj, String.Empty);
+            return Implementation<T>(obj, String.Empty);
         }
 
         /// <summary>
@@ -133,7 +116,8 @@ namespace EVEMon.Common
         /// <param name="obj">The obj.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public static T Implementation<T>(object obj, string message) where T : class
+        private static T Implementation<T>(object obj, string message)
+            where T : class
         {
             T cast = obj as T;
 

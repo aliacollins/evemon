@@ -11,6 +11,18 @@ namespace EVEMon.Common
     #region Flag Enumerations
 
     /// <summary>
+    /// Describes the kind of changes which occurred.
+    /// </summary>
+    [Flags]
+    public enum PlanChange
+    {
+        None = 0,
+        Notification = 1,
+        Prerequisites = 2,
+        All = Notification | Prerequisites
+    }
+
+    /// <summary>
     /// Flags for the races.
     /// </summary>
     [Flags]
@@ -93,7 +105,7 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Represents the options one can use with <see cref="CharacterSchartchpad.Learn()"/>. Those are only optimizations
+    /// Represents the options one can use with <see cref="CharacterScratchpad.SetSkillLevel"/>. Those are only optimizations
     /// </summary>
     [Flags]
     public enum LearningOptions
@@ -124,6 +136,18 @@ namespace EVEMon.Common
 
 
     #region Simple Enumerations
+
+    public enum AccountSortCriteria
+    {
+        /// <summary>
+        /// Accounts are sorted by their ids
+        /// </summary>
+        ID = 0,
+        /// <summary>
+        /// Accounts are sorted by their training completion time or, when not in training, their ids.
+        /// </summary>
+        TrainingCompletion = 1,
+    };
 
     /// <summary>
     /// Enumerations of the implants slots. None is -1, other range from 0 to 4, matching the order of the implants ingame
@@ -359,7 +383,7 @@ namespace EVEMon.Common
     /// <summary>
     /// A blueprint's type.
     /// </summary>
-    /// <remarks>The integer value determines the value assigned in <see cref="IndustryJob(SerializableAPIJob src)"/>.</remarks>
+    /// <remarks>The integer value determines the value assigned in <see cref="IndustryJob"/>.</remarks>
     public enum BlueprintType
     {
         Original = 0,
@@ -515,6 +539,24 @@ namespace EVEMon.Common
         Bad,
         Terrible
     }
+
+    public enum SortOrder
+    {
+        Ascending = 0,
+        Descending = 1
+    };
+
+    public enum CharacterSortCriteria
+    {
+        /// <summary>
+        /// Characters are sorted by their names
+        /// </summary>
+        Name = 0,
+        /// <summary>
+        /// Characters are sorted by their training completion time or, when not in training, their names.
+        /// </summary>
+        TrainingCompletion = 1,
+    };
 
     #endregion
 

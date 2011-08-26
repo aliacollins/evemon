@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common
 {
@@ -50,11 +51,11 @@ namespace EVEMon.Common
 
                 // Notify subscribers
                 CCPCharacter ccpCharacter = CCPCharacter;
-                if (ccpCharacter != null)
-                {
-                    EveMonClient.OnCharacterUpdated(ccpCharacter);
-                    EveMonClient.OnCharacterInfoUpdated(ccpCharacter);
-                }
+                if (ccpCharacter == null)
+                    return;
+
+                EveMonClient.OnCharacterUpdated(ccpCharacter);
+                EveMonClient.OnCharacterInfoUpdated(ccpCharacter);
             }
         }
 
@@ -65,12 +66,8 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (Character character in EveMonClient.Characters)
-                {
-                    if (character is CCPCharacter && character.CharacterID == m_id)
-                        return (CCPCharacter) character;
-                }
-                return null;
+                return EveMonClient.Characters.Where(
+                    character => character is CCPCharacter && character.CharacterID == m_id).Cast<CCPCharacter>().FirstOrDefault();
             }
         }
 
@@ -79,15 +76,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<UriCharacter> UriCharacters
         {
-            get
-            {
-                foreach (Character character in EveMonClient.Characters)
-                {
-                    var uriCharacter = character as UriCharacter;
-                    if (uriCharacter != null)
-                        yield return uriCharacter;
-                }
-            }
+            get { return EveMonClient.Characters.OfType<UriCharacter>(); }
         }
     }
 }

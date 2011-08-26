@@ -30,7 +30,7 @@ namespace EVEMon.Common
         /// Gets or sets the number of new notifications.
         /// </summary>
         /// <value>The new notifications.</value>
-        public int NewNotifications { get; set; }
+        public int NewNotifications { get; private set; }
 
         #endregion
 
@@ -40,21 +40,20 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports the eve notifications IDs from a serializable object.
         /// </summary>
-        /// <param name="eveMailMessagesIDs">The eve mail messages IDs.</param>
+        /// <param name="eveNotificationsIDs">The eve notifications IDs.</param>
         internal void Import(string eveNotificationsIDs)
         {
             if (String.IsNullOrEmpty(eveNotificationsIDs))
                 return;
 
             List<string> ids = eveNotificationsIDs.Split(',').ToList();
-            foreach (var id in ids)
+            foreach (long id in ids.Select(long.Parse))
             {
-                long ID = long.Parse(id);
                 Items.Add(new EveNotification(m_ccpCharacter,
-                                                new SerializableNotificationsListItem()
-                                                {
-                                                    NotificationID = ID
-                                                }));
+                                              new SerializableNotificationsListItem
+                                                  {
+                                                      NotificationID = id
+                                                  }));
             }
         }
 
@@ -62,17 +61,17 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable notifications from the API.</param>
-        internal void Import(List<SerializableNotificationsListItem> src)
+        internal void Import(IEnumerable<SerializableNotificationsListItem> src)
         {
             NewNotifications = 0;
 
             List<EveNotification> newNotifications = new List<EveNotification>();
 
             // Import the notifications from the API
-            foreach (var srcEVENotification in src)
+            foreach (SerializableNotificationsListItem srcEVENotification in src)
             {
                 // If it's a new notification increase the counter
-                var notification = Items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
+                EveNotification notification = Items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
                 if (notification == null)
                     NewNotifications++;
 
@@ -90,16 +89,10 @@ namespace EVEMon.Common
         /// Exports the eve notifications IDs to a serializable object.
         /// </summary>
         /// <returns></returns>
-        internal string Export()
+        internal String Export()
         {
-            List<string> serial = new List<string>();
-
-            foreach (var notification in Items)
-            {
-                serial.Add(notification.NotificationID.ToString());
-            }
-
-            return string.Join(",", serial);
+            List<String> serial = Items.Select(notification => notification.NotificationID.ToString()).ToList();
+            return String.Join(",", serial);
         }
 
         #endregion

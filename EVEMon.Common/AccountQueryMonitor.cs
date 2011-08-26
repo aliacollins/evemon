@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.API;
-using EVEMon.Common.SettingsObjects;
-
+﻿
 namespace EVEMon.Common
 {
     /// <summary>
@@ -18,6 +13,7 @@ namespace EVEMon.Common
         /// Constructor.
         /// </summary>
         /// <param name="account"></param>
+        /// <param name="method"></param>
         internal AccountQueryMonitor(Account account, APIMethods method)
             : base(method)
         {
@@ -40,7 +36,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            provider.QueryMethodAsync<T>(m_method, m_account.UserID, m_account.APIKey, callback);
+            provider.QueryMethodAsync(m_method, m_account.UserID, m_account.APIKey, callback);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -14,7 +12,6 @@ namespace EVEMon.Common
     public sealed class CertificateCategory : ReadonlyKeyedCollection<string, CertificateClass>
     {
         private readonly Character m_character;
-        private readonly StaticCertificateCategory m_staticData;
 
         /// <summary>
         /// Constructor
@@ -24,11 +21,10 @@ namespace EVEMon.Common
         internal CertificateCategory(Character character, StaticCertificateCategory src)
         {
             m_character = character;
-            m_staticData = src;
+            StaticData = src;
 
-            foreach (StaticCertificateClass srcClass in src)
+            foreach (CertificateClass certClass in src.Select(srcClass => new CertificateClass(character, srcClass, this)))
             {
-                CertificateClass certClass = new CertificateClass(character, srcClass, this);
                 Items[certClass.Name] = certClass;
             }
         }
@@ -36,17 +32,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the static data associated with this object.
         /// </summary>
-        public StaticCertificateCategory StaticData
-        {
-            get { return m_staticData; }
-        }
+        public StaticCertificateCategory StaticData { get; private set; }
 
         /// <summary>
         /// Gets this skill's id
         /// </summary>
         public long ID
         {
-            get { return m_staticData.ID; }
+            get { return StaticData.ID; }
         }
 
         /// <summary>
@@ -54,7 +47,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Name
         {
-            get { return m_staticData.Name; }
+            get { return StaticData.Name; }
         }
 
         /// <summary>
@@ -62,7 +55,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Description
         {
-            get { return m_staticData.Description; }
+            get { return StaticData.Description; }
         }
     }
 }

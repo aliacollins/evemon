@@ -25,15 +25,6 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
-        private readonly StandingCollection m_standings;
-        private readonly MarketOrderCollection m_marketOrders;
-        private readonly IndustryJobCollection m_industryJobs;
-        private readonly ResearchPointCollection m_researchPoints;
-        private readonly EveMailMessagesCollection m_eveMailMessages;
-        private readonly EveMailingListsCollection m_eveMailingLists;
-        private readonly EveNotificationsCollection m_eveNotifications;
-        private readonly SkillQueue m_queue;
-        private readonly QueryMonitorCollection m_monitors;
 
         private readonly List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
         private readonly List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
@@ -62,61 +53,61 @@ namespace EVEMon.Common
         private CCPCharacter(CharacterIdentity identity, Guid guid)
             : base(identity, guid)
         {
-            m_queue = new SkillQueue(this);
-            m_standings = new StandingCollection(this);
-            m_marketOrders = new MarketOrderCollection(this);
-            m_industryJobs = new IndustryJobCollection(this);
-            m_researchPoints = new ResearchPointCollection(this);
-            m_eveMailMessages = new EveMailMessagesCollection(this);
-            m_eveMailingLists = new EveMailingListsCollection(this);
-            m_eveNotifications = new EveNotificationsCollection(this);
-            m_monitors = new QueryMonitorCollection();
+            SkillQueue = new SkillQueue(this);
+            Standings = new StandingCollection(this);
+            MarketOrders = new MarketOrderCollection(this);
+            IndustryJobs = new IndustryJobCollection(this);
+            ResearchPoints = new ResearchPointCollection(this);
+            EVEMailMessages = new EveMailMessagesCollection(this);
+            EVEMailingLists = new EveMailingListsCollection(this);
+            EVENotifications = new EveNotificationsCollection(this);
+            QueryMonitors = new QueryMonitorCollection();
 
             // Initializes the query monitors 
             m_charSheetMonitor = new CharacterQueryMonitor<SerializableAPICharacterSheet>(this, APIMethods.CharacterSheet);
             m_charSheetMonitor.Updated += OnCharacterSheetUpdated;
-            m_monitors.Add(m_charSheetMonitor);
+            QueryMonitors.Add(m_charSheetMonitor);
 
             m_skillQueueMonitor = new CharacterQueryMonitor<SerializableAPISkillQueue>(this, APIMethods.SkillQueue);
             m_skillQueueMonitor.Updated += OnSkillQueueUpdated;
-            m_monitors.Add(m_skillQueueMonitor);
+            QueryMonitors.Add(m_skillQueueMonitor);
 
             m_charStandingsMonitor = new CharacterQueryMonitor<SerializableAPIStandings>(this, APIMethods.Standings);
             m_charStandingsMonitor.Updated += OnStandingsUpdated;
-            m_monitors.Add(m_charStandingsMonitor);
+            QueryMonitors.Add(m_charStandingsMonitor);
 
             m_charMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIMarketOrders>(this, APIMethods.MarketOrders);
             m_charMarketOrdersMonitor.Updated += OnCharacterMarketOrdersUpdated;
-            m_monitors.Add(m_charMarketOrdersMonitor);
+            QueryMonitors.Add(m_charMarketOrdersMonitor);
 
             m_corpMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIMarketOrders>(this, APIMethods.CorporationMarketOrders);
             m_corpMarketOrdersMonitor.Updated += OnCorporationMarketOrdersUpdated;
-            m_monitors.Add(m_corpMarketOrdersMonitor);
+            QueryMonitors.Add(m_corpMarketOrdersMonitor);
 
             m_charIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIIndustryJobs>(this, APIMethods.IndustryJobs);
             m_charIndustryJobsMonitor.Updated += OnCharacterJobsUpdated;
-            m_monitors.Add(m_charIndustryJobsMonitor);
+            QueryMonitors.Add(m_charIndustryJobsMonitor);
 
             m_corpIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIIndustryJobs>(this, APIMethods.CorporationIndustryJobs);
             m_corpIndustryJobsMonitor.Updated += OnCorporationJobsUpdated;
-            m_monitors.Add(m_corpIndustryJobsMonitor);
+            QueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearch>(this, APIMethods.ResearchPoints);
             m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
-            m_monitors.Add(m_charResearchPointsMonitor);
+            QueryMonitors.Add(m_charResearchPointsMonitor);
 
             m_charEVEMailMessagesMonitor = new CharacterQueryMonitor<SerializableAPIMailMessages>(this, APIMethods.MailMessages);
             m_charEVEMailMessagesMonitor.Updated += OnCharacterEVEMailMessagesUpdated;
-            m_monitors.Add(m_charEVEMailMessagesMonitor);
+            QueryMonitors.Add(m_charEVEMailMessagesMonitor);
 
             m_charEVENotificationsMonitor = new CharacterQueryMonitor<SerializableAPINotifications>(this, APIMethods.Notifications);
             m_charEVENotificationsMonitor.Updated += OnCharacterEVENotificationsUpdated;
-            m_monitors.Add(m_charEVENotificationsMonitor);
+            QueryMonitors.Add(m_charEVENotificationsMonitor);
 
             // We enable only the monitors that require a limited api key,
             // full api key required monitors will be enabled individually
             // through each character's enabled full api key feature
-            foreach (IQueryMonitor monitor in m_monitors)
+            foreach (IQueryMonitor monitor in QueryMonitors)
             {
                 monitor.Enabled = !monitor.IsFullKeyNeeded;
             }
@@ -167,73 +158,49 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill queue for this character.
         /// </summary>
-        public SkillQueue SkillQueue
-        {
-            get { return m_queue; }
-        }
+        public SkillQueue SkillQueue { get; private set; }
 
         /// <summary>
         /// Gets the standings for this character.
         /// </summary>
-        public StandingCollection Standings
-        {
-            get { return m_standings; }
-        }
+        public StandingCollection Standings { get; private set; }
 
         /// <summary>
         /// Gets the collection of market orders.
         /// </summary>
-        public MarketOrderCollection MarketOrders
-        {
-            get { return m_marketOrders; }
-        }
+        public MarketOrderCollection MarketOrders { get; private set; }
 
         /// <summary>
         /// Gets the collection of industry jobs.
         /// </summary>
-        public IndustryJobCollection IndustryJobs
-        {
-            get { return m_industryJobs; }
-        }
+        public IndustryJobCollection IndustryJobs { get; private set; }
 
         /// <summary>
         /// Gets the collection of research points.
         /// </summary>
-        public ResearchPointCollection ResearchPoints
-        {
-            get { return m_researchPoints; }
-        }
+        public ResearchPointCollection ResearchPoints { get; private set; }
 
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public EveMailMessagesCollection EVEMailMessages
-        {
-            get { return m_eveMailMessages; }
-        }
+        public EveMailMessagesCollection EVEMailMessages { get; private set; }
 
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public IEnumerable<EveMailingList> EVEMailingLists
-        {
-            get { return m_eveMailingLists; }
-        }
+        public EveMailingListsCollection EVEMailingLists { get; private set; }
 
         /// <summary>
         /// Gets the collection of EVE notifications.
         /// </summary>
-        public EveNotificationsCollection EVENotifications
-        {
-            get { return m_eveNotifications; }
-        }
+        public EveNotificationsCollection EVENotifications { get; private set; }
 
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
         /// </summary>
         public override bool IsTraining
         {
-            get { return m_queue.IsTraining; }
+            get { return SkillQueue.IsTraining; }
         }
 
         /// <summary>
@@ -241,7 +208,7 @@ namespace EVEMon.Common
         /// </summary>
         public override QueuedSkill CurrentlyTrainingSkill
         {
-            get { return m_queue.CurrentlyTraining; }
+            get { return SkillQueue.CurrentlyTraining; }
         }
 
         /// <summary>
@@ -259,7 +226,7 @@ namespace EVEMon.Common
         {
             get
             {
-                IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = m_marketOrders
+                IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = MarketOrders
                     .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
                     && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
 
@@ -274,11 +241,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the query monitors enumeration.
         /// </summary>
-        public QueryMonitorCollection QueryMonitors
-        {
-            get { return m_monitors; }
-        }
-        
+        public QueryMonitorCollection QueryMonitors { get; private set; }
+
         #endregion
 
 
@@ -294,32 +258,32 @@ namespace EVEMon.Common
             Export(serial);
 
             // Skill queue
-            serial.SkillQueue = m_queue.Export();
+            serial.SkillQueue = SkillQueue.Export();
 
             // Standings
-            serial.Standings = m_standings.Export();
+            serial.Standings = Standings.Export();
 
             // Market orders
-            serial.MarketOrders = m_marketOrders.Export();
+            serial.MarketOrders = MarketOrders.Export();
 
             // Industry jobs
-            serial.IndustryJobs = m_industryJobs.Export();
+            serial.IndustryJobs = IndustryJobs.Export();
 
             // Research points
-            serial.ResearchPoints = m_researchPoints.Export();
+            serial.ResearchPoints = ResearchPoints.Export();
 
             // Eve mail messages IDs
-            serial.EveMailMessagesIDs = m_eveMailMessages.Export();
+            serial.EveMailMessagesIDs = EVEMailMessages.Export();
 
             // Eve notifications IDs
-            serial.EveNotificationsIDs = m_eveNotifications.Export();
+            serial.EveNotificationsIDs = EVENotifications.Export();
 
             // Last API updates
-            foreach (SerializableAPIUpdate update in m_monitors.Select(monitor => new SerializableAPIUpdate
-                                                                                      {
-                                                                                          Method = monitor.Method,
-                                                                                          Time = monitor.LastUpdate
-                                                                                      }))
+            foreach (SerializableAPIUpdate update in QueryMonitors.Select(monitor => new SerializableAPIUpdate
+                                                                                         {
+                                                                                             Method = monitor.Method,
+                                                                                             Time = monitor.LastUpdate
+                                                                                         }))
             {
                 serial.LastUpdates.Add(update);
             }
@@ -336,31 +300,31 @@ namespace EVEMon.Common
             Import((SerializableSettingsCharacter)serial);
 
             // Skill queue
-            m_queue.Import(serial.SkillQueue);
-            m_queue.UpdateOnTimerTick();
+            SkillQueue.Import(serial.SkillQueue);
+            SkillQueue.UpdateOnTimerTick();
 
             // Standings
-            m_standings.Import(serial.Standings);
+            Standings.Import(serial.Standings);
 
             // Market orders
-            m_marketOrders.Import(serial.MarketOrders);
+            MarketOrders.Import(serial.MarketOrders);
 
             // Industry jobs
-            m_industryJobs.Import(serial.IndustryJobs);
+            IndustryJobs.Import(serial.IndustryJobs);
 
             // Research points
-            m_researchPoints.Import(serial.ResearchPoints);
+            ResearchPoints.Import(serial.ResearchPoints);
 
             // EVE mail messages IDs
-            m_eveMailMessages.Import(serial.EveMailMessagesIDs);
+            EVEMailMessages.Import(serial.EveMailMessagesIDs);
 
             // EVE notifications IDs
-            m_eveNotifications.Import(serial.EveNotificationsIDs);
+            EVENotifications.Import(serial.EveNotificationsIDs);
 
             // Last API updates
             foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
             {
-                IQueryMonitorEx monitor = m_monitors[lastUpdate.Method] as IQueryMonitorEx;
+                IQueryMonitorEx monitor = QueryMonitors[lastUpdate.Method] as IQueryMonitorEx;
                 if (monitor != null)
                     monitor.Reset(lastUpdate.Time);
             }
@@ -382,8 +346,8 @@ namespace EVEMon.Common
             if (!Monitored)
                 return;
 
-            m_monitors.UpdateOnOneSecondTick();
-            m_queue.UpdateOnTimerTick();
+            QueryMonitors.UpdateOnOneSecondTick();
+            SkillQueue.UpdateOnTimerTick();
 
             // Exit if API key is a limited one
             Account account = Identity.Account;
@@ -392,7 +356,7 @@ namespace EVEMon.Common
 
             // If industry jobs monitoring is enabled, update job timers
             if (m_charIndustryJobsMonitor.Enabled)
-                m_industryJobs.UpdateOnTimerTick();
+                IndustryJobs.UpdateOnTimerTick();
 
         }
 
@@ -498,7 +462,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_queue.Import(result.Result.Queue);
+            SkillQueue.Import(result.Result.Queue);
 
             // Check the account has a character in training
             Identity.Account.CharacterInTraining();
@@ -528,7 +492,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_standings.Import(result.Result.CharacterNPCStandings.All);
+            Standings.Import(result.Result.CharacterNPCStandings.All);
         }
 
         /// <summary>
@@ -654,7 +618,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_researchPoints.Import(result.Result.ResearchPoints);
+            ResearchPoints.Import(result.Result.ResearchPoints);
         }
 
         /// <summary>
@@ -676,11 +640,11 @@ namespace EVEMon.Common
             QueryCharacterMailingList();
 
             // Import the data
-            m_eveMailMessages.Import(result.Result.Messages);
+            EVEMailMessages.Import(result.Result.Messages);
 
             // Notify on new messages
-            if (m_eveMailMessages.NewMessages != 0)
-                EveMonClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
+            if (EVEMailMessages.NewMessages != 0)
+                EveMonClient.Notifications.NotifyNewEVEMailMessages(this, EVEMailMessages.NewMessages);
         }
 
         /// <summary>
@@ -698,7 +662,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_eveMailingLists.Import(result.Result.MailingLists);
+            EVEMailingLists.Import(result.Result.MailingLists);
         }
 
         /// <summary>
@@ -716,11 +680,11 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_eveNotifications.Import(result.Result.Notifications);
+            EVENotifications.Import(result.Result.Notifications);
 
             // Notify on new messages
-            if (m_eveNotifications.NewNotifications != 0)
-                EveMonClient.Notifications.NotifyNewEVENotifications(this, m_eveNotifications.NewNotifications);
+            if (EVENotifications.NewNotifications != 0)
+                EveMonClient.Notifications.NotifyNewEVENotifications(this, EVENotifications.NewNotifications);
         }
         #endregion
 
@@ -733,7 +697,7 @@ namespace EVEMon.Common
         /// <param name="queryMonitor">The query monitor.</param>
         public void ForceUpdate(IQueryMonitor queryMonitor)
         {
-            IQueryMonitorEx monitor = m_monitors[queryMonitor.Method] as IQueryMonitorEx;
+            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method] as IQueryMonitorEx;
             if (monitor != null)
                 monitor.ForceUpdate(false);
         }
@@ -804,7 +768,7 @@ namespace EVEMon.Common
             IEnumerable<SerializableOrderListItem> characterOrders = orders.Where(x => x.OwnerID == CharacterID);
 
             List<MarketOrder> endedOrders = new List<MarketOrder>();
-            m_marketOrders.Import(characterOrders, endedOrders);
+            MarketOrders.Import(characterOrders, endedOrders);
 
             // Sends a notification
             if (endedOrders.Count != 0)
@@ -861,7 +825,7 @@ namespace EVEMon.Common
             // Exclude jobs that wheren't issued by this character
             IEnumerable<SerializableJobListItem> characterJobs = jobs.Where(x => x.InstallerID == CharacterID);
 
-            m_industryJobs.Import(characterJobs);
+            IndustryJobs.Import(characterJobs);
 
             // Reset flags
             m_charJobsUpdated = false;

@@ -355,15 +355,14 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Adds summury information for given remapping.
+        /// Adds summary information for given remapping.
         /// </summary>
         /// <param name="remap">Remapping object</param>
         /// <param name="lastRemap">Time of previous remapping</param>
         private void AddSummaryForRemapping(AttributesOptimizer.RemappingResult remap, ref TimeSpan lastRemap)
         {
             // Create the group
-            string text = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
-                                        remap.ToString(m_character),
+            string text = String.Format(CultureConstants.DefaultCulture, "{0} at {1}", remap,
                                         remap.StartTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             ListViewGroup group = new ListViewGroup(text);
             lvPoints.Groups.Add(group);

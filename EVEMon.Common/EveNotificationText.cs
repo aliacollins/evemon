@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.IO;
 using EVEMon.Common.Serialization.API;
-using System.IO;
-using System.Text;
 
 namespace EVEMon.Common
 {
@@ -14,25 +12,22 @@ namespace EVEMon.Common
         public EveNotificationText(SerializableNotificationTextsListItem src)
         {
             NotificationID = src.NotificationID;
-            NotificationText = src.NotificationText.Normalize().ModifyBreakLines();
+            NotificationText = NewLinesToBreakLines(src.NotificationText.Normalize());
         }
 
         /// <summary>
         /// Gets or sets the notification ID.
         /// </summary>
         /// <value>The notification ID.</value>
-        private long NotificationID { get; set; }
+        public long NotificationID { get; set; }
 
         /// <summary>
         /// Gets or sets the notification text.
         /// </summary>
         /// <value>The notification text.</value>
         public string NotificationText { get; private set; }
-    }
 
-    static class NotificationTextExtensions
-    {
-        internal static string ModifyBreakLines(this string text)
+        private static string NewLinesToBreakLines(string text)
         {
             StringReader sr = new StringReader(text);
             StringWriter sw = new StringWriter();

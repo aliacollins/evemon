@@ -4,7 +4,6 @@ using System.IO;
 
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -13,11 +12,16 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class ConquerableStation : Station
     {
-        private readonly static Dictionary<long, ConquerableStation> s_conqStationsByID = new Dictionary<long, ConquerableStation>();
-        private readonly static Dictionary<string, ConquerableStation> s_conqStationsByName = new Dictionary<string, ConquerableStation>();
-        private readonly static string s_filename = "ConquerableStationList";
+        private static readonly Dictionary<long, ConquerableStation> s_conqStationsByID =
+            new Dictionary<long, ConquerableStation>();
+
+        private static readonly Dictionary<string, ConquerableStation> s_conqStationsByName =
+            new Dictionary<string, ConquerableStation>();
+
+        private const string Filename = "ConquerableStationList";
 
         private static bool s_loaded;
+
 
         #region Constructor
 
@@ -44,10 +48,7 @@ namespace EVEMon.Common
                 // Ensure list importation
                 EnsureImportation();
 
-                foreach (var conquerableStation in s_conqStationsByID.Values)
-                {
-                    yield return conquerableStation;
-                }
+                return s_conqStationsByID.Values;
             }
         }
 
@@ -71,6 +72,7 @@ namespace EVEMon.Common
 
 
         #region File Updating
+
         /// <summary>
         /// Downloads the conquerable station list,
         /// while doing a file up to date check.
@@ -82,14 +84,16 @@ namespace EVEMon.Common
             TimeSpan updatePeriod = TimeSpan.FromDays(1);
 
             // Check to see if file is up to date
-            bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(s_filename, updateTime, updatePeriod);
+            bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(Filename, updateTime, updatePeriod);
 
             // Up to date ? Quit
             if (fileUpToDate)
                 return;
 
             // Query the API
-            var result = EveMonClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+            APIResult<SerializableAPIConquerableStationList> result =
+                EveMonClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+
             OnUpdated(result);
         }
 
@@ -113,6 +117,7 @@ namespace EVEMon.Common
             // Notify the subscribers
             EveMonClient.OnConquerableStationListUpdated();
         }
+
         #endregion
 
 
@@ -136,13 +141,14 @@ namespace EVEMon.Common
             if (s_loaded)
                 return;
 
-            var file = LocalXmlCache.GetFile(s_filename).FullName;
+            string file = LocalXmlCache.GetFile(Filename).FullName;
 
             // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(file))
                 return;
 
-            var result = Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(file, APIProvider.RowsetsTransform);
+            APIResult<SerializableAPIConquerableStationList> result =
+                Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(file, APIProvider.RowsetsTransform);
 
             // Checks if EVE Backend Database is temporarily disabled
             if (result.EVEBackendDatabaseDisabled)
@@ -197,7 +203,7 @@ namespace EVEMon.Common
             // Ensure list importation
             EnsureImportation();
 
-            ConquerableStation result = null;
+            ConquerableStation result;
             s_conqStationsByID.TryGetValue(id, out result);
             return result;
         }
@@ -210,7 +216,7 @@ namespace EVEMon.Common
             // Ensure list importation
             EnsureImportation();
 
-            ConquerableStation result = null;
+            ConquerableStation result;
             s_conqStationsByName.TryGetValue(name, out result);
             return result;
         }

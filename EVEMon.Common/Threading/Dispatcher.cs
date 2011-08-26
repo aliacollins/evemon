@@ -212,17 +212,14 @@ namespace EVEMon.Common.Threading
                 // Collect all the actions scheduled before now
                 actionsToInvoke.AddRange(s_delayedOperations.TakeWhile(pair => pair.Key <= DateTime.UtcNow).Select(pair => pair.Value));
 
-                // Remove those actions
-                for (int i = 0; i < actionsToInvoke.Count; i++)
+                foreach (Action action in actionsToInvoke)
                 {
+                    // Execute the entries (we're already on the proper thread)
+                    action.Invoke();
+
+                    // Remove those actions from the list
                     s_delayedOperations.RemoveAt(0);
                 }
-            }
-
-            // Execute the entries (we're already on the proper thread)
-            foreach (Action action in actionsToInvoke)
-            {
-                action.Invoke();
             }
         }
 
@@ -231,7 +228,6 @@ namespace EVEMon.Common.Threading
         /// </summary>
         internal static void Shutdown()
         {
-
             if (s_oneSecondTimer == null)
                 return;
 

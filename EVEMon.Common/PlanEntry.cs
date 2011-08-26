@@ -148,7 +148,7 @@ namespace EVEMon.Common
             {
                 m_notes = value;
                 if (m_owner != null)
-                    m_owner.OnChanged(BasePlan.PlanChange.Notification);
+                    m_owner.OnChanged(PlanChange.Notification);
             }
         }
 
@@ -162,7 +162,7 @@ namespace EVEMon.Common
             {
                 m_remapping = value;
                 if (m_owner != null)
-                    m_owner.OnChanged(BasePlan.PlanChange.Notification);
+                    m_owner.OnChanged(PlanChange.Notification);
             }
         }
 

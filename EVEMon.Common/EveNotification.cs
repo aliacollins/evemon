@@ -75,13 +75,19 @@ namespace EVEMon.Common
         /// Gets the EVE notification title.
         /// </summary>
         /// <value>The title.</value>
-        public string Title { get { return Type; } }
+        public string Title
+        {
+            get { return Type; }
+        }
 
         /// <summary>
         /// Gets the EVE notification text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text { get { return EVENotificationText.NotificationText; } }
+        public string Text
+        {
+            get { return EVENotificationText.NotificationText; }
+        }
 
         #endregion
 
@@ -99,7 +105,8 @@ namespace EVEMon.Common
                 return "Unknown";
 
             // Look into EVEMon's data file if it's an NPC corporation
-            Station station =  StaticGeography.AllStations.FirstOrDefault(x => x.CorporationID == id && !String.IsNullOrEmpty(x.CorporationName));
+            Station station =
+                StaticGeography.AllStations.FirstOrDefault(x => x.CorporationID == id && !String.IsNullOrEmpty(x.CorporationName));
             if (station != null)
                 return station.Name;
 
@@ -122,7 +129,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private List<string> GetRecipient()
         {
-            Recipient = new List<string> {m_ccpCharacter.Name};
+            Recipient = new List<string> { m_ccpCharacter.Name };
 
             return Recipient;
         }
@@ -144,12 +151,12 @@ namespace EVEMon.Common
             m_queryPending = true;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
-                                                                    APIMethods.NotificationTexts,
-                                                                    m_ccpCharacter.Identity.Account.UserID,
-                                                                    m_ccpCharacter.Identity.Account.APIKey,
-                                                                    m_ccpCharacter.CharacterID,
-                                                                    NotificationID,
-                                                                    OnEVENotificationTextDownloaded);
+                APIMethods.NotificationTexts,
+                m_ccpCharacter.Identity.Account.UserID,
+                m_ccpCharacter.Identity.Account.APIKey,
+                m_ccpCharacter.CharacterID,
+                NotificationID,
+                OnEVENotificationTextDownloaded);
         }
 
         /// <summary>
@@ -171,15 +178,15 @@ namespace EVEMon.Common
             // If there is an error response on missing IDs inform the user
             if (!String.IsNullOrEmpty(result.Result.MissingMessageIDs))
                 result.Result.Texts.Add(
-                                    new SerializableNotificationTextsListItem
-                                    {
-                                        NotificationID = long.Parse(result.Result.MissingMessageIDs),
-                                        NotificationText = "The text for this notification was reported missing." 
-                                    });
+                    new SerializableNotificationTextsListItem
+                        {
+                            NotificationID = long.Parse(result.Result.MissingMessageIDs),
+                            NotificationText = "The text for this notification was reported missing."
+                        });
 
             // Quit if for any reason there is no text
             if (result.Result.Texts.Count == 0)
-                return;            
+                return;
 
             // Import the data
             EVENotificationText = new EveNotificationText(result.Result.Texts[0]);

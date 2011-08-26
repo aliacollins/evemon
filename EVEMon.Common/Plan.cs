@@ -106,7 +106,7 @@ namespace EVEMon.Common
         public SerializablePlan Export()
         {
             // Create serialization object
-            Character character = (Character) m_character;
+            Character character = (Character) Character;
             SerializablePlan serial = new SerializablePlan
                                           {
                                               Name = m_name,
@@ -381,7 +381,7 @@ namespace EVEMon.Common
             where T : ISkillLevel
         {
             int lowestPrereqPriority;
-            List<PlanEntry> allEntriesToAdd = GetAllEntriesToAdd(skillsToAdd, note, out lowestPrereqPriority);
+            IEnumerable<PlanEntry> allEntriesToAdd = GetAllEntriesToAdd(skillsToAdd, note, out lowestPrereqPriority);
 
             return new PlanOperation(this, skillsToAdd.Cast<ISkillLevel>(), allEntriesToAdd, lowestPrereqPriority);
 
@@ -395,10 +395,10 @@ namespace EVEMon.Common
         public IPlanOperation TryRemoveSet<T>(IEnumerable<T> skillsToRemove)
             where T : ISkillLevel
         {
-            List<PlanEntry> allEntriesToRemove = GetAllEntriesToRemove(skillsToRemove);
+            IEnumerable<PlanEntry> allEntriesToRemove = GetAllEntriesToRemove(skillsToRemove);
 
             // Creates a plan where the entries and their dependencies have been removed
-            PlanScratchpad freePlan = new PlanScratchpad(m_character);
+            PlanScratchpad freePlan = new PlanScratchpad(Character);
             freePlan.RebuildPlanFrom(Items);
             foreach (PlanEntry entry in allEntriesToRemove)
             {
@@ -508,7 +508,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Plan Clone()
         {
-            return Clone(m_character);
+            return Clone(Character);
         }
 
         #endregion

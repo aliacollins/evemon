@@ -9,8 +9,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class EveMailMessagesComparer : Comparer<EveMailMessage>
     {
-        private EveMailMessagesColumn m_column;
-        private bool m_isAscending;
+        private readonly EveMailMessagesColumn m_column;
+        private readonly bool m_isAscending;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMailMessagesComparer"/> class.

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -25,7 +22,7 @@ namespace EVEMon.Common
         {
             get
             {
-                var thousandFormat = (NumberFormatInfo)DefaultCulture.NumberFormat.Clone();
+                NumberFormatInfo thousandFormat = (NumberFormatInfo)DefaultCulture.NumberFormat.Clone();
                 thousandFormat.NumberDecimalDigits = 0;
                 return thousandFormat;
             }

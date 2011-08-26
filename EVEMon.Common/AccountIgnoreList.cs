@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 
@@ -39,21 +38,20 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public CCPCharacter Remove(CharacterIdentity id)
+        public void Remove(CharacterIdentity id)
         {
-            // If the id was not in list, returns the existing character or null if it does not exist.
+            // If the id was not in list, returns the existing character or null if it does not exist
             var ccpCharacter = id.CCPCharacter;
             if (!Items.Remove(id))
-                return ccpCharacter;
+                return;
 
-            // If character exists, returns it.
+            // If character exists, returns it
             if (ccpCharacter != null)
-                return ccpCharacter;
-                
+                return;
+
             // Create a new CCP character
             ccpCharacter = new CCPCharacter(id);
             EveMonClient.Characters.Add(ccpCharacter, true);
-            return ccpCharacter;
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public void Add(CCPCharacter character)
         {
-            var id = character.Identity;
+            CharacterIdentity id = character.Identity;
             if (Items.Contains(id))
                 return;
 
@@ -71,25 +69,19 @@ namespace EVEMon.Common
 
             // If the identity was belonging to this account, remove the character (won't be serialized anymore !)
             if (id.Account == m_owner)
-            {
                 EveMonClient.Characters.Remove(character, true);
-            }
         }
 
         /// <summary>
         /// Imports the deserialization objects.
         /// </summary>
         /// <param name="serialIDList"></param>
-        internal void Import(List<SerializableCharacterIdentity> serialIDList)
+        internal void Import(IEnumerable<SerializableCharacterIdentity> serialIDList)
         {
             Items.Clear();
-            foreach (var serialID in serialIDList)
+            foreach (CharacterIdentity id in serialIDList.Select(serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
+                                                                             EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
             {
-                var id = EveMonClient.CharacterIdentities[serialID.ID];
-                if (id == null)
-                {
-                    id = EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
-                }
                 Items.Add(id);
             }
         }
@@ -100,12 +92,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableCharacterIdentity> Export()
         {
-            var serial = new List<SerializableCharacterIdentity>();
-            foreach (var id in Items)
-            {
-                serial.Add(new SerializableCharacterIdentity { ID = id.CharacterID, Name = id.Name });
-            }
-            return serial;
+            return Items.Select(id => new SerializableCharacterIdentity { ID = id.CharacterID, Name = id.Name }).ToList();
         }
     }
 }

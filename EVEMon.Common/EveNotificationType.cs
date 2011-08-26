@@ -24,11 +24,8 @@ namespace EVEMon.Common
         {
             EnsureInitialized();
 
-            var type = s_notificationTypes.Types.FirstOrDefault(x => x.TypeID == typeID);
-            if (type != null)
-                return type.TypeName;
-
-            return "Unknown";
+            SerializableNotificationRefTypeIDsListItem type = s_notificationTypes.Types.FirstOrDefault(x => x.TypeID == typeID);
+            return type != null ? type.TypeName : "Unknown";
         }
 
         /// <summary>

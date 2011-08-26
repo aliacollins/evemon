@@ -1,4 +1,3 @@
-using System;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common

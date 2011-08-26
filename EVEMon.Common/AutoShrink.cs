@@ -38,9 +38,9 @@ namespace EVEMon.Common
         /// seconds.  By calling Dirty() at the start of a network operation, we're most likely going to clean up after WCF has
         /// completed processing either the successful call or the timeout.
         /// </remarks>
-        private static TimeSpan m_idleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
-        private static readonly TimeSpan m_infinite = new TimeSpan(0, 0, 0, 0, -1);
-        private static readonly Timer m_dirtyTimer = new Timer(DirtyCallback);
+        private static readonly TimeSpan s_idleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
+        private static readonly TimeSpan s_infinite = new TimeSpan(0, 0, 0, 0, -1);
+        private static readonly Timer s_dirtyTimer = new Timer(DirtyCallback);
 
         /// <summary>
         /// Call this method after an operation has occurred that might have increased the working set of the application
@@ -58,7 +58,7 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Dirty()
         {
-            m_dirtyTimer.Change(m_idleMillisecondsBeforeClean, m_infinite);
+            s_dirtyTimer.Change(s_idleMillisecondsBeforeClean, s_infinite);
         }
 
         /// <summary>
@@ -80,16 +80,16 @@ namespace EVEMon.Common
         /// </param>
         public static void Dirty(TimeSpan idleMillisecondsBeforeClean)
         {
-            m_dirtyTimer.Change(idleMillisecondsBeforeClean, m_infinite);
+            s_dirtyTimer.Change(idleMillisecondsBeforeClean, s_infinite);
         }
 
         /// <summary>
-        /// Forces an immediate cleanup
+        /// Forces an immediate cleanup.
         /// </summary>
         public static void DirtyImmediate()
         {
             DirtyCallback(null);
-            m_dirtyTimer.Change(m_infinite, m_infinite);
+            s_dirtyTimer.Change(s_infinite, s_infinite);
         }
 
         private static void DirtyCallback(object state)
@@ -108,9 +108,7 @@ namespace EVEMon.Common
             // Performs the same operation that Windows does upon "minimize window".  This releases all memory pages not currently in use
             // which greatly reduces the amount of RAM that a managed application take up when idle.
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
                 SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
-            }
         }
 
         [DllImport("kernel32.dll")]

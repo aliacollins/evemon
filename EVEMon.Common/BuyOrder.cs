@@ -1,6 +1,5 @@
 using System;
 
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -11,8 +10,6 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class BuyOrder : MarketOrder
     {
-        private readonly int m_range;
-
         /// <summary>
         /// Constructor from the API.
         /// </summary>
@@ -21,7 +18,7 @@ namespace EVEMon.Common
             : base(src)
         {
             Escrow = src.Escrow;
-            m_range = src.Range;
+            Range = src.Range;
         }
 
         /// <summary>
@@ -32,7 +29,7 @@ namespace EVEMon.Common
             : base(src)
         {
             Escrow = src.Escrow;
-            m_range = src.Range;
+            Range = src.Range;
         }
 
         /// <summary>
@@ -43,10 +40,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the range of this order.
         /// </summary>
-        public int Range
-        {
-            get { return m_range; }
-        }
+        public int Range { get; private set; }
 
         /// <summary>
         /// Gets the description of the range.
@@ -55,18 +49,18 @@ namespace EVEMon.Common
         {
             get
             {
-                switch (m_range)
+                switch (Range)
                 {
                     case -1:
                         return "Station";
                     case 0:
                         return "Solar System";
                     case 1:
-                        return String.Format("{0} jump", m_range.ToString());
+                        return String.Format("{0} jump", Range.ToString());
                     case EveConstants.RegionRange:
                         return "Region";
                     default:
-                        return String.Format("{0} jumps", m_range.ToString());
+                        return String.Format("{0} jumps", Range.ToString());
                 }
             }
         }
@@ -77,9 +71,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override SerializableOrderBase Export()
         {
-            var serial = new SerializableBuyOrder();
-            serial.Escrow = Escrow;
-            serial.Range = m_range;
+            SerializableBuyOrder serial = new SerializableBuyOrder { Escrow = Escrow, Range = Range };
             Export(serial);
             return serial;
         }

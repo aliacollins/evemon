@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
@@ -12,7 +9,6 @@ namespace EVEMon.Common
     {
         private readonly EveAttribute m_attrib;
         private readonly Character m_character;
-        private int m_base;
 
         /// <summary>
         /// Constructor from a character attribute.
@@ -21,7 +17,7 @@ namespace EVEMon.Common
         /// <param name="attrib"></param>
         internal CharacterAttribute(Character character, EveAttribute attrib)
         {
-            m_base = EveConstants.CharacterBaseAttributePoints;
+            Base = EveConstants.CharacterBaseAttributePoints;
             m_attrib = attrib;
             m_character = character;
         }
@@ -29,14 +25,10 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the base attribute.
         /// </summary>
-        public int Base
-        {
-            get { return m_base; }
-            internal set { m_base = value; }
-        }
+        public int Base { get; internal set; }
 
         /// <summary>
-        /// Gets the bonus granted by the implant
+        /// Gets the bonus granted by the implant.
         /// </summary>
         public int ImplantBonus
         {
@@ -48,7 +40,7 @@ namespace EVEMon.Common
         /// </summary>
         public int EffectiveValue
         {
-            get { return m_base + ImplantBonus; }
+            get { return Base + ImplantBonus; }
         }
 
         /// <summary>
@@ -66,13 +58,13 @@ namespace EVEMon.Common
         /// <returns>The formatted string.</returns>
         public string ToString(string format)
         {
-            format = format.Replace("%n",   m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
-            format = format.Replace("%N",   m_attrib.ToString());
-            format = format.Replace("%B",   EveConstants.CharacterBaseAttributePoints.ToString());
-            format = format.Replace("%b",   m_base.ToString());
-            format = format.Replace("%i",   ImplantBonus.ToString());
-            format = format.Replace("%r",   (m_base - EveConstants.CharacterBaseAttributePoints).ToString());
-            format = format.Replace("%e",   EffectiveValue.ToString("0"));
+            format = format.Replace("%n", m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
+            format = format.Replace("%N", m_attrib.ToString());
+            format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString());
+            format = format.Replace("%b", Base.ToString());
+            format = format.Replace("%i", ImplantBonus.ToString());
+            format = format.Replace("%r", (Base - EveConstants.CharacterBaseAttributePoints).ToString());
+            format = format.Replace("%e", EffectiveValue.ToString("0"));
             return format;
         }
 
@@ -82,7 +74,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
- 	         return String.Format ("{0} : {1}", m_attrib, EffectiveValue);
+            return String.Format("{0} : {1}", m_attrib, EffectiveValue);
         }
     }
 }

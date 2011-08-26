@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using EVEMon.Common.Data;
 
@@ -11,15 +10,9 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CharacterScratchpad : BaseCharacter
     {
-        private readonly BaseCharacter m_character;
-
         private readonly CharacterAttributeScratchpad[] m_attributes = new CharacterAttributeScratchpad[5];
-        private readonly List<StaticSkillLevel> m_trainedSkills = new List<StaticSkillLevel>();
         private readonly int[] m_skillLevels;
         private readonly int[] m_skillSP;
-
-        private TimeSpan m_trainingTime = TimeSpan.Zero;
-        private int m_totalSP;
 
         /// <summary>
         /// Constructor from a character
@@ -27,7 +20,9 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public CharacterScratchpad(BaseCharacter character)
         {
-            m_character = character;
+            TrainedSkills = new List<StaticSkillLevel>();
+            TrainingTime = TimeSpan.Zero;
+            Character = character;
             m_skillSP = new int[StaticSkills.ArrayIndicesCount];
             m_skillLevels = new int[StaticSkills.ArrayIndicesCount];
 
@@ -39,24 +34,18 @@ namespace EVEMon.Common
             Reset();
         }
 
+
         #region Core properties
 
         /// <summary>
         /// Gets the character used to build this scratchpad
         /// </summary>
-        public BaseCharacter Character
-        {
-            get { return m_character; }
-        }
+        public BaseCharacter Character { get; private set; }
 
         /// <summary>
         /// Gets or sets the total SP.
         /// </summary>
-        public new int SkillPoints
-        {
-            get { return m_totalSP; }
-            set { m_totalSP = value; }
-        }
+        public new int SkillPoints { get; set; }
 
         #endregion
 
@@ -131,9 +120,9 @@ namespace EVEMon.Common
         /// </summary>
         public void ClearImplants()
         {
-            for (int i = 0; i < m_attributes.Length; i++)
+            foreach (CharacterAttributeScratchpad attribute in m_attributes)
             {
-                m_attributes[i].ImplantBonus = 0;
+                attribute.ImplantBonus = 0;
             }
         }
 
@@ -148,7 +137,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override int GetTotalSkillPoints()
         {
-            return m_totalSP;
+            return SkillPoints;
         }
 
         /// <summary>
@@ -189,55 +178,51 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the total training time. Note the training time is always zero when you create a scratchpad from a character.
         /// </summary>
-        public TimeSpan TrainingTime
-        {
-            get { return m_trainingTime; }
-            set { m_trainingTime = value; }
-        }
+        public TimeSpan TrainingTime { get; private set; }
 
         /// <summary>
-        /// Gets the list of skills trained so far (by the <see cref="Train"/> or <see cref="SetSkillLevel"/> methods).
+        /// Gets the list of skills trained so far (by the <see cref="Train&lt;T&gt;"/> or <see cref="SetSkillLevel"/> methods).
         /// </summary>
-        public List<StaticSkillLevel> TrainedSkills
-        {
-            get { return m_trainedSkills; }
-        }
+        public List<StaticSkillLevel> TrainedSkills { get; private set; }
 
         /// <summary>
         /// Clears the training time and trained skills only. 
-        /// Does not remove the benefits from those skills (use <see cref="Reset"/> for that purpose).
+        /// Does not remove the benefits from those skills (use <see cref="Reset()"/> for that purpose).
         /// </summary>
         public void ClearTraining()
         {
-            m_trainingTime = TimeSpan.Zero;
-            m_trainedSkills.Clear();
+            TrainingTime = TimeSpan.Zero;
+            TrainedSkills.Clear();
         }
 
         /// <summary>
-        /// Performs the given training. Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training.
+        /// Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
-        /// <param name="training"></param>
+        /// <param name="trainings"></param>
         public void Train<T>(IEnumerable<T> trainings)
             where T : ISkillLevel
         {
-            foreach (var item in trainings)
+            foreach (T item in trainings)
             {
                 Train(item.Skill, item.Level);
             }
         }
 
         /// <summary>
-        /// Performs the given training, also apply remapping points. Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training, also apply remapping points.
+        /// Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="entries"></param>
+        /// <param name="applyRemappingPoints"></param>
         public void TrainEntries(IEnumerable<PlanEntry> entries, bool applyRemappingPoints)
         {
             foreach (var entry in entries)
             {
-                if (entry.Remapping != null && entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate && applyRemappingPoints)
-                {
+                if (entry.Remapping != null && entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate &&
+                    applyRemappingPoints)
                     Remap(entry.Remapping);
-                }
+
                 Train(entry.Skill, entry.Level);
             }
         }
@@ -264,42 +249,31 @@ namespace EVEMon.Common
         /// <summary>
         /// Changes the level of the provided skill, updating the results
         /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        public void SetSkillLevel(StaticSkill skill, int level)
-        {
-            SetSkillLevel(skill, level, LearningOptions.None);
-        }
-
-        /// <summary>
-        /// Changes the level of the provided skill, updating the results
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        /// <param name="updateSP"></param>
-        /// <param name="includePrerequisites"></param>
-        public void SetSkillLevel(StaticSkill skill, int level, LearningOptions options)
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="options">The options.</param>
+        private void SetSkillLevel(StaticSkill skill, int level, LearningOptions options = LearningOptions.None)
         {
             int index = skill.ArrayIndex;
 
             // May quit for if this level is alread equal (or greater, depending on the options)
             if ((options & LearningOptions.UpgradeOnly) != LearningOptions.None)
             {
-                if (m_skillLevels[index] >= level) return;
+                if (m_skillLevels[index] >= level)
+                    return;
             }
             else
             {
-                if (m_skillLevels[index] == level) return;
+                if (m_skillLevels[index] == level)
+                    return;
             }
 
             // Update prerequisites
             if ((options & LearningOptions.IgnorePrereqs) == LearningOptions.None)
             {
-                foreach (var prereq in skill.Prerequisites)
+                // Deal with recursive prereqs (like Polaris)
+                foreach (var prereq in skill.Prerequisites.Where(prereq => prereq.Skill != skill))
                 {
-                    // Deal with recursive prereqs (like Polaris)
-                    if (prereq.Skill == skill) continue;
-
                     // Set the prereq's level
                     SetSkillLevel(prereq.Skill, prereq.Level, options | LearningOptions.UpgradeOnly);
                 }
@@ -308,15 +282,13 @@ namespace EVEMon.Common
             // Update training time
             if ((options & LearningOptions.IgnoreTraining) == LearningOptions.None)
             {
-                m_trainingTime += this.GetTrainingTime(skill, level, TrainingOrigin.FromCurrent);
-                m_trainedSkills.Add(new StaticSkillLevel(skill, level));
+                TrainingTime += GetTrainingTime(skill, level);
+                TrainedSkills.Add(new StaticSkillLevel(skill, level));
             }
 
             // Update skillpoints
             if ((options & LearningOptions.FreezeSP) == LearningOptions.None)
-            {
                 UpdateSP(skill, level);
-            }
 
             // Updates the skill level
             m_skillLevels[index] = level;
@@ -333,11 +305,11 @@ namespace EVEMon.Common
             int difference = targetSP - m_skillSP[staticSkill.ArrayIndex];
 
             m_skillSP[staticSkill.ArrayIndex] = targetSP;
-            m_totalSP += difference;
+            SkillPoints += difference;
         }
 
         #endregion
-        
+
 
         #region Cloning, reseting, temporary changes
 
@@ -346,15 +318,22 @@ namespace EVEMon.Common
         /// </summary>
         public void ClearSkills()
         {
-            for (int i = 0; i < m_skillSP.Length; i++) m_skillLevels[i] = 0;
-            for (int i = 0; i < m_skillLevels.Length; i++) m_skillLevels[i] = 0;
-
-            m_totalSP = 0;
-            m_trainingTime = TimeSpan.Zero;
-
-            for (int i = 0; i < m_attributes.Length; i++)
+            for (int i = 0; i < m_skillSP.Length; i++)
             {
-                m_attributes[i].UpdateEffectiveAttribute();
+                m_skillLevels[i] = 0;
+            }
+
+            for (int i = 0; i < m_skillLevels.Length; i++)
+            {
+                m_skillLevels[i] = 0;
+            }
+
+            SkillPoints = 0;
+            TrainingTime = TimeSpan.Zero;
+
+            foreach (CharacterAttributeScratchpad attribute in m_attributes)
+            {
+                attribute.UpdateEffectiveAttribute();
             }
         }
 
@@ -368,13 +347,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Resets the scratchpad from the <see cref="ICharacter"/> it was built upon.
+        /// Resets the scratchpad from the <see cref="BaseCharacter"/> it was built upon.
         /// </summary>
         public void Reset()
         {
-            if (m_character is CharacterScratchpad)
+            if (Character is CharacterScratchpad)
             {
-                Reset((CharacterScratchpad)m_character);
+                Reset((CharacterScratchpad)Character);
             }
             else
             {
@@ -386,13 +365,13 @@ namespace EVEMon.Common
         /// Resets this scratchpad using the provided scratchpad.
         /// </summary>
         /// <param name="scratchpad"></param>
-        public void Reset(CharacterScratchpad scratchpad)
+        private void Reset(CharacterScratchpad scratchpad)
         {
-            m_totalSP = scratchpad.m_totalSP;
-            m_trainingTime = scratchpad.m_trainingTime;
+            SkillPoints = scratchpad.SkillPoints;
+            TrainingTime = scratchpad.TrainingTime;
 
-            m_trainedSkills.Clear();
-            m_trainedSkills.AddRange(scratchpad.m_trainedSkills);
+            TrainedSkills.Clear();
+            TrainedSkills.AddRange(scratchpad.TrainedSkills);
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
@@ -404,28 +383,28 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Resets the scratchpad from the <see cref="ICharacter"/> it was built upon.
+        /// Resets the scratchpad from the <see cref="BaseCharacter"/> it was built upon.
         /// </summary>
         private void ResetFromCharacter()
         {
-            m_trainingTime = TimeSpan.Zero;
-            m_trainedSkills.Clear();
+            TrainingTime = TimeSpan.Zero;
+            TrainedSkills.Clear();
 
             // Initialize attributes-related stuff
             for (int i = 0; i < m_attributes.Length; i++)
             {
-                var attrib = m_character[(EveAttribute)i];
+                ICharacterAttribute attrib = Character[(EveAttribute)i];
                 m_attributes[i].Reset(attrib.Base, attrib.ImplantBonus);
             }
 
             // Initialize skills
-            m_totalSP = 0;
-            foreach (var skill in StaticSkills.AllSkills)
+            SkillPoints = 0;
+            foreach (StaticSkill skill in StaticSkills.AllSkills)
             {
-                int sp = m_character.GetSkillPoints(skill);
-                int level = m_character.GetSkillLevel(skill);
+                int sp = Character.GetSkillPoints(skill);
+                int level = Character.GetSkillLevel(skill);
 
-                m_totalSP += sp;
+                SkillPoints += sp;
                 m_skillSP[skill.ArrayIndex] = sp;
                 m_skillLevels[skill.ArrayIndex] = level;
             }
@@ -439,7 +418,7 @@ namespace EVEMon.Common
         /// <returns>A disposable object which, once disposed, will restore the state of the </returns>
         public IDisposable BeginTemporaryChanges()
         {
-            var clone = this.Clone();
+            CharacterScratchpad clone = Clone();
             return new DisposableWithCallback(() => Reset(clone));
         }
 

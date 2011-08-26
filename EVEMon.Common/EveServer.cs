@@ -11,7 +11,7 @@ namespace EVEMon.Common
     {
         private int m_users;
         private ServerStatus m_status;
-        private QueryMonitor<SerializableAPIServerStatus> m_monitor;
+        private readonly QueryMonitor<SerializableAPIServerStatus> m_monitor;
 
         /// <summary>
         /// Constructor.
@@ -25,25 +25,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the number of users online at the last update.
-        /// </summary>
-        public int Users 
-        { 
-            get { return m_users; } 
-        }
-
-        /// <summary>
-        /// Gets the server's status.
-        /// </summary>
-        public ServerStatus Status
-        {
-            get { return m_status; }
-        }
-
-        /// <summary>
         /// Gets the server's name.
         /// </summary>
-        public string Name
+        private static string Name
         {
             get 
             { 
@@ -97,7 +81,7 @@ namespace EVEMon.Common
         private void OnMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
         {
             // Was there an error ?
-            var lastStatus = m_status;
+            ServerStatus lastStatus = m_status;
             if (result.HasError)
             {
                 // Checks if EVE Backend Database is temporarily disabled

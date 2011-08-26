@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common
 {
@@ -13,13 +11,11 @@ namespace EVEMon.Common
 
         private int m_base;
         private int m_implantBonus;
-        private int m_effectiveAttribute;
 
         /// <summary>
         /// Constructor from a character attribute.
         /// </summary>
         /// <param name="attrib"></param>
-        /// <param name="src"></param>
         internal CharacterAttributeScratchpad(EveAttribute attrib)
         {
             m_attrib = attrib;
@@ -29,6 +25,7 @@ namespace EVEMon.Common
         /// Resets the attribute with the given source
         /// </summary>
         /// <param name="baseAttribute"></param>
+        /// <param name="implantBonus"></param>
         internal void Reset(int baseAttribute, int implantBonus)
         {
             m_base = baseAttribute;
@@ -52,7 +49,7 @@ namespace EVEMon.Common
         /// </summary>
         internal void UpdateEffectiveAttribute()
         {
-            m_effectiveAttribute = m_base + m_implantBonus;
+            EffectiveValue = m_base + m_implantBonus;
         }
 
         /// <summary>
@@ -84,10 +81,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the effective attribute value.
         /// </summary>
-        public int EffectiveValue
-        {
-            get { return m_effectiveAttribute; }
-        }
+        public int EffectiveValue { get; private set; }
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :

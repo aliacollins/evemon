@@ -1,6 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
@@ -15,57 +16,43 @@ namespace EVEMon.Common
     {
         private readonly List<UriCharacter> m_uriCharacters = new List<UriCharacter>();
         private readonly CharacterIdentity m_characterID;
-        private CCPCharacter m_ccp;
 
         /// <summary>
         /// Default constructor, this class is only instantiated by CharacterIdentity
         /// </summary>
-        /// <param name="character">The character identitity this collection is bound to.</param>
+        /// <param name="characterID">The character identitity this collection is bound to.</param>
         internal CharacterCollection(CharacterIdentity characterID)
         {
             m_characterID = characterID;
-            m_ccp = new CCPCharacter(characterID);
+            CCPCharacter = new CCPCharacter(characterID);
         }
 
         /// <summary>
         /// Gets the CCP character
         /// </summary>
-        public CCPCharacter CCPCharacter
-        {
-            get { return m_ccp; }
-        }
+        public CCPCharacter CCPCharacter { get; private set; }
 
         /// <summary>
         /// Gets an enumeration over the URI character
         /// </summary>
         public IEnumerable<UriCharacter> UriCharacters
         {
-            get
-            {
-                foreach (var source in m_uriCharacters)
-                {
-                    yield return source;
-                }
-            }
+            get { return m_uriCharacters; }
         }
 
         /// <summary>
         /// Gets a character by its guid.
         /// </summary>
-        /// <param name="uri"></param>
+        /// <param name="guid"></param>
         /// <returns></returns>
         public Character this[Guid guid]
         {
             get
             {
-                if (m_ccp.Guid == guid) return m_ccp;
+                if (CCPCharacter.Guid == guid)
+                    return CCPCharacter;
 
-                foreach (var source in m_uriCharacters)
-                {
-                    if (source.Guid == guid) return source;
-                }
-
-                return null;
+                return m_uriCharacters.FirstOrDefault(source => source.Guid == guid);
             }
         }
 
@@ -76,14 +63,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public UriCharacter this[Uri uri]
         {
-            get
-            {
-                foreach (var source in m_uriCharacters)
-                {
-                    if (source.Uri == uri) return source;
-                }
-                return null;
-            }
+            get { return m_uriCharacters.FirstOrDefault(source => source.Uri == uri); }
         }
 
         /// <summary>
@@ -118,7 +98,7 @@ namespace EVEMon.Common
         /// <param name="ccpCharacter"></param>
         internal void Add(SerializableCCPCharacter ccpCharacter)
         {
-            m_ccp = new CCPCharacter(m_characterID, ccpCharacter);
+            CCPCharacter = new CCPCharacter(m_characterID, ccpCharacter);
         }
 
         /// <summary>
@@ -129,9 +109,10 @@ namespace EVEMon.Common
         /// <returns>The created character, or null if there was errors on the provided CCP data.</returns>
         internal UriCharacter Add(Uri uri, APIResult<SerializableAPICharacterSheet> result)
         {
-            if (result.HasError) return null;
+            if (result.HasError)
+                return null;
 
-            var character = new UriCharacter(m_characterID, uri, result);
+            UriCharacter character = new UriCharacter(m_characterID, uri, result);
             m_uriCharacters.Add(character);
 
             EveMonClient.OnCharacterCollectionChanged();
@@ -146,30 +127,30 @@ namespace EVEMon.Common
         public void Remove(UriCharacter character)
         {
             if (!m_uriCharacters.Remove(character))
-            {
                 throw new InvalidOperationException("This source does not belong to this character's sources");
-            }
+
             EveMonClient.OnCharacterCollectionChanged();
         }
 
+
         #region Enumerators
+
         IEnumerator<Character> IEnumerable<Character>.GetEnumerator()
         {
-            List<Character> result = new List<Character>();
-            result.Add(m_ccp);
-            foreach (var uriCharacter in m_uriCharacters) result.Add(uriCharacter);
+            List<Character> result = new List<Character> { CCPCharacter };
+            result.AddRange(m_uriCharacters);
 
             return result.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            List<Character> result = new List<Character>();
-            result.Add(m_ccp);
-            foreach (var uriCharacter in m_uriCharacters) result.Add(uriCharacter);
+            List<Character> result = new List<Character> { CCPCharacter };
+            result.AddRange(m_uriCharacters);
 
-            return ((System.Collections.IEnumerable)result).GetEnumerator();
+            return ((IEnumerable)result).GetEnumerator();
         }
+
         #endregion
     }
 }
