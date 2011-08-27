@@ -31,21 +31,24 @@ namespace EVEMon
             this.readingPane = new EVEMon.ReadingPane();
             this.SuspendLayout();
             // 
-            // eveMailReadingPane
+            // readingPane
             // 
             this.readingPane.Dock = System.Windows.Forms.DockStyle.Fill;
             this.readingPane.Location = new System.Drawing.Point(0, 0);
-            this.readingPane.Name = "eveMailReadingPane";
-            this.readingPane.Size = new System.Drawing.Size(584, 232);
+            this.readingPane.MinimumSize = new System.Drawing.Size(250, 150);
+            this.readingPane.Name = "readingPane";
+            this.readingPane.Size = new System.Drawing.Size(414, 232);
             this.readingPane.TabIndex = 0;
             // 
-            // EVEMailWindow
+            // EveMessageWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 232);
+            this.ClientSize = new System.Drawing.Size(414, 232);
             this.Controls.Add(this.readingPane);
-            this.Name = "EVEMailWindow";
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.MinimumSize = new System.Drawing.Size(400, 250);
+            this.Name = "EveMessageWindow";
             this.Text = "EVE Mail Message";
             this.ResumeLayout(false);
 

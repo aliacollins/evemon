@@ -16,8 +16,6 @@ namespace EVEMon
         {
             InitializeComponent();
 
-            DoubleBuffered = true;
-
             lblMessageHeader.Font = FontFactory.GetDefaultFont(10F, FontStyle.Bold);
             lblSender.Font = FontFactory.GetDefaultFont(10F);
             flPanelHeader.ForeColor = SystemColors.ControlText;
@@ -54,11 +52,10 @@ namespace EVEMon
             // Update the text on the header labels
             lblMessageHeader.Text = m_selectedObject.Title;
             lblSender.Text = m_selectedObject.Sender;
-            lblSendDate.Text = String.Format(CultureConstants.DefaultCulture, "Sent: {0:ddd} {0:G}", m_selectedObject.SentDate.ToLocalTime());
-            lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}", string.Join(", ", m_selectedObject.Recipient));
-
-            // Allows the text in the webbrowser to be displayed
-            wbMailBody.AllowNavigation = true;
+            lblSendDate.Text = String.Format(CultureConstants.DefaultCulture, "Sent: {0:ddd} {0:G}",
+                                             m_selectedObject.SentDate.ToLocalTime());
+            lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}",
+                                              string.Join(", ", m_selectedObject.Recipient));
 
             // Parce the mail body text to the web browser
             // so for the text to be formatted accordingly
@@ -68,11 +65,11 @@ namespace EVEMon
             do
             {
                 Application.DoEvents();
-            } while (wbMailBody.ReadyState != WebBrowserReadyState.Complete);
+            } while (wbMailBody.IsBusy);
 
             // Show the controls
             flPanelHeader.Visible = true;
-            wbMailBody.Visible = true;       
+            wbMailBody.Visible = true;
         }
 
         /// <summary>
@@ -100,8 +97,28 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.WebBrowserNavigatingEventArgs"/> instance containing the event data.</param>
         private void wbMailBody_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-            // Prevents the browser to navigate past the home page
-            wbMailBody.AllowNavigation = false;
+            // We assure that the internal browser will initialize and
+            // any other attempt to navigate to a non valid link will fail
+            if (e.Url.ToString() == "about:blank" && String.IsNullOrEmpty(wbMailBody.DocumentText))
+                return;
+
+            // If the link complies with HTTP or HTTPS, open the link on the system's default browser
+            if (e.Url.ToString().StartsWith("http://") || e.Url.ToString().StartsWith("https://"))
+                Util.OpenURL(e.Url.ToString());
+
+            // Prevents the browser to navigate past the shown page
+            e.Cancel = true;
+        }
+
+        /// <summary>
+        /// Handles the PreviewKeyDown event of the wbMailBody control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.PreviewKeyDownEventArgs"/> instance containing the event data.</param>
+        private void wbMailBody_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            // Disables the reload shortcut key
+            wbMailBody.WebBrowserShortcutsEnabled = e.KeyData != Keys.F5;
         }
     }
 }

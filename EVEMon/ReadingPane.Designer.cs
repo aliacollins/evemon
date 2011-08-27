@@ -58,10 +58,12 @@ namespace EVEMon
             this.wbMailBody.Location = new System.Drawing.Point(5, 70);
             this.wbMailBody.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbMailBody.Name = "wbMailBody";
+            this.wbMailBody.ScriptErrorsSuppressed = true;
             this.wbMailBody.Size = new System.Drawing.Size(257, 85);
             this.wbMailBody.TabIndex = 2;
             this.wbMailBody.WebBrowserShortcutsEnabled = false;
             this.wbMailBody.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.wbMailBody_Navigating);
+            this.wbMailBody.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.wbMailBody_PreviewKeyDown);
             // 
             // flPanelHeader
             // 
