@@ -278,6 +278,7 @@ namespace EVEMon.SkillPlanner
                                          return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
                                      });
 
+                    // We hide the reprocessing skill here and make it visible in the "Reprocessing Info" section
                     if (prop.ID == DBConstants.ReprocessingSkillPropertyID)
                         visibleProperty = false;
 
@@ -314,13 +315,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="items">The list of items.</param>
         /// <param name="group">The listGroup.</param>
         /// <param name="prop">The property.</param>
-        private void AddPropertyValue(List<ListViewItem> items, ListViewGroup group, EveProperty prop)
+        private void AddPropertyValue(ICollection<ListViewItem> items, ListViewGroup group, EveProperty prop)
         {
             string[] labels = SelectControl.SelectedObjects.Select(prop.GetLabelOrDefault).ToArray();
             float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) {ToolTipText = prop.Description, Text = prop.Name};
+            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name };
             items.Add(item);
 
             AddValueForSelectedObjects(prop, item, labels, values);
@@ -344,7 +345,7 @@ namespace EVEMon.SkillPlanner
                 min = values.Min();
                 max = values.Max();
                 allEqual = values.All(x => Math.Abs(x - min) < float.Epsilon);
-                if (obj is EveProperty && !((EveProperty) obj).HigherIsBetter)
+                if (obj is EveProperty && !((EveProperty)obj).HigherIsBetter)
                 {
                     float temp = min;
                     min = max;
@@ -390,11 +391,11 @@ namespace EVEMon.SkillPlanner
             string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) {ToolTipText = "The slot that this item fits in", Text = "Fitting Slot"};
+            ListViewItem item = new ListViewItem(group) { ToolTipText = "The slot that this item fits in", Text = "Fitting Slot" };
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels, new float[] {});
+            AddValueForSelectedObjects(null, item, labels, new float[] { });
         }
 
         /// <summary>
@@ -419,9 +420,8 @@ namespace EVEMon.SkillPlanner
             // Add the reprocessing skill
             AddReprocessingSkill(group, items);
 
-            IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects
-                .Where(x => x.ReprocessingMaterials != null)
-                .SelectMany(x => x.ReprocessingMaterials);
+            IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects.Where(
+                x => x.ReprocessingMaterials != null).SelectMany(x => x.ReprocessingMaterials);
 
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
@@ -449,16 +449,16 @@ namespace EVEMon.SkillPlanner
                     // Add default labels and values for non existing materials
                     if (material == null)
                     {
-                        labels.Add("0");
+                        labels.Add("0 ");
                         values.Add(0f);
                         continue;
                     }
-                    labels.Add(material.Quantity.ToString("#,###0"));
+                    labels.Add(material.Quantity.ToString("N0"));
                     values.Add(material.Quantity);
                 }
 
                 // Create the list view item
-                ListViewItem lvItem = new ListViewItem(group) {ToolTipText = item.Description, Text = item.Name};
+                ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name };
                 items.Add(lvItem);
 
                 AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
@@ -476,7 +476,7 @@ namespace EVEMon.SkillPlanner
         {
             // Create the list of labels
             List<string> labels = new List<string>();
-            foreach (var obj in SelectControl.SelectedObjects)
+            foreach (Item obj in SelectControl.SelectedObjects)
             {
                 if (obj.ReprocessingMaterials == null)
                 {
@@ -499,7 +499,7 @@ namespace EVEMon.SkillPlanner
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] {});
+            AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] { });
         }
 
         #endregion

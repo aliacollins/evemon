@@ -823,6 +823,14 @@ namespace EVEMon.SkillPlanner
             ShowInBrowser(item);
         }
 
+        /// <summary>
+        /// Exports activity info to CSV format.
+        /// </summary>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(PropertiesList);
+        }
+
         #endregion
 
     }

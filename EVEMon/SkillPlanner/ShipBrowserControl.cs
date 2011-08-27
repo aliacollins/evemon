@@ -39,7 +39,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e) 
         {
-            ListViewExporter.CreateCSV(lvShipProperties);
+            ListViewExporter.CreateCSV(PropertiesList);
         }
 
         #endregion
