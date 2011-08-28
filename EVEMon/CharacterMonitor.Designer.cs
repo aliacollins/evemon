@@ -45,7 +45,6 @@ namespace EVEMon
             this.upperPanel = new System.Windows.Forms.Panel();
             this.Header = new EVEMon.CharacterMonitorHeader();
             this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
-            this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.skillQueuePanel = new System.Windows.Forms.Panel();
             this.lblPaused = new System.Windows.Forms.Label();
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
@@ -297,13 +296,6 @@ namespace EVEMon
             this.Header.Name = "Header";
             this.Header.Size = new System.Drawing.Size(574, 183);
             this.Header.TabIndex = 15;
-            // 
-            // ttToolTip
-            // 
-            this.ttToolTip.AutoPopDelay = 5000000;
-            this.ttToolTip.InitialDelay = 500;
-            this.ttToolTip.IsBalloon = true;
-            this.ttToolTip.ReshowDelay = 100;
             // 
             // skillQueuePanel
             // 
@@ -620,6 +612,7 @@ namespace EVEMon
             this.notificationList.Location = new System.Drawing.Point(2, 2);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
+            this.notificationList.Notifications = ((System.Collections.Generic.IEnumerable<EVEMon.Common.Notifications.NotificationEventArgs>)(resources.GetObject("notificationList.Notifications")));
             this.notificationList.Size = new System.Drawing.Size(571, 72);
             this.notificationList.TabIndex = 13;
             this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
@@ -1003,7 +996,6 @@ namespace EVEMon
         private System.Windows.Forms.Label lblCurrentlyTraining;
         private System.Windows.Forms.Panel upperPanel;
         private System.Windows.Forms.SaveFileDialog sfdSaveDialog;
-        private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.TableLayoutPanel tlpStatus;
         private System.Windows.Forms.FlowLayoutPanel flpStatusValues;
         private System.Windows.Forms.FlowLayoutPanel flpStatusLabels;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
@@ -25,6 +26,7 @@ namespace EVEMon.Common
 
 
         #region Public properties and methods
+
         /// <summary>
         /// Gets the default provider
         /// </summary>
@@ -60,18 +62,22 @@ namespace EVEMon.Common
             {
                 // Is it a custom provider stored in this collection ?
                 if (m_customProviders.Contains(value))
+                {
                     m_currentProvider = value;
-
-                // Is it the default provider ?
+                }
+                    // Is it the default provider ?
                 else if (APIProvider.DefaultProvider == value)
+                {
                     m_currentProvider = value;
-
-                // is it the test provider
+                }
+                    // is it the test provider
                 else if (APIProvider.TestProvider == value)
+                {
                     m_currentProvider = value;
-
-                // Then it's a non-register provider, we messed up since it should be in this global collection
-                else throw new InvalidOperationException("The given provider is not in the list");
+                }
+                    // Then it's a non-register provider, we messed up since it should be in this global collection
+                else
+                    throw new InvalidOperationException("The given provider is not in the list");
             }
         }
 
@@ -84,46 +90,38 @@ namespace EVEMon.Common
         {
             get
             {
-                // Is it the default provider ?
-                if (DefaultProvider.Name == name)
-                    return DefaultProvider;
-
-                // Look among custom providers
-                foreach (var provider in m_customProviders)
-                {
-                    if (provider.Name == name)
-                        return provider;
-                }
-
-                // No provider found
-                return null;
+                // Is it the default provider ? If not look among custom providers
+                return DefaultProvider.Name == name
+                           ? DefaultProvider
+                           : m_customProviders.FirstOrDefault(provider => provider.Name == name);
             }
         }
+
         #endregion
 
 
         #region Importation/exportation and other internals
+
         /// <summary>
         /// Update the providers with the provided serialization object
         /// </summary>
-        /// <param name="sProviders"></param>
+        /// <param name="serial"></param>
         internal void Import(SerializableAPIProviders serial)
         {
             m_customProviders.Clear();
             m_currentProvider = DefaultProvider;
 
             // Providers
-            foreach(var sProvider in serial.CustomProviders)
+            foreach (var sProvider in serial.CustomProviders)
             {
-                var provider = new APIProvider();
-                provider.Name = sProvider.Name;
-                provider.Url = sProvider.Url;
+                APIProvider provider = new APIProvider { Name = sProvider.Name, Url = sProvider.Url };
 
                 // Providers' methods
-                foreach(var sMethod in sProvider.Methods)
+                foreach (var sMethod in sProvider.Methods)
                 {
-                    var method = provider.GetMethod(sMethod.Method);
-                    if (method != null) method.Path = sMethod.Path;
+                    APIMethod method = provider.GetMethod(sMethod.Method);
+                    if (method != null)
+                        method.Path = sMethod.Path;
                 }
 
                 // Add this provider to our inner list
@@ -131,13 +129,13 @@ namespace EVEMon.Common
             }
 
             // Current provider
-            var newCurrentProvider = this[serial.CurrentProviderName];
-            
+            APIProvider newCurrentProvider = this[serial.CurrentProviderName];
+
             if (newCurrentProvider != null)
                 m_currentProvider = newCurrentProvider;
 
-            if (serial.CurrentProviderName == GlobalAPIProviderCollection.TestProvider.Name)
-                m_currentProvider = GlobalAPIProviderCollection.TestProvider;
+            if (serial.CurrentProviderName == TestProvider.Name)
+                m_currentProvider = TestProvider;
         }
 
         /// <summary>
@@ -146,17 +144,17 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableAPIProviders Export()
         {
-            var serial = new SerializableAPIProviders { CurrentProviderName = CurrentProvider.Name };
+            SerializableAPIProviders serial = new SerializableAPIProviders { CurrentProviderName = CurrentProvider.Name };
 
             // Providers
-            foreach(var provider in CustomProviders)
+            foreach (APIProvider provider in CustomProviders)
             {
-                var serialProvider = new SerializableAPIProvider { Name = provider.Name, Url = provider.Url };
+                SerializableAPIProvider serialProvider = new SerializableAPIProvider { Name = provider.Name, Url = provider.Url };
                 serial.CustomProviders.Add(serialProvider);
 
                 // Methods
                 serialProvider.Methods.Clear();
-                foreach(var method in provider.Methods)
+                foreach (APIMethod method in provider.Methods)
                 {
                     serialProvider.Methods.Add(new SerializableAPIMethod { Method = method.Method, Path = method.Path });
                 }
@@ -164,7 +162,9 @@ namespace EVEMon.Common
 
             return serial;
         }
+
         #endregion
+
 
         /// <summary>
         /// Core method to implement for collection services

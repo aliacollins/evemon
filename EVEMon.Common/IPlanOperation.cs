@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 namespace EVEMon.Common
 {
     public interface IPlanOperation
@@ -21,7 +22,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets all the entries to add when an addition is performed, including the prerequisites.
         /// </summary>
-        ReadOnlyCollection<PlanEntry> AllEntriesToAdd { get; }
+        IEnumerable<PlanEntry> AllEntriesToAdd { get; }
         /// <summary>
         /// Gets the skill levels the user originally wanted to add.
         /// </summary>

@@ -88,8 +88,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Check if file is downloaded and up to date.
         /// </summary>
-        /// <param name="characterName"></param>
-        /// <returns>True if file is up to date, False otherwise</returns>
+        /// <param name="filename">The filename.</param>
+        /// <param name="updateTime">The update time.</param>
+        /// <param name="period">The period.</param>
+        /// <returns>
+        /// True if file is up to date, False otherwise
+        /// </returns>
         internal static bool CheckFileUpToDate(string filename, DateTime updateTime, TimeSpan period)
         {
             var file = GetFile(filename);

@@ -10,14 +10,14 @@ namespace EVEMon.Common
     public sealed class GlobalDatafileCollection : ReadonlyCollection<Datafile>
     {
         /// <summary>
-        /// Default constructor. This class is only instantiated by EveMonClient
+        /// Default constructor. This class is only instantiated by EveMonClient.
         /// </summary>
         internal GlobalDatafileCollection()
         {
         }
 
         /// <summary>
-        /// Update the datafiles list
+        /// Update the datafiles list.
         /// </summary>
         public void Refresh()
         {
@@ -32,7 +32,7 @@ namespace EVEMon.Common
                 Items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
                 Items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
             }
-            // Don't worry if we cant create MD5 maybe they have FIPS enforced.
+            // Don't worry if we can't create MD5 maybe they have FIPS enforced
             catch (Exception)
             {
                 EveMonClient.Trace("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");

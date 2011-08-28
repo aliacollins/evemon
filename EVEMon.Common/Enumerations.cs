@@ -137,6 +137,40 @@ namespace EVEMon.Common
 
     #region Simple Enumerations
 
+    public enum QueryStatus
+    {
+        /// <summary>
+        /// The query will be updated on due time.
+        /// </summary>
+        [Description("Pending...")]
+        Pending,
+        /// <summary>
+        /// The query is being updated.
+        /// </summary>
+        [Description("Updating...")]
+        Updating,
+        /// <summary>
+        /// The query is disabled by the settings.
+        /// </summary>
+        [Description("Disabled by settings.")]
+        Disabled,
+        /// <summary>
+        /// There is no network connection.
+        /// </summary>
+        [Description("No TCP/IP connection.")]
+        NoNetwork,
+        /// <summary>
+        /// A full key was needed.
+        /// </summary>
+        [Description("Full API Key required.")]
+        NoFullKey,
+        /// <summary>
+        /// The character is not on any account.
+        /// </summary>
+        [Description("No associated account.")]
+        NoAccount
+    }
+
     public enum AccountSortCriteria
     {
         /// <summary>

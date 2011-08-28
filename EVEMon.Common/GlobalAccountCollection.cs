@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-
+using System.Text;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
@@ -34,7 +33,8 @@ namespace EVEMon.Common
         {
             message = String.Empty;
 
-            var accountsNotTraining = EveMonClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && !x.HasCharacterInTraining);
+            IEnumerable<Account> accountsNotTraining =
+                EveMonClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && !x.HasCharacterInTraining);
 
             // All accounts are training ?
             if (accountsNotTraining.Count() == 0)
@@ -44,14 +44,15 @@ namespace EVEMon.Common
             StringBuilder builder = new StringBuilder();
             if (accountsNotTraining.Count() == 1)
             {
-                builder.AppendFormat("{0} is not in training", (EveMonClient.Accounts.Count == 1 ? "Your account" : "One of your accounts"));
+                builder.AppendFormat("{0} is not in training",
+                                     (EveMonClient.Accounts.Count == 1 ? "Your account" : "One of your accounts"));
             }
             else
             {
                 builder.Append("Some of your accounts are not in training.");
             }
 
-            foreach (var account in accountsNotTraining)
+            foreach (Account account in accountsNotTraining)
             {
                 builder.AppendLine();
                 builder.AppendFormat(CultureConstants.DefaultCulture, "* {0}", account);
@@ -69,15 +70,7 @@ namespace EVEMon.Common
         /// <returns>The searched account when found; null otherwise.</returns>
         public Account this[long userID]
         {
-            get
-            {
-                foreach (var account in Items.Values)
-                {
-                    if (account.UserID == userID)
-                        return account;
-                }
-                return null;
-            }
+            get { return Items.Values.FirstOrDefault(account => account.UserID == userID); }
         }
 
         /// <summary>
@@ -91,15 +84,21 @@ namespace EVEMon.Common
         {
             // Invokes on the thread pool
             Dispatcher.BackgroundInvoke(() =>
-                {
-                    var charListResult = EveMonClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
+                                            {
+                                                APIResult<SerializableAPICharacters> charListResult =
+                                                    EveMonClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
 
-                    // Call account/AccountStatus.xml to check whether it is a full api key
-                    var accountStatusResult = EveMonClient.APIProviders.CurrentProvider.QueryAccountStatus(userID, apiKey);
+                                                // Call account/AccountStatus.xml to check whether it is a full api key
+                                                APIResult<SerializableAPIAccountStatus> accountStatusResult =
+                                                    EveMonClient.APIProviders.CurrentProvider.QueryAccountStatus(userID, apiKey);
 
-                    // Invokes the callback on the UI thread
-                    Dispatcher.Invoke(() => callback(null, new AccountCreationEventArgs(userID, apiKey, accountStatusResult, charListResult)));
-                });
+                                                // Invokes the callback on the UI thread
+                                                Dispatcher.Invoke(
+                                                    () =>
+                                                    callback(null,
+                                                             new AccountCreationEventArgs(userID, apiKey, accountStatusResult,
+                                                                                          charListResult)));
+                                            });
         }
 
         /// <summary>
@@ -117,9 +116,7 @@ namespace EVEMon.Common
 
             // Remove the account
             if (!Items.Remove(account.UserID))
-            {
                 throw new InvalidOperationException("This account does not exist in the list.");
-            }
 
             EveMonClient.OnAccountCollectionChanged();
         }
@@ -151,7 +148,9 @@ namespace EVEMon.Common
                 }
                 catch (ArgumentException ex)
                 {
-                    EveMonClient.Trace("GlobalAccountCollection.Import - An account with id {0} already existed; additional instance ignored.", serialAccount.ID);
+                    EveMonClient.Trace(
+                        "GlobalAccountCollection.Import - An account with id {0} already existed; additional instance ignored.",
+                        serialAccount.ID);
                     ExceptionHandler.LogException(ex, true);
                 }
             }
@@ -165,14 +164,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableAccount> Export()
         {
-            var serial = new List<SerializableAccount>();
-
-            foreach (var account in Items.Values)
-            {
-                serial.Add(account.Export());
-            }
-
-            return serial;
+            return Items.Values.Select(account => account.Export()).ToList();
         }
     }
 }

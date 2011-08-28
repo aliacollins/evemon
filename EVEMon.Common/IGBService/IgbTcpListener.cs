@@ -31,7 +31,7 @@ namespace EVEMon.Common.IgbService
         }
 
         /// <summary>
-        /// Start listening
+        /// Start listening.
         /// </summary>
         public void Start()
         {
@@ -53,15 +53,18 @@ namespace EVEMon.Common.IgbService
                     m_listener = null;
                     EveMonClient.Trace(String.Format("{0} - {1} - {2}", ex.SocketErrorCode, ex.Message, ex.ErrorCode));
                     EveMonClient.Notifications.NotifyIgbServiceException(m_listenEndpoint.Port);
+                    return;
                 }
+
+                EveMonClient.Notifications.InvalidateIgbServiceException();
             }
         }
 
         /// <summary>
-        /// Stop listening
+        /// Stop listening.
         /// </summary>
         /// <remarks>
-        /// My wife thinks I use this function too often
+        /// My wife thinks I use this function too often.
         /// </remarks>
         public void Stop()
         {

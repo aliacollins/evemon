@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.Settings;
@@ -28,15 +28,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Character this[Guid guid]
         {
-            get
-            {
-                foreach (var character in Items)
-                {
-                    if (character.Guid == guid)
-                        return character;
-                }
-                return null;
-            }
+            get { return Items.FirstOrDefault(character => character.Guid == guid); }
         }
 
         /// <summary>
@@ -75,7 +67,7 @@ namespace EVEMon.Common
             // For CCP characters, also put it on the account's ignore list.
             if (character is CCPCharacter)
             {
-                var account = character.Identity.Account;
+                Account account = character.Identity.Account;
                 if (account != null)
                     account.IgnoreList.Add(character as CCPCharacter);
             }
@@ -99,30 +91,38 @@ namespace EVEMon.Common
                 switch (format.ToLower(CultureConstants.DefaultCulture))
                 {
                     case "eveapi":
-                        var apiResult = Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.ToString(), APIProvider.RowsetsTransform);
+                        APIResult<SerializableAPICharacterSheet> apiResult =
+                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.ToString(), APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;
                     case "serializableccpcharacter":
                         try
                         {
-                            var ccpResult = Util.DeserializeXML<SerializableCCPCharacter>(uri.ToString());
+                            SerializableCCPCharacter ccpResult = Util.DeserializeXML<SerializableCCPCharacter>(uri.ToString());
                             callback(null, new UriCharacterEventArgs(uri, ccpResult));
                         }
                         catch (NullReferenceException ex)
                         {
-                            callback(null, new UriCharacterEventArgs(uri, String.Format(CultureConstants.DefaultCulture, "Unable to load file (SerializableCCPCharacter). ({0})", ex.Message)));
+                            callback(null,
+                                     new UriCharacterEventArgs(uri,
+                                                               String.Format(CultureConstants.DefaultCulture,
+                                                                             "Unable to load file (SerializableCCPCharacter). ({0})",
+                                                                             ex.Message)));
                         }
                         break;
                     case "character":
                         try
                         {
-                            var oldCharacterResult = Util.DeserializeXML<OldExportedCharacter>(uri.ToString());
-                            var ccpCharacterResult = oldCharacterResult.ToSerializableCCPCharacter();
+                            OldExportedCharacter oldCharacterResult = Util.DeserializeXML<OldExportedCharacter>(uri.ToString());
+                            SerializableCCPCharacter ccpCharacterResult = oldCharacterResult.ToSerializableCCPCharacter();
                             callback(null, new UriCharacterEventArgs(uri, ccpCharacterResult));
                         }
                         catch (NullReferenceException ex)
                         {
-                            callback(null, new UriCharacterEventArgs(uri, String.Format(CultureConstants.DefaultCulture, "Unable to load file (Character). ({0})", ex.Message)));
+                            callback(null,
+                                     new UriCharacterEventArgs(uri,
+                                                               String.Format(CultureConstants.DefaultCulture,
+                                                                             "Unable to load file (Character). ({0})", ex.Message)));
                         }
                         break;
                     default:
@@ -130,11 +130,12 @@ namespace EVEMon.Common
                         break;
                 }
             }
-            // So, it's a web address, let's do it in an async way.
+                // So, it's a web address, let's do it in an async way.
             else
             {
-                Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri.ToString(), null, APIProvider.RowsetsTransform, 
-                    (result) => callback(null, new UriCharacterEventArgs(uri, result)));
+                Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri.ToString(), null, APIProvider.RowsetsTransform,
+                                                                           result =>
+                                                                           callback(null, new UriCharacterEventArgs(uri, result)));
             }
         }
 
@@ -142,33 +143,31 @@ namespace EVEMon.Common
         /// Imports the character identities from a serialization object
         /// </summary>
         /// <param name="serial"></param>
-        /// <param name="charactersGuid"></param>
         internal void Import(IEnumerable<SerializableSettingsCharacter> serial)
         {
             // Clear the accounts on every identity
-            foreach (var id in EveMonClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
             {
                 id.Account = null;
             }
 
             // Import the characters, their identies, etc
             Items.Clear();
-            foreach (var serialCharacter in serial)
+            foreach (SerializableSettingsCharacter serialCharacter in serial)
             {
                 // Gets the identity or create it
-                var id = EveMonClient.CharacterIdentities[serialCharacter.ID];
-                if (id == null)
-                    id = EveMonClient.CharacterIdentities.Add(serialCharacter.ID, serialCharacter.Name);
+                CharacterIdentity id = EveMonClient.CharacterIdentities[serialCharacter.ID] ??
+                                       EveMonClient.CharacterIdentities.Add(serialCharacter.ID, serialCharacter.Name);
 
                 // Imports the character
-                var ccpCharacter = serialCharacter as SerializableCCPCharacter;
+                SerializableCCPCharacter ccpCharacter = serialCharacter as SerializableCCPCharacter;
                 if (ccpCharacter != null)
                 {
                     Items.Add(new CCPCharacter(id, ccpCharacter));
                 }
                 else
                 {
-                    var uriCharacter = serialCharacter as SerializableUriCharacter;
+                    SerializableUriCharacter uriCharacter = serialCharacter as SerializableUriCharacter;
                     Items.Add(new UriCharacter(id, uriCharacter));
                 }
             }
@@ -183,23 +182,16 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableSettingsCharacter> Export()
         {
-            var serial = new List<SerializableSettingsCharacter>();
-
-            foreach (var character in Items)
-            {
-                serial.Add(character.Export());
-            }
-
-            return serial;
+            return Items.Select(character => character.Export()).ToList();
         }
 
         /// <summary>
         /// imports the plans from serialization objects
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="serial"></param>
         internal void ImportPlans(List<SerializablePlan> serial)
         {
-            foreach (var character in Items)
+            foreach (Character character in Items)
             {
                 character.ImportPlans(serial);
             }
@@ -211,8 +203,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializablePlan> ExportPlans()
         {
-            var serial = new List<SerializablePlan>();
-            foreach (var character in Items)
+            List<SerializablePlan> serial = new List<SerializablePlan>();
+            foreach (Character character in Items)
             {
                 character.ExportPlans(serial);
             }

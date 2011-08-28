@@ -1,6 +1,5 @@
 ﻿using System;
 using EVEMon.Common.Serialization.API;
-using System.ComponentModel;
 
 namespace EVEMon.Common
 {
@@ -51,65 +50,5 @@ namespace EVEMon.Common
         /// Gets true when a force update is within CCP cache time.
         /// </summary>
         bool ForceUpdateWillCauseError { get; }
-    }
-
-    /// <summary>
-    /// Adds the internal methods for a query monitor.
-    /// </summary>
-    internal interface IQueryMonitorEx : IQueryMonitor
-    {
-        /// <summary>
-        /// Resets the monitor with the given last update time.
-        /// </summary>
-        /// <param name="lastUpdate">The UTC time of the last update.</param>
-        void Reset(DateTime lastUpdate);
-
-        /// <summary>
-        /// Updates on every second.
-        /// </summary>
-        void UpdateOnOneSecondTick();
-
-        /// <summary>
-        /// Forces an update.
-        /// </summary>
-        /// <param name="retryOnError">When true, the update will be reattempted until succesful.</param>
-        void ForceUpdate(bool retryOnError);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum QueryStatus
-    {
-        /// <summary>
-        /// The query will be updated on due time.
-        /// </summary>
-        [Description("Pending...")]
-        Pending,
-        /// <summary>
-        /// The query is being updated.
-        /// </summary>
-        [Description("Updating...")]
-        Updating,
-        /// <summary>
-        /// The query is disabled by the settings.
-        /// </summary>
-        [Description("Disabled by settings.")]
-        Disabled,
-        /// <summary>
-        /// There is no network connection.
-        /// </summary>
-        [Description("No TCP/IP connection.")]
-        NoNetwork,
-        /// <summary>
-        /// A full key was needed.
-        /// </summary>
-        [Description("Full API Key required.")]
-        NoFullKey,
-        /// <summary>
-        /// The character is not on any account.
-        /// </summary>
-        [Description("No associated account.")]
-        NoAccount
     }
 }

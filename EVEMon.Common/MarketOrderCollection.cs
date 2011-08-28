@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -48,6 +47,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src"></param>
+        /// <param name="endedOrders"></param>
         /// <returns>The list of expired orders.</returns>
         internal void Import(IEnumerable<SerializableOrderListItem> src, List<MarketOrder> endedOrders)
         {
@@ -61,18 +61,16 @@ namespace EVEMon.Common
 
             // Import the orders from the API
             List<MarketOrder> newOrders = new List<MarketOrder>();
-            foreach (SerializableOrderListItem srcOrder in src)
+            foreach (SerializableOrderListItem srcOrder in
+                src.Select(srcOrder => new
+                                           {
+                                               srcOrder,
+                                               limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays)
+                                           }).Where(
+                                               order => order.limit >= DateTime.UtcNow).Where(
+                                                   order => !Items.Any(x => x.TryImport(order.srcOrder, endedOrders))).Select(
+                                                       order => order.srcOrder))
             {
-                // Skip long expired orders
-                var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays);
-                if (limit < DateTime.UtcNow)
-                    continue;
-
-                // First check whether it is an existing order
-                // If it is, update it and remove the deletion candidate flag
-                if (Items.Any(x => x.TryImport(srcOrder, endedOrders)))
-                    continue;
-
                 // It's a new order, let's add it
                 if (srcOrder.IsBuyOrder != 0)
                 {
@@ -110,12 +108,7 @@ namespace EVEMon.Common
         internal List<SerializableOrderBase> Export()
         {
             List<SerializableOrderBase> serial = new List<SerializableOrderBase>(Items.Count);
-
-            foreach (MarketOrder order in Items)
-            {
-                serial.Add(order.Export());
-            }
-
+            serial.AddRange(Items.Select(order => order.Export()));
             return serial;
         }
     }

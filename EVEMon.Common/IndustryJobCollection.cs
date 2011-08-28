@@ -30,7 +30,7 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<SerializableJob> src)
         {
             Items.Clear();
-            foreach (var srcJob in src)
+            foreach (SerializableJob srcJob in src)
             {
                 Items.Add(new IndustryJob(srcJob));
             }
@@ -45,29 +45,22 @@ namespace EVEMon.Common
             // Mark all jobs for deletion 
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
-            foreach (var job in Items)
+            foreach (IndustryJob job in Items)
             {
                 job.MarkedForDeletion = true;
             }
 
             // Import the jobs from the API
-            List<IndustryJob> newJobs = new List<IndustryJob>();
-            foreach (var srcJob in src)
-            {
-                // Skip long ended jobs
-                var limit = srcJob.EndProductionTime.AddDays(IndustryJob.MaxEndedDays);
-                if (limit < DateTime.UtcNow)
-                    continue;
-
-                // First check whether it is an existing job
-                // If it is, update it and remove the deletion candidate flag
-                if (Items.Any(x => x.TryImport(srcJob)))
-                    continue;
-
-                var job = new IndustryJob(srcJob);
-                if (job.InstalledItem != null)
-                    newJobs.Add(job);
-            }
+            List<IndustryJob> newJobs = (src.Select(
+                srcJob => new
+                              {
+                                  srcJob,
+                                  limit = srcJob.EndProductionTime.AddDays(IndustryJob.MaxEndedDays)
+                              }).Where(
+                                  job => job.limit >= DateTime.UtcNow).Where(
+                                      job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
+                                          job => new IndustryJob(job.srcJob)).Where(
+                                              job => job.InstalledItem != null)).ToList();
 
             // Add the items that are no longer marked for deletion
             newJobs.AddRange(Items.Where(x => !x.MarkedForDeletion));
@@ -87,11 +80,7 @@ namespace EVEMon.Common
         internal List<SerializableJob> Export()
         {
             List<SerializableJob> serial = new List<SerializableJob>(Items.Count);
-
-            foreach (var job in Items)
-            {
-                serial.Add(job.Export());
-            }
+            serial.AddRange(Items.Select(job => job.Export()));
 
             return serial;
         }
@@ -108,7 +97,7 @@ namespace EVEMon.Common
             List<IndustryJob> jobsCompleted = new List<IndustryJob>();
 
             // Add the not notified "Ready" jobs to the completed list
-            foreach (var job in Items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
+            foreach (IndustryJob job in Items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
             {
                 jobsCompleted.Add(job);
                 job.NotificationSend = true;

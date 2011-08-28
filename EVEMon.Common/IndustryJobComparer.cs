@@ -9,8 +9,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class IndustryJobComparer : Comparer<IndustryJob>
     {
-        private IndustryJobColumn m_column;
-        private bool m_isAscending;
+        private readonly IndustryJobColumn m_column;
+        private readonly bool m_isAscending;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IndustryJobComparer"/> class.
@@ -64,9 +64,7 @@ namespace EVEMon.Common
             switch (m_column)
             {
                 case IndustryJobColumn.State:
-                    if (x.State == JobState.Active)
-                        return x.ActiveJobState.CompareTo(y.ActiveJobState);
-                    return x.State.CompareTo(y.State);
+                    return x.State == JobState.Active ? x.ActiveJobState.CompareTo(y.ActiveJobState) : x.State.CompareTo(y.State);
 
                 case IndustryJobColumn.TTC:
                     return x.EndProductionTime.CompareTo(y.EndProductionTime);

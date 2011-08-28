@@ -8,7 +8,7 @@ namespace EVEMon.Common
         string Title { get;}
         string Sender { get;}
         DateTime SentDate { get;}
-        List<string> Recipient { get;}
+        IEnumerable<string> Recipient { get;}
         string Text { get;}
     }
 }

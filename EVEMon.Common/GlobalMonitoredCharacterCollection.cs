@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.SettingsObjects;
@@ -46,9 +45,11 @@ namespace EVEMon.Common
         public void MoveTo(Character item, int targetIndex)
         {
             int oldIndex = Items.IndexOf(item);
-            if (oldIndex == -1) throw new InvalidOperationException("The item was not found in the collection.");
+            if (oldIndex == -1)
+                throw new InvalidOperationException("The item was not found in the collection.");
 
-            if (oldIndex < targetIndex) targetIndex--;
+            if (oldIndex < targetIndex)
+                targetIndex--;
             Items.RemoveAt(oldIndex);
             Items.Insert(targetIndex, item);
 
@@ -56,9 +57,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// When the <see cref="Character.IsMonitored"/> property changed, this collection is updated
+        /// When the <see cref="Character.Monitored"/> property changed, this collection is updated.
         /// </summary>
         /// <param name="character">The character for which the property changed</param>
+        /// <param name="value"></param>
         internal void OnCharacterMonitoringChanged(Character character, bool value)
         {
             if (value)
@@ -82,36 +84,33 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports the given characters
         /// </summary>
-        /// <param name="characterGuids"></param>
-        internal void Import(List<MonitoredCharacterSettings> monitoredCharacters)
+        /// <param name="monitoredCharacters"></param>
+        internal void Import(IEnumerable<MonitoredCharacterSettings> monitoredCharacters)
         {
             Items.Clear();
             foreach (var characterSettings in monitoredCharacters)
             {
-                var character = EveMonClient.Characters[characterSettings.CharacterGuid];
-                if (character != null)
-                {
-                    Items.Add(character);
-                    character.Monitored = true;
-                    character.UISettings = characterSettings.Settings;
-                }
+                Character character = EveMonClient.Characters[characterSettings.CharacterGuid];
+                if (character == null)
+                    continue;
+                Items.Add(character);
+                character.Monitored = true;
+                character.UISettings = characterSettings.Settings;
             }
 
             EveMonClient.OnMonitoredCharactersChanged();
         }
 
         /// <summary>
-        /// Updates the settings from <see cref="Settings.UI.MonitoredCharacters"/>. Adds and removes group as needed.
+        /// Updates the settings from <see cref="Settings"/>. Adds and removes group as needed.
         /// </summary>
-        /// <param name="order"></param>
         internal List<MonitoredCharacterSettings> Export()
         {
-            List<MonitoredCharacterSettings> serial = new List<MonitoredCharacterSettings>();
-            foreach (var character in Items)
-            {
-                serial.Add(new MonitoredCharacterSettings { CharacterGuid = character.Guid, Settings = character.UISettings.Clone() });
-            }
-            return serial;
+            return Items.Select(character => new MonitoredCharacterSettings
+                                                 {
+                                                     CharacterGuid = character.Guid,
+                                                     Settings = character.UISettings.Clone()
+                                                 }).ToList();
         }
     }
 }

@@ -63,7 +63,7 @@ namespace EVEMon.Common
         /// Gets or sets the EVE notification recipient.
         /// </summary>
         /// <value>The recipient.</value>
-        public List<string> Recipient { get; private set; }
+        public IEnumerable<string> Recipient { get; private set; }
 
         /// <summary>
         /// Gets or sets the EVE notification text.
@@ -127,10 +127,9 @@ namespace EVEMon.Common
         /// Gets the recipient.
         /// </summary>
         /// <returns></returns>
-        private List<string> GetRecipient()
+        private IEnumerable<string> GetRecipient()
         {
             Recipient = new List<string> { m_ccpCharacter.Name };
-
             return Recipient;
         }
 

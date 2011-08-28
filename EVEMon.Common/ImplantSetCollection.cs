@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using EVEMon.Common.Collections;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -12,12 +13,9 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class ImplantSetCollection : ReadonlyVirtualCollection<ImplantSet>
     {
-        private Character m_owner;
-        private ImplantSet m_none;
-        private ImplantSet m_api;
-        private ImplantSet m_oldAPI;
+        private readonly Character m_owner;
+        private readonly List<ImplantSet> m_customSets;
         private ImplantSet m_current;
-        private List<ImplantSet> m_customSets;
 
         /// <summary>
         /// Internal constructor
@@ -27,16 +25,16 @@ namespace EVEMon.Common
         {
             m_owner = owner;
             m_customSets = new List<ImplantSet>();
-            m_oldAPI = new ImplantSet(owner, "Previous implants from the API");
-            m_api = new ImplantSet(owner, "Implants from API");
-            m_none = new ImplantSet(owner, "<None>");
-            m_current = m_api;
+            OldAPI = new ImplantSet(owner, "Previous implants from the API");
+            API = new ImplantSet(owner, "Implants from API");
+            None = new ImplantSet(owner, "<None>");
+            m_current = API;
         }
 
         /// <summary>
         /// Gets the implant set by its index. First items are <see cref="API"/>, <see cref="OldAPI"/>, then the custom sets.
         /// </summary>
-        /// <param name="set"></param>
+        /// <param name="index"></param>
         /// <returns></returns>
         public ImplantSet this[int index]
         {
@@ -46,26 +44,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the none im
         /// </summary>
-        public ImplantSet None
-        {
-            get { return m_none; }
-        }
+        public ImplantSet None { get; private set; }
 
         /// <summary>
         /// Gets the implants retrieved from the API.
         /// </summary>
-        public ImplantSet API
-        {
-            get { return m_api; }
-        }
+        public ImplantSet API { get; private set; }
 
         /// <summary>
         /// Gets the implants previously retrieved from the API.
         /// </summary>
-        public ImplantSet OldAPI
-        {
-            get { return m_oldAPI; }
-        }
+        public ImplantSet OldAPI { get; private set; }
 
         /// <summary>
         /// Gets or sets the current implant set.
@@ -77,6 +66,7 @@ namespace EVEMon.Common
             {
                 if (m_current == value)
                     return;
+
                 m_current = value;
                 EveMonClient.OnCharacterUpdated(m_owner);
             }
@@ -89,7 +79,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public ImplantSet Add(string name)
         {
-            var set = new ImplantSet(m_owner, name);
+            ImplantSet set = new ImplantSet(m_owner, name);
             m_customSets.Add(set);
             EveMonClient.OnCharacterUpdated(m_owner);
             return set;
@@ -111,9 +101,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override IEnumerable<ImplantSet> Enumerate()
         {
-            yield return m_api;
-            yield return m_oldAPI;
-            foreach (var set in m_customSets)
+            yield return API;
+            yield return OldAPI;
+            foreach (ImplantSet set in m_customSets)
             {
                 yield return set;
             }
@@ -125,13 +115,13 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public void Import(SerializableImplantSetCollection serial)
         {
-            m_api.Import(serial.API, false);
-            m_oldAPI.Import(serial.API, false);
+            API.Import(serial.API, false);
+            OldAPI.Import(serial.API, false);
 
             m_customSets.Clear();
-            foreach(var serialSet in serial.CustomSets)
+            foreach (SerializableSettingsImplantSet serialSet in serial.CustomSets)
             {
-                var set = new ImplantSet(m_owner, serialSet.Name);
+                ImplantSet set = new ImplantSet(m_owner, serialSet.Name);
                 set.Import(serialSet, true);
                 m_customSets.Add(set);
             }
@@ -148,9 +138,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public SerializableImplantSetCollection Export()
         {
-            var serial = new SerializableImplantSetCollection();
-            serial.API = m_api.Export();
-            serial.OldAPI = m_oldAPI.Export();
+            SerializableImplantSetCollection serial = new SerializableImplantSetCollection
+                                                          { API = API.Export(), OldAPI = OldAPI.Export() };
             serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
             serial.SelectedIndex = Enumerate().IndexOf(m_current);
             return serial;
@@ -163,12 +152,12 @@ namespace EVEMon.Common
         internal void Import(SerializableImplantSet serial)
         {
             // Search whether the api infos are different from the ones currently stored
-            var newSet = new ImplantSet(m_owner, "temp");
+            ImplantSet newSet = new ImplantSet(m_owner, "temp");
             newSet.Import(serial);
 
             bool isDifferent = false;
-            var oldArray = m_api.ToArray();
-            var newArray = newSet.ToArray();
+            Implant[] oldArray = API.ToArray();
+            Implant[] newArray = newSet.ToArray();
             for (int i = 0; i < oldArray.Length; i++)
             {
                 isDifferent |= (oldArray[i] != newArray[i]);
@@ -176,9 +165,9 @@ namespace EVEMon.Common
 
             // Imports the API and make a backup
             if (isDifferent)
-                m_oldAPI.Import(m_api.Export(), false);
+                OldAPI.Import(API.Export(), false);
 
-            m_api.Import(serial);
+            API.Import(serial);
 
             EveMonClient.OnSettingsChanged();
         }

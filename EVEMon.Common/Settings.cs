@@ -408,6 +408,10 @@ namespace EVEMon.Common
         private static SerializableSettings DeserializeOldFormat(string filename)
         {
             var oldSerial = Util.DeserializeXML<OldSettings>(filename, Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
+
+            if (oldSerial == null)
+                return null;
+
             var serial = new SerializableSettings();
 
             // Accounts

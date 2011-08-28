@@ -36,11 +36,9 @@ namespace EVEMon.Common
         internal CharacterIdentity Add(long id, string name)
         {
             if (Items.ContainsKey(id))
-            {
                 throw new ArgumentException("An identity with the same ID already exists.");
-            }
 
-            var identity = new CharacterIdentity(id, name);
+            CharacterIdentity identity = new CharacterIdentity(id, name);
             Items[id] = identity;
             return identity;
         }

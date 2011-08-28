@@ -23,7 +23,7 @@ namespace EVEMon.Common
         /// Default constructor.
         /// </summary>
         /// <param name="owner"></param>
-        /// <param name="set"></param>
+        /// <param name="name"></param>
         internal ImplantSet(Character owner, string name)
         {
             m_name = name;
@@ -42,7 +42,7 @@ namespace EVEMon.Common
         public string Name
         {
             get { return m_name; }
-            set 
+            set
             {
                 if (m_name == value)
                     return;
@@ -60,27 +60,16 @@ namespace EVEMon.Common
         /// <returns>The requested implant when found; null otherwise.</returns>
         public Implant this[ImplantSlots slot]
         {
-            get 
-            { 
-                if (slot == ImplantSlots.None) return null;
-                return m_values[(int)slot]; 
-            }
-            set 
-            { 
+            get { return slot == ImplantSlots.None ? null : m_values[(int)slot]; }
+            set
+            {
                 if (slot == ImplantSlots.None)
                     throw new InvalidOperationException("Cannot assign 'none' slot");
 
                 if (value != null && value.Slot != slot)
                     throw new InvalidOperationException("Slot mismatch");
 
-                if (value == null)
-                {
-                    value = Implant.None;
-                }
-                else
-                {
-                    m_values[(int)slot] = value;
-                }
+                m_values[(int)slot] = value ?? Implant.None;
 
                 EveMonClient.OnCharacterUpdated(m_owner);
             }
@@ -93,14 +82,8 @@ namespace EVEMon.Common
         /// <returns>The requested implant when found; null otherwise.</returns>
         public Implant this[EveAttribute attrib]
         {
-            get 
-            { 
-                return this[Implant.AttribToSlot(attrib)];
-            }
-            set 
-            { 
-                this[Implant.AttribToSlot(attrib)] = value; 
-            }
+            get { return this[Implant.AttribToSlot(attrib)]; }
+            set { this[Implant.AttribToSlot(attrib)] = value; }
         }
 
         /// <summary>
@@ -109,10 +92,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override IEnumerable<Implant> Enumerate()
         {
-            foreach (var implant in m_values)
-            {
-                yield return implant;
-            }
+            return m_values;
         }
 
         /// <summary>
@@ -121,19 +101,20 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableSettingsImplantSet Export()
         {
-            var serial = new SerializableSettingsImplantSet();
-            serial.Intelligence = Export(ImplantSlots.Intelligence);
-            serial.Perception = Export(ImplantSlots.Perception);
-            serial.Willpower = Export(ImplantSlots.Willpower);
-            serial.Charisma = Export(ImplantSlots.Charisma);
-            serial.Memory = Export(ImplantSlots.Memory);
-            serial.Slot6 = Export(ImplantSlots.Slot6);
-            serial.Slot7 = Export(ImplantSlots.Slot7);
-            serial.Slot8 = Export(ImplantSlots.Slot8);
-            serial.Slot9 = Export(ImplantSlots.Slot9);
-            serial.Slot10 = Export(ImplantSlots.Slot10);
-            serial.Name = m_name;
-            return serial;
+            return new SerializableSettingsImplantSet
+                       {
+                           Intelligence = Export(ImplantSlots.Intelligence),
+                           Perception = Export(ImplantSlots.Perception),
+                           Willpower = Export(ImplantSlots.Willpower),
+                           Charisma = Export(ImplantSlots.Charisma),
+                           Memory = Export(ImplantSlots.Memory),
+                           Slot6 = Export(ImplantSlots.Slot6),
+                           Slot7 = Export(ImplantSlots.Slot7),
+                           Slot8 = Export(ImplantSlots.Slot8),
+                           Slot9 = Export(ImplantSlots.Slot9),
+                           Slot10 = Export(ImplantSlots.Slot10),
+                           Name = m_name
+                       };
         }
 
         /// <summary>
@@ -150,6 +131,7 @@ namespace EVEMon.Common
         /// Imports data from a settings serialization object.
         /// </summary>
         /// <param name="serial"></param>
+        /// <param name="importName"></param>
         internal void Import(SerializableSettingsImplantSet serial, bool importName)
         {
             Import(ImplantSlots.Intelligence, serial.Intelligence);
@@ -171,12 +153,12 @@ namespace EVEMon.Common
         /// Updates the given slot with the provided serialization object.
         /// </summary>
         /// <param name="slot"></param>
-        /// <param name="serial"></param>
+        /// <param name="name"></param>
         private void Import(ImplantSlots slot, string name)
         {
             // Backwards compatibility for older versions
             name = name.Replace("<", String.Empty).Replace(">", String.Empty);
-            
+
             m_values[(int)slot] = StaticItems.GetImplants(slot)[name];
         }
 
@@ -184,7 +166,6 @@ namespace EVEMon.Common
         /// Imports data from an API serialization object.
         /// </summary>
         /// <param name="serial"></param>
-        /// <param name="overrideManual"></param>
         internal void Import(SerializableImplantSet serial)
         {
             Import(ImplantSlots.Intelligence, serial.Intelligence);

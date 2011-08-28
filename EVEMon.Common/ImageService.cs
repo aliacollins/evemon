@@ -64,7 +64,7 @@ namespace EVEMon.Common
                     }
                     callback(image);
                     return;
-                    
+
                 }
                 catch (Exception e)
                 {
@@ -73,13 +73,14 @@ namespace EVEMon.Common
             }
 
             // Downloads the image and adds it to cache
-            EveMonClient.HttpWebService.DownloadImageAsync(url, GotImage, (GetImageCallback)((img) =>
-                {
-                    if (img != null)
-                        AddImageToCache(url, img);
+            EveMonClient.HttpWebService.DownloadImageAsync(url, GotImage,
+                                                           (GetImageCallback)(img =>
+                                                                                  {
+                                                                                      if (img != null)
+                                                                                          AddImageToCache(url, img);
 
-                    callback(img);
-                }));
+                                                                                      callback(img);
+                                                                                  }));
         }
 
         /// <summary>
@@ -97,11 +98,12 @@ namespace EVEMon.Common
                     // Write this image to the cache file
                     EveMonClient.EnsureCacheDirInit();
                     string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
-                    FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs => {
-                        image.Save(fs, ImageFormat.Png);
-                        fs.Flush();
-                        return true;
-                    });
+                    FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
+                                                                         {
+                                                                             image.Save(fs, ImageFormat.Png);
+                                                                             fs.Flush();
+                                                                             return true;
+                                                                         });
                 }
                 catch (Exception e)
                 {
@@ -124,9 +126,9 @@ namespace EVEMon.Common
 
             byte[] hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(url));
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            foreach (byte bit in hash)
             {
-                sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", hash[i]));
+                sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", bit));
             }
             sb.Append(ext);
             return sb.ToString();

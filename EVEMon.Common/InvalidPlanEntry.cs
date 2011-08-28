@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Attributes;
+﻿using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common
 {
@@ -22,28 +19,16 @@ namespace EVEMon.Common
         /// <summary>
         /// Name of the skill that can not be identified.
         /// </summary>
-        public string SkillName
-        {
-            get;
-            set;
-        }
+        public string SkillName { get; set; }
 
         /// <summary>
         /// Planned level.
         /// </summary>
-        public int PlannedLevel
-        {
-            get;
-            set;
-        }
+        public int PlannedLevel { get; set; }
 
         /// <summary>
         /// Has the user been notified that this entry has been marked as invalid.
         /// </summary>
-        public bool Acknowledged
-        {
-            get;
-            set;
-        }
+        public bool Acknowledged { get; set; }
     }
 }

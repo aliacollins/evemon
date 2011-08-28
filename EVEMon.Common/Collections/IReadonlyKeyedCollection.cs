@@ -1,25 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Collections
 {
-
-
-    #region IReadonlyCollection<T>
-
-    /// <summary>
-    /// Represents a read-only collection
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IReadonlyCollection<out T> : IEnumerable<T>
-    {
-        int Count { get; }
-    }
-
-    #endregion
-
-
-    #region IReadonlyKeyedCollection<T>
-
     /// <summary>
     /// Represents a read-only collection
     /// </summary>
@@ -30,6 +12,4 @@ namespace EVEMon.Common.Collections
         int Count { get; }
         TItem this[TKey key] { get; }
     }
-
-    #endregion
 }

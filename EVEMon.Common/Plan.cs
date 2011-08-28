@@ -649,7 +649,7 @@ namespace EVEMon.Common
             /// <summary>
             /// Gets all the entries to add when an addition is performed, including the prerequisites.
             /// </summary>
-            public ReadOnlyCollection<PlanEntry> AllEntriesToAdd
+            public IEnumerable<PlanEntry> AllEntriesToAdd
             {
                 get { return m_allEntriesToAdd.AsReadOnly(); }
             }

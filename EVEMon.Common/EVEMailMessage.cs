@@ -92,7 +92,7 @@ namespace EVEMon.Common
         /// Gets or sets the recipients.
         /// </summary>
         /// <value>The recipient.</value>
-        public List<string> Recipient { get; private set; }
+        public IEnumerable<string> Recipient { get; private set; }
 
         /// <summary>
         /// Gets or sets the EVE mail body.
@@ -195,25 +195,25 @@ namespace EVEMon.Common
         /// Gets the recipient.
         /// </summary>
         /// <returns></returns>
-        private List<string> GetRecipient()
+        private IEnumerable<string> GetRecipient()
         {
             Recipient = new List<string>();
 
             if (!String.IsNullOrEmpty(ToCharacters[0]))
             {
-                Recipient.AddRange(ToCharacters);
+                Recipient = ToCharacters.ToList();
                 return Recipient;
             }
 
             if (!String.IsNullOrEmpty(ToCorpOrAlliance))
             {
-                Recipient.Add(ToCorpOrAlliance);
+                Recipient = new List<string> { ToCorpOrAlliance };
                 return Recipient;
             }
 
             if (!String.IsNullOrEmpty(ToMailingLists[0]))
             {
-                Recipient.AddRange(ToMailingLists);
+                Recipient = ToMailingLists.ToList();
                 return Recipient;
             }
 
