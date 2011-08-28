@@ -53,6 +53,7 @@ namespace EVEMon
             // 
             // wbMailBody
             // 
+            this.wbMailBody.AllowWebBrowserDrop = false;
             this.wbMailBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wbMailBody.IsWebBrowserContextMenuEnabled = false;
             this.wbMailBody.Location = new System.Drawing.Point(5, 70);

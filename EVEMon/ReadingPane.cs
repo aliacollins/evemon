@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 
@@ -59,7 +62,7 @@ namespace EVEMon
 
             // Parce the mail body text to the web browser
             // so for the text to be formatted accordingly
-            wbMailBody.DocumentText = m_selectedObject.Text;
+            wbMailBody.DocumentText = SpecialFormattedTextForLinks();
 
             // We need to wait for the Document to be loaded
             do
@@ -70,6 +73,27 @@ namespace EVEMon
             // Show the controls
             flPanelHeader.Visible = true;
             wbMailBody.Visible = true;
+        }
+
+        /// <summary>
+        /// Formats the text in a special way to enable tooltip when mouse is over a link.
+        /// </summary>
+        /// <returns></returns>
+        private string SpecialFormattedTextForLinks()
+        {
+            Dictionary<string, string> links = new Dictionary<string, string>();
+
+            Regex regex = new Regex(@"<a\shref=""(.*?)"">.*?</a>", RegexOptions.IgnoreCase);
+            foreach (Match match in regex.Matches(m_selectedObject.Text))
+            {
+                string matchValue = match.Groups[1].Value;
+                if (matchValue.StartsWith("http://") || matchValue.StartsWith("https://"))
+                    links[match.ToString()] = String.Format("<span title=\"{0}{1}Click to follow link\">{2}</span>",
+                                                            matchValue, Environment.NewLine, match);
+            }
+
+            return links.Aggregate(m_selectedObject.Text,
+                                   (specialFormattedText, link) => specialFormattedText.Replace(link.Key, link.Value));
         }
 
         /// <summary>
