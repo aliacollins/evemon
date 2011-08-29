@@ -5,12 +5,8 @@ namespace EVEMon.Common.Notifications
     /// <summary>
     /// Represents an argument for a notification invalidation.
     /// </summary>
-    [Serializable]
     public class NotificationEventArgs : EventArgs
     {
-        private readonly NotificationCategory m_category;
-        private readonly Object m_sender;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -18,32 +14,26 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender"></param>
         public NotificationEventArgs(NotificationCategory category, Object sender)
         {
-            m_category = category;
-            m_sender = sender;
+            Category = category;
+            Sender = sender;
         }
 
         /// <summary>
         /// Gets this category's notification.
         /// </summary>
-        public NotificationCategory Category
-        {
-            get { return m_category; }
-        }
+        public NotificationCategory Category { get; private set; }
 
         /// <summary>
         /// Gets the sender of this notification.
         /// </summary>
-        public Object Sender
-        {
-            get { return m_sender; }
-        }
+        public object Sender { get; private set; }
 
         /// <summary>
         /// Gets the character who sent this notification, or null if the sender was not a character.
         /// </summary>
         public Character SenderCharacter
         {
-            get { return m_sender as Character; }
+            get { return Sender as Character; }
         }
 
         /// <summary>
@@ -51,7 +41,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         public Account SenderAccount
         {
-            get { return m_sender as Account; }
+            get { return Sender as Account; }
         }
 
         /// <summary>
@@ -82,7 +72,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         public long InvalidationKey
         {
-            get { return GetKey(m_sender, m_category); }
+            get { return GetKey(Sender, Category); }
         }
 
         /// <summary>

@@ -612,7 +612,6 @@ namespace EVEMon
             this.notificationList.Location = new System.Drawing.Point(2, 2);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Notifications = ((System.Collections.Generic.IEnumerable<EVEMon.Common.Notifications.NotificationEventArgs>)(resources.GetObject("notificationList.Notifications")));
             this.notificationList.Size = new System.Drawing.Size(571, 72);
             this.notificationList.TabIndex = 13;
             this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);

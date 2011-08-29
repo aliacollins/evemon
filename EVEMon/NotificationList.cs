@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -46,7 +47,7 @@ namespace EVEMon
             listBox.MouseDown += listBox_MouseDown;
             listBox.MouseLeave += listBox_MouseLeave;
 
-            listBox.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            listBox.Font = FontFactory.GetFont("Tahoma", 8.25F);
         }
 
         /// <summary>
@@ -83,6 +84,8 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the displayed notifications.
         /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<NotificationEventArgs> Notifications
         {
             get { return m_notifications; }
@@ -91,8 +94,9 @@ namespace EVEMon
                 m_notifications.Clear();
                 if (value != null)
                 {
-                    IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
-                    m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int) x.Priority));
+                    IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(
+                        x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
+                    m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
                 }
                 UpdateContent();
             }
