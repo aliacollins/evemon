@@ -521,7 +521,6 @@
     <Compile Include="Collections\ReadonlyKeyedCollection.cs" />
     <Compile Include="Collections\ReadonlyVirtualCollection.cs" />
     <Compile Include="IPlanOperation.cs" />
-    <Compile Include="ObsoleteRemovalPolicy.cs" />
     <Compile Include="PlanEntryExtensions.cs" />
     <Compile Include="PlanScratchpad.cs" />
     <Compile Include="Controls\CharacterPortrait.cs">

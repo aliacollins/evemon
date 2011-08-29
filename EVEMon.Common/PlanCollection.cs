@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 
@@ -28,14 +27,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Plan this[string name]
         {
-            get
-            {
-                foreach (var plan in Items)
-                {
-                    if (plan.Name == name) return plan;
-                }
-                return null;
-            }
+            get { return Items.FirstOrDefault(plan => plan.Name == name); }
         }
 
         /// <summary>
@@ -48,7 +40,7 @@ namespace EVEMon.Common
             {
                 item = item.Clone(m_owner);
             }
-            else if (this.Contains(item))
+            else if (Contains(item))
             {
                 item = item.Clone();
             }
@@ -82,23 +74,30 @@ namespace EVEMon.Common
             List<Plan> newPlanList = new List<Plan>();
 
             // We first update existing plans
-            foreach (var serialPlan in plans)
+            foreach (SerializablePlan serialPlan in plans)
             {
                 // Filter plans which belong to this owner
-                if (serialPlan.Owner != m_owner.Guid) continue;
+                if (serialPlan.Owner != m_owner.Guid)
+                    continue;
 
                 // If a plan with the same name already exists, we update it
-                var plan = this[serialPlan.Name];
+                Plan plan = this[serialPlan.Name];
 
-                if (plan != null) plan.Import(serialPlan);
-                else plan = new Plan(m_owner, serialPlan);
+                if (plan != null)
+                {
+                    plan.Import(serialPlan);
+                }
+                else
+                {
+                    plan = new Plan(m_owner, serialPlan);
+                }
 
                 newPlanList.Add(plan);
             }
 
             // We now add the new plans
             Items.Clear();
-            foreach (var plan in newPlanList)
+            foreach (Plan plan in newPlanList)
             {
                 Items.Add(plan);
                 plan.IsConnected = true;

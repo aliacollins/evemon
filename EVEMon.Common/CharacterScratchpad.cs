@@ -219,7 +219,7 @@ namespace EVEMon.Common
         {
             foreach (var entry in entries)
             {
-                if (entry.Remapping != null && entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate &&
+                if (entry.Remapping != null && entry.Remapping.Status == RemappingPointStatus.UpToDate &&
                     applyRemappingPoints)
                     Remap(entry.Remapping);
 

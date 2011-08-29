@@ -80,9 +80,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Testing notification.
         /// </summary>
-#if DEBUG
         [Header("Test Notification")]
-#endif
         TestNofitication,
     }
 }

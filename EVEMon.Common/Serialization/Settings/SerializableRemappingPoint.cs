@@ -3,12 +3,12 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
-    /// Represents a remapping point
+    /// Represents a remapping point.
     /// </summary>
     public sealed class SerializableRemappingPoint
     {
         [XmlAttribute("status")]
-        public RemappingPoint.PointStatus Status { get; set; }
+        public RemappingPointStatus Status { get; set; }
 
         [XmlAttribute("per")]
         public int Perception { get; set; }

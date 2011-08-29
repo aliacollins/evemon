@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -12,14 +11,10 @@ namespace EVEMon.Common
         /// Rreturns an enumeration of static equivalent of those character skills.
         /// </summary>
         /// <param name="src"></param>
-        /// <param name="character"></param>
         /// <returns></returns>
         public static IEnumerable<StaticSkill> ToStatic(this IEnumerable<Skill> src)
         {
-            foreach (var item in src)
-            {
-                yield return item.StaticData;
-            }
+            return src.Select(item => item.StaticData);
         }
 
         /// <summary>
@@ -30,10 +25,10 @@ namespace EVEMon.Common
         /// <remarks>Please note they may be redundancies.</remarks>
         public static IEnumerable<SkillLevel> GetAllPrerequisites(this IEnumerable<Skill> src)
         {
-            var first = src.FirstOrDefault();
-            if (first == null) return EmptyEnumerable<SkillLevel>.Instance;
-            return src.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
+            Skill first = src.FirstOrDefault();
+            return first == null
+                       ? EmptyEnumerable<SkillLevel>.Instance
+                       : src.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
         }
-
     }
 }

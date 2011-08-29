@@ -19,6 +19,8 @@ namespace InstallBuilder
         private static string s_sourceFilesDir;
         private static string s_nsisExe;
 
+        private static bool s_isDebug;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,7 +28,7 @@ namespace InstallBuilder
         /// <returns></returns>
         public static int Main(string[] args)
         {
-            CheckDebug();
+            CheckIsDebug();
 
             bool nsisExist = PopulateEnvironment(args);
 
@@ -78,9 +80,9 @@ namespace InstallBuilder
         /// Checks the debug.
         /// </summary>
         [Conditional("DEBUG")]
-        private static void CheckDebug()
+        private static void CheckIsDebug()
         {
-            Application.Exit();
+            s_isDebug = true;
         }
 
         /// <summary>
@@ -169,7 +171,7 @@ namespace InstallBuilder
 
                     string entryName = String.Format("EVEMon{0}", file.Remove(0, s_sourceFilesDir.Length));
                     Console.WriteLine("Zipping {0}", entryName);
-                    ZipEntry entry = new ZipEntry(entryName) {DateTime = DateTime.Now};
+                    ZipEntry entry = new ZipEntry(entryName) { DateTime = DateTime.Now };
 
                     zipStream.PutNextEntry(entry);
 
@@ -195,11 +197,10 @@ namespace InstallBuilder
         {
             try
             {
-#if DEBUG
-                string nsisScript = Path.Combine(s_projectDir, "bin\\x86\\Debug\\EVEMon Installer Script.nsi");
-#else
-                string nsisScript = Path.Combine(s_projectDir, "bin\\x86\\Release\\EVEMon Installer Script.nsi");
-#endif
+                string nsisScript = Path.Combine(s_projectDir,
+                                                 s_isDebug
+                                                     ? "bin\\x86\\Debug\\EVEMon Installer Script.nsi"
+                                                     : "bin\\x86\\Release\\EVEMon Installer Script.nsi");
 
                 string param =
                     String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_installerDir, nsisScript);

@@ -15,14 +15,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public IQueryMonitor this[APIMethods method]
         {
-            get 
-            {
-                foreach (var monitor in Items)
-                {
-                    if (monitor.Method == method) return monitor;
-                }
-                return null;
-            }
+            get { return Items.FirstOrDefault(monitor => monitor.Method == method); }
         }
 
         /// <summary>
@@ -30,10 +23,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool AnyUpdating
         {
-            get
-            {
-                return Items.Any(x => x.IsUpdating);
-            }
+            get { return Items.Any(x => x.IsUpdating); }
         }
 
         /// <summary>
@@ -41,10 +31,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool HasErrors
         {
-            get
-            {
-                return Items.Any(x => x.LastResult != null && x.LastResult.HasError);
-            }
+            get { return Items.Any(x => x.LastResult != null && x.LastResult.HasError); }
         }
 
         /// <summary>
@@ -52,10 +39,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<IAPIResult> APIResults
         {
-            get
-            {
-                return Items.Where(x => x.LastResult != null).Select(x => x.LastResult);
-            }
+            get { return Items.Where(x => x.LastResult != null).Select(x => x.LastResult); }
         }
 
         /// <summary>
@@ -65,31 +49,21 @@ namespace EVEMon.Common
         {
             get
             {
-                // Caches the times and sort
-                var times = Items.Select(x => x.NextUpdate).ToArray();
-                var monitors = Items.ToArray();
-                Array.Sort(times, monitors);
+                IOrderedEnumerable<IQueryMonitor> monitors = Items.OrderBy(x => x.NextUpdate);
 
                 // Returns the monitors which are planned for an autoupdate
-                for (int i = 0; i < monitors.Length; i++)
+                foreach (IQueryMonitorEx monitor in monitors.Select(monitor => (IQueryMonitorEx)monitor).Where(
+                    monitor => monitor.Status == QueryStatus.Pending || monitor.Status == QueryStatus.Updating))
                 {
-                    IQueryMonitorEx monitor = (IQueryMonitorEx)monitors[i];
-                    if (monitor.Status == QueryStatus.Pending || monitor.Status == QueryStatus.Updating)
-                    {
-                        yield return monitors[i];
-                    }
+                    yield return monitor;
                 }
 
                 // Returns the monitors which won't autoupdate
-                for (int i = 0; i < monitors.Length; i++)
+                foreach (IQueryMonitorEx monitor in monitors.Select(monitor => (IQueryMonitorEx)monitor).Where(
+                    monitor => monitor.Status != QueryStatus.Pending && monitor.Status != QueryStatus.Updating))
                 {
-                    IQueryMonitorEx monitor = (IQueryMonitorEx)monitors[i];
-                    if (monitor.Status != QueryStatus.Pending && monitor.Status != QueryStatus.Updating)
-                    {
-                        yield return monitors[i];
-                    }
+                    yield return monitor;
                 }
-
             }
         }
 
@@ -104,15 +78,15 @@ namespace EVEMon.Common
                 IQueryMonitor nextMonitor = null;
                 foreach (IQueryMonitorEx monitor in Items)
                 {
-                    if (monitor.Status == QueryStatus.Pending || monitor.Status == QueryStatus.Updating)
-                    {
-                        var monitorNextTime = monitor.NextUpdate;
-                        if (monitorNextTime < nextTime)
-                        {
-                            nextMonitor = monitor;
-                            nextTime = monitorNextTime;
-                        }
-                    }
+                    if (monitor.Status != QueryStatus.Pending && monitor.Status != QueryStatus.Updating)
+                        continue;
+
+                    DateTime monitorNextTime = monitor.NextUpdate;
+                    if (monitorNextTime >= nextTime)
+                        continue;
+
+                    nextMonitor = monitor;
+                    nextTime = monitorNextTime;
                 }
                 return nextMonitor;
             }
@@ -124,8 +98,9 @@ namespace EVEMon.Common
         /// <param name="method"></param>
         public void Query(APIMethods method)
         {
-            var monitor = this[method] as IQueryMonitorEx;
-            monitor.ForceUpdate(false);
+            IQueryMonitorEx monitor = this[method] as IQueryMonitorEx;
+            if (monitor != null)
+                monitor.ForceUpdate(false);
         }
 
         /// <summary>
@@ -142,7 +117,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Checks for auto-updates for every monitor in this collection.
         /// </summary>
-        /// <param name="monitor"></param>
         internal void UpdateOnOneSecondTick()
         {
             foreach (IQueryMonitorEx monitor in Items)

@@ -18,11 +18,10 @@ namespace EVEMon.Common
     public sealed class Plan : BasePlan
     {
         private string m_name;
-        private bool m_isConnected;
         private int m_changedNotificationSuppressions;
         private PlanChange m_change;
-        private PlanSorting m_sortingPreferences;
         private InvalidPlanEntry[] m_invalidEntries;
+
 
         #region Construction, importation, exportation
 
@@ -33,7 +32,7 @@ namespace EVEMon.Common
         public Plan(BaseCharacter character)
             : base(character)
         {
-            m_sortingPreferences = new PlanSorting();
+            SortingPreferences = new PlanSorting();
             m_invalidEntries = new InvalidPlanEntry[0];
         }
 
@@ -56,7 +55,7 @@ namespace EVEMon.Common
         {
             // Update name
             m_name = serial.Name;
-            m_sortingPreferences = serial.SortingPreferences.Clone();
+            SortingPreferences = serial.SortingPreferences.Clone();
 
             // Update entries
             List<PlanEntry> entries = new List<PlanEntry>();
@@ -95,7 +94,7 @@ namespace EVEMon.Common
             m_invalidEntries = invalidEntries.ToArray();
 
             // Notify name change
-            if (m_isConnected)
+            if (IsConnected)
                 EveMonClient.OnPlanNameChanged(this);
         }
 
@@ -106,12 +105,12 @@ namespace EVEMon.Common
         public SerializablePlan Export()
         {
             // Create serialization object
-            Character character = (Character) Character;
+            Character character = (Character)Character;
             SerializablePlan serial = new SerializablePlan
                                           {
                                               Name = m_name,
                                               Owner = character.Guid,
-                                              SortingPreferences = m_sortingPreferences.Clone()
+                                              SortingPreferences = SortingPreferences.Clone()
                                           };
 
             // Add entries
@@ -163,11 +162,7 @@ namespace EVEMon.Common
         /// Gets or sets true if the plan is connected to a character and will send notifications.
         /// When false, it's just a computing helper.
         /// </summary>
-        internal bool IsConnected
-        {
-            get { return m_isConnected; }
-            set { m_isConnected = value; }
-        }
+        internal bool IsConnected { private get; set; }
 
         #endregion
 
@@ -183,7 +178,7 @@ namespace EVEMon.Common
             set
             {
                 m_name = value;
-                if (m_isConnected)
+                if (IsConnected)
                     EveMonClient.OnPlanNameChanged(this);
             }
         }
@@ -207,10 +202,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets sorting preferences for this plan. Those are only preferences, it does not change the plan.
         /// </summary>
-        public PlanSorting SortingPreferences
-        {
-            get { return m_sortingPreferences; }
-        }
+        public PlanSorting SortingPreferences { get; private set; }
 
         #endregion
 
@@ -256,7 +248,7 @@ namespace EVEMon.Common
                 FixPrerequisites();
 
             // Notify changes
-            if ((change & PlanChange.Notification) != PlanChange.None && m_isConnected)
+            if ((change & PlanChange.Notification) != PlanChange.None && IsConnected)
                 EveMonClient.OnPlanChanged(this);
 
         }
@@ -297,7 +289,7 @@ namespace EVEMon.Common
                 // We may either have to add or remove entries. First, we assume we have to add ones
                 if (level > plannedLevel)
                 {
-                    List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel> {new StaticSkillLevel(skill, level)};
+                    List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel> { new StaticSkillLevel(skill, level) };
 
                     // None added ? Then return
                     IPlanOperation operation = TryAddSet(skillsToAdd, noteForNewEntries);
@@ -497,7 +489,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Plan Clone(BaseCharacter character)
         {
-            Plan plan = new Plan(character) {Name = m_name};
+            Plan plan = new Plan(character) { Name = m_name };
             plan.RebuildPlanFrom(this);
             return plan;
         }

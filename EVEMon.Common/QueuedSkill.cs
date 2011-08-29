@@ -16,7 +16,8 @@ namespace EVEMon.Common
         /// <param name="character">The character for this training</param>
         /// <param name="serial">The serialization object for this training</param>
         /// <param name="isPaused">When true, the training is currently paused.</param>
-        /// <param name="startTimeWhenPaused">Training starttime when the queue is actually paused. Indeed, in such case, CCP returns empty start and end time, so we compute a "what if we start now" scenario.</param>
+        /// <param name="startTimeWhenPaused">Training starttime when the queue is actually paused.
+        /// Indeed, in such case, CCP returns empty start and end time, so we compute a "what if we start now" scenario.</param>
         internal QueuedSkill(Character character, SerializableQueuedSkill serial, bool isPaused, ref DateTime startTimeWhenPaused)
         {
             Owner = character;
@@ -102,7 +103,7 @@ namespace EVEMon.Common
             {
                 float spPerHour = Owner.GetBaseSPPerHour(Skill);
                 double estimatedSP = EndSP - (EndTime.Subtract(DateTime.UtcNow)).TotalHours * spPerHour;
-                return (Skill.IsTraining ? Math.Max((int) estimatedSP, StartSP) : StartSP);
+                return (Skill.IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP);
             }
         }
 
@@ -125,10 +126,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsCompleted
         {
-            get
-            {
-                return EndTime <= DateTime.UtcNow;
-            }
+            get { return EndTime <= DateTime.UtcNow; }
         }
 
         /// <summary>

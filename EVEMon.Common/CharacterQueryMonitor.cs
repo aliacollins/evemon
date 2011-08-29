@@ -48,7 +48,7 @@ namespace EVEMon.Common
         protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
             Account account = m_character.Identity.Account;
-            provider.QueryMethodAsync(m_method, account.UserID, account.APIKey, m_character.CharacterID, callback);
+            provider.QueryMethodAsync(Method, account.UserID, account.APIKey, m_character.CharacterID, callback);
         }
     }
 }

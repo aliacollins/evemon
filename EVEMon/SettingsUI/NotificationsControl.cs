@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Notifications;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SettingsUI
 {
     public partial class NotificationsControl : UserControl
     {
         // Would have love to use tableLayoutPanel, unfortunately, they are just a piece of trash.
-        public const int RowHeight = 28;
+        private const int RowHeight = 28;
 
 
-        private List<ComboBox> m_combos = new List<ComboBox>();
-        private List<CheckBox> m_checkboxes = new List<CheckBox>();
+        private readonly List<ComboBox> m_combos = new List<ComboBox>();
+        private readonly List<CheckBox> m_checkboxes = new List<CheckBox>();
         private NotificationSettings m_settings;
 
         /// <summary>
@@ -30,28 +29,28 @@ namespace EVEMon.SettingsUI
 
             // Add the controls for every member of the enumeration
             int height = RowHeight;
-            var categories = Enum.GetValues(typeof(NotificationCategory))
-                                            .Cast<NotificationCategory>()
-                                            .Where(x=> x.HasHeader());
+            IEnumerable<NotificationCategory> categories = Enum.GetValues(typeof(NotificationCategory))
+                .Cast<NotificationCategory>()
+                .Where(x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication)
+                .Where(x => x.HasHeader());
 
-            foreach (var cat in categories)
+            foreach (NotificationCategory cat in categories)
             {
                 // Add the label
-                var label = new Label();
-                label.AutoSize = false;
-                label.Text = cat.GetHeader();
-                label.TextAlign = ContentAlignment.MiddleLeft;
-                label.Location = new Point(labelNotification.Location.X, height);
-                label.Width = labelBehaviour.Location.X - 3;
-                label.Height = RowHeight;
+                Label label = new Label
+                                  {
+                                      AutoSize = false,
+                                      Text = cat.GetHeader(),
+                                      TextAlign = ContentAlignment.MiddleLeft,
+                                      Location = new Point(labelNotification.Location.X, height),
+                                      Width = labelBehaviour.Location.X - 3,
+                                      Height = RowHeight
+                                  };
                 Controls.Add(label);
 
                 // Add the "system tray tooltip" combo box
-                var combo = new ComboBox();
-                combo.Tag = cat;
-                combo.Items.Add("Never");
-                combo.Items.Add("Once");
-                combo.Items.Add("Repeat until clicked");
+                ComboBox combo = new ComboBox { Tag = cat };
+                combo.Items.AddRange(new[] { "Never", "Once", "Repeat until clicked" });
                 combo.SelectedIndex = 0;
                 combo.Margin = new Padding(3);
                 combo.Height = RowHeight - 4;
@@ -63,13 +62,15 @@ namespace EVEMon.SettingsUI
                 m_combos.Add(combo);
 
                 // Add the "main window" checkbox
-                var checkbox = new CheckBox();
-                checkbox.Tag = cat;
-                checkbox.Text = "Show";
-                checkbox.Margin = new Padding(3);
-                checkbox.Height = RowHeight - 4;
-                checkbox.Width = labelMainWindow.Width;
-                checkbox.Location = new Point(labelMainWindow.Location.X + 15, height + 2);
+                CheckBox checkbox = new CheckBox
+                                        {
+                                            Tag = cat,
+                                            Text = "Show",
+                                            Margin = new Padding(3),
+                                            Height = RowHeight - 4,
+                                            Width = labelMainWindow.Width,
+                                            Location = new Point(labelMainWindow.Location.X + 15, height + 2)
+                                        };
                 checkbox.CheckedChanged += checkbox_CheckedChanged;
                 Controls.Add(checkbox);
                 m_checkboxes.Add(checkbox);
@@ -94,9 +95,9 @@ namespace EVEMon.SettingsUI
                 if (value == null)
                     return;
 
-                foreach (var combo in m_combos)
+                foreach (ComboBox combo in m_combos)
                 {
-                    var cat = (NotificationCategory)combo.Tag;
+                    NotificationCategory cat = (NotificationCategory)combo.Tag;
                     int index = (int)m_settings.Categories[cat].ToolTipBehaviour;
                     
                     // TODO: Remove the following code line after deprecating ToolTipNotificationBehaviour.RepeatUntiClicked
@@ -106,9 +107,9 @@ namespace EVEMon.SettingsUI
                     combo.SelectedIndex = index;
                 }
 
-                foreach (var checkbox in m_checkboxes)
+                foreach (CheckBox checkbox in m_checkboxes)
                 {
-                    var cat = (NotificationCategory)checkbox.Tag;
+                    NotificationCategory cat = (NotificationCategory)checkbox.Tag;
                     checkbox.Checked = m_settings.Categories[cat].ShowOnMainWindow;
                 }
             }
@@ -119,10 +120,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void combo_SelectedIndexChanged(object sender, EventArgs e)
+        private void combo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var combo = (ComboBox)sender;
-            var cat = (NotificationCategory)combo.Tag;
+            ComboBox combo = (ComboBox)sender;
+            NotificationCategory cat = (NotificationCategory)combo.Tag;
             m_settings.Categories[cat].ToolTipBehaviour = (ToolTipNotificationBehaviour)combo.SelectedIndex;
         }
 
@@ -131,10 +132,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void checkbox_CheckedChanged(object sender, EventArgs e)
+        private void checkbox_CheckedChanged(object sender, EventArgs e)
         {
-            var checkbox = (CheckBox)sender;
-            var cat = (NotificationCategory)checkbox.Tag;
+            CheckBox checkbox = (CheckBox)sender;
+            NotificationCategory cat = (NotificationCategory)checkbox.Tag;
             m_settings.Categories[cat].ShowOnMainWindow = checkbox.Checked;
         }
     }

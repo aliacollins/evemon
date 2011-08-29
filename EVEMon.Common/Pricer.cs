@@ -8,34 +8,34 @@ using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
+    /// <summary>
+    /// Redundant class. Could be usefull if and when we implement a regions market monitor.
+    /// </summary>
     public sealed class PricerMaketOrdersQueryResult
     {
-        public string ErrorMessage
-        {
-            get;
-            set;
-        }
+        public string ErrorMessage { get; set; }
 
         public IEnumerable<MarketOrder> Orders
         {
-            get 
+            get
             {
-                foreach (Station station in StaticGeography.AllStations.First(x => x.Name == "Jita").SolarSystem)
-                {
-                    yield return new SellOrder(new SerializableOrderListItem 
-                    { 
-                        Range = 0, 
-                        MinVolume = 1, 
-                        ItemID = 35, 
-                        StationID = station.ID, 
-                        RemainingVolume = 5000, 
-                        UnitaryPrice = 10.0M
-                    });
-                }
+                return StaticGeography.AllStations.First(x => x.Name == "Jita").SolarSystem.Select(
+                    station => new SellOrder(new SerializableOrderListItem
+                                                 {
+                                                     Range = 0,
+                                                     MinVolume = 1,
+                                                     ItemID = 35,
+                                                     StationID = station.ID,
+                                                     RemainingVolume = 5000,
+                                                     UnitaryPrice = 10.0M
+                                                 }));
             }
         }
     }
 
+    /// <summary>
+    /// Redundant class. Could be usefull if and when we implement a regions market monitor.
+    /// </summary>
     public static class Pricer
     {
         /// <summary>

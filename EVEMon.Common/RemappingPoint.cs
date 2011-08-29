@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
@@ -10,52 +10,47 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class RemappingPoint
     {
-        /// <summary>
-        /// Describes whether it has already been computed or not
-        /// </summary>
-        public enum PointStatus
-        {
-            NotComputed,
-            UpToDate
-        }
-
-        private PointStatus m_status;
+        private readonly int[] m_attributes = new int[5];
         private string m_description = String.Empty;
-        private int[] m_attributes = new int[5];
-        private Guid m_guid = Guid.NewGuid();
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public RemappingPoint()
         {
+            Guid = Guid.NewGuid();
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="serial"></param>
         public RemappingPoint(SerializableRemappingPoint serial)
         {
+            Guid = Guid.NewGuid();
             m_attributes[(int)EveAttribute.Intelligence] = serial.Intelligence;
             m_attributes[(int)EveAttribute.Perception] = serial.Perception;
             m_attributes[(int)EveAttribute.Willpower] = serial.Willpower;
             m_attributes[(int)EveAttribute.Charisma] = serial.Charisma;
             m_attributes[(int)EveAttribute.Memory] = serial.Memory;
             m_description = serial.Description;
-            m_status = serial.Status;
+            Status = serial.Status;
         }
 
         /// <summary>
-        /// Gets a global identified of this remapping point
+        /// Gets a global identified of this remapping point.
         /// </summary>
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        [XmlIgnore]
+        public Guid Guid { get; private set; }
 
         /// <summary>
-        /// Gets the new base value for the given attribute
+        /// Gets the point's status (whether is has been initialized/computed or not).
+        /// </summary>
+        [XmlIgnore]
+        public RemappingPointStatus Status { get; private set; }
+
+        /// <summary>
+        /// Gets the new base value for the given attribute.
         /// </summary>
         /// <param name="attrib"></param>
         /// <returns></returns>
@@ -65,27 +60,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the point's status (whether is has been initialized/computed or not)
-        /// </summary>
-        [System.Xml.Serialization.XmlIgnore]
-        public PointStatus Status
-        {
-            get { return this.m_status; }
-            internal set { this.m_status = value; }
-        }
-
-        /// <summary>
-        /// Gets a short string representation of the point ("i5 p7 c8 w9 m5")
+        /// Gets a short string representation of the point ("i5 p7 c8 w9 m5").
         /// </summary>
         /// <returns></returns>
         private string ToShortString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append("i").Append(this.m_attributes[(int)EveAttribute.Intelligence].ToString()).
-                Append(" p").Append(this.m_attributes[(int)EveAttribute.Perception].ToString()).
-                Append(" c").Append(this.m_attributes[(int)EveAttribute.Charisma].ToString()).
-                Append(" w").Append(this.m_attributes[(int)EveAttribute.Willpower].ToString()).
-                Append(" m").Append(this.m_attributes[(int)EveAttribute.Memory].ToString());
+            builder.Append("i").Append(m_attributes[(int)EveAttribute.Intelligence].ToString()).
+                Append(" p").Append(m_attributes[(int)EveAttribute.Perception].ToString()).
+                Append(" c").Append(m_attributes[(int)EveAttribute.Charisma].ToString()).
+                Append(" w").Append(m_attributes[(int)EveAttribute.Willpower].ToString()).
+                Append(" m").Append(m_attributes[(int)EveAttribute.Memory].ToString());
 
             return builder.ToString();
         }
@@ -100,11 +85,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         public string ToLongString()
         {
-            switch (m_status)
+            switch (Status)
             {
-                case PointStatus.NotComputed:
+                case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
-                case PointStatus.UpToDate:
+                case RemappingPointStatus.UpToDate:
                     return String.Format("Remapping : {0}", m_description);
                 default:
                     throw new NotImplementedException();
@@ -121,11 +106,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            switch (m_status)
+            switch (Status)
             {
-                case PointStatus.NotComputed:
+                case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
-                case PointStatus.UpToDate:
+                case RemappingPointStatus.UpToDate:
                     return String.Format("Remapping (active) : {0}", ToShortString());
                 default:
                     throw new NotImplementedException();
@@ -140,7 +125,7 @@ namespace EVEMon.Common
         internal void SetBaseAttributes(CharacterScratchpad newScratchpad, CharacterScratchpad oldScratchpad)
         {
             // Update the status
-            this.m_status = PointStatus.UpToDate;
+            Status = RemappingPointStatus.UpToDate;
 
             // Initialize the string
             StringBuilder builder = new StringBuilder();
@@ -157,32 +142,27 @@ namespace EVEMon.Common
             }
 
             // Return the final string
-            this.m_description = builder.ToString();
+            m_description = builder.ToString();
         }
 
         /// <summary>
-        /// Gets a string representation of the attribute
+        /// Gets a string representation of the attribute.
         /// </summary>
         /// <param name="attrib"></param>
         /// <param name="oldScratchpad"></param>
         /// <param name="newScratchpad"></param>
         /// <returns></returns>
-        public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad, CharacterScratchpad newScratchpad)
+        public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad,
+                                                   CharacterScratchpad newScratchpad)
         {
             int bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
 
             if (bonusDifference == 0)
-            {
                 return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");
-            }
-            else if (bonusDifference > 0)
-            {
-                return newScratchpad[attrib].ToString(String.Format("%N (+{0}) = %e = (%B + %r + %i)", bonusDifference));
-            }
-            else
-            {
-                return newScratchpad[attrib].ToString(String.Format("%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
-            }
+
+            return newScratchpad[attrib].ToString(bonusDifference > 0
+                                                      ? String.Format("%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
+                                                      : String.Format("%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
         }
 
         /// <summary>
@@ -191,7 +171,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return m_guid.GetHashCode();
+            return Guid.GetHashCode();
         }
 
         /// <summary>
@@ -202,26 +182,27 @@ namespace EVEMon.Common
         {
             RemappingPoint clone = new RemappingPoint();
             Array.Copy(m_attributes, clone.m_attributes, 5);
-            clone.m_status = m_status;
-            clone.m_guid = m_guid;
+            clone.Status = Status;
+            clone.Guid = Guid;
             return clone;
         }
 
         /// <summary>
-        /// Creates a serialization object
+        /// Creates a serialization object.
         /// </summary>
         /// <returns></returns>
         internal SerializableRemappingPoint Export()
         {
-            var serial = new SerializableRemappingPoint();
-            serial.Intelligence = m_attributes[(int)EveAttribute.Intelligence];
-            serial.Perception = m_attributes[(int)EveAttribute.Perception];
-            serial.Willpower = m_attributes[(int)EveAttribute.Willpower];
-            serial.Charisma = m_attributes[(int)EveAttribute.Charisma];
-            serial.Memory = m_attributes[(int)EveAttribute.Memory];
-            serial.Description = m_description;
-            serial.Status = m_status;
-            return serial;
+            return new SerializableRemappingPoint
+                       {
+                           Intelligence = m_attributes[(int)EveAttribute.Intelligence],
+                           Perception = m_attributes[(int)EveAttribute.Perception],
+                           Willpower = m_attributes[(int)EveAttribute.Willpower],
+                           Charisma = m_attributes[(int)EveAttribute.Charisma],
+                           Memory = m_attributes[(int)EveAttribute.Memory],
+                           Description = m_description,
+                           Status = Status
+                       };
         }
     }
 }

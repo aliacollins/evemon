@@ -1,6 +1,6 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 
@@ -10,10 +10,9 @@ namespace EVEMon.Common
     /// Represents a lisht and fast dictionary for skilllevels, focused on 
     /// </summary>
     internal sealed class SkillLevelSet<T> : IReadonlyCollection<T>
-        where T : ISkillLevel
+        where T : class, ISkillLevel
     {
         private readonly T[] m_items;
-        private int m_count;
 
         /// <summary>
         /// Constructor
@@ -26,10 +25,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the number of items in the set
         /// </summary>
-        public int Count
-        {
-            get { return m_count; }
-        }
+        public int Count { get; private set; }
 
         /// <summary>
         /// Adds the given item in the list
@@ -40,7 +36,9 @@ namespace EVEMon.Common
             this[item.Skill.ArrayIndex, item.Level] = item;
         }
 
+
         #region Indexors
+
         /// <summary>
         /// Gets or sets the item for the given skill array index and level
         /// </summary>
@@ -57,10 +55,16 @@ namespace EVEMon.Common
             set
             {
                 Enforce.Argument(level > 0 && level <= 5, "level", "Level mut be greater than 0 and lesser or equal than 5.");
-                var oldValue = m_items[skillArrayIndex * 5 + level - 1];
+                T oldValue = m_items[skillArrayIndex * 5 + level - 1];
 
-                if (value.Skill == null) m_count--;
-                else if (oldValue == null || oldValue.Skill == null) m_count++;
+                if (value.Skill == null)
+                {
+                    Count--;
+                }
+                else if (oldValue == null || oldValue.Skill == null)
+                {
+                    Count++;
+                }
                 m_items[skillArrayIndex * 5 + level - 1] = value;
             }
         }
@@ -76,10 +80,12 @@ namespace EVEMon.Common
             get { return this[skill.ArrayIndex, level]; }
             set { this[skill.ArrayIndex, level] = value; }
         }
+
         #endregion
 
 
         #region Contains overloads
+
         /// <summary>
         /// Gets true if a matching item is already contained.
         /// </summary>
@@ -88,7 +94,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(int skillArrayindex, int level)
         {
-            var result = this[skillArrayindex, level];
+            T result = this[skillArrayindex, level];
             return result != null && result.Skill != null;
         }
 
@@ -100,7 +106,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(StaticSkill skill, int level)
         {
-            var result = this[skill.ArrayIndex, level];
+            T result = this[skill.ArrayIndex, level];
             return result != null && result.Skill != null;
         }
 
@@ -112,7 +118,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(Skill skill, int level)
         {
-            var result = this[skill.ArrayIndex, level];
+            T result = this[skill.ArrayIndex, level];
             return result != null && result.Skill != null;
         }
 
@@ -124,13 +130,15 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(ISkillLevel item)
         {
-            var result = this[item.Skill.ArrayIndex, item.Level];
+            T result = this[item.Skill.ArrayIndex, item.Level];
             return result != null && result.Skill != null;
         }
+
         #endregion
 
 
         #region Remove overloads
+
         /// <summary>
         /// Gets true if a matching item is already contained.
         /// </summary>
@@ -163,10 +171,12 @@ namespace EVEMon.Common
         {
             this[item.Skill.ArrayIndex, item.Level] = default(T);
         }
+
         #endregion
 
 
         #region GetLevelsOf() overloads
+
         /// <summary>
         /// Gets the levels of the given skill.
         /// </summary>
@@ -197,19 +207,19 @@ namespace EVEMon.Common
             for (int i = 0; i < 5; i++)
             {
                 T item = m_items[skillArrayIndex * 5 + i];
-                if (item != null && item.Skill != null) yield return item;
+                if (item != null && item.Skill != null)
+                    yield return item;
             }
         }
+
         #endregion
 
 
         #region IEnumerable<T> Members
+
         private IEnumerable<T> Enumerate()
         {
-            foreach (var item in m_items)
-            {
-                if (item != null) yield return item;
-            }
+            return m_items.Where(item => item != null);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -217,10 +227,11 @@ namespace EVEMon.Common
             return Enumerate().GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((System.Collections.IEnumerable)Enumerate()).GetEnumerator();
+            return ((IEnumerable)Enumerate()).GetEnumerator();
         }
+
         #endregion
     }
 }

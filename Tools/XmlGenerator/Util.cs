@@ -92,18 +92,19 @@ namespace EVEMon.XmlGenerator
                         xslt.Transform(reader, writer);
                         writer.Flush();
 
-#if DEBUG
-                        // Gets a printing for debugging
-                        stream.Seek(0, SeekOrigin.Begin);
-                        XmlDocument doc2 = new XmlDocument();
-                        doc2.Load(stream);
-                        Trace.Write(GetXMLStringRepresentation(doc2));
-#endif
+                        if (EveMonClient.IsDebugBuild)
+                        {
+                            // Gets a printing for debugging
+                            stream.Seek(0, SeekOrigin.Begin);
+                            XmlDocument doc2 = new XmlDocument();
+                            doc2.Load(stream);
+                            Trace.Write(GetXMLStringRepresentation(doc2));
+                        }
 
                         // Deserialize from the given stream
                         stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof (T));
-                        T result = (T) xs.Deserialize(stream);
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        T result = (T)xs.Deserialize(stream);
 
                         // XML deserialization creates a lot of garbage so we cleans up now to avoid wasting hundreds of MB 
                         // and OOM exceptions.

@@ -1,57 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents the 
-    /// </summary>
-    public enum PlanSort
-    {
-        Name = 0,
-        Time = 1, 
-        SkillsCount = 2
-    }
-
-    /// <summary>
-    /// Implements a plan comparer
+    /// Implements a plan comparer.
     /// </summary>
     public sealed class PlanComparer : Comparer<Plan>
     {
-        private SortOrder m_order;
-        private PlanSort m_sort;
-
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="psw"></param>
-        /// <param name="ci"></param>
+        /// <param name="sort"></param>
         public PlanComparer(PlanSort sort)
         {
-            m_sort = sort;
+            Sort = sort;
         }
 
         /// <summary>
-        /// Sort order (ascending, descending)
+        /// Sort order (ascending, descending).
         /// </summary>
-        public SortOrder Order
-        {
-            get { return m_order; }
-            set { m_order = value; }
-        }
+        public SortOrder Order { get; set; }
 
         /// <summary>
-        /// Sort criteria
+        /// Sort criteria.
         /// </summary>
-        public PlanSort Sort
-        {
-            get { return m_sort; }
-            set { m_sort = value; }
-        }
+        public PlanSort Sort { get; set; }
 
         /// <summary>
-        /// Comparison function
+        /// Comparison function.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -59,30 +36,36 @@ namespace EVEMon.Common
         public override int Compare(Plan x, Plan y)
         {
             // Swap variables for descending order
-            if (m_order == SortOrder.Descending)
+            if (Order == SortOrder.Descending)
             {
-                var tmp = y;
+                Plan tmp = y;
                 y = x;
                 x = tmp;
             }
 
             // Compare plans
-            switch (m_sort)
+            switch (Sort)
             {
                 case PlanSort.Name:
-                    return String.Compare(x.Name, y.Name);
-
+                    if (x != null && y != null)
+                        return String.Compare(x.Name, y.Name);
+                    break;
                 case PlanSort.Time:
-                    var xtime = x.GetTotalTime(null, true);
-                    var ytime = y.GetTotalTime(null, true);
-                    return TimeSpan.Compare(xtime, ytime);
-
+                    if (x != null && y != null)
+                    {
+                        TimeSpan xtime = x.GetTotalTime(null, true);
+                        TimeSpan ytime = y.GetTotalTime(null, true);
+                        return TimeSpan.Compare(xtime, ytime);
+                    }
+                    break;
                 case PlanSort.SkillsCount:
-                    return x.UniqueSkillsCount - y.UniqueSkillsCount;
-
+                    if (x != null && y != null)
+                        return x.UniqueSkillsCount - y.UniqueSkillsCount;
+                    break;
                 default:
                     throw new NotImplementedException();
             }
+            return 0;
         }
     }
 }

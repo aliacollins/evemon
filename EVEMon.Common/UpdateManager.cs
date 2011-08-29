@@ -1,16 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-
 using EVEMon.Common.Net;
-using EVEMon.Common.Threading;
 using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Threading;
 
 
 namespace EVEMon.Common
@@ -20,9 +14,10 @@ namespace EVEMon.Common
     /// </summary>
     public static class UpdateManager
     {
-        private static bool s_checkScheduled = false;
+        private static readonly TimeSpan s_frequency = TimeSpan.FromMinutes(Settings.Updates.UpdateFrequency);
+
+        private static bool s_checkScheduled;
         private static bool s_enabled;
-        private static TimeSpan s_frequency = TimeSpan.FromMinutes(Settings.Updates.UpdateFrequency);
 
         /// <summary>
         /// Delete the installation files on a previous autoupdate.
@@ -70,7 +65,7 @@ namespace EVEMon.Common
         private static void ScheduleCheck(TimeSpan time)
         {
             s_checkScheduled = true;
-            Dispatcher.Schedule(time, () => BeginCheck());
+            Dispatcher.Schedule(time, BeginCheck);
             EveMonClient.Trace("UpdateManager.ScheduleCheck in {0}", time);
         }
 
@@ -98,7 +93,7 @@ namespace EVEMon.Common
 
             EveMonClient.Trace("UpdateManager.BeginCheck");
 
-            // Otherwise, query Batlleclinic
+            // Otherwise, query BattleClinic
             Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, null, OnCheckCompleted);
         }
 

@@ -137,6 +137,42 @@ namespace EVEMon.Common
 
     #region Simple Enumerations
 
+    /// <summary>
+    /// The policy to apply when removing obsolete entries from a plan
+    /// </summary>
+    public enum ObsoleteRemovalPolicy
+    {
+        None = 0,
+        RemoveAll = 1,
+        ConfirmedOnly = 2
+    }
+    
+    /// <summary>
+    /// Represents the 
+    /// </summary>
+    public enum PlanSort
+    {
+        Name = 0,
+        Time = 1,
+        SkillsCount = 2
+    }
+
+    public enum PlanFormat
+    {
+        Emp = 1,
+        Xml = 2,
+        Text = 3
+    }
+
+    /// <summary>
+    /// Describes whether it has already been computed or not
+    /// </summary>
+    public enum RemappingPointStatus
+    {
+        NotComputed,
+        UpToDate
+    }
+
     public enum QueryStatus
     {
         /// <summary>

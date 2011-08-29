@@ -1,4 +1,3 @@
-using WeakReference=System.WeakReference;
 using System;
 
 namespace EVEMon.Common
@@ -29,20 +28,22 @@ namespace EVEMon.Common
         public bool TryDo(Action<T> action)
         {
             // Removes the reference at this index if it does not exist anymore
-            if (!this.IsAlive) return false;
+            if (!IsAlive)
+                return false;
 
             // Try to notify the monitor
             try
             {
-                // Retrieve the reference and removes it if null.
-                var target = this.Target;
-                if (target == null) return false;
+                // Retrieve the reference and removes it if null
+                T target = Target;
+                if (target == null)
+                    return false;
 
                 // Notify the monitor.
                 action(target);
                 return true;
             }
-            // Occurs when the target has been garbage collected since the moment we performed the check.
+                // Occurs when the target has been garbage collected since the moment we performed the check
             catch (InvalidOperationException)
             {
                 return false;

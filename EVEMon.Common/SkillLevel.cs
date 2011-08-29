@@ -6,7 +6,7 @@ namespace EVEMon.Common
     /// <summary>
     /// Represents a skill and level tuple.
     /// </summary>
-    public struct SkillLevel : ISkillLevel
+    public class SkillLevel : ISkillLevel
     {
         /// <summary>
         /// Constructor from the skill object.
@@ -14,7 +14,6 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         /// <param name="level"></param>
         public SkillLevel(Skill skill, int level)
-            : this()
         {
             Skill = skill;
             Level = level;

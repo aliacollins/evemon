@@ -15,19 +15,11 @@ namespace EVEMon.Common
     {
         public event QueryCallback<T> Updated;
 
-        protected readonly APIMethods m_method;
-        protected readonly bool m_isFullKeyNeeded;
-        protected readonly string m_methodHeader;
+        private readonly string m_methodHeader;
 
-        protected QueryStatus m_status;
-        protected DateTime m_lastUpdate;
-        protected APIResult<T> m_lastResult;
-        protected CacheStyle m_cacheStyle;
-        protected bool m_forceUpdate;
-        protected bool m_retryOnForceUpdateError;
-        protected bool m_isUpdating;
-        protected bool m_isCanceled;
-        protected bool m_enabled;
+        private bool m_forceUpdate;
+        private bool m_retryOnForceUpdateError;
+        private bool m_isCanceled;
 
         /// <summary>
         /// Constructor.
@@ -35,15 +27,12 @@ namespace EVEMon.Common
         /// <param name="method"></param>
         internal QueryMonitor(APIMethods method)
         {
-            m_lastUpdate = DateTime.MinValue;
-            m_isFullKeyNeeded = method.HasAttribute<FullKeyAttribute>();
+            LastUpdate = DateTime.MinValue;
+            IsFullKeyNeeded = method.HasAttribute<FullKeyAttribute>();
             m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
-            m_method = method;
-            m_enabled = true;
-
-            bool methodHasAttribute = m_method.HasAttribute<UpdateAttribute>();
-            m_cacheStyle = (methodHasAttribute ? m_method.GetAttribute<UpdateAttribute>().CacheStyle : CacheStyle.Short);
+            Method = method;
+            Enabled = true;
 
             NetworkMonitor.Register(this);
         }
@@ -51,48 +40,35 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true if the query is enabled.
         /// </summary>
-        public bool Enabled
-        {
-            get { return m_enabled; }
-            set { m_enabled = value; }
-        }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Gets the API method monitored by this instance.
         /// </summary>
-        public APIMethods Method
-        {
-            get { return m_method; }
-        }
+        public APIMethods Method { get; private set; }
 
         /// <summary>
         /// Gets the last time this instance was updated (UTC).
         /// </summary>
-        public DateTime LastUpdate
-        {
-            get { return m_lastUpdate; }
-        }
+        public DateTime LastUpdate { get; private set; }
 
         /// <summary>
         /// Gets the status of the query.
         /// </summary>
-        public QueryStatus Status
-        {
-            get { return m_status; }
-        }
+        public QueryStatus Status { get; private set; }
 
         /// <summary>
         /// Gets true when the API provider is CCP and a force update is triggered before the next available update.
         /// </summary>
         public bool ForceUpdateWillCauseError
         {
-            get 
+            get
             {
                 if (EveMonClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider &&
                     EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider)
                     return false;
 
-                var cachedTime = (m_lastResult == null ? NextUpdate : m_lastResult.CachedUntil);
+                DateTime cachedTime = (LastResult == null ? NextUpdate : LastResult.CachedUntil);
 
                 return DateTime.UtcNow < cachedTime;
             }
@@ -107,23 +83,23 @@ namespace EVEMon.Common
             {
                 // If there was an error on last try, we use the cached time
                 // (we exclude the corporation roles error for characters corporation issued queries)
-                if (m_lastResult != null
-                    && m_lastResult.HasError
-                    && m_lastResult.CCPError != null
-                    && !m_lastResult.CCPError.IsOrdersRelatedCorpRolesError
-                    && !m_lastResult.CCPError.IsJobsRelatedCorpRolesError)
-                    return m_lastResult.CachedUntil;
+                if (LastResult != null
+                    && LastResult.HasError
+                    && LastResult.CCPError != null
+                    && !LastResult.CCPError.IsOrdersRelatedCorpRolesError
+                    && !LastResult.CCPError.IsJobsRelatedCorpRolesError)
+                    return LastResult.CachedUntil;
 
                 // No error ? Then we compute the next update according to the settings.
-                UpdatePeriod period = Settings.Updates.Periods[m_method];
+                UpdatePeriod period = Settings.Updates.Periods[Method];
                 if (period == UpdatePeriod.Never)
                     return DateTime.MaxValue;
 
-                DateTime nextUpdate = m_lastUpdate.Add(period.ToDuration());
+                DateTime nextUpdate = LastUpdate.Add(period.ToDuration());
 
                 // If CCP "cached until" is greater than what we computed, return CCP cached time.
-                if (m_lastResult != null && m_lastResult.CachedUntil > nextUpdate)
-                    return m_lastResult.CachedUntil;
+                if (LastResult != null && LastResult.CachedUntil > nextUpdate)
+                    return LastResult.CachedUntil;
 
                 return nextUpdate;
             }
@@ -132,26 +108,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the last result queried from the API provider.
         /// </summary>
-        public APIResult<T> LastResult
-        {
-            get { return m_lastResult; }
-        }
+        public APIResult<T> LastResult { get; private set; }
 
         /// <summary>
         /// Gets true whether the method is curently being requeried.
         /// </summary>
-        public bool IsUpdating
-        {
-            get { return m_isUpdating; }
-        }
+        public bool IsUpdating { get; private set; }
 
         /// <summary>
         /// Gets true whether a full key is needed.
         /// </summary>
-        public bool IsFullKeyNeeded
-        {
-            get { return m_isFullKeyNeeded; }
-        }
+        public bool IsFullKeyNeeded { get; private set; }
 
         /// <summary>
         /// Manually updates this monitor with the provided data, like if it has just been updated from CCP.
@@ -162,8 +129,8 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void UpdateWith(APIResult<T> result)
         {
-            m_lastResult = result;
-            m_lastUpdate = DateTime.UtcNow;
+            LastResult = result;
+            LastUpdate = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -182,36 +149,36 @@ namespace EVEMon.Common
         internal void UpdateOnOneSecondTick()
         {
             // Are we already updating ?
-            if (m_isUpdating)
+            if (IsUpdating)
                 return;
 
             m_isCanceled = false;
 
             // Is it enabled ?
-            if (!m_enabled)
+            if (!Enabled)
             {
-                m_status = QueryStatus.Disabled;
+                Status = QueryStatus.Disabled;
                 return;
             }
 
             // Do we have a network ?
             if (!NetworkMonitor.IsNetworkAvailable)
             {
-                m_status = QueryStatus.NoNetwork;
+                Status = QueryStatus.NoNetwork;
                 return;
             }
 
             // Check for an account
             if (!CheckAccount())
             {
-                m_status = QueryStatus.NoAccount;
+                Status = QueryStatus.NoAccount;
                 return;
             }
 
             // Check for a full key
-            if (m_isFullKeyNeeded && !HasFullKey())
+            if (IsFullKeyNeeded && !HasFullKey())
             {
-                m_status = QueryStatus.NoFullKey;
+                Status = QueryStatus.NoFullKey;
                 return;
             }
 
@@ -222,14 +189,14 @@ namespace EVEMon.Common
                 var nextUpdate = NextUpdate;
                 if (nextUpdate > DateTime.UtcNow)
                 {
-                    m_status = QueryStatus.Pending;
+                    Status = QueryStatus.Pending;
                     return;
                 }
             }
 
             // Starts the update
-            m_isUpdating = true;
-            m_status = QueryStatus.Updating;
+            IsUpdating = true;
+            Status = QueryStatus.Updating;
             QueryAsyncCore(EveMonClient.APIProviders.CurrentProvider, OnQueried);
         }
 
@@ -258,17 +225,17 @@ namespace EVEMon.Common
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected virtual void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            provider.QueryMethodAsync(m_method, callback);
+            provider.QueryMethodAsync(Method, callback);
         }
 
         /// <summary>
         /// Occurs when a new result has been queried.
         /// </summary>
         /// <param name="result">The downloaded result</param>
-        protected void OnQueried(APIResult<T> result)
+        private void OnQueried(APIResult<T> result)
         {
-            m_isUpdating = false;
-            m_status = QueryStatus.Pending;
+            IsUpdating = false;
+            Status = QueryStatus.Pending;
 
             // Do we need to retry the force update ?
             m_forceUpdate = (m_retryOnForceUpdateError && result.HasError);
@@ -279,8 +246,8 @@ namespace EVEMon.Common
 
             // Updates the stored data
             m_retryOnForceUpdateError = false;
-            m_lastUpdate = DateTime.UtcNow;
-            m_lastResult = result;
+            LastUpdate = DateTime.UtcNow;
+            LastResult = result;
 
             // Notify subscribers
             if (Updated != null)
@@ -291,17 +258,17 @@ namespace EVEMon.Common
         /// Resets the monitor with the given last update time.
         /// </summary>
         /// <param name="lastUpdate">The UTC time of the last update.</param>
-        public void Reset(DateTime lastUpdate)
+        private void Reset(DateTime lastUpdate)
         {
             Cancel();
-            m_lastUpdate = lastUpdate;
-            m_lastResult = null;
+            LastUpdate = lastUpdate;
+            LastResult = null;
         }
 
         /// <summary>
         /// Cancels the running update.
         /// </summary>
-        public void Cancel()
+        private void Cancel()
         {
             m_isCanceled = true;
             m_forceUpdate = false;
@@ -320,12 +287,13 @@ namespace EVEMon.Common
         /// Notifies the network availability changed.
         /// </summary>
         /// <param name="isAvailable"></param>
-        internal void SetNetworkStatus(bool isAvailable)
+        private void SetNetworkStatus(bool isAvailable)
         {
         }
 
 
         #region Interfaces implementations.
+
         void INetworkChangeSubscriber.SetNetworkStatus(bool isAvailable)
         {
             SetNetworkStatus(isAvailable);
@@ -348,7 +316,7 @@ namespace EVEMon.Common
 
         IAPIResult IQueryMonitor.LastResult
         {
-            get { return m_lastResult; }
+            get { return LastResult; }
         }
 
         #endregion

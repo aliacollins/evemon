@@ -6,7 +6,7 @@ namespace EVEMon.Common.Data
     /// <summary>
     /// Represents a skill and level tuple.
     /// </summary>
-    public struct StaticSkillLevel : ISkillLevel
+    public class StaticSkillLevel : ISkillLevel
     {
 
         #region Constructors
@@ -17,7 +17,6 @@ namespace EVEMon.Common.Data
         /// <param name="id"></param>
         /// <param name="level"></param>
         public StaticSkillLevel(int id, int level)
-            : this()
         {
             Skill = StaticSkills.GetSkillByID(id);
             Level = level;
@@ -29,7 +28,6 @@ namespace EVEMon.Common.Data
         /// <param name="name"></param>
         /// <param name="level"></param>
         public StaticSkillLevel(string name, int level)
-            : this()
         {
             Skill = StaticSkills.GetSkillByName(name);
             Level = level;
@@ -41,7 +39,6 @@ namespace EVEMon.Common.Data
         /// <param name="skill"></param>
         /// <param name="level"></param>
         public StaticSkillLevel(StaticSkill skill, int level)
-            : this()
         {
             Skill = skill;
             Level = level;
@@ -52,7 +49,6 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="obj"></param>
         public StaticSkillLevel(ISkillLevel obj)
-            : this()
         {
             Skill = obj.Skill;
             Level = obj.Level;
@@ -65,7 +61,6 @@ namespace EVEMon.Common.Data
         /// <param name="level"></param>
         /// <param name="activityId"></param>
         public StaticSkillLevel(int id, int level, int activityId)
-            : this()
         {
             Skill = StaticSkills.GetSkillByID(id);
             Level = level;

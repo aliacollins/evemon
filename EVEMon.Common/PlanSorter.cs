@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using EVEMon.Common.Data;
 
@@ -11,11 +10,11 @@ namespace EVEMon.Common
     /// </summary>
     internal sealed class PlanSorter
     {
-        private PlanEntrySort m_sort;
-        private bool m_reverseOrder;
-        private bool m_groupByPriority;
-        private IEnumerable<PlanEntry> m_entries;
-        private BaseCharacter m_character;
+        private readonly PlanEntrySort m_sort;
+        private readonly bool m_reverseOrder;
+        private readonly bool m_groupByPriority;
+        private readonly IEnumerable<PlanEntry> m_entries;
+        private readonly BaseCharacter m_character;
 
         /// <summary>
         /// Constructor.
@@ -25,7 +24,8 @@ namespace EVEMon.Common
         /// <param name="sort"></param>
         /// <param name="reverseOrder"></param>
         /// <param name="groupByPriority"></param>
-        internal PlanSorter(BaseCharacter character, IEnumerable<PlanEntry> entries, PlanEntrySort sort, bool reverseOrder, bool groupByPriority)
+        internal PlanSorter(BaseCharacter character, IEnumerable<PlanEntry> entries, PlanEntrySort sort, bool reverseOrder,
+                            bool groupByPriority)
         {
             m_sort = sort;
             m_entries = entries;
@@ -45,14 +45,12 @@ namespace EVEMon.Common
             // Apply first pass (priorities grouping)
             // We split the entries into multiple priority groups if that selection is made
             List<PlanScratchpad> groupedPlan = new List<PlanScratchpad>();
-            var scratchpad = new CharacterScratchpad(m_character);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
 
             if (m_groupByPriority)
             {
-                foreach (var group in m_entries.GroupBy(x => x.Priority).OrderBy(x => x.Key))
-                {
-                    groupedPlan.Add(new PlanScratchpad(scratchpad, group));
-                }
+                groupedPlan.AddRange(
+                    m_entries.GroupBy(x => x.Priority).OrderBy(x => x.Key).Select(group => new PlanScratchpad(scratchpad, group)));
             }
             else
             {
@@ -85,25 +83,25 @@ namespace EVEMon.Common
         /// Ensures the prerequisites order is correct.
         /// </summary>
         /// <param name="list"></param>
-        private static void FixPrerequisitesOrder(List<PlanEntry> list)
+        private static void FixPrerequisitesOrder(ICollection<PlanEntry> list)
         {
             // Gather prerequisites/postrequisites relationships and use them to connect nodes - O(n²) operation
-            var dependencies = new Dictionary<PlanEntry,List<PlanEntry>>();
-            foreach (var entry in list)
+            Dictionary<PlanEntry, List<PlanEntry>> dependencies = new Dictionary<PlanEntry, List<PlanEntry>>();
+            foreach (PlanEntry entry in list)
             {
                 dependencies[entry] = new List<PlanEntry>(list.Where(x => entry.IsDependentOf(x)));
             }
 
 
             // Insert entries
-            var entriesToAdd = new LinkedList<PlanEntry>(list);
-            var set = new SkillLevelSet<PlanEntry>();
+            LinkedList<PlanEntry> entriesToAdd = new LinkedList<PlanEntry>(list);
+            SkillLevelSet<PlanEntry> set = new SkillLevelSet<PlanEntry>();
             list.Clear();
 
             while (entriesToAdd.Count != 0)
             {
                 // Gets the first entry which has all its prerequisites satisfied.
-                var item = entriesToAdd.First(x => dependencies[x].All(y => set[y.Skill, y.Level] != null));
+                PlanEntry item = entriesToAdd.First(x => dependencies[x].All(y => set[y.Skill, y.Level] != null));
 
                 // Add it to the set and list, and remove it from the entries to add
                 set[item.Skill, item.Level] = item;
@@ -115,13 +113,26 @@ namespace EVEMon.Common
 
         #region Simple sort operators
 
+        /// <summary>
+        /// Compares by name.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByName(PlanEntry x, PlanEntry y)
         {
             int nameDiff = String.CompareOrdinal(x.Skill.Name, y.Skill.Name);
-            if (nameDiff != 0) return nameDiff;
+            if (nameDiff != 0)
+                return nameDiff;
             return x.Level - y.Level;
         }
 
+        /// <summary>
+        /// Compares by cost.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByCost(PlanEntry x, PlanEntry y)
         {
             long xCost = (x.Level == 1 && !x.CharacterSkill.IsOwned ? x.Skill.Cost : 0);
@@ -129,51 +140,111 @@ namespace EVEMon.Common
             return xCost.CompareTo(yCost);
         }
 
+        /// <summary>
+        /// Compares by training time.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByTrainingTime(PlanEntry x, PlanEntry y)
         {
             return x.TrainingTime.CompareTo(y.TrainingTime);
         }
 
+        /// <summary>
+        /// Compares by training time natural.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByTrainingTimeNatural(PlanEntry x, PlanEntry y)
         {
             return x.NaturalTrainingTime.CompareTo(y.NaturalTrainingTime);
         }
 
+        /// <summary>
+        /// Compares by SP per hour.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareBySPPerHour(PlanEntry x, PlanEntry y)
         {
             return x.SpPerHour - y.SpPerHour;
         }
 
+        /// <summary>
+        /// Compares by primary attribute.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByPrimaryAttribute(PlanEntry x, PlanEntry y)
         {
             return (int)x.Skill.PrimaryAttribute - (int)y.Skill.PrimaryAttribute;
         }
 
+        /// <summary>
+        /// Compares by secondary attribute.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareBySecondaryAttribute(PlanEntry x, PlanEntry y)
         {
             return (int)x.Skill.SecondaryAttribute - (int)y.Skill.SecondaryAttribute;
         }
 
+        /// <summary>
+        /// Compares by priority.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByPriority(PlanEntry x, PlanEntry y)
         {
             return x.Priority - y.Priority;
         }
 
+        /// <summary>
+        /// Compares by plan group.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByPlanGroup(PlanEntry x, PlanEntry y)
         {
             return String.Compare(x.PlanGroupsDescription, y.PlanGroupsDescription);
         }
 
+        /// <summary>
+        /// Compares by plan type.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByPlanType(PlanEntry x, PlanEntry y)
         {
             return (int)x.Type - (int)y.Type;
         }
 
+        /// <summary>
+        /// Compares by notes.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByNotes(PlanEntry x, PlanEntry y)
         {
             return String.Compare(x.Notes, y.Notes);
         }
 
+        /// <summary>
+        /// Compares by time difference.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByTimeDifference(PlanEntry x, PlanEntry y)
         {
             var xDuration = x.TrainingTime - x.OldTrainingTime;
@@ -181,6 +252,12 @@ namespace EVEMon.Common
             return xDuration.CompareTo(yDuration);
         }
 
+        /// <summary>
+        /// Compares by percent completed.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByPercentCompleted(PlanEntry x, PlanEntry y)
         {
             float xRatio = x.CharacterSkill.FractionCompleted;
@@ -188,35 +265,62 @@ namespace EVEMon.Common
             return xRatio.CompareTo(yRatio);
         }
 
+        /// <summary>
+        /// Compares by rank.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareByRank(PlanEntry x, PlanEntry y)
         {
             return x.Skill.Rank - y.Skill.Rank;
         }
 
+        /// <summary>
+        /// Compares by skill points required.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public static int CompareBySkillPointsRequired(PlanEntry x, PlanEntry y)
         {
             return x.SkillPointsRequired.CompareTo(y.SkillPointsRequired);
         }
 
-        public static int CompareBySkillGroupDuration(PlanEntry x, PlanEntry y, IEnumerable<PlanEntry> entries, Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
+        /// <summary>
+        /// Compares by skill group duration.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="entries">The entries.</param>
+        /// <param name="skillGroupsDurations">The skill groups durations.</param>
+        /// <returns></returns>
+        public static int CompareBySkillGroupDuration(PlanEntry x, PlanEntry y, IEnumerable<PlanEntry> entries,
+                                                      Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
         {
-            var xDuration = GetSkillGroupDuration(x.Skill.Group, entries, skillGroupsDurations);
-            var yDuration = GetSkillGroupDuration(y.Skill.Group, entries, skillGroupsDurations);
+            TimeSpan xDuration = GetSkillGroupDuration(x.Skill.Group, entries, skillGroupsDurations);
+            TimeSpan yDuration = GetSkillGroupDuration(y.Skill.Group, entries, skillGroupsDurations);
             return xDuration.CompareTo(yDuration);
         }
 
-        private static TimeSpan GetSkillGroupDuration(StaticSkillGroup group, IEnumerable<PlanEntry> entries, Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
+        /// <summary>
+        /// Gets the duration of the skill group.
+        /// </summary>
+        /// <param name="group">The group.</param>
+        /// <param name="entries">The entries.</param>
+        /// <param name="skillGroupsDurations">The skill groups durations.</param>
+        /// <returns></returns>
+        private static TimeSpan GetSkillGroupDuration(StaticSkillGroup group, IEnumerable<PlanEntry> entries,
+                                                      IDictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
         {
             if (!skillGroupsDurations.ContainsKey(group))
             {
-                TimeSpan time = TimeSpan.Zero;
-                foreach (var entry in entries.Where(x => x.Skill.Group == group))
-                {
-                    time += entry.TrainingTime;
-                }
+                TimeSpan time = entries.Where(x => x.Skill.Group == group).Aggregate(TimeSpan.Zero,
+                                                                                     (current, entry) =>
+                                                                                     current + entry.TrainingTime);
                 skillGroupsDurations[group] = time;
             }
-            
+
             return skillGroupsDurations[group];
         }
 

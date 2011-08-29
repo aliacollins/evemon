@@ -22,7 +22,7 @@ namespace EVEMon.Common
         public SkillQueueToolTip(Control owner)
         {
             m_owner = owner;
-            m_toolTip = new ToolTip {UseFading = false};
+            m_toolTip = new ToolTip { UseFading = false };
             m_toolTip.Popup += m_toolTip_Popup;
         }
 

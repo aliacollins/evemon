@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using System.Linq;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -17,14 +17,10 @@ namespace EVEMon.Common
             bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
 
             // Scroll through entries
-            foreach (var pe in items)
+            foreach (int index in items.Select(pe => pe.Skill.ArrayIndex).Where(index => !counted[index]))
             {
-                int index = pe.Skill.ArrayIndex;
-                if (!counted[index])
-                {
-                    counted[index] = true;
-                    count++;
-                }
+                counted[index] = true;
+                count++;
             }
 
             // Return the count
@@ -42,14 +38,12 @@ namespace EVEMon.Common
             bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
 
             // Scroll through selection
-            foreach (var pe in items)
+            foreach (int index in items.Select(pe => new { pe, index = pe.Skill.ArrayIndex }).Where(
+                item => !counted[item.index] && !item.pe.CharacterSkill.IsKnown && !item.pe.CharacterSkill.IsOwned).Select(
+                    item => item.index))
             {
-                int index = pe.Skill.ArrayIndex;
-                if (!counted[index] && !pe.CharacterSkill.IsKnown && !pe.CharacterSkill.IsOwned)
-                {
-                    counted[index] = true;
-                    count++;
-                }
+                counted[index] = true;
+                count++;
             }
 
             // Return the count
@@ -57,7 +51,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the total cost of the skill books, in ISK
+        /// Gets the total cost of the skill books, in ISK.
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
         /// <returns>Cumulative cost of all skill books.</returns>
@@ -67,14 +61,13 @@ namespace EVEMon.Common
             bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
 
             // Scroll through entries
-            foreach (var pe in items)
+            foreach (PlanEntry pe in items)
             {
                 int index = pe.Skill.ArrayIndex;
-                if (!counted[index])
-                {
-                    counted[index] = true;
-                    cost += pe.Skill.Cost;
-                }
+                if (counted[index])
+                    continue;
+                counted[index] = true;
+                cost += pe.Skill.Cost;
             }
 
             // Return the cost
@@ -82,7 +75,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the cost of the not known skill books, in ISK
+        /// Gets the cost of the not known skill books, in ISK.
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
         /// <returns>Cumulative cost of known skill books.</returns>
@@ -92,14 +85,13 @@ namespace EVEMon.Common
             bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
 
             // Scroll through entries
-            foreach (var pe in items)
+            foreach (PlanEntry pe in items)
             {
                 int index = pe.Skill.ArrayIndex;
-                if (!counted[index] && !pe.CharacterSkill.IsKnown && !pe.CharacterSkill.IsOwned)
-                {
-                    counted[index] = true;
-                    cost += pe.Skill.Cost;
-                }
+                if (counted[index] || pe.CharacterSkill.IsKnown || pe.CharacterSkill.IsOwned)
+                    continue;
+                counted[index] = true;
+                cost += pe.Skill.Cost;
             }
 
             // Return the cost

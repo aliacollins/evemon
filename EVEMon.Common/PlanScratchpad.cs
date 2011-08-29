@@ -15,6 +15,7 @@ namespace EVEMon.Common
     public sealed class PlanScratchpad : BasePlan
     {
         #region Disposable
+
         /// <summary>
         /// A stub disposable object.
         /// </summary>
@@ -24,9 +25,11 @@ namespace EVEMon.Common
             {
             }
         }
+
         #endregion
 
-        private static readonly Disposable m_disposable = new Disposable();
+
+        private static readonly Disposable s_disposable = new Disposable();
 
         /// <summary>
         /// Constructor.
@@ -48,7 +51,9 @@ namespace EVEMon.Common
             AddRange(entries);
         }
 
+
         #region Event firing and suppression
+
         /// <summary>
         /// Returns an <see cref="IDisposable"/> object which suspends events notification and will resume them once disposed.
         /// </summary>
@@ -56,7 +61,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override IDisposable SuspendingEvents()
         {
-            return m_disposable;
+            return s_disposable;
         }
 
         /// <summary>
@@ -65,10 +70,12 @@ namespace EVEMon.Common
         internal override void OnChanged(PlanChange change)
         {
         }
+
         #endregion
 
 
         #region Insertions and removals
+
         /// <summary>
         /// Adds an item.
         /// </summary>
@@ -81,10 +88,13 @@ namespace EVEMon.Common
         /// <summary>
         /// Adds the provided items.
         /// </summary>
-        /// <param name="entry"></param>
+        /// <param name="entries"></param>
         public void AddRange(IEnumerable<PlanEntry> entries)
         {
-            foreach(var entry in entries) AddCore(entry);
+            foreach (PlanEntry entry in entries)
+            {
+                AddCore(entry);
+            }
         }
 
         /// <summary>
@@ -94,12 +104,15 @@ namespace EVEMon.Common
         public void Remove(PlanEntry entry)
         {
             int index = IndexOf(entry.Skill, entry.Level);
-            if (index != -1) RemoveCore(index);
+            if (index != -1)
+                RemoveCore(index);
         }
+
         #endregion
 
 
         #region Simple sort
+
         /// <summary>
         /// Performs a simple ordering by the given sort criteria, based on the latest statistics.
         /// </summary>
@@ -160,12 +173,14 @@ namespace EVEMon.Common
                     Items.StableSort(PlanSorter.CompareBySkillPointsRequired);
                     break;
                 default:
-                    break;
+                    throw new NotImplementedException();
             }
 
             // Reverse order
-            if (reverseOrder) Items.Reverse();
+            if (reverseOrder)
+                Items.Reverse();
         }
+
         #endregion
     }
 }

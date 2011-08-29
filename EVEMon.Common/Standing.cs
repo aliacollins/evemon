@@ -129,10 +129,7 @@ namespace EVEMon.Common
                 if (EffectiveStanding < 0.5)
                     return StandingStatus.Neutral;
 
-                if (EffectiveStanding < 5.5)
-                    return StandingStatus.Good;
-
-                return StandingStatus.Excellent;
+                return EffectiveStanding < 5.5 ? StandingStatus.Good : StandingStatus.Excellent;
             }
         }
 

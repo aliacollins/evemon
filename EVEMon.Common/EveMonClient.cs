@@ -109,6 +109,14 @@ namespace EVEMon.Common
         /// </summary>
         public static bool Closed { get; private set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is debug build.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is debug build; otherwise, <c>false</c>.
+        /// </value>
+        public static bool IsDebugBuild { get; private set; }
+
         #endregion
 
 
@@ -191,13 +199,16 @@ namespace EVEMon.Common
                 if (!String.IsNullOrEmpty(SettingsFileName))
                     return;
 
-#if DEBUG
-                SettingsFileName = "settings-debug.xml";
-                s_traceFile = "trace-debug.txt";
-#else
-                SettingsFileName = "settings.xml";
-                s_traceFile = "trace.txt";
-#endif
+                if (IsDebugBuild)
+                {
+                    SettingsFileName = "settings-debug.xml";
+                    s_traceFile = "trace-debug.txt";
+                }
+                else
+                {
+                    SettingsFileName = "settings.xml";
+                    s_traceFile = "trace.txt";
+                }
 
                 while (true)
                 {
@@ -1079,6 +1090,15 @@ namespace EVEMon.Common
             System.Diagnostics.Trace.Listeners.Remove(s_traceListener);
             s_traceListener.Close();
             s_traceStream.Close();
+        }
+
+        /// <summary>
+        /// Will only execute if DEBUG is set, thus lets us avoid #IFDEF.
+        /// </summary>
+        [Conditional("DEBUG")]
+        public static void CheckIsDebug()
+        {
+            IsDebugBuild = true;
         }
 
         #endregion

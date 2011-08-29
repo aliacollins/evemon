@@ -138,17 +138,16 @@ namespace EVEMon.Common
         /// </summary>
         internal SerializableResearchPoint Export()
         {
-            var serial = new SerializableResearchPoint();
-
-            serial.AgentID = AgentID;
-            serial.AgentName = AgentName;
-            serial.SkillID = m_skillID;
-            serial.SkillName = Field;
-            serial.StartDate = StartDate;
-            serial.PointsPerDay = PointsPerDay;
-            serial.RemainderPoints = m_remainderPoints;
-
-            return serial;
+            return new SerializableResearchPoint
+                       {
+                           AgentID = AgentID,
+                           AgentName = AgentName,
+                           SkillID = m_skillID,
+                           SkillName = Field,
+                           StartDate = StartDate,
+                           PointsPerDay = PointsPerDay,
+                           RemainderPoints = m_remainderPoints
+                       };
         }
 
         #endregion

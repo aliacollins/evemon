@@ -36,7 +36,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            provider.QueryMethodAsync(m_method, m_account.UserID, m_account.APIKey, callback);
+            provider.QueryMethodAsync(Method, m_account.UserID, m_account.APIKey, callback);
         }
     }
 }

@@ -436,7 +436,7 @@ namespace EVEMon.SkillPlanner
 
             // For a manually edited point, we initialize the control with the attributes from the current remapping point
             if (m_strategy == Strategy.ManualRemappingPointEdition &&
-                m_manuallyEditedRemappingPoint.Status == RemappingPoint.PointStatus.UpToDate)
+                m_manuallyEditedRemappingPoint.Status == RemappingPointStatus.UpToDate)
                 ctl.UpdateValuesFrom(m_manuallyEditedRemappingPoint);
 
             return ctl;

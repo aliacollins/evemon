@@ -175,7 +175,9 @@ namespace EVEMon
             VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion.ToString());
 
             AddDevelopersToListView();
-            AddDebugTag();
+
+            if (EveMonClient.IsDebugBuild)
+                AddDebugTag();
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
             AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
@@ -208,10 +210,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Adds " (Debug)" to the verison number if the build has
-        /// the DEBUG conditional set.
+        /// Adds " (Debug)" to the verison number if the build is in DEBUG.
         /// </summary>
-        [Conditional("DEBUG")]
         private void AddDebugTag()
         {
             VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} (Debug)", VersionLabel.Text);

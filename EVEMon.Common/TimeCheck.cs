@@ -1,6 +1,6 @@
 using System;
-using EVEMon.Common.Net;
 using System.Globalization;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common
 {
@@ -58,16 +58,16 @@ namespace EVEMon.Common
         /// </summary>
         private class SyncState
         {
-            private readonly TimeSynchronisationCallback _callback;
+            private readonly TimeSynchronisationCallback m_callback;
 
             internal SyncState (TimeSynchronisationCallback callback)
             {
-                _callback = callback;
+                m_callback = callback;
             }
 
             internal TimeSynchronisationCallback Callback
             {
-                get { return _callback; }
+                get { return m_callback; }
             }
         }
     }

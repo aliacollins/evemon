@@ -13,7 +13,6 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class SkillCollection : ReadonlyKeyedCollection<long, Skill>
     {
-        private readonly Character m_character;
         private readonly Skill[] m_itemsArray = new Skill[StaticSkills.ArrayIndicesCount];
         private readonly Dictionary<string, Skill> m_itemsByName = new Dictionary<string, Skill>();
 
@@ -23,19 +22,15 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal SkillCollection(Character character)
         {
-            m_character = character;
-            foreach (var group in character.SkillGroups)
+            foreach (Skill skill in character.SkillGroups.SelectMany(group => group))
             {
-                foreach (var skill in group)
-                {
-                    Items[skill.ID] = skill;
-                    m_itemsByName[skill.Name] = skill;
-                    m_itemsArray[skill.ArrayIndex] = skill;
-                }
+                Items[skill.ID] = skill;
+                m_itemsByName[skill.Name] = skill;
+                m_itemsArray[skill.ArrayIndex] = skill;
             }
 
             // Build prerequisites list
-            foreach (var skill in m_itemsArray)
+            foreach (Skill skill in m_itemsArray)
             {
                 skill.CompleteInitialization(m_itemsArray);
             }
@@ -50,7 +45,7 @@ namespace EVEMon.Common
         {
             get
             {
-                Skill skill = null;
+                Skill skill;
                 m_itemsByName.TryGetValue(name, out skill);
                 return skill;
             }
@@ -92,17 +87,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableCharacterSkill> Export()
         {
-            List<SerializableCharacterSkill> skills = new List<SerializableCharacterSkill>();
-            foreach (Skill skill in Items.Values.Where(x => x.IsKnown || x.IsOwned))
-            {
-                skills.Add(skill.Export());
-            }
-
-            return skills;
+            return Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export()).ToList();
         }
 
         /// Imports data from a serialization object.
-        internal void Import(List<SerializableCharacterSkill> skills, bool fromCCP)
+        internal void Import(IEnumerable<SerializableCharacterSkill> skills, bool fromCCP)
         {
             // Skills : reset all > update all
             foreach (Skill skill in Items.Values)

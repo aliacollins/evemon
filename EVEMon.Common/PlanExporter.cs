@@ -10,13 +10,6 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-    public enum PlanFormat
-    {
-        Emp = 1,
-        Xml = 2,
-        Text = 3
-    }
-
     public static class PlanExporter
     {
         public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
@@ -293,9 +286,7 @@ namespace EVEMon.Common
             }
 
             if (result == null)
-            {
                 MessageBox.Show("There was a problem with the format of the document.");
-            }
 
             return result;
         }

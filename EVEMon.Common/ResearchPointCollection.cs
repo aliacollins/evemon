@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -57,12 +57,7 @@ namespace EVEMon.Common
         internal List<SerializableResearchPoint> Export()
         {
             List<SerializableResearchPoint> serial = new List<SerializableResearchPoint>(Items.Count);
-
-            foreach (ResearchPoint researchPoint in Items)
-            {
-                serial.Add(researchPoint.Export());
-            }
-
+            serial.AddRange(Items.Select(researchPoint => researchPoint.Export()));
             return serial;
         }
     }

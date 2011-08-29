@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Threading;
 using System.IO;
-using EVEMon.Common.Threading;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Reflection;
-using EVEMon.Common.Serialization;
 using System.Windows.Forms;
-
+using System.Xml.Serialization;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.SettingsObjects;
+using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Importation;
-using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -23,8 +18,18 @@ namespace EVEMon.Common
     /// The settings class is bound 
     /// </summary>
     [EnforceUIThreadAffinity]
-    public static partial class Settings
+    public static class Settings
     {
+        /// <summary>
+        /// Flag to indicate if a save is pending but not committed.
+        /// </summary>
+        private static bool s_savePending;
+
+        /// <summary>
+        /// The last time the settings were saved.
+        /// </summary>
+        private static DateTime s_lastSaveTime = DateTime.MinValue;
+
         /// <summary>
         /// Static constructor
         /// </summary>
@@ -33,7 +38,7 @@ namespace EVEMon.Common
             UI = new UISettings();
             G15 = new G15Settings();
             IGB = new IGBSettings();
-            Proxy = new ProxySettings(); 
+            Proxy = new ProxySettings();
             Updates = new UpdateSettings();
             Calendar = new CalendarSettings();
             Exportation = new ExportationSettings();
@@ -41,7 +46,58 @@ namespace EVEMon.Common
         }
 
 
+        #region The very settings
+
+        /// <summary>
+        /// Gets or sets the compatibility mode.
+        /// </summary>
+        public static CompatibilityMode Compatibility { get; set; }
+
+        /// <summary>
+        /// Gets the settings for updates.
+        /// </summary>
+        public static UpdateSettings Updates { get; set; }
+
+        /// <summary>
+        /// Gets the settings for UI (look'n feel)
+        /// </summary>
+        public static UISettings UI { get; set; }
+
+        /// <summary>
+        /// Gets the settings for the G15 keyboard.
+        /// </summary>
+        public static G15Settings G15 { get; set; }
+
+        /// <summary>
+        /// Gets the settings for the notifications (alerts).
+        /// </summary>
+        public static NotificationSettings Notifications { get; set; }
+
+        /// <summary>
+        /// Gets the settings for the network.
+        /// </summary>
+        public static IGBSettings IGB { get; set; }
+
+        /// <summary>
+        /// Gets the calendar settings.
+        /// </summary>
+        public static CalendarSettings Calendar { get; set; }
+
+        /// <summary>
+        /// Gets or sets the exportation settings.
+        /// </summary>
+        public static ExportationSettings Exportation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom proxy settings.
+        /// </summary>
+        public static ProxySettings Proxy { get; set; }
+
+        #endregion
+
+
         #region Serialization - Core - Methods to update to add a property
+
         /// <summary>
         /// Creates new empty Settings file, overwriting the existing file
         /// </summary>
@@ -85,7 +141,7 @@ namespace EVEMon.Common
                 }
 
                 // Global settings
-                Settings.Compatibility = serial.Compatibility;
+                Compatibility = serial.Compatibility;
 
                 // API providers
                 EveMonClient.APIProviders.Import(serial.APIProviders);
@@ -94,14 +150,14 @@ namespace EVEMon.Common
                 Scheduler.Import(serial.Scheduler);
 
                 // User settings
-                Settings.UI = serial.UI.Clone();
-                Settings.G15 = serial.G15.Clone();
-                Settings.IGB = serial.IGB.Clone();
-                Settings.Proxy = serial.Proxy.Clone();
-                Settings.Updates = serial.Updates.Clone();
-                Settings.Notifications = serial.Notifications.Clone();
-                Settings.Exportation = serial.Exportation.Clone();
-                Settings.Calendar = serial.Calendar.Clone();
+                UI = serial.UI.Clone();
+                G15 = serial.G15.Clone();
+                IGB = serial.IGB.Clone();
+                Proxy = serial.Proxy.Clone();
+                Updates = serial.Updates.Clone();
+                Notifications = serial.Notifications.Clone();
+                Exportation = serial.Exportation.Clone();
+                Calendar = serial.Calendar.Clone();
 
                 // Trim the data
                 OnImportCompleted();
@@ -127,63 +183,77 @@ namespace EVEMon.Common
         private static void OnImportCompleted()
         {
             // Add missing notification behaviours
-            foreach (NotificationCategory cat in Enum.GetValues(typeof(NotificationCategory)))
+            foreach (NotificationCategory cat in Enum.GetValues(
+                typeof(NotificationCategory)).Cast<NotificationCategory>().Where(
+                    cat => !Notifications.Categories.ContainsKey(cat)))
             {
-                if (!Settings.Notifications.Categories.ContainsKey(cat))
-                    Settings.Notifications.Categories[cat] = new NotificationCategorySettings();
+                Notifications.Categories[cat] = new NotificationCategorySettings();
             }
 
             // Add missing API methods update periods
-            foreach(APIMethods method in Enum.GetValues(typeof(APIMethods)))
+            foreach (APIMethods method in Enum.GetValues(typeof(APIMethods)))
             {
-                if (!Settings.Updates.Periods.ContainsKey(method))
-                {
-                    var updateAttribute = method.GetAttribute<UpdateAttribute>();
-                    if (updateAttribute != null)
-                        Settings.Updates.Periods.Add(method, updateAttribute.DefaultPeriod);
-                }
+                if (Updates.Periods.ContainsKey(method))
+                    continue;
+
+                UpdateAttribute updateAttribute = method.GetAttribute<UpdateAttribute>();
+                if (updateAttribute != null)
+                    Updates.Periods.Add(method, updateAttribute.DefaultPeriod);
             }
 
             // Add missing plan order columns
-            var planColumns = UI.PlanWindow.Columns.ToList();
+            List<PlanColumnSettings> planColumns = UI.PlanWindow.Columns.ToList();
             planColumns.AddRange(EnumExtensions.GetValues<PlanColumn>().
-                Where(x => x != PlanColumn.None && planColumns.All(y => y.Column != x)).
-                Select(x => new PlanColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                     Where(x => x != PlanColumn.None && planColumns.All(y => y.Column != x)).
+                                     Select(x => new PlanColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
             UI.PlanWindow.Columns = planColumns.ToArray();
 
             // Add missing market order columns
-            var ordersColumns = UI.MainWindow.MarketOrders.Columns.ToList();
+            List<MarketOrderColumnSettings> ordersColumns = UI.MainWindow.MarketOrders.Columns.ToList();
             ordersColumns.AddRange(EnumExtensions.GetValues<MarketOrderColumn>().
-                Where(x => x != MarketOrderColumn.None && ordersColumns.All(y => y.Column != x)).
-                Select(x => new MarketOrderColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                       Where(x => x != MarketOrderColumn.None && ordersColumns.All(y => y.Column != x)).
+                                       Select(x => new MarketOrderColumnSettings { Column = x, Visible = false, Width = -1 }).
+                                       ToArray());
             UI.MainWindow.MarketOrders.Columns = ordersColumns.ToArray();
 
             // Add missing industry jobs columns
-            var jobsColumns = UI.MainWindow.IndustryJobs.Columns.ToList();
+            List<IndustryJobColumnSettings> jobsColumns = UI.MainWindow.IndustryJobs.Columns.ToList();
             jobsColumns.AddRange(EnumExtensions.GetValues<IndustryJobColumn>().
-                Where(x => x != IndustryJobColumn.None && jobsColumns.All(y => y.Column != x)).
-                Select(x => new IndustryJobColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                     Where(x => x != IndustryJobColumn.None && jobsColumns.All(y => y.Column != x)).
+                                     Select(x => new IndustryJobColumnSettings { Column = x, Visible = false, Width = -1 }).
+                                     ToArray());
             UI.MainWindow.IndustryJobs.Columns = jobsColumns.ToArray();
 
             // Add missing research points columns
-            var researchColumns = UI.MainWindow.Research.Columns.ToList();
+            List<ResearchColumnSettings> researchColumns = UI.MainWindow.Research.Columns.ToList();
             researchColumns.AddRange(EnumExtensions.GetValues<ResearchColumn>().
-                Where(x => x != ResearchColumn.None && researchColumns.All(y => y.Column != x)).
-                Select(x => new ResearchColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                         Where(x => x != ResearchColumn.None && researchColumns.All(y => y.Column != x)).
+                                         Select(x => new ResearchColumnSettings { Column = x, Visible = false, Width = -1 }).
+                                         ToArray());
             UI.MainWindow.Research.Columns = researchColumns.ToArray();
 
             // Add missing EVE mail messages columns
-            var eveMailMessagesColumns = UI.MainWindow.EVEMailMessages.Columns.ToList();
+            List<EveMailMessagesColumnSettings> eveMailMessagesColumns = UI.MainWindow.EVEMailMessages.Columns.ToList();
             eveMailMessagesColumns.AddRange(EnumExtensions.GetValues<EveMailMessagesColumn>().
-                Where(x => x != EveMailMessagesColumn.None && eveMailMessagesColumns.All(y => y.Column != x)).
-                Select(x => new EveMailMessagesColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                                Where(
+                                                    x => x != EveMailMessagesColumn.None &&
+                                                         eveMailMessagesColumns.All(y => y.Column != x)).
+                                                Select(
+                                                    x =>
+                                                    new EveMailMessagesColumnSettings { Column = x, Visible = false, Width = -1 })
+                                                .ToArray());
             UI.MainWindow.EVEMailMessages.Columns = eveMailMessagesColumns.ToArray();
 
             // Add missing EVE notifications columns
-            var eveNotificationsColumns = UI.MainWindow.EVENotifications.Columns.ToList();
+            List<EveNotificationsColumnSettings> eveNotificationsColumns = UI.MainWindow.EVENotifications.Columns.ToList();
             eveNotificationsColumns.AddRange(EnumExtensions.GetValues<EveNotificationsColumn>().
-                Where(x => x != EveNotificationsColumn.None && eveNotificationsColumns.All(y => y.Column != x)).
-                Select(x => new EveNotificationsColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                                 Where(
+                                                     x => x != EveNotificationsColumn.None &&
+                                                          eveNotificationsColumns.All(y => y.Column != x)).
+                                                 Select(
+                                                     x =>
+                                                     new EveNotificationsColumnSettings
+                                                         { Column = x, Visible = false, Width = -1 }).ToArray());
             UI.MainWindow.EVENotifications.Columns = eveNotificationsColumns.ToArray();
         }
 
@@ -193,39 +263,32 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static SerializableSettings Export()
         {
-            SerializableSettings serial = new SerializableSettings();
-
-            serial.Revision = Settings.Revision;
-            serial.Compatibility = Settings.Compatibility;
-
-            // Export characters and such
-            serial.Characters = EveMonClient.Characters.Export();
-            serial.Accounts = EveMonClient.Accounts.Export();
-            serial.Plans = EveMonClient.Characters.ExportPlans();
-            serial.MonitoredCharacters = EveMonClient.MonitoredCharacters.Export();
-
-            // API providers
-            serial.APIProviders = EveMonClient.APIProviders.Export();
-
-            // Scheduler
-            serial.Scheduler = Scheduler.Export();
-
-            // User settings
-            serial.Calendar = Settings.Calendar.Clone();
-            serial.Notifications = Settings.Notifications.Clone();
-            serial.Exportation = Settings.Exportation.Clone();
-            serial.Updates = Settings.Updates.Clone();
-            serial.Proxy = Settings.Proxy.Clone();
-            serial.IGB = Settings.IGB.Clone();
-            serial.G15 = Settings.G15.Clone();
-            serial.UI = Settings.UI.Clone();
-
-            return serial;
+            return new SerializableSettings
+                       {
+                           Revision = Revision,
+                           Compatibility = Compatibility,
+                           Characters = EveMonClient.Characters.Export(),
+                           Accounts = EveMonClient.Accounts.Export(),
+                           Plans = EveMonClient.Characters.ExportPlans(),
+                           MonitoredCharacters = EveMonClient.MonitoredCharacters.Export(),
+                           APIProviders = EveMonClient.APIProviders.Export(),
+                           Scheduler = Scheduler.Export(),
+                           Calendar = Calendar.Clone(),
+                           Notifications = Notifications.Clone(),
+                           Exportation = Exportation.Clone(),
+                           Updates = Updates.Clone(),
+                           Proxy = Proxy.Clone(),
+                           IGB = IGB.Clone(),
+                           G15 = G15.Clone(),
+                           UI = UI.Clone()
+                       };
         }
+
         #endregion
 
 
         #region Initialization and loading
+
         /// <summary>
         /// Gets the current assembly's revision, which is also used for files versioning.
         /// </summary>
@@ -237,7 +300,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Initialization for the EVEMon client. Will automatically load the settings file.
         /// </summary>
-        /// <param name="applicationForm">The main application form</param>
         /// <exception cref="InvalidOperationException">The instance has been initialized already</exception>
         public static void InitializeFromFile()
         {
@@ -270,8 +332,8 @@ namespace EVEMon.Common
             if (settings == null)
             {
                 MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                    "Cannot restore the settings from {0}, the file is corrupted.", filename),
-                    "Bad settings file.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                              "Cannot restore the settings from {0}, the file is corrupted.", filename),
+                                "Bad settings file.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -285,7 +347,6 @@ namespace EVEMon.Common
         /// <returns><c>Null</c> if we have been unable to load anything from files, the generated settings otherwise</returns>
         private static SerializableSettings TryDeserializeSettings()
         {
-            SerializableSettings settings = null;
             string settingsFile = EveMonClient.SettingsFileNameFullPath;
             string backupFile = settingsFile + ".bak";
 
@@ -301,17 +362,10 @@ namespace EVEMon.Common
                     // Gets the revision number of the assembly which generated this file
                     int revision = Util.GetRevisionNumber(settingsFile);
 
-                    // Try to load from a file
-                    if (revision == 0)
-                    {
-                        // Old format
-                        settings = DeserializeOldFormat(settingsFile);
-                    }
-                    else
-                    {
-                        // New format
-                        settings = Util.DeserializeXML<SerializableSettings>(settingsFile);
-                    }
+                    // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
+                    SerializableSettings settings = revision == 0
+                                                        ? DeserializeOldFormat(settingsFile)
+                                                        : Util.DeserializeXML<SerializableSettings>(settingsFile);
 
                     // If the settings loaded OK, make a backup as 'last good settings' and return
                     if (settings != null)
@@ -332,15 +386,14 @@ namespace EVEMon.Common
         /// Try to deserialize from the backup file.
         /// </summary>
         /// <param name="backupFile"></param>
+        /// <param name="settingsFile"></param>
+        /// <param name="recover"></param>
         /// <returns></returns>
         private static SerializableSettings TryDeserializeBackup(string backupFile, string settingsFile, bool recover)
         {
-            SerializableSettings settings = null;
-
             // Load failed, so check for backup
             if (File.Exists(backupFile))
             {
-                System.DateTime startTime = System.DateTime.Now;
                 EveMonClient.Trace("Settings.TryDeserializeBackup - begin");
 
                 FileInfo backupInfo = new FileInfo(backupFile);
@@ -350,34 +403,29 @@ namespace EVEMon.Common
                     {
                         // Prompts the user to use the backup
                         String fileDate = String.Format("{0} at {1}",
-                                                    backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
-                                                    backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
+                                                        backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
+                                                        backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
                         DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                            "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate),
-                            "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                                                                        "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?",
+                                                                        fileDate),
+                                                          "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                         if (dr == DialogResult.No)
                         {
-                            MessageBox.Show("Your settings file is corrupt, and no backup is available. A new settings file will be created."
-                                            + " You may wish to close down EVEMon and restore a saved copy of your file.", "Corrupt Settings",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show(
+                                "Your settings file is corrupt, and no backup is available. A new settings file will be created."
+                                + " You may wish to close down EVEMon and restore a saved copy of your file.", "Corrupt Settings",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             return null;
                         }
                     }
                     // Gets the revision number of the assembly which generated this file
                     int revision = Util.GetRevisionNumber(backupFile);
 
-                    // Try to load from a backup file
-                    if (revision == 0)
-                    {
-                        // Old format
-                        settings = DeserializeOldFormat(backupFile);
-                    }
-                    else
-                    {
-                        // New format
-                        settings = Util.DeserializeXML<SerializableSettings>(backupFile);
-                    }
+                    // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
+                    SerializableSettings settings = revision == 0
+                                                        ? DeserializeOldFormat(backupFile)
+                                                        : Util.DeserializeXML<SerializableSettings>(backupFile);
 
                     // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
                     if (settings != null)
@@ -385,7 +433,7 @@ namespace EVEMon.Common
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                        EveMonClient.Trace("Settings.TryDeserializeBackup - done {0}", System.DateTime.Now.Subtract(startTime));
+                        EveMonClient.Trace("Settings.TryDeserializeBackup - done");
                         return settings;
                     }
 
@@ -407,39 +455,40 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static SerializableSettings DeserializeOldFormat(string filename)
         {
-            var oldSerial = Util.DeserializeXML<OldSettings>(filename, Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
+            OldSettings oldSerial = Util.DeserializeXML<OldSettings>(filename,
+                                                                     Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
 
             if (oldSerial == null)
                 return null;
 
-            var serial = new SerializableSettings();
+            SerializableSettings serial = new SerializableSettings();
 
             // Accounts
             serial.Accounts.AddRange(oldSerial.Accounts);
 
             // Characters
-            foreach (var oldCharacter in oldSerial.Characters)
+            foreach (SerializableCCPCharacter character in oldSerial.Characters.Select(
+                oldCharacter => new SerializableCCPCharacter
+                                    {
+                                        ID = oldCharacter.ID,
+                                        Name = oldCharacter.Name,
+                                        Guid = Guid.NewGuid()
+                                    }))
             {
-                // Adds the char both to the characters list and the monitored characters list.
-                var character = new SerializableCCPCharacter {
-                    ID = oldCharacter.ID, 
-                    Name = oldCharacter.Name, 
-                    Guid = Guid.NewGuid()
-                };
                 serial.MonitoredCharacters.Add(new MonitoredCharacterSettings { CharacterGuid = character.Guid });
                 serial.Characters.Add(character);
             }
 
             // Plans
-            foreach (var oldPlan in oldSerial.Plans)
+            foreach (OldSettingsPlan oldPlan in oldSerial.Plans)
             {
                 // Look for the owner by his name
-                var owner = serial.Characters.SingleOrDefault(x => x.Name == oldPlan.Owner);
+                SerializableSettingsCharacter owner = serial.Characters.SingleOrDefault(x => x.Name == oldPlan.Owner);
                 if (owner == null)
                     continue;
 
                 // Imports the plan
-                var plan = new SerializablePlan { Owner = owner.Guid, Name = oldPlan.Name };
+                SerializablePlan plan = new SerializablePlan { Owner = owner.Guid, Name = oldPlan.Name };
                 plan.Entries.AddRange(oldPlan.Entries);
                 serial.Plans.Add(plan);
             }
@@ -450,49 +499,43 @@ namespace EVEMon.Common
         /// <summary>
         /// Compare the settings version with this version and, when different, update and prompt the user for a backup.
         /// </summary>
-        /// <param name="notifyUser"></param>
+        /// <param name="settings"></param>
         private static void CheckSettingsVersion(SerializableSettings settings)
         {
-#if !DEBUG
+            if (EveMonClient.IsDebugBuild)
+                return;
+
             int revision = Assembly.GetExecutingAssembly().GetName().Version.Revision;
-            if (revision != settings.Revision)
+            if (revision == settings.Revision)
+                return;
+            DialogResult backupSettings =
+                MessageBox.Show(
+                    "The current EVEMon settings file is from a previous version of EVEMon. Backup the current file before proceeding (recommended)?",
+                    "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1);
+
+            if (backupSettings != DialogResult.Yes)
+                return;
+
+            using (SaveFileDialog fileDialog = new SaveFileDialog())
             {
-                DialogResult backupSettings =
-                    MessageBox.Show("The current EVEMon settings file is from a previous version of EVEMon. Backup the current file before proceeding (recommended)?",
-                        "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                fileDialog.Title = "Settings file backup";
+                fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
+                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak",
+                                                    revision.ToString());
+                fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                DialogResult saveFile = fileDialog.ShowDialog();
+                if (saveFile != DialogResult.OK)
+                    return;
 
-                if (backupSettings == DialogResult.Yes)
-                {
-                    using (SaveFileDialog fileDialog = new SaveFileDialog())
-                    {
-                        fileDialog.Title = "Settings file backup";
-                        fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
-                        fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision.ToString());
-                        fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                        DialogResult saveFile = fileDialog.ShowDialog();
-                        if (saveFile != DialogResult.OK)
-                            return;
-
-                        FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
-                    }
-                }
+                FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
             }
-#endif
         }
+
         #endregion
 
 
         #region Save
-
-        /// <summary>
-        /// Flag to indicate if a save is pending but not committed.
-        /// </summary>
-        private static bool m_savePending = false;
-
-        /// <summary>
-        /// The last time the settings were saved.
-        /// </summary>
-        private static DateTime m_lastSaveTime = DateTime.MinValue;
 
         /// <summary>
         /// Every 10s, the timer ticks and check whether we should save the settings.
@@ -500,7 +543,7 @@ namespace EVEMon.Common
         internal static void UpdateOnOneSecondTick()
         {
             // Is a save requested and is the last save older than 10s ?
-            if (m_savePending && DateTime.UtcNow > m_lastSaveTime.AddSeconds(10))
+            if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
                 SaveImmediate();
         }
 
@@ -513,7 +556,7 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Save()
         {
-            m_savePending = true;
+            s_savePending = true;
         }
 
         /// <summary>
@@ -526,15 +569,15 @@ namespace EVEMon.Common
 
             // Save in settings file
             FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fs =>
-            {
-                xs.Serialize(fs, settings);
-                fs.Flush();
-                return true;
-            });
+                                                                                         {
+                                                                                             xs.Serialize(fs, settings);
+                                                                                             fs.Flush();
+                                                                                             return true;
+                                                                                         });
 
             // Reset savePending flag
-            m_lastSaveTime = DateTime.UtcNow;
-            m_savePending = false;
+            s_lastSaveTime = DateTime.UtcNow;
+            s_savePending = false;
         }
 
         /// <summary>
@@ -551,96 +594,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true if we're currently restoring the settings.
         /// </summary>
-        public static bool IsRestoringSettings
-        {
-            get;
-            private set;
-        }
-        
-        #endregion
-
-
-        #region The very settings
-        /// <summary>
-        /// Gets or sets the compatibility mode.
-        /// </summary>
-        public static CompatibilityMode Compatibility
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the settings for updates.
-        /// </summary>
-        public static UpdateSettings Updates
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the settings for UI (look'n feel)
-        /// </summary>
-        public static UISettings UI
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the settings for the G15 keyboard.
-        /// </summary>
-        public static G15Settings G15
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the settings for the notifications (alerts).
-        /// </summary>
-        public static NotificationSettings Notifications
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the settings for the network.
-        /// </summary>
-        public static IGBSettings IGB
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the calendar settings.
-        /// </summary>
-        public static CalendarSettings Calendar
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the exportation settings.
-        /// </summary>
-        public static ExportationSettings Exportation
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the custom proxy settings.
-        /// </summary>
-        public static ProxySettings Proxy
-        {
-            get;
-            set;
-        }
+        public static bool IsRestoringSettings { get; private set; }
 
         #endregion
     }

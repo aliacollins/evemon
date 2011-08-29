@@ -94,7 +94,7 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public void Import(SerializableUriCharacter serial)
         {
-            Import((SerializableSettingsCharacter) serial);
+            Import((SerializableSettingsCharacter)serial);
 
             m_uri = new Uri(serial.Uri);
 

@@ -8,7 +8,6 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Threading;
@@ -100,8 +99,8 @@ namespace EVEMon.Common
 
                             // Deserialize from the given stream
                             stream.Seek(0, SeekOrigin.Begin);
-                            XmlSerializer xs = new XmlSerializer(typeof (T));
-                            return (T) xs.Deserialize(stream);
+                            XmlSerializer xs = new XmlSerializer(typeof(T));
+                            return (T)xs.Deserialize(stream);
                         }
                     }
                 }
@@ -109,8 +108,8 @@ namespace EVEMon.Common
                 // Deserialization without transform
                 using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof (T));
-                    return (T) xs.Deserialize(stream);
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
+                    return (T)xs.Deserialize(stream);
                 }
             }
                 // An error occurred during the XSL transform
@@ -150,8 +149,8 @@ namespace EVEMon.Common
                 {
                     using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof (T));
-                        return (T) xs.Deserialize(zs);
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        return (T)xs.Deserialize(zs);
                     }
                 }
             }
@@ -298,16 +297,16 @@ namespace EVEMon.Common
 
                                 // Deserialize from the given stream
                                 stream.Seek(0, SeekOrigin.Begin);
-                                XmlSerializer xs = new XmlSerializer(typeof (APIResult<T>));
-                                result = (APIResult<T>) xs.Deserialize(stream);
+                                XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
+                                result = (APIResult<T>)xs.Deserialize(stream);
                             }
                         }
                     }
                         // Deserialization without transform
                     else
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof (APIResult<T>));
-                        result = (APIResult<T>) xs.Deserialize(reader);
+                        XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
+                        result = (APIResult<T>)xs.Deserialize(reader);
                     }
                 }
 
@@ -373,8 +372,8 @@ namespace EVEMon.Common
                                 using (
                                     XmlNodeReader reader = new XmlNodeReader(asyncResult.Result))
                                 {
-                                    XmlSerializer xs = new XmlSerializer(typeof (T));
-                                    result = (T) xs.Deserialize(reader);
+                                    XmlSerializer xs = new XmlSerializer(typeof(T));
+                                    result = (T)xs.Deserialize(reader);
                                 }
                             }
                                 // An error occurred during the deserialization
@@ -402,8 +401,7 @@ namespace EVEMon.Common
         public static string GetXMLStringRepresentation(XmlDocument doc)
         {
             // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings
-                                             {Indent = true, NewLineHandling = NewLineHandling.Replace};
+            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
 
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();
@@ -539,7 +537,7 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 throw new FileNotFoundException("Document not found", filename);
 
-            XmlTextReader reader = new XmlTextReader(filename) {XmlResolver = null};
+            XmlTextReader reader = new XmlTextReader(filename) { XmlResolver = null };
 
             while (reader.Read())
             {

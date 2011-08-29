@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
-using System.Collections;
-using System.Windows.Forms;
-using System.IO;
-using System.Reflection;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -18,20 +11,16 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class SkillGroup : ReadonlyKeyedCollection<string, Skill>
     {
-        private Character m_character;
-        private StaticSkillGroup m_group;
-
         /// <summary>
         /// Constructor, only used by SkillCollection
         /// </summary>
         /// <param name="character"></param>
-        /// <param name="group"></param>
+        /// <param name="src"></param>
         internal SkillGroup(Character character, StaticSkillGroup src)
         {
-            m_group = src;
-            m_character = character;
+            StaticData = src;
 
-            foreach (var srcSkill in src)
+            foreach (StaticSkill srcSkill in src)
             {
                 Items[srcSkill.Name] = new Skill(character, this, srcSkill);
             }
@@ -40,17 +29,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the static data associated with this group
         /// </summary>
-        public StaticSkillGroup StaticData
-        {
-            get { return m_group; }
-        }
+        public StaticSkillGroup StaticData { get; private set; }
 
         /// <summary>
         /// Gets the group's ID
         /// </summary>
         public long ID
         {
-            get { return m_group.ID; }
+            get { return StaticData.ID; }
         }
 
         /// <summary>
@@ -58,7 +44,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Name
         {
-            get { return m_group.Name; }
+            get { return StaticData.Name; }
         }
 
         /// <summary>
@@ -86,15 +72,7 @@ namespace EVEMon.Common
         /// </summary>
         public int TotalSP
         {
-            get
-            {
-                int result = 0;
-                foreach (Skill gs in Items.Values)
-                {
-                    result += gs.SkillPoints;
-                }
-                return result;
-            }
+            get { return Items.Values.Sum(gs => gs.SkillPoints); }
         }
     }
 }

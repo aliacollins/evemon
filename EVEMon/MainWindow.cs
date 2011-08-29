@@ -66,7 +66,8 @@ namespace EVEMon
             tcCharacterTabs.TabPages.Remove(tpOverview);
             lblServerStatus.Text = String.Format("// {0}", EveMonClient.EVEServer.StatusText);
 
-            DisplayTestMenu();
+            if (EveMonClient.IsDebugBuild)
+                DisplayTestMenu();
         }
 
         /// <summary>
@@ -1896,7 +1897,9 @@ namespace EVEMon
 
         #region Testing Functions
 
-        [Conditional("DEBUG")]
+        /// <summary>
+        /// Displays the test menu.
+        /// </summary>
         private void DisplayTestMenu()
         {
             testToolStripMenuItem.Visible = true;

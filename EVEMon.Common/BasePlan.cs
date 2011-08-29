@@ -800,7 +800,7 @@ namespace EVEMon.Common
             {
                 // Apply the remapping
                 if (applyRemappingPoints && entry.Remapping != null &&
-                    entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate)
+                    entry.Remapping.Status == RemappingPointStatus.UpToDate)
                 {
                     scratchpad.Remap(entry.Remapping);
                     scratchpadWithoutImplants.Remap(entry.Remapping);
@@ -839,7 +839,7 @@ namespace EVEMon.Common
             {
                 // Apply the remapping
                 if (applyRemappingPoints && entry.Remapping != null &&
-                    entry.Remapping.Status == RemappingPoint.PointStatus.UpToDate)
+                    entry.Remapping.Status == RemappingPointStatus.UpToDate)
                     scratchpad.Remap(entry.Remapping);
 
                 // Update entry's statistics

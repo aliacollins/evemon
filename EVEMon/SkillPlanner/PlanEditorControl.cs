@@ -105,7 +105,7 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            Font = FontFactory.GetFont("Tahoma", 8.25F);
 
             m_columns.Clear();
             m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
@@ -1068,7 +1068,7 @@ namespace EVEMon.SkillPlanner
                 remapping = item.Tag as RemappingPoint;
             }
 
-            // Since the list is not sorted anymore, we disable/hide the sort buttons and feedback.
+            // Since the list is not sorted anymore, we disable/hide the sort buttons and feedback
             m_plan.SortingPreferences.Order = ThreeStateSortOrder.None;
             m_plan.SortingPreferences.GroupByPriority = false;
             UpdateSortVisualFeedback();
@@ -1956,7 +1956,7 @@ namespace EVEMon.SkillPlanner
                 bool isPreRequisite = false;
                 bool isPostRequisite = false;
 
-                // Checks whether it is a prerequisite of the currently selected entry and whether we should highlight it.
+                // Checks whether it is a prerequisite of the currently selected entry and whether we should highlight it
                 if (!Settings.UI.SafeForWork && Settings.UI.PlanWindow.HighlightPrerequisites && SelectedEntries.Count() == 1)
                 {
                     PlanEntry currentEntry = current.Tag as PlanEntry;
@@ -1967,34 +1967,41 @@ namespace EVEMon.SkillPlanner
                         if (currentEntry.Skill.HasAsImmediatePrereq(selectedEntry.Skill, out neededLevel))
                         {
                             if (currentEntry.Level == 1 && neededLevel >= selectedEntry.Level)
-                            {
                                 isPostRequisite = true;
-                            }
                         }
+
                         if (selectedEntry.Skill.HasAsImmediatePrereq(currentEntry.Skill, out neededLevel))
                         {
                             if (currentEntry.Level == neededLevel)
-                            {
                                 isPreRequisite = true;
-                            }
                         }
+
                         if (currentEntry.Skill == selectedEntry.Skill)
-                        {
                             isSameSkill = true;
-                        }
                     }
                 }
 
                 // Color depends on the entry's status
                 if (current.Tag is RemappingPoint)
+                {
                     current.ImageIndex = 3;
+                }
                 else if (isSameSkill)
+                {
                     current.ImageIndex = 1;
+                }
                 else if (isPreRequisite)
+                {
                     current.ImageIndex = 2;
+                }
                 else if (isPostRequisite)
+                {
                     current.ImageIndex = 0;
-                else current.ImageIndex = -1;
+                }
+                else
+                {
+                    current.ImageIndex = -1;
+                }
             }
 
             UpdateStatusBar();
@@ -2139,11 +2146,11 @@ namespace EVEMon.SkillPlanner
             IEnumerable<PlanColumnSettings> columns = ExportColumnSettings();
             using (PlanColumnSelectWindow dialog = new PlanColumnSelectWindow(columns))
             {
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
-                    Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
-                }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
+                Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
             }
         }
 

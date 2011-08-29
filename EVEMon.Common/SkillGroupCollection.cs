@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -13,18 +11,14 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class SkillGroupCollection : ReadonlyKeyedCollection<string, SkillGroup>
     {
-        private readonly Character m_character;
-
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="character"></param>
         internal SkillGroupCollection(Character character)
         {
-            m_character = character;
-            foreach (var srcGroup in StaticSkills.AllGroups)
+            foreach (SkillGroup group in StaticSkills.AllGroups.Select(srcGroup => new SkillGroup(character, srcGroup)))
             {
-                var group = new SkillGroup(character, srcGroup);
                 Items[group.Name] = group;
             }
         }

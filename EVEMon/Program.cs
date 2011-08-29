@@ -1,4 +1,3 @@
-//#define DEBUG_SINGLETHREAD
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -15,8 +14,7 @@ namespace EVEMon
     internal static class Program
     {
         private static bool s_exitRequested;
-        private static bool s_showWindowOnError = true;
-        private static bool s_isDebugBuild;
+        private static bool s_showNotWindowOnError;
 
         /// <summary>
         /// The main entry point for the application.
@@ -24,11 +22,11 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
-            // Sets isDebugBuild variable to true if this is a debug build
-            CheckIsDebug();
+            // Check if we are in DEBUG mode 
+            EveMonClient.CheckIsDebug();
 
             // Quits non-debug builds if another instance already exists
-            if (!s_isDebugBuild && !IsInstanceUnique)
+            if (!EveMonClient.IsDebugBuild && !IsInstanceUnique)
                 return;
 
             // Subscribe application's events (especially the unhandled exceptions management for the crash box)
@@ -118,7 +116,7 @@ namespace EVEMon
                 Application.SetCompatibleTextRenderingDefault(false);
 
                 String appId = "EVEMon";
-                if (s_isDebugBuild)
+                if (EveMonClient.IsDebugBuild)
                     appId = String.Format(CultureConstants.DefaultCulture, "{0}-DEBUG", appId);
 
                 Windows7.SetProcessAppID(appId);
@@ -128,15 +126,6 @@ namespace EVEMon
                 // On some systems, a crash may occur here because of some skinning programs or others.
                 ExceptionHandler.LogException(ex, true);
             }
-        }
-
-        /// <summary>
-        /// Will only execute if DEBUG is set, thus lets us avoid #IFDEF.
-        /// </summary>
-        [Conditional("DEBUG")]
-        private static void CheckIsDebug()
-        {
-            s_isDebugBuild = true;
         }
 
         #endregion
@@ -188,10 +177,10 @@ namespace EVEMon
             if (Debugger.IsAttached)
                 return;
 
-            if (!s_showWindowOnError)
+            if (s_showNotWindowOnError)
                 return;
 
-            s_showWindowOnError = false;
+            s_showNotWindowOnError = true;
 
             // Shutdown EveMonClient timer in case that was causing the crash
             // so we don't get multiple crashes

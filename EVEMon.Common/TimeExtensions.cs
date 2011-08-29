@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
+using System.Text;
 
 namespace EVEMon.Common
 {
@@ -42,7 +41,7 @@ namespace EVEMon.Common
 
             return dt;
         }
-        
+
         /// <summary>
         /// Returns a string representation for the time left to the given date, using the following formats : 
         /// <list type="bullet">
@@ -52,11 +51,13 @@ namespace EVEMon.Common
         /// </list>
         /// </summary>
         /// <param name="t">The time (in the future) for which you want a span.</param>
+        /// <param name="dateTimeKind">The kind of the dateTime (UTC or Local) being converted.</param>
+        /// <remarks>DateTimeKind.Unspecified will be treated as UTC</remarks>
         /// <returns></returns>
         public static string ToRemainingTimeShortDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
             DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
-            
+
             // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
             StringBuilder sb = new StringBuilder();
@@ -88,10 +89,7 @@ namespace EVEMon.Common
                 }
                 return sb.ToString();
             }
-            else
-            {
-                return "Done";
-            }
+            return "Done";
         }
 
         /// <summary>
@@ -109,7 +107,7 @@ namespace EVEMon.Common
         public static string ToRemainingTimeDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
             DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
-            
+
             StringBuilder sb = new StringBuilder();
             if (t > now)
             {
@@ -155,10 +153,7 @@ namespace EVEMon.Common
                 }
                 return sb.ToString();
             }
-            else
-            {
-                return "Completed";
-            }
+            return "Completed";
         }
 
         /// <summary>
@@ -216,12 +211,12 @@ namespace EVEMon.Common
         /// function doesn't respect system settings, so we have to
         /// mangle LongTimePattern to track users preference.
         /// </remarks>
-        /// <param name="ShortTimeString">DateTime to be formatted</param>
+        /// <param name="shortTimeString">DateTime to be formatted</param>
         /// <returns>String containing formatted text</returns>
         public static string ToCustomShortTimeString(this DateTime shortTimeString)
         {
             DateTimeFormatInfo dateTimeFormat = CultureConstants.DefaultCulture.DateTimeFormat;
-            
+
             // Get the LongTimePattern and remove :ss and :s
             string shortTimePattern = dateTimeFormat.LongTimePattern.Replace(":ss", String.Empty);
             shortTimePattern = shortTimePattern.Replace(":s", String.Empty);
@@ -234,19 +229,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="ts">The timespan.</param>
         /// <param name="dto">Formatting options.</param>
+        /// <param name="includeSeconds"></param>
         /// <returns>Timespan formatted as English text.</returns>
-        public static string ToDescriptiveText(this TimeSpan ts, DescriptiveTextOptions dto)
-        {
-            return ToDescriptiveText(ts, dto, true);
-        }
-
-        /// <summary>
-        /// Convert a timespan into English text.
-        /// </summary>
-        /// <param name="ts">The timespan.</param>
-        /// <param name="dto">Formatting options.</param>
-        /// <returns>Timespan formatted as English text.</returns>
-        public static string ToDescriptiveText(this TimeSpan ts, DescriptiveTextOptions dto, bool includeSeconds)
+        public static string ToDescriptiveText(this TimeSpan ts, DescriptiveTextOptions dto, bool includeSeconds = true)
         {
             StringBuilder sb = new StringBuilder();
 

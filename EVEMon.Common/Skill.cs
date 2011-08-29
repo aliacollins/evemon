@@ -13,10 +13,6 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class Skill : IStaticSkill
     {
-        private readonly Character m_character;
-        private readonly StaticSkill m_staticData;
-        private readonly SkillGroup m_skillGroup;
-
         private readonly List<SkillLevel> m_prereqs = new List<SkillLevel>();
         private int m_currentSkillPoints;
         private int m_skillLevel;
@@ -35,9 +31,9 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         internal Skill(Character owner, SkillGroup group, StaticSkill skill)
         {
-            m_character = owner;
-            m_staticData = skill;
-            m_skillGroup = group;
+            Character = owner;
+            StaticData = skill;
+            Group = group;
         }
 
         /// <summary>
@@ -46,7 +42,7 @@ namespace EVEMon.Common
         /// <param name="skills">The array of the character's skills.</param>
         internal void CompleteInitialization(Skill[] skills)
         {
-            m_prereqs.AddRange(m_staticData.Prerequisites.Select(x => new SkillLevel(skills[x.Skill.ArrayIndex], x.Level)));
+            m_prereqs.AddRange(StaticData.Prerequisites.Select(x => new SkillLevel(skills[x.Skill.ArrayIndex], x.Level)));
         }
 
         /// <summary>
@@ -86,7 +82,7 @@ namespace EVEMon.Common
         {
             m_known = true;
             m_level++;
-            m_currentSkillPoints = m_staticData.GetPointsRequiredForLevel(Math.Min(m_level, 5));
+            m_currentSkillPoints = StaticData.GetPointsRequiredForLevel(Math.Min(m_level, 5));
         }
 
         /// <summary>
@@ -95,15 +91,15 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableCharacterSkill Export()
         {
-            var dest = new SerializableCharacterSkill
-                           {
-                               ID = m_staticData.ID,
-                               Name = m_staticData.Name,
-                               Level = Math.Min(m_level, 5),
-                               Skillpoints = m_currentSkillPoints,
-                               OwnsBook = m_owned,
-                               IsKnown = m_known
-                           };
+            SerializableCharacterSkill dest = new SerializableCharacterSkill
+                                                  {
+                                                      ID = StaticData.ID,
+                                                      Name = StaticData.Name,
+                                                      Level = Math.Min(m_level, 5),
+                                                      Skillpoints = m_currentSkillPoints,
+                                                      OwnsBook = m_owned,
+                                                      IsKnown = m_known
+                                                  };
 
             return dest;
         }
@@ -117,7 +113,7 @@ namespace EVEMon.Common
             set
             {
                 m_owned = value;
-                EveMonClient.OnCharacterUpdated(m_character);
+                EveMonClient.OnCharacterUpdated(Character);
             }
         }
 
@@ -129,25 +125,19 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the character this skill is bound to.
         /// </summary>
-        public Character Character
-        {
-            get { return m_character; }
-        }
+        public Character Character { get; private set; }
 
         /// <summary>
         /// Gets the underlying static data.
         /// </summary>
-        public StaticSkill StaticData
-        {
-            get { return m_staticData; }
-        }
+        public StaticSkill StaticData { get; private set; }
 
         /// <summary>
         /// Gets this skill's id.
         /// </summary>
         public long ID
         {
-            get { return m_staticData.ID; }
+            get { return StaticData.ID; }
         }
 
         /// <summary>
@@ -155,7 +145,7 @@ namespace EVEMon.Common
         /// </summary>
         public int ArrayIndex
         {
-            get { return m_staticData.ArrayIndex; }
+            get { return StaticData.ArrayIndex; }
         }
 
         /// <summary>
@@ -163,7 +153,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Name
         {
-            get { return m_staticData.Name; }
+            get { return StaticData.Name; }
         }
 
         /// <summary>
@@ -171,7 +161,7 @@ namespace EVEMon.Common
         /// </summary>
         public string Description
         {
-            get { return m_staticData.Description; }
+            get { return StaticData.Description; }
         }
 
         /// <summary>
@@ -185,17 +175,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill group this skill is part of.
         /// </summary>
-        public SkillGroup Group
-        {
-            get { return m_skillGroup; }
-        }
+        public SkillGroup Group { get; private set; }
 
         /// <summary>
         /// Gets whether this skill and all its prereqs are trainable on a trial account.
         /// </summary>
         public bool IsTrainableOnTrialAccount
         {
-            get { return m_staticData.IsTrainableOnTrialAccount; }
+            get { return StaticData.IsTrainableOnTrialAccount; }
         }
 
         /// <summary>
@@ -203,7 +190,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsPublic
         {
-            get { return m_staticData.IsPublic; }
+            get { return StaticData.IsPublic; }
         }
 
         /// <summary>
@@ -213,7 +200,7 @@ namespace EVEMon.Common
         /// </summary>
         public string DescriptionNL
         {
-            get { return m_staticData.DescriptionNL.Trim(); }
+            get { return StaticData.DescriptionNL.Trim(); }
         }
 
         /// <summary>
@@ -221,7 +208,7 @@ namespace EVEMon.Common
         /// </summary>
         public long Cost
         {
-            get { return m_staticData.Cost; }
+            get { return StaticData.Cost; }
         }
 
         /// <summary>
@@ -229,7 +216,7 @@ namespace EVEMon.Common
         /// </summary>
         public string FormattedCost
         {
-            get { return m_staticData.FormattedCost; }
+            get { return StaticData.FormattedCost; }
         }
 
         /// <summary>
@@ -237,7 +224,7 @@ namespace EVEMon.Common
         /// </summary>
         public EveAttribute PrimaryAttribute
         {
-            get { return m_staticData.PrimaryAttribute; }
+            get { return StaticData.PrimaryAttribute; }
         }
 
         /// <summary>
@@ -245,7 +232,7 @@ namespace EVEMon.Common
         /// </summary>
         public EveAttribute SecondaryAttribute
         {
-            get { return m_staticData.SecondaryAttribute; }
+            get { return StaticData.SecondaryAttribute; }
         }
 
         /// <summary>
@@ -253,7 +240,7 @@ namespace EVEMon.Common
         /// </summary>
         public int Rank
         {
-            get { return m_staticData.Rank; }
+            get { return StaticData.Rank; }
         }
 
         /// <summary>
@@ -296,7 +283,7 @@ namespace EVEMon.Common
         /// <remarks>Please notice, they may be redundancies.</remarks>
         public IEnumerable<SkillLevel> AllPrerequisites
         {
-            get { return m_staticData.AllPrerequisites.ToCharacter(m_character); }
+            get { return StaticData.AllPrerequisites.ToCharacter(Character); }
         }
 
         /// <summary>
@@ -306,8 +293,8 @@ namespace EVEMon.Common
         {
             get
             {
-                float spPerHour = m_character.GetBaseSPPerHour(this);
-                return (int) Math.Round(spPerHour);
+                float spPerHour = Character.GetBaseSPPerHour(this);
+                return (int)Math.Round(spPerHour);
             }
         }
 
@@ -331,14 +318,14 @@ namespace EVEMon.Common
         {
             get
             {
-                CCPCharacter ccpCharacter = m_character as CCPCharacter;
+                CCPCharacter ccpCharacter = Character as CCPCharacter;
 
                 // Current character isn't a CCP character, so can't have a Queue.
                 if (ccpCharacter == null)
                     return false;
 
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                return skillQueue.Where(x => x.Skill != null).Any(skill => m_staticData.ID == skill.Skill.ID);
+                return skillQueue.Where(x => x.Skill != null).Any(skill => StaticData.ID == skill.Skill.ID);
             }
         }
 
@@ -349,7 +336,7 @@ namespace EVEMon.Common
         {
             get
             {
-                CCPCharacter ccpCharacter = m_character as CCPCharacter;
+                CCPCharacter ccpCharacter = Character as CCPCharacter;
                 if (ccpCharacter == null)
                     return false;
 
@@ -367,7 +354,7 @@ namespace EVEMon.Common
                 // Is it in training ? Then we estimate the current SP
                 if (IsTraining)
                 {
-                    CCPCharacter ccpCharacter = m_character as CCPCharacter;
+                    CCPCharacter ccpCharacter = Character as CCPCharacter;
                     if (ccpCharacter != null)
                         return ccpCharacter.CurrentlyTrainingSkill.CurrentSP;
                 }
@@ -389,12 +376,12 @@ namespace EVEMon.Common
                     return 1.0f;
 
                 // Not partially trained ? Then it's 1.0
-                int levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
+                int levelSp = StaticData.GetPointsRequiredForLevel(m_level);
                 if (SkillPoints <= levelSp)
                     return 0.0f;
 
                 // Partially trained, let's compute the difference with the previous level
-                float nextLevelSp = m_staticData.GetPointsRequiredForLevel(m_level + 1);
+                float nextLevelSp = StaticData.GetPointsRequiredForLevel(m_level + 1);
                 float fraction = (SkillPoints - levelSp) / (nextLevelSp - levelSp);
 
                 return (fraction <= 1 ? fraction : fraction % 1);
@@ -419,7 +406,7 @@ namespace EVEMon.Common
                 if (Level == 5)
                     return false;
 
-                bool partialLevel = SkillPoints > m_staticData.GetPointsRequiredForLevel(Level),
+                bool partialLevel = SkillPoints > StaticData.GetPointsRequiredForLevel(Level),
                      isNotFullyTrained = (GetLeftPointsRequiredToLevel(Level + 1) != 0),
                      isPartiallyTrained = (partialLevel && isNotFullyTrained);
                 return isPartiallyTrained;
@@ -498,7 +485,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
-            return character.Skills[m_staticData.ArrayIndex];
+            return character.Skills[StaticData.ArrayIndex];
         }
 
         #endregion
@@ -513,7 +500,7 @@ namespace EVEMon.Common
         /// <returns>Time it will take.</returns>
         public TimeSpan GetTimeSpanForPoints(int points)
         {
-            return m_character.GetTimeSpanForPoints(this, points);
+            return Character.GetTimeSpanForPoints(this, points);
         }
 
         /// <summary>
@@ -524,7 +511,7 @@ namespace EVEMon.Common
         /// <returns>The required nr. of points.</returns>
         public int GetLeftPointsRequiredToLevel(int level)
         {
-            int result = m_staticData.GetPointsRequiredForLevel(level) - SkillPoints;
+            int result = StaticData.GetPointsRequiredForLevel(level) - SkillPoints;
 
             return result < 0 ? 0 : result;
         }
@@ -540,8 +527,8 @@ namespace EVEMon.Common
             if (level == 0)
                 return 0;
 
-            int startSP = Math.Max(SkillPoints, m_staticData.GetPointsRequiredForLevel(level - 1));
-            int result = m_staticData.GetPointsRequiredForLevel(level) - startSP;
+            int startSP = Math.Max(SkillPoints, StaticData.GetPointsRequiredForLevel(level - 1));
+            int result = StaticData.GetPointsRequiredForLevel(level) - startSP;
 
             return result < 0 ? 0 : result;
         }
@@ -589,7 +576,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticSkill(Skill s)
         {
-            return s.m_staticData;
+            return s.StaticData;
         }
 
         #endregion
@@ -599,12 +586,12 @@ namespace EVEMon.Common
 
         List<StaticSkillLevel> IStaticSkill.Prerequisites
         {
-            get { return m_staticData.Prerequisites; }
+            get { return StaticData.Prerequisites; }
         }
 
         StaticSkillGroup IStaticSkill.Group
         {
-            get { return m_staticData.Group; }
+            get { return StaticData.Group; }
         }
 
         #endregion
