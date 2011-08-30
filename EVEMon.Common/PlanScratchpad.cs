@@ -123,7 +123,9 @@ namespace EVEMon.Common
             // Apply simple sort operators
             switch (sort)
             {
-                case PlanEntrySort.Name:
+                    case PlanEntrySort.None:
+                    break;
+                    case PlanEntrySort.Name:
                     Items.StableSort(PlanSorter.CompareByName);
                     break;
                 case PlanEntrySort.Cost:
