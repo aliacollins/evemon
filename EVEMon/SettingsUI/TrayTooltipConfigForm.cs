@@ -82,21 +82,21 @@ namespace EVEMon.SettingsUI
         {
             tbTooltipTestDisplay.Text = FormatExampleTooltipText(tbTooltipString.Text);
 
-            if (cbTooltipDisplay.SelectedIndex == -1)
+            if (cbTooltipDisplay.SelectedIndex != -1)
+                return;
+
+            int index = m_tooltipCodes.Length;
+
+            for (int i = 0; i < m_tooltipCodes.Length; i++)
             {
-                int index = m_tooltipCodes.Length;
-
-                for (int i = 0; i < m_tooltipCodes.Length; i++)
+                if (m_tooltipCodes[i].Equals(tbTooltipString.Text))
                 {
-                    if (m_tooltipCodes[i].Equals(tbTooltipString.Text))
-                    {
-                        index = i;
-                    }
+                    index = i;
                 }
-
-                cbTooltipDisplay.SelectedIndex = index;
-                DisplayCustomControls(index == m_tooltipCodes.Length);
             }
+
+            cbTooltipDisplay.SelectedIndex = index;
+            DisplayCustomControls(index == m_tooltipCodes.Length);
         }
 
         // Formats the argument format string with hardcoded exampe values.  Works basically the
@@ -172,12 +172,11 @@ namespace EVEMon.SettingsUI
             {
                 tbTooltipString.Text = m_settings.Format;
                 DisplayCustomControls(true);
+                return;
             }
-            else
-            {
-                tbTooltipString.Text = m_tooltipCodes[index];
-                DisplayCustomControls(false);
-            }
+
+            tbTooltipString.Text = m_tooltipCodes[index];
+            DisplayCustomControls(false);
         }
 
         /// <summary>
@@ -198,6 +197,5 @@ namespace EVEMon.SettingsUI
         {
             m_settings.DisplayOrder = cbTooltipOrder.Checked;
         }
-
     }
 }

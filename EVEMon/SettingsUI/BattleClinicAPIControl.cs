@@ -20,7 +20,6 @@ namespace EVEMon.SettingsUI
         public BattleClinicAPIControl()
         {
             InitializeComponent();
-            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
             apiResponseLabel.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
             apiResponseLabel.Text = String.Empty;
             throbber.Visible = false;
@@ -84,6 +83,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void BattleClinicAPIControl_Load(object sender, EventArgs e)
         {
+            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+
             EveMonClient.BCAPICredentialsUpdated += EveMonClient_BCAPICredentialsUpdated;
             Disposed += OnDisposed;
 
@@ -185,12 +186,12 @@ namespace EVEMon.SettingsUI
 
             for (int i = 0; i < bcUserIDTextBox.TextLength; i++)
             {
-                if (!Char.IsDigit(bcUserIDTextBox.Text[i]))
-                {
-                    errorProvider.SetError(bcUserIDTextBox, "UserID must be numerical.");
-                    e.Cancel = true;
-                    break;
-                }
+                if (Char.IsDigit(bcUserIDTextBox.Text[i]))
+                    continue;
+
+                errorProvider.SetError(bcUserIDTextBox, "UserID must be numerical.");
+                e.Cancel = true;
+                break;
             }
         }
 

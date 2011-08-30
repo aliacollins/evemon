@@ -75,6 +75,7 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.monthCalendar1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -82,7 +83,6 @@ namespace EVEMon.Schedule
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select Date";
-            this.Load += new System.EventHandler(this.DateSelectWindow_Load);
             this.ResumeLayout(false);
 
         }

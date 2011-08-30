@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -55,15 +56,11 @@ namespace EVEMon.SettingsUI
         private void InitializeDataGrid()
         {
             dgMethods.Rows.Clear();
-            foreach (var method in m_provider.Methods)
+            foreach (SerializableAPIMethod method in m_provider.Methods.Where(method => method.Method != APIMethods.None))
             {
-                // Skip "none"
-                if (method.Method == APIMethods.None)
-                    continue;
-
                 // Fills empty path with the default one
                 if (String.IsNullOrEmpty(method.Path))
-                    method.Path = APIProvider.DefaultProvider.Methods.FirstOrDefault(x => x.Method == method.Method).Path;
+                    method.Path = APIProvider.DefaultProvider.Methods.First(x => x.Method == method.Method).Path;
 
                 // Add row
                 int rowIndex = dgMethods.Rows.Add(method.Method, method.Path);
@@ -78,14 +75,13 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnUseDefaults_Click(object sender, EventArgs e)
         {
-            var defaultMethods = APIProvider.DefaultProvider.Methods;
+            IEnumerable<APIMethod> defaultMethods = APIProvider.DefaultProvider.Methods;
             foreach (DataGridViewRow row in dgMethods.Rows)
             {
-                var rowMethod = (SerializableAPIMethod)row.Tag;
-                foreach (APIMethod defaultMethod in defaultMethods)
+                SerializableAPIMethod rowMethod = (SerializableAPIMethod)row.Tag;
+                foreach (APIMethod defaultMethod in defaultMethods.Where(defaultMethod => defaultMethod.Method == rowMethod.Method))
                 {
-                    if (defaultMethod.Method == rowMethod.Method)
-                        row.Cells[1].Value = defaultMethod.Path;
+                    row.Cells[1].Value = defaultMethod.Path;
                 }
             }
         }
@@ -105,7 +101,7 @@ namespace EVEMon.SettingsUI
 
             foreach (DataGridViewRow row in dgMethods.Rows)
             {
-                var method = (SerializableAPIMethod)row.Tag;
+                SerializableAPIMethod method = (SerializableAPIMethod)row.Tag;
                 method.Path = (string)row.Cells[1].Value;
             }
 
@@ -132,16 +128,15 @@ namespace EVEMon.SettingsUI
 
             // Check the name does not already exist
             bool exist = (configName == APIProvider.DefaultProvider.Name);
-            foreach (var provider in m_providers.CustomProviders)
-            {
-                exist |= (configName == provider.Name && provider != m_provider);
-            }
+            exist = m_providers.CustomProviders.Aggregate(exist,
+                                                          (current, provider) =>
+                                                          current | (configName == provider.Name && provider != m_provider));
 
             if (!exist)
                 return;
 
             ShowValidationError(txtConfigurationName,
-                String.Format("There is already a provider named {0}.", configName));
+                                String.Format("There is already a provider named {0}.", configName));
             e.Cancel = true;
         }
 

@@ -2,12 +2,10 @@
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Printing;
 
-namespace EVEMon.SkillPlanner
+namespace EVEMon.Printing
 {
     /// <summary>
     /// Prints a plan.
@@ -20,11 +18,11 @@ namespace EVEMon.SkillPlanner
         private readonly Font m_boldFont;
         private readonly SolidBrush m_brush;
         private readonly PlanExportSettings m_settings;
-        
+
         private int m_entryToPrint;
-        private Point m_point = new Point();
+        private Point m_point;
         private DateTime m_currentDate = DateTime.Now;
-        private DateTime m_printStartTime = DateTime.Now;
+        private readonly DateTime m_printStartTime = DateTime.Now;
         private TimeSpan m_trainingTime = TimeSpan.Zero;
 
         /// <summary>
@@ -59,23 +57,27 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void PrintPlan()
         {
-            PrintDocument doc = new PrintDocument();
-            doc.DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
+            PrintDocument doc = new PrintDocument
+                                    {
+                                        DocumentName =
+                                            String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})",
+                                                          m_character.Name, m_plan.Name)
+                                    };
             doc.PrintPage += doc_PrintPage;
 
             //Display the options
             using (PrintOptionsDialog prdlg = new PrintOptionsDialog(m_settings, doc))
             {
-                if (prdlg.ShowDialog() == DialogResult.OK)
-                {
-                    doc.PrinterSettings.PrinterName = prdlg.PrinterName;
+                if (prdlg.ShowDialog() != DialogResult.OK)
+                    return;
 
-                    // Display the preview
-                    using (PrintPreviewDialog pd = new PrintPreviewDialog())
-                    {
-                        pd.Document = doc;
-                        pd.ShowDialog();
-                    }
+                doc.PrinterSettings.PrinterName = prdlg.PrinterName;
+
+                // Display the preview
+                using (PrintPreviewDialog pd = new PrintPreviewDialog())
+                {
+                    pd.Document = doc;
+                    pd.ShowDialog();
                 }
             }
         }
@@ -88,7 +90,6 @@ namespace EVEMon.SkillPlanner
         private void doc_PrintPage(object sender, PrintPageEventArgs e)
         {
             var g = e.Graphics;
-            int cumulativeSkillTotal = m_character.SkillPoints;
             string s = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
             int index = 0;
 
@@ -101,13 +102,13 @@ namespace EVEMon.SkillPlanner
                 var size = g.MeasureString(s, m_boldFont);
                 m_point.X = (int)((e.MarginBounds.Width - size.Width) / 2);
 
-                size = PrintBold(g, s, m_point);
+                size = PrintBold(g, s);
                 m_point.Y += (int)(2 * size.Height);
                 m_point.X = 5;
             }
 
             bool resetTotal = true;
-            if (m_entryToPrint == 0) 
+            if (m_entryToPrint == 0)
                 m_currentDate = m_printStartTime;
 
             // Scroll through entries
@@ -139,10 +140,8 @@ namespace EVEMon.SkillPlanner
                     e.HasMorePages = true;
                     return;
                 }
-                else
-                {
-                    m_entryToPrint = 0;
-                }
+
+                m_entryToPrint = 0;
             }
 
             // Reached the end of the plan
@@ -166,12 +165,12 @@ namespace EVEMon.SkillPlanner
             // Print entry index
             if (m_settings.EntryNumber)
             {
-                size = Print(g, index.ToString() + ": ", m_point);
+                size = Print(g, index.ToString() + ": ");
                 m_point.X += (int)size.Width;
             }
 
             // Print skill name and level
-            size = PrintBold(g, pe.ToString(), m_point);
+            size = PrintBold(g, pe.ToString());
             m_point.X += (int)size.Width;
 
             // Print Notes ?
@@ -180,9 +179,9 @@ namespace EVEMon.SkillPlanner
                 // Jump to next line
                 m_point.Y += (int)size.Height;
                 m_point.X = 20;
-                
+
                 // Note
-                size = Print(g, pe.Notes, m_point);
+                size = Print(g, pe.Notes);
                 m_point.X += (int)size.Width;
             }
 
@@ -194,7 +193,7 @@ namespace EVEMon.SkillPlanner
                 m_point.X = 20;
 
                 // Open parenthesis
-                size = Print(g, " (", m_point);
+                size = Print(g, " (");
                 m_point.X += (int)size.Width;
 
                 // Training time ?
@@ -204,7 +203,7 @@ namespace EVEMon.SkillPlanner
                     size = Print(g, pe.TrainingTime.ToDescriptiveText(
                         DescriptiveTextOptions.FullText |
                         DescriptiveTextOptions.IncludeCommas |
-                        DescriptiveTextOptions.SpaceText), m_point);
+                        DescriptiveTextOptions.SpaceText));
                     m_point.X += (int)size.Width;
                     needComma = true;
                 }
@@ -214,14 +213,14 @@ namespace EVEMon.SkillPlanner
                 {
                     if (needComma)
                     {
-                        size = Print(g, "; ", m_point);
+                        size = Print(g, "; ");
                         m_point.X += (int)size.Width;
                     }
 
-                    size = Print(g, "Start: ", m_point);
+                    size = Print(g, "Start: ");
                     m_point.X += (int)size.Width;
 
-                    size = Print(g, pe.StartTime.ToString(), m_point);
+                    size = Print(g, pe.StartTime.ToString());
                     m_point.X += (int)size.Width;
 
                     needComma = true;
@@ -232,20 +231,18 @@ namespace EVEMon.SkillPlanner
                 {
                     if (needComma)
                     {
-                        size = Print(g, "; ", m_point);
+                        size = Print(g, "; ");
                         m_point.X += (int)size.Width;
                     }
-                    size = Print(g, "Finish: ", m_point);
+                    size = Print(g, "Finish: ");
                     m_point.X += (int)size.Width;
 
-                    size = Print(g, pe.EndTime.ToString(), m_point);
+                    size = Print(g, pe.EndTime.ToString());
                     m_point.X += (int)size.Width;
-
-                    needComma = true;
                 }
 
                 // Close parenthesis
-                size = Print(g, ")", m_point);
+                size = Print(g, ")");
                 m_point.X += (int)size.Width;
             }
 
@@ -264,69 +261,63 @@ namespace EVEMon.SkillPlanner
             SizeF size = SizeF.Empty;
             bool needComma = false;
 
-            if (m_settings.FooterCount || m_settings.FooterTotalTime || m_settings.FooterDate)
+            if (!m_settings.FooterCount && !m_settings.FooterTotalTime && !m_settings.FooterDate)
+                return;
+
+            // Jump to next line
+            m_point.X = 5;
+            m_point.Y += 20;
+
+            // Total number of entries on this page
+            if (m_settings.FooterCount)
             {
-                // Jump to next line
-                m_point.X = 5;
-                m_point.Y += 20;
+                size = Print(g, index.ToString());
+                m_point.X += (int)size.Width;
 
-                // Total number of entries on this page
-                if (m_settings.FooterCount)
-                {
-                    size = Print(g, index.ToString(), m_point);
-                    m_point.X += (int)size.Width;
+                size = Print(g, index != 1 ? " skills" : " skill");
 
-                    if (index != 1)
-                        size = Print(g, " skills", m_point);
-                    else
-                        size = Print(g, " skill", m_point);
-
-                    m_point.X += (int)size.Width;
-                    needComma = true;
-                }
-
-                // Total training time for ths page
-                if (m_settings.FooterTotalTime)
-                {
-                    if (needComma)
-                    {
-                        size = Print(g, "; ", m_point);
-                        m_point.X += (int)size.Width;
-                    }
-                    size = Print(g, "Total time: ", m_point);
-                    m_point.X += (int)size.Width;
-
-                    size = Print(g, m_trainingTime.ToDescriptiveText(
-                            DescriptiveTextOptions.FullText
-                            | DescriptiveTextOptions.IncludeCommas
-                            | DescriptiveTextOptions.SpaceText),
-                            m_point);
-
-                    m_point.X += (int)size.Width;
-
-                    needComma = true;
-                }
-
-                // Date at the end of this plan
-                if (m_settings.FooterDate)
-                {
-                    if (needComma)
-                    {
-                        size = Print(g, "; ", m_point);
-                        m_point.X += (int)size.Width;
-                    }
-                    size = Print(g, "Completion: ", m_point);
-                    m_point.X += (int)size.Width;
-                    size = Print(g, m_currentDate.ToString(), m_point);
-                    m_point.X += (int)size.Width;
-
-                    needComma = true;
-                }
-
-                // Jump line
-                m_point.X = 5;
-                m_point.Y += (int)size.Height;
+                m_point.X += (int)size.Width;
+                needComma = true;
             }
+
+            // Total training time for ths page
+            if (m_settings.FooterTotalTime)
+            {
+                if (needComma)
+                {
+                    size = Print(g, "; ");
+                    m_point.X += (int)size.Width;
+                }
+                size = Print(g, "Total time: ");
+                m_point.X += (int)size.Width;
+
+                size = Print(g, m_trainingTime.ToDescriptiveText(
+                    DescriptiveTextOptions.FullText
+                    | DescriptiveTextOptions.IncludeCommas
+                    | DescriptiveTextOptions.SpaceText));
+
+                m_point.X += (int)size.Width;
+
+                needComma = true;
+            }
+
+            // Date at the end of this plan
+            if (m_settings.FooterDate)
+            {
+                if (needComma)
+                {
+                    size = Print(g, "; ");
+                    m_point.X += (int)size.Width;
+                }
+                size = Print(g, "Completion: ");
+                m_point.X += (int)size.Width;
+                size = Print(g, m_currentDate.ToString());
+                m_point.X += (int)size.Width;
+            }
+
+            // Jump line
+            m_point.X = 5;
+            m_point.Y += (int)size.Height;
         }
 
         /// <summary>
@@ -334,9 +325,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="g">The graphics canvas.</param>
         /// <param name="s">The string to print.</param>
-        /// <param name="p">The position.</param>
         /// <returns></returns>
-        private SizeF PrintBold(Graphics g, string s, Point p)
+        private SizeF PrintBold(Graphics g, string s)
         {
             SizeF f = g.MeasureString(s, m_boldFont);
             g.DrawString(s, m_boldFont, m_brush, m_point);
@@ -348,9 +338,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="g">The graphics canvas.</param>
         /// <param name="s">The string to print.</param>
-        /// <param name="p">The position.</param>
         /// <returns></returns>
-        private SizeF Print(Graphics g, string s, Point p)
+        private SizeF Print(Graphics g, string s)
         {
             SizeF f = g.MeasureString(s, m_font);
             g.DrawString(s, m_font, m_brush, m_point);

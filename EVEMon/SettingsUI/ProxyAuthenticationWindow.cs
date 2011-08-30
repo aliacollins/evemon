@@ -1,7 +1,5 @@
 using System;
 using System.Windows.Forms;
-using EVEMon.Common;
-using EVEMon.Common.Net;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
@@ -9,53 +7,71 @@ namespace EVEMon.SettingsUI
 {
     public partial class ProxyAuthenticationWindow : EVEMonForm
     {
-        private ProxySettings m_proxySetting;
+        private readonly ProxySettings m_proxySetting;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="settings"></param>
         public ProxyAuthenticationWindow(ProxySettings settings)
         {
-            m_proxySetting = settings;
             InitializeComponent();
+            m_proxySetting = settings;
             UpdateFields();
         }
 
+        /// <summary>
+        /// Updates the fields.
+        /// </summary>
         private void UpdateFields()
         {
-            if (m_proxySetting != null)
+            if (m_proxySetting == null)
+                return;
+
+            switch (m_proxySetting.Authentication)
             {
-                switch (m_proxySetting.Authentication)
-                {
-                    case ProxyAuthentication.None:
-                        rbNoAuth.Checked = true;
-                        break;
+                case ProxyAuthentication.None:
+                    rbNoAuth.Checked = true;
+                    break;
 
-                    case ProxyAuthentication.SystemDefault:
-                        rbSystemDefault.Checked = true;
-                        break;
+                case ProxyAuthentication.SystemDefault:
+                    rbSystemDefault.Checked = true;
+                    break;
 
-                    case ProxyAuthentication.Specified:
-                        tbUsername.Text = m_proxySetting.Username;
-                        tbPassword.Text = m_proxySetting.Password;
-                        rbSuppliedAuth.Checked = true;
-                        break;
-                }
+                case ProxyAuthentication.Specified:
+                    tbUsername.Text = m_proxySetting.Username;
+                    tbPassword.Text = m_proxySetting.Password;
+                    rbSuppliedAuth.Checked = true;
+                    break;
             }
         }
 
+        /// <summary>
+        /// Handles the CheckedChanged event of the rbSuppliedAuth control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void rbSuppliedAuth_CheckedChanged(object sender, EventArgs e)
         {
             tlpSpecifiedAuth.Enabled = rbSuppliedAuth.Checked;
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnCancel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnOk control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (rbNoAuth.Checked)
@@ -73,8 +89,8 @@ namespace EVEMon.SettingsUI
                 m_proxySetting.Password = tbPassword.Text;
             }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

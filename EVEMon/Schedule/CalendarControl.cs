@@ -1,20 +1,38 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Globalization;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using EVEMon.Common.Scheduling;
 using EVEMon.Common;
 
 namespace EVEMon.Schedule
 {
+    public enum CalendarType
+    {
+        Month
+    }
 
     public partial class CalendarControl : UserControl
     {
+        public delegate void DaySelectedEvent(DateTime datetime, MouseEventArgs mouse, Point loc);
+
+        public event DaySelectedEvent DayClicked;
+        public event DaySelectedEvent DayDoubleClicked;
+
+        private const double CellAspectRatio = 7.0d / 10.0d;
+        private const int MaxRows = 6;
+        private const int HeaderHeight = 20;
+        private const int DayHeaderHeight = 20;
+
+        private Point m_calTopLeft = new Point(0, 0);
+        private Size m_cellSize = new Size(5, 5);
+        private DayOfWeek m_firstDayOfWeek;
+        private CalendarType m_calendarType = CalendarType.Month;
         private DateTime m_date;
-        
-        public CalendarControl()
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CalendarControl"/> class.
+        /// </summary>
+        protected CalendarControl()
         {
             InitializeComponent();
 
@@ -25,51 +43,63 @@ namespace EVEMon.Schedule
             m_date = DateTime.Now;
         }
 
-        private DayOfWeek m_firstDayOfWeek;
-        private CalendarType m_calendarType = CalendarType.Month;
-
+        /// <summary>
+        /// Gets or sets the type of the calendar.
+        /// </summary>
+        /// <value>The type of the calendar.</value>
         public CalendarType CalendarType
         {
             get { return m_calendarType; }
             set
             {
-                if (m_calendarType != value)
-                {
-                    m_calendarType = value;
-                    this.Invalidate();
-                }
+                if (m_calendarType == value)
+                    return;
+
+                m_calendarType = value;
+                Invalidate();
             }
         }
 
+        /// <summary>
+        /// Gets or sets the date.
+        /// </summary>
+        /// <value>The date.</value>
         public DateTime Date
         {
             get { return m_date; }
             set
             {
-                if (m_date != value)
-                {
-                    m_date = value;
-                    this.Invalidate();
-                }
+                if (m_date == value)
+                    return;
+
+                m_date = value;
+                Invalidate();
             }
         }
 
+        /// <summary>
+        /// Handles the Load event of the CalendarControl control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void CalendarControl_Load(object sender, EventArgs e)
         {
             m_firstDayOfWeek = CultureConstants.DefaultCulture.DateTimeFormat.FirstDayOfWeek;
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            using (Brush b = new LinearGradientBrush(
-                this.ClientRectangle, Color.LightBlue, Color.DarkBlue, 90.0F))
+            using (Brush b = new LinearGradientBrush(ClientRectangle, Color.LightBlue, Color.DarkBlue, 90.0F))
             {
                 e.Graphics.FillRectangle(b, e.ClipRectangle);
             }
 
             switch (m_calendarType)
             {
-                default:
                 case CalendarType.Month:
                     PaintMonthCalendar(e);
                     HighlightToday(e);
@@ -78,37 +108,32 @@ namespace EVEMon.Schedule
             }
         }
 
-        private const double CELL_ASPECT_RATIO = 7.0d/10.0d;
-        private const int MAX_ROWS = 6;
-        private const int HEADER_HEIGHT = 20;
-        private const int DAY_HEADER_HEIGHT = 20;
-
-        private Point m_calTopLeft = new Point(0, 0);
-        private Size m_cellSize = new Size(5, 5);
-
+        /// <summary>
+        /// Calculates the cell metrics.
+        /// </summary>
         private void CalculateCellMetrics()
         {
-            double maxCellWidth = Math.Floor(Convert.ToDouble(this.ClientSize.Width)/8.0f);
+            double maxCellWidth = Math.Floor(Convert.ToDouble(ClientSize.Width) / 8.0f);
             double maxCellHeight =
-                Math.Floor(Convert.ToDouble(this.ClientSize.Height - HEADER_HEIGHT - DAY_HEADER_HEIGHT)/
-                           Convert.ToDouble(MAX_ROWS + 1));
+                Math.Floor(Convert.ToDouble(ClientSize.Height - HeaderHeight - DayHeaderHeight) /
+                           Convert.ToDouble(MaxRows + 1));
 
-            double heightWithMaxWidth = Math.Floor(maxCellWidth*CELL_ASPECT_RATIO);
+            double heightWithMaxWidth = Math.Floor(maxCellWidth * CellAspectRatio);
 
             int effectiveHeight = Convert.ToInt32(heightWithMaxWidth);
             int effectiveWidth = Convert.ToInt32(maxCellWidth);
             if (heightWithMaxWidth > maxCellHeight)
             {
-                double widthWithMaxHeight = Math.Floor(maxCellHeight/CELL_ASPECT_RATIO);
+                double widthWithMaxHeight = Math.Floor(maxCellHeight / CellAspectRatio);
                 effectiveHeight = Convert.ToInt32(maxCellHeight);
                 effectiveWidth = Convert.ToInt32(widthWithMaxHeight);
             }
 
-            int calWidth = effectiveWidth*7;
-            int calHeight = effectiveHeight*MAX_ROWS;
+            int calWidth = effectiveWidth * 7;
+            int calHeight = effectiveHeight * MaxRows;
 
-            m_calTopLeft = new Point((this.ClientSize.Width/2) - (calWidth/2),
-                                     (this.ClientSize.Height/2) - ((calHeight + HEADER_HEIGHT + DAY_HEADER_HEIGHT)/2));
+            m_calTopLeft = new Point((ClientSize.Width / 2) - (calWidth / 2),
+                                     (ClientSize.Height / 2) - ((calHeight + HeaderHeight + DayHeaderHeight) / 2));
             m_cellSize = new Size(effectiveWidth, effectiveHeight);
         }
 
@@ -126,7 +151,7 @@ namespace EVEMon.Schedule
             using (Font boldf = FontFactory.GetDefaultFont(FontStyle.Bold))
             {
                 Rectangle headerRect = new Rectangle(m_calTopLeft.X, m_calTopLeft.Y,
-                                                     m_cellSize.Width*7, HEADER_HEIGHT);
+                                                     m_cellSize.Width * 7, HeaderHeight);
                 using (Brush hb = new SolidBrush(Color.FromArgb(47, 77, 132)))
                 {
                     g.FillRectangle(hb, headerRect);
@@ -143,13 +168,13 @@ namespace EVEMon.Schedule
                 {
                     for (int x = 0; x < 7; x++)
                     {
-                        Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width*x),
-                                                           m_calTopLeft.Y + HEADER_HEIGHT, m_cellSize.Width,
-                                                           DAY_HEADER_HEIGHT);
+                        Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+                                                           m_calTopLeft.Y + HeaderHeight, m_cellSize.Width,
+                                                           DayHeaderHeight);
                         g.FillRectangle(db, cellRect);
                         g.DrawRectangle(Pens.Black, cellRect);
 
-                        string dayName = CultureConstants.DefaultCulture.DateTimeFormat.DayNames[(int) cDow];
+                        string dayName = CultureConstants.DefaultCulture.DateTimeFormat.DayNames[(int)cDow];
                         TextRenderer.DrawText(g, dayName, boldf,
                                               new Rectangle(cellRect.Left + 1, cellRect.Top + 1, cellRect.Width - 2,
                                                             cellRect.Height - 2),
@@ -157,24 +182,24 @@ namespace EVEMon.Schedule
                                               TextFormatFlags.EndEllipsis | TextFormatFlags.HorizontalCenter |
                                               TextFormatFlags.VerticalCenter);
 
-                        cDow = (DayOfWeek) (((int) cDow + 1)%7);
+                        cDow = (DayOfWeek)(((int)cDow + 1) % 7);
                     }
                 }
             }
 
             bool daysRunning = false;
             using (Brush validDayBrush = new LinearGradientBrush(
-                new Rectangle(m_calTopLeft.X, m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT,
-                              m_cellSize.Width*7, m_cellSize.Height*MAX_ROWS),
+                new Rectangle(m_calTopLeft.X, m_calTopLeft.Y + HeaderHeight + DayHeaderHeight,
+                              m_cellSize.Width * 7, m_cellSize.Height * MaxRows),
                 Color.FromArgb(244, 244, 244), Color.FromArgb(203, 220, 228), LinearGradientMode.Vertical))
             {
-                for (int y = 0; y < MAX_ROWS; y++)
+                for (int y = 0; y < MaxRows; y++)
                 {
                     cDow = m_firstDayOfWeek;
                     using (Brush invalidDayBrush = new LinearGradientBrush(
                         new Rectangle(m_calTopLeft.X,
-                                      m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT + (y*m_cellSize.Height),
-                                      m_cellSize.Width*7, m_cellSize.Height),
+                                      m_calTopLeft.Y + HeaderHeight + DayHeaderHeight + (y * m_cellSize.Height),
+                                      m_cellSize.Width * 7, m_cellSize.Height),
                         Color.FromArgb(169, 169, 169), Color.FromArgb(140, 140, 140), LinearGradientMode.Vertical))
                     {
                         for (int x = 0; x < 7; x++)
@@ -194,23 +219,16 @@ namespace EVEMon.Schedule
                                 }
                             }
 
-                            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width*x),
-                                                               m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT +
-                                                               (m_cellSize.Height*y), m_cellSize.Width,
+                            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+                                                               m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
+                                                               (m_cellSize.Height * y), m_cellSize.Width,
                                                                m_cellSize.Height);
-                            if (isValidDay)
-                            {
-                                g.FillRectangle(validDayBrush, cellRect);
-                            }
-                            else
-                            {
-                                g.FillRectangle(invalidDayBrush, cellRect);
-                            }
+                            g.FillRectangle(isValidDay ? validDayBrush : invalidDayBrush, cellRect);
                             g.DrawRectangle(Pens.Black, cellRect);
 
                             if (isValidDay)
                             {
-                                TextRenderer.DrawText(g, dayNum.ToString(), this.Font,
+                                TextRenderer.DrawText(g, dayNum.ToString(), Font,
                                                       new Point(cellRect.Left + 2, cellRect.Top + 2), Color.Black,
                                                       Color.Transparent,
                                                       TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
@@ -219,18 +237,28 @@ namespace EVEMon.Schedule
                                 PaintMonthEntriesForDay(g, datetime, cellRect);
                             }
 
-                            cDow = (DayOfWeek) (((int) cDow + 1)%7);
+                            cDow = (DayOfWeek)(((int)cDow + 1) % 7);
                         }
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Paints the month entries for day.
+        /// </summary>
+        /// <param name="g">The g.</param>
+        /// <param name="datetime">The datetime.</param>
+        /// <param name="cellRect">The cell rect.</param>
         protected virtual void PaintMonthEntriesForDay(Graphics g, DateTime datetime, Rectangle cellRect)
         {
             // No Implementation
         }
 
+        /// <summary>
+        /// Highlights the day.
+        /// </summary>
+        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
         private void HighlightDay(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -238,53 +266,65 @@ namespace EVEMon.Schedule
             CalculateCellMetrics();
             DateTime mdt = new DateTime(m_date.Year, m_date.Month, 1);
 
-            int box_number = m_date.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
-            int x_co = box_number%7;
-            int y_co = (int) Math.Floor(box_number/7.0);
-            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width*x_co),
-                                               m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT +
-                                               (m_cellSize.Height*y_co), m_cellSize.Width, m_cellSize.Height);
+            int boxNumber = m_date.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
+            int x = boxNumber % 7;
+            int y = (int)Math.Floor(boxNumber / 7.0);
+            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+                                               m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
+                                               (m_cellSize.Height * y), m_cellSize.Width, m_cellSize.Height);
             g.DrawRectangle(Pens.DeepSkyBlue, cellRect);
         }
 
+        /// <summary>
+        /// Highlights the today.
+        /// </summary>
+        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
         private void HighlightToday(PaintEventArgs e)
         {
             DateTime today = DateTime.Now;
             DateTime mdt = new DateTime(m_date.Year, m_date.Month, 1);
-            if (today.Month == mdt.Month && today.Year == mdt.Year)
-            {
-                Graphics g = e.Graphics;
+            if (today.Month != mdt.Month || today.Year != mdt.Year)
+                return;
 
-                CalculateCellMetrics();
+            Graphics g = e.Graphics;
 
-                int box_number = today.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
-                int x_co = box_number%7;
-                int y_co = (int) Math.Floor(box_number/7.0);
-                Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width*x_co),
-                                                   m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT +
-                                                   (m_cellSize.Height*y_co), m_cellSize.Width, m_cellSize.Height);
-                g.DrawRectangle(Pens.Violet, cellRect);
-            }
+            CalculateCellMetrics();
+
+            int boxNumber = today.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
+            int x = boxNumber % 7;
+            int y = (int)Math.Floor(boxNumber / 7.0);
+            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+                                               m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
+                                               (m_cellSize.Height * y), m_cellSize.Width, m_cellSize.Height);
+            g.DrawRectangle(Pens.Violet, cellRect);
         }
 
-        protected override void OnClick(System.EventArgs e)
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Click"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnClick(EventArgs e)
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
 
             Point p = mouse.Location;
             DateTime newDate = GetDateFromPoint(p);
             DateTime oldDate = m_date;
-            if (newDate != new DateTime(0))
-            {
-                m_date = newDate;
-                this.Invalidate();   
+            if (newDate == new DateTime(0))
+                return;
 
-                // Only send out the events if we clicked on a day this month
-                if (newDate.Month == oldDate.Month && mouse.Clicks == 1)
-                    DayClicked(m_date, mouse, p);
-            }
+            m_date = newDate;
+            Invalidate();
+
+            // Only send out the events if we clicked on a day this month
+            if (newDate.Month == oldDate.Month && mouse.Clicks == 1)
+                DayClicked(m_date, mouse, p);
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.DoubleClick"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnDoubleClick(EventArgs e)
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
@@ -292,28 +332,28 @@ namespace EVEMon.Schedule
             Point p = mouse.Location;
             DateTime newDate = GetDateFromPoint(p);
             DateTime oldDate = m_date;
-            if (newDate != new DateTime(0))
-            {
-                if (newDate.Month == oldDate.Month && mouse.Clicks == 2)
-                    DayDoubleClicked(m_date, mouse, p);
-            }
+            if (newDate == new DateTime(0))
+                return;
+
+            if (newDate.Month == oldDate.Month && mouse.Clicks == 2)
+                DayDoubleClicked(m_date, mouse, p);
         }
 
-        public delegate void DaySelectedEvent(DateTime datetime, MouseEventArgs mouse, Point loc);
-
-        public event DaySelectedEvent DayClicked;
-        public event DaySelectedEvent DayDoubleClicked;
-
-        // return the date under a specific point (used for hover tips etc)
-        public DateTime GetDateFromPoint(Point p)
+        // 
+        /// <summary>
+        /// Gets the date under a specific point (used for hover tips etc).
+        /// </summary>
+        /// <param name="p">The p.</param>
+        /// <returns></returns>
+        private DateTime GetDateFromPoint(Point p)
         {
             // Make sure the member values are set up
             CalculateCellMetrics();
 
             // Make sure we clicked on the scheduler
-            if (p.X < m_calTopLeft.X || p.Y < m_calTopLeft.Y || 
+            if (p.X < m_calTopLeft.X || p.Y < m_calTopLeft.Y ||
                 (p.X > m_calTopLeft.X + m_cellSize.Width * 7) ||
-                (p.Y > m_calTopLeft.Y + (m_cellSize.Height * MAX_ROWS) + HEADER_HEIGHT + DAY_HEADER_HEIGHT)) 
+                (p.Y > m_calTopLeft.Y + (m_cellSize.Height * MaxRows) + HeaderHeight + DayHeaderHeight))
             {
                 return new DateTime(0);
             }
@@ -324,7 +364,7 @@ namespace EVEMon.Schedule
 
             // Calculate the x/y position over the grid, and hence the day/week number the user is clicking on
             int day = (p.X -= m_calTopLeft.X) / m_cellSize.Width;
-            int week = (p.Y -= (m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT)) / m_cellSize.Height;
+            int week = (p.Y -= (m_calTopLeft.Y + HeaderHeight + DayHeaderHeight)) / m_cellSize.Height;
 
             if (nStartDay < 0)
                 week -= 1;
@@ -336,7 +376,7 @@ namespace EVEMon.Schedule
             DateTime dt = m_date;
             int month = m_date.Month;
             int year = m_date.Year;
-            if(day > DateTime.DaysInMonth(dt.Year, dt.Month))
+            if (day > DateTime.DaysInMonth(dt.Year, dt.Month))
             {
                 if (dt.Month + 1 > 12)
                 {
@@ -348,8 +388,8 @@ namespace EVEMon.Schedule
                     month++;
                 }
                 day -= DateTime.DaysInMonth(dt.Year, dt.Month);
-            } 
-            else if(day <= 0) 
+            }
+            else if (day <= 0)
             {
                 if (dt.Month - 1 <= 0)
                 {
@@ -366,10 +406,5 @@ namespace EVEMon.Schedule
 
             return dt;
         }
-    }
-
-    public enum CalendarType
-    {
-        Month
     }
 }

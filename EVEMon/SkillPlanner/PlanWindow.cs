@@ -11,6 +11,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
+using EVEMon.Printing;
 
 namespace EVEMon.SkillPlanner
 {

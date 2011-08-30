@@ -152,7 +152,7 @@ namespace EVEMon.Schedule
             this.label14.TabIndex = 20;
             this.label14.Text = "weeks";
             // 
-            // nUDweeklyfrequency
+            // nudWeeklyFrequency
             // 
             this.nudWeeklyFrequency.Location = new System.Drawing.Point(48, 3);
             this.nudWeeklyFrequency.Maximum = new decimal(new int[] {
@@ -165,7 +165,7 @@ namespace EVEMon.Schedule
             0,
             0,
             0});
-            this.nudWeeklyFrequency.Name = "nUDweeklyfrequency";
+            this.nudWeeklyFrequency.Name = "nudWeeklyFrequency";
             this.nudWeeklyFrequency.Size = new System.Drawing.Size(35, 21);
             this.nudWeeklyFrequency.TabIndex = 19;
             this.nudWeeklyFrequency.Value = new decimal(new int[] {
@@ -395,7 +395,7 @@ namespace EVEMon.Schedule
             this.rbRecurring.AutoSize = true;
             this.rbRecurring.Location = new System.Drawing.Point(17, 169);
             this.rbRecurring.Name = "rbRecurring";
-            this.rbRecurring.Size = new System.Drawing.Size(100, 17);
+            this.rbRecurring.Size = new System.Drawing.Size(97, 17);
             this.rbRecurring.TabIndex = 1;
             this.rbRecurring.TabStop = true;
             this.rbRecurring.Text = "Recurring entry";
@@ -520,7 +520,7 @@ namespace EVEMon.Schedule
             this.rbOneTime.Checked = true;
             this.rbOneTime.Location = new System.Drawing.Point(17, 30);
             this.rbOneTime.Name = "rbOneTime";
-            this.rbOneTime.Size = new System.Drawing.Size(97, 17);
+            this.rbOneTime.Size = new System.Drawing.Size(93, 17);
             this.rbOneTime.TabIndex = 0;
             this.rbOneTime.TabStop = true;
             this.rbOneTime.Text = "One time entry";
@@ -544,7 +544,7 @@ namespace EVEMon.Schedule
             this.cbUseEVETime.AutoSize = true;
             this.cbUseEVETime.Location = new System.Drawing.Point(17, 66);
             this.cbUseEVETime.Name = "cbUseEVETime";
-            this.cbUseEVETime.Size = new System.Drawing.Size(172, 17);
+            this.cbUseEVETime.Size = new System.Drawing.Size(176, 17);
             this.cbUseEVETime.TabIndex = 2;
             this.cbUseEVETime.Text = "Entry defined in EVE/UTC Time";
             this.cbUseEVETime.UseVisualStyleBackColor = true;
@@ -554,7 +554,7 @@ namespace EVEMon.Schedule
             this.cbSilent.AutoSize = true;
             this.cbSilent.Location = new System.Drawing.Point(17, 43);
             this.cbSilent.Name = "cbSilent";
-            this.cbSilent.Size = new System.Drawing.Size(303, 17);
+            this.cbSilent.Size = new System.Drawing.Size(290, 17);
             this.cbSilent.TabIndex = 1;
             this.cbSilent.Text = "Silent mode during this entry (no tray tooltips nor sounds)";
             this.cbSilent.UseVisualStyleBackColor = true;
@@ -564,7 +564,7 @@ namespace EVEMon.Schedule
             this.cbBlocking.AutoSize = true;
             this.cbBlocking.Location = new System.Drawing.Point(17, 20);
             this.cbBlocking.Name = "cbBlocking";
-            this.cbBlocking.Size = new System.Drawing.Size(283, 17);
+            this.cbBlocking.Size = new System.Drawing.Size(274, 17);
             this.cbBlocking.TabIndex = 0;
             this.cbBlocking.Text = "Unavailable to start new skill training during this entry";
             this.cbBlocking.UseVisualStyleBackColor = true;
@@ -636,6 +636,7 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.tbTitle);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -643,7 +644,6 @@ namespace EVEMon.Schedule
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Schedule Entry";
-            this.Load += new System.EventHandler(this.EditScheduleEntryWindow_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.pnlRecurring.ResumeLayout(false);

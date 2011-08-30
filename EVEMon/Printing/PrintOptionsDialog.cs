@@ -1,34 +1,26 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing.Printing;
-
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Printing
 {
     public partial class PrintOptionsDialog : EVEMonForm
     {
-        PlanExportSettings m_pto;
+        readonly PlanExportSettings m_pto;
 
         public PrintOptionsDialog(PlanExportSettings pto, PrintDocument doc)
         {
             InitializeComponent();
 
-            int index;
             string curPrinter = doc.PrinterSettings.PrinterName;
 
             m_pto = pto;
 
             foreach (String printer in PrinterSettings.InstalledPrinters)
             {
-                index = comboPrinters.Items.Add(printer);
+                int index = comboPrinters.Items.Add(printer);
 
                 doc.PrinterSettings.PrinterName = printer;
                 if (doc.PrinterSettings.IsDefaultPrinter)
@@ -49,71 +41,121 @@ namespace EVEMon.Printing
             IncludeHeader = pto.IncludeHeader;
         }
 
+        /// <summary>
+        /// Gets the name of the printer.
+        /// </summary>
+        /// <value>The name of the printer.</value>
         public String PrinterName
         {
             get { return comboPrinters.Items[comboPrinters.SelectedIndex].ToString()  ; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [entry finish date].
+        /// </summary>
+        /// <value><c>true</c> if [entry finish date]; otherwise, <c>false</c>.</value>
         public bool EntryFinishDate
         {
             get { return checkFinishDate.Checked; }
             set { checkFinishDate.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [entry number].
+        /// </summary>
+        /// <value><c>true</c> if [entry number]; otherwise, <c>false</c>.</value>
         public bool EntryNumber
         {
             get { return checkEntryNumber.Checked; }
             set { checkEntryNumber.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [entry start date].
+        /// </summary>
+        /// <value><c>true</c> if [entry start date]; otherwise, <c>false</c>.</value>
         public bool EntryStartDate
         {
             get { return checkStartDate.Checked; }
             set { checkStartDate.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [entry training times].
+        /// </summary>
+        /// <value><c>true</c> if [entry training times]; otherwise, <c>false</c>.</value>
         public bool EntryTrainingTimes
         {
             get { return checkTrainingTimes.Checked; }
             set { checkTrainingTimes.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [entry notes].
+        /// </summary>
+        /// <value><c>true</c> if [entry notes]; otherwise, <c>false</c>.</value>
         public bool EntryNotes
         {
             get { return checkNotes.Checked; }
             set { checkNotes.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [footer count].
+        /// </summary>
+        /// <value><c>true</c> if [footer count]; otherwise, <c>false</c>.</value>
         public bool FooterCount
         {
             get { return checkPageNumbers.Checked; }
             set { checkPageNumbers.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [footer date].
+        /// </summary>
+        /// <value><c>true</c> if [footer date]; otherwise, <c>false</c>.</value>
         public bool FooterDate
         {
             get { return checkDateInformation.Checked; }
             set { checkDateInformation.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [footer total time].
+        /// </summary>
+        /// <value><c>true</c> if [footer total time]; otherwise, <c>false</c>.</value>
         public bool FooterTotalTime
         {
             get { return checkTotalTimes.Checked; }
             set { checkTotalTimes.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [include header].
+        /// </summary>
+        /// <value><c>true</c> if [include header]; otherwise, <c>false</c>.</value>
         public bool IncludeHeader
         {
             get { return checkPageHeaders.Checked; }
             set { checkPageHeaders.Checked = value; }
         }
 
+        /// <summary>
+        /// Called when [set as defaults].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnSetAsDefaults(object sender, EventArgs e)
         {
             OnAccept(sender,e) ;
             Settings.Save();
         }
 
+        /// <summary>
+        /// Called when [accept].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnAccept(object sender, EventArgs e)
         {
             m_pto.EntryFinishDate = EntryFinishDate;

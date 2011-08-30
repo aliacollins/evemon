@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common;
 using EVEMon.Common.Attributes;
-
+using EVEMon.Common.SettingsObjects;
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.SettingsUI
@@ -17,9 +14,10 @@ namespace EVEMon.SettingsUI
     public partial class UpdateSettingsControl : UserControl
     {
         // Would have love to use tableLayoutPanel, unfortunately, they are just a piece of trash.
-        public const int RowHeight = 28;
+        private const int RowHeight = 28;
 
-        private List<ComboBox> m_combos = new List<ComboBox>();
+        private readonly List<ComboBox> m_combos = new List<ComboBox>();
+
         private UpdateSettings m_settings;
 
         public UpdateSettingsControl()
@@ -28,7 +26,7 @@ namespace EVEMon.SettingsUI
 
             // Add the controls for every member of the enumeration
             int height = RowHeight;
-            var methods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>();
+            IEnumerable<APIMethods> methods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>();
             foreach (var method in methods)
             {
                 // Skip if there is no header
@@ -36,39 +34,42 @@ namespace EVEMon.SettingsUI
                     continue;
 
                 // Add the icon
-                var icon = CommonProperties.Resources.APIKeyLimited16;
-                var iconToolTip = "This query requires a limited API key.";
+                Bitmap icon = CommonProperties.Resources.APIKeyLimited16;
+                string iconToolTip = "This query requires a limited API key.";
                 if (method.HasAttribute<FullKeyAttribute>())
                 {
                     icon = CommonProperties.Resources.APIKeyFull16;
                     iconToolTip = "This query requires a full API key.";
                 }
 
-                var picture = new PictureBox();
-                picture.Image = icon;
-                picture.Size = icon.Size;
-                picture.Location = new Point(0, height + (RowHeight - icon.Size.Height) / 2);
+                PictureBox picture = new PictureBox
+                                         {
+                                             Image = icon,
+                                             Size = icon.Size,
+                                             Location = new Point(0, height + (RowHeight - icon.Size.Height) / 2)
+                                         };
                 toolTip.SetToolTip(picture, iconToolTip);
                 Controls.Add(picture);
 
                 // Add the label
-                var label = new Label();
-                label.AutoSize = false;
-                label.Text = method.GetHeader();
-                label.TextAlign = ContentAlignment.MiddleLeft;
-                label.Location = new Point(labelMethod.Location.X, height);
-                label.Width = labelMethod.Width;
-                label.Height = RowHeight;
+                Label label = new Label
+                                  {
+                                      AutoSize = false,
+                                      Text = method.GetHeader(),
+                                      TextAlign = ContentAlignment.MiddleLeft,
+                                      Location = new Point(labelMethod.Location.X, height),
+                                      Width = labelMethod.Width,
+                                      Height = RowHeight
+                                  };
                 toolTip.SetToolTip(label, method.GetDescription());
                 Controls.Add(label);
 
                 // Add the "system tray tooltip" combo box
-                var combo = new ComboBox();
-                combo.Tag = method;
+                ComboBox combo = new ComboBox { Tag = method };
 
-                foreach (var period in GetUpdatePeriods(method))
+                foreach (UpdatePeriod period in GetUpdatePeriods(method))
                 {
-                    var header = period.GetHeader();
+                    string header = period.GetHeader();
                     if (period == UpdatePeriod.Never && method.HasAttribute<ForcedOnStartupAttribute>())
                         header = "On Startup";
 
@@ -89,7 +90,7 @@ namespace EVEMon.SettingsUI
                 height += RowHeight;
             }
 
-            this.Height = height;
+            Height = height;
         }
 
 
@@ -106,10 +107,10 @@ namespace EVEMon.SettingsUI
                 if (value == null)
                     return;
 
-                foreach (var combo in m_combos)
+                foreach (ComboBox combo in m_combos)
                 {
-                    var method = (APIMethods)combo.Tag;
-                    var periods = GetUpdatePeriods(method);
+                    APIMethods method = (APIMethods)combo.Tag;
+                    List<UpdatePeriod> periods = GetUpdatePeriods(method);
                     combo.SelectedIndex = Math.Max(0, periods.IndexOf(m_settings.Periods[method]));
                 }
             }
@@ -120,11 +121,11 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void combo_SelectedIndexChanged(object sender, EventArgs e)
+        private void combo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var combo = (ComboBox)sender;
-            var method = (APIMethods)combo.Tag;
-            var periods = GetUpdatePeriods(method);
+            ComboBox combo = (ComboBox)sender;
+            APIMethods method = (APIMethods)combo.Tag;
+            List<UpdatePeriod> periods = GetUpdatePeriods(method);
 
             if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count)
                 return;
@@ -145,25 +146,17 @@ namespace EVEMon.SettingsUI
         /// <returns></returns>
         private List<UpdatePeriod> GetUpdatePeriods(APIMethods method)
         {
-            List<UpdatePeriod> periods = new List<UpdatePeriod>();
-            periods.Add(UpdatePeriod.Never);
+            List<UpdatePeriod> periods = new List<UpdatePeriod> { UpdatePeriod.Never };
 
-            var updateAttribute = method.GetAttribute<UpdateAttribute>();
+            UpdateAttribute updateAttribute = method.GetAttribute<UpdateAttribute>();
             int min = (int)updateAttribute.Minimum;
             int max = (int)updateAttribute.Maximum;
 
-            foreach (UpdatePeriod period in Enum.GetValues(typeof(UpdatePeriod)))
-            {
-                if (period != UpdatePeriod.Never)
-                {
-                    int index = (int)period;
-                    if (index >= min && index <= max)
-                        periods.Add(period);
-                }
-            }
+            periods.AddRange(Enum.GetValues(typeof(UpdatePeriod)).Cast<UpdatePeriod>().Where(
+                period => period != UpdatePeriod.Never).Select(period => new { period, index = (int)period }).Where(
+                    period => period.index >= min && period.index <= max).Select(period => period.period));
 
             return periods;
         }
-
     }
 }

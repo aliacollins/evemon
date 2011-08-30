@@ -29,6 +29,7 @@ namespace EVEMon.Schedule
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScheduleEditorWindow));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbAddEntry = new System.Windows.Forms.ToolStripButton();
             this.tsbDeleteEntry = new System.Windows.Forms.ToolStripButton();
@@ -51,9 +52,11 @@ namespace EVEMon.Schedule
             this.newScheduleEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -78,7 +81,7 @@ namespace EVEMon.Schedule
             // 
             // tsbAddEntry
             // 
-            this.tsbAddEntry.Image = global::EVEMon.Common.Properties.Resources.SchedulerAdd;
+            this.tsbAddEntry.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddEntry.Image")));
             this.tsbAddEntry.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddEntry.Name = "tsbAddEntry";
             this.tsbAddEntry.Size = new System.Drawing.Size(139, 22);
@@ -87,7 +90,7 @@ namespace EVEMon.Schedule
             // 
             // tsbDeleteEntry
             // 
-            this.tsbDeleteEntry.Image = global::EVEMon.Common.Properties.Resources.SchedulerDelete;
+            this.tsbDeleteEntry.Image = ((System.Drawing.Image)(resources.GetObject("tsbDeleteEntry.Image")));
             this.tsbDeleteEntry.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteEntry.Name = "tsbDeleteEntry";
             this.tsbDeleteEntry.Size = new System.Drawing.Size(90, 22);
@@ -96,7 +99,7 @@ namespace EVEMon.Schedule
             // 
             // tsbClearExpired
             // 
-            this.tsbClearExpired.Image = global::EVEMon.Common.Properties.Resources.SchedulerClear;
+            this.tsbClearExpired.Image = ((System.Drawing.Image)(resources.GetObject("tsbClearExpired.Image")));
             this.tsbClearExpired.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClearExpired.Name = "tsbClearExpired";
             this.tsbClearExpired.Size = new System.Drawing.Size(133, 22);
@@ -193,10 +196,10 @@ namespace EVEMon.Schedule
             this.calControl.Size = new System.Drawing.Size(533, 421);
             this.calControl.TabIndex = 0;
             this.calControl.TextColor = System.Drawing.Color.White;
-            this.calControl.MouseLeave += new System.EventHandler(this.calControl_MouseLeave);
             this.calControl.DayClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayClicked);
             this.calControl.DayDoubleClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayDoubleClicked);
             this.calControl.MouseEnter += new System.EventHandler(this.calControl_MouseEnter);
+            this.calControl.MouseLeave += new System.EventHandler(this.calControl_MouseLeave);
             // 
             // panel1
             // 
@@ -219,7 +222,7 @@ namespace EVEMon.Schedule
             this.nudMonth.Size = new System.Drawing.Size(93, 21);
             this.nudMonth.TabIndex = 5;
             this.nudMonth.Wrap = true;
-            this.nudMonth.SelectedItemChanged += new System.EventHandler(this.changedMonth);
+            this.nudMonth.SelectedItemChanged += new System.EventHandler(this.nudMonth_ValueChanged);
             // 
             // nudDay
             // 
@@ -238,7 +241,7 @@ namespace EVEMon.Schedule
             0,
             0,
             0});
-            this.nudDay.ValueChanged += new System.EventHandler(this.changedDay);
+            this.nudDay.ValueChanged += new System.EventHandler(this.nudDay_ValueChanged);
             // 
             // nudYear
             // 
@@ -262,7 +265,7 @@ namespace EVEMon.Schedule
             0,
             0,
             0});
-            this.nudYear.ValueChanged += new System.EventHandler(this.changedYear);
+            this.nudYear.ValueChanged += new System.EventHandler(this.nudYear_ValueChanged);
             // 
             // label2
             // 
@@ -332,6 +335,7 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.ssStatusBar);
             this.Controls.Add(this.toolStrip1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(720, 522);
             this.Name = "ScheduleEditorWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -341,10 +345,12 @@ namespace EVEMon.Schedule
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

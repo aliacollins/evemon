@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.ComponentModel;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Resources;
 using System.Security;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -12,7 +15,6 @@ using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Controls;
 using EVEMon.Controls.MultiPanel;
 using Microsoft.Win32;
 
@@ -22,8 +24,8 @@ namespace EVEMon.SettingsUI
     {
         private const string StartupRegistryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 
-        private SerializableSettings m_settings;
-        private SerializableSettings m_oldSettings;
+        private readonly SerializableSettings m_settings;
+        private readonly SerializableSettings m_oldSettings;
         private bool m_isLoading;
 
         /// <summary>
@@ -48,18 +50,20 @@ namespace EVEMon.SettingsUI
 
             // Fill the overview portraits sizes
             overviewPortraitSizeComboBox.Items.AddRange(
-                Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(x =>
-                {
-                    // Transforms x64 to 64 by 64
-                    var size = x.ToString().Substring(1);
-                    return String.Format("{0} by {0}", size);
-                }).ToArray());
+                Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
+                    x =>
+                        {
+                            // Transforms x64 to 64 by 64
+                            string size = x.ToString().Substring(1);
+                            return String.Format("{0} by {0}", size);
+                        }).ToArray());
 
             // Expands the left panel and selects the first page and node.
             treeView.ExpandAll();
             treeView.SelectedNode = treeView.Nodes[0];
             multiPanel.SelectedPage = generalPage;
         }
+
 
         #region Core methods
 
@@ -132,7 +136,9 @@ namespace EVEMon.SettingsUI
             cbSkillIconSet.Items.Clear();
             for (int i = 1; i < IconSettings.Default.Properties.Count; i++)
             {
-                cbSkillIconSet.Items.Add(IconSettings.Default.Properties["Group" + i].DefaultValue.ToString());
+                SettingsProperty iconSettingsProperty = IconSettings.Default.Properties["Group" + i];
+                if (iconSettingsProperty != null)
+                    cbSkillIconSet.Items.Add(iconSettingsProperty.DefaultValue.ToString());
             }
 
             // Window settings
@@ -140,17 +146,17 @@ namespace EVEMon.SettingsUI
             rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
             rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
 
-            if (m_settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar)
+            switch (m_settings.UI.MainWindowCloseBehaviour)
             {
-                rbMinToTaskBar.Checked = true;
-            }
-            else if (m_settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTray)
-            {
-                rbMinToTray.Checked = true;
-            }
-            else
-            {
-                rbExitEVEMon.Checked = true;
+                case CloseBehaviour.MinimizeToTaskbar:
+                    rbMinToTaskBar.Checked = true;
+                    break;
+                case CloseBehaviour.MinimizeToTray:
+                    rbMinToTray.Checked = true;
+                    break;
+                default:
+                    rbExitEVEMon.Checked = true;
+                    break;
             }
 
             // G15
@@ -226,14 +232,18 @@ namespace EVEMon.SettingsUI
             cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
 
             // Obsolete plan entry removal behaviour
-            alwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.AlwaysAsk);
-            removeAllRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveAll);
-            removeConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
+            alwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
+                                            ObsoleteEntryRemovalBehaviour.AlwaysAsk);
+            removeAllRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
+                                            ObsoleteEntryRemovalBehaviour.RemoveAll);
+            removeConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
+                                                  ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
 
             // Skill Browser Icon Set
             cbSkillIconSet.SelectedIndex = (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count &&
-                                            m_settings.UI.SkillBrowser.IconsGroupIndex > 0 ?
-                                            m_settings.UI.SkillBrowser.IconsGroupIndex - 1 : 0);
+                                            m_settings.UI.SkillBrowser.IconsGroupIndex > 0
+                                                ? m_settings.UI.SkillBrowser.IconsGroupIndex - 1
+                                                : 0);
 
             // System tray popup/tooltip
             trayPopupRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm);
@@ -306,7 +316,7 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Fetches the controls' values to <see cref="m_settings"/>.
         /// </summary>
-        private bool ApplyToSettings()
+        private void ApplyToSettings()
         {
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
@@ -388,14 +398,14 @@ namespace EVEMon.SettingsUI
             m_settings.G15.ShowEVETime = cbG15ShowEVETime.Checked;
 
             // Notifications
-            NotificationSettings notificationSettings = new NotificationSettings();
+            NotificationSettings notificationSettings;
             PopulateNotificationsFromControls(out notificationSettings);
             m_settings.Notifications = notificationSettings;
 
             // IGB
             m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
             m_settings.IGB.IGBServerPublic = cbIGBPublic.Checked;
-            int igbServerPort = m_settings.IGB.IGBServerPort;
+            int igbServerPort;
             Int32.TryParse(igbPortTextBox.Text, out igbServerPort);
             m_settings.IGB.IGBServerPort = igbServerPort;
 
@@ -425,7 +435,7 @@ namespace EVEMon.SettingsUI
 
             // Proxy
             m_settings.Proxy.Enabled = customProxyCheckBox.Checked;
-            int proxyPort = m_settings.Proxy.Port;
+            int proxyPort;
             Int32.TryParse(proxyPortTextBox.Text, out proxyPort);
             m_settings.Proxy.Port = proxyPort;
             m_settings.Proxy.Host = proxyHttpHostTextBox.Text;
@@ -449,8 +459,9 @@ namespace EVEMon.SettingsUI
             m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text;
             m_settings.Calendar.GooglePassword = tbGooglePassword.Text;
             m_settings.Calendar.GoogleURL = tbGoogleURI.Text;
-            m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1 ?
-                                (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex : GoogleCalendarReminder.None;
+            m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1
+                                                     ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex
+                                                     : GoogleCalendarReminder.None;
 
             m_settings.Calendar.UseReminding = cbSetReminder.Checked;
             m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text);
@@ -463,22 +474,22 @@ namespace EVEMon.SettingsUI
             m_settings.APIProviders.CurrentProviderName = (string)cbAPIServer.SelectedItem;
 
             // Run at startup
-            if (runAtStartupComboBox.Enabled)
-            {
-                RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
-                if (runAtStartupComboBox.Checked)
-                {
-                    rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture,
-                                                "\"{0}\" {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
-                }
-                else
-                {
-                    rk.DeleteValue("EVEMon", false);
-                }
-            }
+            if (!runAtStartupComboBox.Enabled)
+                return;
 
-            // Success
-            return true;
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
+            if (rk == null)
+                return;
+
+            if (runAtStartupComboBox.Checked)
+            {
+                rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture,
+                                                    "\"{0}\" {1}", Application.ExecutablePath, "-startMinimized"));
+            }
+            else
+            {
+                rk.DeleteValue("EVEMon", false);
+            }
         }
 
         /// <summary>
@@ -495,16 +506,10 @@ namespace EVEMon.SettingsUI
             notificationSettings.EmailSmtpServer = tbMailServer.Text;
 
             // Try and get a usable number out of the text box
-            int emailPortNumber = notificationSettings.EmailPortNumber;
-            if (Int32.TryParse(emailPortTextBox.Text, out emailPortNumber))
-            {
-                notificationSettings.EmailPortNumber = emailPortNumber;
-            }
-            // Failing that just set to the IANA assigned port for SMTP
-            else
-            {
-                notificationSettings.EmailPortNumber = 25;
-            }
+            int emailPortNumber;
+            notificationSettings.EmailPortNumber = Int32.TryParse(emailPortTextBox.Text, out emailPortNumber)
+                                                       ? emailPortNumber
+                                                       : 25;
 
             notificationSettings.EmailServerRequiresSSL = cbEmailServerRequireSsl.Checked;
             notificationSettings.EmailAuthenticationRequired = cbEmailAuthRequired.Checked;
@@ -546,9 +551,8 @@ namespace EVEMon.SettingsUI
         private void InitilizeGoogleCalendarReminderDropDown()
         {
             cbGoogleReminder.Items.Clear();
-            foreach (Enum item in GoogleAppointmentFilter.ReminderMethods)
+            foreach (string text in GoogleAppointmentFilter.ReminderMethods.Cast<Enum>().Select(item => item.ToString()))
             {
-                string text = item.ToString();
                 cbGoogleReminder.Items.Add(char.ToUpper(text[0]) + text.Substring(1));
             }
         }
@@ -563,14 +567,14 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        void tbReminder_Validating(object sender, CancelEventArgs e)
+        private void tbReminder_Validating(object sender, CancelEventArgs e)
         {
             int value;
-            if (!Int32.TryParse(tbReminder.Text, out value) || value <= 0)
-            {
-                e.Cancel = true;
-                ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer");
-            }
+            if (Int32.TryParse(tbReminder.Text, out value) && value > 0)
+                return;
+
+            e.Cancel = true;
+            ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer");
         }
 
         /// <summary>
@@ -579,9 +583,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void proxyPortTextBox_Validating(object sender, CancelEventArgs e)
+        private void proxyPortTextBox_Validating(object sender, CancelEventArgs e)
         {
-            var text = ((TextBox)sender).Text;
+            string text = ((TextBox)sender).Text;
             e.Cancel = !IsValidPort(text, "Proxy port");
         }
 
@@ -591,9 +595,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void igbPortTextBox_Validating(object sender, CancelEventArgs e)
+        private void igbPortTextBox_Validating(object sender, CancelEventArgs e)
         {
-            var text = ((TextBox)sender).Text;
+            string text = ((TextBox)sender).Text;
             e.Cancel = !IsValidPort(text, "IGB port");
         }
 
@@ -603,7 +607,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void igbPortTextBox_TextChanged(object sender, EventArgs e)
+        private void igbPortTextBox_TextChanged(object sender, EventArgs e)
         {
             igbUrlTextBox.Text = String.Format("http://localhost:{0}/", igbPortTextBox.Text);
         }
@@ -616,13 +620,14 @@ namespace EVEMon.SettingsUI
         /// <returns></returns>
         private bool IsValidPort(string str, string portName)
         {
-            int port = -1;
+            int port;
             Int32.TryParse(str, out port);
 
             if ((port < IPEndPoint.MinPort) || (port > IPEndPoint.MaxPort))
             {
                 ShowErrorMessage("Invalid port",
-                    String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
+                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName,
+                                               IPEndPoint.MinPort, IPEndPoint.MaxPort));
 
                 return false;
             }
@@ -678,9 +683,7 @@ namespace EVEMon.SettingsUI
             // Minimize to tray/task bar
             rbMinToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
             if (rbSystemTrayOptionsNever.Checked && rbMinToTray.Checked)
-            {
                 rbMinToTaskBar.Checked = true;
-            }
 
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
@@ -728,7 +731,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void emailTestButton_Click(object sender, EventArgs e)
         {
-            NotificationSettings configuredValues = new NotificationSettings();
+            NotificationSettings configuredValues;
             PopulateNotificationsFromControls(out configuredValues);
 
             if (!Emailer.SendTestMail(configuredValues))
@@ -750,14 +753,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void proxyAuthenticationButton_Click(object sender, EventArgs e)
         {
-            var proxySettings = m_settings.Proxy.Clone();
+            ProxySettings proxySettings = m_settings.Proxy.Clone();
             using (ProxyAuthenticationWindow window = new ProxyAuthenticationWindow(proxySettings))
             {
-                var result = window.ShowDialog();
+                DialogResult result = window.ShowDialog();
                 if (result == DialogResult.OK)
-                {
                     m_settings.Proxy = proxySettings;
-                }
             }
         }
 
@@ -768,17 +769,17 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void trayTooltipButton_Click(object sender, EventArgs e)
         {
-            var tooltipSettings = m_settings.UI.SystemTrayTooltip.Clone();
+            TrayTooltipSettings tooltipSettings = m_settings.UI.SystemTrayTooltip.Clone();
             using (TrayTooltipConfigForm f = new TrayTooltipConfigForm(tooltipSettings))
             {
                 // Set current tooltip string
                 f.ShowDialog();
-                if (f.DialogResult == DialogResult.OK)
-                {
-                    // Save changes in local copy
-                    m_settings.UI.SystemTrayTooltip = tooltipSettings;
-                    trayTooltipRadio.Checked = true;
-                }
+                if (f.DialogResult != DialogResult.OK)
+                    return;
+
+                // Save changes in local copy
+                m_settings.UI.SystemTrayTooltip = tooltipSettings;
+                trayTooltipRadio.Checked = true;
             }
         }
 
@@ -789,16 +790,16 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void trayPopupButton_Click(object sender, EventArgs e)
         {
-            var popupSettings = m_settings.UI.SystemTrayPopup.Clone();
+            TrayPopupSettings popupSettings = m_settings.UI.SystemTrayPopup.Clone();
             using (TrayPopupConfigForm f = new TrayPopupConfigForm(popupSettings))
             {
                 // Edit a copy of the current settings
                 f.ShowDialog();
-                if (f.DialogResult == DialogResult.OK)
-                {
-                    m_settings.UI.SystemTrayPopup = popupSettings;
-                    trayPopupRadio.Checked = true;
-                }
+                if (f.DialogResult != DialogResult.OK)
+                    return;
+
+                m_settings.UI.SystemTrayPopup = popupSettings;
+                trayPopupRadio.Checked = true;
             }
         }
 
@@ -814,12 +815,12 @@ namespace EVEMon.SettingsUI
             using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, newProvider))
             {
                 DialogResult result = apiForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    m_settings.APIProviders.CustomProviders.Add(newProvider);
-                    InitialiseAPIProvidersDropDown();
-                    cbAPIServer.SelectedIndex = cbAPIServer.Items.Count - 1;
-                }
+                if (result != DialogResult.OK)
+                    return;
+
+                m_settings.APIProviders.CustomProviders.Add(newProvider);
+                InitialiseAPIProvidersDropDown();
+                cbAPIServer.SelectedIndex = cbAPIServer.Items.Count - 1;
             }
         }
 
@@ -832,17 +833,15 @@ namespace EVEMon.SettingsUI
         {
             // Search the provider with the selected name
             string name = (string)cbAPIServer.SelectedItem;
-            foreach (var provider in m_settings.APIProviders.CustomProviders)
+            foreach (SerializableAPIProvider provider in m_settings.APIProviders.CustomProviders.Where(
+                provider => name == provider.Name))
             {
-                if (name == provider.Name)
+                // Open the config form for this provider
+                using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, provider))
                 {
-                    // Open the config form for this provider
-                    using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, provider))
-                    {
-                        apiForm.ShowDialog();
-                    }
-                    return;
+                    apiForm.ShowDialog();
                 }
+                return;
             }
         }
 
@@ -854,30 +853,25 @@ namespace EVEMon.SettingsUI
         private void btnDeleteAPIServer_Click(object sender, EventArgs e)
         {
             string name = (string)cbAPIServer.SelectedItem;
-            var result = MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Delete API Server configuration \"{0}\"?", name),
-                    "Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult result =
+                MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Delete API Server configuration \"{0}\"?", name),
+                                "Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button2);
 
-            if (result == DialogResult.Yes)
-            {
-                // Search the provider with the selected name
-                SerializableAPIProvider providerToRemove = null;
-                foreach (var provider in m_settings.APIProviders.CustomProviders)
-                {
-                    if (name == provider.Name)
-                    {
-                        providerToRemove = provider;
-                        break;
-                    }
-                }
+            if (result != DialogResult.Yes)
+                return;
 
-                // Remove it
-                if (providerToRemove != null)
-                {
-                    m_settings.APIProviders.CustomProviders.Remove(providerToRemove);
-                    InitialiseAPIProvidersDropDown();
-                    cbAPIServer.SelectedIndex = 0;
-                }
-            }
+            // Search the provider with the selected name
+            SerializableAPIProvider providerToRemove =
+                m_settings.APIProviders.CustomProviders.FirstOrDefault(provider => name == provider.Name);
+
+            // Remove it
+            if (providerToRemove == null)
+                return;
+
+            m_settings.APIProviders.CustomProviders.Remove(providerToRemove);
+            InitialiseAPIProvidersDropDown();
+            cbAPIServer.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -920,67 +914,70 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void skillIconSetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ImageList def = new ImageList();
-            def.ColorDepth = ColorDepth.Depth32Bit;
+            ImageList def = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
             string groupname = null;
             if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < IconSettings.Default.Properties.Count - 1)
-                groupname = IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)].DefaultValue.ToString();
+            {
+                SettingsProperty iconSettingsProperty =
+                    IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)];
+                if (iconSettingsProperty != null)
+                    groupname = iconSettingsProperty.DefaultValue.ToString();
+            }
 
             if ((groupname != null
-                && !System.IO.File.Exists(
-                    String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
-                        (cbSkillIconSet.SelectedIndex + 1),
-                        groupname)))
-                || !System.IO.File.Exists(
-                    String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory)))
+                 && !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                               Path.DirectorySeparatorChar,
+                                               AppDomain.CurrentDomain.BaseDirectory,
+                                               (cbSkillIconSet.SelectedIndex + 1),
+                                               groupname)))
+                || !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                              Path.DirectorySeparatorChar,
+                                              AppDomain.CurrentDomain.BaseDirectory)))
             {
                 groupname = null;
             }
+
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(
-                    String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory));
-                System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                IResourceReader basic =
+                    new ResourceReader(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                                     Path.DirectorySeparatorChar,
+                                                     AppDomain.CurrentDomain.BaseDirectory));
+                IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
-                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader(
-                    String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
-                        (cbSkillIconSet.SelectedIndex + 1),
-                        groupname));
+                basic =
+                    new ResourceReader(String.Format("{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                     Path.DirectorySeparatorChar,
+                                                     AppDomain.CurrentDomain.BaseDirectory,
+                                                     (cbSkillIconSet.SelectedIndex + 1),
+                                                     groupname));
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
                     if (def.Images.ContainsKey(basicx.Key.ToString()))
                         def.Images.RemoveByKey(basicx.Key.ToString());
 
-                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
                 }
                 basic.Close();
             }
             tvlist.Nodes.Clear();
             tvlist.ImageList = def;
             tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
-            TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"), tvlist.ImageList.Images.IndexOfKey("book"));
-            gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
-            gtn.Nodes.Add(new TreeNode("Pre-Reqs met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
+            TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"),
+                                        tvlist.ImageList.Images.IndexOfKey("book"));
+            gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"),
+                                       tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
+            gtn.Nodes.Add(new TreeNode("Pre-Reqs met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsMet"),
+                                       tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
             for (int i = 0; i < 6; i++)
             {
-                gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
+                gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i),
+                                           tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
             }
             gtn.Expand();
             tvlist.Nodes.Add(gtn);
@@ -1007,24 +1004,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var text = e.Node.Tag as string;
-            foreach (MultiPanelPage page in multiPanel.Controls)
+            string text = e.Node.Tag as string;
+            foreach (MultiPanelPage page in multiPanel.Controls.Cast<MultiPanelPage>().Where(page => page.Name == text))
             {
-                if (page.Name == text)
-                {
-                    multiPanel.SelectedPage = page;
-                    return;
-                }
+                multiPanel.SelectedPage = page;
+                return;
             }
-        }
-
-        /// <summary>
-        /// When the size changes, stores the window rect.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
         }
 
         /// <summary>
@@ -1038,12 +1023,11 @@ namespace EVEMon.SettingsUI
             {
                 cbG15CycleTimes.Checked = false;
                 panelCycleQueueInfo.Enabled = false;
+                return;
             }
-            else
-            {
-                ACycleTimesInterval.Maximum = Math.Max(ACycleInterval.Value / 2, 1);
-                panelCycleQueueInfo.Enabled = true;
-            }
+
+            ACycleTimesInterval.Maximum = Math.Max(ACycleInterval.Value / 2, 1);
+            panelCycleQueueInfo.Enabled = true;
         }
 
         /// <summary>
