@@ -261,7 +261,9 @@ namespace EVEMon.Common.Controls
 
                 FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
                                                                      {
-                                                                         newImage.Save(fs, ImageFormat.Png);
+                                                                         // We need to create a copy of the image because GDI+ is locking it
+                                                                         Image image = new Bitmap(newImage);
+                                                                         image.Save(fs, ImageFormat.Png);
                                                                          fs.Flush();
                                                                          fs.Close();
                                                                          return true;

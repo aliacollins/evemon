@@ -515,7 +515,7 @@ namespace EVEMon
             base.OnLoad(e);
 
             // Fonts
-            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             // Subscribe to events
