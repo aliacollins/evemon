@@ -12,7 +12,7 @@ namespace EVEMon
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.
         /// </summary>
-        internal EveMessageWindow()
+        private EveMessageWindow()
         {
             InitializeComponent();
 

@@ -1,12 +1,7 @@
 using System;
-using System.Data;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Collections.Generic;
-
+using System.ComponentModel;
+using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
@@ -15,12 +10,12 @@ namespace EVEMon
 {
     public partial class IndustryJobsWindow : EVEMonForm
     {
-        private bool m_init;
+        private readonly bool m_init;
 
         public IndustryJobsWindow()
         {
             InitializeComponent();
-            this.RememberPositionKey = "IndustryJobsWindow";
+            RememberPositionKey = "IndustryJobsWindow";
             m_init = true;
         }
 
@@ -34,11 +29,11 @@ namespace EVEMon
             {
                 jobsList.Grouping = value;
 
-                if (m_init)
-                {
-                    jobsList.UpdateColumns();
-                    jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
-                }
+                if (!m_init)
+                    return;
+
+                jobsList.UpdateColumns();
+                jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
             }
         }
 
@@ -52,11 +47,11 @@ namespace EVEMon
             {
                 jobsList.ShowIssuedFor = value;
 
-                if (m_init)
-                {
-                    jobsList.UpdateColumns();
-                    jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
-                }
+                if (!m_init)
+                    return;
+
+                jobsList.UpdateColumns();
+                jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
             }
         }
 
@@ -83,11 +78,11 @@ namespace EVEMon
             {
                 jobsList.Columns = value;
 
-                if (m_init)
-                {
-                    jobsList.UpdateColumns();
-                    jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
-                }
+                if (!m_init)
+                    return;
+
+                jobsList.UpdateColumns();
+                jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
             }
         }
     }

@@ -16,7 +16,7 @@ namespace EVEMon
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public UpdateNotifyForm()
+        private UpdateNotifyForm()
         {
             InitializeComponent();
         }
@@ -37,21 +37,19 @@ namespace EVEMon
         /// <param name="e"></param>
         private void btnIgnore_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show(
-                "Are you sure you want to ignore this update? You will not " +
-                "be prompted again until a newer version is released.",
-                "Ignore Update?",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show("Are you sure you want to ignore this update? You will not " +
+                                              "be prompted again until a newer version is released.",
+                                              "Ignore Update?",
+                                              MessageBoxButtons.YesNo,
+                                              MessageBoxIcon.Question,
+                                              MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.No)
-            {
                 return;
-            }
+
             Settings.Updates.MostRecentDeniedUpgrade = m_args.NewestVersion.ToString();
             Settings.Save();
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -64,21 +62,23 @@ namespace EVEMon
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
                 Uri updateURI = new Uri(m_args.InstallerUrl);
-                string localFilename = Path.Combine(EveMonClient.EVEMonDataDir, Path.GetFileName(updateURI.AbsolutePath));
-                using (UpdateDownloadForm f = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
+                string filename = Path.GetFileName(updateURI.AbsolutePath);
+                if (filename != null)
                 {
-                    f.ShowDialog();
-                    if (f.DialogResult == DialogResult.OK)
+                    string localFilename = Path.Combine(EveMonClient.EVEMonDataDir, filename);
+                    using (UpdateDownloadForm f = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
                     {
-                        ExecPatcher(localFilename, m_args.AutoInstallArguments);
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.OK)
+                            ExecPatcher(localFilename, m_args.AutoInstallArguments);
                     }
                 }
             }
             else
             {
-                Process.Start(m_args.ForumUrl);
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                Util.OpenURL(m_args.ForumUrl);
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 
@@ -109,8 +109,8 @@ namespace EVEMon
                 }
                 throw;
             }
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void btnLater_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace EVEMon
 
             // Set the detailed update information (from the XML)
             string updMessage = m_args.UpdateMessage;
-            updMessage.Replace("\r", String.Empty);
+            updMessage = updMessage.Replace("\r", String.Empty);
             textBox1.Lines = updMessage.Split('\n');
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;

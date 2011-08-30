@@ -358,7 +358,7 @@ namespace EVEMon
                                                  BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int) (pctBarRect.Width * skill.FractionCompleted);
+            int fillWidth = (int)(pctBarRect.Width * skill.FractionCompleted);
             if (fillWidth > 0)
             {
                 Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
@@ -623,7 +623,7 @@ namespace EVEMon
             if (item is SkillGroup)
             {
                 // Left button : expand/collapse
-                SkillGroup sg = (SkillGroup) item;
+                SkillGroup sg = (SkillGroup)item;
                 if (e.Button != MouseButtons.Right)
                 {
                     ToggleGroupExpandCollapse(sg);
@@ -645,7 +645,7 @@ namespace EVEMon
             }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
-            Skill skill = (Skill) item;
+            Skill skill = (Skill)item;
             if (e.Button == MouseButtons.Right)
             {
                 // "Show in Skill Explorer" menu item
@@ -686,7 +686,7 @@ namespace EVEMon
                 }
 
                 // Display the context menu
-                contextMenuStripPlanPopup.Show((Control) sender, new Point(e.X, e.Y));
+                contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
                 return;
             }
 
@@ -899,8 +899,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void menuPlanItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem planItem = (ToolStripMenuItem) sender;
-            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>) planItem.Tag;
+            ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
+            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>)planItem.Tag;
 
             IPlanOperation operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
             PlanHelper.SelectPerform(operation);
@@ -913,8 +913,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tmSkillExplorer_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem) sender;
-            Skill skill = (Skill) item.Tag;
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            Skill skill = (Skill)item.Tag;
 
             SkillExplorerWindow window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
             window.Skill = skill;

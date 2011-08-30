@@ -1,5 +1,5 @@
-using EVEMon.Common;
 using System;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 
 namespace EVEMon
@@ -12,12 +12,20 @@ namespace EVEMon
         private readonly DateTime m_serverTime;
         private readonly DateTime m_localTime;
 
-        public TimeCheckNotification()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeCheckNotification"/> class.
+        /// </summary>
+        private TimeCheckNotification()
         {
             InitializeComponent();
-            this.uxTitleLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            uxTitleLabel.Font = FontFactory.GetFont("Tahoma", 12F);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeCheckNotification"/> class.
+        /// </summary>
+        /// <param name="serverTime">The server time.</param>
+        /// <param name="localTime">The local time.</param>
         public TimeCheckNotification(DateTime serverTime, DateTime localTime)
             : this ()
         {
@@ -25,6 +33,10 @@ namespace EVEMon
             m_localTime = localTime;
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Form.Shown"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
@@ -34,12 +46,21 @@ namespace EVEMon
             uxCheckTimeOnStartUpCheckBox.Checked = Settings.Updates.CheckTimeOnStartup;
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Form.Closing"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event data.</param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             Settings.Updates.CheckTimeOnStartup = uxCheckTimeOnStartUpCheckBox.Checked;
             base.OnClosing(e);
         }
 
+        /// <summary>
+        /// Handles the Click event of the uxCloseButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void uxCloseButton_Click(object sender, EventArgs e)
         {
             Close();

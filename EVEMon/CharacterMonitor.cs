@@ -1,4 +1,3 @@
-//#define DEBUG_SINGLETHREAD
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +11,6 @@ using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Controls;
 using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon
@@ -22,7 +20,6 @@ namespace EVEMon
     /// </summary>
     public partial class CharacterMonitor : UserControl
     {
-        private readonly Character m_character;
         private readonly List<ToolStripButton> m_fullAPIKeyFeatures = new List<ToolStripButton>();
         private CredentialsLevel m_keyLevel;
         private bool m_pendingUpdate;
@@ -48,7 +45,7 @@ namespace EVEMon
         public CharacterMonitor(Character character)
             : this()
         {
-            m_character = character;
+            Character = character;
             Header.Character = character;
             skillsList.Character = character;
             skillQueueList.Character = character;
@@ -131,10 +128,7 @@ namespace EVEMon
         /// Gets the character associated with this monitor.
         /// </summary>
         /// <value>The character.</value>
-        public Character Character
-        {
-            get { return m_character; }
-        }
+        public Character Character { get; private set; }
 
         #endregion
 
@@ -154,7 +148,7 @@ namespace EVEMon
 
             // Picks the last selected page
             multiPanel.SelectedPage = null;
-            string tag = m_character.UISettings.SelectedPage;
+            string tag = Character.UISettings.SelectedPage;
             ToolStripItem item =
                 toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == x.Tag as string);
 
@@ -221,12 +215,12 @@ namespace EVEMon
         /// </summary>
         private void UpdateTrainingInfo()
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
 
             // Is the character in training ?
-            if (m_character.IsTraining)
+            if (Character.IsTraining)
             {
-                QueuedSkill training = m_character.CurrentlyTrainingSkill;
+                QueuedSkill training = Character.CurrentlyTrainingSkill;
                 DateTime completionTime = training.EndTime.ToLocalTime();
 
                 lblTrainingSkill.Text = training.ToString();
@@ -296,7 +290,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateWarningLabel()
         {
-            if (m_character.Identity.Account == null)
+            if (Character.Identity.Account == null)
             {
                 warningLabel.Text = "This character has no associated account, data won't be updated.";
                 warningLabel.Visible = true;
@@ -311,29 +305,28 @@ namespace EVEMon
         /// </summary>
         private void UpdateFeaturesMenu()
         {
-            Account account = m_character.Identity.Account;
+            Account account = Character.Identity.Account;
             if (account == null || m_keyLevel == account.KeyLevel)
                 return;
 
             m_keyLevel = account.KeyLevel;
 
-            if (m_character is CCPCharacter)
+            if (!(Character is CCPCharacter))
+                return;
+            if (m_keyLevel == CredentialsLevel.Full)
             {
-                if (m_keyLevel == CredentialsLevel.Full)
-                {
-                    m_fullAPIKeyFeatures.ForEach(x => x.Visible = CheckEnabledFeatures(x.Text));
-                    featuresMenu.Visible = true;
-                    tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
+                m_fullAPIKeyFeatures.ForEach(x => x.Visible = CheckEnabledFeatures(x.Text));
+                featuresMenu.Visible = true;
+                tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
 
-                    ToggleFullAPIKeyFeaturesMonitoring();
+                ToggleFullAPIKeyFeaturesMonitoring();
 
-                    return;
-                }
-
-                m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
-                featuresMenu.Visible = tsToggleSeparator.Visible = false;
-                UpdateFullAPIKeyPagesSettings();
+                return;
             }
+
+            m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
+            featuresMenu.Visible = tsToggleSeparator.Visible = false;
+            UpdateFullAPIKeyPagesSettings();
         }
 
         /// <summary>
@@ -342,10 +335,10 @@ namespace EVEMon
         private void UpdatePageControls()
         {
             // Enables/Disables the skill page controls
-            toggleSkillsIcon.Enabled = !m_character.Skills.IsEmpty();
+            toggleSkillsIcon.Enabled = !Character.Skills.IsEmpty();
 
             // Exit if it's a non-CCPCharacter
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
 
@@ -354,7 +347,7 @@ namespace EVEMon
             {
                 item.Visible = true;
             }
-            
+
             // Enables/Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)
                 toolStripContextual.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
@@ -386,18 +379,17 @@ namespace EVEMon
         private void ToggleFullAPIKeyFeaturesMonitoring()
         {
             // Exit if it's a non-CCPCharacter
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
 
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.Where(x => x.IsFullKeyNeeded))
             {
                 foreach (ToolStripButton fullAPIKeyFeature in m_fullAPIKeyFeatures
-                                                        .Where(x => monitor.Method.ToString().Contains(x.Text)))
+                    .Where(x => monitor.Method.ToString().Contains(x.Text)).Where(
+                        fullAPIKeyFeature =>
+                        !monitor.Method.ToString().Contains("Corporation") || !ccpCharacter.IsInNPCCorporation))
                 {
-                    if (monitor.Method.ToString().Contains("Corporation") && ccpCharacter.IsInNPCCorporation)
-                        continue;
-
                     monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
                 }
 
@@ -421,15 +413,11 @@ namespace EVEMon
                 || (multiPanel.SelectedPage == eveNotificationsPage && !eveNotificationsIcon.Visible))
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
 
-            var enabledFullAPIKeyPages = new List<string>();
-            foreach (ToolStripMenuItem menuItem in featuresMenu.DropDownItems)
-            {
-                if (menuItem.Checked)
-                    enabledFullAPIKeyPages.Add(menuItem.Text);
-            }
+            List<string> enabledFullAPIKeyPages = (featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
+                menuItem => menuItem.Checked).Select(menuItem => menuItem.Text)).ToList();
 
-            m_character.UISettings.FullAPIKeyEnabledPages.Clear();
-            m_character.UISettings.FullAPIKeyEnabledPages.AddRange(enabledFullAPIKeyPages);
+            Character.UISettings.FullAPIKeyEnabledPages.Clear();
+            Character.UISettings.FullAPIKeyEnabledPages.AddRange(enabledFullAPIKeyPages);
         }
 
         /// <summary>
@@ -439,7 +427,7 @@ namespace EVEMon
         /// <returns></returns>
         private bool CheckEnabledFeatures(string page)
         {
-            return m_character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
+            return Character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
         }
 
         /// <summary>
@@ -447,18 +435,17 @@ namespace EVEMon
         /// </summary>
         private void UpdateFeaturesTextVisibility()
         {
-            if (!Settings.UI.SafeForWork)
-            {
-                foreach (ToolStripItem item in toolStripFeatures.Items)
-                {
-                    if (item is ToolStripButton)
-                        item.DisplayStyle = (Settings.UI.ShowTextInToolStrip
-                                                 ? ToolStripItemDisplayStyle.ImageAndText
-                                                 : ToolStripItemDisplayStyle.Image);
-                }
+            if (Settings.UI.SafeForWork)
+                return;
 
-                featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            foreach (ToolStripButton item in toolStripFeatures.Items.OfType<ToolStripButton>())
+            {
+                item.DisplayStyle = (Settings.UI.ShowTextInToolStrip
+                                         ? ToolStripItemDisplayStyle.ImageAndText
+                                         : ToolStripItemDisplayStyle.Image);
             }
+
+            featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
         }
 
         #endregion
@@ -473,7 +460,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdatePageControls();
@@ -486,7 +473,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdatePageControls();
@@ -499,7 +486,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdatePageControls();
@@ -512,7 +499,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdatePageControls();
@@ -525,7 +512,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdatePageControls();
@@ -538,7 +525,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdateContent();
@@ -565,10 +552,10 @@ namespace EVEMon
             }
             else
             {
-                foreach (ToolStripItem item in toolStripFeatures.Items)
+                foreach (ToolStripItem item in toolStripFeatures.Items.Cast<ToolStripItem>().Where(
+                    item => item is ToolStripButton || item is ToolStripDropDownButton))
                 {
-                    if (item is ToolStripButton || item is ToolStripDropDownButton)
-                        item.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                    item.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 }
 
                 foreach (ToolStripItem item in toolStripContextual.Items)
@@ -582,7 +569,7 @@ namespace EVEMon
             // "Update Calendar" button
             btnAddToCalendar.Visible = Settings.Calendar.Enabled;
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
 
@@ -611,7 +598,7 @@ namespace EVEMon
             // Update the full api key enabled pages
             UpdateFeaturesMenu();
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
 
@@ -620,7 +607,7 @@ namespace EVEMon
                 return;
 
             // Remaining training time label
-            QueuedSkill training = m_character.CurrentlyTrainingSkill;
+            QueuedSkill training = Character.CurrentlyTrainingSkill;
             lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
 
             // Remaining queue time label
@@ -664,7 +651,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateNotifications()
         {
-            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == m_character);
+            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == Character);
         }
 
         #endregion
@@ -686,17 +673,17 @@ namespace EVEMon
                     continue;
 
                 // Is it the item we clicked ?
-                var button = item as ToolStripButton;
-                if (item == sender)
+                ToolStripButton button = item as ToolStripButton;
+                if (button != null && item == sender)
                 {
                     // Selects the proper page
                     multiPanel.SelectedPage =
-                        multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string) item.Tag);
+                        multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)item.Tag);
 
                     // Checks it
                     button.Checked = true;
                 }
-                // Or another one representing another page ?
+                    // Or another one representing another page ?
                 else if (button != null)
                 {
                     // Unchecks it
@@ -716,7 +703,7 @@ namespace EVEMon
                 return;
 
             // Stores the setting
-            m_character.UISettings.SelectedPage = e.NewPage.Text;
+            Character.UISettings.SelectedPage = e.NewPage.Text;
 
             // Update the buttons visibility
             toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
@@ -751,8 +738,8 @@ namespace EVEMon
                 return;
             }
 
-            if (m_character is CCPCharacter)
-                ExternalCalendar.UpdateCalendar(m_character as CCPCharacter);
+            if (Character is CCPCharacter)
+                ExternalCalendar.UpdateCalendar(Character as CCPCharacter);
         }
 
         /// <summary>
@@ -784,7 +771,7 @@ namespace EVEMon
             skillsList.Height = preferredHeight;
             skillsList.Update();
 
-            var bitmap = new Bitmap(skillsList.Width, preferredHeight);
+            Bitmap bitmap = new Bitmap(skillsList.Width, preferredHeight);
             skillsList.DrawToBitmap(bitmap, new Rectangle(0, 0, skillsList.Width, preferredHeight));
 
             skillsList.Dock = DockStyle.Fill;
@@ -810,11 +797,9 @@ namespace EVEMon
             featuresMenu.DropDownItems.Clear();
 
             // Create the menu items
-            foreach (FullAPIKeyFeatures feature in EnumExtensions.GetValues<FullAPIKeyFeatures>())
+            foreach (ToolStripMenuItem item in EnumExtensions.GetValues<FullAPIKeyFeatures>().Select(
+                feature => new ToolStripMenuItem(feature.GetHeader()) { Checked = CheckEnabledFeatures(feature.GetHeader()) }))
             {
-                var item = new ToolStripMenuItem(feature.GetHeader());
-                item.Checked = CheckEnabledFeatures(feature.GetHeader());
-
                 featuresMenu.DropDownItems.Add(item);
             }
         }
@@ -826,7 +811,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void featuresMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            var item = e.ClickedItem as ToolStripMenuItem;
+            ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
             item.Checked = !item.Checked;
 
             ordersIcon.Visible = (item.Text == ordersIcon.Text ? item.Checked : ordersIcon.Visible);
@@ -837,7 +822,7 @@ namespace EVEMon
 
             UpdateFullAPIKeyPagesSettings();
             ToggleFullAPIKeyFeaturesMonitoring();
-       }
+        }
 
         /// <summary>
         /// On opening we create the menu items for "Group By..." in panel.
@@ -850,7 +835,7 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == ordersPage)
                 CreateGroupMenuList<MarketOrderGrouping, Enum>(ordersList);
-            
+
             if (multiPanel.SelectedPage == jobsPage)
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
 
@@ -871,7 +856,7 @@ namespace EVEMon
             ToolStripItem item = e.ClickedItem;
             if (multiPanel.SelectedPage == ordersPage)
                 GroupMenuSetting<MarketOrderGrouping, Enum>(item, ordersList);
-            
+
             if (multiPanel.SelectedPage == jobsPage)
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
 
@@ -891,7 +876,7 @@ namespace EVEMon
         {
             if (multiPanel.SelectedPage == ordersPage)
                 ordersList.TextFilter = searchTextBox.Text;
-            
+
             if (multiPanel.SelectedPage == jobsPage)
                 jobsList.TextFilter = searchTextBox.Text;
 
@@ -914,7 +899,8 @@ namespace EVEMon
         {
             if (multiPanel.SelectedPage == ordersPage)
             {
-                using (var f = new MarketOrdersColumnsSelectWindow(ordersList.Columns.Select(x => x.Clone())))
+                using (MarketOrdersColumnsSelectWindow f =
+                    new MarketOrdersColumnsSelectWindow(ordersList.Columns.Select(x => x.Clone())))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -925,10 +911,11 @@ namespace EVEMon
                     }
                 }
             }
-            
+
             if (multiPanel.SelectedPage == jobsPage)
             {
-                using (var f = new IndustryJobsColumnsSelectWindow(jobsList.Columns.Select(x => x.Clone())))
+                using (IndustryJobsColumnsSelectWindow f =
+                    new IndustryJobsColumnsSelectWindow(jobsList.Columns.Select(x => x.Clone())))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -942,7 +929,8 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == researchPage)
             {
-                using (var f = new ResearchColumnsSelectWindow(researchList.Columns.Select(x => x.Clone())))
+                using (ResearchColumnsSelectWindow f =
+                    new ResearchColumnsSelectWindow(researchList.Columns.Select(x => x.Clone())))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -956,7 +944,8 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == mailMessagesPage)
             {
-                using (var f = new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Select(x => x.Clone())))
+                using (EveMailMessagesColumnsSelectWindow f =
+                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Select(x => x.Clone())))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -970,7 +959,8 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == eveNotificationsPage)
             {
-                using (var f = new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Select(x => x.Clone())))
+                using (EveNotificationsColumnsSelectWindow f =
+                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Select(x => x.Clone())))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -991,12 +981,11 @@ namespace EVEMon
         private void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
             bool hideInactive = true;
-            bool numberFormat = false;
 
             if (multiPanel.SelectedPage == ordersPage)
             {
+                bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
                 hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
-                numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
                 preferencesMenu.DropDownItems.Insert(3, numberAbsFormatMenuItem);
                 preferencesMenu.DropDownItems.Remove(tsReadingPaneSeparator);
                 preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
@@ -1004,7 +993,7 @@ namespace EVEMon
                 showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
             }
-            
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -1048,7 +1037,7 @@ namespace EVEMon
                 Settings.UI.MainWindow.MarketOrders.HideInactiveOrders = !hideInactive;
                 ordersList.UpdateColumns();
             }
-            
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -1083,7 +1072,7 @@ namespace EVEMon
                 ordersList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
                 showOnlyCorpMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Corporation);
             }
-            
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
@@ -1103,7 +1092,7 @@ namespace EVEMon
                 ordersList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
                 showOnlyCharMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Character);
             }
-            
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
@@ -1243,21 +1232,20 @@ namespace EVEMon
         /// Creates the group menu list.
         /// </summary>
         /// <typeparam name="T">The grouping type.</typeparam>
-        /// <typeparam name="V">The grouping base type.</typeparam>
+        /// <typeparam name="T1">The grouping base type.</typeparam>
         /// <param name="list">The list.</param>
-        private void CreateGroupMenuList<T, V>(IGroupingListView list)
-            where T : V
+        private void CreateGroupMenuList<T, T1>(IGroupingListView list)
+            where T : T1
         {
-            foreach (T grouping in EnumExtensions.GetValues<T>())
+            foreach (ToolStripButton menu in EnumExtensions.GetValues<T>().Select(
+                grouping => new { grouping, group = grouping as Enum }).Where(
+                    menu => menu.group != null).Select(
+                        menu => new ToolStripButton(menu.group.GetHeader())
+                                    {
+                                        Checked = (list.Grouping.CompareTo(menu.group) == 0),
+                                        Tag = menu.grouping
+                                    }))
             {
-                Enum group = grouping as Enum;
-                if (group == null)
-                    continue;
-
-                var menu = new ToolStripButton(group.GetHeader());
-                menu.Checked = (list.Grouping.CompareTo(group) == 0);
-                menu.Tag = (T)grouping;
-
                 groupMenu.DropDownItems.Add(menu);
             }
         }
@@ -1266,11 +1254,11 @@ namespace EVEMon
         /// Sets and stores in settings the GroupBy selection.
         /// </summary>
         /// <typeparam name="T">The grouping type.</typeparam>
-        /// <typeparam name="V">The grouping base type.</typeparam>
+        /// <typeparam name="T1">The grouping base type.</typeparam>
         /// <param name="item">The item.</param>
         /// <param name="list">The list.</param>
-        private void GroupMenuSetting<T, V>(ToolStripItem item, IGroupingListView list)
-            where T : V
+        private void GroupMenuSetting<T, T1>(ToolStripItem item, IGroupingListView list)
+            where T : T1
         {
             Enum grouping = item.Tag as Enum;
             if (grouping == null)
@@ -1280,21 +1268,21 @@ namespace EVEMon
             T obj = default(T);
 
             if (obj is MarketOrderGrouping)
-                m_character.UISettings.OrdersGroupBy = (MarketOrderGrouping)grouping;
+                Character.UISettings.OrdersGroupBy = (MarketOrderGrouping)grouping;
 
             if (obj is IndustryJobGrouping)
-                m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
+                Character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
 
             if (obj is EVEMailMessagesGrouping)
-                m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;
+                Character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;
 
             if (obj is EVENotificationsGrouping)
-                m_character.UISettings.EVENotificationsGroupBy = (EVENotificationsGrouping)grouping;
+                Character.UISettings.EVENotificationsGroupBy = (EVENotificationsGrouping)grouping;
         }
-        
+
         #endregion
-        
-        
+
+
         #region Testing Function
 
         /// <summary>
@@ -1302,12 +1290,12 @@ namespace EVEMon
         /// </summary>
         internal void TestCharacterNotification()
         {
-            var notification = new NotificationEventArgs(NotificationCategory.TestNofitication, m_character)
-            {
-                Priority = NotificationPriority.Warning,
-                Behaviour = NotificationBehaviour.Overwrite,
-                Description = "Test Character Notification."
-            };
+            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.TestNofitication, Character)
+                                                     {
+                                                         Priority = NotificationPriority.Warning,
+                                                         Behaviour = NotificationBehaviour.Overwrite,
+                                                         Description = "Test Character Notification."
+                                                     };
             EveMonClient.Notifications.Notify(notification);
         }
 

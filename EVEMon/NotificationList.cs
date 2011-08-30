@@ -85,7 +85,7 @@ namespace EVEMon
         /// Gets or sets the displayed notifications.
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public IEnumerable<NotificationEventArgs> Notifications
         {
             get { return m_notifications; }

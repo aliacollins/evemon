@@ -41,7 +41,7 @@ namespace EVEMon
         private QueuedSkill[] m_skillQueue;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public MainWindowSkillsQueueList()
         {
@@ -70,11 +70,9 @@ namespace EVEMon
         /// </summary>
         private int GetItemHeight
         {
-            get
-            {
-                return Math.Max((m_skillsQueueFont.Height * 2) + PadTop * 2 + LowerBoxHeight, MinimumHeight);
-            }
+            get { return Math.Max((m_skillsQueueFont.Height * 2) + PadTop * 2 + LowerBoxHeight, MinimumHeight); }
         }
+
 
         #region Inherited events
 
@@ -105,6 +103,7 @@ namespace EVEMon
         }
 
         #endregion
+
 
         #region Display update
 
@@ -175,6 +174,7 @@ namespace EVEMon
 
         #endregion
 
+
         #region Drawing
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace EVEMon
             int skillPointsToNextLevel = (skill.Skill == null
                                               ? 0
                                               : skill.Skill.StaticData.GetPointsRequiredForLevel(
-                                                    Math.Min(skill.Level, 5)));
+                                                  Math.Min(skill.Level, 5)));
 
             if (skill.Skill != null && skill.Level == skill.Skill.Level + 1)
                 percentCompleted = skill.Skill.PercentCompleted;
@@ -267,7 +267,7 @@ namespace EVEMon
                             new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth,
                                           BoxHeight));
 
-            const int LevelBoxWidth = (BoxWidth - 4 - 3)/5;
+            const int LevelBoxWidth = (BoxWidth - 4 - 3) / 5;
             for (int level = 1; level <= 5; level++)
             {
                 Rectangle brect =
@@ -298,7 +298,8 @@ namespace EVEMon
                         g.FillRectangle(brush, brect);
 
                     // Blinking indicator of skill level in training
-                    if (!skill.Skill.IsTraining || skill != qskill || level != skill.Level || Math.Abs(percentCompleted) < double.Epsilon)
+                    if (!skill.Skill.IsTraining || skill != qskill || level != skill.Level ||
+                        Math.Abs(percentCompleted) < double.Epsilon)
                         continue;
 
                     if (m_count == 0)
@@ -317,8 +318,8 @@ namespace EVEMon
                                           e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
 
             Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2,
-                                           e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
-                                           BoxWidth - 3, LowerBoxHeight - 3);
+                                                 e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
+                                                 BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
             int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
@@ -370,6 +371,7 @@ namespace EVEMon
 
         #endregion
 
+
         #region Local events
 
         /// <summary>
@@ -396,8 +398,8 @@ namespace EVEMon
                 return;
 
             // Compute the number of lines to move
-            int direction = lines/Math.Abs(lines);
-            int[] numberOfPixelsToMove = new int[lines*direction];
+            int direction = lines / Math.Abs(lines);
+            int[] numberOfPixelsToMove = new int[lines * direction];
             for (int i = 1; i <= Math.Abs(lines); i++)
             {
                 object item = null;
@@ -473,7 +475,8 @@ namespace EVEMon
                 if (e.Button == MouseButtons.Right)
                 {
                     // "Show in Skill Explorer" menu item
-                    ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", CommonProperties.Resources.LeadsTo);
+                    ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer",
+                                                                              CommonProperties.Resources.LeadsTo);
                     tmSkillExplorer.Click += tmSkillExplorer_Click;
                     tmSkillExplorer.Tag = skill;
 
@@ -484,23 +487,25 @@ namespace EVEMon
                     if (skill.Level < 5)
                     {
                         // Reset the menu.
-                        ToolStripMenuItem tm = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+                        ToolStripMenuItem tm =
+                            new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
 
                         // Build the level options
                         int nextLevel = Math.Min(5, skill.Level + 1);
                         for (int level = nextLevel; level < 6; level++)
                         {
                             ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture,
-                                                                                "Level {0} to", Skill.GetRomanFromInt(level)));
+                                                                                              "Level {0} to",
+                                                                                              Skill.GetRomanFromInt(level)));
                             tm.DropDownItems.Add(menuLevel);
 
                             int level1 = level;
                             Character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
-                                                    {
-                                                        menuPlanItem.Click += menuPlanItem_Click;
-                                                        menuPlanItem.Tag = new Pair<Plan, SkillLevel>(
-                                                                                            plan, new SkillLevel(skill, level1));
-                                                    });
+                                                                               {
+                                                                                   menuPlanItem.Click += menuPlanItem_Click;
+                                                                                   menuPlanItem.Tag = new Pair<Plan, SkillLevel>(
+                                                                                       plan, new SkillLevel(skill, level1));
+                                                                               });
                         }
 
                         // Add to the context menu
@@ -509,7 +514,7 @@ namespace EVEMon
                     }
 
                     // Display the context menu
-                    contextMenuStripPlanPopup.Show((Control) sender, new Point(e.X, e.Y));
+                    contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
                     return;
                 }
             }
@@ -693,8 +698,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void menuPlanItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem planItem = (ToolStripMenuItem) sender;
-            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>) planItem.Tag;
+            ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
+            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>)planItem.Tag;
 
             IPlanOperation operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
             PlanHelper.SelectPerform(operation);
@@ -707,14 +712,15 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tmSkillExplorer_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem) sender;
-            Skill skill = (Skill) item.Tag;
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            Skill skill = (Skill)item.Tag;
 
             SkillExplorerWindow window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
             window.Skill = skill;
         }
 
         #endregion
+
 
         #region Global events
 

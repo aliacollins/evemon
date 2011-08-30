@@ -17,10 +17,12 @@ namespace EVEMon
     /// </summary>
     public partial class UnhandledExceptionWindow : EVEMonForm
     {
-        public UnhandledExceptionWindow()
+        private readonly Exception m_exception;
+
+        private UnhandledExceptionWindow()
         {
             InitializeComponent();
-            this.WhatCanYouDoLabel.Font = FontFactory.GetFont("Tahoma", 10F);
+            WhatCanYouDoLabel.Font = FontFactory.GetFont("Tahoma", 10F);
         }
 
         public UnhandledExceptionWindow(Exception err)
@@ -29,7 +31,6 @@ namespace EVEMon
             m_exception = err;
         }
 
-        private Exception m_exception;
 
         /// <summary>
         /// Loads resources, generates the report
@@ -40,18 +41,17 @@ namespace EVEMon
         {
             try
             {
-                var i = CommonProperties.Resources.Bug;
+                Bitmap i = CommonProperties.Resources.Bug;
 
                 int oHeight = i.Height;
                 int oWidth = i.Width;
                 if (i.Height > BugPictureBox.ClientSize.Height)
                 {
-                    double scale = (double)(BugPictureBox.ClientSize.Height) / (double)(i.Height);
+                    double scale = (double)(BugPictureBox.ClientSize.Height) / i.Height;
                     oHeight = (int)(oHeight * scale);
                     oWidth = (int)(oWidth * scale);
                     Bitmap b = new Bitmap(i, new Size(oWidth, oHeight));
 
-                    int oRight = BugPictureBox.Right;
                     BugPictureBox.ClientSize = new Size(oWidth, oHeight);
                     BugPictureBox.Image = b;
                 }
@@ -63,10 +63,11 @@ namespace EVEMon
 
             string trace;
             EveMonClient.StopTraceLogging();
-            
+
             try
             {
-                using (FileStream traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read))
+                using (FileStream traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read)
+                    )
                 {
                     using (StreamReader traceReader = new StreamReader(traceStream))
                     {
@@ -85,10 +86,14 @@ namespace EVEMon
                 StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
 
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", Application.ProductVersion, Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version, Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}{1}", os.VersionString, Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}{1}", Environment.CommandLine, Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", Application.ProductVersion,
+                                             Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version,
+                                             Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}{1}", os.VersionString,
+                                             Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}{1}", Environment.CommandLine,
+                                             Environment.NewLine);
                 exceptionReport.AppendLine();
                 exceptionReport.Append(RecursiveStackTrace).AppendLine();
                 exceptionReport.AppendLine();
@@ -106,6 +111,10 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Gets the datafile report.
+        /// </summary>
+        /// <value>The datafile report.</value>
         private string DatafileReport
         {
             get
@@ -123,7 +132,8 @@ namespace EVEMon
                         FileInfo info = new FileInfo(datafile);
                         Datafile file = new Datafile(Path.GetFileName(datafile));
 
-                        datafileReport.AppendFormat(CultureConstants.DefaultCulture, "  {0} ({1}KiB - {2}){3}", info.Name, info.Length / 1024, file.MD5Sum, Environment.NewLine);
+                        datafileReport.AppendFormat(CultureConstants.DefaultCulture, "  {0} ({1}KiB - {2}){3}", info.Name,
+                                                    info.Length / 1024, file.MD5Sum, Environment.NewLine);
                     }
                 }
                 catch
@@ -134,6 +144,10 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Gets the recursive stack trace.
+        /// </summary>
+        /// <value>The recursive stack trace.</value>
         private string RecursiveStackTrace
         {
             get
@@ -151,20 +165,34 @@ namespace EVEMon
                     stackTraceBuilder.Append(ex.ToString()).AppendLine();
                 }
 
-                stackTraceBuilder = stackTraceBuilder.Replace(@"D:\EVEMon\", String.Empty); // Richard Slater's local installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\EVEMon Project\EVEMon\", String.Empty); // Jimi's local installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"d:\tmp\evemon_installer\", String.Empty); // TeamCity's installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"d:\tmp\evemon\", String.Empty); // TeamCity's snapshot builder path
+                stackTraceBuilder = stackTraceBuilder.Replace(@"D:\EVEMon\", String.Empty);
+                // Richard Slater's local installer builder path
+                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\EVEMon Project\EVEMon\", String.Empty);
+                // Jimi's local installer builder path
+                stackTraceBuilder = stackTraceBuilder.Replace(@"d:\tmp\evemon_installer\", String.Empty);
+                // TeamCity's installer builder path
+                stackTraceBuilder = stackTraceBuilder.Replace(@"d:\tmp\evemon\", String.Empty);
+                // TeamCity's snapshot builder path
                 return stackTraceBuilder.ToString();
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the CloseButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void CloseButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the LinkClicked event of the CopyDetailsLinkLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CopyDetailsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -177,41 +205,61 @@ namespace EVEMon
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
+                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. " +
+                                "Wait a few moments and try again.");
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the ResetButtonLinkLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ResetButtonLinkLabel_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show(
-                "This will clear all your saved settings, including skill plans and " +
-                "character logins. You should only try this if EVEMon has errored more " +
-                "than once.\r\n\r\nClear settings?",
-                "Clear Settings?",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show("This will clear all your saved settings, including skill plans and " +
+                                              "character logins. You should only try this if EVEMon has errored more " +
+                                              "than once.\r\n\r\nClear settings?",
+                                              "Clear Settings?",
+                                              MessageBoxButtons.YesNo,
+                                              MessageBoxIcon.Warning,
+                                              MessageBoxDefaultButton.Button2);
 
-            if (dr == DialogResult.Yes)
-            {
-                Settings.Reset();
-                MessageBox.Show("Your settings have been reset.",
-                                "Settings Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
+            if (dr != DialogResult.Yes)
+                return;
+
+            Settings.Reset();
+            MessageBox.Show("Your settings have been reset.",
+                            "Settings Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the LinkClicked event of the llblReport control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(NetworkConstants.EVEMonBugReport);
         }
 
+        /// <summary>
+        /// Handles the LinkClicked event of the llblKnownProblems control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(NetworkConstants.EVEMonKnownProblems);
         }
 
+        /// <summary>
+        /// Handles the LinkClicked event of the llblLatestBinaries control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(NetworkConstants.EVEMonMainPage);

@@ -13,12 +13,12 @@ namespace EVEMon
 {
     public partial class DataUpdateNotifyForm : EVEMonForm
     {
-        private DataUpdateAvailableEventArgs m_args;
+        private readonly DataUpdateAvailableEventArgs m_args;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public DataUpdateNotifyForm()
+        private DataUpdateNotifyForm()
         {
             InitializeComponent();
         }
@@ -44,8 +44,8 @@ namespace EVEMon
             foreach (SerializableDatafile dfv in m_args.ChangedFiles)
             {
                 changedFiles.AppendFormat(CultureConstants.DefaultCulture,
-                                        "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
-                                        dfv.Name, dfv.Date, dfv.Url, Environment.NewLine);
+                                          "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
+                                          dfv.Name, dfv.Date, dfv.Url, Environment.NewLine);
                 notes.AppendLine(dfv.Message);
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
@@ -71,22 +71,15 @@ namespace EVEMon
 
                 // one or more files failed
                 string message = String.Format(
-                    CultureConstants.DefaultCulture, 
-                    "{0} file{1} failed to download, do you wish to try again?", 
+                    CultureConstants.DefaultCulture,
+                    "{0} file{1} failed to download, do you wish to try again?",
                     m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
 
                 result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
             }
 
-            // if no files were updated, abort the update process.
-            if (m_args.ChangedFiles.Count == changedFilesCount)
-            {
-                DialogResult = DialogResult.Abort;
-            }
-            else
-            {
-                DialogResult = DialogResult.OK;
-            }
+            // If no files were updated, abort the update process.
+            DialogResult = m_args.ChangedFiles.Count == changedFilesCount ? DialogResult.Abort : DialogResult.OK;
 
             Close();
         }
@@ -99,9 +92,9 @@ namespace EVEMon
             List<SerializableDatafile> datafiles = new List<SerializableDatafile>();
 
             // Copy the list of datafiles
-            m_args.ChangedFiles.ForEach(x => datafiles.Add(x));
+            m_args.ChangedFiles.ForEach(datafiles.Add);
 
-            foreach (var dfv in datafiles)
+            foreach (SerializableDatafile dfv in datafiles)
             {
                 // Work out the new names of the files
                 string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
@@ -115,20 +108,20 @@ namespace EVEMon
                 // Show the download dialog, which will download the file
                 using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
                 {
-                    if (f.ShowDialog() == DialogResult.OK)
+                    if (f.ShowDialog() != DialogResult.OK)
+                        continue;
+
+                    string filename = Path.GetFileName(newFilename);
+                    Datafile datafile = new Datafile(filename);
+
+                    if (datafile.MD5Sum != dfv.MD5Sum)
                     {
-                        string filename = Path.GetFileName(newFilename);
-                        Datafile datafile = new Datafile(filename);
-
-                        if (datafile.MD5Sum != dfv.MD5Sum)
-                        {
-                            File.Delete(newFilename);
-                            continue;
-                        }
-
-                        ReplaceDatafile(oldFilename, newFilename);
-                        m_args.ChangedFiles.Remove(dfv);
+                        File.Delete(newFilename);
+                        continue;
                     }
+
+                    ReplaceDatafile(oldFilename, newFilename);
+                    m_args.ChangedFiles.Remove(dfv);
                 }
             }
         }

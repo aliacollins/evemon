@@ -1,10 +1,9 @@
 using System;
-using System.Diagnostics;
+using System.Collections;
+using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common;
-using System.Collections;
-using System.Drawing;
 using EVEMon.Common.Controls;
 
 namespace EVEMon
@@ -15,11 +14,8 @@ namespace EVEMon
     /// </summary>
     public partial class AboutWindow : EVEMonForm
     {
-        SortedList slPriority;
-        SortedList slDevelopers;
-        SortedList slOutput;
-        public Font myFont;
-        public Font myFontbold;
+        private readonly SortedList m_headers;
+        private readonly SortedList m_developers;
 
         /// <summary>
         /// Setup the list of developers and the standard font
@@ -28,126 +24,125 @@ namespace EVEMon
         {
             InitializeComponent();
             devsList.SelectedIndexChanged += devsList_SelectedIndexChanged;
-            myFont = FontFactory.GetDefaultFont(8.25f);
-            myFontbold = FontFactory.GetDefaultFont(8.25f, FontStyle.Bold);
             EVEMonLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
             DevContribLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
             CredentialsLabels.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
 
             // list of headings
-            slPriority = new SortedList();
-            slPriority.Add("01", "Guru");
-            slPriority.Add("02", "Guru (Retired)");
-            slPriority.Add("03", "Developers");
-            slPriority.Add("04", "Developers (Retired)");
-            slPriority.Add("05", "Contributors");
-            
+            m_headers = new SortedList
+                             {
+                                 { "01", "Guru" },
+                                 { "02", "Guru (Retired)" },
+                                 { "03", "Developers" },
+                                 { "04", "Developers (Retired)" },
+                                 { "05", "Contributors" }
+                             };
+
             // list of developers by heading
-            slDevelopers = new SortedList();
-            
-            // EVEMon Guru
-            slDevelopers.Add("Jimi", "01");
+            m_developers = new SortedList
+                               {
+                                   // EVEMon Guru
+                                   { "Jimi", "01" },
 
-            // Guru (Retired)
-            slDevelopers.Add("Araan Sunn", "02");
-            slDevelopers.Add("Six Anari", "02");
-            slDevelopers.Add("Anders Chydenius", "02");
-            slDevelopers.Add("Brad Stone", "02");
-            slDevelopers.Add("Eewec Ourbyni", "02");
-            slDevelopers.Add("Richard Slater", "02");
-            slDevelopers.Add("Vehlin", "02");
+                                   // Guru (Retired)
+                                   { "Araan Sunn", "02" },
+                                   { "Six Anari", "02" },
+                                   { "Anders Chydenius", "02" },
+                                   { "Brad Stone", "02" },
+                                   { "Eewec Ourbyni", "02" },
+                                   { "Richard Slater", "02" },
+                                   { "Vehlin", "02" },
 
-            // Developers
-            slDevelopers.Add("MrCue", "03");
-            slDevelopers.Add("Tonto Auri", "03");
+                                   // Developers
+                                   { "MrCue", "03" },
+                                   { "Tonto Auri", "03" },
 
-            // Developers (Retired)
-            slDevelopers.Add("Collin Grady", "04");
-            slDevelopers.Add("DCShadow", "04");
-            slDevelopers.Add("DonQuiche", "04");
-            slDevelopers.Add("Grauw", "04");
-            slDevelopers.Add("Jalon Mevek", "04");
-            slDevelopers.Add("Labogh", "04");
-            slDevelopers.Add("romanl", "04");
-            slDevelopers.Add("Safrax", "04");
-            slDevelopers.Add("Stevil Knevil", "04");
-            slDevelopers.Add("TheBelgarion", "04");
+                                   // Developers (Retired)
+                                   { "Collin Grady", "04" },
+                                   { "DCShadow", "04" },
+                                   { "DonQuiche", "04" },
+                                   { "Grauw", "04" },
+                                   { "Jalon Mevek", "04" },
+                                   { "Labogh", "04" },
+                                   { "romanl", "04" },
+                                   { "Safrax", "04" },
+                                   { "Stevil Knevil", "04" },
+                                   { "TheBelgarion", "04" },
 
-            // Contributors
-            slDevelopers.Add("Abomb", "05");
-            slDevelopers.Add("Adam Butt", "05");
-            slDevelopers.Add("Aevum Decessus", "05");
-            slDevelopers.Add("aliceturing", "05");
-            slDevelopers.Add("aMUSiC", "05");
-            slDevelopers.Add("Arengor", "05");
-            slDevelopers.Add("ATGardner", "05");
-            slDevelopers.Add("Barend", "05");
-            slDevelopers.Add("bugusnot", "05");
-            slDevelopers.Add("Candle","05");
-            slDevelopers.Add("coeus", "05");
-            slDevelopers.Add("CrazyMahone", "05");
-            slDevelopers.Add("CyberTech", "05");
-            slDevelopers.Add("Dariana", "05");
-            slDevelopers.Add("Eviro", "05");
-            slDevelopers.Add("exi", "05");
-            slDevelopers.Add("FangVV", "05");
-            slDevelopers.Add("Femaref", "05");
-            slDevelopers.Add("Flash", "05");
-            slDevelopers.Add("Galideeth", "05");
-            slDevelopers.Add("gareth", "05");
-            slDevelopers.Add("gavinl", "05");
-            slDevelopers.Add("GoneWacko", "05");
-            slDevelopers.Add("happyslinky", "05");
-            slDevelopers.Add("jdread", "05");
-            slDevelopers.Add("Jeff Zellner", "05");
-            slDevelopers.Add("jthiesen", "05");            
-            slDevelopers.Add("justinian", "05");
-            slDevelopers.Add("Kingdud", "05");
-            slDevelopers.Add("Kw4h", "05");
-            slDevelopers.Add("Lexiica", "05");
-            slDevelopers.Add("Master of Dice", "05");
-            slDevelopers.Add("Maximilian Kernbach", "05");
-            slDevelopers.Add("MaZ", "05");
-            slDevelopers.Add("mexx24", "05");
-            slDevelopers.Add("Michayel Lyon", "05");
-            slDevelopers.Add("mintoko", "05");
-            slDevelopers.Add("misterilla", "05");
-            slDevelopers.Add("Moq", "05");
-            slDevelopers.Add("morgangreenacre", "05");
-            slDevelopers.Add("Namistai", "05");
-            slDevelopers.Add("Nascent Nimbus", "05");
-            slDevelopers.Add("NetMage", "05");
-            slDevelopers.Add("Nagapito", "05");
-            slDevelopers.Add("Nilyen", "05");
-            slDevelopers.Add("Nimrel", "05");
-            slDevelopers.Add("Niom", "05");
-            slDevelopers.Add("Pharazon", "05");
-            slDevelopers.Add("Phoenix Flames", "05");
-            slDevelopers.Add("phorge", "05");
-            slDevelopers.Add("Optica", "05");
-            slDevelopers.Add("Risako", "05");
-            slDevelopers.Add("Ruldar", "05");
-            slDevelopers.Add("Safarian Lanar", "05");
-            slDevelopers.Add("scoobyrich", "05");
-            slDevelopers.Add("Sertan Deras", "05");
-            slDevelopers.Add("shaver", "05");
-            slDevelopers.Add("Shocky", "05");
-            slDevelopers.Add("Shwehan Juanis", "05");
-            slDevelopers.Add("skolima", "05");
-            slDevelopers.Add("Spiff Nutter", "05");
-            slDevelopers.Add("Subkahnshus", "05");
-            slDevelopers.Add("The_Assimilator", "05");
-            slDevelopers.Add("TheConstructor", "05");
-            slDevelopers.Add("Trin", "05");
-            slDevelopers.Add("vardoj", "05");
-            slDevelopers.Add("Waste Land", "05");
-            slDevelopers.Add("wrok", "05");
-            slDevelopers.Add("xNomeda", "05");
-            slDevelopers.Add("ykoehler", "05");
-            slDevelopers.Add("Zarra Kri", "05");
-            slDevelopers.Add("Zofu", "05");
-    
-            slOutput = new SortedList();
+                                   // Contributors
+                                   { "Abomb", "05" },
+                                   { "Adam Butt", "05" },
+                                   { "Aevum Decessus", "05" },
+                                   { "aliceturing", "05" },
+                                   { "aMUSiC", "05" },
+                                   { "Arengor", "05" },
+                                   { "ATGardner", "05" },
+                                   { "Barend", "05" },
+                                   { "bugusnot", "05" },
+                                   { "Candle", "05" },
+                                   { "coeus", "05" },
+                                   { "CrazyMahone", "05" },
+                                   { "CyberTech", "05" },
+                                   { "Dariana", "05" },
+                                   { "Eviro", "05" },
+                                   { "exi", "05" },
+                                   { "FangVV", "05" },
+                                   { "Femaref", "05" },
+                                   { "Flash", "05" },
+                                   { "Galideeth", "05" },
+                                   { "gareth", "05" },
+                                   { "gavinl", "05" },
+                                   { "GoneWacko", "05" },
+                                   { "happyslinky", "05" },
+                                   { "jdread", "05" },
+                                   { "Jeff Zellner", "05" },
+                                   { "jthiesen", "05" },
+                                   { "justinian", "05" },
+                                   { "Kingdud", "05" },
+                                   { "Kw4h", "05" },
+                                   { "Lexiica", "05" },
+                                   { "Master of Dice", "05" },
+                                   { "Maximilian Kernbach", "05" },
+                                   { "MaZ", "05" },
+                                   { "mexx24", "05" },
+                                   { "Michayel Lyon", "05" },
+                                   { "mintoko", "05" },
+                                   { "misterilla", "05" },
+                                   { "Moq", "05" },
+                                   { "morgangreenacre", "05" },
+                                   { "Namistai", "05" },
+                                   { "Nascent Nimbus", "05" },
+                                   { "NetMage", "05" },
+                                   { "Nagapito", "05" },
+                                   { "Nilyen", "05" },
+                                   { "Nimrel", "05" },
+                                   { "Niom", "05" },
+                                   { "Pharazon", "05" },
+                                   { "Phoenix Flames", "05" },
+                                   { "phorge", "05" },
+                                   { "Optica", "05" },
+                                   { "Risako", "05" },
+                                   { "Ruldar", "05" },
+                                   { "Safarian Lanar", "05" },
+                                   { "scoobyrich", "05" },
+                                   { "Sertan Deras", "05" },
+                                   { "shaver", "05" },
+                                   { "Shocky", "05" },
+                                   { "Shwehan Juanis", "05" },
+                                   { "skolima", "05" },
+                                   { "Spiff Nutter", "05" },
+                                   { "Subkahnshus", "05" },
+                                   { "The_Assimilator", "05" },
+                                   { "TheConstructor", "05" },
+                                   { "Trin", "05" },
+                                   { "vardoj", "05" },
+                                   { "Waste Land", "05" },
+                                   { "wrok", "05" },
+                                   { "xNomeda", "05" },
+                                   { "ykoehler", "05" },
+                                   { "Zarra Kri", "05" },
+                                   { "Zofu", "05" }
+                               };
         }
 
         /// <summary>
@@ -155,12 +150,10 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void devsList_SelectedIndexChanged(object sender, EventArgs e)
+        private void devsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (devsList.SelectedItems.Count != 0)
-            {
                 devsList.SelectedItems.Clear();
-            }
         }
 
         /// <summary>
@@ -172,7 +165,7 @@ namespace EVEMon
         private void AboutWindow_Load(object sender, EventArgs e)
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion.ToString());
+            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion);
 
             AddDevelopersToListView();
 
@@ -226,18 +219,17 @@ namespace EVEMon
             devsList.Columns.Add(new ColumnHeader());
 
             // Set up the list of developers.
-            for (int i = 0; i < slPriority.Count; i++)
+            for (int i = 0; i < m_headers.Count; i++)
             {
-                var group = new ListViewGroup(slPriority.GetByIndex(i).ToString());
+                ListViewGroup group = new ListViewGroup(m_headers.GetByIndex(i).ToString());
                 devsList.Groups.Add(group);
 
-                for (int j = 0; j < slDevelopers.Count; j++)
+                for (int j = 0; j < m_developers.Count; j++)
                 {
-                    if (slPriority.GetKey(i) == slDevelopers.GetByIndex(j))
-                    {
-                        var item = new ListViewItem(slDevelopers.GetKey(j).ToString(), group);
-                        devsList.Items.Add(item);
-                    }
+                    if (m_headers.GetKey(i) != m_developers.GetByIndex(j))
+                        continue;
+                    ListViewItem item = new ListViewItem(m_developers.GetKey(j).ToString(), group);
+                    devsList.Items.Add(item);
                 }
             }
 
@@ -274,9 +266,7 @@ namespace EVEMon
         private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (e.Link.LinkData.GetType() != typeof(String))
-            {
                 return;
-            }
 
             try
             {

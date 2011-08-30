@@ -9,25 +9,42 @@ namespace EVEMon
 {
     public sealed class IndustryJobsColumnsSelectWindow : ColumnSelectWindow
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndustryJobsColumnsSelectWindow"/> class.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
         public IndustryJobsColumnsSelectWindow(IEnumerable<IndustryJobColumnSettings> settings)
-            : base(settings.Select(x => x.Clone()).Cast<IColumnSettings>())
+            : base(settings.Select(x => x.Clone()))
         {
         }
 
+        /// <summary>
+        /// Gets the header.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         protected override string GetHeader(int key)
         {
             return ((IndustryJobColumn)key).GetDescription();
         }
 
+        /// <summary>
+        /// Gets all keys.
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<int> GetAllKeys()
         {
             return EnumExtensions.GetValues<IndustryJobColumn>().Where(x => x != IndustryJobColumn.None).Select(x => (int)x);
         }
 
+        /// <summary>
+        /// Gets the default columns.
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<IColumnSettings> GetDefaultColumns()
         {
-            var settings = new IndustryJobSettings();
-            return settings.Columns.Cast<IColumnSettings>();
+            IndustryJobSettings settings = new IndustryJobSettings();
+            return settings.Columns;
         }
     }
 }

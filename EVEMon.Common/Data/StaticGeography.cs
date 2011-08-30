@@ -158,7 +158,7 @@ namespace EVEMon.Common.Data
                 return s_agentsByID.Values;
             }
         }
-        
+
         #endregion
 
 
@@ -285,6 +285,31 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
+
+
+        /// <summary>
+        /// The description of the range.
+        /// </summary>
+        public static string GetRange(int range)
+        {
+            switch (range)
+            {
+                case 0:
+                    return "stations";
+                case 1:
+                    return "solar systems";
+                case 2:
+                    return "5 jumps";
+                case 3:
+                    return "10 jumps";
+                case 4:
+                    return "20 jumps";
+                case 5:
+                    return "regions";
+                default:
+                    return String.Empty;
+            }
+        }
 
     }
 }

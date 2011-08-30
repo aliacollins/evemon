@@ -17,45 +17,44 @@ namespace EVEMon
     public partial class OverviewItem : UserControl
     {
         private readonly Color m_lightForeColor;
-        private Character m_character;
-        private int m_portraitSize = 96;
+        private readonly bool m_showConflicts;
+        private readonly bool m_tooltip;
+        private readonly bool m_showSkillInTraining;
+        private readonly bool m_showCompletionTime;
+        private readonly bool m_showRemainingTime;
+        private readonly bool m_showWalletBalance;
+        private readonly bool m_showPortrait;
+        private readonly bool m_showSkillQueueTrainingTime;
+        private readonly int m_portraitSize = 96;
+
         private bool m_hovered;
-        private bool m_pressed = false;
+        private bool m_pressed;
         private bool m_pendingUpdate;
         private int m_preferredWidth = 1;
         private int m_preferredHeight = 1;
 
-        private bool m_showSkillInTraining;
-        private bool m_showCompletionTime;
-        private bool m_showRemainingTime;
-        private bool m_showWalletBalance;
-        private bool m_showPortrait;
-        private bool m_showConflicts;
-        private bool m_showSkillQueueTrainingTime;
-
         private bool m_hasRemainingTime;
         private bool m_hasCompletionTime;
         private bool m_hasSkillInTraining;
-		private bool m_hasSkillQueueTrainingTime;
+        private bool m_hasSkillQueueTrainingTime;
 
-        private bool m_tooltip = false;
 
         #region Initialization, destruction
 
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        public OverviewItem()
+        private OverviewItem()
         {
             InitializeComponent();
 
             // Initializes fonts and colors
             lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
-            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Regular);
-            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
-            lblCompletionTime.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
-            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F);
+            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            lblCompletionTime.Font = FontFactory.GetFont("Tahoma");
+            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F);
 
             // Misc fields
             m_showPortrait = true;
@@ -85,13 +84,13 @@ namespace EVEMon
         /// <param name="character"></param>
         /// <param name="portraitSize"></param>
         private OverviewItem(Character character, PortraitSizes portraitSize)
-            :this()
+            : this()
         {
-            m_character = character;
             m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.DefaultCulture);
 
             pbCharacterPortrait.Visible = false;
             pbCharacterPortrait.Character = character;
+            Character = character;
         }
 
         /// <summary>
@@ -150,7 +149,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnDisposed(object sender, EventArgs e)
+        private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
@@ -178,25 +177,23 @@ namespace EVEMon
         #endregion
 
 
-        #region Global events and content update
+        #region Public Properties
 
         /// <summary>
         /// Gets the character control is bound to.
         /// </summary>
-        [Browsable(false)]
-        public Character Character
-        {
-            get { return m_character; }
-            set
-            {
-                if (m_character == value)
-                    return;
+        public Character Character { get; private set; }
 
-                m_character = value;
+        /// <summary>
+        /// Gets or sets true whether a button should appear on hover.
+        /// </summary>
+        [Description("When true, a background button will appear on hover and the control will fire Click event")]
+        public bool Clickable { get; set; }
 
-                UpdateContent();
-            }
-        }
+        #endregion
+
+
+        #region Global events and content update
 
         /// <summary>
         /// Update the controls.
@@ -211,32 +208,33 @@ namespace EVEMon
 
             m_pendingUpdate = false;
 
-            lblCharName.Text = m_character.Name;
-            pbCharacterPortrait.Character = m_character;
-            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            lblCharName.Text = Character.Name;
+            pbCharacterPortrait.Character = Character;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter != null)
                 lblBalance.ForeColor = (!ccpCharacter.HasSufficientBalance ? Color.Orange : lblBalance.ForeColor);
-            
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", m_character.Balance);
+
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", Character.Balance);
 
             // Character in training ? We have labels to fill
-            if (m_character.IsTraining)
+            if (Character.IsTraining)
             {
                 // Update the skill in training label
-                QueuedSkill trainingSkill = m_character.CurrentlyTrainingSkill;
+                QueuedSkill trainingSkill = Character.CurrentlyTrainingSkill;
                 lblSkillInTraining.Text = trainingSkill.ToString();
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
                 // Update the completion time
-                lblCompletionTime.Text = (m_portraitSize > 80 ?
-                    String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime) :
-                    endTime.ToString(CultureConstants.DefaultCulture));
+                lblCompletionTime.Text = (m_portraitSize > 80
+                                              ? String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime)
+                                              : endTime.ToString(CultureConstants.DefaultCulture));
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
                 lblCompletionTime.ForeColor = (
-                    m_showConflicts && Scheduler.SkillIsBlockedAt(endTime, out blockingEntry) ?
-                                        Color.Red : m_lightForeColor);
+                                                  m_showConflicts && Scheduler.SkillIsBlockedAt(endTime, out blockingEntry)
+                                                      ? Color.Red
+                                                      : m_lightForeColor);
 
                 // Updates the time remaining label
                 lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
@@ -256,7 +254,7 @@ namespace EVEMon
                 m_hasSkillInTraining = false;
                 m_hasCompletionTime = false;
                 m_hasRemainingTime = false;
-				m_hasSkillQueueTrainingTime = false;
+                m_hasSkillQueueTrainingTime = false;
             }
 
             // Adjusts all the controls layout.
@@ -272,8 +270,25 @@ namespace EVEMon
             lblRemainingTime.Visible = m_hasRemainingTime & m_showRemainingTime;
             lblCompletionTime.Visible = m_hasCompletionTime & m_showCompletionTime;
             lblSkillInTraining.Visible = m_hasSkillInTraining & m_showSkillInTraining;
-			lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime & m_showSkillQueueTrainingTime;
+            lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime & m_showSkillQueueTrainingTime;
             lblBalance.Visible = m_showWalletBalance;
+        }
+
+        /// <summary>
+        /// Updates the training time.
+        /// </summary>
+        private void UpdateTrainingTime()
+        {
+            if (!Visible)
+                return;
+
+            if (!Character.IsTraining)
+                return;
+
+            TimeSpan remainingTime = Character.CurrentlyTrainingSkill.RemainingTime;
+            lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+
+            UpdateSkillQueueTrainingTime();
         }
 
         /// <summary>
@@ -282,7 +297,7 @@ namespace EVEMon
         /// <returns></returns>
         private void UpdateSkillQueueTrainingTime()
         {
-            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.
             if (ccpCharacter == null)
@@ -290,7 +305,6 @@ namespace EVEMon
 
             DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
-            string timeLeftText;
 
             // Negative time ?
             if (timeLeft < TimeSpan.Zero)
@@ -300,7 +314,9 @@ namespace EVEMon
                 {
                     lblSkillQueueTrainingTime.ForeColor = lblRemainingTime.ForeColor;
                     lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                        "Queue finishes in: {0}", skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc));
+                                                                   "Queue finishes in: {0}",
+                                                                   skillQueueEndTime.ToRemainingTimeShortDescription(
+                                                                       DateTimeKind.Utc));
                     return;
                 }
 
@@ -317,13 +333,13 @@ namespace EVEMon
             }
 
             // Less than one minute ? Display seconds else display time without seconds
-            timeLeftText = (timeLeft < TimeSpan.FromMinutes(1) ?
-                timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas) :
-                timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
+            string timeLeftText = (timeLeft < TimeSpan.FromMinutes(1)
+                                       ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
+                                       : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
 
             lblSkillQueueTrainingTime.ForeColor = Color.Red;
             lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                "{0} free room in skill queue", timeLeftText);
+                                                           "{0} free room in skill queue", timeLeftText);
         }
 
         /// <summary>
@@ -331,18 +347,9 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (!Visible)
-                return;
-
-            if (m_character.IsTraining)
-            {
-                TimeSpan remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
-                lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-
-                UpdateSkillQueueTrainingTime();
-            }
+            UpdateTrainingTime();
         }
 
         /// <summary>
@@ -360,13 +367,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             // Character still training ? Jump to next skill
-            if (m_character.IsTraining)
+            if (Character.IsTraining)
             {
                 UpdateContent();
             }
@@ -383,9 +390,9 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (e.Character != Character)
                 return;
 
             UpdateContent();
@@ -407,7 +414,7 @@ namespace EVEMon
                 if (m_pendingUpdate)
                     UpdateContent();
 
-                EveMonClient_TimerTick(null, null);
+                UpdateTrainingTime();
             }
             base.OnVisibleChanged(e);
         }
@@ -420,9 +427,9 @@ namespace EVEMon
         {
             if (m_hovered)
             {
-                ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed ?
-                    PushButtonState.Pressed :
-                    PushButtonState.Hot);
+                ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
+                                                                            ? PushButtonState.Pressed
+                                                                            : PushButtonState.Hot);
             }
             base.OnPaint(e);
         }
@@ -446,7 +453,6 @@ namespace EVEMon
         /// <summary>
         /// When the mouse leaves the control, we need to hide the button background.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
         protected override void OnMouseLeave(EventArgs e)
         {
@@ -455,6 +461,9 @@ namespace EVEMon
             base.OnMouseLeave(e);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             m_pressed = true;
@@ -462,6 +471,10 @@ namespace EVEMon
             base.OnMouseDown(e);
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseUp"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             m_pressed = false;
@@ -475,121 +488,10 @@ namespace EVEMon
         #region Layout
 
         /// <summary>
-        /// Gets or sets true whether a button should appear on hover.
-        /// </summary>
-        [Browsable(true), Description("When true, a background button will appear on hover and the control will fire Click event")]
-        public bool Clickable
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the size mode.
-        /// </summary>
-        [Browsable(true), Description("The size of a portrait.")]
-        public PortraitSizes PortraitSize
-        {
-            get { return (PortraitSizes)Enum.Parse(typeof(PortraitSizes), String.Format(CultureConstants.DefaultCulture, "x{0}", m_portraitSize)); }
-            set
-            {
-                var portraitSize = Int32.Parse(value.ToString().Substring(1), CultureConstants.DefaultCulture);
-                if (m_portraitSize == portraitSize) return;
-                m_portraitSize = portraitSize;
-
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        [Browsable(true), Description("When true, the skill currently in training will be displayed.")]
-        /// <summary>
-        /// Gets or sets whether the skill currently in training must be displayed.
-        /// </summary>
-        public bool ShowSkillInTraining
-        {
-            get { return m_showSkillInTraining; }
-            set 
-            {
-                m_showSkillInTraining = value;
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        [Browsable(true), Description("When true, the remaining training time will be displayed.")]
-        /// <summary>
-        /// Gets or sets whether the remaining time must be displayed.
-        /// </summary>
-        public bool ShowRemainingTime
-        {
-            get { return m_showRemainingTime; }
-            set 
-            { 
-                m_showRemainingTime = value;
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        [Browsable(true), Description("When true, the training completion time will be displayed.")]
-        /// <summary>
-        /// Gets or sets whether the training completion time must be displayed.
-        /// </summary>
-        public bool ShowCompletionTime
-        {
-            get { return m_showCompletionTime; }
-            set 
-            {
-                m_showCompletionTime = value;
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        [Browsable(true), Description("When true, the wallet balance will be displayed.")]
-        /// <summary>
-        /// Gets or sets whether the wallet balance must be displayed.
-        /// </summary>
-        public bool ShowWalletBalance
-        {
-            get { return m_showWalletBalance; }
-            set 
-            {
-                m_showWalletBalance = value;
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        [Browsable(true), Description("When true, the portrait will be displayed.")]
-        /// <summary>
-        /// Gets or sets whether the portrait must be displayed.
-        /// </summary>
-        public bool ShowPortrait
-        {
-            get { return m_showPortrait; }
-            set
-            {
-                m_showPortrait = value;
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        [Browsable(true), Description("When true, the skill queue free room time will be displayed.")]
-        /// <summary>
-        /// Gets or sets whether the skill queue free room time must be displayed.
-        /// </summary>
-        public bool ShowSkillQueueFreeRoom
-        {
-            get { return m_showSkillQueueTrainingTime; }
-            set
-            {
-                m_showSkillQueueTrainingTime = value;
-                PerformCustomLayout(m_tooltip);
-            }
-        }
-
-        /// <summary>
         /// Adjusts all the controls layout.
         /// </summary>
-        /// <param name="portraitSize"></param>
-        public void PerformCustomLayout(bool tooltip)
+        /// <param name="tooltip"></param>
+        private void PerformCustomLayout(bool tooltip)
         {
             UpdateVisibilities();
 
@@ -627,7 +529,7 @@ namespace EVEMon
             int labelWidth = 0;
             if (!tooltip)
                 labelWidth = 215;
-            
+
             // Big font size
             float bigFontSize = 11.25f;
             if (portraitSize <= 48)
@@ -657,13 +559,13 @@ namespace EVEMon
             // Adjust the top labels
             int top = margin - 2;
             int left = (showPortrait ? portraitSize + margin * 2 : margin);
-            int right = 10;
+            const int RightPad = 10;
 
             lblCharName.Font = FontFactory.GetFont(lblCharName.Font.FontFamily, bigFontSize, lblCharName.Font.Style);
             lblCharName.Location = new Point(left, top);
-            if (lblCharName.PreferredWidth + right > labelWidth)
-                labelWidth = lblCharName.PreferredWidth + right;
-            labelHeight = Math.Max (labelHeight, lblCharName.Font.Height);
+            if (lblCharName.PreferredWidth + RightPad > labelWidth)
+                labelWidth = lblCharName.PreferredWidth + RightPad;
+            labelHeight = Math.Max(labelHeight, lblCharName.Font.Height);
             lblCharName.Size = new Size(labelWidth, labelHeight);
             top += labelHeight;
 
@@ -671,8 +573,8 @@ namespace EVEMon
             {
                 lblBalance.Font = FontFactory.GetFont(lblBalance.Font.FontFamily, mediumFontSize, lblBalance.Font.Style);
                 lblBalance.Location = new Point(left, top);
-                if (lblBalance.PreferredWidth + right > labelWidth)
-                    labelWidth = lblBalance.PreferredWidth + right;
+                if (lblBalance.PreferredWidth + RightPad > labelWidth)
+                    labelWidth = lblBalance.PreferredWidth + RightPad;
                 labelHeight = Math.Max(labelHeight, lblBalance.Font.Height);
                 lblBalance.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
@@ -685,10 +587,11 @@ namespace EVEMon
 
             if (lblRemainingTime.Visible)
             {
-                lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize, lblRemainingTime.Font.Style);
+                lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize,
+                                                            lblRemainingTime.Font.Style);
                 lblRemainingTime.Location = new Point(left, top);
-                if (lblRemainingTime.PreferredWidth + right > labelWidth)
-                    labelWidth = lblRemainingTime.PreferredWidth + right;
+                if (lblRemainingTime.PreferredWidth + RightPad > labelWidth)
+                    labelWidth = lblRemainingTime.PreferredWidth + RightPad;
                 labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
                 lblRemainingTime.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
@@ -697,8 +600,8 @@ namespace EVEMon
             if (lblSkillInTraining.Visible)
             {
                 lblSkillInTraining.Location = new Point(left, top);
-                if (lblSkillInTraining.PreferredWidth + right > labelWidth)
-                    labelWidth = lblSkillInTraining.PreferredWidth + right;
+                if (lblSkillInTraining.PreferredWidth + RightPad > labelWidth)
+                    labelWidth = lblSkillInTraining.PreferredWidth + RightPad;
                 smallLabelHeight = Math.Max(smallLabelHeight, lblSkillInTraining.Font.Height);
                 lblSkillInTraining.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
@@ -707,18 +610,18 @@ namespace EVEMon
             if (lblCompletionTime.Visible)
             {
                 lblCompletionTime.Location = new Point(left, top);
-                if (lblCompletionTime.PreferredWidth + right > labelWidth)
-                    labelWidth = lblCompletionTime.PreferredWidth + right;
+                if (lblCompletionTime.PreferredWidth + RightPad > labelWidth)
+                    labelWidth = lblCompletionTime.PreferredWidth + RightPad;
                 smallLabelHeight = Math.Max(smallLabelHeight, lblCompletionTime.Font.Height);
                 lblCompletionTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
-            
+
             if (lblSkillQueueTrainingTime.Visible)
             {
                 lblSkillQueueTrainingTime.Location = new Point(left, top);
-                if (lblSkillQueueTrainingTime.PreferredWidth + right > labelWidth)
-                    labelWidth = lblSkillQueueTrainingTime.PreferredWidth + right;
+                if (lblSkillQueueTrainingTime.PreferredWidth + RightPad > labelWidth)
+                    labelWidth = lblSkillQueueTrainingTime.PreferredWidth + RightPad;
                 smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueTrainingTime.Font.Height);
                 lblSkillQueueTrainingTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;

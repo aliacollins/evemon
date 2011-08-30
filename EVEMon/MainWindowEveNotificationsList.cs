@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Data;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Collections.Generic;
-
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Controls;
-using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 
 namespace EVEMon
 {
@@ -19,7 +15,7 @@ namespace EVEMon
     {
         #region Fields
 
-        private List<EveNotificationsColumnSettings> m_columns = new List<EveNotificationsColumnSettings>();
+        private readonly List<EveNotificationsColumnSettings> m_columns = new List<EveNotificationsColumnSettings>();
         private readonly List<EveNotification> m_list = new List<EveNotification>();
 
         private EVENotificationsGrouping m_grouping;
@@ -27,7 +23,7 @@ namespace EVEMon
         private ReadingPanePositioning m_panePosition;
 
         private string m_textFilter = String.Empty;
-        private bool m_sortAscending = false;
+        private bool m_sortAscending;
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
         private bool m_init;
@@ -67,11 +63,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        public Character Character
-        {
-            get;
-            set;
-        }
+        public Character Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -121,13 +113,7 @@ namespace EVEMon
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public IEnumerable<EveNotification> EVENotifications
         {
-            get
-            {
-                foreach (var eveNotification in m_list)
-                {
-                    yield return eveNotification;
-                }
-            }
+            get { return m_list; }
             set
             {
                 m_list.Clear();
@@ -148,10 +134,11 @@ namespace EVEMon
             get
             {
                 // Add the visible columns; matching the display order
-                var newColumns = new List<EveNotificationsColumnSettings>();
+                List<EveNotificationsColumnSettings> newColumns = new List<EveNotificationsColumnSettings>();
                 foreach (var header in lvNotifications.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    var columnSetting = m_columns.First(x => x.Column == (EveNotificationsColumn)header.Tag);
+                    EveNotificationsColumnSettings columnSetting =
+                        m_columns.First(x => x.Column == (EveNotificationsColumn)header.Tag);
                     if (columnSetting.Width != -1)
                         columnSetting.Width = header.Width;
 
@@ -159,10 +146,7 @@ namespace EVEMon
                 }
 
                 // Then add the other columns
-                foreach (var column in m_columns.Where(x => !x.Visible))
-                {
-                    newColumns.Add(column);
-                }
+                newColumns.AddRange(m_columns.Where(x => !x.Visible));
 
                 return newColumns;
             }
@@ -230,10 +214,9 @@ namespace EVEMon
         #region Update Methods
 
         /// <summary>
-        /// <summary>
         /// Updates the columns.
         /// </summary>
-        public void UpdateColumns()
+        private void UpdateColumns()
         {
             lvNotifications.BeginUpdate();
             m_isUpdatingColumns = true;
@@ -242,9 +225,10 @@ namespace EVEMon
             {
                 lvNotifications.Columns.Clear();
 
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (EveNotificationsColumnSettings column in m_columns.Where(x => x.Visible))
                 {
-                    var header = lvNotifications.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(), column.Width);
+                    ColumnHeader header = lvNotifications.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(),
+                                                                      column.Width);
                     header.Tag = (object)column.Column;
                 }
 
@@ -252,9 +236,9 @@ namespace EVEMon
                 UpdateContent();
 
                 // Force the auto-resize of the columns with -1 width
-                var resizeStyle = (lvNotifications.Items.Count == 0 ?
-                    ColumnHeaderAutoResizeStyle.HeaderSize :
-                    ColumnHeaderAutoResizeStyle.ColumnContent);
+                ColumnHeaderAutoResizeStyle resizeStyle = (lvNotifications.Items.Count == 0
+                                                               ? ColumnHeaderAutoResizeStyle.HeaderSize
+                                                               : ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
                 foreach (var column in m_columns.Where(x => x.Visible))
@@ -275,22 +259,23 @@ namespace EVEMon
         /// <summary>
         /// Updates the content of the listview.
         /// </summary>
-        public void UpdateContent()
+        private void UpdateContent()
         {
             // Returns if not visible
             if (!Visible)
                 return;
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvNotifications.SelectedItems.Count > 0 ?
-                                lvNotifications.SelectedItems[0].Tag.GetHashCode() : 0);
+            int selectedItem = (lvNotifications.SelectedItems.Count > 0
+                                    ? lvNotifications.SelectedItems[0].Tag.GetHashCode()
+                                    : 0);
 
             lvNotifications.BeginUpdate();
             splitContainerNotifications.Visible = false;
             try
             {
-                var text = m_textFilter.ToLowerInvariant();
-                var eveNotifications = m_list.Where(x => IsTextMatching(x, text));
+                string text = m_textFilter.ToLowerInvariant();
+                IEnumerable<EveNotification> eveNotifications = m_list.Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
@@ -325,10 +310,10 @@ namespace EVEMon
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
                 {
-                    foreach (ListViewItem lvItem in lvNotifications.Items)
+                    foreach (ListViewItem lvItem in lvNotifications.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
                     {
-                        if (lvItem.Tag.GetHashCode() == selectedItem)
-                            lvItem.Selected = true;
+                        lvItem.Selected = true;
                     }
                 }
 
@@ -358,7 +343,7 @@ namespace EVEMon
             // Add the groups
             foreach (var group in groups)
             {
-                string groupText = String.Empty;
+                string groupText;
                 if (group.Key is EVEMailState)
                 {
                     groupText = ((EVEMailState)(Object)group.Key).GetHeader();
@@ -372,7 +357,7 @@ namespace EVEMon
                     groupText = group.Key.ToString();
                 }
 
-                var listGroup = new ListViewGroup(groupText);
+                ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvNotifications.Groups.Add(listGroup);
 
                 // Add the items in every group
@@ -381,9 +366,8 @@ namespace EVEMon
                     if (String.IsNullOrEmpty(eveNotification.NotificationID.ToString()))
                         continue;
 
-                    var item = new ListViewItem(eveNotification.Sender, listGroup);
-                    item.UseItemStyleForSubItems = false;
-                    item.Tag = eveNotification;
+                    ListViewItem item = new ListViewItem(eveNotification.Sender, listGroup)
+                                            { UseItemStyleForSubItems = false, Tag = eveNotification };
 
                     // Add enough subitems to match the number of columns
                     while (item.SubItems.Count < lvNotifications.Columns.Count + 1)
@@ -394,8 +378,8 @@ namespace EVEMon
                     // Creates the subitems
                     for (int i = 0; i < lvNotifications.Columns.Count; i++)
                     {
-                        var header = lvNotifications.Columns[i];
-                        var column = (EveNotificationsColumn)header.Tag;
+                        ColumnHeader header = lvNotifications.Columns[i];
+                        EveNotificationsColumn column = (EveNotificationsColumn)header.Tag;
                         SetColumn(eveNotification, item.SubItems[i], column);
                     }
 
@@ -422,7 +406,7 @@ namespace EVEMon
         {
             for (int i = 0; i < lvNotifications.Columns.Count; i++)
             {
-                var column = (EveNotificationsColumn)lvNotifications.Columns[i].Tag;
+                EveNotificationsColumn column = (EveNotificationsColumn)lvNotifications.Columns[i].Tag;
                 if (m_sortCriteria == column)
                 {
                     lvNotifications.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
@@ -437,7 +421,7 @@ namespace EVEMon
         /// <summary>
         /// Updates the listview sub-item.
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="eveNotification"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
         private void SetColumn(EveNotification eveNotification, ListViewItem.ListViewSubItem item, EveNotificationsColumn column)
@@ -447,16 +431,13 @@ namespace EVEMon
                 case EveNotificationsColumn.SenderName:
                     item.Text = eveNotification.Sender;
                     break;
-
                 case EveNotificationsColumn.Type:
                     item.Text = eveNotification.Type;
                     break;
-
                 case EveNotificationsColumn.SentDate:
                     item.Text = String.Format(CultureConstants.DefaultCulture,
-                                                "{0:ddd} {0:G}", eveNotification.SentDate.ToLocalTime());
+                                              "{0:ddd} {0:G}", eveNotification.SentDate.ToLocalTime());
                     break;
-
                 default:
                     //return;
                     throw new NotImplementedException();
@@ -470,7 +451,6 @@ namespace EVEMon
         {
             switch (PanePosition)
             {
-                default:
                 case ReadingPanePositioning.Off:
                     splitContainerNotifications.Panel2Collapsed = true;
                     break;
@@ -482,6 +462,8 @@ namespace EVEMon
                     splitContainerNotifications.Orientation = Orientation.Vertical;
                     splitContainerNotifications.Panel2Collapsed = false;
                     break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -500,14 +482,10 @@ namespace EVEMon
         /// </returns>
         private bool IsTextMatching(EveNotification x, string text)
         {
-            if (String.IsNullOrEmpty(text)
-                || x.Sender.ToLowerInvariant().Contains(text)
-                || x.Type.ToLowerInvariant().Contains(text)
-                || (x.EVENotificationText != null && x.EVENotificationText.NotificationText.ToLowerInvariant().Contains(text)))
-
-                return true;
-
-            return false;
+            return String.IsNullOrEmpty(text)
+                   || x.Sender.ToLowerInvariant().Contains(text)
+                   || x.Type.ToLowerInvariant().Contains(text)
+                   || (x.EVENotificationText != null && x.EVENotificationText.NotificationText.ToLowerInvariant().Contains(text));
         }
 
         /// <summary>
@@ -522,6 +500,11 @@ namespace EVEMon
             }
 
             EveNotification selectedObject = lvNotifications.SelectedItems[0].Tag as EveNotification;
+            if (selectedObject == null)
+            {
+                eveNotificationReadingPane.HidePane();
+                return;
+            }
 
             // If we haven't done it yet, download the mail body
             if (selectedObject.EVENotificationText == null)
@@ -598,8 +581,8 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void lvNotifications_DoubleClick(object sender, EventArgs e)
         {
-            var item = (ListViewItem)lvNotifications.SelectedItems[0];
-            var notification = (EveNotification)item.Tag;
+            ListViewItem item = lvNotifications.SelectedItems[0];
+            EveNotification notification = (EveNotification)item.Tag;
 
             // Quit if we haven't downloaded the notification text yet
             if (notification.EVENotificationText == null)
@@ -614,7 +597,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void lvNotifications_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        private void lvNotifications_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         }
@@ -624,7 +607,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void lvNotifications_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        private void lvNotifications_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
@@ -640,7 +623,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void lvNotifications_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            var column = (EveNotificationsColumn)lvNotifications.Columns[e.Column].Tag;
+            EveNotificationsColumn column = (EveNotificationsColumn)lvNotifications.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
             {
                 m_sortAscending = !m_sortAscending;
@@ -664,7 +647,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (m_columnsChanged)
             {
@@ -682,10 +665,10 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            var ccpCharacter = Character as CCPCharacter;
-            if (e.Character != ccpCharacter)
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+            if (ccpCharacter == null || e.Character != ccpCharacter)
                 return;
 
             EVENotifications = ccpCharacter.EVENotifications;
@@ -699,12 +682,13 @@ namespace EVEMon
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVENotificationTextDownloaded(object sender, CharacterChangedEventArgs e)
         {
-            var ccpCharacter = Character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (e.Character != ccpCharacter)
                 return;
 
             OnSelectionChanged();
         }
+
         # endregion
     }
 }

@@ -310,7 +310,7 @@ namespace EVEMon
             Dictionary<Character, TabPage> pages = new Dictionary<Character, TabPage>();
             foreach (TabPage page in tcCharacterTabs.TabPages.Cast<TabPage>().Where(page => page.Tag is Character))
             {
-                pages[(Character) page.Tag] = page;
+                pages[(Character)page.Tag] = page;
             }
 
             // Updates the pages
@@ -448,9 +448,9 @@ namespace EVEMon
             // If the page content has not been created yet, do it now
             TabPage page = tcCharacterTabs.SelectedTab;
             if (page != null && page.Controls.Count == 0)
-                new CharacterMonitor((Character) page.Tag) {Parent = page, Dock = DockStyle.Fill};
+                new CharacterMonitor((Character)page.Tag) { Parent = page, Dock = DockStyle.Fill };
 
-            
+
             // Collext the menu buttons that get enabled by a character
             ToolStripItem[] characterEnabledMenuItems = new ToolStripItem[]
                                                             {
@@ -476,7 +476,7 @@ namespace EVEMon
         private void overview_CharacterClicked(object sender, CharacterChangedEventArgs e)
         {
             foreach (TabPage tab in tcCharacterTabs.TabPages.Cast<TabPage>()
-                .Select(tab => new {tab, character = tab.Tag as Character})
+                .Select(tab => new { tab, character = tab.Tag as Character })
                 .Where(tab => tab.character == e.Character).Select(character => character.tab))
             {
                 tcCharacterTabs.SelectedTab = tab;
@@ -554,20 +554,23 @@ namespace EVEMon
 
             // Group by account
             IGrouping<long, NotificationEventArgs>[] groups = m_popupNotifications.GroupBy(x =>
-                                                                                      {
-                                                                                          if (x.Sender == null)
-                                                                                              return 0;
+                                                                                               {
+                                                                                                   if (x.Sender == null)
+                                                                                                       return 0;
 
-                                                                                          if (x.SenderAccount != null)
-                                                                                              return x.SenderAccount.UserID;
+                                                                                                   if (x.SenderAccount != null)
+                                                                                                       return
+                                                                                                           x.SenderAccount.UserID;
 
-                                                                                          return
-                                                                                              x.SenderCharacter.Identity.Account ==
-                                                                                              null
-                                                                                                  ? 1
-                                                                                                  : x.SenderCharacter.Identity.
-                                                                                                        Account.UserID;
-                                                                                      }).ToArray();
+                                                                                                   return
+                                                                                                       x.SenderCharacter.Identity.
+                                                                                                           Account ==
+                                                                                                       null
+                                                                                                           ? 1
+                                                                                                           : x.SenderCharacter.
+                                                                                                                 Identity.
+                                                                                                                 Account.UserID;
+                                                                                               }).ToArray();
 
             // Add every group, order by character's name, accounts being on top
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
@@ -619,7 +622,9 @@ namespace EVEMon
                 return;
             }
 
-            int maxlevel = 0, textlenght = 0, count = 0;
+            int maxlevel = 0,
+                textlenght = 0,
+                count = 0;
             Object lastSender = m_popupNotifications[0].Sender;
             StringBuilder builder = new StringBuilder();
 
@@ -633,8 +638,8 @@ namespace EVEMon
                     bool senderIsCharacter = (notification.Sender != null) &&
                                              (notification.Sender == notification.SenderCharacter);
                     string tooltipText = notification.Description;
-                    maxlevel = Math.Max(maxlevel, (int) notification.Priority);
-                    int level = (int) notification.Priority;
+                    maxlevel = Math.Max(maxlevel, (int)notification.Priority);
+                    int level = (int)notification.Priority;
 
                     if (notification.Sender != lastSender)
                         builder.AppendLine();
@@ -1079,7 +1084,7 @@ namespace EVEMon
                                                  UseShellExecute = false
                                              };
 
-            using (Process evemonProc = new Process {StartInfo = startInfo})
+            using (Process evemonProc = new Process { StartInfo = startInfo })
             {
                 evemonProc.Start();
             }
@@ -1349,7 +1354,7 @@ namespace EVEMon
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(character) {Name = planName};
+            Plan newPlan = new Plan(character) { Name = planName };
 
             // Add plan and save
             character.Plans.Add(newPlan);
@@ -1430,8 +1435,8 @@ namespace EVEMon
         private void planItem_Click(object sender, EventArgs e)
         {
             // Retrieve the plan
-            ToolStripMenuItem menuItem = (ToolStripMenuItem) sender;
-            Plan plan = (Plan) menuItem.Tag;
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            Plan plan = (Plan)menuItem.Tag;
 
             // Show or bring to front if a window with the same plan as tag already exists
             WindowsFactory<PlanWindow>.ShowByTag(plan);
@@ -1686,7 +1691,7 @@ namespace EVEMon
         private void trayIcon_Click(object sender, EventArgs e)
         {
             // Returns for right-button click
-            if (e is MouseEventArgs && ((MouseEventArgs) e).Button == MouseButtons.Right)
+            if (e is MouseEventArgs && ((MouseEventArgs)e).Button == MouseButtons.Right)
                 return;
 
             // Update the tray icon's visibility
@@ -1946,11 +1951,11 @@ namespace EVEMon
         private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.TestNofitication, null)
-                                            {
-                                                Priority = NotificationPriority.Information,
-                                                Behaviour = NotificationBehaviour.Overwrite,
-                                                Description = "Test Notification"
-                                            };
+                                                     {
+                                                         Priority = NotificationPriority.Information,
+                                                         Behaviour = NotificationBehaviour.Overwrite,
+                                                         Description = "Test Notification"
+                                                     };
             EveMonClient.Notifications.Notify(notification);
         }
 

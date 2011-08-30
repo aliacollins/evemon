@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -53,10 +54,13 @@ namespace EVEMon.Common.Controls
             base.OnVisibleChanged(e);
         }
 
+
         #region Properties
+
         /// <summary>
         /// Gets or sets the character ID. Also sets the <see cref="Character"/> property to <c>null</c>.
         /// </summary>
+        [Browsable(false)]
         public long CharacterID
         {
             get { return m_id; }
@@ -74,6 +78,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets or sets the character. Also updates the <see cref="CharacterID"/> property.
         /// </summary>
+        [Browsable(false)]
         public Character Character
         {
             get { return m_character; }
@@ -108,10 +113,12 @@ namespace EVEMon.Common.Controls
                     m_character.IsUpdatingPortrait = value;
             }
         }
+
         #endregion
 
 
         #region Default mechanism on character id change (portraits cache, then ImageService for CCP url)
+
         /// <summary>
         /// When the character ID changed... 
         /// <list type="bullet">
@@ -162,7 +169,7 @@ namespace EVEMon.Common.Controls
 
             EveMonClient.EnsureCacheDirInit();
             string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
-                                                 String.Format("{0}.png", m_character.Guid));
+                                                String.Format("{0}.png", m_character.Guid));
 
             if (!File.Exists(cacheFileName))
                 return null;
@@ -253,12 +260,12 @@ namespace EVEMon.Common.Controls
                                                     String.Format("{0}.png", m_character.Guid));
 
                 FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
-                {
-                    newImage.Save(fs, ImageFormat.Png);
-                    fs.Flush();
-                    fs.Close();
-                    return true;
-                });
+                                                                     {
+                                                                         newImage.Save(fs, ImageFormat.Png);
+                                                                         fs.Flush();
+                                                                         fs.Close();
+                                                                         return true;
+                                                                     });
 
                 // Notify the other controls we updated this portrait
                 EveMonClient.OnCharacterPortraitUpdated(m_character);
@@ -274,10 +281,12 @@ namespace EVEMon.Common.Controls
                 IsUpdating = false;
             }
         }
+
         #endregion
 
 
         #region Mechanisms related to the game folder
+
         /// <summary>
         /// Download the image from the EVE cache (in EVE Online client installation folder).
         /// </summary>
@@ -305,7 +314,7 @@ namespace EVEMon.Common.Controls
                         evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
                     {
                         filesInEveCache.AddRange(di.GetFiles(String.Format("{0}*", m_id)));
-                        
+
                         // Look up for an image file and add it to the list
                         // (CCP changed image format in Incursion 1.1.0
                         // as part of new character portraits creator,
@@ -319,14 +328,16 @@ namespace EVEMon.Common.Controls
                     {
                         StringBuilder message = new StringBuilder();
 
-                        message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}", Environment.NewLine);
+                        message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}",
+                                             Environment.NewLine);
                         message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
                         message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
                         message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
-                        message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}", EveMonClient.EVEApplicationDataDir, Environment.NewLine);
+                        message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}",
+                                             EveMonClient.EVEApplicationDataDir, Environment.NewLine);
 
                         MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        
+
                         IsUpdating = false;
                         return;
                     }
@@ -399,10 +410,12 @@ namespace EVEMon.Common.Controls
 
             return false;
         }
+
         #endregion
 
 
         #region Controls and global events handler
+
         /// <summary>
         /// Handles the CharacterPortraitUpdated event of the EveMonClient control.
         /// </summary>
@@ -462,6 +475,7 @@ namespace EVEMon.Common.Controls
 
             cmsPictureOptions.Show(MousePosition);
         }
+
         #endregion
     }
 }

@@ -69,7 +69,7 @@ namespace EVEMon.Common
         /// <param name="fontName">The font's name</param>
         /// <param name="style">The font's style</param>
         /// <returns></returns>
-        public static Font GetFont(string fontName, FontStyle style)
+        public static Font GetFont(string fontName, FontStyle style = FontStyle.Regular)
         {
             return GetFont(fontName, DefaultFont.Size, style, DefaultFont.Unit);
         }

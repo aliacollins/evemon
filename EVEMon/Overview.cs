@@ -8,9 +8,6 @@ using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Overview : UserControl
     {
         public event EventHandler<CharacterChangedEventArgs> CharacterClicked;
@@ -21,24 +18,6 @@ namespace EVEMon
         public Overview()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
-            this.AutoScroll = true;
-
-            EveMonClient.SettingsChanged += new EventHandler(EveMonClient_SettingsChanged);
-            EveMonClient.MonitoredCharacterCollectionChanged += new EventHandler(EveMonClient_MonitoredCharacterCollectionChanged);
-            this.Disposed += new EventHandler(Overview_Disposed);
-        }
-
-        /// <summary>
-        /// On disposing, unsubscribe events.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void Overview_Disposed(object sender, EventArgs e)
-        {
-            EveMonClient.SettingsChanged -= new EventHandler(EveMonClient_SettingsChanged);
-            EveMonClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveMonClient_MonitoredCharacterCollectionChanged);
-            this.Disposed -= new EventHandler(Overview_Disposed);
         }
 
         /// <summary>
@@ -48,10 +27,29 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            DoubleBuffered = true;
+            AutoScroll = true;
+
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            Disposed += OnDisposed;
+
             UpdateContent();
+        }
+
+        /// <summary>
+        /// On disposing, unsubscribe events.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            Disposed -= OnDisposed;
         }
 
         #region Content creation and layout
@@ -59,9 +57,9 @@ namespace EVEMon
         /// <summary>
         /// Updates the characters' list with the provided monitors
         /// </summary>
-        public void UpdateContent()
+        private void UpdateContent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             try
             {
                 CleanUp();
@@ -75,7 +73,7 @@ namespace EVEMon
                     return;
 
                 // Creates the controls
-                var characters = new List<Character>();
+                List<Character> characters = new List<Character>();
                 if (Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
                 {
                     characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
@@ -86,11 +84,9 @@ namespace EVEMon
                     characters.AddRange(EveMonClient.MonitoredCharacters);
                 }
 
-                foreach (var character in characters)
+                foreach (OverviewItem item in characters.Select(character => new OverviewItem(character, Settings.UI.MainWindow)))
                 {
-                    // Creates a control and adds it
-                    var item = new OverviewItem(character, Settings.UI.MainWindow);
-                    item.Click += new EventHandler(item_Click);
+                    item.Click += item_Click;
                     item.Clickable = true;
 
                     // Ensure that the control gets created before we add it,
@@ -100,43 +96,38 @@ namespace EVEMon
                     item.CreateControl();
 
                     // Add it 
-                    this.Controls.Add(item);
+                    Controls.Add(item);
                 }
 
                 PerformCustomLayout();
             }
             finally
             {
-                this.ResumeLayout();
+                ResumeLayout();
             }
         }
 
         /// <summary>
         /// Cleans up the existing controls
         /// </summary>
-        internal void CleanUp()
+        private void CleanUp()
         {
-            List<Control> itemsToRemove = new List<Control>();
+            List<Control> itemsToRemove = Controls.Cast<Control>().Where(item => item != labelNoCharacters).ToList();
             
             // Compile a list of items to remove, if we remove them
             // within the loop one object will be leaked every time
             // we call this method
-            foreach (Control item in this.Controls)
-            {
-                if (item != labelNoCharacters)
-                    itemsToRemove.Add(item);
-            }
 
             // Dispose every one of the control to prevent timer's execution
             foreach (Control item in itemsToRemove)
             {
-                item.Click -= new EventHandler(item_Click);
+                item.Click -= item_Click;
                 item.Dispose();
             }
 
             // Clear the controls list
-            this.Controls.Clear();
-            this.Controls.Add(labelNoCharacters);
+            Controls.Clear();
+            Controls.Add(labelNoCharacters);
         }
 
         /// <summary>
@@ -147,87 +138,79 @@ namespace EVEMon
         /// </remarks>
         private void PerformCustomLayout()
         {
-            const int padding = 20;
-            this.SuspendLayout();
+            const int Pad = 20;
+            SuspendLayout();
             try
             {
                 // Check there is at least one control
-                int numControls = this.Controls.Count - 1;
+                int numControls = Controls.Count - 1;
                 if (numControls <= 0)
                     return;
 
                 // Reset the scroll bar position
-                this.VerticalScroll.Value = 0;
+                VerticalScroll.Value = 0;
 
                 // Retrieve the item width (should be the same for all controls) and compute the item and row width
-                var firstItem = (OverviewItem)this.Controls[1];
+                OverviewItem firstItem = (OverviewItem)Controls[1];
                 int itemWidth = firstItem.PreferredSize.Width;
 
                 // Computes the number of columns and rows we need
-                int numColumns = Math.Max(1, Math.Min(numControls, this.ClientSize.Width / itemWidth));
-                int numRows = (this.Controls.Count + numColumns - 1) / numColumns;
+                int numColumns = Math.Max(1, Math.Min(numControls, ClientSize.Width / itemWidth));
 
                 // Computes the horizontal margin
-                int neededWidth = numColumns * (itemWidth + padding) - padding;
-                int marginH = Math.Max(0, (this.ClientSize.Width - neededWidth) >> 1);
+                int neededWidth = numColumns * (itemWidth + Pad) - Pad;
+                int marginH = Math.Max(0, (ClientSize.Width - neededWidth) >> 1);
 
                 // Measure the total height
                 int index = 0;
                 int rowIndex = 0;
                 int rowHeight = 0;
                 int height = 0;
-                foreach (Control ctl in this.Controls)
+                foreach (Control ctl in Controls.Cast<Control>().Where(ctl => ctl != labelNoCharacters))
                 {
-                    // Skip the "no characters" label
-                    if (ctl == labelNoCharacters)
-                        continue;
-
                     // Add the item to the row
                     rowHeight = Math.Max(rowHeight, ctl.PreferredSize.Height);
                     rowIndex++;
                     index++;
 
                     // Skip if row not complete yet
-                    if (rowIndex != numColumns && index != this.Controls.Count)
+                    if (rowIndex != numColumns && index != Controls.Count)
                         continue;
 
-                    height += rowHeight + padding;
+                    height += rowHeight + Pad;
                     rowHeight = 0;
                     rowIndex = 0;
                 }
 
                 // Computes the vertical margin
-                height -= padding;
-                int marginV = Math.Max(0, (this.ClientSize.Height - height) / 3); // We puts 1/3 at the top, 2/3 at the bottom
+                height -= Pad;
+                int marginV = Math.Max(0, (ClientSize.Height - height) / 3); // We puts 1/3 at the top, 2/3 at the bottom
 
 
                 // Adjust the controls bounds
                 rowIndex = 0;
                 rowHeight = 0;
                 height = marginV;
-                foreach (Control ctl in this.Controls)
+                foreach (Control ctl in Controls.Cast<Control>().Where(ctl => ctl != labelNoCharacters))
                 {
-                    // Skip the "no characters" label
-                    if (ctl == labelNoCharacters)
-                        continue;
-
                     // Set the control bound
-                    ctl.SetBounds(marginH + rowIndex * (itemWidth + padding), height, ctl.PreferredSize.Width, ctl.PreferredSize.Height);
+                    ctl.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, ctl.PreferredSize.Width,
+                                  ctl.PreferredSize.Height);
                     rowHeight = Math.Max(rowHeight, ctl.PreferredSize.Height);
                     rowIndex++;
 
                     // Skip if row not complete yet
-                    if (rowIndex != numColumns && index != this.Controls.Count)
+                    if (rowIndex != numColumns && index != Controls.Count)
                         continue;
 
-                    height += rowHeight + padding;
+                    height += rowHeight + Pad;
                     rowHeight = 0;
                     rowIndex = 0;
                 }
             }
             finally
             {
-                this.ResumeLayout(true);
+                ResumeLayout(true);
             }
         }
 
@@ -241,7 +224,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
@@ -251,7 +234,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
@@ -271,11 +254,11 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void item_Click(object sender, EventArgs e)
+        private void item_Click(object sender, EventArgs e)
         {
-            var item = sender as OverviewItem;
-            if (this.CharacterClicked != null)
-                this.CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
+            OverviewItem item = sender as OverviewItem;
+            if (CharacterClicked != null && item != null)
+                    CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
         }
 
         #endregion

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Linq;
 
 using EVEMon.Common;
@@ -15,12 +11,12 @@ namespace EVEMon
 {
     public partial class MarketOrdersWindow : EVEMonForm
     {
-        private bool m_init;
+        private readonly bool m_init;
 
         public MarketOrdersWindow()
         {
             InitializeComponent();
-            this.RememberPositionKey = "MarketOrdersWindow";
+            RememberPositionKey = "MarketOrdersWindow";
             m_init = true;
         }
 
@@ -34,11 +30,11 @@ namespace EVEMon
             {
                 ordersList.Grouping = value;
 
-                if (m_init)
-                {
-                    ordersList.UpdateColumns();
-                    ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
-                }
+                if (!m_init)
+                    return;
+
+                ordersList.UpdateColumns();
+                ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
             }
         }
 
@@ -52,11 +48,11 @@ namespace EVEMon
             {
                 ordersList.ShowIssuedFor = value;
 
-                if (m_init)
-                {
-                    ordersList.UpdateColumns();
-                    ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
-                }
+                if (!m_init)
+                    return;
+
+                ordersList.UpdateColumns();
+                ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
             }
         }
 
@@ -83,11 +79,11 @@ namespace EVEMon
             {
                 ordersList.Columns = value;
 
-                if (m_init)
-                {
-                    ordersList.UpdateColumns();
-                    ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
-                }
+                if (!m_init)
+                    return;
+
+                ordersList.UpdateColumns();
+                ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
             }
         }
     }

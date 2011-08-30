@@ -16,7 +16,7 @@ namespace EVEMon
     {
         #region Fields
 
-        private List<ResearchColumnSettings> m_columns = new List<ResearchColumnSettings>();
+        private readonly List<ResearchColumnSettings> m_columns = new List<ResearchColumnSettings>();
         private readonly List<ResearchPoint> m_list = new List<ResearchPoint>();
 
         private ResearchColumn m_sortCriteria;
@@ -66,11 +66,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        public Character Character
-        {
-            get;
-            set;
-        }
+        public Character Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -93,13 +89,7 @@ namespace EVEMon
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public IEnumerable<ResearchPoint> ResearchPoints
         {
-            get
-            {
-                foreach (var researchPoint in m_list)
-                {
-                    yield return researchPoint;
-                }
-            }
+            get { return m_list; }
             set
             {
                 m_list.Clear();
@@ -120,10 +110,10 @@ namespace EVEMon
             get
             {
                 // Add the visible columns; matching the display order
-                var newColumns = new List<ResearchColumnSettings>();
-                foreach (var header in lvResearchPoints.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
+                List<ResearchColumnSettings> newColumns = new List<ResearchColumnSettings>();
+                foreach (ColumnHeader header in lvResearchPoints.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    var columnSetting = m_columns.First(x => x.Column == (ResearchColumn)header.Tag);
+                    ResearchColumnSettings columnSetting = m_columns.First(x => x.Column == (ResearchColumn)header.Tag);
                     if (columnSetting.Width != -1)
                         columnSetting.Width = header.Width;
 
@@ -131,10 +121,7 @@ namespace EVEMon
                 }
 
                 // Then add the other columns
-                foreach (var column in m_columns.Where(x => !x.Visible))
-                {
-                    newColumns.Add(column);
-                }
+                newColumns.AddRange(m_columns.Where(x => !x.Visible));
 
                 return newColumns;
             }
@@ -182,7 +169,7 @@ namespace EVEMon
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            var ccpCharacter = Character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             ResearchPoints = (ccpCharacter == null ? null : ccpCharacter.ResearchPoints);
             Columns = Settings.UI.MainWindow.Research.Columns;
 
@@ -199,10 +186,9 @@ namespace EVEMon
         #region Update Methods
 
         /// <summary>
-        /// <summary>
         /// Updates the columns.
         /// </summary>
-        public void UpdateColumns()
+        private void UpdateColumns()
         {
             lvResearchPoints.BeginUpdate();
             m_isUpdatingColumns = true;
@@ -211,10 +197,11 @@ namespace EVEMon
             {
                 lvResearchPoints.Columns.Clear();
 
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (ResearchColumnSettings column in m_columns.Where(x => x.Visible))
                 {
-                    var header = lvResearchPoints.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(), column.Width);
-                    header.Tag = (object)column.Column;
+                    ColumnHeader header = lvResearchPoints.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(),
+                                                                       column.Width);
+                    header.Tag = column.Column;
 
                     switch (column.Column)
                     {
@@ -234,12 +221,12 @@ namespace EVEMon
                 UpdateContent();
 
                 // Force the auto-resize of the columns with -1 width
-                var resizeStyle = (lvResearchPoints.Items.Count == 0 ?
-                    ColumnHeaderAutoResizeStyle.HeaderSize :
-                    ColumnHeaderAutoResizeStyle.ColumnContent);
+                ColumnHeaderAutoResizeStyle resizeStyle = (lvResearchPoints.Items.Count == 0
+                                                               ? ColumnHeaderAutoResizeStyle.HeaderSize
+                                                               : ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (ResearchColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     if (column.Width == -1)
                         lvResearchPoints.AutoResizeColumn(index, resizeStyle);
@@ -257,35 +244,34 @@ namespace EVEMon
         /// <summary>
         /// Updates the content of the listview.
         /// </summary>
-        public void UpdateContent()
+        private void UpdateContent()
         {
             // Returns if not visible
             if (!Visible)
                 return;
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvResearchPoints.SelectedItems.Count > 0 ?
-                                lvResearchPoints.SelectedItems[0].Tag.GetHashCode() : 0);
+            int selectedItem = (lvResearchPoints.SelectedItems.Count > 0
+                                    ? lvResearchPoints.SelectedItems[0].Tag.GetHashCode()
+                                    : 0);
 
             lvResearchPoints.BeginUpdate();
             try
             {
-                var text = m_textFilter.ToLowerInvariant();
-                var researhPoints = m_list.Where(x => IsTextMatching(x, text));
+                string text = m_textFilter.ToLowerInvariant();
+                IEnumerable<ResearchPoint> researhPoints = m_list.Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
                 lvResearchPoints.Items.Clear();
 
                 // Add the items in every group
-                foreach (var researchPoint in researhPoints)
+                foreach (ResearchPoint researchPoint in researhPoints)
                 {
                     if (String.IsNullOrEmpty(researchPoint.AgentName) || String.IsNullOrEmpty(researchPoint.Field))
                         continue;
 
-                    var item = new ListViewItem(researchPoint.AgentName);
-                    item.UseItemStyleForSubItems = false;
-                    item.Tag = researchPoint;
+                    ListViewItem item = new ListViewItem(researchPoint.AgentName) { UseItemStyleForSubItems = false, Tag = researchPoint };
 
                     // Add enough subitems to match the number of columns
                     while (item.SubItems.Count < lvResearchPoints.Columns.Count + 1)
@@ -296,8 +282,8 @@ namespace EVEMon
                     // Creates the subitems
                     for (int i = 0; i < lvResearchPoints.Columns.Count; i++)
                     {
-                        var header = lvResearchPoints.Columns[i];
-                        var column = (ResearchColumn)header.Tag;
+                        ColumnHeader header = lvResearchPoints.Columns[i];
+                        ResearchColumn column = (ResearchColumn)header.Tag;
                         SetColumn(researchPoint, item.SubItems[i], column);
                     }
 
@@ -307,10 +293,10 @@ namespace EVEMon
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
                 {
-                    foreach (ListViewItem lvItem in lvResearchPoints.Items)
+                    foreach (ListViewItem lvItem in lvResearchPoints.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
                     {
-                        if (lvItem.Tag.GetHashCode() == selectedItem)
-                            lvItem.Selected = true;
+                        lvItem.Selected = true;
                     }
                 }
 
@@ -345,7 +331,7 @@ namespace EVEMon
         {
             for (int i = 0; i < lvResearchPoints.Columns.Count; i++)
             {
-                var column = (ResearchColumn)lvResearchPoints.Columns[i].Tag;
+                ResearchColumn column = (ResearchColumn)lvResearchPoints.Columns[i].Tag;
                 if (m_sortCriteria == column)
                 {
                     lvResearchPoints.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
@@ -360,7 +346,7 @@ namespace EVEMon
         /// <summary>
         /// Updates the listview sub-item.
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="researchPoint"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
         private void SetColumn(ResearchPoint researchPoint, ListViewItem.ListViewSubItem item, ResearchColumn column)
@@ -370,47 +356,36 @@ namespace EVEMon
                 case ResearchColumn.Agent:
                     item.Text = researchPoint.AgentName;
                     break;
-
                 case ResearchColumn.Level:
                     item.Text = researchPoint.AgentLevel.ToString();
                     break;
-
                 case ResearchColumn.Quality:
                     item.Text = researchPoint.AgentQuality.ToString();
                     break;
-
                 case ResearchColumn.Field:
                     item.Text = researchPoint.Field;
                     break;
-
                 case ResearchColumn.CurrentRP:
                     item.Text = researchPoint.CurrentRP.ToString("N2");
                     break;
-
                 case ResearchColumn.PointsPerDay:
                     item.Text = researchPoint.PointsPerDay.ToString("N2");
                     break;
-
                 case ResearchColumn.StartDate:
                     item.Text = researchPoint.StartDate.ToLocalTime().ToString();
                     break;
-
                 case ResearchColumn.Location:
                     item.Text = researchPoint.Station.FullLocation;
                     break;
-
                 case ResearchColumn.Region:
                     item.Text = researchPoint.Station.SolarSystem.Constellation.Region.Name;
                     break;
-
                 case ResearchColumn.SolarSystem:
                     item.Text = researchPoint.Station.SolarSystem.Name;
                     break;
-
                 case ResearchColumn.Station:
                     item.Text = researchPoint.Station.Name;
                     break;
-
                 default:
                     //return;
                     throw new NotImplementedException();
@@ -432,16 +407,13 @@ namespace EVEMon
         /// </returns>
         private bool IsTextMatching(ResearchPoint x, string text)
         {
-            if (String.IsNullOrEmpty(text)
-                || x.AgentName.ToLowerInvariant().Contains(text)
-                || x.Field.ToLowerInvariant().Contains(text)
-                || x.Station.Name.ToLowerInvariant().Contains(text)
-                || x.Station.SolarSystem.Name.ToLowerInvariant().Contains(text)
-                || x.Station.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
-                || x.Station.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text))
-                return true;
-
-            return false;
+            return String.IsNullOrEmpty(text)
+                   || x.AgentName.ToLowerInvariant().Contains(text)
+                   || x.Field.ToLowerInvariant().Contains(text)
+                   || x.Station.Name.ToLowerInvariant().Contains(text)
+                   || x.Station.SolarSystem.Name.ToLowerInvariant().Contains(text)
+                   || x.Station.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
+                   || x.Station.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
         }
 
         #endregion
@@ -464,7 +436,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void MainWindowResearchPointsList_Resize(object sender, EventArgs e)
+        private void MainWindowResearchPointsList_Resize(object sender, EventArgs e)
         {
             if (!m_init)
                 return;
@@ -477,7 +449,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void lvResearchPoints_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        private void lvResearchPoints_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         }
@@ -487,7 +459,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void lvResearchPoints_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        private void lvResearchPoints_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
@@ -503,7 +475,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void lvResearchPoints_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            var column = (ResearchColumn)lvResearchPoints.Columns[e.Column].Tag;
+            ResearchColumn column = (ResearchColumn)lvResearchPoints.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
             {
                 m_sortAscending = !m_sortAscending;
@@ -527,7 +499,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (m_columnsChanged)
             {
@@ -545,10 +517,10 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            var ccpCharacter = Character as CCPCharacter;
-            if (e.Character != ccpCharacter)
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+            if (ccpCharacter == null || e.Character != ccpCharacter)
                 return;
 
             ResearchPoints = ccpCharacter.ResearchPoints;

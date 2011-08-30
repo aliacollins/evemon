@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class TipWindow
+    sealed partial class TipWindow
     {
         /// <summary>
         /// Required designer variable.

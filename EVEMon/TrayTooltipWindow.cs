@@ -32,7 +32,7 @@ namespace EVEMon
         {
             InitializeComponent();
         }
-        
+
         #endregion
 
 
@@ -48,7 +48,7 @@ namespace EVEMon
             if (DesignMode)
                 return;
 
-            Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
+            Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints);
 
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
@@ -76,11 +76,11 @@ namespace EVEMon
         {
             base.OnShown(e);
 
-            // Equivalent to setting TopMost = true, except don't activate the window.
+            // Equivalent to setting TopMost = true, except don't activate the window
             NativeMethods.SetWindowPos(Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
-                NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+                                       NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
 
-            // Show the window without activating it.
+            // Show the window without activating it
             NativeMethods.ShowWindow(Handle, NativeMethods.SW_SHOWNOACTIVATE);
         }
 
@@ -95,7 +95,7 @@ namespace EVEMon
 
             base.OnVisibleChanged(e);
         }
-        
+
         #endregion
 
 
@@ -169,17 +169,17 @@ namespace EVEMon
                     TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
 
                     tooltip = Regex.Replace(tooltip,
-                        '%' + character.CharacterID.ToString() + 'r',
-                        remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                        RegexOptions.Compiled);
+                                            '%' + character.CharacterID.ToString() + 'r',
+                                            remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                                            RegexOptions.Compiled);
                 }
 
                 CCPCharacter ccpCharacter = character as CCPCharacter;
                 if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
-                {                    
+                {
                     tooltip = Regex.Replace(tooltip,
-                        '%' + character.CharacterID.ToString() + 'r', "(Paused)",
-                        RegexOptions.Compiled);
+                                            '%' + character.CharacterID.ToString() + 'r', "(Paused)",
+                                            RegexOptions.Compiled);
                 }
             }
 
@@ -199,56 +199,57 @@ namespace EVEMon
             StringBuilder sb = new StringBuilder();
 
             sb.Append(Regex.Replace(toolTipFormat, "%([nbsdr]|[ct][ir])",
-                delegate(Match m)
-                    {
-                        // First group
-                        switch (m.Groups[1].Value[0])
-                        {
-                            case 'n':
-                                return character.Name;
-                            case 'b':
-                                return character.Balance.ToString("N2");
-                        }
+                                    m =>
+                                        {
+                                            // First group
+                                            switch (m.Groups[1].Value[0])
+                                            {
+                                                case 'n':
+                                                    return character.Name;
+                                                case 'b':
+                                                    return character.Balance.ToString("N2");
+                                            }
 
-                        CCPCharacter ccpCharacter = character as CCPCharacter;
-                        if (ccpCharacter != null && (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
-                        {
-                            int level;
-                            switch (m.Groups[1].Value[0])
-                            {
-                                case 'r':
-                                    return '%' + character.CharacterID.ToString() + 'r';
-                                case 's':
-                                    return character.CurrentlyTrainingSkill.SkillName;
-                                case 'd':
-                                    return character.CurrentlyTrainingSkill.EndTime.ToString("g");
-                                case 'c':
-                                    level = character.CurrentlyTrainingSkill.Level - 1;
-                                    break;
-                                case 't':
-                                    level = character.CurrentlyTrainingSkill.Level;
-                                    break;
-                                default:
-                                    return String.Empty;
-                            }
+                                            CCPCharacter ccpCharacter = character as CCPCharacter;
+                                            if (ccpCharacter != null &&
+                                                (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
+                                            {
+                                                int level;
+                                                switch (m.Groups[1].Value[0])
+                                                {
+                                                    case 'r':
+                                                        return '%' + character.CharacterID.ToString() + 'r';
+                                                    case 's':
+                                                        return character.CurrentlyTrainingSkill.SkillName;
+                                                    case 'd':
+                                                        return character.CurrentlyTrainingSkill.EndTime.ToString("g");
+                                                    case 'c':
+                                                        level = character.CurrentlyTrainingSkill.Level - 1;
+                                                        break;
+                                                    case 't':
+                                                        level = character.CurrentlyTrainingSkill.Level;
+                                                        break;
+                                                    default:
+                                                        return String.Empty;
+                                                }
 
-                            // Second group
-                            if (level >= 0 && m.Groups[1].Value.Length > 1)
-                            {
-                                switch (m.Groups[1].Value[1])
-                                {
-                                    case 'i':
-                                        return level.ToString();
-                                    case 'r':
-                                        return Skill.GetRomanFromInt(level);
-                                    default:
-                                        return String.Empty;
-                                }
-                            }
-                        }
+                                                // Second group
+                                                if (level >= 0 && m.Groups[1].Value.Length > 1)
+                                                {
+                                                    switch (m.Groups[1].Value[1])
+                                                    {
+                                                        case 'i':
+                                                            return level.ToString();
+                                                        case 'r':
+                                                            return Skill.GetRomanFromInt(level);
+                                                        default:
+                                                            return String.Empty;
+                                                    }
+                                                }
+                                            }
 
-                        return String.Empty;
-                    }, RegexOptions.Compiled));
+                                            return String.Empty;
+                                        }, RegexOptions.Compiled));
 
             return sb.ToString();
         }
@@ -291,4 +292,3 @@ namespace EVEMon
         #endregion
     }
 }
-

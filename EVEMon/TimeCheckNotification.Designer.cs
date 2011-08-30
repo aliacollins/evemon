@@ -237,6 +237,7 @@ namespace EVEMon
             this.Controls.Add(this.uxContentPanel);
             this.Controls.Add(this.uxTitlePanel);
             this.Controls.Add(this.uxButtonPanel);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
