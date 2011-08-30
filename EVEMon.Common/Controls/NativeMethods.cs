@@ -35,8 +35,13 @@ namespace EVEMon.Common.Controls
         /// <param name="frm"></param>
         public static void ShowInactiveTopmost(this Form frm)
         {
+            // We store the 'left' and 'top' position because for some reason
+            // on first execution of 'ShowWindow' the form position gets reset
+            int left = frm.Left;
+            int top = frm.Top;
+
+            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE);
             ShowWindow(frm.Handle, SW_SHOWNOACTIVATE);
-            SetWindowPos(frm.Handle, HWND_TOPMOST, frm.Left, frm.Top, frm.Width, frm.Height, SWP_NOACTIVATE);
         }
 
         /// <summary>
