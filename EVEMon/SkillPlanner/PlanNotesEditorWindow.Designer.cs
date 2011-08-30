@@ -1,6 +1,6 @@
 namespace EVEMon.SkillPlanner
 {
-    partial class PlanNotesEditorWindow
+    sealed partial class PlanNotesEditorWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,24 +28,24 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.NoteTextBox = new System.Windows.Forms.TextBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // NoteTextBox
             // 
-            this.textBox1.AcceptsReturn = true;
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.NoteTextBox.AcceptsReturn = true;
+            this.NoteTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(12, 12);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(268, 213);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.NoteTextBox.Location = new System.Drawing.Point(12, 12);
+            this.NoteTextBox.Multiline = true;
+            this.NoteTextBox.Name = "NoteTextBox";
+            this.NoteTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.NoteTextBox.Size = new System.Drawing.Size(268, 213);
+            this.NoteTextBox.TabIndex = 0;
+            this.NoteTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // btnOk
             // 
@@ -78,7 +78,7 @@ namespace EVEMon.SkillPlanner
             this.ClientSize = new System.Drawing.Size(292, 266);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.NoteTextBox);
             this.MaximizeBox = false;
             this.Name = "EditEntryNoteWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -89,7 +89,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox NoteTextBox;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
     }

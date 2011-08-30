@@ -11,17 +11,18 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class ImplantCalculator : EVEMonForm, IPlanOrderPluggable
     {
-        private bool m_isUpdating = false;
+        private readonly Plan m_plan;
+
         private Character m_character;
         private BaseCharacter m_characterScratchpad;
-        private PlanEditorControl m_planEditor;
-        private Plan m_plan;
         private ImplantSet m_set;
+
+        private bool m_isUpdating;
 
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        public ImplantCalculator()
+        private ImplantCalculator()
         {
             InitializeComponent();
         }
@@ -37,12 +38,9 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Sets the owner control
+        /// Sets the owner control.
         /// </summary>
-        public PlanEditorControl PlanEditor
-        {
-            set { m_planEditor = value; }
-        }
+        public PlanEditorControl PlanEditor { private get; set; }
 
         /// <summary>
         /// On load, update the controls states.
@@ -59,15 +57,15 @@ namespace EVEMon.SkillPlanner
             foreach (var control in AtrributesPanel.Controls)
             {
                 NumericUpDown nud = control as NumericUpDown;
-                 
+
                 if (nud == null)
                     continue;
 
-                var attrib = (EveAttribute)(int.Parse((string)nud.Tag));
+                EveAttribute attrib = (EveAttribute)(int.Parse((string)nud.Tag));
                 nud.Minimum = m_character[attrib].EffectiveValue - m_character[attrib].ImplantBonus;
-                nud.Maximum = (m_plan.ChosenImplantSet[attrib].Bonus > EveConstants.MaxImplantPoints ?
-                                nud.Minimum + m_plan.ChosenImplantSet[attrib].Bonus :
-                                nud.Minimum + EveConstants.MaxImplantPoints);
+                nud.Maximum = (m_plan.ChosenImplantSet[attrib].Bonus > EveConstants.MaxImplantPoints
+                                   ? nud.Minimum + m_plan.ChosenImplantSet[attrib].Bonus
+                                   : nud.Minimum + EveConstants.MaxImplantPoints);
             }
 
             UpdateContent();
@@ -91,7 +89,7 @@ namespace EVEMon.SkillPlanner
             m_isUpdating = false;
 
             // If the implant set isn't the active one we notify the user
-            this.lblNotice.Visible = (m_set != m_character.ImplantSets.Current);
+            lblNotice.Visible = (m_set != m_character.ImplantSets.Current);
 
             //  Update all the times on the right pane
             UpdateTimes();
@@ -103,8 +101,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="attrib"></param>
         /// <param name="myValue"></param>
         /// <param name="lblAdjust"></param>
-        /// <param name="lblEffective"></param>
-        private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffective)
+        /// <param name="lblEffectiveAttribute"></param>
+        private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffectiveAttribute)
         {
             int baseAttr = m_characterScratchpad[attrib].EffectiveValue - m_characterScratchpad[attrib].ImplantBonus;
             int adjust = myValue - baseAttr;
@@ -112,7 +110,7 @@ namespace EVEMon.SkillPlanner
             if (adjust >= 0)
             {
                 lblAdjust.ForeColor = SystemColors.ControlText;
-                lblAdjust.Text = "+" + adjust.ToString();
+                lblAdjust.Text = String.Format("+{0}", adjust);
             }
             else
             {
@@ -120,9 +118,9 @@ namespace EVEMon.SkillPlanner
                 lblAdjust.Text = adjust.ToString();
             }
 
-            lblEffective.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("0");
+            lblEffectiveAttribute.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("0");
         }
-        
+
         /// <summary>
         /// Update all the times on the right pane (base time, best time, etc).
         /// </summary>
@@ -130,23 +128,24 @@ namespace EVEMon.SkillPlanner
         {
             if (m_isUpdating)
                 return;
-            
 
-            if (m_planEditor != null)
+
+            if (PlanEditor != null)
             {
                 m_characterScratchpad = m_character.After(m_set);
-                m_planEditor.ShowWithPluggable(this);
+                PlanEditor.ShowWithPluggable(this);
             }
 
             // Current (with implants)
-            TimeSpan currentSpan = UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet), lblCurrentSpan, lblCurrentDate);
+            TimeSpan currentSpan = UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet), lblCurrentSpan,
+                                                           lblCurrentDate);
 
             // Current (without implants)
-            var noneImplantSet = m_character.ImplantSets.None;
+            ImplantSet noneImplantSet = m_character.ImplantSets.None;
             TimeSpan baseSpan = UpdateTimesForCharacter(m_character.After(noneImplantSet), lblBaseSpan, lblBaseDate);
 
             // This
-            var scratchpad = CreateModifiedScratchpad();
+            CharacterScratchpad scratchpad = CreateModifiedScratchpad();
             TimeSpan thisSpan = UpdateTimesForCharacter(scratchpad, lblThisSpan, lblThisDate);
 
             // Are the new attributes better than current (without implants) ?
@@ -154,13 +153,15 @@ namespace EVEMon.SkillPlanner
             {
                 lblComparedToBase.ForeColor = Color.Red;
                 lblComparedToBase.Text = String.Format("{0} slower than current base",
-                    thisSpan.Subtract(baseSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                                                       thisSpan.Subtract(baseSpan).ToDescriptiveText(
+                                                           DescriptiveTextOptions.IncludeCommas));
             }
             else if (thisSpan < baseSpan)
             {
                 lblComparedToBase.ForeColor = Color.Green;
                 lblComparedToBase.Text = String.Format("{0} faster than current base",
-                    baseSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                                                       baseSpan.Subtract(thisSpan).ToDescriptiveText(
+                                                           DescriptiveTextOptions.IncludeCommas));
             }
             else
             {
@@ -173,16 +174,18 @@ namespace EVEMon.SkillPlanner
             {
                 lblComparedToCurrent.ForeColor = Color.DarkRed;
                 lblComparedToCurrent.Text = String.Format("{0} slower than current",
-                    thisSpan.Subtract(currentSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                                                          thisSpan.Subtract(currentSpan).ToDescriptiveText(
+                                                              DescriptiveTextOptions.IncludeCommas));
             }
             else if (thisSpan < currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.DarkGreen;
                 lblComparedToCurrent.Text = String.Format("{0} faster than current",
-                    currentSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                                                          currentSpan.Subtract(thisSpan).ToDescriptiveText(
+                                                              DescriptiveTextOptions.IncludeCommas));
             }
             else
-            { 
+            {
                 lblComparedToCurrent.ForeColor = SystemColors.ControlText;
                 lblComparedToCurrent.Text = "No time difference than current";
             }
@@ -197,7 +200,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TimeSpan UpdateTimesForCharacter(BaseCharacter character, Label lblSpan, Label lblDate)
         {
-            
+
             TimeSpan ts = character.GetTrainingTimeToMultipleSkills(m_plan);
             DateTime dt = DateTime.Now + ts;
 
@@ -207,7 +210,9 @@ namespace EVEMon.SkillPlanner
             return ts;
         }
 
+
         #region Controls events
+
         /// <summary>
         /// When the intelligence numeric box changed, we update the attributes labels and the times on the right pane.
         /// </summary>
@@ -216,7 +221,7 @@ namespace EVEMon.SkillPlanner
         private void nudIntelligence_ValueChanged(object sender, EventArgs e)
         {
             UpdateAttributeLabels(EveAttribute.Intelligence, (int)(nudIntelligence.Value),
-                            lblAdjustIntelligence, lblEffectiveIntelligence);
+                                  lblAdjustIntelligence, lblEffectiveIntelligence);
             UpdateTimes();
         }
 
@@ -228,7 +233,7 @@ namespace EVEMon.SkillPlanner
         private void nudCharisma_ValueChanged(object sender, EventArgs e)
         {
             UpdateAttributeLabels(EveAttribute.Charisma, (int)(nudCharisma.Value),
-                            lblAdjustCharisma, lblEffectiveCharisma);
+                                  lblAdjustCharisma, lblEffectiveCharisma);
             UpdateTimes();
         }
 
@@ -240,10 +245,10 @@ namespace EVEMon.SkillPlanner
         private void nudPerception_ValueChanged(object sender, EventArgs e)
         {
             UpdateAttributeLabels(EveAttribute.Perception, (int)(nudPerception.Value),
-                            lblAdjustPerception, lblEffectivePerception);
+                                  lblAdjustPerception, lblEffectivePerception);
             UpdateTimes();
-            if (m_planEditor != null)
-                m_planEditor.ShowWithPluggable(this);
+            if (PlanEditor != null)
+                PlanEditor.ShowWithPluggable(this);
         }
 
         /// <summary>
@@ -254,7 +259,7 @@ namespace EVEMon.SkillPlanner
         private void nudMemory_ValueChanged(object sender, EventArgs e)
         {
             UpdateAttributeLabels(EveAttribute.Memory, (int)(nudMemory.Value),
-                            lblAdjustMemory, lblEffectiveMemory);
+                                  lblAdjustMemory, lblEffectiveMemory);
             UpdateTimes();
         }
 
@@ -266,7 +271,7 @@ namespace EVEMon.SkillPlanner
         private void nudWillpower_ValueChanged(object sender, EventArgs e)
         {
             UpdateAttributeLabels(EveAttribute.Willpower, (int)(nudWillpower.Value),
-                            lblAdjustWillpower, lblEffectiveWillpower);
+                                  lblAdjustWillpower, lblEffectiveWillpower);
             UpdateTimes();
         }
 
@@ -282,7 +287,7 @@ namespace EVEMon.SkillPlanner
             foreach (var set in m_character.ImplantSets)
             {
                 var item = mnLoadAtts.DropDownItems.Add(set.Name);
-                item.Click += new EventHandler(implantSetMenuitem_Click);
+                item.Click += implantSetMenuitem_Click;
                 item.Tag = set;
             }
         }
@@ -295,10 +300,10 @@ namespace EVEMon.SkillPlanner
         private void implantSetMenuitem_Click(object sender, EventArgs e)
         {
             // Update the character to a scratchpad using the implant set attacthed to the sender menu as its tag.
-            var menu = (ToolStripItem)sender;
+            ToolStripItem menu = (ToolStripItem)sender;
             m_set = menu.Tag as ImplantSet;
             m_characterScratchpad = m_character.After(m_set);
-            
+
             UpdateContent();
         }
 
@@ -320,10 +325,12 @@ namespace EVEMon.SkillPlanner
 
             return scratchpad;
         }
+
         #endregion
 
 
         #region IPlanOrderPluggable Members
+
         /// <summary>
         /// Updates the statistics for the plan editor.
         /// </summary>
@@ -333,7 +340,7 @@ namespace EVEMon.SkillPlanner
         {
             areRemappingPointsActive = true;
 
-            var scratchpad = CreateModifiedScratchpad();
+            CharacterScratchpad scratchpad = CreateModifiedScratchpad();
             plan.UpdateStatistics(scratchpad, true, true);
             plan.UpdateOldTrainingTimes();
         }
@@ -345,6 +352,7 @@ namespace EVEMon.SkillPlanner
         {
             UpdateTimes();
         }
+
         #endregion
     }
 }

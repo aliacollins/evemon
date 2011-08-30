@@ -618,12 +618,6 @@
     <Compile Include="SkillPlanner\SkillBrowserControl.Designer.cs">
       <DependentUpon>SkillBrowserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\EntrySuppressionWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\EntrySuppressionWindow.Designer.cs">
-      <DependentUpon>EntrySuppressionWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SkillPlanner\PlanNotesEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -641,12 +635,6 @@
     </Compile>
     <Compile Include="SkillPlanner\ItemBrowserControl.Designer.cs">
       <DependentUpon>ItemBrowserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\LineDrawControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\LineDrawControl.Designer.cs">
-      <DependentUpon>LineDrawControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\PlanWindow.cs">
       <SubType>Form</SubType>
@@ -861,10 +849,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>SkillBrowserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\EntrySuppressionWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>EntrySuppressionWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\PlanNotesEditorWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>PlanNotesEditorWindow.cs</DependentUpon>
@@ -876,10 +860,6 @@
     <EmbeddedResource Include="SkillPlanner\ItemBrowserControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ItemBrowserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\LineDrawControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>LineDrawControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\PlanWindow.resx">
       <SubType>Designer</SubType>

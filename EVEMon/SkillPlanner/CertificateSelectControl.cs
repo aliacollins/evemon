@@ -14,8 +14,10 @@ namespace EVEMon.SkillPlanner
 {
     public partial class CertificateSelectControl : UserControl
     {
-        private readonly char[] UpperCertificatesLetters = new char[] { 'B', 'S', 'I', 'E' };
-        private readonly char[] LowerCertificatesLetters = new char[] { '1', '2', '3', '4' }; // Stupid insensitive images keys' comparison, we cannot use bsie
+        private readonly char[] m_upperCertificatesLetters = new[] { 'B', 'S', 'I', 'E' };
+
+        private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4' };
+                                // Stupid insensitive images keys' comparison, we cannot use bsie
 
         private Plan m_plan;
         private Character m_character;
@@ -25,6 +27,7 @@ namespace EVEMon.SkillPlanner
         private bool m_allExpanded;
 
         public event EventHandler<EventArgs> SelectionChanged;
+
 
         #region Constructors
 
@@ -49,7 +52,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            
+
             tbSearchText.KeyPress -= tbSearchText_KeyPress;
             tbSearchText.Enter -= tbSearchText_Enter;
             tbSearchText.Leave -= tbSearchText_Leave;
@@ -63,7 +66,6 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// On load, read settings and update the content.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
@@ -107,7 +109,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
             UpdateContent();
@@ -124,7 +126,7 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            set 
+            set
             {
                 if (m_plan == value)
                     return;
@@ -142,33 +144,32 @@ namespace EVEMon.SkillPlanner
             get { return m_selectedCertificateClass; }
             set
             {
-                if (m_selectedCertificateClass != value)
+                if (m_selectedCertificateClass == value)
+                    return;
+
+                m_selectedCertificateClass = value;
+
+                // Updates the selection for the three controls
+                m_blockSelectionReentrancy = true;
+                try
                 {
-                    m_selectedCertificateClass = value;
+                    tvItems.SelectNodeWithTag(value);
 
-                    // Updates the selection for the three controls
-                    m_blockSelectionReentrancy = true;
-                    try
+                    lvSortedList.SelectedItems.Clear();
+                    foreach (ListViewItem item in lvSortedList.Items.Cast<ListViewItem>().Where(item => item.Tag == value))
                     {
-                        tvItems.SelectNodeWithTag(value);
-
-                        lvSortedList.SelectedItems.Clear();
-                        foreach (ListViewItem item in lvSortedList.Items)
-                        {
-                            if (item.Tag == value)
-                                item.Selected = true;
-                        }
-
-                        lbSearchList.SelectedItem = value;
-                    }
-                    finally
-                    {
-                        m_blockSelectionReentrancy = false;
+                        item.Selected = true;
                     }
 
-                    // Fires event for subscribers
-                    OnSelectionChanged();
+                    lbSearchList.SelectedItem = value;
                 }
+                finally
+                {
+                    m_blockSelectionReentrancy = false;
+                }
+
+                // Fires event for subscribers
+                OnSelectionChanged();
             }
         }
 
@@ -247,11 +248,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 0x01)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
+            if (e.KeyChar != 0x01)
+                return;
+
+            tbSearchText.SelectAll();
+            e.Handled = true;
         }
 
         /// <summary>
@@ -323,19 +324,19 @@ namespace EVEMon.SkillPlanner
                 lbNoMatches.Visible = true;
                 UpdateSelection(null);
             }
-            // Is it sorted ?
+                // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
                 lvSortedList.Visible = true;
                 UpdateListView(classes);
             }
-            // Not sorted but there is a text filter
+                // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 lbSearchList.Visible = true;
                 UpdateListBox(classes);
             }
-            // Regular display, the tree 
+                // Regular display, the tree 
             else
             {
                 tvItems.Visible = true;
@@ -350,8 +351,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
-                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                                        : 0);
 
             TreeNode selectedNode = null;
 
@@ -361,8 +363,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 // Blank image list for 'Safe for work' setting
-                ImageList newImageList = new ImageList();
-                newImageList.ImageSize = new Size(24, 24);
+                ImageList newImageList = new ImageList { ImageSize = new Size(24, 24) };
                 newImageList.Images.Add(new Bitmap(24, 24));
 
                 tvItems.ImageList = (Settings.UI.SafeForWork ? newImageList : ilCertIcons);
@@ -375,26 +376,27 @@ namespace EVEMon.SkillPlanner
                 {
                     int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
 
-                    TreeNode node = new TreeNode()
+                    TreeNode node = new TreeNode
+                                        {
+                                            Text = category.Name,
+                                            ImageIndex = imageIndex,
+                                            SelectedImageIndex = imageIndex,
+                                            Tag = category
+                                        };
+
+                    foreach (TreeNode childNode in classes.Where(x => x.Category == category).Select(
+                        certClass => new
+                                         {
+                                             certClass,
+                                             index = GetCertImageIndex(certClass)
+                                         }).Select(childNode => new TreeNode
+                                                                    {
+                                                                        Text = childNode.certClass.Name,
+                                                                        ImageIndex = childNode.index,
+                                                                        SelectedImageIndex = childNode.index,
+                                                                        Tag = childNode.certClass
+                                                                    }))
                     {
-                        Text = category.Name,
-                        ImageIndex = imageIndex,
-                        SelectedImageIndex = imageIndex,
-                        Tag = category
-                    };
-
-                    foreach (CertificateClass certClass in classes.Where(x => x.Category == category))
-                    {
-                        int index = GetCertImageIndex(certClass);
-
-                        TreeNode childNode = new TreeNode()
-                        {
-                            Text = certClass.Name,
-                            ImageIndex = index,
-                            SelectedImageIndex = index,
-                            Tag = certClass
-                        };
-
                         numberOfItems++;
                         node.Nodes.Add(childNode);
                     }
@@ -405,13 +407,10 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes())
+                    foreach (TreeNode node in tvItems.GetAllNodes().Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
-                        if (node.Tag.GetHashCode() == selectedItemHash)
-                        {
-                            tvItems.SelectNodeWithTag(node.Tag);
-                            selectedNode = node;
-                        }
+                        tvItems.SelectNodeWithTag(node.Tag);
+                        selectedNode = node;
                     }
                 }
 
@@ -462,9 +461,10 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IEnumerable<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
-                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
-            
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                                        : 0);
+
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
             string column = GetSortedListData(ref classes, ref labels);
@@ -497,13 +497,11 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (ListViewItem lvItem in lvSortedList.Items)
+                    foreach (ListViewItem lvItem in lvSortedList.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
                     {
-                        if (lvItem.Tag.GetHashCode() == selectedItemHash)
-                        {
-                            lvItem.Selected = true;
-                            selectedItem = lvItem;
-                        }
+                        lvItem.Selected = true;
+                        selectedItem = lvItem;
                     }
                 }
 
@@ -513,7 +511,9 @@ namespace EVEMon.SkillPlanner
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-                chName.Width = Math.Max(0, Math.Max(lvSortedList.ClientSize.Width / 2, lvSortedList.ClientSize.Width - (chSortKey.Width + 16)));
+                chName.Width = Math.Max(0,
+                                        Math.Max(lvSortedList.ClientSize.Width / 2,
+                                                 lvSortedList.ClientSize.Width - (chSortKey.Width + 16)));
                 chSortKey.Text = column;
             }
             finally
@@ -534,7 +534,7 @@ namespace EVEMon.SkillPlanner
             if (cbFilter.SelectedIndex != 0)
             {
                 Func<CertificateClass, bool> predicate = GetFilter();
-                classes = classes.Where(x => predicate(x));
+                classes = classes.Where(predicate);
             }
 
             // Text search
@@ -545,7 +545,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // When sorting by "time to...", filter completed items
-            if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToEliteGrade || cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextGrade)
+            if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToEliteGrade ||
+                cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextGrade)
                 classes = classes.Where(x => !x.IsCompleted);
 
             return classes;
@@ -559,21 +560,18 @@ namespace EVEMon.SkillPlanner
             // Update the base filter from the combo box
             switch ((CertificateFilter)cbFilter.SelectedIndex)
             {
-                default:
                 case CertificateFilter.All:
-                    return (x) => true;
-
+                    return x => true;
                 case CertificateFilter.HideElite:
-                    return (x) => !x.IsCompleted;
-
+                    return x => !x.IsCompleted;
                 case CertificateFilter.NextGradeTrainable:
-                    return (x) => x.IsFurtherTrainable;
-
+                    return x => x.IsFurtherTrainable;
                 case CertificateFilter.NextGradeUntrainable:
-                    return (x) => !x.IsFurtherTrainable & !x.IsCompleted;
-
+                    return x => !x.IsFurtherTrainable & !x.IsCompleted;
                 case CertificateFilter.Claimable:
-                    return (x) => x.Any(y => y.CanBeClaimed);
+                    return x => x.Any(y => y.CanBeClaimed);
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -587,47 +585,46 @@ namespace EVEMon.SkillPlanner
         {
             switch ((CertificateSort)cbSorting.SelectedIndex)
             {
-                // Sort by name, default, occurs on initialization
-                default:
+                    // Sort by name, default, occurs on initialization
                 case CertificateSort.Name:
                     return String.Empty;
-
-                // Sort by time to next grade
+                    // Sort by time to next grade
                 case CertificateSort.TimeToNextGrade:
                     IEnumerable<TimeSpan> times = classes.Select(x =>
-                                            {
-                                                Certificate nextUntrained = x.LowestUntrainedGrade;
-                                                return (nextUntrained == null ? TimeSpan.Zero : nextUntrained.GetTrainingTime());
-                                            });
+                                                                     {
+                                                                         Certificate nextUntrained = x.LowestUntrainedGrade;
+                                                                         return (nextUntrained == null
+                                                                                     ? TimeSpan.Zero
+                                                                                     : nextUntrained.GetTrainingTime());
+                                                                     });
 
                     CertificateClass[] classesArray = classes.ToArray();
                     TimeSpan[] timesArray = times.ToArray();
                     Array.Sort(timesArray, classesArray);
-
                     classes = classesArray;
                     labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                     return "Time";
-
-                // Sort by time to elite (or highest) grade
+                    // Sort by time to elite (or highest) grade
                 case CertificateSort.TimeToEliteGrade:
                     times = classes.Select(x =>
-                    {
-                        Certificate lastGrade = x.HighestGradeCertificate;
-                        CertificateStatus status = lastGrade.Status;
+                                               {
+                                                   Certificate lastGrade = x.HighestGradeCertificate;
+                                                   CertificateStatus status = lastGrade.Status;
 
-                        if (status == CertificateStatus.Granted || status == CertificateStatus.Claimable)
-                            return TimeSpan.Zero;
+                                                   if (status == CertificateStatus.Granted ||
+                                                       status == CertificateStatus.Claimable)
+                                                       return TimeSpan.Zero;
 
-                        return lastGrade.GetTrainingTime();
-                    });
-
+                                                   return lastGrade.GetTrainingTime();
+                                               });
                     classesArray = classes.ToArray();
                     timesArray = times.ToArray();
                     Array.Sort(timesArray, classesArray);
-
                     classes = classesArray;
                     labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                     return "Time to Elite";
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -637,7 +634,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="certClass"></param>
         /// <returns></returns>
-        private int GetCertImageIndex(CertificateClass certClass)
+        private int GetCertImageIndex(IEnumerable<Certificate> certClass)
         {
             // Prepare datas, especially image keys like "BSIE", "BSie", "BE", etc (lower for non-granted, upper for granted, only existing certs)
             // Correction : keys are insenstive, so we use 1234 instead of lower case letters
@@ -654,11 +651,11 @@ namespace EVEMon.SkillPlanner
                 {
                     totalGranted++;
                     granted[index] = true;
-                    chars[index] = UpperCertificatesLetters[(int)cert.Grade];   // Gets "B" for granted basic
+                    chars[index] = m_upperCertificatesLetters[(int)cert.Grade]; // Gets "B" for granted basic
                 }
                 else
                 {
-                    chars[index] = LowerCertificatesLetters[(int)cert.Grade];  // Gets "b" for non-granted basic
+                    chars[index] = m_lowerCertificatesLetters[(int)cert.Grade]; // Gets "b" for non-granted basic
                 }
 
                 index++;
@@ -671,7 +668,7 @@ namespace EVEMon.SkillPlanner
             // Create key and retrieves its index, then returns if it already exists
             string key = new string(chars);
             index = tvItems.ImageList.Images.IndexOfKey(key);
-            if (index != -1) 
+            if (index != -1)
                 return index;
 
             // Create the image if it does not exist yet
@@ -683,12 +680,13 @@ namespace EVEMon.SkillPlanner
             {
                 string[] letters = new string[4];
                 float[] xPositions = new float[4];
-                float x = 0.0f, height = 0.0f;
+                float x = 0.0f,
+                      height = 0.0f;
 
                 // Scroll through letters and measure them
                 for (int i = 0; i < certs.Count; i++)
                 {
-                    letters[i] = UpperCertificatesLetters[(int)certs[i].Grade].ToString();
+                    letters[i] = m_upperCertificatesLetters[(int)certs[i].Grade].ToString();
                     SizeF size = g.MeasureString(letters[i], m_iconsFont, MaxLetterWidth, StringFormat.GenericTypographic);
                     height = Math.Max(height, size.Height);
                     xPositions[i] = x;
@@ -696,7 +694,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Y offset
-                float y = Math.Max(0.0f, (ImageSize - (float)height) * 0.5f);
+                float y = Math.Max(0.0f, (ImageSize - height) * 0.5f);
 
                 // Draw the letters
                 g.Clear(Color.White);
@@ -719,10 +717,12 @@ namespace EVEMon.SkillPlanner
             tvItems.ImageList.Images.Add(key, bmp);
             return tvItems.ImageList.Images.IndexOfKey(key);
         }
+
         #endregion
 
 
         #region Selection Helper Methods
+
         /// <summary>
         /// Called whenever the selection changes,
         /// fires the approriate event.
@@ -740,37 +740,17 @@ namespace EVEMon.SkillPlanner
         {
             if (lvSortedList.Visible)
             {
-                if (lvSortedList.SelectedItems.Count == 0)
-                {
-                    UpdateSelection(null);
-                }
-                else
-                {
-                    UpdateSelection(lvSortedList.SelectedItems[0].Tag);
-                }
+                UpdateSelection(lvSortedList.SelectedItems.Count == 0 ? null : lvSortedList.SelectedItems[0].Tag);
+                return;
             }
-            else if (lbSearchList.Visible)
+
+            if (lbSearchList.Visible)
             {
-                if (lbSearchList.SelectedItems.Count == 0)
-                {
-                    UpdateSelection(null);
-                }
-                else
-                {
-                    UpdateSelection(lbSearchList.SelectedItems[0]);
-                }
+                UpdateSelection(lbSearchList.SelectedItems.Count == 0 ? null : lbSearchList.SelectedItems[0]);
+                return;
             }
-            else
-            {
-                if (tvItems.SelectedNode == null)
-                {
-                    UpdateSelection(null);
-                }
-                else
-                {
-                    UpdateSelection(tvItems.SelectedNode.Tag);
-                }
-            }
+
+            UpdateSelection(tvItems.SelectedNode == null ? null : tvItems.SelectedNode.Tag);
         }
 
         /// <summary>
@@ -809,17 +789,19 @@ namespace EVEMon.SkillPlanner
         {
             Settings.UI.CertificateBrowser.Sort = (CertificateSort)sortIndex;
         }
+
         #endregion
 
 
         #region Context menus
+
         /// <summary>
         /// When the tree's context menu opens,
         /// we update the submenus' statuses.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void cmListSkills_Opening(object sender, CancelEventArgs e)
+        private void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = tvItems.SelectedNode;
             CertificateClass certClass = SelectedCertificateClass;
@@ -845,9 +827,13 @@ namespace EVEMon.SkillPlanner
             tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
 
             tsmExpandSelected.Text = (certClass == null && node != null &&
-                                    !node.IsExpanded ? String.Format("Expand \"{0}\"", node.Text) : String.Empty);
+                                      !node.IsExpanded
+                                          ? String.Format("Expand \"{0}\"", node.Text)
+                                          : String.Empty);
             tsmCollapseSelected.Text = (certClass == null && node != null &&
-                                    node.IsExpanded ? String.Format("Collapse \"{0}\"", node.Text) : String.Empty);
+                                        node.IsExpanded
+                                            ? String.Format("Collapse \"{0}\"", node.Text)
+                                            : String.Empty);
 
             // "Expand All" and "Collapse All" menu
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
@@ -858,8 +844,7 @@ namespace EVEMon.SkillPlanner
         /// Sets the visible status of the context menu submenu.
         /// </summary>
         /// <param name="menu"></param>
-        /// <param name="certClass"></param>
-        /// <param name="grade"></param>
+        /// <param name="cert"></param>
         private void SetAdditionMenuStatus(ToolStripMenuItem menu, Certificate cert)
         {
             if (cert == null)
@@ -957,6 +942,7 @@ namespace EVEMon.SkillPlanner
             tvItems.CollapseAll();
             m_allExpanded = false;
         }
+
         #endregion
 
     }

@@ -1,13 +1,12 @@
 using System;
 using System.Windows.Forms;
-using EVEMon.Common;
 using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class PlanNotesEditorWindow : EVEMonForm
+    public sealed partial class PlanNotesEditorWindow : EVEMonForm
     {
-        public PlanNotesEditorWindow()
+        private PlanNotesEditorWindow()
         {
             InitializeComponent();
         }
@@ -15,37 +14,56 @@ namespace EVEMon.SkillPlanner
         public PlanNotesEditorWindow(string skillName)
             : this()
         {
-            this.Text = "Notes for " + skillName;
+            Text = "Notes for " + skillName;
         }
 
+        /// <summary>
+        /// Gets or sets the note text.
+        /// </summary>
+        /// <value>The note text.</value>
         public string NoteText
         {
-            get { return textBox1.Text; }
+            get { return NoteTextBox.Text; }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                {
                     value = String.Empty;
-                }
-                textBox1.Lines = value.Split(new string[4] {"\r\n", "\n\r", "\r", "\n"}, StringSplitOptions.None);
+
+                NoteTextBox.Lines = value.Split(new string[4] { "\r\n", "\n\r", "\r", "\n" }, StringSplitOptions.None);
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnOk control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnCancel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
-		private void textBox1_KeyDown(object sender, KeyEventArgs e) {
-			if (e.Control && e.KeyCode == Keys.Enter)
-				btnOk_Click(sender, e);
-		}
+        /// <summary>
+        /// Handles the KeyDown event of the NoteTextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter)
+                btnOk_Click(sender, e);
+        }
     }
 }

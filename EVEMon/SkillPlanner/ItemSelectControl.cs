@@ -149,15 +149,12 @@ namespace EVEMon.SkillPlanner
                 case ObjectUsabilityFilter.All:
                     UsabilityPredicate = SelectAll;
                     break;
-
                 case ObjectUsabilityFilter.Usable:
                     UsabilityPredicate = CanUse;
                     break;
-
                 case ObjectUsabilityFilter.Unusable:
                     UsabilityPredicate = CannotUse;
                     break;
-
                 default:
                     throw new NotImplementedException();
             }
@@ -179,19 +176,15 @@ namespace EVEMon.SkillPlanner
                 default:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.All;
                     break;
-
                 case 1:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.High;
                     break;
-
                 case 2:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.Medium;
                     break;
-
                 case 3:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.Low;
                     break;
-
                 case 4:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.None;
                     break;

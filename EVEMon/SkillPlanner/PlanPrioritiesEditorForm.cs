@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Controls;
 
@@ -21,12 +16,23 @@ namespace EVEMon.SkillPlanner
             get { return (int)nudPriority.Value; }
             set { nudPriority.Value = value; }
         }
+
+        /// <summary>
+        /// Handles the Click event of the btnOk control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
+        /// <summary>
+        /// Handles the Load event of the ChangePriorityForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ChangePriorityForm_Load(object sender, EventArgs e)
         {
             nudPriority.Select(0, 3);

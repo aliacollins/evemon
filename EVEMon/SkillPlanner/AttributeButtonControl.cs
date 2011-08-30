@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace EVEMon.SkillPlanner
 {
@@ -16,103 +14,118 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public class AttributeButtonControl : Control
     {
-        private Pen borderPen = Pens.Black;
-        private Pen borderPenInactive = Pens.Gray;
+        private readonly Pen m_borderPenInactive = Pens.Gray;
+        private readonly Brush m_backgroundBrush = Brushes.LightGray;
+        private readonly Brush m_backgroundBrushHighlighted = Brushes.WhiteSmoke;
+        private readonly Brush m_backgroundBrushPressed = Brushes.DarkGray;
 
-        private Brush backgroundBrush = Brushes.LightGray;
-        private Brush backgroundBrushHighlighted = Brushes.WhiteSmoke;
-        private Brush backgroundBrushPressed = Brushes.DarkGray;
+        private Pen m_borderPen = Pens.Black;
 
-        private GraphicsPath borderPath;
+        private GraphicsPath m_borderPath;
 
-        private int valueChange;
-
-        /// <summary>
-        /// Gets ot sets the change of the atribute value.
-        /// </summary>
-        [Category("Behavior")]
-        [DefaultValue(0)]
-        public int ValueChange
-        {
-            get { return valueChange; }
-            set { valueChange = value; }
-        }
-
-        private AttributeBarControl attributeBar;
-
-        /// <summary>
-        /// Gets or sets <see cref="AttributeBarControl"/> associated with this button.
-        /// </summary>
-        [Category("Behavior")]
-        [DefaultValue(null)]
-        public AttributeBarControl AttributeBar
-        {
-            get { return attributeBar; }
-            set { attributeBar = value; }
-        }
-
+        private bool m_hover;
+        private bool m_pressed;
         /// <summary>
         /// Initializes new instance of <see cref="AttributeButtonControl"/>.
         /// </summary>
         public AttributeButtonControl()
-            : base()
         {
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            SetStyle(ControlStyles.StandardDoubleClick, false);
-            borderPath = CreateBorderPath();
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.DoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint | 
+                     ControlStyles.SupportsTransparentBackColor |
+                     ControlStyles.StandardDoubleClick, false);
+            UpdateStyles();
+
+            m_borderPath = CreateBorderPath();
         }
 
+        /// <summary>
+        /// Gets ot sets the change of the atribute value.
+        /// </summary>
+        [Category("Behavior"), DefaultValue(0)]
+        public int ValueChange { get; set; }
+
+        /// <summary>
+        /// Gets or sets <see cref="AttributeBarControl"/> associated with this button.
+        /// </summary>
+        [Category("Behavior"), DefaultValue(null)]
+        public AttributeBarControl AttributeBar { get; set; }
+
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.ForeColorChanged"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnForeColorChanged(EventArgs e)
         {
             base.OnForeColorChanged(e);
-            borderPen = new Pen(this.ForeColor);
+            m_borderPen = new Pen(ForeColor);
         }
 
-        private bool hover = false;
-        private bool pressed = false;
-
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseEnter"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
 
-            hover = true;
+            m_hover = true;
             Invalidate();
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseLeave"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
 
-            hover = false;
+            m_hover = false;
             Invalidate();
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseDown"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
 
             if (e.Button == MouseButtons.Left)
-                pressed = true;
+                m_pressed = true;
 
             Invalidate();
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseUp"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
 
             if (e.Button == MouseButtons.Left)
-                pressed = false;
+                m_pressed = false;
 
             Invalidate();
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Resize"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnResize(EventArgs e)
         {
-            if (borderPath != null)
-                borderPath.Dispose();
+            if (m_borderPath != null)
+                m_borderPath.Dispose();
 
-            borderPath = CreateBorderPath();
+            m_borderPath = CreateBorderPath();
 
             base.OnResize(e);
         }
@@ -125,24 +138,31 @@ namespace EVEMon.SkillPlanner
         {
             GraphicsPath borderPath = new GraphicsPath();
 
-            const int radius = 3;
-            int h = 1;
-            int v = 1;
-            int width = this.Width - 2;
-            int height = this.Height - 2;
-            borderPath.AddLine(h + radius, v, h + width - (radius * 2), v);
-            borderPath.AddArc(h + width - (radius * 2), v, radius * 2, radius * 2, 270, 90);
-            borderPath.AddLine(h + width, v + radius, h + width, v + height - (radius * 2));
-            borderPath.AddArc(h + width - (radius * 2), v + height - (radius * 2), radius * 2, radius * 2, 0, 90);
-            borderPath.AddLine(h + width - (radius * 2), v + height, h + radius, v + height);
-            borderPath.AddArc(h, v + height - (radius * 2), radius * 2, radius * 2, 90, 90);
-            borderPath.AddLine(h, v + height - (radius * 2), h, v + radius);
-            borderPath.AddArc(h, v, radius * 2, radius * 2, 180, 90);
+            const int Radius = 3;
+            const int HorizontalPad = 1;
+            const int VerticalPad = 1;
+            int width = Width - VerticalPad * 2;
+            int height = Height - HorizontalPad * 2;
+            borderPath.AddLine(HorizontalPad + Radius, VerticalPad, HorizontalPad + width - (Radius * 2), VerticalPad);
+            borderPath.AddArc(HorizontalPad + width - (Radius * 2), VerticalPad, Radius * 2, Radius * 2, 270, 90);
+            borderPath.AddLine(HorizontalPad + width, VerticalPad + Radius, HorizontalPad + width,
+                               VerticalPad + height - (Radius * 2));
+            borderPath.AddArc(HorizontalPad + width - (Radius * 2), VerticalPad + height - (Radius * 2), Radius * 2, Radius * 2, 0,
+                              90);
+            borderPath.AddLine(HorizontalPad + width - (Radius * 2), VerticalPad + height, HorizontalPad + Radius,
+                               VerticalPad + height);
+            borderPath.AddArc(HorizontalPad, VerticalPad + height - (Radius * 2), Radius * 2, Radius * 2, 90, 90);
+            borderPath.AddLine(HorizontalPad, VerticalPad + height - (Radius * 2), HorizontalPad, VerticalPad + Radius);
+            borderPath.AddArc(HorizontalPad, VerticalPad, Radius * 2, Radius * 2, 180, 90);
             borderPath.CloseFigure();
 
             return borderPath;
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -151,23 +171,22 @@ namespace EVEMon.SkillPlanner
             {
                 g.SmoothingMode = SmoothingMode.HighQuality;
 
-                Pen pen = this.Enabled ? borderPen : borderPenInactive;
+                Pen pen = Enabled ? m_borderPen : m_borderPenInactive;
                 Brush brush;
-                if (pressed)
-                    brush = backgroundBrushPressed;
+                if (m_pressed)
+                    brush = m_backgroundBrushPressed;
+                else if (m_hover)
+                    brush = m_backgroundBrushHighlighted;
                 else
-                    if (hover)
-                        brush = backgroundBrushHighlighted;
-                    else
-                        brush = backgroundBrush;
+                    brush = m_backgroundBrush;
 
-                e.Graphics.FillPath(brush, borderPath);
-                e.Graphics.DrawPath(pen, borderPath);
+                e.Graphics.FillPath(brush, m_borderPath);
+                e.Graphics.DrawPath(pen, m_borderPath);
 
-                e.Graphics.DrawLine(pen, 4, this.Height / 2, this.Width - 4, this.Height / 2);
+                e.Graphics.DrawLine(pen, 4, Height / 2, Width - 4, Height / 2);
 
-                if (this.valueChange >= 0)
-                    e.Graphics.DrawLine(pen, this.Width / 2, 4, this.Width / 2, this.Height - 4);
+                if (ValueChange >= 0)
+                    e.Graphics.DrawLine(pen, Width / 2, 4, Width / 2, Height - 4);
             }
         }
     }

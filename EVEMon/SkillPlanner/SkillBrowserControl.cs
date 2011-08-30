@@ -30,15 +30,15 @@ namespace EVEMon.SkillPlanner
         {
             base.OnLoad(e);
 
-            lblSkillName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
-            
+            lblSkillName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+
             // Reposition the help text along side the treeview
             Control[] result = skillSelectControl.Controls.Find("pnlResults", true);
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
             skillTreeDisplay.SkillClicked += skillTreeDisplay_SkillClicked;
-            
+
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
@@ -84,7 +84,8 @@ namespace EVEMon.SkillPlanner
             get { return m_selectedSkill; }
             set
             {
-                if (m_selectedSkill == value) return;
+                if (m_selectedSkill == value)
+                    return;
 
                 m_selectedSkill = value;
                 skillTreeDisplay.RootSkill = value;
@@ -167,8 +168,10 @@ namespace EVEMon.SkillPlanner
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
 
-            planToMenu.Text = (level == 0 ? "Plan To (none)..." :
-                String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...", Skill.GetRomanFromInt(level)));
+            planToMenu.Text = (level == 0
+                                   ? "Plan To (none)..."
+                                   : String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...",
+                                                   Skill.GetRomanFromInt(level)));
         }
 
         /// <summary>
@@ -180,7 +183,7 @@ namespace EVEMon.SkillPlanner
             {
                 // View help message
                 lblHelp.Visible = true;
-                
+
                 rightPanel.Visible = false;
                 return;
             }
@@ -194,17 +197,18 @@ namespace EVEMon.SkillPlanner
             // Updates the main labels
             lblSkillClass.Text = m_selectedSkill.Group.Name;
             lblSkillName.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                                m_selectedSkill.Name,
-                                                m_selectedSkill.Rank);
+                                              m_selectedSkill.Name,
+                                              m_selectedSkill.Rank);
             lblSkillCost.Text = String.Format(CultureConstants.DefaultCulture, "{0} ISK", m_selectedSkill.FormattedCost);
             descriptionTextBox.Text = m_selectedSkill.Description;
             if (!m_selectedSkill.IsPublic)
                 descriptionTextBox.Text += " ** THIS IS A NON-PUBLIC SKILL **";
 
-            lblAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Primary: {0}, Secondary: {1} (SP/Hour: {2:#,##0})",
-                                                    m_selectedSkill.PrimaryAttribute.ToString(),
-                                                    m_selectedSkill.SecondaryAttribute.ToString(),
-                                                    m_selectedSkill.SkillPointsPerHour);
+            lblAttributes.Text = String.Format(CultureConstants.DefaultCulture,
+                                               "Primary: {0}, Secondary: {1} (SP/Hour: {2:#,##0})",
+                                               m_selectedSkill.PrimaryAttribute.ToString(),
+                                               m_selectedSkill.SecondaryAttribute.ToString(),
+                                               m_selectedSkill.SkillPointsPerHour);
             // Training time per level
             UpdateLevelLabel(lblLevel1Time, 1);
             UpdateLevelLabel(lblLevel2Time, 2);
@@ -241,7 +245,7 @@ namespace EVEMon.SkillPlanner
             // "Level III :"
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ",Skill.GetRomanFromInt(level));
+            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ", Skill.GetRomanFromInt(level));
 
             // Is it already trained ?
             if (m_selectedSkill.Level >= level)
@@ -260,7 +264,7 @@ namespace EVEMon.SkillPlanner
             if (totalPrereqTime > TimeSpan.Zero)
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, " (plus {0})",
-                    totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                                totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else
             {

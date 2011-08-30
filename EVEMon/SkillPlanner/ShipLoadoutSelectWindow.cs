@@ -3,19 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.BattleClinic;
-using System.Runtime.InteropServices;
-
-using SortOrder = System.Windows.Forms.SortOrder;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.BattleClinic;
+using SortOrder = System.Windows.Forms.SortOrder;
 
 namespace EVEMon.SkillPlanner
 {
@@ -26,18 +23,19 @@ namespace EVEMon.SkillPlanner
 
         private Item m_ship;
         private Plan m_plan;
-        private Character m_character;
+        private readonly Character m_character;
         private SerializableLoadout m_selectedLoadout;
-        private List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
-        private LoadoutListSorter m_columnSorter;
-        private static Dictionary<string, string> s_typeMap = new Dictionary<string, string>();
+        private readonly List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
+        private readonly LoadoutListSorter m_columnSorter;
+        private static readonly Dictionary<string, string> s_typeMap = new Dictionary<string, string>();
+
 
         #region Initialization, loading, closing
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShipLoadoutSelectWindow"/> class.
         /// </summary>
-        public ShipLoadoutSelectWindow()
+        private ShipLoadoutSelectWindow()
         {
             InitializeComponent();
         }
@@ -50,15 +48,13 @@ namespace EVEMon.SkillPlanner
         public ShipLoadoutSelectWindow(Item ship, Plan plan)
             : this()
         {
-            this.persistentSplitContainer1.RememberDistanceKey = "ShipLoadoutBrowser";
+            persistentSplitContainer1.RememberDistanceKey = "ShipLoadoutBrowser";
 
             m_character = (Character)plan.Character;
             m_plan = plan;
             m_ship = ship;
 
-            m_columnSorter = new LoadoutListSorter(this);
-            m_columnSorter.OrderOfSort = SortOrder.Descending;
-            m_columnSorter.SortColumn = 2;
+            m_columnSorter = new LoadoutListSorter { OrderOfSort = SortOrder.Descending, SortColumn = 2 };
             lvLoadouts.ListViewItemSorter = m_columnSorter;
         }
 
@@ -69,7 +65,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void LoadoutSelect_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             s_typeMap["high"] = "High Slots";
@@ -98,7 +94,8 @@ namespace EVEMon.SkillPlanner
             eveImage.EveItem = m_ship;
 
             // Download the loadouts feed
-            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed, m_ship.ID.ToString());
+            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
+                                       m_ship.ID.ToString());
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutFeedDownloaded);
 
             // Set labels while the user wait
@@ -153,9 +150,12 @@ namespace EVEMon.SkillPlanner
                 QueryLoadoutsFeed();
             }
         }
+
         #endregion
 
+
         #region Downloads
+
         /// <summary>
         /// Occurs when we downloaded a loadouts feed from BattleClinic
         /// </summary>
@@ -164,7 +164,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private void OnLoadoutFeedDownloaded(SerializableLoadoutFeed feed, string errorMessage)
         {
-            if (this.IsDisposed)
+            if (IsDisposed)
                 return;
 
             // Restore the default cursor instead of the waiting one
@@ -175,14 +175,17 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "There was a problem connecting to BattleClinic, it may be down for maintainance.\r\n{0}", errorMessage);
+                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
+                                                 "There was a problem connecting to BattleClinic, it may be down for maintainance.\r\n{0}",
+                                                 errorMessage);
                 return;
             }
 
             // Are there no feeds ?
             if (feed.Race == null || feed.Race.Loadouts.Length == 0)
             {
-                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
+                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
+                                                 "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
                 return;
             }
 
@@ -190,8 +193,7 @@ namespace EVEMon.SkillPlanner
             lvLoadouts.Items.Clear();
             foreach (SerializableLoadout loadout in feed.Race.Loadouts)
             {
-                ListViewItem lvi = new ListViewItem(loadout.LoadoutName);
-                lvi.Text = loadout.LoadoutName;
+                ListViewItem lvi = new ListViewItem(loadout.LoadoutName) { Text = loadout.LoadoutName };
                 lvi.SubItems.Add(loadout.Author);
                 lvi.SubItems.Add(loadout.Rating.ToString());
                 lvi.SubItems.Add(loadout.SubmissionDate.ToString());
@@ -213,7 +215,7 @@ namespace EVEMon.SkillPlanner
         private void DownloadLoadout(SerializableLoadout loadout)
         {
             // See the cursor to wait
-            Cursor.Current = Cursors.WaitCursor; 
+            Cursor.Current = Cursors.WaitCursor;
 
             // Retrieve the selected loadout
             m_selectedLoadout = loadout;
@@ -224,19 +226,20 @@ namespace EVEMon.SkillPlanner
             lblSubmitDate.Text = m_selectedLoadout.SubmissionDate.ToString();
 
             // Download the loadout details
-            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails, m_selectedLoadout.LoadoutId.ToString());
+            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
+                                       m_selectedLoadout.LoadoutId);
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutDownloaded);
         }
 
         /// <summary>
         /// Occurs when we downloaded a loadout from BattleClinic
         /// </summary>
-        /// <param name="feed"></param>
+        /// <param name="loadoutFeed"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
         private void OnLoadoutDownloaded(SerializableLoadoutFeed loadoutFeed, string errorMessage)
         {
-            if (this.IsDisposed)
+            if (IsDisposed)
                 return;
 
             // Reset the controls
@@ -248,15 +251,16 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race.Loadouts.Length == 0)
             {
-                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.\r\n{0}", errorMessage);
+                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.\r\n{0}",
+                                                  errorMessage);
                 lblTrainTime.Visible = true;
                 return;
             }
 
-            var loadout = loadoutFeed.Race.Loadouts[0];
+            SerializableLoadout loadout = loadoutFeed.Race.Loadouts[0];
 
             // Fill the items tree
-            var slotTypes = loadout.Slots.GroupBy(x => x.SlotType);
+            IEnumerable<IGrouping<string, SerializableLoadoutSlot>> slotTypes = loadout.Slots.GroupBy(x => x.SlotType);
             foreach (var slotType in slotTypes)
             {
                 TreeNode typeNode = new TreeNode(s_typeMap[slotType.Key]);
@@ -267,9 +271,7 @@ namespace EVEMon.SkillPlanner
                     if (item == null)
                         continue;
 
-                    TreeNode slotNode = new TreeNode();
-                    slotNode.Text = item.Name;
-                    slotNode.Tag = item;
+                    TreeNode slotNode = new TreeNode { Text = item.Name, Tag = item };
                     typeNode.Nodes.Add(slotNode);
 
                     m_prerequisites.AddRange(item.Prerequisites);
@@ -309,19 +311,19 @@ namespace EVEMon.SkillPlanner
             }
 
             // Compute the training time
-            var scratchpad = new CharacterScratchpad(m_character);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
             foreach (var entry in m_plan)
             {
                 scratchpad.Train(entry);
             }
 
-            var startTime = scratchpad.TrainingTime;
-            foreach (var prereq in m_prerequisites)
+            TimeSpan startTime = scratchpad.TrainingTime;
+            foreach (StaticSkillLevel prereq in m_prerequisites)
             {
                 scratchpad.Train(prereq);
             }
 
-            var trainingTime = scratchpad.TrainingTime.Subtract(startTime);
+            TimeSpan trainingTime = scratchpad.TrainingTime.Subtract(startTime);
 
             // update the labels
             btnPlan.Enabled = true;
@@ -331,22 +333,28 @@ namespace EVEMon.SkillPlanner
             lblTrainTime.Text = trainingTime.ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
         }
+
         #endregion
-        
+
+
         #region Global events
+
         /// <summary>
         /// Occurs when the plan changed. We update the status of the training time and such.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             if (e.Plan == m_plan)
                 UpdatePlanningControls();
         }
+
         #endregion
-        
+
+
         #region Controls' events handlers
+
         /// <summary>
         /// When the user double-click a loadout, we download it.
         /// </summary>
@@ -357,8 +365,7 @@ namespace EVEMon.SkillPlanner
             if (lvLoadouts.SelectedItems.Count == 0)
                 return;
 
-            var loadout = lvLoadouts.SelectedItems[0].Tag as SerializableLoadout;
-
+            SerializableLoadout loadout = lvLoadouts.SelectedItems[0].Tag as SerializableLoadout;
             DownloadLoadout(loadout);
         }
 
@@ -370,8 +377,8 @@ namespace EVEMon.SkillPlanner
         private void btnCancel_Click(object sender, EventArgs e)
         {
             m_selectedLoadout = null;
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -384,9 +391,11 @@ namespace EVEMon.SkillPlanner
             // Is the column we're already sorting by ? Then swap sort order
             if (e.Column == m_columnSorter.SortColumn)
             {
-                m_columnSorter.OrderOfSort = (m_columnSorter.OrderOfSort == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
+                m_columnSorter.OrderOfSort = (m_columnSorter.OrderOfSort == SortOrder.Ascending
+                                                  ? SortOrder.Descending
+                                                  : SortOrder.Ascending);
             }
-            // Then the user wants to sort by a different column
+                // Then the user wants to sort by a different column
             else
             {
                 m_columnSorter.SortColumn = e.Column;
@@ -407,11 +416,13 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic, m_selectedLoadout.Topic.ToString()));
+                Util.OpenURL(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic,
+                                           m_selectedLoadout.Topic.ToString()));
             }
             else
             {
-                MessageBox.Show("Please select a loadout to discuss.", "No Loadout Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select a loadout to discuss.", "No Loadout Selected", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
 
         }
@@ -423,7 +434,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnPlan_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryAddSet(m_prerequisites, m_selectedLoadout.LoadoutName);
+            IPlanOperation operation = m_plan.TryAddSet(m_prerequisites, m_selectedLoadout.LoadoutName);
             PlanHelper.Perform(operation);
             UpdatePlanningControls();
         }
@@ -436,21 +447,21 @@ namespace EVEMon.SkillPlanner
         private void tvLoadout_MouseUp(object sender, MouseEventArgs e)
         {
             // Show menu only if the right mouse button is clicked.
-            if (e.Button == MouseButtons.Right)
-            {
-                // Point where the mouse is clicked.
-                Point p = new Point(e.X, e.Y);
+            if (e.Button != MouseButtons.Right)
+                return;
 
-                // Get the node that the user has clicked.
-                TreeNode node = tvLoadout.GetNodeAt(p);
-                if (node != null && node.Tag != null)
-                {
-                    // Select the node the user has clicked.
-                    // The node appears selected until the menu is displayed on the screen.
-                    tvLoadout.SelectedNode = node;
-                    cmNode.Show(tvLoadout, p);
-                }
-            }
+            // Point where the mouse is clicked.
+            Point p = new Point(e.X, e.Y);
+
+            // Get the node that the user has clicked.
+            TreeNode node = tvLoadout.GetNodeAt(p);
+            if (node == null || node.Tag == null)
+                return;
+
+            // Select the node the user has clicked.
+            // The node appears selected until the menu is displayed on the screen.
+            tvLoadout.SelectedNode = node;
+            cmNode.Show(tvLoadout, p);
         }
 
         /// <summary>
@@ -487,17 +498,17 @@ namespace EVEMon.SkillPlanner
         {
             ExportToEFT();
         }
+
         #endregion
-       
+
+
         #region EFT Export Function
+
         private void ExportToEFT()
         {
-            Dictionary<String, List<string>> items;
-            string exportText;
-
-            items = GetItemsBySlots();
+            Dictionary<string, List<string>> items = GetItemsBySlots();
             ExtractProperties(items);
-            exportText = FormatForEFT(items);
+            string exportText = FormatForEFT(items);
 
             // Copy to clipboard
             try
@@ -508,8 +519,7 @@ namespace EVEMon.SkillPlanner
             catch (ExternalException ex)
             {
                 // there is a bug that results in an exception being
-                // thrown when the clipboard is in use by another
-                // process.
+                // thrown when the clipboard is in use by another process.
                 ExceptionHandler.LogException(ex, true);
             }
         }
@@ -537,25 +547,20 @@ namespace EVEMon.SkillPlanner
             exportText.AppendLine();
 
             if (items.ContainsKey(s_typeMap["lo"]))
-            {
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["lo"]].ToArray()));
-            }
+            
             if (items.ContainsKey(s_typeMap["med"]))
-            {
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["med"]].ToArray()));
-            }
+
             if (items.ContainsKey(s_typeMap["high"]))
-            {
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["high"]].ToArray()));
-            }
+
             if (items.ContainsKey(s_typeMap["rig"]))
-            {
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["rig"]].ToArray()));
-            }
+
             if (items.ContainsKey(s_typeMap["subSystem"]))
-            {
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["subSystem"]].ToArray()));
-            }
+
             if (items.ContainsKey(s_typeMap["drone"]))
             {
                 foreach (String s in items[s_typeMap["drone"]])
@@ -567,14 +572,15 @@ namespace EVEMon.SkillPlanner
             return exportText.ToString();
         }
 
+        /// <summary>
+        /// Extracts the properties.
+        /// </summary>
+        /// <param name="items">The items.</param>
         private void ExtractProperties(Dictionary<String, List<string>> items)
         {
             // Add "empty slot" mentions for every slot type
-            foreach (EvePropertyValue prop in m_ship.Properties)
+            foreach (EvePropertyValue prop in m_ship.Properties.Where(prop => prop.Property != null))
             {
-                if (prop.Property == null)
-                    continue;
-
                 if (prop.Property.Name.Contains("High Slots"))
                 {
                     int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
@@ -617,32 +623,54 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
         #endregion
 
+
         #region LoadoutListSorter
-        public class LoadoutListSorter : IComparer
+
+        private class LoadoutListSorter : IComparer
         {
-            private ListView m_loadouts;
-            public LoadoutListSorter(ShipLoadoutSelectWindow ls)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="LoadoutListSorter"/> class.
+            /// </summary>
+            public LoadoutListSorter()
             {
-                m_loadouts = ls.lvLoadouts;
                 OrderOfSort = SortOrder.Ascending;
             }
 
-            private int m_sortColumn;
-            public int SortColumn
-            {
-                get { return m_sortColumn; }
-                set { m_sortColumn = value; }
-            }
+            /// <summary>
+            /// Gets or sets the order of sort.
+            /// </summary>
+            /// <value>The order of sort.</value>
+            public SortOrder OrderOfSort { get; set; }
 
+            /// <summary>
+            /// Gets or sets the sort column.
+            /// </summary>
+            /// <value>The sort column.</value>
+            public int SortColumn { get; set; }
+
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <param name="x">The first object to compare.</param>
+            /// <param name="y">The second object to compare.</param>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>,
+            /// as shown in the following table.Value Meaning Less than zero <paramref name="x"/> is less than <paramref name="y"/>.
+            /// Zero <paramref name="x"/> equals <paramref name="y"/>. Greater than zero <paramref name="x"/> is greater than <paramref name="y"/>.
+            /// </returns>
+            /// <exception cref="T:System.ArgumentException">Neither <paramref name="x"/> nor <paramref name="y"/>
+            /// implements the <see cref="T:System.IComparable"/> interface.-or- <paramref name="x"/> and <paramref name="y"/>
+            /// are of different types and neither one can handle comparisons with the other. </exception>
             public int Compare(object x, object y)
             {
                 int compareResult = 0;
                 ListViewItem a = (ListViewItem)x;
                 ListViewItem b = (ListViewItem)y;
 
-                if (m_sortOrder == SortOrder.Descending)
+                if (OrderOfSort == SortOrder.Descending)
                 {
                     ListViewItem tmp = b;
                     b = a;
@@ -652,7 +680,7 @@ namespace EVEMon.SkillPlanner
                 SerializableLoadout sla = a.Tag as SerializableLoadout;
                 SerializableLoadout slb = b.Tag as SerializableLoadout;
 
-                switch (m_sortColumn)
+                switch (SortColumn)
                 {
                     case 0: // sort by name
                         compareResult = String.Compare(a.Text, b.Text);
@@ -660,37 +688,26 @@ namespace EVEMon.SkillPlanner
                     case 1: // Author
                         compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text);
                         break;
-                    case 2:  // Rating
-                        if (sla.Rating < slb.Rating)
+                    case 2: // Rating
+                        if (slb != null && (sla != null && sla.Rating < slb.Rating))
                         {
                             compareResult = -1;
                         }
-                        else if (sla.Rating > slb.Rating)
+                        else if (slb != null && (sla != null && sla.Rating > slb.Rating))
                         {
                             compareResult = 1;
                         }
-                        else
-                        {
-                            compareResult = 0;
-                        }
                         break;
-                    case 3:  // Date
-                        compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
+                    case 3: // Date
+                        if (sla != null && slb != null)
+                                compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
                         break;
                 }
 
                 return compareResult;
             }
-
-
-            private SortOrder m_sortOrder = SortOrder.None;
-
-            public SortOrder OrderOfSort
-            {
-                get { return m_sortOrder; }
-                set { m_sortOrder = value; }
-            }
         }
+
         #endregion
 
     }

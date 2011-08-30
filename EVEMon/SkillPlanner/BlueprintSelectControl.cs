@@ -41,23 +41,23 @@ namespace EVEMon.SkillPlanner
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
             {
-                cbUsabilityFilter.SelectedIndex = (int) Settings.UI.BlueprintBrowser.UsabilityFilter;
-                cbActivityFilter.SelectedIndex = (int) Settings.UI.BlueprintBrowser.ActivityFilter;
+                cbUsabilityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.UsabilityFilter;
+                cbActivityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.ActivityFilter;
                 tbSearchText.Text = Settings.UI.BlueprintBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
 
-                cbTech1.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) !=
-                                  ItemMetaGroup.Empty;
-                cbTech2.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) !=
-                                  ItemMetaGroup.Empty;
-                cbTech3.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) !=
-                                  ItemMetaGroup.Empty;
-                cbFaction.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) !=
-                                    ItemMetaGroup.Empty;
-                cbStoryline.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) !=
-                                      ItemMetaGroup.Empty;
-                cbOfficer.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Officer) !=
-                                    ItemMetaGroup.Empty;
+                cbTech1.Checked =
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.Empty;
+                cbTech2.Checked =
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.Empty;
+                cbTech3.Checked =
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
+                cbFaction.Checked =
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
+                cbStoryline.Checked =
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
+                cbOfficer.Checked =
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Officer) != ItemMetaGroup.Empty;
             }
             else
             {
@@ -238,11 +238,11 @@ namespace EVEMon.SkillPlanner
 
                     int result = BuildSubtree(group, node.Nodes);
 
-                    if (result != 0)
-                    {
-                        numberOfItems += result;
-                        tvItems.Nodes.Add(node);
-                    }
+                    if (result == 0)
+                        continue;
+
+                    numberOfItems += result;
+                    tvItems.Nodes.Add(node);
                 }
 
                 TreeNode selectedNode = null;

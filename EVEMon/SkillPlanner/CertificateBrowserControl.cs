@@ -37,7 +37,7 @@ namespace EVEMon.SkillPlanner
         {
             base.OnLoad(e);
 
-            lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
+            lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
 
             certSelectCtl.SelectionChanged += certSelectCtl_SelectionChanged;
             certDisplayCtl.SelectionChanged += certDisplayCtl_SelectionChanged;
@@ -60,7 +60,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnDisposed(object sender, EventArgs e)
+        private void OnDisposed(object sender, EventArgs e)
         {
             certSelectCtl.SelectionChanged -= certSelectCtl_SelectionChanged;
             certDisplayCtl.SelectionChanged -= certDisplayCtl_SelectionChanged;
@@ -104,14 +104,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public CertificateClass SelectedCertificateClass
         {
-            get
-            {
-                return certSelectCtl.SelectedCertificateClass;
-            }
-            set
-            {
-                certSelectCtl.SelectedCertificateClass = value;
-            }
+            get { return certSelectCtl.SelectedCertificateClass; }
+            set { certSelectCtl.SelectedCertificateClass = value; }
         }
 
         /// <summary>
@@ -160,7 +154,7 @@ namespace EVEMon.SkillPlanner
 
             Certificate firstCert = certClass.LowestGradeCertificate;
             lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                certClass.Name, (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
+                                         certClass.Name, (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             lblCategory.Text = certClass.Category.Name;
 
             // Initialize the labels' text for every existing grade
@@ -296,7 +290,8 @@ namespace EVEMon.SkillPlanner
                 else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                 {
                     tslbEligible.Text += String.Format(" (improved from \"{0}\")",
-                                                       highestClaimedCertificate.Grade.ToString().ToLower(CultureConstants.DefaultCulture));
+                                                       highestClaimedCertificate.Grade.ToString().ToLower(
+                                                           CultureConstants.DefaultCulture));
                 }
                 else
                 {
@@ -379,9 +374,9 @@ namespace EVEMon.SkillPlanner
                 Certificate firstCert = certClass.LowestGradeCertificate;
                 textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
                 lblName.Text = String.Format("{0} {1}", certClass.Name,
-                    (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
+                                             (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             }
-            // So, one of our cert class's grades has been selected, we use its description
+                // So, one of our cert class's grades has been selected, we use its description
             else
             {
                 textboxDescription.Text = cert.Description;
@@ -420,7 +415,7 @@ namespace EVEMon.SkillPlanner
 
         #region Context menu
 
-		/// <summary>
+        /// <summary>
         /// Handles the Click event of the tsPlanToBasic control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -466,9 +461,9 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        
+
         #region Heleper Methods
-		
+
         /// <summary>
         /// Updates the control visibility.
         /// </summary>
@@ -485,7 +480,7 @@ namespace EVEMon.SkillPlanner
                 tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
         }
- 
-	#endregion  
+
+        #endregion
     }
 }

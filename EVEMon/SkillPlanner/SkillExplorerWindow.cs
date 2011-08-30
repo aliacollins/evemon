@@ -1,12 +1,10 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -38,19 +36,20 @@ namespace EVEMon.SkillPlanner
     /// </remarks>
     public partial class SkillExplorerWindow : EVEMonForm
     {
-        private PlanWindow m_planWindow;
+        private readonly PlanWindow m_planWindow;
         private Character m_character;
         private Skill m_skill;
         private bool m_hasItems;
         private bool m_hasShips;
         private bool m_hasBlueprints;
 
+
         #region Constructor
 
         /// <summary>
         /// Constructor for designer.
         /// </summary>
-        public SkillExplorerWindow()
+        private SkillExplorerWindow()
         {
             InitializeComponent();
             splitContainer1.RememberDistanceKey = "SkillExplorer";
@@ -63,7 +62,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="skill">The skill we want to analyze</param>
         /// <param name="planWindow">The plan window</param>
-        public SkillExplorerWindow(Skill skill, PlanWindow planWindow) 
+        public SkillExplorerWindow(Skill skill, PlanWindow planWindow)
             : this()
         {
             m_planWindow = planWindow;
@@ -104,8 +103,8 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_skill == value)
                     return;
-                
-                // we can't unset a skill
+
+                // We can't unset a skill
                 if (value == null)
                     return;
 
@@ -114,9 +113,8 @@ namespace EVEMon.SkillPlanner
 
                 // If already in history combo, remove it to reinsert it at the top
                 if (cbHistory.Items.Contains(m_skill.Name))
-                {
                     cbHistory.Items.RemoveAt(cbHistory.Items.IndexOf(m_skill.Name));
-                }
+
                 cbHistory.Items.Insert(0, m_skill.Name);
                 cbHistory.SelectedIndex = 0;
 
@@ -128,6 +126,7 @@ namespace EVEMon.SkillPlanner
 
 
         #region Content creation and update
+
         /// <summary>
         /// Update all the content.
         /// </summary>
@@ -141,12 +140,13 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Update the character and plan name on the skill header group title.
         /// </summary>
-         private void UpdatePlanName()
+        private void UpdatePlanName()
         {
             if (m_planWindow == null)
                 return;
 
-            grpPlanName.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_character.Name, m_planWindow.Plan.Name);
+            grpPlanName.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_character.Name,
+                                             m_planWindow.Plan.Name);
         }
 
         /// <summary>
@@ -165,13 +165,18 @@ namespace EVEMon.SkillPlanner
             if (m_skill.IsKnown)
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Trained to level {0} with {1}", m_skill.Level,
-                    (m_skill.SkillPoints > 0 ? String.Format(CultureConstants.DefaultCulture,"{0:0,0,0} sp", m_skill.SkillPoints) : "0 sp"));
+                                (m_skill.SkillPoints > 0
+                                     ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} sp", m_skill.SkillPoints)
+                                     : "0 sp"));
             }
             else
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Not Trained - prereqs {0}met, skillbook is {1}",
-                    (m_skill.ArePrerequisitesMet ? String.Empty : "not "),
-                    (m_skill.IsOwned ? "owned" : String.Format(CultureConstants.DefaultCulture, "not owned, book costs {0} ISK", m_skill.FormattedCost)));
+                                (m_skill.ArePrerequisitesMet ? String.Empty : "not "),
+                                (m_skill.IsOwned
+                                     ? "owned"
+                                     : String.Format(CultureConstants.DefaultCulture, "not owned, book costs {0} ISK",
+                                                     m_skill.FormattedCost)));
             }
             sb.Append(")");
 
@@ -261,7 +266,9 @@ namespace EVEMon.SkillPlanner
                     SkillLevel skillLevel = new SkillLevel(m_skill, i);
 
                     // Gets the enabled skills and check it's not empty
-                    Skill[] enabledSkills = m_skill.Character.Skills.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToArray();
+                    Skill[] enabledSkills =
+                        m_skill.Character.Skills.Where(
+                            x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToArray();
                     if (enabledSkills.IsEmpty())
                         continue;
 
@@ -280,7 +287,7 @@ namespace EVEMon.SkillPlanner
                             levelNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
                         }
                     }
-                    // Or do we need to group skills by their groups ?
+                        // Or do we need to group skills by their groups ?
                     else if (rbShowTree.Checked)
                     {
                         foreach (IGrouping<SkillGroup, Skill> group in enabledSkills
@@ -328,9 +335,16 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 List<Item> items = new List<Item>(StaticItems.AllItems.Concat(StaticBlueprints.AllBlueprints).
-                    Where(x => x.MarketGroup.ParentGroup != null && x.MarketGroup.ParentGroup.ID != DBConstants.SkillsMarketGroupID). // exclude skills
-                    Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData)).
-                    Where(x => !cbShowBaseOnly.Checked || x.MetaGroup == ItemMetaGroup.T1 || x.MetaGroup == ItemMetaGroup.T2));
+                                                      Where(
+                                                          x =>
+                                                          x.MarketGroup.ParentGroup != null &&
+                                                          x.MarketGroup.ParentGroup.ID != DBConstants.SkillsMarketGroupID).
+                                                      // exclude skills
+                                                      Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData)).
+                                                      Where(
+                                                          x =>
+                                                          !cbShowBaseOnly.Checked || x.MetaGroup == ItemMetaGroup.T1 ||
+                                                          x.MetaGroup == ItemMetaGroup.T2));
 
                 // Scroll through levels
                 for (int i = 1; i <= 5; i++)
@@ -338,7 +352,8 @@ namespace EVEMon.SkillPlanner
                     SkillLevel skillLevel = new SkillLevel(m_skill, i);
 
                     // Gets the enabled objects and check it's not empty
-                    IEnumerable<Item> enabledObjects = items.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData && y.Level == i));
+                    IEnumerable<Item> enabledObjects =
+                        items.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData && y.Level == i));
                     if (enabledObjects.IsEmpty())
                         continue;
 
@@ -360,26 +375,33 @@ namespace EVEMon.SkillPlanner
 
                         foreach (Item blueprint in enabledObjects.Where(x => x is Blueprint).ToArray().OrderBy(x => x.Name))
                         {
-                            List<string> listOfActivities = blueprint.Prerequisites.Where(x => x.Skill == m_skill.StaticData && x.Level == i)
-                                                                        .Select(x => x.Activity.GetDescription()).ToList();
+                            List<string> listOfActivities =
+                                blueprint.Prerequisites.Where(x => x.Skill == m_skill.StaticData && x.Level == i)
+                                    .Select(x => x.Activity.GetDescription()).ToList();
                             TreeNode node = CreateNode(blueprint, blueprint.Prerequisites
-                                .Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character));
+                                                                      .Where(
+                                                                          x =>
+                                                                          listOfActivities.Contains(x.Activity.GetDescription())).
+                                                                      ToCharacter(m_character));
                             node.Text = String.Format("{0} ({1})", node.Text, string.Join(", ", listOfActivities));
                             levelNode.Nodes.Add(node);
                             m_hasBlueprints = true;
                         }
 
-                        foreach (Item item in enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)).ToArray().OrderBy(x => x.Name))
+                        foreach (
+                            Item item in
+                                enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)).ToArray().OrderBy(x => x.Name))
                         {
                             levelNode.Nodes.Add(CreateNode(item, item.Prerequisites.ToCharacter(m_character)));
                             m_hasItems = true;
                         }
                     }
-                    // Or do we need to group items by their groups ?
+                        // Or do we need to group items by their groups ?
                     else if (rbShowTree.Checked)
                     {
                         // Add ships
-                        IGrouping<MarketGroup, Item>[] shipsToAdd = enabledObjects.Where(x => x is Ship).GroupBy(x => x.MarketGroup.ParentGroup).ToArray();
+                        IGrouping<MarketGroup, Item>[] shipsToAdd =
+                            enabledObjects.Where(x => x is Ship).GroupBy(x => x.MarketGroup.ParentGroup).ToArray();
                         foreach (IGrouping<MarketGroup, Item> shipGroup in shipsToAdd.OrderBy(x => x.Key.Name))
                         {
                             TreeNode groupNode = new TreeNode(shipGroup.Key.Name);
@@ -392,23 +414,21 @@ namespace EVEMon.SkillPlanner
                         }
 
                         // Add blueprints recursively                       
-                        foreach (BlueprintMarketGroup blueprintMarketGroup in StaticBlueprints.BlueprintMarketGroups)
+                        foreach (TreeNode node in StaticBlueprints.BlueprintMarketGroups.SelectMany(
+                            blueprintMarketGroup =>
+                            CreateMarketGroupsNode(blueprintMarketGroup, enabledObjects.Where(x => x is Blueprint), i)))
                         {
-                            foreach (TreeNode node in CreateMarketGroupsNode(blueprintMarketGroup, enabledObjects.Where(x => x is Blueprint), i))
-                            {
-                                levelNode.Nodes.Add(node);
-                                m_hasBlueprints = true;
-                            }
+                            levelNode.Nodes.Add(node);
+                            m_hasBlueprints = true;
                         }
 
                         // Add items recursively
-                        foreach (MarketGroup marketGroup in StaticItems.MarketGroups)
+                        foreach (TreeNode node in StaticItems.MarketGroups.SelectMany(
+                            marketGroup =>
+                            CreateMarketGroupsNode(marketGroup, enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)))))
                         {
-                            foreach (TreeNode node in CreateMarketGroupsNode(marketGroup, enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint))))
-                            {
-                                levelNode.Nodes.Add(node);
-                                m_hasItems = true;
-                            }
+                            levelNode.Nodes.Add(node);
+                            m_hasItems = true;
                         }
                     }
 
@@ -416,7 +436,7 @@ namespace EVEMon.SkillPlanner
                     levelNode.Expand();
                     tvEntity.Nodes.Add(levelNode);
                 }
-                
+
                 // No enabled skill found for any level ?
                 if (tvEntity.Nodes.Count == 0)
                     tvEntity.Nodes.Add(new TreeNode("No ships, blueprints or items enabled by this skill"));
@@ -435,7 +455,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="blueprints">The blueprints.</param>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        private IEnumerable<TreeNode> CreateMarketGroupsNode(BlueprintMarketGroup blueprintMarketGroup, IEnumerable<Item> blueprints, int level)
+        private IEnumerable<TreeNode> CreateMarketGroupsNode(BlueprintMarketGroup blueprintMarketGroup,
+                                                             IEnumerable<Item> blueprints, int level)
         {
             // Add categories
             foreach (BlueprintMarketGroup category in blueprintMarketGroup.SubGroups)
@@ -453,11 +474,12 @@ namespace EVEMon.SkillPlanner
             foreach (Item blueprint in blueprints.Where(x => x.MarketGroup == blueprintMarketGroup))
             {
                 List<string> listOfActivities = blueprint.Prerequisites
-                                        .Where(x => x.Skill == m_skill.StaticData && x.Level == level)
-                                        .Select(x => x.Activity.GetDescription()).ToList();
+                    .Where(x => x.Skill == m_skill.StaticData && x.Level == level)
+                    .Select(x => x.Activity.GetDescription()).ToList();
 
                 TreeNode node = CreateNode(blueprint, blueprint.Prerequisites
-                                        .Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character));
+                                                          .Where(x => listOfActivities.Contains(x.Activity.GetDescription())).
+                                                          ToCharacter(m_character));
                 node.Text = String.Format("{0} ({1})", node.Text, string.Join(", ", listOfActivities));
                 yield return node;
             }
@@ -500,13 +522,11 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode CreateNode(Object obj, IEnumerable<SkillLevel> prerequisites)
         {
-            TreeNode node = new TreeNode(obj.ToString());
-            node.ToolTipText = String.Empty;
-            node.Tag = obj;
+            TreeNode node = new TreeNode(obj.ToString()) { ToolTipText = String.Empty, Tag = obj };
 
             // When all prereqs satisifed, keep the default color
             if (prerequisites.All(x => x.IsTrained))
-                    return node;
+                return node;
 
             // Are all other prerequisites known ?
             if (prerequisites.All(x => x.IsTrained || x.Skill == m_skill))
@@ -531,30 +551,28 @@ namespace EVEMon.SkillPlanner
         /// Creates a prereq skills list for a blueprint with the given activity.
         /// </summary>
         /// <param name="prerequisites">The prerequisites of a blueprint activities</param>
-        /// <param name="prereqList">A list of the unique prerequisites skills for the given activities</param>
-        private List<SkillLevel> CreatePrereqList(IEnumerable<SkillLevel> prerequisites)
+        private IEnumerable<SkillLevel> CreatePrereqList(IEnumerable<SkillLevel> prerequisites)
         {
             List<SkillLevel> prereqList = new List<SkillLevel>();
-            foreach (SkillLevel prereq in prerequisites)
+            foreach (SkillLevel prereq in prerequisites.Where(prereq => !prereqList.Contains(prereq)))
             {
-                if (prereqList.Contains(prereq))
-                    continue;
-
                 prereqList.Add(prereq);
             }
 
             return prereqList;
         }
+
         #endregion
 
 
         #region Global events and auto-update
+
         /// <summary>
         /// Occurs whenever the plan changes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdatePlanName();
         }
@@ -564,7 +582,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -581,10 +599,12 @@ namespace EVEMon.SkillPlanner
         {
             UpdateHeader();
         }
+
         #endregion
 
 
         #region Skills context Menu
+
         /// <summary>
         /// Returns the currently selected skill or null if non is selected.
         /// </summary>
@@ -602,7 +622,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void tvSkills_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void tvSkills_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.Right)
                 return;
@@ -613,7 +633,7 @@ namespace EVEMon.SkillPlanner
             // Display menu only when we access the skill explorer through a plan
             if (m_planWindow == null)
                 return;
-           
+
             // Do not display menu for non-skill nodes
             Skill skill = GetSelectedSkill();
             if (skill == null)
@@ -695,7 +715,8 @@ namespace EVEMon.SkillPlanner
                 FormatPrerequisite(sb, prereq, ref index);
             }
 
-            MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + skill.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + skill.Name, MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -714,22 +735,30 @@ namespace EVEMon.SkillPlanner
                 if (!prereq.IsTrained)
                 {
                     index++;
-                    string level = prereq.Skill.Level > 0 ? String.Format(CultureConstants.DefaultCulture, "(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)";
-                    sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} {2}\n", index, prereq.ToString(), level);
+                    string level = prereq.Skill.Level > 0
+                                       ? String.Format(CultureConstants.DefaultCulture, "(Trained to level {0})",
+                                                       prereq.Skill.RomanLevel)
+                                       : "(Not yet trained)";
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} {2}\n", index, prereq, level);
                 }
                 return;
             }
 
             // We don't know this prereq at all
             index++;
-            sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} (Prereqs {2}met, skillbook {3}", index, prereq.ToString(),
-                (prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not "),
-                (prereq.Skill.IsOwned ? "owned)": String.Format(CultureConstants.DefaultCulture, "not owned,\n costs {0} ISK)\n", prereq.Skill.FormattedCost)));
+            sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} (Prereqs {2}met, skillbook {3}", index, prereq,
+                            (prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not "),
+                            (prereq.Skill.IsOwned
+                                 ? "owned)"
+                                 : String.Format(CultureConstants.DefaultCulture, "not owned,\n costs {0} ISK)\n",
+                                                 prereq.Skill.FormattedCost)));
         }
+
         #endregion
 
 
         #region Items Ships and Blueprints context menu
+
         /// <summary>
         /// Returns the currently selected item or null if non is selected.
         /// </summary>
@@ -749,7 +778,8 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private List<string> GetSelectedItemActivities(Item entity)
         {
-            List<string> list = tvEntity.SelectedNode.Text.Replace(entity.Name, String.Empty).Trim().Trim("()".ToCharArray()).Split(',').ToList();
+            List<string> list =
+                tvEntity.SelectedNode.Text.Replace(entity.Name, String.Empty).Trim().Trim("()".ToCharArray()).Split(',').ToList();
 
             if (list[0] == String.Empty)
                 list[0] = (BlueprintActivity.None.GetDescription());
@@ -762,14 +792,14 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void tvEntity_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void tvEntity_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button != MouseButtons.Right)
                 return;
 
             // Updates selection
             tvEntity.SelectedNode = e.Node;
-            
+
             // Display menu only when we access the skill explorer through a plan
             if (m_planWindow == null)
                 return;
@@ -782,7 +812,9 @@ namespace EVEMon.SkillPlanner
             // "Add to plan" is enabled if we don't know all the prereqs 
             // and we're not already planning at least one of the unknown prereqs
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            bool canPlan = entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character).Any(x => !x.IsTrained && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
+            bool canPlan =
+                entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character).
+                    Any(x => !x.IsTrained && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
             tsShowObjectPrereqs.Enabled = canPlan;
             tsAddObjectToPlan.Enabled = canPlan;
 
@@ -801,12 +833,14 @@ namespace EVEMon.SkillPlanner
         private void tsAddEntityToPlan_Click(object sender, EventArgs e)
         {
             Item entity = GetSelectedItem();
-        
+
             if (entity == null)
                 return;
 
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            IPlanOperation operation = m_planWindow.Plan.TryAddSet(entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())), entity.Name);
+            IPlanOperation operation =
+                m_planWindow.Plan.TryAddSet(
+                    entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())), entity.Name);
             PlanHelper.Perform(operation);
         }
 
@@ -824,8 +858,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            List<SkillLevel> prereqList = CreatePrereqList(entity.Prerequisites
-                                            .Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character));
+            IEnumerable<SkillLevel> prereqList = CreatePrereqList(entity.Prerequisites
+                                                               .Where(x => listOfActivities.Contains(x.Activity.GetDescription()))
+                                                               .ToCharacter(m_character));
 
             int index = 0;
             StringBuilder sb = new StringBuilder();
@@ -834,12 +869,15 @@ namespace EVEMon.SkillPlanner
                 FormatPrerequisite(sb, prereq, ref index);
             }
 
-            MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + entity.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + entity.Name, MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
         }
+
         #endregion
 
 
         #region Controls' events
+
         /// <summary>
         /// Toggling the radio buttons to switch between sorted list and category views
         /// </summary>
@@ -884,22 +922,22 @@ namespace EVEMon.SkillPlanner
             Item item = GetSelectedItem();
             if (item == null)
                 return;
-            
-            Item ship = item as Ship;
-            Item blueprint = item as Blueprint;
 
+            Item ship = item as Ship;
             if (ship != null)
             {
                 m_planWindow.ShowShipInBrowser(ship);
+                return;
             }
-            else if (blueprint != null)
+
+            Item blueprint = item as Blueprint;
+            if (blueprint != null)
             {
-                m_planWindow.ShowBlueprintInBrowser(item);
+                m_planWindow.ShowBlueprintInBrowser(blueprint);
+                return;
             }
-            else if (item != null)
-            {
-                m_planWindow.ShowItemInBrowser(item);
-            }
+
+            m_planWindow.ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -923,9 +961,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbHistory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string skillName = cbHistory.Items[cbHistory.SelectedIndex] as string;
+            string skillName = cbHistory.Items[cbHistory.SelectedIndex] as String;
             Skill = m_character.Skills[skillName];
         }
-        #endregion 
+
+        #endregion
     }
 }

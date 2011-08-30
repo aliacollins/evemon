@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 using EVEMon.Common;
-using EVEMon.Controls;
+using EVEMon.Common.Controls;
 using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon.SkillPlanner
@@ -17,12 +13,12 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class PlanToOperationForm : EVEMonForm
     {
-        private IPlanOperation m_operation;
+        private readonly IPlanOperation m_operation;
 
         /// <summary>
         /// Designer constructor
         /// </summary>
-        public PlanToOperationForm()
+        private PlanToOperationForm()
         {
             InitializeComponent();
         }
@@ -32,12 +28,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="operation"></param>
         public PlanToOperationForm(IPlanOperation operation)
-            :this()
+            : this()
         {
             if (operation.Type == PlanOperations.None)
-            {
                 throw new ArgumentException("This window doesn't support empty operations.", "operation");
-            }
 
             m_operation = operation;
             rootMultiPanel.SelectedPage = additionPage;
@@ -54,7 +48,7 @@ namespace EVEMon.SkillPlanner
             // Are we performing an addition ?
             if (m_operation.Type == PlanOperations.Addition)
             {
-                this.Text = "Add entries to plan";
+                Text = "Add entries to plan";
 
                 // Updates the other buttons
                 previousButton.Visible = false;
@@ -74,18 +68,19 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     priorityNumericBox.Minimum = m_operation.HighestPriorityForAddition;
-                    priorityLabel.Text = "The highest priority you can set is " + m_operation.HighestPriorityForAddition.ToString();
+                    priorityLabel.Text = "The highest priority you can set is " +
+                                         m_operation.HighestPriorityForAddition.ToString();
                 }
             }
-            // Suppression 
+                // Suppression 
             else
             {
-                this.Text = "Remove entries from plan";
+                Text = "Remove entries from plan";
                 previousButton.Visible = (m_operation.RemovablePrerequisites.Count != 0);
                 cancelButton.Focus();
 
                 // Updates the selected page
-                this.rootMultiPanel.SelectionChange += new MultiPanelSelectionChangeHandler(rootMultiPanel_SelectionChange);
+                rootMultiPanel.SelectionChange += rootMultiPanel_SelectionChange;
                 rootMultiPanel.SelectedPage = dependenciesSuppressionPage;
 
                 // Loads the entries to remove listbox
@@ -102,17 +97,17 @@ namespace EVEMon.SkillPlanner
         private void FillListBox<T>(IEnumerable<T> items, ListBox listBox)
             where T : ISkillLevel
         {
-            var plan = new PlanScratchpad(m_operation.Plan.Character);
+            PlanScratchpad plan = new PlanScratchpad(m_operation.Plan.Character);
             plan.RebuildPlanFrom(items.Select(x => new PlanEntry(x.Skill, x.Level)));
             plan.Fix();
 
             listBox.Items.Clear();
-            foreach (var entry in plan)
+            foreach (PlanEntry entry in plan)
             {
                 string name = entry.ToString();
 
                 if (m_operation.Type == PlanOperations.Addition)
-                { 
+                {
                     // Skip if the entry is already in the plan
                     if (m_operation.Plan.IsPlanned(entry.Skill, entry.Level))
                         continue;
@@ -146,7 +141,7 @@ namespace EVEMon.SkillPlanner
             // When there aren't any, we just have one page.
 
             // Guess whether we're on the final page (2/2 or 1/1)
-            bool isFinal = false;
+            bool isFinal;
             if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage)
             {
                 isFinal = true;
@@ -205,8 +200,8 @@ namespace EVEMon.SkillPlanner
                 m_operation.PerformSuppression(uselessPrereqsCheckbox.Checked);
             }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -216,8 +211,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

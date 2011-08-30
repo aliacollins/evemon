@@ -6,7 +6,6 @@ namespace EVEMon.SkillPlanner
 {
     public partial class AttributesOptimizationSettingsForm : EVEMonForm
     {
-        private AttributesOptimizationForm m_optimizationForm;
         private readonly Character m_character;
         private readonly Plan m_plan;
 
@@ -30,10 +29,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the optimization form.
         /// </summary>
         /// <value>The optimization form.</value>
-        public AttributesOptimizationForm OptimizationForm
-        {
-            get { return m_optimizationForm; }
-        }
+        public AttributesOptimizationForm OptimizationForm { get; private set; }
 
         /// <summary>
         /// Handles the Click event of the buttonRemappingPoints control.
@@ -44,7 +40,7 @@ namespace EVEMon.SkillPlanner
         {
             string title = String.Format("Attributes optimization ({0}, remapping points)", m_plan.Name);
             string description = String.Format("Based on {0}; using the remapping points you defined.", m_plan.Name);
-            m_optimizationForm = new AttributesOptimizationForm(m_character, m_plan, 
+            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan, 
                 AttributesOptimizationForm.Strategy.RemappingPoints, title, description);
         }
 
@@ -57,7 +53,7 @@ namespace EVEMon.SkillPlanner
         {
             string title = String.Format("Attributes optimization ({0}, first year)", m_plan.Name);
             string description = String.Format("Based on {0}; best attributes for the first year.", m_plan.Name);
-            m_optimizationForm = new AttributesOptimizationForm(m_character, m_plan,
+            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                 AttributesOptimizationForm.Strategy.OneYearPlan, title, description);
         }
 
@@ -71,7 +67,7 @@ namespace EVEMon.SkillPlanner
             string title = String.Format("Attributes optimization ({0})", m_character.Name);
             string description = String.Format("Based on {0}", m_character.Name);
             description += (description.EndsWith("s") ? "' skills" : "'s skills");
-            m_optimizationForm = new AttributesOptimizationForm(m_character, m_plan,
+            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                 AttributesOptimizationForm.Strategy.Character, title, description);
         }
     }

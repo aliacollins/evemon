@@ -305,7 +305,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void contextMenu_Opening(object sender, CancelEventArgs e)
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
             if (tvSkillList.SelectedNode == null)
             {

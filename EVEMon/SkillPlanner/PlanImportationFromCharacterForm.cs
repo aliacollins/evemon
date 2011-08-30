@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -17,76 +12,56 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class PlanImportationFromCharacterForm : EVEMonForm
     {
-        private Character m_targetCharacter;
-        private Character m_selectedChar;
-        private Plan m_selectedPlan;
-        private Plan m_targetPlan;
-
-
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="toCharacter"></param>
+        /// <param name="targetCharacter"></param>
         public PlanImportationFromCharacterForm(Character targetCharacter)
         {
             InitializeComponent();
-            m_targetCharacter = targetCharacter;
+            TargetCharacter = targetCharacter;
         }
 
         /// <summary>
         /// Gets the selected source plan.
         /// </summary>
-        public Plan SourcePlan
-        {
-            get { return m_selectedPlan; }
-        }
-
-        /// <summary>
-        /// Gets the selected source character.
-        /// </summary>
-        public Character SourceCharacter
-        {
-            get { return m_selectedChar; }
-        }
+        public Plan SourcePlan { get; private set; }
 
         /// <summary>
         /// Gets the target character.
         /// </summary>
-        public Character TargetCharacter
-        {
-            get { return m_targetCharacter; }
-        }
+        public Character TargetCharacter { get; private set; }
 
         /// <summary>
         /// Gets the exported plan. 
         /// </summary>
         /// <remarks>This plan has not been added to the character's list and still has the same name than the source plan.</remarks>
-        public Plan TargetPlan
-        {
-            get { return m_targetPlan; }
-        }
+        public Plan TargetPlan { get; private set; }
 
         /// <summary>
         /// Populate the plans list from the given character
         /// </summary>
-        /// <param name="characterName"></param>
+        /// <param name="character"></param>
         private void PopulatePlans(Character character)
         {
             btnLoad.Enabled = false;
             lbPlan.Items.Clear();
-            foreach (var plan in character.Plans)
+            foreach (Plan plan in character.Plans)
             {
                 lbPlan.Items.Add(plan);
             }
         }
+
+
         #region Event handlers
+
         /// <summary>
         /// Populate the character list with all characters except the target
         /// </summary>
         private void CrossPlanSelect_Load(object sender, EventArgs e)
         {
             cbCharacter.Items.Clear();
-            foreach (var character in EveMonClient.Characters.Where(x => x.CharacterID != m_targetCharacter.CharacterID))
+            foreach (var character in EveMonClient.Characters.Where(x => x.CharacterID != TargetCharacter.CharacterID))
             {
                 cbCharacter.Items.Add(character);
             }
@@ -121,12 +96,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            m_selectedPlan = lbPlan.SelectedItem as Plan;
-            m_selectedChar = cbCharacter.SelectedItem as Character;
-            m_targetPlan = m_selectedPlan.Clone(m_targetCharacter);
+            SourcePlan = (Plan)lbPlan.SelectedItem;
+            TargetPlan = SourcePlan.Clone(TargetCharacter);
             DialogResult = DialogResult.OK;
-            this.Close();
+            Close();
         }
+
         #endregion
     }
 }

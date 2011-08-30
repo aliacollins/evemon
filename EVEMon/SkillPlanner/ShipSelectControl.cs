@@ -169,9 +169,10 @@ namespace EVEMon.SkillPlanner
         private void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0 ?
-                                tvItems.SelectedNodes[0].Tag.GetHashCode() : 0);
-            
+            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                                        : 0);
+
             int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
@@ -183,17 +184,17 @@ namespace EVEMon.SkillPlanner
                 {
                     TreeNode node = new TreeNode
                                         {
-                        Text = group.Name,
-                        Tag = group
-                    };
+                                            Text = group.Name,
+                                            Tag = group
+                                        };
 
                     int result = BuildSubtree(group, node.Nodes);
 
-                    if (result != 0)
-                    {
-                        numberOfItems += result;
-                        tvItems.Nodes.Add(node);
-                    }
+                    if (result == 0)
+                        continue;
+
+                    numberOfItems += result;
+                    tvItems.Nodes.Add(node);
                 }
 
                 TreeNode selectedNode = null;
@@ -201,13 +202,10 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes())
+                    foreach (TreeNode node in tvItems.GetAllNodes().Where(node => node.Tag.GetHashCode() == selectedItemHash))
                     {
-                        if (node.Tag.GetHashCode() == selectedItemHash)
-                        {
-                            tvItems.SelectNodeWithTag(node.Tag);
-                            selectedNode = node;
-                        }
+                        tvItems.SelectNodeWithTag(node.Tag);
+                        selectedNode = node;
                     }
                 }
 

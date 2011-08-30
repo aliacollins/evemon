@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using EVEMon.Common;
+﻿using System.Windows.Forms;
 
 namespace EVEMon.SkillPlanner
 {
@@ -39,12 +35,8 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            TextRenderer.DrawText(e.Graphics,
-                label.Text,
-                label.Font,
-                e.TextRectangle,
-                label.ForeColor,
-                TextFormatFlags.EndEllipsis);
+            TextRenderer.DrawText(e.Graphics, label.Text, label.Font, e.TextRectangle, label.ForeColor,
+                                  TextFormatFlags.EndEllipsis);
         }
     }
 }

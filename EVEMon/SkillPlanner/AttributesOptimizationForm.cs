@@ -131,7 +131,7 @@ namespace EVEMon.SkillPlanner
             m_thread = new Thread(Run);
             m_thread.Start();
 
-            lvPoints.Font = FontFactory.GetDefaultFont(9F, FontStyle.Regular);
+            lvPoints.Font = FontFactory.GetDefaultFont(9F);
         }
 
         /// <summary>

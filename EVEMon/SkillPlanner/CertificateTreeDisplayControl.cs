@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
 
             cmListSkills.Opening += cmListSkills_Opening;
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
-            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
             treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;

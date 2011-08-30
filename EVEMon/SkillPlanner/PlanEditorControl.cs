@@ -19,7 +19,6 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
-
     /// <summary>
     /// The main control of the plan editor window, the list of plan entries.
     /// </summary>

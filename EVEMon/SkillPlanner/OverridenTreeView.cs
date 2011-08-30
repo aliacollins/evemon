@@ -9,7 +9,7 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     internal class OverridenTreeView : TreeView
     {
-        private const int WM_LBUTTONDBLCLK = 0x203;
+        private const int WmLButtonDblClk = 0x203;
 
         /// <summary>
         /// Overrides <see cref="M:System.Windows.Forms.Control.WndProc(System.Windows.Forms.Message@)"/>.
@@ -17,7 +17,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="m">The Windows <see cref="T:System.Windows.Forms.Message"/> to process.</param>
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_LBUTTONDBLCLK)
+            if (m.Msg == WmLButtonDblClk)
             {
                 HandleDoubleClick(ref m);
             }

@@ -22,11 +22,13 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class EFTLoadoutImportationForm : EVEMonForm
     {
+        private readonly List<Item> m_objects = new List<Item>();
+        private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
+
         private Plan m_plan;
         private BaseCharacter m_character;
         private string m_loadoutName = String.Empty;
-        private readonly List<Item> m_objects = new List<Item>();
-        private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
+
 
         #region Constructors
 
@@ -51,15 +53,15 @@ namespace EVEMon.SkillPlanner
         #region Overridden Methods
 
         /// <summary>
-		/// Checks and pastes loadout from clipboard.
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivated(EventArgs e)
-		{
-			base.OnActivated(e);
-            
-			if (!Visible)
-				return;
+        /// Checks and pastes loadout from clipboard.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            if (!Visible)
+                return;
 
             if (PasteTextBox.Text.Length > 0)
                 return;
@@ -67,14 +69,14 @@ namespace EVEMon.SkillPlanner
             if (!Clipboard.ContainsText())
                 return;
 
-			string clipboardText = Clipboard.GetText();
+            string clipboardText = Clipboard.GetText();
 
-			if (!IsLoadout(clipboardText))
-				return;
+            if (!IsLoadout(clipboardText))
+                return;
 
             ExplanationLabel.Text = "The EFT formated loadout is shown below.";
-			PasteTextBox.Text = Clipboard.GetText();
-		}
+            PasteTextBox.Text = Clipboard.GetText();
+        }
 
         /// <summary>
         /// Unsubscribe events on closing.
@@ -100,12 +102,12 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set
             {
-                if (m_plan != value)
-                {
-                    m_plan = value;
-                    m_character = (Character)m_plan.Character;
-                    UpdatePlanStatus();
-                }
+                if (m_plan == value)
+                    return;
+
+                m_plan = value;
+                m_character = m_plan.Character;
+                UpdatePlanStatus();
             }
         }
 
@@ -119,9 +121,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            if(e.Plan == m_plan) UpdatePlanStatus();
+            if (e.Plan == m_plan)
+                UpdatePlanStatus();
         }
 
         /// <summary>
@@ -129,9 +132,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character) return;
+            if (e.Character != m_character)
+                return;
             UpdatePlanStatus();
         }
 
@@ -230,15 +234,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">Arguments of the event.</param>
         private void tvLoadout_DoubleClick(object sender, EventArgs e)
         {
-            if (ResultsTreeView.SelectedNode != null)
-            {
-                Item item = ResultsTreeView.SelectedNode.Tag as Item;
-                if (item != null)
-                {
-                    PlanWindow opener = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                    opener.ShowItemInBrowser(item);
-                }
-            }
+            if (ResultsTreeView.SelectedNode == null)
+                return;
+
+            Item item = ResultsTreeView.SelectedNode.Tag as Item;
+            if (item == null)
+                return;
+
+            PlanWindow opener = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            opener.ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -246,23 +250,23 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender">Source of the event.</param>
         /// <param name="e">Arguments of the event.</param>
-        private void tvLoadout_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void tvLoadout_MouseUp(object sender, MouseEventArgs e)
         {
             // Show menu only if the right mouse button is clicked.
-            if (e.Button == MouseButtons.Right)
-            {
-                // Point where the mouse is clicked.
-                Point p = new Point(e.X, e.Y);
+            if (e.Button != MouseButtons.Right)
+                return;
 
-                // Get the node that the user has clicked.
-                TreeNode node = ResultsTreeView.GetNodeAt(p);
-                if (node != null && node.Tag != null)
-                {
-                    // Select the node the user has clicked.
-                    ResultsTreeView.SelectedNode = node;
-                    RightClickContextMenuStrip.Show(ResultsTreeView, p);
-                }
-            }
+            // Point where the mouse is clicked.
+            Point p = new Point(e.X, e.Y);
+
+            // Get the node that the user has clicked.
+            TreeNode node = ResultsTreeView.GetNodeAt(p);
+            if (node == null || node.Tag == null)
+                return;
+
+            // Select the node the user has clicked.
+            ResultsTreeView.SelectedNode = node;
+            RightClickContextMenuStrip.Show(ResultsTreeView, p);
         }
 
         #endregion
@@ -271,29 +275,27 @@ namespace EVEMon.SkillPlanner
         #region Helper Methods
 
         /// <summary>
-		/// Checks loadout for valid header.
-		/// </summary>
-		/// <param name="text">Loadout text.</param>
-		/// <returns>Is loadout valid.</returns>
-		private bool IsLoadout(string text)
-		{
-			string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-			if (lines.Length == 0)
-				return false;
+        /// Checks loadout for valid header.
+        /// </summary>
+        /// <param name="text">Loadout text.</param>
+        /// <returns>Is loadout valid.</returns>
+        private bool IsLoadout(string text)
+        {
+            string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length == 0)
+                return false;
 
-			// Error on first line ?
-			string line = lines[0];
-			if (String.IsNullOrEmpty(line) || !line.StartsWith("[") || !line.Contains(","))
-				return false;
+            // Error on first line ?
+            string line = lines[0];
+            if (String.IsNullOrEmpty(line) || !line.StartsWith("[") || !line.Contains(","))
+                return false;
 
-			// Retrieve the ship
-			int commaIndex = line.IndexOf(',');
-			string shipTypeName = line.Substring(1, commaIndex - 1);
-			Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
-			if (ship == null)
-				return false;
+            // Retrieve the ship
+            int commaIndex = line.IndexOf(',');
+            string shipTypeName = line.Substring(1, commaIndex - 1);
+            Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
 
-			return true;
+            return ship != null;
         }
 
         /// <summary>
@@ -309,7 +311,7 @@ namespace EVEMon.SkillPlanner
             // Retrieve the item and its charge
             string itemName = line.Contains(",") ? line.Substring(0, line.LastIndexOf(',')) : line;
             string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
-            
+
             // Look up if it's a drone
             itemName = itemName.Contains(" x") ? itemName.Substring(0, line.LastIndexOf(" x")) : itemName;
 
@@ -335,39 +337,35 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Is it a rig?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.ShipModificationsMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(new[] { DBConstants.ShipModificationsMarketGroupID }))
                     nodeName = "Rigs";
 
                 // Is it a subsystem?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.SubsystemsMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(new[] { DBConstants.SubsystemsMarketGroupID }))
                     nodeName = "Subsystems";
 
                 // Is it a drone?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.DronesMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(new[] { DBConstants.DronesMarketGroupID }))
                     nodeName = "Drones";
 
                 // Gets or create the node for the slot
-                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey(nodeName) ?
-                    ResultsTreeView.Nodes.Add(nodeName, nodeName) :
-                    ResultsTreeView.Nodes[nodeName];
+                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey(nodeName)
+                                        ? ResultsTreeView.Nodes.Add(nodeName, nodeName)
+                                        : ResultsTreeView.Nodes[nodeName];
 
                 // Add a new node
-                TreeNode itemNode = new TreeNode();
-                itemNode.Text = item.Name;
-                itemNode.Tag = item;
+                TreeNode itemNode = new TreeNode { Text = item.Name, Tag = item };
                 slotNode.Nodes.Add(itemNode);
             }
 
             // Has charges ? 
             if (charge != null)
             {
-                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey("Ammunition") ?
-                    ResultsTreeView.Nodes.Add("Ammunition", "Ammunition") :
-                    ResultsTreeView.Nodes["Ammunition"];
+                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey("Ammunition")
+                                        ? ResultsTreeView.Nodes.Add("Ammunition", "Ammunition")
+                                        : ResultsTreeView.Nodes["Ammunition"];
 
-                TreeNode ammoNode = new TreeNode();
-                ammoNode.Text = charge.Name;
-                ammoNode.Tag = charge;
+                TreeNode ammoNode = new TreeNode { Text = charge.Name, Tag = charge };
                 slotNode.Nodes.Add(ammoNode);
             }
 
@@ -387,8 +385,8 @@ namespace EVEMon.SkillPlanner
             // Compute the skills to add
             m_skillsToAdd.Clear();
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
-            Character character = m_character as Character;
-            foreach (var obj in m_objects)
+            Character character = (Character)m_character;
+            foreach (Item obj in m_objects)
             {
                 scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill].Level < x.Level));
             }
@@ -402,7 +400,7 @@ namespace EVEMon.SkillPlanner
                 PlanedLabel.Text = "All skills already trained.";
                 TrainTimeLabel.Visible = false;
             }
-            // Are skills already planned ?
+                // Are skills already planned ?
             else if (m_plan.AreSkillsPlanned(m_skillsToAdd))
             {
                 AddToPlanButton.Enabled = false;
@@ -410,7 +408,7 @@ namespace EVEMon.SkillPlanner
                 PlanedLabel.Text = "All skills already trained or planned.";
                 TrainTimeLabel.Visible = false;
             }
-            // There is at least one untrained or non-planned skill
+                // There is at least one untrained or non-planned skill
             else
             {
                 AddToPlanButton.Enabled = true;

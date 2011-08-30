@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -6,6 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Serialization.Settings;
 using EVEMon.Controls;
 using SortOrder = EVEMon.Common.SortOrder;
 
@@ -22,7 +24,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor for designer.
         /// </summary>
-        public PlanManagementWindow()
+        private PlanManagementWindow()
         {
             InitializeComponent();
         }
@@ -36,8 +38,6 @@ namespace EVEMon.SkillPlanner
         {
             m_character = character;
             m_columnSorter = new PlanComparer(PlanSort.Name);
-
-            EveMonClient.CharacterPlanCollectionChanged += new EventHandler<CharacterChangedEventArgs>(EveMonClient_CharacterPlanCollectionChanged);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            EveMonClient.CharacterPlanCollectionChanged -= new EventHandler<CharacterChangedEventArgs>(EveMonClient_CharacterPlanCollectionChanged);
+            EveMonClient.CharacterPlanCollectionChanged -= EveMonClient_CharacterPlanCollectionChanged;
             base.OnClosing(e);
         }
 
@@ -57,8 +57,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void PlanSelectWindow_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            EveMonClient.CharacterPlanCollectionChanged += EveMonClient_CharacterPlanCollectionChanged;
 
             UpdateContent(true);
             lbPlanList.ListViewItemSorter = null;
@@ -79,9 +81,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Or are we just opening a plan ?
-            var plan = (Plan)lbPlanList.SelectedItems[0].Tag;
+            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             WindowsFactory<PlanWindow>.ShowByTag(plan);
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -91,16 +93,18 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
+
         #region List management and creation
+
         /// <summary>
         /// Occurs when new plans are added or removed to the collection
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_CharacterPlanCollectionChanged(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterPlanCollectionChanged(object sender, CharacterChangedEventArgs e)
         {
             UpdateContent(true);
         }
@@ -112,30 +116,29 @@ namespace EVEMon.SkillPlanner
         private void UpdateContent(bool restoreSelectionAndFocus)
         {
             // Store selection and focus
-            var selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).ToList();
-            var focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
+            List<Plan> selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).ToList();
+            Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
 
             lbPlanList.BeginUpdate();
             try
             {
                 // Recreate the list from scratch
                 lbPlanList.Items.Clear();
-                foreach (var plan in m_character.Plans)
+                foreach (Plan plan in m_character.Plans)
                 {
                     // Create the item and add it.
-                    ListViewItem lvi = new ListViewItem(plan.Name);
-                    lvi.Tag = plan;
+                    ListViewItem lvi = new ListViewItem(plan.Name) { Tag = plan };
                     lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
                         DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString());
                     lbPlanList.Items.Add(lvi);
 
                     // Restore selection and focus
-                    if (restoreSelectionAndFocus)
-                    {
-                        lvi.Selected = selection.Contains(plan);
-                        lvi.Focused = (focused == plan);
-                    }
+                    if (!restoreSelectionAndFocus)
+                        continue;
+
+                    lvi.Selected = selection.Contains(plan);
+                    lvi.Focused = (focused == plan);
                 }
 
                 // Enable/disable the button
@@ -153,7 +156,7 @@ namespace EVEMon.SkillPlanner
         private void MergePlans()
         {
             // Build the merge plan
-            var result = new Plan(m_character);
+            Plan result = new Plan(m_character);
             using (result.SuspendingEvents())
             {
                 // Merge the plans
@@ -167,8 +170,8 @@ namespace EVEMon.SkillPlanner
                             result.PlanTo(entry.Skill, entry.Level, entry.Priority, entry.Notes);
 
                         // Then we update the entry's groups
-                        var newEntry = result.GetEntry(entry.Skill, entry.Level);
-                        
+                        PlanEntry newEntry = result.GetEntry(entry.Skill, entry.Level);
+
                         // The entry may be null if the character already knows it.
                         if (newEntry != null)
                             newEntry.PlanGroups.Add(plan.Name);
@@ -188,10 +191,12 @@ namespace EVEMon.SkillPlanner
                 m_character.Plans.Add(result);
             }
         }
+
         #endregion
 
 
         #region List's events
+
         /// <summary>
         /// When the user select another item, we update the control's status.
         /// </summary>
@@ -234,7 +239,7 @@ namespace EVEMon.SkillPlanner
                 // Swap sort order
                 m_columnSorter.Order = (m_columnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
             }
-            // Or a new column
+                // Or a new column
             else
             {
                 m_columnSorter.Sort = (PlanSort)e.Column;
@@ -259,10 +264,12 @@ namespace EVEMon.SkillPlanner
             // Rebuild the plans list from the listview items
             m_character.Plans.RebuildFrom(lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan));
         }
+
         #endregion
 
 
         #region Menus and buttons handlers
+
         /// <summary>
         /// File > New plan.
         /// </summary>
@@ -278,15 +285,14 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // Create the plan and add it
-                var plan = new Plan(m_character);
-                plan.Name = npw.Result;
+                Plan plan = new Plan(m_character) { Name = npw.Result };
                 m_character.Plans.Add(plan);
 
                 // Open a window for this plan
                 WindowsFactory<PlanWindow>.ShowByTag(plan);
             }
 
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -302,7 +308,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Load from file and returns if an error occurred (user has already been warned)
-            var serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
+            SerializablePlan serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
             if (serial == null)
                 return;
 
@@ -338,7 +344,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // Retrieves the cloned plan
-                var plan = cps.TargetPlan;
+                Plan plan = cps.TargetPlan;
 
                 // Adds and fixes the prerequisites order
                 plan.Fix();
@@ -382,13 +388,13 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                var plan = lbPlanList.SelectedItems[0].Tag as Plan;
+                Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
                 planName = "\"" + plan.Name + "\"";
             }
 
             // Prompt the user for confirmation with a message box
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete " + planName + "?", title, 
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show("Are you sure you want to delete " + planName + "?", title,
+                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -412,7 +418,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Prompts the user for a new name
-            var plan = lbPlanList.SelectedItems[0].Tag as Plan;
+            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             using (NewPlanWindow f = new NewPlanWindow())
             {
                 f.Text = "Rename Plan";
@@ -440,8 +446,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Rebuild a plans array
-            var plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan).ToArray();
-            var temp = plans[idx - 1];
+            Plan[] plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan).ToArray();
+            Plan temp = plans[idx - 1];
             plans[idx - 1] = plans[idx];
             plans[idx] = temp;
 
@@ -462,8 +468,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Rebuild a plans array
-            var plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan).ToArray();
-            var temp = plans[idx + 1];
+            Plan[] plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan).ToArray();
+            Plan temp = plans[idx + 1];
             plans[idx + 1] = plans[idx];
             plans[idx] = temp;
 
@@ -484,10 +490,12 @@ namespace EVEMon.SkillPlanner
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             UIHelper.ExportPlan(plan);
         }
+
         #endregion
 
 
         #region Context Menu
+
         /// <summary>
         /// When the context menu opens, we change the items states.
         /// </summary>
@@ -552,6 +560,7 @@ namespace EVEMon.SkillPlanner
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             UIHelper.ExportPlan(plan);
         }
+
         #endregion
     }
 }

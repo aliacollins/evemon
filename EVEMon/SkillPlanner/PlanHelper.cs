@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Windows.Forms;
 using EVEMon.Common;
-using System.Windows.Forms;
 
 namespace EVEMon.SkillPlanner
 {
@@ -38,11 +35,10 @@ namespace EVEMon.SkillPlanner
                     menu.Text += "...";
             }
 
-            var menuItem = menu as ToolStripMenuItem;
+            ToolStripMenuItem menuItem = menu as ToolStripMenuItem;
             if (menuItem != null)
-            {
                 menuItem.Checked = (plan.GetPlannedLevel(skill) == level);
-            }
+
             return menu.Enabled;
         }
 
@@ -52,27 +48,23 @@ namespace EVEMon.SkillPlanner
         /// <param name="plan"></param>
         /// <param name="skill"></param>
         /// <param name="level">A integer between 0 (remove all entries for this skill) and 5.</param>
-        /// <param name="operation"></param>
         /// <returns></returns>
-        public static bool EnablePlanTo(Plan plan, Skill skill, int level)
+        private static bool EnablePlanTo(Plan plan, Skill skill, int level)
         {
             // The entry actually wants to remove the item
             if (level == 0)
             {
                 return plan.IsPlanned(skill);
             }
+
             // The entry is already known
-            else if (skill.Level >= level)
+            if (skill.Level >= level)
             {
                 return false;
             }
-            // The entry is already planned at this very level
-            else if (plan.GetPlannedLevel(skill) == level)
-            {
-                return false;
-            }
-            // Ok
-            return true;
+
+            // The entry is already planned at this very level ?
+            return plan.GetPlannedLevel(skill) != level;
         }
 
         /// <summary>
@@ -95,10 +87,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Performs the action for the "Plan To N" and "Remove" menu options, in a silent way whenever possible.
         /// </summary>
-        /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static bool PerformSilently(IPlanOperation operation)
+        private static bool PerformSilently(IPlanOperation operation)
         {
             var window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
             return PerformSilently(window, operation);
@@ -110,16 +101,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static bool PerformSilently(Form parentForm, IPlanOperation operation)
+        private static bool PerformSilently(Form parentForm, IPlanOperation operation)
         {
             if (operation == null)
                 return false;
 
             // A window is required
             if (RequiresWindow(operation))
-            {
                 return Perform(parentForm, operation);
-            }
 
             // Silent way
             operation.Perform();
@@ -140,13 +129,14 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Performs the action for the "Plan To N" and "Remove" menu options.
         /// </summary>
+        /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static bool Perform(Form parentForm, IPlanOperation operation)
+        private static bool Perform(Form parentForm, IPlanOperation operation)
         {
             using (var window = new PlanToOperationForm(operation))
             {
-                var result = window.ShowDialog(parentForm);
+                DialogResult result = window.ShowDialog(parentForm);
                 return result == DialogResult.OK;
             }
         }
@@ -159,13 +149,9 @@ namespace EVEMon.SkillPlanner
         public static bool SelectPerform(IPlanOperation operation)
         {
             if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
-            {
                 return Perform(operation);
-            }
-            else
-            {
-                return PerformSilently(operation);
-            }
+
+            return PerformSilently(operation);
         }
     }
 }

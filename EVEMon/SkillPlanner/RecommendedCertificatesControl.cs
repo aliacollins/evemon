@@ -26,6 +26,7 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private TimeSpan m_trainTime;
 
+
         #region Constructor
 
         /// <summary>
@@ -185,10 +186,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode GetCertNode(StaticCertificate certificate)
         {
-            Character character = (Character) m_plan.Character;
+            Character character = (Character)m_plan.Character;
             Certificate cert = character.Certificates[certificate.ID];
 
-            TreeNode node = new TreeNode(cert.ToString()) {Tag = cert};
+            TreeNode node = new TreeNode(cert.ToString()) { Tag = cert };
 
             // Generate child certificate nodes if required
             foreach (StaticCertificate childCert in cert.StaticData.PrerequisiteCertificates)
@@ -213,10 +214,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode GetSkillNode(StaticSkillLevel prereq)
         {
-            Character character = (Character) m_plan.Character;
+            Character character = (Character)m_plan.Character;
             Skill skill = character.Skills[prereq.Skill];
 
-            TreeNode node = new TreeNode(prereq.ToString()) {Tag = new SkillLevel(skill, prereq.Level)};
+            TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 
             // Generate child prerequisite skill nodes if required
             foreach (StaticSkillLevel childPrereq in skill.StaticData.Prerequisites)
@@ -261,8 +262,8 @@ namespace EVEMon.SkillPlanner
                 // The node represents a skill prerequisite
             else
             {
-                SkillLevel skillPrereq = (SkillLevel) node.Tag;
-                Character character = (Character) m_plan.Character;
+                SkillLevel skillPrereq = (SkillLevel)node.Tag;
+                Character character = (Character)m_plan.Character;
                 Skill skill = character.Skills[skillPrereq.Skill];
 
                 // Skill requirement met
@@ -334,7 +335,7 @@ namespace EVEMon.SkillPlanner
                 // Or a skill prerequisite ?
             else
             {
-                SkillLevel skillPrereq = (SkillLevel) e.Node.Tag;
+                SkillLevel skillPrereq = (SkillLevel)e.Node.Tag;
                 line = skillPrereq.ToString();
                 supIcon = SkillIcon;
 
@@ -368,8 +369,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             int imgOfssetX = e.Bounds.Left;
-            float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height)*0.5f);
-            e.Graphics.DrawImageUnscaled(imageList.Images[supIcon], (imgOfssetX), (int) (e.Bounds.Top + imgOffsetY));
+            float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height) * 0.5f);
+            e.Graphics.DrawImageUnscaled(imageList.Images[supIcon], (imgOfssetX), (int)(e.Bounds.Top + imgOffsetY));
         }
 
         /// <summary>
@@ -417,7 +418,7 @@ namespace EVEMon.SkillPlanner
             List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
             IEnumerable<IEnumerable<StaticSkillLevel>> certPrereqSkills =
                 (tvCertList.Nodes.Cast<TreeNode>().Select(certificate => certificate.Tag))
-                .OfType<Certificate>().Select(cert => cert.StaticData.AllTopPrerequisiteSkills);
+                    .OfType<Certificate>().Select(cert => cert.StaticData.AllTopPrerequisiteSkills);
 
             foreach (IEnumerable<StaticSkillLevel> skills in certPrereqSkills)
             {
@@ -459,14 +460,14 @@ namespace EVEMon.SkillPlanner
             if (selectedNode.Tag is Certificate)
             {
                 PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                Certificate cert = ((Certificate) selectedNode.Tag);
+                Certificate cert = ((Certificate)selectedNode.Tag);
                 pw.ShowCertInBrowser(cert);
             }
             else
             {
                 // Open skill browser tab for this skill
                 PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                Skill skill = ((SkillLevel) selectedNode.Tag).Skill;
+                Skill skill = ((SkillLevel)selectedNode.Tag).Skill;
                 pw.ShowSkillInBrowser(skill);
             }
         }
@@ -517,7 +518,7 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     // Update "add to" menu
-                    SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
+                    SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
                     Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
                     tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill,
@@ -554,7 +555,7 @@ namespace EVEMon.SkillPlanner
                 // When a skill is selected
             else
             {
-                SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
+                SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
                 npw.ShowSkillInBrowser(prereq.Skill);
             }
         }
@@ -572,7 +573,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Open the skill explorer
-            SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
+            SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
             npw.ShowSkillInExplorer(prereq.Skill);
         }
 
@@ -611,7 +612,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                SkillLevel prereq = (SkillLevel) tvCertList.SelectedNode.Tag;
+                SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
                 IPlanOperation operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
                 PlanHelper.SelectPerform(operation);
             }

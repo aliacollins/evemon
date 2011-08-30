@@ -18,10 +18,6 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public class SkillClickedEventArgs : EventArgs
     {
-        private Skill m_skill;
-        private MouseButtons m_button;
-        private Point m_location;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SkillClickedEventArgs"/> class.
         /// </summary>
@@ -30,37 +26,28 @@ namespace EVEMon.SkillPlanner
         /// <param name="location">The location.</param>
         internal SkillClickedEventArgs(Skill skill, MouseButtons button, Point location)
         {
-            m_skill = skill;
-            m_button = button;
-            m_location = location;
+            Skill = skill;
+            Button = button;
+            Location = location;
         }
 
         /// <summary>
         /// Gets the skill.
         /// </summary>
         /// <value>The skill.</value>
-        public Skill Skill
-        {
-            get { return m_skill; }
-        }
+        public Skill Skill { get; private set; }
 
         /// <summary>
         /// Gets the button.
         /// </summary>
         /// <value>The button.</value>
-        public MouseButtons Button
-        {
-            get { return m_button; }
-        }
+        public MouseButtons Button { get; private set; }
 
         /// <summary>
         /// Gets the location.
         /// </summary>
         /// <value>The location.</value>
-        public Point Location
-        {
-            get { return m_location; }
-        }
+        public Point Location { get; private set; }
     }
     #endregion
 }
