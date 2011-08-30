@@ -152,9 +152,11 @@
     <Compile Include="Controls\BorderPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\Design\MultiPanelDesigner.cs" />
+    <Compile Include="Controls\Design\MultiPanelDesignerHelper.cs" />
+    <Compile Include="Controls\Design\MultiPanelPageDesigner.cs" />
+    <Compile Include="Controls\Design\MultiPanelSelectionEditor.cs" />
     <Compile Include="Controls\ListViewDragEventArgs.cs" />
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelDesignerHelper.cs" />
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelSelectionEditor.cs" />
     <Compile Include="Controls\DraggableListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -271,11 +273,9 @@
     <Compile Include="Controls\MultiPanel\MultiPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelDesigner.cs" />
     <Compile Include="Controls\MultiPanel\MultiPanelPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelPageDesigner.cs" />
     <Compile Include="Controls\NoFlickerListBox.cs">
       <SubType>Component</SubType>
     </Compile>
