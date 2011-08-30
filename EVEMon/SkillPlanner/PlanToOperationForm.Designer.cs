@@ -1,4 +1,6 @@
-﻿namespace EVEMon.SkillPlanner
+﻿using EVEMon.Controls.MultiPanel;
+
+namespace EVEMon.SkillPlanner
 {
     partial class PlanToOperationForm
     {
@@ -36,17 +38,17 @@
             this.previousButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
-            this.rootMultiPanel = new EVEMon.Controls.MultiPanel();
-            this.additionPage = new EVEMon.Controls.MultiPanelPage();
+            this.rootMultiPanel = new MultiPanel();
+            this.additionPage = new MultiPanelPage();
             this.priorityGroup = new System.Windows.Forms.GroupBox();
             this.priorityLabel = new System.Windows.Forms.Label();
             this.lbExisting = new System.Windows.Forms.Label();
             this.priorityNumericBox = new System.Windows.Forms.NumericUpDown();
             this.additionsListBox = new System.Windows.Forms.ListBox();
-            this.dependenciesSuppressionPage = new EVEMon.Controls.MultiPanelPage();
+            this.dependenciesSuppressionPage = new MultiPanelPage();
             this.suppressionListBox = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.uselessPrereqsSuppressionPage = new EVEMon.Controls.MultiPanelPage();
+            this.uselessPrereqsSuppressionPage = new MultiPanelPage();
             this.uselessPrereqsListBox = new System.Windows.Forms.ListBox();
             this.uselessPrereqsCheckbox = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
@@ -328,10 +330,10 @@
 
         #endregion
 
-        private EVEMon.Controls.MultiPanel rootMultiPanel;
-        private EVEMon.Controls.MultiPanelPage additionPage;
-        private EVEMon.Controls.MultiPanelPage dependenciesSuppressionPage;
-        private EVEMon.Controls.MultiPanelPage uselessPrereqsSuppressionPage;
+        private MultiPanel rootMultiPanel;
+        private MultiPanelPage additionPage;
+        private MultiPanelPage dependenciesSuppressionPage;
+        private MultiPanelPage uselessPrereqsSuppressionPage;
         private System.Windows.Forms.Button previousButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button nextButton;

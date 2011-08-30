@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
 using System.ComponentModel;
 using System.ComponentModel.Design;
-using System.Drawing;
+using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
-namespace EVEMon.Controls.Design
+namespace EVEMon.Controls.MultiPanel.Design
 {
     /// <summary>
-    /// A designer hosting a <see cref="MMultiPanel"/>.
+    /// A designer hosting a <see cref="MultiPanel"/>.
     /// </summary>
     /// <remarks>
     /// Based on the work from Liron Levi on Code Project, under public domain. 
@@ -21,8 +18,6 @@ namespace EVEMon.Controls.Design
     public class MultiPanelDesigner : ParentControlDesigner
     {
         private MultiPanel m_panel;
-        private DesignerVerbCollection m_verbs = new DesignerVerbCollection();
-
 
         /// <summary>
         /// Overridden. Gets the collection of verbs that are available to this designer.
@@ -31,7 +26,7 @@ namespace EVEMon.Controls.Design
         {
             get
             {
-                var host = (IDesignerHost)GetService(typeof(IDesignerHost));
+                IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
                 return MultiPanelDesignerHelper.GetDesignerVerbs(host, m_panel);
             }
         }
@@ -54,19 +49,25 @@ namespace EVEMon.Controls.Design
             m_panel = component as MultiPanel;
             if (m_panel == null)
             {
-                this.DisplayError(new ArgumentException("Tried to use the MultiPanelControlDesign with a class that does not inherit from MultiPanel.", "component"));
+                DisplayError(
+                    new ArgumentException(
+                        "Tried to use the MultiPanelControlDesign with a class that does not inherit from MultiPanel.",
+                        "component"));
                 return;
             }
 
-            m_panel.SelectionChange += new MultiPanelSelectionChangeHandler(OnPanelSelectionChange);
+            m_panel.SelectionChange += OnPanelSelectionChange;
             base.Initialize(component);
 
             // Subscribe events 
-            IComponentChangeService componentChangeService = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
-            if (componentChangeService != null) componentChangeService.ComponentRemoved += new ComponentEventHandler(OnComponentRemoved);
+            IComponentChangeService componentChangeService =
+                (IComponentChangeService)GetService(typeof(IComponentChangeService));
+            if (componentChangeService != null)
+                componentChangeService.ComponentRemoved += OnComponentRemoved;
 
             ISelectionService selectionService = (ISelectionService)GetService(typeof(ISelectionService));
-            if (selectionService != null) selectionService.SelectionChanged += new EventHandler(OnServiceSelectionChanged);
+            if (selectionService != null)
+                selectionService.SelectionChanged += OnServiceSelectionChanged;
         }
 
         /// <summary>
@@ -83,10 +84,12 @@ namespace EVEMon.Controls.Design
         /// <returns></returns>
         public override bool CanParent(Control control)
         {
-            return ((control is MultiPanelPage) && !this.Control.Contains(control));
+            return ((control is MultiPanelPage) && !Control.Contains(control));
         }
 
+
         #region Private Methods
+
         /// <summary>
         /// Occurs when the service's selection changes.
         /// </summary>
@@ -95,14 +98,15 @@ namespace EVEMon.Controls.Design
         private void OnServiceSelectionChanged(object sender, EventArgs e)
         {
             ISelectionService service = (ISelectionService)GetService(typeof(ISelectionService));
-            if (service != null)
-            {
-                if (service.PrimarySelection != null)
-                {
-                    MultiPanelPage page = GetMultiPanelPage((Control)service.PrimarySelection);
-                    if (page != null) m_panel.SelectedPage = page;
-                }
-            }
+            if (service == null)
+                return;
+
+            if (service.PrimarySelection == null)
+                return;
+
+            MultiPanelPage page = GetMultiPanelPage((Control)service.PrimarySelection);
+            if (page != null)
+                m_panel.SelectedPage = page;
         }
 
         /// <summary>
@@ -110,7 +114,7 @@ namespace EVEMon.Controls.Design
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        void OnPanelSelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
+        private void OnPanelSelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
         {
             RaiseComponentChanging(TypeDescriptor.GetProperties(Control)["SelectedPage"]);
             RaiseComponentChanged(TypeDescriptor.GetProperties(Control)["SelectedPage"], args.OldPage, args.NewPage);
@@ -136,18 +140,13 @@ namespace EVEMon.Controls.Design
             if (ctrl is MultiPanelPage)
             {
                 MultiPanelPage page = (MultiPanelPage)ctrl;
-                if (Object.ReferenceEquals(m_panel, page.Parent)) return page;
-                return null;
+                return ReferenceEquals(m_panel, page.Parent) ? page : null;
             }
 
             // If the control has a parent, browser its ancestry
-            if (ctrl.Parent != null)
-            {
-                return GetMultiPanelPage(ctrl.Parent);
-            }
-
-            return null;
+            return ctrl.Parent != null ? GetMultiPanelPage(ctrl.Parent) : null;
         }
+
         #endregion
     }
 }

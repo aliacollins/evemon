@@ -10,7 +10,7 @@ namespace EVEMon.Controls
         {
             Rectangle newBounds = new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height);
 
-            if (newBounds.Width == 0 || newBounds.Height == 0) 
+            if (newBounds.Width == 0 || newBounds.Height == 0)
                 return;
 
             // stacked using blocks to avoid indentation, don't need to call IDisposable.Dispose explicitly
@@ -47,18 +47,16 @@ namespace EVEMon.Controls
 
         private void PaintNonItemRegion()
         {
-            using (Graphics g = Graphics.FromHwnd(this.Handle))
-            using (Region r = new Region(this.ClientRectangle))
+            using (Graphics g = Graphics.FromHwnd(Handle))
+            using (Region r = new Region(ClientRectangle))
             {
-                for (int i = 0; i < this.Items.Count; i++)
+                for (int i = 0; i < Items.Count; i++)
                 {
-                    Rectangle itemRect = this.GetItemRectangle(i);
+                    Rectangle itemRect = GetItemRectangle(i);
                     r.Exclude(itemRect);
                 }
-                using (var brush = new SolidBrush(this.BackColor))
-                {
-                    g.FillRegion(SystemBrushes.Window, r);
-                }
+
+                g.FillRegion(SystemBrushes.Window, r);
             }
         }
     }

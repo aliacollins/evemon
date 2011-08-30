@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
 using System.Windows.Forms;
 
 namespace EVEMon.Controls
@@ -32,10 +30,10 @@ namespace EVEMon.Controls
         /// <returns></returns>
         public int Compare(object x, object y)
         {
-            var itemX = (ListViewItem)x;
-            var itemY = (ListViewItem)y;
-            var tagX = (T)itemX.Tag;
-            var tagY = (T)itemY.Tag;
+            ListViewItem itemX = (ListViewItem)x;
+            ListViewItem itemY = (ListViewItem)y;
+            T tagX = (T)itemX.Tag;
+            T tagY = (T)itemY.Tag;
 
             return m_comparer.Compare(tagX, tagY);
         }

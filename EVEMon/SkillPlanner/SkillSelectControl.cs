@@ -14,8 +14,6 @@ using EVEMon.Common.Controls;
 
 using CommonResources = EVEMon.Common.Resources;
 
-using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
-
 namespace EVEMon.SkillPlanner
 {
     public partial class SkillSelectControl : UserControl
@@ -26,6 +24,7 @@ namespace EVEMon.SkillPlanner
         private Character m_character;
         private Skill m_selectedSkill;
         private Plan m_plan;
+
 
         #region Lifecycle
 
@@ -138,7 +137,9 @@ namespace EVEMon.SkillPlanner
         /// Gets or sets true whether the control is hosted in the skill browser.
         /// When true, the "Show in skill browser" context menus won't be displayed.
         /// </summary>
-        [Category("Behavior"), Description("When true, the \"Show in Skill Browser\" context menus won't be displayed."), DefaultValue(false)]
+        [Category("Behavior"),
+         Description("When true, the \"Show in Skill Browser\" context menus won't be displayed."),
+         DefaultValue(false)]
         public bool HostedInSkillBrowser { get; set; }
 
         #endregion
@@ -164,7 +165,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static ImageList GetIconSet(int index, ImageList defaultList)
         {
-            ImageList def = new ImageList {ColorDepth = ColorDepth.Depth32Bit};
+            ImageList def = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
             string groupname = null;
 
             if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
@@ -175,23 +176,23 @@ namespace EVEMon.SkillPlanner
             }
 
             if ((groupname != null && !File.Exists(String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        index,
-                        groupname)) ||
-                !File.Exists(String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        AppDomain.CurrentDomain.BaseDirectory))))
+                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                Path.DirectorySeparatorChar,
+                AppDomain.CurrentDomain.BaseDirectory,
+                index,
+                groupname)) ||
+                 !File.Exists(String.Format(
+                     "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                     Path.DirectorySeparatorChar,
+                     AppDomain.CurrentDomain.BaseDirectory))))
                 groupname = null;
 
             if (groupname != null)
             {
                 IResourceReader basic = new ResourceReader(String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        AppDomain.CurrentDomain.BaseDirectory));
+                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                    Path.DirectorySeparatorChar,
+                    AppDomain.CurrentDomain.BaseDirectory));
 
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
 
@@ -203,11 +204,11 @@ namespace EVEMon.SkillPlanner
                 basic.Close();
 
                 basic = new ResourceReader(String.Format(
-                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        index,
-                        groupname));
+                    "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                    Path.DirectorySeparatorChar,
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    index,
+                    groupname));
 
                 basicx = basic.GetEnumerator();
 
@@ -253,19 +254,19 @@ namespace EVEMon.SkillPlanner
                 lbNoMatches.Visible = true;
                 SelectedSkill = null;
             }
-            // Is it sorted ?
+                // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
                 lvSortedSkillList.Visible = true;
                 UpdateListView(skills);
             }
-            // Not sorted but there is a text filter
+                // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 lbSearchList.Visible = true;
                 UpdateListBox(skills);
             }
-            // Regular display, the tree
+                // Regular display, the tree
             else
             {
                 tvItems.Visible = true;
@@ -286,7 +287,7 @@ namespace EVEMon.SkillPlanner
                 skills = skills.Where(x => x.IsPublic);
 
             // Filter
-            Func<Skill,bool> predicate = GetFilter();
+            Func<Skill, bool> predicate = GetFilter();
             skills = skills.Where(predicate);
 
             // Text search
@@ -294,11 +295,12 @@ namespace EVEMon.SkillPlanner
             {
                 string searchText = tbSearchText.Text.ToLower(CultureConstants.DefaultCulture).Trim();
                 skills = skills.Where(x => (x.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText)
-                                         || x.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText)));
+                                            || x.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText)));
             }
 
             // When sorting by "time to...", remove lv5 skills
-            if (cbSorting.SelectedIndex == (int)SkillSort.TimeToLevel5 || cbSorting.SelectedIndex == (int)SkillSort.TimeToNextLevel)
+            if (cbSorting.SelectedIndex == (int)SkillSort.TimeToLevel5 ||
+                cbSorting.SelectedIndex == (int)SkillSort.TimeToNextLevel)
                 skills = skills.Where(x => x.Level < 5);
 
             return skills;
@@ -479,7 +481,7 @@ namespace EVEMon.SkillPlanner
                 m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height/tvItems.ItemHeight))
+                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
                 {
                     tvItems.ExpandAll();
                     m_allExpanded = true;
@@ -587,11 +589,11 @@ namespace EVEMon.SkillPlanner
 
             switch ((SkillSort)cbSorting.SelectedIndex)
             {
-                // Sort by name, default, occurs on initialization
+                    // Sort by name, default, occurs on initialization
                 default:
                     return String.Empty;
 
-                // Time to next level
+                    // Time to next level
                 case SkillSort.TimeToNextLevel:
                     IEnumerable<TimeSpan> times = skills.Select(
                         x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToNextLevel()));
@@ -611,8 +613,8 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
-                                Skill.GetRomanFromInt(skillsArray[i].Level + 1),
-                                time.ToDescriptiveText(DescriptiveTextOptions.Default));
+                                                           Skill.GetRomanFromInt(skillsArray[i].Level + 1),
+                                                           time.ToDescriptiveText(DescriptiveTextOptions.Default));
                         }
                     }
 
@@ -621,7 +623,7 @@ namespace EVEMon.SkillPlanner
 
                     return "Time";
 
-                // Time to level 5
+                    // Time to level 5
                 case SkillSort.TimeToLevel5:
                     times = skills.Select(
                         x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToLevel(5)));
@@ -649,13 +651,13 @@ namespace EVEMon.SkillPlanner
 
                     return "Time to V";
 
-                // Skill rank
+                    // Skill rank
                 case SkillSort.Rank:
                     skills = skills.ToArray().OrderBy(x => x.Rank);
                     labels = skills.Select(x => x.Rank.ToString());
                     return "Rank";
 
-                // Skill SP/hour
+                    // Skill SP/hour
                 case SkillSort.SPPerHour:
                     skills = skills.ToArray().OrderBy(x => x.SkillPointsPerHour).Reverse();
                     labels = skills.Select(x => x.SkillPointsPerHour.ToString());
@@ -789,7 +791,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tbSearch_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar != (int) Keys.LButton)
+            if (e.KeyChar != (int)Keys.LButton)
                 return;
 
             tbSearchText.SelectAll();
@@ -882,9 +884,13 @@ namespace EVEMon.SkillPlanner
             cmiExpandSelected.Visible = (SelectedSkill == null && node != null && !node.IsExpanded);
 
             cmiExpandSelected.Text = (SelectedSkill == null && node != null &&
-                                    !node.IsExpanded ? String.Format("Expand \"{0}\"", node.Text) : String.Empty);
+                                      !node.IsExpanded
+                                          ? String.Format("Expand \"{0}\"", node.Text)
+                                          : String.Empty);
             cmiCollapseSelected.Text = (SelectedSkill == null && node != null &&
-                                    node.IsExpanded ? String.Format("Collapse \"{0}\"", node.Text) : String.Empty);
+                                        node.IsExpanded
+                                            ? String.Format("Collapse \"{0}\"", node.Text)
+                                            : String.Empty);
 
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;

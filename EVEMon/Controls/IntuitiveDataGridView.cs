@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace EVEMon.Controls
 {
@@ -11,14 +7,6 @@ namespace EVEMon.Controls
     /// </summary>
     public sealed class IntuitiveDataGridView : DataGridView
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public IntuitiveDataGridView()
-            : base()
-        {
-        }
-
         /// <summary>
         /// Processes F2 and Enter correctly.
         /// </summary>
@@ -29,27 +17,25 @@ namespace EVEMon.Controls
             Keys key = (keyData & Keys.KeyCode);
             if (key == Keys.Return)
             {
-                if (!this.IsCurrentCellInEditMode) return this.ProcessF2Key(keyData);
-                else
-                {
-                    DataGridViewCell currentCell = CurrentCell;
-                    CurrentCell = null;
-                    CurrentCell = currentCell;
-                    EndEdit();
-                    return true;
-                }
+                if (!IsCurrentCellInEditMode)
+                    return ProcessF2Key(keyData);
+
+                DataGridViewCell currentCell = CurrentCell;
+                CurrentCell = null;
+                CurrentCell = currentCell;
+                EndEdit();
+                return true;
             }
             if (key == Keys.F2)
             {
-                if (!this.IsCurrentCellInEditMode) return this.ProcessF2Key(keyData);
-                else
-                {
-                    DataGridViewCell currentCell = CurrentCell;
-                    CurrentCell = null;
-                    CurrentCell = currentCell;
-                    EndEdit();
-                    return true;
-                }
+                if (!IsCurrentCellInEditMode)
+                    return ProcessF2Key(keyData);
+
+                DataGridViewCell currentCell = CurrentCell;
+                CurrentCell = null;
+                CurrentCell = currentCell;
+                EndEdit();
+                return true;
             }
 
             return base.ProcessDialogKey(keyData);
@@ -62,16 +48,11 @@ namespace EVEMon.Controls
         /// <returns></returns>
         protected override bool ProcessDataGridViewKey(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Return)
-            {
-                if (!this.IsCurrentCellInEditMode) return this.ProcessF2Key(e.KeyData);
-                //else return this.EndEdit();
-            }
+            if (e.KeyCode == Keys.Return && !IsCurrentCellInEditMode)
+                return ProcessF2Key(e.KeyData);
+
             if (e.KeyCode == Keys.F2)
-            {
-                if (!this.IsCurrentCellInEditMode) return this.ProcessF2Key(e.KeyData);
-                else return this.EndEdit();
-            }
+                return !IsCurrentCellInEditMode ? ProcessF2Key(e.KeyData) : EndEdit();
 
             return base.ProcessDataGridViewKey(e);
         }
@@ -83,7 +64,8 @@ namespace EVEMon.Controls
         protected override void OnCellClick(DataGridViewCellEventArgs e)
         {
             base.OnCellClick(e);
-            if (e.ColumnIndex >= 0) this.BeginEdit(true);
+            if (e.ColumnIndex >= 0)
+                BeginEdit(true);
         }
     }
 }

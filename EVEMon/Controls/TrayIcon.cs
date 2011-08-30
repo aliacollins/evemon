@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using EVEMon.Common;
 using EVEMon.Common.Controls;
 
 namespace EVEMon.Controls
@@ -309,19 +308,15 @@ namespace EVEMon.Controls
         private abstract class MouseState
         {
             /// <summary>
+            /// Thread syncronisation lock. Used extensively to enusre that mouseMove event handlers
+            /// and thread timer callbacks always have a consistent object state.
+            /// </summary>
+            protected readonly Object SyncLock = new Object();
+
+            /// <summary>
             /// Flag to determine if mouse tracking enabled
             /// </summary>
             private bool m_mouseTrackingEnabled;
-
-            /// <summary>
-            /// A <see cref="System.Drawing.Point"/> holding the last known mouse position
-            /// </summary>
-            protected Point m_mousePosition;
-
-            /// <summary>
-            /// The <see cref="TrayIcon"/> whose MouseState we are managing
-            /// </summary>
-            protected readonly TrayIcon m_trayIcon;
 
             /// <summary>
             /// Specifies a mouse state
@@ -333,43 +328,53 @@ namespace EVEMon.Controls
                 MouseHovering
             };
 
-            /// <summary>
-            /// Thread syncronisation lock. Used extensively to enusre that mouseMove event handlers
-            /// and thread timer callbacks always have a consistent object state.
-            /// </summary>
-            protected readonly Object m_syncLock;
 
             /// <summary>
             /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
             /// </summary>
-            /// <param name="trayIcon">The <see cref="TrayIcon"/> whose state is being managed.</param>
+            /// <param name="trayIcon">The <see cref="Controls.TrayIcon"/> whose state is being managed.</param>
             /// <param name="mousePosition">A <see cref="System.Drawing.Point"/> representing the last known mouse location.</param>
             protected MouseState(TrayIcon trayIcon, Point mousePosition)
             {
-                m_trayIcon = trayIcon;
-                m_mousePosition = mousePosition;
-                m_syncLock = new Object();
+                TrayIcon = trayIcon;
+                MousePosition = mousePosition;
             }
 
+            /// <summary>
+            /// A <see cref="System.Drawing.Point"/> holding the last known mouse position
+            /// </summary>
+            protected Point MousePosition { get; private set; }
+
+            /// <summary>
+            /// The <see cref="Controls.TrayIcon"/> whose MouseState we are managing
+            /// </summary>
+            protected TrayIcon TrayIcon { get; private set; }
+
+            /// <summary>
+            /// Enables the mouse tracking.
+            /// </summary>
             protected void EnableMouseTracking()
             {
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
                     // Add event handler for mouse movement
-                    m_trayIcon.notifyIcon.MouseMove += notifyIcon_MouseMove;
+                    TrayIcon.notifyIcon.MouseMove += notifyIcon_MouseMove;
                     m_mouseTrackingEnabled = true;
                 }
             }
 
+            /// <summary>
+            /// Disables the mouse tracking.
+            /// </summary>
             protected void DisableMouseTracking()
             {
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
                     if (!m_mouseTrackingEnabled)
                         return;
 
                     // Unsubscribe this MouseState from the notify icon MouseMove event
-                    m_trayIcon.notifyIcon.MouseMove -= notifyIcon_MouseMove;
+                    TrayIcon.notifyIcon.MouseMove -= notifyIcon_MouseMove;
                     m_mouseTrackingEnabled = false;
                 }
             }
@@ -383,13 +388,13 @@ namespace EVEMon.Controls
             {
                 // Lock syncLock to ensure that further events block until
                 // we've handled this one
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
                     // Only cascade the event if mouse tracking still active
                     if (!m_mouseTrackingEnabled)
                         return;
 
-                    m_mousePosition = Control.MousePosition;
+                    MousePosition = Control.MousePosition;
                     OnMouseMove();
                 }
             }
@@ -402,26 +407,25 @@ namespace EVEMon.Controls
             }
 
             /// <summary>
-            /// Changes the state of the parent <see cref="TrayIcon"/>.
+            /// Changes the state of the parent <see cref="Controls.TrayIcon"/>.
             /// </summary>
-            /// <param name="state">A <see cref="TrayIcon.MouseState.States"/> indicating the state to change to.</param>
+            /// <param name="state">A <see cref="Controls.TrayIcon.MouseState.States"/> indicating the state to change to.</param>
             protected void ChangeState(States state)
             {
                 // Change the parent TrayIcon's state
                 switch (state)
                 {
                     case States.MouseOut:
-                        m_trayIcon.m_mouseState = new MouseStateOut(m_trayIcon);
+                        TrayIcon.m_mouseState = new MouseStateOut(TrayIcon);
                         break;
                     case States.MouseOver:
-                        m_trayIcon.m_mouseState = new MouseStateOver(m_trayIcon, m_mousePosition);
+                        TrayIcon.m_mouseState = new MouseStateOver(TrayIcon, MousePosition);
                         break;
                     case States.MouseHovering:
-                        m_trayIcon.m_mouseState = new MouseStateHovering(m_trayIcon, m_mousePosition);
+                        TrayIcon.m_mouseState = new MouseStateHovering(TrayIcon, MousePosition);
                         break;
                 }
             }
-
         }
 
         #endregion
@@ -437,7 +441,6 @@ namespace EVEMon.Controls
         /// </remarks>
         private class MouseStateOut : MouseState
         {
-
             /// <summary>
             /// Initializes a new instance of the <see cref="TrayIcon.MouseStateOut"/> class for a given trayIcon.
             /// </summary>
@@ -493,10 +496,10 @@ namespace EVEMon.Controls
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure
                 // initialisation completes before the timeout occurs
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
                     // Start the hover timer
-                    m_timer = new System.Threading.Timer(HoverTimeout, null, m_trayIcon.MouseHoverTime,
+                    m_timer = new System.Threading.Timer(HoverTimeout, null, TrayIcon.MouseHoverTime,
                                                          System.Threading.Timeout.Infinite);
 
                     // Start tracking the mouse
@@ -512,7 +515,7 @@ namespace EVEMon.Controls
                 try
                 {
                     // Mouse has moved, so reset the hover timer
-                    m_timer.Change(m_trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
+                    m_timer.Change(TrayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -532,7 +535,7 @@ namespace EVEMon.Controls
             /// <param name="state"></param>
             private void HoverTimeout(object state)
             {
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
                     // We may have multiple callbacks pending because the threads in the threadpool were busy waiting for our requests to CCP
                     // As a result, they're going to execute one after the other one, raising ObjectDisposedException when trying to stops the timer
@@ -559,7 +562,7 @@ namespace EVEMon.Controls
                     // Check if the mouse is still in the same place
                     // Since we update mousePosition and reset the timer on MouseMove events, if it has moved
                     // when HoverTimeout is called it means its no longer over the icon
-                    ChangeState(Control.MousePosition == m_mousePosition ? States.MouseHovering : States.MouseOut);
+                    ChangeState(Control.MousePosition == MousePosition ? States.MouseHovering : States.MouseOut);
                 }
             }
         }
@@ -592,10 +595,10 @@ namespace EVEMon.Controls
                 : base(trayicon, mousePosition)
             {
                 // Fire the MouseHover event
-                m_trayIcon.OnMouseHover(new EventArgs());
+                TrayIcon.OnMouseHover(new EventArgs());
 
                 // Lock the syncLock to make sure the timer is initialised before mouse events are handled
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
                     // Start tracking the mouse
                     EnableMouseTracking();
@@ -615,9 +618,9 @@ namespace EVEMon.Controls
             /// <param name="state"></param>
             private void MouseMonitor(object state)
             {
-                lock (m_syncLock)
+                lock (SyncLock)
                 {
-                    if (Control.MousePosition == m_mousePosition)
+                    if (Control.MousePosition == MousePosition)
                     {
                         // Mouse hasn't moved so check back in 100ms
                         m_timer.Change(100, System.Threading.Timeout.Infinite);
@@ -633,10 +636,10 @@ namespace EVEMon.Controls
                     DisableMouseTracking();
 
                     // Restore the default icon text
-                    m_trayIcon.notifyIcon.Text = m_trayIcon.m_iconText;
+                    TrayIcon.notifyIcon.Text = TrayIcon.m_iconText;
 
                     // Fire the MouseLeave event
-                    m_trayIcon.OnMouseLeave(new EventArgs());
+                    TrayIcon.OnMouseLeave(new EventArgs());
 
                     // Change to MouseOut state
                     ChangeState(States.MouseOut);

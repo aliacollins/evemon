@@ -24,7 +24,6 @@ namespace EVEMon.Accounting
         /// Constructor.
         /// </summary>
         public AccountsListBox()
-            : base()
         {
             DrawMode = DrawMode.OwnerDrawFixed;
             DrawItem += OnDrawItem;
@@ -36,13 +35,7 @@ namespace EVEMon.Accounting
         [Browsable(false)]
         public IEnumerable<Account> Accounts
         {
-            get
-            {
-                foreach (var account in m_accounts)
-                {
-                    yield return account;
-                }
-            }
+            get { return m_accounts; }
             set
             {
                 m_accounts.Clear();
@@ -70,7 +63,7 @@ namespace EVEMon.Accounting
             try
             {
                 Items.Clear();
-                foreach (var account in EveMonClient.Accounts)
+                foreach (Account account in EveMonClient.Accounts)
                 {
                     Items.Add(account);
                     if (account == oldSelection)
@@ -100,18 +93,18 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnDrawItem(object sender, DrawItemEventArgs e)
+        private void OnDrawItem(object sender, DrawItemEventArgs e)
         {
             // Background
-            var g = e.Graphics;
-            bool isSelected = (e.State & DrawItemState.Selected) != DrawItemState.None; 
-            var fontBrush = (isSelected ? SystemBrushes.HighlightText : SystemBrushes.ControlText);
+            Graphics g = e.Graphics;
+            bool isSelected = (e.State & DrawItemState.Selected) != DrawItemState.None;
+            Brush fontBrush = (isSelected ? SystemBrushes.HighlightText : SystemBrushes.ControlText);
             e.DrawBackground();
 
             if (e.Index < 0 || e.Index >= Items.Count)
                 return;
 
-            var account = (Account)Items[e.Index];
+            Account account = (Account)Items[e.Index];
 
             int height = ItemHeight;
             int margin = (height - 32) / 2;
@@ -134,53 +127,53 @@ namespace EVEMon.Accounting
             g.DrawImageUnscaled(icon, new Point(e.Bounds.Left + margin, e.Bounds.Top + margin * 2));
 
             // Texts drawing
-            using (var boldFont = FontFactory.GetFont(Font, FontStyle.Bold))
+            using (Font boldFont = FontFactory.GetFont(Font, FontStyle.Bold))
             {
                 // Draws the texts on the upper third
                 int left = e.Bounds.Left + 32 + 2 * margin;
                 int top = e.Bounds.Top + margin;
-                string UserID = account.UserID.ToString();
-                Size UserIDTextSize = TextRenderer.MeasureText(g, UserID, boldFont);
-                g.DrawString(UserID, boldFont, fontBrush, new PointF(left, top));
+                string userID = account.UserID.ToString();
+                Size userIDTextSize = TextRenderer.MeasureText(g, userID, boldFont);
+                g.DrawString(userID, boldFont, fontBrush, new PointF(left, top));
                 g.DrawString(account.APIKey.ToLower(CultureConstants.DefaultCulture),
-                    Font, fontBrush, new PointF(left + UserIDTextSize.Width, top));
+                             Font, fontBrush, new PointF(left + userIDTextSize.Width, top));
 
-                using (var middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f, FontStyle.Regular))
+                using (Font middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f, FontStyle.Regular))
                 {
                     // Draw the texts on the middle third
                     top = e.Bounds.Top + height / 3 + 4;
                     string accountCreated = String.Format(CultureConstants.DefaultCulture, "Created: {0}",
-                                            (account.KeyLevel == CredentialsLevel.Full ?
-                                            account.AccountCreated.ToLocalTime().ToString() :
-                                            "Full API Key Required"));
+                                                          (account.KeyLevel == CredentialsLevel.Full
+                                                               ? account.AccountCreated.ToLocalTime().ToString()
+                                                               : "Full API Key Required"));
                     g.DrawString(accountCreated, middleFont, fontBrush, new PointF(left, top));
                     left += (int)g.MeasureString(accountCreated, middleFont).Width + margin * 4;
 
                     string accountExpires = String.Format(CultureConstants.DefaultCulture, "Paid Until: {0}",
-                                            (account.KeyLevel == CredentialsLevel.Full ?
-                                            account.AccountExpiration.ToLocalTime().ToString() :
-                                            "Full API Key Required"));
+                                                          (account.KeyLevel == CredentialsLevel.Full
+                                                               ? account.AccountExpiration.ToLocalTime().ToString()
+                                                               : "Full API Key Required"));
                     g.DrawString(accountExpires, middleFont, fontBrush, new PointF(left, top));
 
-                    using (var smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f, FontStyle.Regular))
+                    using (Font smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f, FontStyle.Regular))
                     {
-                        using (var strikeoutFont = FontFactory.GetFont(smallFont, FontStyle.Strikeout))
+                        using (Font strikeoutFont = FontFactory.GetFont(smallFont, FontStyle.Strikeout))
                         {
-                            using (var smallBoldFont = FontFactory.GetFont(smallFont, FontStyle.Bold))
+                            using (Font smallBoldFont = FontFactory.GetFont(smallFont, FontStyle.Bold))
                             {
                                 // Draws the texts on the lower third
                                 top = e.Bounds.Top + (height / 3) * 2 + 4;
                                 left = e.Bounds.Left + 32 + 2 * margin;
                                 bool isFirst = true;
-                                var identities = new List<CharacterIdentity>();
+                                List<CharacterIdentity> identities = new List<CharacterIdentity>();
                                 identities.AddRange(account.CharacterIdentities
-                                    .Where(x => !account.IgnoreList.Contains(x)).ToArray().OrderBy(x => x.Name));
+                                                        .Where(x => !account.IgnoreList.Contains(x)).ToArray().OrderBy(x => x.Name));
                                 identities.AddRange(account.IgnoreList.OrderBy(x => x.Name));
 
-                                foreach (var id in identities)
+                                foreach (CharacterIdentity id in identities)
                                 {
                                     // Skip if no CCP character
-                                    var ccpCharacter = id.CCPCharacter;
+                                    CCPCharacter ccpCharacter = id.CCPCharacter;
                                     if (ccpCharacter == null)
                                         continue;
 
@@ -193,7 +186,7 @@ namespace EVEMon.Accounting
                                     isFirst = false;
 
                                     // Selects font
-                                    var font = smallFont;
+                                    Font font = smallFont;
                                     if (account.IgnoreList.Contains(id))
                                     {
                                         font = strikeoutFont;

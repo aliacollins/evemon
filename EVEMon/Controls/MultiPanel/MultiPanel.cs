@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using EVEMon.Controls.Design;
+using EVEMon.Controls.MultiPanel.Design;
 
-namespace EVEMon.Controls
+namespace EVEMon.Controls.MultiPanel
 {
+    public delegate void MultiPanelSelectionChangeHandler(object sender, MultiPanelSelectionChangeEventArgs args);
+
     /// <summary>
     /// A panel with multiple pages that can be switched.
     /// </summary>
@@ -41,10 +43,10 @@ namespace EVEMon.Controls
 
                 foreach (Control child in Controls)
                 {
-                    child.Visible = Object.ReferenceEquals(child, m_selectedPage);
-                } 
+                    child.Visible = ReferenceEquals(child, m_selectedPage);
+                }
 
-                if( SelectionChange != null)
+                if (SelectionChange != null)
                     SelectionChange(null, new MultiPanelSelectionChangeEventArgs(oldPage, value));
             }
         }
@@ -74,6 +76,7 @@ namespace EVEMon.Controls
 
 
         #region MultiPanelPagesCollection
+
         /// <summary>
         /// A collection of pages for the <see cref="MultiPanel"/> control.
         /// </summary>
@@ -81,9 +84,9 @@ namespace EVEMon.Controls
         /// Based on the work from Liron Levi on Code Project, under public domain. 
         /// See http://www.codeproject.com/KB/cs/multipanelcontrol.aspx
         /// </remarks>
-        private sealed class MultiPanelPagesCollection : Control.ControlCollection
+        private sealed class MultiPanelPagesCollection : ControlCollection
         {
-            private MultiPanel m_owner;
+            private readonly MultiPanel m_owner;
 
             /// <summary>
             /// Constructor.
@@ -97,7 +100,8 @@ namespace EVEMon.Controls
 
                 m_owner = owner as MultiPanel;
                 if (m_owner == null)
-                    throw new ArgumentException("Tried to create a MultiPanelPagesCollection with a non-MultiPanel owner.", "owner");
+                    throw new ArgumentException("Tried to create a MultiPanelPagesCollection with a non-MultiPanel owner.",
+                                                "owner");
             }
 
             /// <summary>
@@ -111,7 +115,8 @@ namespace EVEMon.Controls
 
                 MultiPanelPage p = value as MultiPanelPage;
                 if (p == null)
-                    throw new ArgumentException("Tried to add a non-MultiPanelPage control to the MultiPanelPagesCollection", "value");
+                    throw new ArgumentException("Tried to add a non-MultiPanelPage control to the MultiPanelPagesCollection",
+                                                "value");
 
                 p.SendToBack();
                 base.Add(p);
@@ -149,49 +154,7 @@ namespace EVEMon.Controls
                 return GetChildIndex(ctrl);
             }
         }
+
         #endregion
     }
-
-
-    #region MultiPanelSelectionChangeEventArgs
-    /// <summary>
-    /// Argument for the <see cref="MultiPanel.SelectionChange"/> event.
-    /// </summary>
-    public sealed class MultiPanelSelectionChangeEventArgs : EventArgs
-    {
-        private MultiPanelPage m_oldPage;
-        private MultiPanelPage m_newPage;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="oldPage"></param>
-        /// <param name="newPage"></param>
-        public MultiPanelSelectionChangeEventArgs(MultiPanelPage oldPage, MultiPanelPage newPage)
-        {
-            m_oldPage = oldPage;
-            m_newPage = newPage;
-
-        }
-
-        /// <summary>
-        /// Gets the old selection.
-        /// </summary>
-        public MultiPanelPage OldPage
-        {
-            get { return m_oldPage; }
-        }
-
-        /// <summary>
-        /// Gets the new selection.
-        /// </summary>
-        public MultiPanelPage NewPage
-        {
-            get { return m_newPage; }
-        }
-
-    }
-    #endregion
-
-    public delegate void MultiPanelSelectionChangeHandler(object sender, MultiPanelSelectionChangeEventArgs args);
 }

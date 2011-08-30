@@ -18,10 +18,10 @@ namespace EVEMon.Controls
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ColumnSelectWindow(IEnumerable<IColumnSettings> columns)
+        protected ColumnSelectWindow(IEnumerable<IColumnSettings> columns)
         {
             InitializeComponent();
-            clbColumns.ItemCheck += new ItemCheckEventHandler(clbColumns_ItemCheck);
+            clbColumns.ItemCheck += clbColumns_ItemCheck;
 
             // Fill the columns list
             m_columns.AddRange(columns);
@@ -32,12 +32,8 @@ namespace EVEMon.Controls
         /// </summary>
         public IEnumerable<IColumnSettings> Columns
         {
-            get
-            {
-                foreach (var column in m_columns)
-                {
-                    yield return column;
-                }
+            get {
+                return m_columns;
             }
         }
 
@@ -74,22 +70,22 @@ namespace EVEMon.Controls
             bool isChecked = (e.NewValue == CheckState.Checked);
 
             // Gets the key of the modified column
-            var header = (string)clbColumns.Items[e.Index];
-            var key = GetAllKeys().First(x => GetHeader(x) == header);
+            string header = (string)clbColumns.Items[e.Index];
+            int key = GetAllKeys().First(x => GetHeader(x) == header);
 
             // Gets the column for this key
-            var column = m_columns.First(x => x.Key == key);
+            IColumnSettings column = m_columns.First(x => x.Key == key);
 
             // Add or remove from the list
-            if (column.Visible != isChecked)
-            {
-                column.Visible = isChecked;
-                if (isChecked)
-                {
-                    m_columns.Remove(column);
-                    m_columns.Add(column);
-                }
-            }
+            if (column.Visible == isChecked)
+                return;
+
+            column.Visible = isChecked;
+            if (!isChecked)
+                return;
+
+            m_columns.Remove(column);
+            m_columns.Add(column);
         }
 
         /// <summary>
@@ -99,8 +95,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -110,8 +106,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>

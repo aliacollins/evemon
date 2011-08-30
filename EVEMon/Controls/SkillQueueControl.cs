@@ -1,18 +1,27 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
-using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace EVEMon.Controls
 {
     public class SkillQueueControl : Control
     {
+        private static readonly DateTime s_paintTime = DateTime.UtcNow;
+
+        private readonly SkillQueueToolTip m_toolTip;
+
         private DateTime m_nextRepainting = DateTime.MinValue;
-        private static DateTime m_paintTime = DateTime.UtcNow;
+        private SkillQueue m_skillQueue;
+        private Color m_firstColor = Color.LightBlue;
+        private Color m_secondColor = Color.DarkBlue;
+        private Color m_emptyColor = Color.DimGray;
+        private Color m_borderColor = Color.Gray;
+        private Point m_lastLocation = new Point(-1, -1);
 
 
         #region Constructors, disposing, global events
@@ -83,11 +92,11 @@ namespace EVEMon.Controls
 
             Invalidate();
         }
+
         #endregion
 
 
         #region Public Properties
-        private SkillQueue m_skillQueue;
 
         /// <summary>
         /// Skill Queue to be rendered.
@@ -96,10 +105,7 @@ namespace EVEMon.Controls
         [Description("Skill queue to render on the control canvas")]
         public SkillQueue SkillQueue
         {
-            get
-            {
-                return m_skillQueue;
-            }
+            get { return m_skillQueue; }
             set
             {
                 m_skillQueue = value;
@@ -107,19 +113,14 @@ namespace EVEMon.Controls
             }
         }
 
-        private Color m_firstColor = Color.LightBlue;
-        
         /// <summary>
         /// The first of two colors to be used in the queue.
         /// </summary>
         [Category("Appearance")]
         [Description("First color of the component")]
-        public Color FirstColor 
+        public Color FirstColor
         {
-            get
-            {
-                return m_firstColor;
-            }
+            get { return m_firstColor; }
 
             set
             {
@@ -128,8 +129,6 @@ namespace EVEMon.Controls
             }
         }
 
-        private Color m_secondColor = Color.DarkBlue;
-
         /// <summary>
         /// The second of two colours to be used in the queue.
         /// </summary>
@@ -137,18 +136,13 @@ namespace EVEMon.Controls
         [Description("Second color of the component")]
         public Color SecondColor
         {
-            get
-            {
-                return m_secondColor;
-            }
+            get { return m_secondColor; }
             set
             {
                 m_secondColor = value;
                 Invalidate();
             }
         }
-
-        private Color m_emptyColor = Color.DimGray;
 
         /// <summary>
         /// The color used for the free space at the end of the queue.
@@ -157,18 +151,13 @@ namespace EVEMon.Controls
         [Description("Color used for the free space at the end of the queue when there are less than 24h of training queued.")]
         public Color EmptyColor
         {
-            get
-            {
-                return m_emptyColor;
-            }
+            get { return m_emptyColor; }
             set
             {
                 m_emptyColor = value;
                 Invalidate();
             }
         }
-
-        private Color m_borderColor = Color.Gray;
 
         /// <summary>
         /// The color used for the border of the queue.
@@ -177,20 +166,19 @@ namespace EVEMon.Controls
         [Description("Color used for the border of the queue.")]
         public Color BorderColor
         {
-            get
-            {
-                return m_borderColor;
-            }
+            get { return m_borderColor; }
             set
             {
                 m_borderColor = value;
                 Invalidate();
             }
         }
+
         #endregion
 
-        
+
         #region Overridden Methods
+
         /// <summary>
         /// Paint the skill queue to the control surface.
         /// </summary>
@@ -219,13 +207,13 @@ namespace EVEMon.Controls
             }
 
             // We need to update the painting only every (24h / width in pixels)
-            m_nextRepainting = DateTime.Now.AddSeconds((24 * 3600) / width);
+            m_nextRepainting = DateTime.Now.AddSeconds((double)(24 * 3600) / width);
         }
+
         #endregion
 
 
         #region Private Methods
-        SkillQueueToolTip m_toolTip;
 
         /// <summary>
         /// Get the first of the two alternating colours.
@@ -236,14 +224,7 @@ namespace EVEMon.Controls
         /// <returns>First Colour property, or dark Gray if in safe for work mode</returns>
         private Color GetFirstColor()
         {
-            if (Settings.UI.SafeForWork)
-            {
-                return Color.DarkGray;
-            }
-            else
-            {
-                return m_firstColor;
-            }
+            return Settings.UI.SafeForWork ? Color.DarkGray : m_firstColor;
         }
 
         /// <summary>
@@ -255,14 +236,7 @@ namespace EVEMon.Controls
         /// <returns>Second Colour property, or gray if in safe for work mode</returns>
         private Color GetSecondColor()
         {
-            if (Settings.UI.SafeForWork)
-            {
-                return Color.Gray;
-            }
-            else
-            {
-                return m_secondColor;
-            }
+            return Settings.UI.SafeForWork ? Color.Gray : m_secondColor;
         }
 
         /// <summary>
@@ -274,14 +248,7 @@ namespace EVEMon.Controls
         /// <returns>Second Colour property, or dim gray if in safe for work mode</returns>
         private Color GetEmptyColor()
         {
-            if (Settings.UI.SafeForWork)
-            {
-                return Color.DimGray;
-            }
-            else
-            {
-                return m_emptyColor;
-            }
+            return Settings.UI.SafeForWork ? Color.DimGray : m_emptyColor;
         }
 
         /// <summary>
@@ -293,14 +260,7 @@ namespace EVEMon.Controls
         /// <returns>Second Colour property, or black if in safe for work mode</returns>
         private Color GetBorderColor()
         {
-            if (Settings.UI.SafeForWork)
-            {
-                return Color.Black;
-            }
-            else
-            {
-                return m_borderColor;
-            }
+            return Settings.UI.SafeForWork ? Color.Black : m_borderColor;
         }
 
         /// <summary>
@@ -314,9 +274,9 @@ namespace EVEMon.Controls
         /// <param name="height">Height of the canvas</param>
         private void PaintPoint(Graphics g, int width, int height)
         {
-            using(Brush background = new SolidBrush(BackColor))
+            using (Brush background = new SolidBrush(BackColor))
             {
-                using(Pen pen = new Pen(GetBorderColor(), 1.0f))
+                using (Pen pen = new Pen(GetBorderColor(), 1.0f))
                 {
                     int halfHeight = (height / 2);
                     int pointWidth = (height / 2) + 1;
@@ -370,10 +330,8 @@ namespace EVEMon.Controls
                     return;
 
                 int lastX = 0;
-                foreach (QueuedSkill skill in m_skillQueue)
+                foreach (Rectangle skillRect in m_skillQueue.Select(skill => GetSkillRect(skill, width, height)))
                 {
-                    // find the rectangle for the skill and paint it
-                    Rectangle skillRect = GetSkillRect(skill, width, height);
                     g.FillRectangle(brushes[brushNumber], skillRect);
                     lastX = skillRect.Right;
 
@@ -386,18 +344,18 @@ namespace EVEMon.Controls
                 {
                     PaintPoint(g, width, height);
                 }
-                // Else, draw a dark region at the end and the border
+                    // Else, draw a dark region at the end and the border
                 else
                 {
                     // Empty region
-                    var emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
-                    using (var brush = new SolidBrush(GetEmptyColor()))
+                    Rectangle emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
+                    using (SolidBrush brush = new SolidBrush(GetEmptyColor()))
                     {
                         g.FillRectangle(brush, emptyRect);
                     }
 
                     // Then the border
-                    using(Pen pen = new Pen(GetBorderColor(), 1.0f))
+                    using (Pen pen = new Pen(GetBorderColor(), 1.0f))
                     {
                         g.DrawRectangle(pen, 0, 0, width - 1, height - 1);
                     }
@@ -432,26 +390,24 @@ namespace EVEMon.Controls
                 relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
 
             }
-            // Timespan is stable
+                // Timespan is stable
             else
             {
-                relativeStart = skill.StartTime.Subtract(m_paintTime);
-                relativeFinish = skill.EndTime.Subtract(m_paintTime);
+                relativeStart = skill.StartTime.Subtract(s_paintTime);
+                relativeFinish = skill.EndTime.Subtract(s_paintTime);
             }
 
-            int TotalSeconds = (int)TimeSpan.FromHours(24).TotalSeconds;
-            
-            double Start = Math.Floor((relativeStart.TotalSeconds / TotalSeconds) * width);
-            double Finish = Math.Floor((relativeFinish.TotalSeconds / TotalSeconds) * width);
+            int totalSeconds = (int)TimeSpan.FromHours(24).TotalSeconds;
+
+            double start = Math.Floor((relativeStart.TotalSeconds / totalSeconds) * width);
+            double finish = Math.Floor((relativeFinish.TotalSeconds / totalSeconds) * width);
 
             // If the start time is before now set it to zero
-            if (Start < 0)
-                Start = 0;
+            if (start < 0)
+                start = 0;
 
-            return new Rectangle((int)Start, 0, (int)(Finish - Start), height);
+            return new Rectangle((int)start, 0, (int)(finish - start), height);
         }
-
-        private Point m_lastLocation = new Point(-1, -1);
 
         /// <summary>
         /// Triggers when the mouse is moved displays skill.
@@ -475,21 +431,22 @@ namespace EVEMon.Controls
                 Rectangle skillRect = GetSkillRect(skill, Width, Height);
                 lastX = skillRect.Right;
 
-                if (skillRect.Contains(e.Location))
-                {
-                    Point tipPoint = new Point((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2, e.Location.Y);
-                    m_toolTip.Display(skill, tipPoint);
-                    base.OnMouseMove(e);
-                    return;
-                }
+                if (!skillRect.Contains(e.Location))
+                    continue;
+
+                Point tipPoint = new Point((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2, e.Location.Y);
+                m_toolTip.Display(skill, tipPoint);
+                base.OnMouseMove(e);
+                return;
             }
 
             // Are we in the empty space ?
-            var emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
+            Rectangle emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
             if (emptyRect.Contains(e.Location))
             {
-                var leftTime = (m_skillQueue.IsPaused ? m_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
-                var text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}", leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
+                TimeSpan leftTime = (m_skillQueue.IsPaused ? s_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
+                string text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}",
+                                            leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
                 Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2, e.Location.Y);
                 m_toolTip.Display(text, tipPoint);
                 base.OnMouseMove(e);
@@ -527,6 +484,7 @@ namespace EVEMon.Controls
 
             PaintPoint(g, width, height);
         }
+
         #endregion
 
     }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Text;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
+using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
-namespace EVEMon.Controls.Design
+namespace EVEMon.Controls.MultiPanel.Design
 {
     /// <summary>
     /// A designer hosting a page of the <see cref="MultiPanel"/> control.
@@ -19,16 +18,10 @@ namespace EVEMon.Controls.Design
     public class MultiPanelPageDesigner : ScrollableControlDesigner
     {
         private MultiPanelPage m_page;
-        private Font m_font = new Font("Courier New", 8F, FontStyle.Bold);
-        private StringFormat m_rightFormat = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.DirectionRightToLeft);
+        private readonly Font m_font = new Font("Courier New", 8F, FontStyle.Bold);
 
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public MultiPanelPageDesigner()
-        {
-        }
+        private readonly StringFormat m_rightFormat =
+            new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.DirectionRightToLeft);
 
         /// <summary>
         /// Overridden. Initializes the component.
@@ -40,7 +33,9 @@ namespace EVEMon.Controls.Design
             m_page = component as MultiPanelPage;
             if (m_page == null)
             {
-                DisplayError(new Exception("You attempted to use a MultiPanelPageDesigner with a class that does not inherit from MultiPanelPage."));
+                DisplayError(
+                    new Exception(
+                        "You attempted to use a MultiPanelPageDesigner with a class that does not inherit from MultiPanelPage."));
             }
 
             base.Initialize(component);
@@ -63,20 +58,18 @@ namespace EVEMon.Controls.Design
         [Description("The text identifying the page.")]
         public string Text
         {
-            get
-            {
-                return m_page.Text;
-            }
+            get { return m_page.Text; }
             set
             {
-                string ot = m_page.Text;
                 m_page.Text = value;
 
                 IComponentChangeService service = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
-                if (service == null) return;
+                if (service == null)
+                    return;
 
                 MultiPanel panel = m_page.Parent as MultiPanel;
-                if (panel != null) panel.Refresh();
+                if (panel != null)
+                    panel.Refresh();
             }
         }
 
@@ -87,8 +80,8 @@ namespace EVEMon.Controls.Design
         {
             get
             {
-                var host = (IDesignerHost)GetService(typeof(IDesignerHost));
-                var panel = (MultiPanel)m_page.Parent;
+                IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
+                MultiPanel panel = (MultiPanel)m_page.Parent;
                 return MultiPanelDesignerHelper.GetDesignerVerbs(host, panel);
             }
         }
@@ -113,10 +106,10 @@ namespace EVEMon.Controls.Design
             using (Brush b = new SolidBrush(Color.FromArgb(100, Color.Black)))
             {
                 float fh = m_font.GetHeight(pea.Graphics);
-                RectangleF tleft = new RectangleF(0, 0, m_page.Width / 2, fh);
-                RectangleF bleft = new RectangleF(0, m_page.Height - fh, m_page.Width / 2, fh);
-                RectangleF tright = new RectangleF(m_page.Width / 2, 0, m_page.Width / 2, fh);
-                RectangleF bright = new RectangleF(m_page.Width / 2, m_page.Height - fh, m_page.Width / 2, fh);
+                RectangleF tleft = new RectangleF(0, 0, (float)m_page.Width / 2, fh);
+                RectangleF bleft = new RectangleF(0, m_page.Height - fh, (float)m_page.Width / 2, fh);
+                RectangleF tright = new RectangleF((float)m_page.Width / 2, 0, (float)m_page.Width / 2, fh);
+                RectangleF bright = new RectangleF((float)m_page.Width / 2, m_page.Height - fh, (float)m_page.Width / 2, fh);
                 pea.Graphics.DrawString(m_page.Text, m_font, b, tleft);
                 pea.Graphics.DrawString(m_page.Text, m_font, b, bleft);
                 pea.Graphics.DrawString(m_page.Text, m_font, b, tright, m_rightFormat);
@@ -125,13 +118,15 @@ namespace EVEMon.Controls.Design
         }
 
         /// <summary>
-        /// Overridden. Adds properties to or removes properties from the Properties grid in a design host at design time or provides new design-time properties that might correspond to properties on the associated control.
+        /// Overridden. Adds properties to or removes properties from the Properties grid in a design host at design time
+        /// or provides new design-time properties that might correspond to properties on the associated control.
         /// </summary>
         /// <param name="properties">The original properties dictionary.</param>
         protected override void PreFilterProperties(IDictionary properties)
         {
             base.PreFilterProperties(properties);
-            properties["Text"] = TypeDescriptor.CreateProperty(typeof(MultiPanelPageDesigner), (PropertyDescriptor)properties["Text"], new Attribute[0]);
+            properties["Text"] = TypeDescriptor.CreateProperty(typeof(MultiPanelPageDesigner),
+                                                               (PropertyDescriptor)properties["Text"], new Attribute[0]);
         }
     }
 }

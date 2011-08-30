@@ -1,20 +1,12 @@
 using System;
-using System.Collections;
+using System.ComponentModel;
 using System.Windows.Forms;
 using EVEMon.Common;
-using System.ComponentModel;
-
-using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace EVEMon.Controls
 {
     public class PersistentSplitContainer : SplitContainer
     {
-        public PersistentSplitContainer()
-            : base()
-        {
-        }
-        
         private string m_rememberDistanceKey;
 
         /// <summary>
@@ -25,9 +17,10 @@ namespace EVEMon.Controls
         public string RememberDistanceKey
         {
             get { return m_rememberDistanceKey; }
-            set 
+            set
             {
                 m_rememberDistanceKey = value;
+
                 // Set the splitter width here rather than in an override of CreateControl()
                 // because CreatControl is only called when we make the container visible
                 // so if the container is created, but never shown, the persistant splitter 
@@ -39,12 +32,12 @@ namespace EVEMon.Controls
                         if (Settings.UI.Splitters.ContainsKey(m_rememberDistanceKey))
                         {
                             int d = Settings.UI.Splitters[m_rememberDistanceKey];
-                            d = this.VerifyValidSplitterDistance(d);
-                            this.SplitterDistance = d;
+                            d = VerifyValidSplitterDistance(d);
+                            SplitterDistance = d;
                         }
                         else
                         {
-                            Settings.UI.Splitters.Add(m_rememberDistanceKey, Math.Min(this.Width / 4, 100));
+                            Settings.UI.Splitters.Add(m_rememberDistanceKey, Math.Min(Width / 4, 100));
                         }
                     }
                 }
@@ -60,28 +53,34 @@ namespace EVEMon.Controls
             }
         }
 
-       protected override void Dispose(bool disposing)
+        /// <summary>
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
         {
             if (!String.IsNullOrEmpty(m_rememberDistanceKey))
             {
-                int d = this.SplitterDistance;
+                int d = SplitterDistance;
                 if (VerifyValidSplitterDistance(d) == d)
-                {
                     Settings.UI.Splitters[m_rememberDistanceKey] = d;
-                }
             }
 
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Verifies the valid splitter distance.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns></returns>
         private int VerifyValidSplitterDistance(int d)
         {
-            int defaultDistance = this.SplitterDistance;
+            int defaultDistance = SplitterDistance;
 
-            if ((d < this.Panel1MinSize) || (d + this.Panel2MinSize > this.Width))
+            if ((d < Panel1MinSize) || (d + Panel2MinSize > Width))
                 return defaultDistance;
-            else
-                return d;
+            return d;
         }
     }
 }

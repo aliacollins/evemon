@@ -16,13 +16,13 @@ namespace EVEMon.Controls
     /// <summary>
     /// The little "flower" displayed on the top right of the characters monitors.
     /// </summary>
-    public class Throbber : PictureBox
+    public sealed class Throbber : PictureBox
     {
         // Static members
-        private static int m_runners;
-        private static Timer m_timer;
-        private static Image m_strobeFrame = null;
-        private static Image[] m_movingFrames = null;
+        private static int s_runners;
+        private static Timer s_timer;
+        private static Image s_strobeFrame;
+        private static Image[] s_movingFrames;
 
         // Instance members
         private ThrobberState m_state = ThrobberState.Stopped;
@@ -35,18 +35,15 @@ namespace EVEMon.Controls
         public Throbber()
         {
             // Initializes the common images
-            if (m_strobeFrame == null)
+            if (s_strobeFrame == null)
                 InitImages();
 
             // Initializes the common timer
-            if (m_timer == null)
-            {
-                m_timer = new Timer();
-                m_timer.Interval = 100;
-            }
+            if (s_timer == null)
+                s_timer = new Timer { Interval = 100 };
 
             // Always subscribed to the timer (ridiculous CPU overhead, less work for the GC with no subscriptions/unsubscriptions, cleaner code)
-            m_timer.Tick += m_timer_Tick;
+            s_timer.Tick += TimerTick;
 
             // Forces the control to be 24*24
             MinimumSize = new Size(24, 24);
@@ -62,11 +59,13 @@ namespace EVEMon.Controls
             set
             {
                 // Is the state unchanged ? 
-                if (value == m_state) return;
+                if (value == m_state)
+                    return;
                 m_state = value;
 
                 // Leave it stopped if not visible
-                if(!Visible) return;
+                if (!Visible)
+                    return;
 
                 // Start or stop
                 switch (m_state)
@@ -94,12 +93,14 @@ namespace EVEMon.Controls
             m_ticks = 0;
 
             // Is it already running ?
-            if (m_running) return;
+            if (m_running)
+                return;
             m_running = true;
 
             // Start
-            m_runners++;
-            if (m_runners == 1) m_timer.Start();
+            s_runners++;
+            if (s_runners == 1)
+                s_timer.Start();
         }
 
         /// <summary>
@@ -108,12 +109,14 @@ namespace EVEMon.Controls
         private void Stop()
         {
             // Is it already stopped ?
-            if (!m_running) return;
+            if (!m_running)
+                return;
             m_running = false;
 
             // Stop
-            m_runners--;
-            if (m_runners == 0) m_timer.Stop();
+            s_runners--;
+            if (s_runners == 0)
+                s_timer.Stop();
         }
 
         /// <summary>
@@ -121,7 +124,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void m_timer_Tick(object sender, EventArgs e)
+        private void TimerTick(object sender, EventArgs e)
         {
             // Invalidates the control
             Refresh();
@@ -134,20 +137,18 @@ namespace EVEMon.Controls
         /// <param name="pe"></param>
         protected override void OnPaint(PaintEventArgs pe)
         {
-            Image frame = m_strobeFrame;
+            Image frame = s_strobeFrame;
 
             // Select the frame to display
             switch (m_state)
             {
                 case ThrobberState.Rotating:
-                    frame = m_movingFrames[m_ticks % m_movingFrames.Length];
+                    frame = s_movingFrames[m_ticks % s_movingFrames.Length];
                     break;
 
                 case ThrobberState.Strobing:
-                    if ((m_ticks % 10) >= 5) return;
-                    break;
-
-                default:
+                    if ((m_ticks % 10) >= 5)
+                        return;
                     break;
             }
 
@@ -183,27 +184,28 @@ namespace EVEMon.Controls
         /// </summary>
         private static void InitImages()
         {
-            int width = 24;
-            int height = 24;
+            const int ImageWidth = 24;
+            const int ImageHeight = 24;
             Image b = CommonProperties.Resources.Throbber;
 
             //Make the stopped Image
-            m_strobeFrame = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(m_strobeFrame))
+            s_strobeFrame = new Bitmap(ImageWidth, ImageHeight);
+            using (Graphics g = Graphics.FromImage(s_strobeFrame))
             {
-                g.DrawImage(b, new Rectangle(0, 0, width, height), new Rectangle(0, 0, width, height), GraphicsUnit.Pixel);
+                g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight), new Rectangle(0, 0, ImageWidth, ImageHeight), GraphicsUnit.Pixel);
             }
 
             //Make the moving Images
-            m_movingFrames = new Image[8];
+            s_movingFrames = new Image[8];
             for (int i = 1; i < 9; i++)
             {
-                Bitmap ib = new Bitmap(width, height);
+                Bitmap ib = new Bitmap(ImageWidth, ImageHeight);
                 using (Graphics g = Graphics.FromImage(ib))
                 {
-                    g.DrawImage(b, new Rectangle(0, 0, width, height), new Rectangle(i * width, 0, width, height), GraphicsUnit.Pixel);
+                    g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight), new Rectangle(i * ImageWidth, 0, ImageWidth, ImageHeight),
+                                GraphicsUnit.Pixel);
                 }
-                m_movingFrames[i - 1] = ib;
+                s_movingFrames[i - 1] = ib;
             }
         }
     }

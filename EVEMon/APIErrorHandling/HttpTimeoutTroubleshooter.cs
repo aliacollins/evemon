@@ -1,11 +1,10 @@
-﻿using EVEMon.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 
 namespace EVEMon.APIErrorHandling
 {
@@ -21,10 +20,10 @@ namespace EVEMon.APIErrorHandling
         {
             InitializeComponent();
 
-            var Options = new List<TimeoutOption>();
-            var updateSettings = new UpdateSettings();
-            
-            // lets add 10 - 60 to the list.
+            List<TimeoutOption> options = new List<TimeoutOption>();
+            UpdateSettings updateSettings = new UpdateSettings();
+
+            // Lets add 10 - 60 to the list
             for (int i = 10; i <= 60; i += 10)
             {
                 string text = String.Empty;
@@ -35,22 +34,21 @@ namespace EVEMon.APIErrorHandling
                 if (i == Settings.Updates.HttpTimeout)
                     text = "Current";
 
-                Options.Add(new TimeoutOption(i, text));
+                options.Add(new TimeoutOption(i, text));
             }
 
-            // if the current is set to something odd we add it and sort by Seconds
-            if (!Options.Any(x => x.Seconds == Settings.Updates.HttpTimeout))
-                Options.Add(new TimeoutOption(Settings.Updates.HttpTimeout, "Current"));
+            // If the current is set to something odd we add it and sort by Seconds
+            if (!options.Any(x => x.Seconds == Settings.Updates.HttpTimeout))
+                options.Add(new TimeoutOption(Settings.Updates.HttpTimeout, "Current"));
 
-            // if the default is not in the list we add it
-            if (!Options.Any(x => x.Seconds == updateSettings.HttpTimeout))
-                Options.Add(new TimeoutOption(updateSettings.HttpTimeout, "Default"));
+            // If the default is not in the list we add it
+            if (!options.Any(x => x.Seconds == updateSettings.HttpTimeout))
+                options.Add(new TimeoutOption(updateSettings.HttpTimeout, "Default"));
 
-            Options.Sort((a, b) => a.Seconds.CompareTo(b.Seconds));
+            options.Sort((a, b) => a.Seconds.CompareTo(b.Seconds));
 
-
-            // databind
-            TimeoutDropDown.DataSource = Options;
+            // Databind
+            TimeoutDropDown.DataSource = options;
             TimeoutDropDown.DisplayMember = "Label";
             TimeoutDropDown.ValueMember = "Seconds";
         }
@@ -75,15 +73,6 @@ namespace EVEMon.APIErrorHandling
             /// Initializes a new instance of the <see cref="TimeoutOption"/> class.
             /// </summary>
             /// <param name="seconds">The seconds.</param>
-            public TimeoutOption(int seconds)
-            {
-                Seconds = seconds;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimeoutOption"/> class.
-            /// </summary>
-            /// <param name="seconds">The seconds.</param>
             /// <param name="text">The text.</param>
             public TimeoutOption(int seconds, string text)
             {
@@ -95,7 +84,7 @@ namespace EVEMon.APIErrorHandling
             /// Gets or sets the seconds.
             /// </summary>
             /// <value>The seconds.</value>
-            public int Seconds { get; set; }
+            public int Seconds { get; private set; }
 
             /// <summary>
             /// Gets or sets the text.
@@ -111,7 +100,7 @@ namespace EVEMon.APIErrorHandling
             {
                 get
                 {
-                    var builder = new StringBuilder();
+                    StringBuilder builder = new StringBuilder();
 
                     if (Seconds % 60 == 0)
                     {

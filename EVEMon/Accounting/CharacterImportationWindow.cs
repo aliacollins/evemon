@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Controls;
 
@@ -20,7 +15,6 @@ namespace EVEMon.Accounting
         // When multiple downloads are fired, we only want to react to the latest one, this is done through versioning.
         private int m_version;
         private UriCharacterEventArgs m_args;
-        private UriCharacter m_character;
 
         /// <summary>
         /// Constructor for a new character creation.
@@ -43,15 +37,15 @@ namespace EVEMon.Accounting
             namePanel.Visible = false;
             okButton.Enabled = false;
 
-            m_character = character;
-            if (m_character.Uri.IsFile)
+            Character = character;
+            if (Character.Uri.IsFile)
             {
-                fileTextBox.Text = m_character.Uri.ToString();
+                fileTextBox.Text = Character.Uri.ToString();
                 fileRadio.Checked = true;
             }
             else
             {
-                urlTextBox.Text = m_character.Uri.ToString();
+                urlTextBox.Text = Character.Uri.ToString();
                 urlRadio.Checked = true;
             }
         }
@@ -59,10 +53,7 @@ namespace EVEMon.Accounting
         /// <summary>
         /// Gets the generated character after the form closing, or null if the operation was cancel or couldn't success.
         /// </summary>
-        public UriCharacter Character
-        {
-            get { return m_character; }
-        }
+        public UriCharacter Character { get; private set; }
 
         /// <summary>
         /// On load, subscribe events.
@@ -150,27 +141,28 @@ namespace EVEMon.Accounting
 
             // Starts querying the web or the hard drive, and invokes the given callback on result.
             int version = m_version;
-            EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(uri), (sender, args) =>
-                {
-                    if (version != m_version)
-                        return;
+            EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(uri),
+                                                               (sender, args) =>
+                                                                   {
+                                                                       if (version != m_version)
+                                                                           return;
 
-                    urlThrobber.State = ThrobberState.Stopped;
+                                                                       urlThrobber.State = ThrobberState.Stopped;
 
-                    // Was there an error ?
-                    if (args.HasError)
-                    {
-                        okButton.Enabled = false;
-                        errorPanel.Visible = true;
-                        labelError.Text = args.Error;
-                        return;
-                    }
+                                                                       // Was there an error ?
+                                                                       if (args.HasError)
+                                                                       {
+                                                                           okButton.Enabled = false;
+                                                                           errorPanel.Visible = true;
+                                                                           labelError.Text = args.Error;
+                                                                           return;
+                                                                       }
 
-                    nameTextBox.Text = args.CharacterName;
-                    namePanel.Visible = true;
-                    okButton.Enabled = true;
-                    m_args = args;
-                });
+                                                                       nameTextBox.Text = args.CharacterName;
+                                                                       namePanel.Visible = true;
+                                                                       okButton.Enabled = true;
+                                                                       m_args = args;
+                                                                   });
         }
 
         /// <summary>
@@ -188,16 +180,16 @@ namespace EVEMon.Accounting
             }
 
             // Generates or updates the character
-            if (m_character == null)
+            if (Character == null)
             {
-                m_character = m_args.CreateCharacter();
+                Character = m_args.CreateCharacter();
             }
             else
             {
-                m_args.UpdateCharacter(m_character);
+                m_args.UpdateCharacter(Character);
             }
-            
-            m_character.Name = nameTextBox.Text;
+
+            Character.Name = nameTextBox.Text;
 
             DialogResult = DialogResult.OK;
         }

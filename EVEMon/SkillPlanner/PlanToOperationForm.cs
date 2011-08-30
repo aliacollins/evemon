@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using EVEMon.Common.Controls;
 using EVEMon.Common;
 using EVEMon.Controls;
+using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon.SkillPlanner
 {

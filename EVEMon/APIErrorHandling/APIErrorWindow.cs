@@ -36,7 +36,7 @@ namespace EVEMon.ApiErrorHandling
         /// Gets or sets the notification for this error.
         /// </summary>
         [Browsable(false)]
-        public APIErrorNotificationEventArgs NotificationEventArgs
+        public APIErrorNotificationEventArgs Notification
         {
             get { return m_notification; }
             set
@@ -78,18 +78,12 @@ namespace EVEMon.ApiErrorHandling
             if (exception == null)
                 return null;
 
-            var httpException = exception as HttpWebServiceException;
+            HttpWebServiceException httpException = exception as HttpWebServiceException;
 
             if (httpException == null)
                 return null;
 
-            if (httpException.Status == HttpWebServiceExceptionStatus.Timeout)
-            {
-                var troubleshooter = new HttpTimeoutTroubleshooter();
-                return troubleshooter;
-            }
-
-            return null;
+            return httpException.Status == HttpWebServiceExceptionStatus.Timeout ? new HttpTimeoutTroubleshooter() : null;
         }
 
         /// <summary>
@@ -146,16 +140,15 @@ namespace EVEMon.ApiErrorHandling
             if (value == null)
                 return "No error selected.";
 
-            if (value.Result == null)
-                return String.Format("{0}{1}No details were provided.", value, Environment.NewLine);
-
-            return String.Format("{0}{1}{2}", value, Environment.NewLine, GetErrorLabelTextDetail(value.Result));
+            return value.Result == null
+                       ? String.Format("{0}{1}No details were provided.", value, Environment.NewLine)
+                       : String.Format("{0}{1}{2}", value, Environment.NewLine, GetErrorLabelTextDetail(value.Result));
         }
 
         /// <summary>
         /// Gets the error label text detail.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="result">The value.</param>
         private static string GetErrorLabelTextDetail(IAPIResult result)
         {
             switch (result.ErrorType)
@@ -165,21 +158,21 @@ namespace EVEMon.ApiErrorHandling
 
                 case APIEnumerations.APIErrors.CCP:
                     return String.Format(CultureConstants.DefaultCulture,
-                        "CCP Error {0} : {1}",
-                        result.CCPError.ErrorCode,
-                        result.CCPError.ErrorMessage);
+                                         "CCP Error {0} : {1}",
+                                         result.CCPError.ErrorCode,
+                                         result.CCPError.ErrorMessage);
 
                 case APIEnumerations.APIErrors.Http:
                     return String.Format(CultureConstants.DefaultCulture,
-                        "HTTP error: {0}", result.ErrorMessage);
+                                         "HTTP error: {0}", result.ErrorMessage);
 
                 case APIEnumerations.APIErrors.Xml:
                     return String.Format(CultureConstants.DefaultCulture,
-                        "XML error: {0}", result.ErrorMessage);
+                                         "XML error: {0}", result.ErrorMessage);
 
                 case APIEnumerations.APIErrors.Xslt:
                     return String.Format(CultureConstants.DefaultCulture,
-                        "XSLT error: {0}", result.ErrorMessage);
+                                         "XSLT error: {0}", result.ErrorMessage);
 
                 default:
                     throw new NotImplementedException();
@@ -209,7 +202,7 @@ namespace EVEMon.ApiErrorHandling
             {
                 m_troubleshooter.Dispose();
                 m_troubleshooter = null;
-            }            
+            }
 
             base.OnFormClosed(e);
         }
@@ -221,26 +214,21 @@ namespace EVEMon.ApiErrorHandling
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CopyToClipboardLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            var builder = new StringBuilder();
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            StringBuilder builder = new StringBuilder();
 
             builder.AppendFormat("EVEMon {0} API Error:{1}", version, Environment.NewLine);
             builder.AppendLine();
-            builder.AppendLine(GetErrorLabelText(NotificationEventArgs));
+            builder.AppendLine(GetErrorLabelText(Notification));
             builder.AppendLine();
-            builder.AppendLine(GetXmlData(NotificationEventArgs.Result));
+            builder.AppendLine(GetXmlData(Notification.Result));
 
             if (m_troubleshooter != null)
             {
                 builder.AppendLine();
-                if (m_troubleshooterUsed)
-                {
-                    builder.Append("A troubleshooter was displayed and used.");
-                }
-                else
-                {
-                    builder.Append("A troubleshooter was displayed but not used.");
-                }
+                builder.Append(m_troubleshooterUsed
+                                   ? "A troubleshooter was displayed and used."
+                                   : "A troubleshooter was displayed but not used.");
             }
 
             try
@@ -252,7 +240,8 @@ namespace EVEMon.ApiErrorHandling
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
+                MessageBox.Show(
+                    "Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
             }
         }
     }

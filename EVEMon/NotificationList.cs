@@ -350,7 +350,7 @@ namespace EVEMon
             if (notification is APIErrorNotificationEventArgs)
             {
                 APIErrorWindow window = WindowsFactory<APIErrorWindow>.ShowUnique();
-                window.NotificationEventArgs = (APIErrorNotificationEventArgs)notification;
+                window.Notification = (APIErrorNotificationEventArgs)notification;
                 return;
             }
 
@@ -358,7 +358,7 @@ namespace EVEMon
             if (notification is SkillCompletionNotificationEventArgs)
             {
                 SkillCompletionWindow window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
-                window.NotificationEventArgs = (SkillCompletionNotificationEventArgs)notification;
+                window.Notification = (SkillCompletionNotificationEventArgs)notification;
                 return;
             }
 
@@ -366,7 +366,7 @@ namespace EVEMon
             if (notification is ClaimableCertificateNotificationEventArgs)
             {
                 ClaimableCertificateWindow window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
-                window.NotificationEventArgs = (ClaimableCertificateNotificationEventArgs)notification;
+                window.Notification = (ClaimableCertificateNotificationEventArgs)notification;
                 return;
             }
 

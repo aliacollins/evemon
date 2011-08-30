@@ -1,29 +1,42 @@
 using System;
 using System.Collections;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EVEMon.Controls
 {
     public class DraggableListView : ListView
     {
+        public event EventHandler<ListViewDragEventArgs> ListViewItemsDragging;
+        public event EventHandler<EventArgs> ListViewItemsDragged;
+
+        private const string Reorder = "Reorder";
+
+        private bool m_dragging;
+        private bool m_allowRowReorder = true;
+        private int m_dropMarkerOn = -1;
+        private bool m_dropMarkerBelow;
+
+
         public DraggableListView()
-            : base()
         {
             DraggableInit();
         }
 
+
         #region Draggable stuff
-        private const string REORDER = "Reorder";
 
-        private bool allowRowReorder = true;
-
+        /// <summary>
+        /// Gets or sets a value indicating whether [allow row reorder].
+        /// </summary>
+        /// <value><c>true</c> if [allow row reorder]; otherwise, <c>false</c>.</value>
         public bool AllowRowReorder
         {
-            get { return this.allowRowReorder; }
+            get { return m_allowRowReorder; }
             set
             {
-                this.allowRowReorder = value;
+                m_allowRowReorder = value;
                 base.AllowDrop = value;
             }
         }
@@ -36,26 +49,24 @@ namespace EVEMon.Controls
 
         private void DraggableInit()
         {
-            this.AllowRowReorder = true;
+            AllowRowReorder = true;
         }
 
-        public event EventHandler<ListViewDragEventArgs> ListViewItemsDragging;
-        public event EventHandler<EventArgs> ListViewItemsDragged;
-
-        private bool m_dragging = false;
-
-        private EVEMon.Common.Skill GetDraggingSkill(DragEventArgs e)
+        private Common.Skill GetDraggingSkill(DragEventArgs e)
         {
             if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode"))
-            {
-                return (EVEMon.Common.Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;
-            }
+                return (Common.Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;
+
             return null;
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.DragDrop"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragDrop(DragEventArgs e)
         {
-            EVEMon.Common.Skill dragSkill = GetDraggingSkill(e);
+            Common.Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
                 base.OnDragDrop(e);
@@ -64,84 +75,80 @@ namespace EVEMon.Controls
             base.OnDragDrop(e);
             m_dragging = false;
             ClearDropMarker();
-            if (!this.AllowRowReorder)
-            {
+            if (!AllowRowReorder)
                 return;
-            }
-            if (base.SelectedItems.Count == 0)
-            {
+
+            if (SelectedItems.Count == 0)
                 return;
-            }
-            Point cp = base.PointToClient(new Point(e.X, e.Y));
-            ListViewItem dragToItem = base.GetItemAt(cp.X, cp.Y);
+
+            Point cp = PointToClient(new Point(e.X, e.Y));
+            ListViewItem dragToItem = GetItemAt(cp.X, cp.Y);
             if (dragToItem == null)
-            {
                 return;
-            }
+
             int dropIndex = dragToItem.Index;
-            if (dropIndex > base.SelectedItems[0].Index)
-            {
+            if (dropIndex > SelectedItems[0].Index)
                 dropIndex++;
-            }
 
             if (ListViewItemsDragging != null)
             {
-                ListViewDragEventArgs args = new ListViewDragEventArgs(base.SelectedItems[0].Index,
-                                                                       base.SelectedItems.Count, dropIndex);
+                ListViewDragEventArgs args = new ListViewDragEventArgs(SelectedItems[0].Index,
+                                                                       SelectedItems.Count, dropIndex);
                 ListViewItemsDragging(this, args);
                 if (args.Cancel)
-                {
                     return;
-                }
             }
 
-            ArrayList insertItems = new ArrayList(base.SelectedItems.Count);
+            ArrayList insertItems = new ArrayList(SelectedItems.Count);
             // Make a copy of all the selected items
 
-            foreach (ListViewItem item in base.SelectedItems)
+            foreach (ListViewItem item in SelectedItems)
             {
                 insertItems.Add(item.Clone());
             }
 
             // insert the copied items in reverse order at the drop index so 
             // they appear in the right order after they've all been inserted
-            for (int i=insertItems.Count-1; i>=0; i--)
+            for (int i = insertItems.Count - 1; i >= 0; i--)
             {
-                base.Items.Insert(dropIndex, (ListViewItem)insertItems[i]);
+                Items.Insert(dropIndex, (ListViewItem)insertItems[i]);
             }
+
             // remove the selected items
-            foreach (ListViewItem item in base.SelectedItems)
+            foreach (ListViewItem item in SelectedItems)
             {
                 // must clear the items icon index or an exception is thrown when it is removed
                 item.StateImageIndex = -1;
-                base.Items.Remove(item);
+                Items.Remove(item);
             }
 
             if (ListViewItemsDragged != null)
-            {
                 ListViewItemsDragged(this, new EventArgs());
-            }
 
             // if the item was dragged to the end of the plan.
             if (dropIndex >= Items.Count)
             {
-                base.EnsureVisible(Items.Count - 1);
+                EnsureVisible(Items.Count - 1);
             }
             else
             {
-                base.EnsureVisible(dropIndex);
+                EnsureVisible(dropIndex);
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.DragOver"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragOver(DragEventArgs e)
         {
-            EVEMon.Common.Skill dragSkill = GetDraggingSkill(e);
+            Common.Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
                 base.OnDragOver(e);
                 return;
             }
-            if (!this.AllowRowReorder)
+            if (!AllowRowReorder)
             {
                 e.Effect = DragDropEffects.None;
                 ClearDropMarker();
@@ -153,27 +160,26 @@ namespace EVEMon.Controls
                 ClearDropMarker();
                 return;
             }
-            Point cp = base.PointToClient(new Point(e.X, e.Y));
-            ListViewItem hoverItem = base.GetItemAt(cp.X, cp.Y);
+            Point cp = PointToClient(new Point(e.X, e.Y));
+            ListViewItem hoverItem = GetItemAt(cp.X, cp.Y);
             if (hoverItem == null)
             {
                 e.Effect = DragDropEffects.None;
                 ClearDropMarker();
                 return;
             }
-            foreach (ListViewItem moveItem in base.SelectedItems)
+
+            if (SelectedItems.Cast<ListViewItem>().Any(moveItem => moveItem.Index == hoverItem.Index))
             {
-                if (moveItem.Index == hoverItem.Index)
-                {
-                    e.Effect = DragDropEffects.None;
-                    hoverItem.EnsureVisible();
-                    ClearDropMarker();
-                    return;
-                }
+                e.Effect = DragDropEffects.None;
+                hoverItem.EnsureVisible();
+                ClearDropMarker();
+                return;
             }
+
             base.OnDragOver(e);
-            String text = (String)e.Data.GetData(REORDER.GetType());
-            if (text.CompareTo(REORDER) == 0)
+            String text = (String)e.Data.GetData(Reorder.GetType());
+            if (text.CompareTo(Reorder) == 0)
             {
                 e.Effect = DragDropEffects.Move;
                 hoverItem.EnsureVisible();
@@ -188,30 +194,37 @@ namespace EVEMon.Controls
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.DragEnter"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragEnter(DragEventArgs e)
         {
-            EVEMon.Common.Skill dragSkill = GetDraggingSkill(e);
+            Common.Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
                 base.OnDragEnter(e);
                 return;
             }
+
             base.OnDragEnter(e);
-            if (!this.AllowRowReorder)
+            if (!AllowRowReorder)
             {
                 e.Effect = DragDropEffects.None;
                 ClearDropMarker();
                 return;
             }
+
             if (!e.Data.GetDataPresent(DataFormats.Text))
             {
                 e.Effect = DragDropEffects.None;
                 ClearDropMarker();
                 return;
             }
+
             base.OnDragEnter(e);
-            String text = (String)e.Data.GetData(REORDER.GetType());
-            if (text.CompareTo(REORDER) == 0)
+            String text = (String)e.Data.GetData(Reorder.GetType());
+            if (text.CompareTo(Reorder) == 0)
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -222,14 +235,11 @@ namespace EVEMon.Controls
             }
         }
 
-        private int m_dropMarkerOn = -1;
-        private bool m_dropMarkerBelow = false;
-
         public void ClearDropMarker()
         {
             if (m_dropMarkerOn != -1)
             {
-                this.RestrictedPaint();
+                RestrictedPaint();
             }
             m_dropMarkerOn = -1;
         }
@@ -237,29 +247,31 @@ namespace EVEMon.Controls
         public void DrawDropMarker(int index, bool below)
         {
             if (m_dropMarkerOn != -1 && (m_dropMarkerOn != index || m_dropMarkerBelow != below))
-            {
                 ClearDropMarker();
-            }
-            if (m_dropMarkerOn != index)
-            {
-                m_dropMarkerOn = index;
-                m_dropMarkerBelow = below;
-                this.RestrictedPaint();
-            }
+
+            if (m_dropMarkerOn == index)
+                return;
+
+            m_dropMarkerOn = index;
+            m_dropMarkerBelow = below;
+            RestrictedPaint();
         }
 
         private void RestrictedPaint()
         {
-            Rectangle itemRect = base.GetItemRect(m_dropMarkerOn, ItemBoundsPortion.ItemOnly);
-            Point start;
-            Point end;
-            start = new Point(itemRect.Left, (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
-            end = new Point((this.Width < itemRect.Right ? this.Width : itemRect.Right), (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
-            start = this.PointToScreen(start);
-            end = this.PointToScreen(end);
+            Rectangle itemRect = GetItemRect(m_dropMarkerOn, ItemBoundsPortion.ItemOnly);
+            Point start = new Point(itemRect.Left, (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
+            Point end = new Point((Width < itemRect.Right ? Width : itemRect.Right),
+                                  (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
+            start = PointToScreen(start);
+            end = PointToScreen(end);
             ControlPaint.DrawReversibleLine(start, end, SystemColors.Window);
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data. </param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -270,55 +282,20 @@ namespace EVEMon.Controls
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.ListView.ItemDrag"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.Windows.Forms.ItemDragEventArgs"/> that contains the event data. </param>
         protected override void OnItemDrag(ItemDragEventArgs e)
         {
             base.OnItemDrag(e);
-            if (!this.AllowRowReorder)
-            {
+            if (!AllowRowReorder)
                 return;
-            }
-            base.DoDragDrop(REORDER, DragDropEffects.Move);
+
+            DoDragDrop(Reorder, DragDropEffects.Move);
             m_dragging = true;
         }
+
         #endregion
-    }
-
-    public class ListViewDragEventArgs : EventArgs
-    {
-        private int m_movingFrom;
-
-        public int MovingFrom
-        {
-            get { return m_movingFrom; }
-        }
-
-        private int m_movingCount;
-
-        public int MovingCount
-        {
-            get { return m_movingCount; }
-        }
-
-        private int m_movingTo;
-
-        public int MovingTo
-        {
-            get { return m_movingTo; }
-        }
-
-        private bool m_cancel = false;
-
-        public bool Cancel
-        {
-            get { return m_cancel; }
-            set { m_cancel = value; }
-        }
-
-        internal ListViewDragEventArgs(int from, int count, int to)
-        {
-            m_movingFrom = from;
-            m_movingCount = count;
-            m_movingTo = to;
-        }
     }
 }

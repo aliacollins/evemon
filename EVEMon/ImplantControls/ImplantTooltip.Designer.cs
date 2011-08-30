@@ -1,4 +1,4 @@
-﻿namespace EVEMon.Controls
+﻿namespace EVEMon.ImplantControls
 {
     partial class ImplantTooltip
     {

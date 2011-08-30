@@ -5,8 +5,9 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Controls;
-
+using EVEMon.Controls.MultiPanel;
 using CommonProperties = EVEMon.Common.Properties;
+using Enumerable = System.Linq.Enumerable;
 
 namespace EVEMon.Accounting
 {
@@ -61,7 +62,7 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        void multiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
+        private void multiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
         {
             if (args.NewPage == credentialsPage)
             {
@@ -130,7 +131,7 @@ namespace EVEMon.Accounting
                 {
                     m_account.TryUpdateAsync(apiKeyTextBox.Text, OnUpdated);
                 }
-                // Or creating a new one ?
+                    // Or creating a new one ?
                 else
                 {
                     Int64 userID;
@@ -175,12 +176,15 @@ namespace EVEMon.Accounting
 
             // Updates the characters list
             charactersListView.Items.Clear();
-            foreach (var id in args.Identities)
+            foreach (ListViewItem item in Enumerable.Select(args.Identities,
+                                                            id =>
+                                                            new ListViewItem(id.Name)
+                                                                {
+                                                                    Checked = (m_account == null
+                                                                               || !m_account.IgnoreList.Contains(id)),
+                                                                    Tag = id
+                                                                }))
             {
-                var item = new ListViewItem(id.Name);
-                item.Checked = (m_account == null || !m_account.IgnoreList.Contains(id));
-                item.Tag = id;
-
                 charactersListView.Items.Add(item);
             }
 
@@ -201,14 +205,14 @@ namespace EVEMon.Accounting
             // Takes care of the ignore list
             foreach (ListViewItem item in charactersListView.Items)
             {
-                var id = (CharacterIdentity)item.Tag;
+                CharacterIdentity id = (CharacterIdentity)item.Tag;
                 if (item.Checked)
                 {
                     m_account.IgnoreList.Remove(id);
                 }
                 else
                 {
-                    var ccpCharacter = id.CCPCharacter;
+                    CCPCharacter ccpCharacter = id.CCPCharacter;
                     if (ccpCharacter != null)
                         m_account.IgnoreList.Add(ccpCharacter);
                 }

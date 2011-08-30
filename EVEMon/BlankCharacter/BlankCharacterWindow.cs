@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-
+using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Serialization.Settings;
@@ -73,7 +73,7 @@ namespace EVEMon.BlankCharacter
         private void buttonOK_Click(object sender, EventArgs e)
         {
             // Create the blank character from selections
-            var serial = blankCharacterControl.CreateCharacter();
+            SerializableCCPCharacter serial = blankCharacterControl.CreateCharacter();
 
             // Two choices for one button
             // Save blank character ?
@@ -124,11 +124,11 @@ namespace EVEMon.BlankCharacter
                     // Disabling control edit ability
                     blankCharacterControl.Enabled = false;
                     
-                    var xmlDoc = Util.SerializeToXmlDocument(serial.GetType(), serial);
+                    XmlDocument xmlDoc = Util.SerializeToXmlDocument(serial.GetType(), serial);
                     string content = Util.GetXMLStringRepresentation(xmlDoc);
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName, fs =>
                     {
-                        using (var writer = new StreamWriter(fs, Encoding.UTF8))
+                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                         {
                             writer.Write(content);
                             writer.Flush();
@@ -158,7 +158,7 @@ namespace EVEMon.BlankCharacter
                 if (args == null || args.HasError)
                     return;
 
-                var character = args.CreateCharacter();
+                UriCharacter character = args.CreateCharacter();
                 character.Monitored = true;
             });
         }

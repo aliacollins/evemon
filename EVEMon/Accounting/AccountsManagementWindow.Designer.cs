@@ -1,4 +1,6 @@
-﻿namespace EVEMon.Accounting
+﻿using EVEMon.Controls.MultiPanel;
+
+namespace EVEMon.Accounting
 {
     partial class AccountsManagementWindow
     {
@@ -43,15 +45,15 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.charactersMultiPanel = new EVEMon.Controls.MultiPanel();
-            this.charactersListPage = new EVEMon.Controls.MultiPanelPage();
+            this.charactersMultiPanel = new MultiPanel();
+            this.charactersListPage = new MultiPanelPage();
             this.charactersListView = new System.Windows.Forms.ListView();
             this.columnMonitored = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnAccount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnUri = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.noCharactersPage = new EVEMon.Controls.MultiPanelPage();
+            this.noCharactersPage = new MultiPanelPage();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.importCharacterMenu = new System.Windows.Forms.ToolStripButton();
             this.deleteCharacterMenu = new System.Windows.Forms.ToolStripButton();
@@ -59,10 +61,10 @@
             this.groupingMenu = new System.Windows.Forms.ToolStripButton();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.accountsMultiPanel = new EVEMon.Controls.MultiPanel();
-            this.accountsListPage = new EVEMon.Controls.MultiPanelPage();
+            this.accountsMultiPanel = new MultiPanel();
+            this.accountsListPage = new MultiPanelPage();
             this.accountsListBox = new EVEMon.Accounting.AccountsListBox();
-            this.noAccountsPage = new EVEMon.Controls.MultiPanelPage();
+            this.noAccountsPage = new MultiPanelPage();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.addAccountMenu = new System.Windows.Forms.ToolStripButton();
             this.deleteAccountMenu = new System.Windows.Forms.ToolStripButton();
@@ -494,12 +496,12 @@
         private System.Windows.Forms.ColumnHeader columnAccount;
         private System.Windows.Forms.ColumnHeader columnUri;
         private System.Windows.Forms.ColumnHeader columnMonitored;
-        private EVEMon.Controls.MultiPanel accountsMultiPanel;
-        private EVEMon.Controls.MultiPanelPage accountsListPage;
-        private EVEMon.Controls.MultiPanelPage noAccountsPage;
-        private EVEMon.Controls.MultiPanel charactersMultiPanel;
-        private EVEMon.Controls.MultiPanelPage charactersListPage;
-        private EVEMon.Controls.MultiPanelPage noCharactersPage;
+        private MultiPanel accountsMultiPanel;
+        private MultiPanelPage accountsListPage;
+        private MultiPanelPage noAccountsPage;
+        private MultiPanel charactersMultiPanel;
+        private MultiPanelPage charactersListPage;
+        private MultiPanelPage noCharactersPage;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton groupMenu;
         private System.Windows.Forms.ToolStripButton addCharacterMenu;

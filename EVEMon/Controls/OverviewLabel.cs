@@ -41,10 +41,10 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            using (var foreground = new SolidBrush(this.ForeColor))
+            using (SolidBrush foreground = new SolidBrush(ForeColor))
             {
-                var format = new StringFormat();
-                
+                StringFormat format = new StringFormat();
+
                 if (AutoEllipsis)
                     format.Trimming = StringTrimming.EllipsisCharacter;
 

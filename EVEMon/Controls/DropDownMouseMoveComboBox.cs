@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Controls;
-using System.Windows.Forms;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Design;
+using System.Windows.Forms;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.Controls
 {
@@ -21,11 +19,12 @@ namespace EVEMon.Controls
     /// </remarks>
     public sealed class DropDownMouseMoveComboBox : CustomComboBox
     {
-        #region CustomListBox
+        #region Private Class 'CustomListBox'
+
         /// <summary>
         /// A custom <see cref="ListBox"/> being shown within the dropdown form representing the dropdown list.
         /// </summary>
-        internal class CustomListBox : ListBox
+        private sealed class CustomListBox : ListBox
         {
             public event DropDownMouseMoveHandler DropDownMouseMove;
 
@@ -33,11 +32,10 @@ namespace EVEMon.Controls
             /// Constructor.
             /// </summary>
             public CustomListBox()
-                : base()
             {
-                this.SelectionMode = SelectionMode.One;
-                this.HorizontalScrollbar = true;
-                this.IntegralHeight = false;
+                SelectionMode = SelectionMode.One;
+                HorizontalScrollbar = true;
+                IntegralHeight = false;
             }
 
             /// <summary>
@@ -65,13 +63,11 @@ namespace EVEMon.Controls
             {
                 base.OnMouseMove(e);
                 int index = IndexFromPoint(e.Location);
-                if (index >= 0)
-                {
-                    if (DropDownMouseMove != null)
-                    {
-                        DropDownMouseMove(this, this.Items[index], e.Location);
-                    }
-                }
+                if (index < 0)
+                    return;
+
+                if (DropDownMouseMove != null)
+                    DropDownMouseMove(this, Items[index], e.Location);
             }
 
             /// <summary>
@@ -85,7 +81,9 @@ namespace EVEMon.Controls
                 base.OnClick(e);
             }
         }
+
         #endregion
+
 
         public event DropDownMouseMoveHandler DropDownMouseMove;
         private CustomListBox m_listBox;
@@ -95,17 +93,16 @@ namespace EVEMon.Controls
         /// Constructor.
         /// </summary>
         public DropDownMouseMoveComboBox()
-            : base()
         {
             // Default value separator.
-            this.Cursor = Cursors.Default;
-            this.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.DrawItem += new DrawItemEventHandler(ToolTipComboBox_DrawItem);
+            Cursor = Cursors.Default;
+            DropDownStyle = ComboBoxStyle.DropDownList;
+            DrawMode = DrawMode.OwnerDrawFixed;
+            DrawItem += ToolTipComboBox_DrawItem;
 
             // CheckOnClick style for the dropdown (NOTE: must be set after dropdown is created).
-            m_listBox.DropDownMouseMove += new DropDownMouseMoveHandler(listBox_DropDownMouseMove);
-            m_listBox.SelectedIndexChanged += new EventHandler(listBox_SelectedIndexChanged);
+            m_listBox.DropDownMouseMove += listBox_DropDownMouseMove;
+            m_listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
         }
 
         /// <summary>
@@ -114,14 +111,16 @@ namespace EVEMon.Controls
         /// <returns>The control to add to the popup</returns>
         protected override Control CreateContent()
         {
-            m_listBox = new CustomListBox();
-            m_listBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            m_listBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            m_listBox.FormattingEnabled = true;
-            m_listBox.Location = new System.Drawing.Point(0, 0);
-            m_listBox.Name = "m_listBox";
-            m_listBox.Size = new System.Drawing.Size(47, 15);
-            m_listBox.TabIndex = 0;
+            m_listBox = new CustomListBox
+                            {
+                                BorderStyle = BorderStyle.None,
+                                Dock = DockStyle.Fill,
+                                FormattingEnabled = true,
+                                Location = new Point(0, 0),
+                                Name = "m_listBox",
+                                Size = new Size(47, 15),
+                                TabIndex = 0
+                            };
             return m_listBox;
         }
 
@@ -129,7 +128,9 @@ namespace EVEMon.Controls
         /// Gets the list of items.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        [Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
+        [Editor(
+            "System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+            , typeof(UITypeEditor))]
         public new ListBox.ObjectCollection Items
         {
             get { return m_listBox.Items; }
@@ -161,7 +162,7 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnSelectionChangeCommitted(EventArgs e)
         {
-            m_listBox.SelectedItem = this.SelectedItem;
+            m_listBox.SelectedItem = SelectedItem;
             base.OnSelectionChangeCommitted(e);
         }
 
@@ -171,8 +172,7 @@ namespace EVEMon.Controls
         /// <returns></returns>
         public override string GetTextValue()
         {
-            if (m_listBox.SelectedItem == null) return String.Empty;
-            return m_listBox.SelectedItem.ToString();
+            return m_listBox.SelectedItem == null ? String.Empty : m_listBox.SelectedItem.ToString();
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace EVEMon.Controls
         {
             // Set the text portion equal to the string comprising all checked items (if any, otherwise empty!).
             m_displayText = GetTextValue();
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -196,15 +196,13 @@ namespace EVEMon.Controls
         /// <summary>
         /// When the mouse moves over a drop down item, we fire the event.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="sender"></param>
         /// <param name="item"></param>
         /// <param name="point"></param>
-        void listBox_DropDownMouseMove(object sender, object item, Point point)
+        private void listBox_DropDownMouseMove(object sender, object item, Point point)
         {
             if (DropDownMouseMove != null)
-            {
                 DropDownMouseMove(sender, item, point);
-            }
         }
 
         /// <summary>
@@ -212,10 +210,10 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void listBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_displayText = GetTextValue();
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -223,10 +221,10 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ToolTipComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        private void ToolTipComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             // Background
-            using (Brush backBrush = new SolidBrush(this.BackColor))
+            using (Brush backBrush = new SolidBrush(BackColor))
             {
                 e.Graphics.FillRectangle(backBrush, e.Bounds);
             }
@@ -234,17 +232,17 @@ namespace EVEMon.Controls
             // Display text
             if (!String.IsNullOrEmpty(m_displayText))
             {
-                using (Brush foreBrush = new SolidBrush(this.ForeColor))
+                using (Brush foreBrush = new SolidBrush(ForeColor))
                 {
-                    const float offset = 3.0f;
-                    var size = e.Graphics.MeasureString(m_displayText, this.Font);
-                    var rect = new RectangleF(offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - offset, size.Height);
-                    e.Graphics.DrawString(m_displayText, this.Font, foreBrush, rect, StringFormat.GenericTypographic);
+                    const float Offset = 3.0f;
+                    SizeF size = e.Graphics.MeasureString(m_displayText, Font);
+                    RectangleF rect = new RectangleF(Offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - Offset, size.Height);
+                    e.Graphics.DrawString(m_displayText, Font, foreBrush, rect, StringFormat.GenericTypographic);
                 }
             }
 
             // Focus rect
             e.DrawFocusRectangle();
         }
-   }
+    }
 }

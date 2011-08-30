@@ -13,23 +13,52 @@ namespace EVEMon.BlankCharacter
 {
     public partial class BlankCharacterControl : UserControl
     {
-        private readonly Dictionary<int, int> s_allRaceSkills = new Dictionary<int, int>()
-            { { 3426, 3 }, { 3413, 3 }, { 3416, 2 }, { 3300, 2 }, { 3386, 2 }, { 3392, 2 }, { 3449, 3 }, { 3402, 3 }, { 3327, 3 } };
+        private readonly Dictionary<int, int> m_allRaceSkills = new Dictionary<int, int>
+                                                                    {
+                                                                        { DBConstants.ElectronicsSkillID, 3 },
+                                                                        { DBConstants.EngineeringSkillID, 3 },
+                                                                        { DBConstants.ShieldOperationSkillID, 2 },
+                                                                        { DBConstants.GunnerySkillID, 2 },
+                                                                        { DBConstants.MiningSkillID, 2 },
+                                                                        { DBConstants.MechanicSkillID, 2 },
+                                                                        { DBConstants.NavigationSkillID, 3 },
+                                                                        { DBConstants.ScienceSkillID, 3 },
+                                                                        { DBConstants.SpaceshipCommandSkillID, 3 }
+                                                                    };
 
-        private readonly Dictionary<int, int> s_amarrRaceSkills = new Dictionary<int, int>() { { 3303, 3 }, { 3331, 2 } };
-        private readonly Dictionary<int, int> s_caldariRaceSkills = new Dictionary<int, int>() { { 3301, 3 }, { 3330, 2 } };
-        private readonly Dictionary<int, int> s_gallenteRaceSkills = new Dictionary<int, int>() { { 3301, 3 }, { 3328, 2 } };
-        private readonly Dictionary<int, int> s_minmatarRaceSkills = new Dictionary<int, int>() { { 3302, 3 }, { 3329, 2 } };
+        private readonly Dictionary<int, int> m_amarrRaceSkills = new Dictionary<int, int>
+                                                                      {
+                                                                          { DBConstants.SmallEnergyTurretSkillID, 3 },
+                                                                          { DBConstants.AmarrFrigateSkillID, 2 }
+                                                                      };
+
+        private readonly Dictionary<int, int> m_caldariRaceSkills = new Dictionary<int, int>
+                                                                        {
+                                                                            { DBConstants.SmallHybridTurretSkillID, 3 },
+                                                                            { DBConstants.CaldariFrigateSkillID, 2 }
+                                                                        };
+
+        private readonly Dictionary<int, int> m_gallenteRaceSkills = new Dictionary<int, int>
+                                                                         {
+                                                                             { DBConstants.SmallHybridTurretSkillID, 3 },
+                                                                             { DBConstants.GallenteFrigateSkillID, 2 }
+                                                                         };
+
+        private readonly Dictionary<int, int> m_minmatarRaceSkills = new Dictionary<int, int>
+                                                                         {
+                                                                             { DBConstants.SmallProjectileTurretSkillID, 3 },
+                                                                             { DBConstants.MinmatarFrigateSkillID, 2 }
+                                                                         };
 
         private Race m_race;
         private Bloodline m_bloodline;
         private Ancestry m_ancestry;
         private Gender m_gender;
 
-        private Font m_AmarrFont;
-        private Font m_CaldariFont;
-        private Font m_GallenteFont;
-        private Font m_MinmatarFont;
+        private Font m_amarrFont;
+        private Font m_caldariFont;
+        private Font m_gallenteFont;
+        private Font m_minmatarFont;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlankCharacterControl"/> class.
@@ -49,11 +78,11 @@ namespace EVEMon.BlankCharacter
         {
             ForeColor = SystemColors.GrayText;
 
-            m_AmarrFont = FontFactory.GetFont("Niagara Solid", 10f, FontStyle.Regular);
-            m_CaldariFont = FontFactory.GetFont("Impact", 8.25f, FontStyle.Regular);
-            m_GallenteFont = FontFactory.GetFont("Arial Rounded MT Bold", 8.25f, FontStyle.Regular);
-            m_MinmatarFont = FontFactory.GetFont("Moolboran", 9f, FontStyle.Regular);
-            
+            m_amarrFont = FontFactory.GetFont("Niagara Solid", 10f);
+            m_caldariFont = FontFactory.GetFont("Impact", 8.25f);
+            m_gallenteFont = FontFactory.GetFont("Arial Rounded MT Bold", 8.25f);
+            m_minmatarFont = FontFactory.GetFont("Moolboran", 9f);
+
             m_race = Race.Amarr;
 
             UpdateBloodlineControl();
@@ -71,25 +100,27 @@ namespace EVEMon.BlankCharacter
 
             switch (m_race)
             {
-                default:
                 case Race.Amarr:
-                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_AmarrFont;
+                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_amarrFont;
                     break;
 
                 case Race.Caldari:
                     index = 3;
-                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_CaldariFont;
+                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_caldariFont;
                     break;
 
                 case Race.Gallente:
                     index = 6;
-                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_GallenteFont;
+                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_gallenteFont;
                     break;
 
                 case Race.Minmatar:
                     index = 9;
-                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_MinmatarFont;
+                    lblAncestry1.Font = lblAncestry2.Font = lblAncestry3.Font = m_minmatarFont;
                     break;
+
+                default:
+                    throw new NotImplementedException();
             }
 
             pbBloodline1.Image = ilBloodline.Images[index];
@@ -118,7 +149,6 @@ namespace EVEMon.BlankCharacter
 
             switch (m_bloodline)
             {
-                default:
                 case Bloodline.Amarr:
                     break;
                 case Bloodline.Ni_Kunni:
@@ -154,6 +184,8 @@ namespace EVEMon.BlankCharacter
                 case Bloodline.Vherokior:
                     index = 33;
                     break;
+                default:
+                    throw new NotImplementedException();
             }
 
             pbAncestry1.Image = ilAncestry.Images[index];
@@ -173,7 +205,7 @@ namespace EVEMon.BlankCharacter
             if (rbAncestry3.Checked)
                 m_ancestry = (Ancestry)lblAncestry3.Tag;
         }
-        
+
         #endregion
 
 
@@ -315,47 +347,47 @@ namespace EVEMon.BlankCharacter
 
         internal SerializableCCPCharacter CreateCharacter()
         {
-            var serial = new SerializableCCPCharacter()
-            {
-                ID = 9999999,
-                Name = tbCharacterName.Text,
-                Birthday = DateTime.UtcNow,
-                Race = m_race.ToString(),
-                BloodLine = m_bloodline.ToString().Replace("_", "-"),
-                Ancestry = m_ancestry.ToString().Replace("_", " "),
-                Gender = m_gender.ToString(),
-                CorporationName = "Blank Character's Corp",
-                CorporationID = 9999999,
-                CloneName = "Clone Grade Alpha",
-                CloneSkillPoints = 900000,
-                Balance = 0,
+            return new SerializableCCPCharacter
+                       {
+                           ID = 9999999,
+                           Name = tbCharacterName.Text,
+                           Birthday = DateTime.UtcNow,
+                           Race = m_race.ToString(),
+                           BloodLine = m_bloodline.ToString().Replace("_", "-"),
+                           Ancestry = m_ancestry.ToString().Replace("_", " "),
+                           Gender = m_gender.ToString(),
+                           CorporationName = "Blank Character's Corp",
+                           CorporationID = 9999999,
+                           CloneName = "Clone Grade Alpha",
+                           CloneSkillPoints = 900000,
+                           Balance = 0,
 
-                Attributes = new SerializableCharacterAttributes()
-                {
-                    Intelligence = EveConstants.CharacterBaseAttributePoints + 3,
-                    Memory = EveConstants.CharacterBaseAttributePoints + 3,
-                    Perception = EveConstants.CharacterBaseAttributePoints + 3,
-                    Willpower = EveConstants.CharacterBaseAttributePoints + 3,
-                    Charisma = EveConstants.CharacterBaseAttributePoints + 2
-                },
+                           Attributes = new SerializableCharacterAttributes
+                                            {
+                                                Intelligence = EveConstants.CharacterBaseAttributePoints + 3,
+                                                Memory = EveConstants.CharacterBaseAttributePoints + 3,
+                                                Perception = EveConstants.CharacterBaseAttributePoints + 3,
+                                                Willpower = EveConstants.CharacterBaseAttributePoints + 3,
+                                                Charisma = EveConstants.CharacterBaseAttributePoints + 2
+                                            },
 
-                ImplantSets = new SerializableImplantSetCollection()
-                {
-                    API = new SerializableSettingsImplantSet() { Name = "Implants from API" },
-                    OldAPI = new SerializableSettingsImplantSet() { Name = "Previous implants from the API" },
-                },
+                           ImplantSets = new SerializableImplantSetCollection
+                                             {
+                                                 API = new SerializableSettingsImplantSet { Name = "Implants from API" },
+                                                 OldAPI =
+                                                     new SerializableSettingsImplantSet
+                                                         { Name = "Previous implants from the API" },
+                                             },
 
-                Skills = GetSkillsForRace(),
+                           Skills = GetSkillsForRace(),
 
-                Certificates = new List<SerializableCharacterCertificate>(),
-            };
-
-            return serial;
+                           Certificates = new List<SerializableCharacterCertificate>(),
+                       };
         }
 
         #endregion
 
-        
+
         #region Helper Methods
 
         /// <summary>
@@ -364,48 +396,44 @@ namespace EVEMon.BlankCharacter
         /// <returns></returns>
         private List<SerializableCharacterSkill> GetSkillsForRace()
         {
-            var skills = new List<SerializableCharacterSkill>();
-            var startingSkills = new Dictionary<int, int>();
+            Dictionary<int, int> startingSkills = new Dictionary<int, int>();
 
             switch (m_race)
             {
                 case Race.Amarr:
-                    startingSkills = s_allRaceSkills.Concat(s_amarrRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    startingSkills = m_allRaceSkills.Concat(m_amarrRaceSkills).ToDictionary(x => x.Key, x => x.Value);
                     break;
                 case Race.Caldari:
-                    startingSkills = s_allRaceSkills.Concat(s_caldariRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    startingSkills = m_allRaceSkills.Concat(m_caldariRaceSkills).ToDictionary(x => x.Key, x => x.Value);
                     break;
                 case Race.Gallente:
-                    startingSkills = s_allRaceSkills.Concat(s_gallenteRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    startingSkills = m_allRaceSkills.Concat(m_gallenteRaceSkills).ToDictionary(x => x.Key, x => x.Value);
                     break;
                 case Race.Minmatar:
-                    startingSkills = s_allRaceSkills.Concat(s_minmatarRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    startingSkills = m_allRaceSkills.Concat(m_minmatarRaceSkills).ToDictionary(x => x.Key, x => x.Value);
                     break;
             }
 
-            foreach (var raceSkill in startingSkills)
-            {
-                var staticSkill = StaticSkills.GetSkillByID(raceSkill.Key);
-                if (staticSkill == null)
-                    continue;
-
-                var skill = new SerializableCharacterSkill()
-                {
-                    ID = raceSkill.Key,
-                    Level = raceSkill.Value,
-                    Name = StaticSkills.GetSkillByID(raceSkill.Key).Name,
-                    Skillpoints = StaticSkills.GetSkillByID(raceSkill.Key).GetPointsRequiredForLevel(raceSkill.Value),
-                    IsKnown = true,
-                    OwnsBook = false,
-                };
-
-                skills.Add(skill);
-            }
-            
-            return skills;
+            return (startingSkills.Select(
+                raceSkill => new
+                                 {
+                                     raceSkill,
+                                     staticSkill = StaticSkills.GetSkillByID(raceSkill.Key)
+                                 }).Where(raceSkill => raceSkill.staticSkill != null).Select(
+                                     skill => new SerializableCharacterSkill
+                                                  {
+                                                      ID = skill.raceSkill.Key,
+                                                      Level = skill.raceSkill.Value,
+                                                      Name = StaticSkills.GetSkillByID(skill.raceSkill.Key).Name,
+                                                      Skillpoints =
+                                                          StaticSkills.GetSkillByID(skill.raceSkill.Key).GetPointsRequiredForLevel
+                                                          (skill.raceSkill.Value),
+                                                      IsKnown = true,
+                                                      OwnsBook = false,
+                                                  })).ToList();
         }
- 
-	    #endregion
+
+        #endregion
 
     }
 }

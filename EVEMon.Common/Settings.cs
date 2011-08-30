@@ -568,12 +568,13 @@ namespace EVEMon.Common
             XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
 
             // Save in settings file
-            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fs =>
-                                                                                         {
-                                                                                             xs.Serialize(fs, settings);
-                                                                                             fs.Flush();
-                                                                                             return true;
-                                                                                         });
+            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath,
+                                              fs =>
+                                                  {
+                                                      xs.Serialize(fs, settings);
+                                                      fs.Flush();
+                                                      return true;
+                                                  });
 
             // Reset savePending flag
             s_lastSaveTime = DateTime.UtcNow;

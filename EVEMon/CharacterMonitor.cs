@@ -13,6 +13,7 @@ using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
+using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon
 {
@@ -708,7 +709,7 @@ namespace EVEMon
         /// When the selected page changes, we may have to update the related controls visibility.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Controls.MultiPanelSelectionChangeEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="MultiPanelSelectionChangeEventArgs"/> instance containing the event data.</param>
         private void multiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs e)
         {
             if (e.NewPage == null)

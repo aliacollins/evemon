@@ -1,4 +1,6 @@
-﻿namespace EVEMon.Accounting
+﻿using EVEMon.Controls.MultiPanel;
+
+namespace EVEMon.Accounting
 {
     partial class AccountUpdateOrAdditionWindow
     {
@@ -39,15 +41,15 @@
             this.nextButton = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.multiPanel = new EVEMon.Controls.MultiPanel();
-            this.credentialsPage = new EVEMon.Controls.MultiPanelPage();
+            this.multiPanel = new MultiPanel();
+            this.credentialsPage = new MultiPanelPage();
             this.apiKeyTextBox = new System.Windows.Forms.TextBox();
             this.userIDTextBox = new System.Windows.Forms.TextBox();
             this.apiKeyLabel = new System.Windows.Forms.Label();
             this.UserIDLabel = new System.Windows.Forms.Label();
-            this.waitingPage = new EVEMon.Controls.MultiPanelPage();
+            this.waitingPage = new MultiPanelPage();
             this.throbber = new EVEMon.Controls.Throbber();
-            this.resultPage = new EVEMon.Controls.MultiPanelPage();
+            this.resultPage = new MultiPanelPage();
             this.keyTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.keyPicture = new System.Windows.Forms.PictureBox();
             this.keyLabel = new System.Windows.Forms.Label();
@@ -373,8 +375,8 @@
 
         #endregion
 
-        private EVEMon.Controls.MultiPanel multiPanel;
-        private EVEMon.Controls.MultiPanelPage credentialsPage;
+        private MultiPanel multiPanel;
+        private MultiPanelPage credentialsPage;
         private System.Windows.Forms.TextBox apiKeyTextBox;
         private System.Windows.Forms.TextBox userIDTextBox;
         private System.Windows.Forms.Label apiKeyLabel;
@@ -382,9 +384,9 @@
         private System.Windows.Forms.Button nextButton;
         private System.Windows.Forms.Button previousButton;
         private System.Windows.Forms.Button cancelButton;
-        private EVEMon.Controls.MultiPanelPage waitingPage;
+        private MultiPanelPage waitingPage;
         private EVEMon.Controls.Throbber throbber;
-        private EVEMon.Controls.MultiPanelPage resultPage;
+        private MultiPanelPage resultPage;
         private System.Windows.Forms.PictureBox keyPicture;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListView charactersListView;

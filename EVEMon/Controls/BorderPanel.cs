@@ -9,7 +9,7 @@ namespace EVEMon.Controls
     /// There is probably some way to change the client rectangle area but I didn't find it.
     /// Did I mention I hate winforms very much ?
     /// </summary>
-    public class BorderPanel : Panel
+    public sealed class BorderPanel : Panel
     {
         /// <summary>
         /// Constructor.

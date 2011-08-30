@@ -13,6 +13,7 @@ using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
+using EVEMon.Controls.MultiPanel;
 using Microsoft.Win32;
 
 namespace EVEMon.SettingsUI

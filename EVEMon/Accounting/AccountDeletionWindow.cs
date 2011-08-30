@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.Accounting
 {
@@ -25,20 +21,21 @@ namespace EVEMon.Accounting
 
             // Add characters
             charactersListView.Items.Clear();
-            foreach (var id in account.CharacterIdentities)
+            foreach (CharacterIdentity id in account.CharacterIdentities)
             {
                 // Skip if there is no CCP character for this identity.
-                var ccpCharacter = id.CCPCharacter;
-                if (ccpCharacter == null) continue;
+                CCPCharacter ccpCharacter = id.CCPCharacter;
+                if (ccpCharacter == null)
+                    continue;
 
                 // Add an item for this character
-                var item = new ListViewItem(ccpCharacter.Name);
+                ListViewItem item = new ListViewItem(ccpCharacter.Name);
                 item.Tag = ccpCharacter;
                 item.Checked = true;
                 charactersListView.Items.Add(item);
             }
         }
-        
+
         /// <summary>
         /// "Delete" button.
         /// </summary>
@@ -50,17 +47,14 @@ namespace EVEMon.Accounting
             EveMonClient.Accounts.Remove(m_account);
 
             // Remove the characters
-            foreach (ListViewItem item in charactersListView.Items)
+            foreach (var ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
+                item => item.Checked).Select(item => item.Tag as CCPCharacter))
             {
-                if (item.Checked)
-                {
-                    var ccpCharacter = item.Tag as CCPCharacter;
-                    EveMonClient.Characters.Remove(ccpCharacter);
-                }
+                EveMonClient.Characters.Remove(ccpCharacter);
             }
 
             // Closes the window
-            this.Close();
+            Close();
         }
     }
 }

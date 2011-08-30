@@ -9,12 +9,12 @@ namespace EVEMon.Controls
     /// <summary>
     /// A tab control which support drag and dropping.
     /// </summary>
-    public class DraggableTabControl : TabControl
+    public sealed class DraggableTabControl : TabControl
     {
         private int m_markerIndex;
         private bool m_markerOnLeft;
-        private Point m_lastPoint = new Point();
-        private InsertionMarker m_marker;
+        private Point m_lastPoint;
+        private readonly InsertionMarker m_marker;
 
         /// <summary>
         /// Constructor.
@@ -55,12 +55,13 @@ namespace EVEMon.Controls
         protected override void OnDragOver(DragEventArgs e)
         {
             base.OnDragOver(e);
-            var draggedTab = GetDraggedTab(e);
+            TabPage draggedTab = GetDraggedTab(e);
 
             // Retrieve the point in client coordinates
             Point pt = new Point(e.X, e.Y);
             pt = PointToClient(pt);
-            if (pt.Equals(m_lastPoint)) return;
+            if (pt.Equals(m_lastPoint))
+                return;
             m_lastPoint = pt;
 
             // Make sure there is a TabPage being dragged.
@@ -71,7 +72,7 @@ namespace EVEMon.Controls
             }
 
             // Retrieve the dragged page. If same as dragged page, return
-            var hoveredTab = GetTabPageAt(pt);
+            TabPage hoveredTab = GetTabPageAt(pt);
             if (draggedTab == hoveredTab)
             {
                 e.Effect = DragDropEffects.None;
@@ -82,15 +83,13 @@ namespace EVEMon.Controls
             // Get the old and new marker indices
             bool onLeft;
             int newIndex = GetMarkerIndex(draggedTab, pt, out onLeft);
-            var oldIndex = m_markerIndex;
+            int oldIndex = m_markerIndex;
             m_markerIndex = newIndex;
             m_markerOnLeft = onLeft;
 
             // Updates the new tab index
             if (oldIndex != newIndex)
-            {
                 UpdateMarker();
-            }
 
             e.Effect = DragDropEffects.Move;
         }
@@ -138,7 +137,8 @@ namespace EVEMon.Controls
             SuspendLayout();
             try
             {
-                if (TabPages.IndexOf(draggedTab) < index) index--;
+                if (TabPages.IndexOf(draggedTab) < index)
+                    index--;
                 TabPages.Remove(draggedTab);
                 TabPages.Insert(index, draggedTab);
                 SelectedTab = draggedTab;
@@ -156,7 +156,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnDragLeave(EventArgs e)
         {
-            if (m_marker.Bounds.Contains(Cursor.Position)) return;
+            if (m_marker.Bounds.Contains(Cursor.Position))
+                return;
             m_markerIndex = -1;
             UpdateMarker();
             base.OnDragLeave(e);
@@ -168,14 +169,17 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private static TabPage GetDraggedTab(DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(typeof(TabPage))) return null;
+            if (!e.Data.GetDataPresent(typeof(TabPage)))
+                return null;
             return (TabPage)e.Data.GetData(typeof(TabPage));
         }
 
         /// <summary>
         /// Gets the insertion index from the given point.
         /// </summary>
+        /// <param name="draggedPage"></param>
         /// <param name="pt"></param>
+        /// <param name="onLeft"></param>
         /// <returns></returns>
         private int GetMarkerIndex(TabPage draggedPage, Point pt, out bool onLeft)
         {
@@ -188,24 +192,25 @@ namespace EVEMon.Controls
                     onLeft = true;
                     return 0;
                 }
-                else
-                {
-                    onLeft = false;
-                    return TabCount;
-                }
+
+                onLeft = false;
+                return TabCount;
             }
 
             // So we're over a page, retrieves its index.
             int newIndex = TabPages.IndexOf(hoveredPage);
 
             // Is it on the left or the right side of the tab ?
-            var rect = GetTabRect(newIndex);
+            Rectangle rect = GetTabRect(newIndex);
             onLeft = (pt.X < (rect.Left + rect.Right) / 2);
-            if (onLeft) return newIndex;
+            if (onLeft)
+                return newIndex;
 
             // If there is a tab on the right, we may put the burden on it
-            if (newIndex + 1 >= TabCount) return newIndex;
-            var nextPage = GetTabPageAt(new Point(rect.Right + 1, pt.Y));
+            if (newIndex + 1 >= TabCount)
+                return newIndex;
+
+            TabPage nextPage = GetTabPageAt(new Point(rect.Right + 1, pt.Y));
 
             if (nextPage != null && nextPage != draggedPage)
             {
@@ -224,8 +229,12 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private static int GetInsertionIndex(int markerIndex, bool onLeft)
         {
-            if (markerIndex == -1) return 0;
-            if (onLeft) return markerIndex;
+            if (markerIndex == -1)
+                return 0;
+
+            if (onLeft)
+                return markerIndex;
+
             return markerIndex + 1;
         }
 
@@ -237,15 +246,13 @@ namespace EVEMon.Controls
         {
             base.OnMouseMove(e);
 
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
-            {
-                TabPage tp = SelectedTab;
+            if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
+                return;
 
-                if (tp != null)
-                {
-                    DoDragDrop(tp, DragDropEffects.All);
-                }
-            }
+            TabPage tp = SelectedTab;
+
+            if (tp != null)
+                DoDragDrop(tp, DragDropEffects.All);
         }
 
         /// <summary>
@@ -259,11 +266,11 @@ namespace EVEMon.Controls
 
             for (int i = 0; i < TabPages.Count; i++)
             {
-                if (GetTabRect(i).Contains(pt))
-                {
-                    tp = TabPages[i];
-                    break;
-                }
+                if (!GetTabRect(i).Contains(pt))
+                    continue;
+
+                tp = TabPages[i];
+                break;
             }
 
             return tp;
@@ -280,13 +287,13 @@ namespace EVEMon.Controls
                 return;
             }
 
-            var rect = GetTabRect(m_markerIndex);
+            Rectangle rect = GetTabRect(m_markerIndex);
             rect.Height -= 1;
             rect.X += 1;
             rect.Y += 1;
 
-            var topLeft = PointToScreen(new Point(rect.Left, rect.Top));
-            var topRight = PointToScreen(new Point(rect.Right, rect.Top));
+            Point topLeft = PointToScreen(new Point(rect.Left, rect.Top));
+            Point topRight = PointToScreen(new Point(rect.Right, rect.Top));
 
             m_marker.Reversed = !m_markerOnLeft;
             m_marker.ShowInactiveTopmost();
@@ -303,13 +310,14 @@ namespace EVEMon.Controls
 
 
         #region InsertionMarker
+
         /// <summary>
         /// A window displaying the insertion marker.
         /// </summary>
-        private class InsertionMarker : Form
+        private sealed class InsertionMarker : Form
         {
             private bool m_reversed;
-            private DraggableTabControl m_owner;
+            private readonly DraggableTabControl m_owner;
 
             /// <summary>
             /// Constructor.
@@ -338,7 +346,8 @@ namespace EVEMon.Controls
                 get { return m_reversed; }
                 set
                 {
-                    if (m_reversed == value) return;
+                    if (m_reversed == value)
+                        return;
                     m_reversed = value;
                     Invalidate();
                 }
@@ -406,12 +415,14 @@ namespace EVEMon.Controls
             protected override void OnDragLeave(EventArgs e)
             {
                 Point pt = m_owner.PointToClient(Cursor.Position);
-                if (m_owner.ClientRectangle.Contains(pt)) return;
+                if (m_owner.ClientRectangle.Contains(pt))
+                    return;
 
                 m_owner.OnDragLeave(e);
                 base.OnDragLeave(e);
             }
         }
+
         #endregion
 
     }

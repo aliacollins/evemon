@@ -1,39 +1,30 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Design;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
 
 namespace EVEMon.Controls
 {
     public class ExpandablePanelControl : NoFlickerPanel
     {
         // Settings
-        protected PanelState panelState;
-        protected AnimationSpeed animationSpeed;
-        protected Direction expandDirection = Direction.Up;
+        private PanelState m_panelState;
         private int m_animationStep;
         private int m_expandedHeight;
-        private bool m_beginExpanded;
-        
+
         // Header
-        protected NoFlickerPanel nfpHeader;
-        private string m_headerText = "Header Text";
 
         // ContextMenu
-        protected ContextMenuStrip contextMenuStrip;
-        protected ToolStripMenuItem tsmiExpandCollapse;
-        protected ToolStripMenuItem tsmiSelectAnim;
-        protected ToolStripSeparator tsmiSeparator;
-        protected ToolStripMenuItem tsmiNoAnim;
-        protected ToolStripMenuItem tsmiHighAnim;
-        protected ToolStripMenuItem tsmiMedAnim;
-        protected ToolStripMenuItem tsmiLowAnim;
-
-        private bool m_enableContextMenu;
+        private ContextMenuStrip m_contextMenuStrip;
+        private ToolStripMenuItem m_tsmiExpandCollapse;
+        private ToolStripMenuItem m_tsmiSelectAnim;
+        private ToolStripSeparator m_tsmiSeparator;
+        private ToolStripMenuItem m_tsmiNoAnim;
+        private ToolStripMenuItem m_tsmiHighAnim;
+        private ToolStripMenuItem m_tsmiMedAnim;
+        private ToolStripMenuItem m_tsmiLowAnim;
 
         // Graphics variables
         private StringFormat m_hCenteredStringFormat;
@@ -41,7 +32,7 @@ namespace EVEMon.Controls
         private Bitmap m_expandImage;
         private Bitmap m_collapseImage;
         private int m_offset;
-        private int m_pad = 6;
+        private const int Pad = 6;
 
 
         #region Constructor
@@ -50,8 +41,9 @@ namespace EVEMon.Controls
         /// Cunstructor.
         /// </summary>
         public ExpandablePanelControl()
-            : base()
         {
+            HeaderText = "Header Text";
+            ExpandDirection = Direction.Up;
             // Header
             CreateHeader();
 
@@ -59,35 +51,28 @@ namespace EVEMon.Controls
             CreateContextMenu();
 
             // Event handlers
-            nfpHeader.Paint += new PaintEventHandler(nfpHeader_Paint);
-            nfpHeader.MouseClick += expandablePanelControl_MouseClick;
+            Header.Paint += nfpHeader_Paint;
+            Header.MouseClick += expandablePanelControl_MouseClick;
             MouseClick += expandablePanelControl_MouseClick;
         }
 
         /// <summary>
         /// Gets true if the Panel is expanded.
         /// </summary>
-        internal bool IsExpanded
+        private bool IsExpanded
         {
-            get { return panelState == PanelState.Expanded; }
+            get { return m_panelState == PanelState.Expanded; }
         }
 
         /// <summary>
         /// Gets the Header of the Panel.
         /// </summary>
-        internal NoFlickerPanel Header
-        {
-            get { return nfpHeader; }
-        }
+        internal NoFlickerPanel Header { get; private set; }
 
         /// <summary>
         /// Gets or sets the Header text.
         /// </summary>
-        internal string HeaderText
-        {
-            get { return m_headerText; }
-            set { m_headerText = value; }
-        }
+        internal string HeaderText { get; set; }
 
         /// <summary>
         /// Gets or sets the expanded Height of the Panel.
@@ -100,7 +85,7 @@ namespace EVEMon.Controls
                 m_expandedHeight = value;
 
                 // If we start collapsed we don't have to update the height
-                if (!IsExpanded && !m_beginExpanded)
+                if (!IsExpanded && !ExpandedOnStartup)
                     return;
 
                 Height = m_expandedHeight;
@@ -118,11 +103,8 @@ namespace EVEMon.Controls
         /// </summary>
         private void CreateHeader()
         {
-            nfpHeader = new NoFlickerPanel();
-            nfpHeader.Width = Width;
-            nfpHeader.Height = 30;
-            nfpHeader.BackColor = Color.Transparent;
-            Controls.Add(nfpHeader);
+            Header = new NoFlickerPanel { Width = Width, Height = 30, BackColor = Color.Transparent };
+            Controls.Add(Header);
         }
 
         /// <summary>
@@ -130,37 +112,37 @@ namespace EVEMon.Controls
         /// </summary>
         private void CreateContextMenu()
         {
-            contextMenuStrip = new ContextMenuStrip();
-            tsmiExpandCollapse = new ToolStripMenuItem();
-            tsmiSelectAnim = new ToolStripMenuItem();
-            tsmiNoAnim = new ToolStripMenuItem();
-            tsmiHighAnim = new ToolStripMenuItem();
-            tsmiMedAnim = new ToolStripMenuItem();
-            tsmiLowAnim = new ToolStripMenuItem();
-            tsmiSeparator = new ToolStripSeparator();
+            m_contextMenuStrip = new ContextMenuStrip();
+            m_tsmiExpandCollapse = new ToolStripMenuItem();
+            m_tsmiSelectAnim = new ToolStripMenuItem();
+            m_tsmiNoAnim = new ToolStripMenuItem();
+            m_tsmiHighAnim = new ToolStripMenuItem();
+            m_tsmiMedAnim = new ToolStripMenuItem();
+            m_tsmiLowAnim = new ToolStripMenuItem();
+            m_tsmiSeparator = new ToolStripSeparator();
             
             // Add menu items
-            contextMenuStrip.Items.Add(tsmiExpandCollapse);
-            contextMenuStrip.Items.Add(tsmiSeparator);
-            contextMenuStrip.Items.Add(tsmiSelectAnim);
-            tsmiSelectAnim.DropDownItems.AddRange(new ToolStripItem[]
+            m_contextMenuStrip.Items.Add(m_tsmiExpandCollapse);
+            m_contextMenuStrip.Items.Add(m_tsmiSeparator);
+            m_contextMenuStrip.Items.Add(m_tsmiSelectAnim);
+            m_tsmiSelectAnim.DropDownItems.AddRange(new ToolStripItem[]
             {
-                tsmiNoAnim,
-                tsmiHighAnim,
-                tsmiMedAnim,
-                tsmiLowAnim
+                m_tsmiNoAnim,
+                m_tsmiHighAnim,
+                m_tsmiMedAnim,
+                m_tsmiLowAnim
             });
             
             // Apply properties
-            tsmiSelectAnim.Text = "Animation Speed";
-            tsmiNoAnim.Text = "None";
-            tsmiHighAnim.Text = "High";
-            tsmiMedAnim.Text = "Medium";
-            tsmiLowAnim.Text = "Low";
+            m_tsmiSelectAnim.Text = "Animation Speed";
+            m_tsmiNoAnim.Text = "None";
+            m_tsmiHighAnim.Text = "High";
+            m_tsmiMedAnim.Text = "Medium";
+            m_tsmiLowAnim.Text = "Low";
 
             // Subscribe events
-            tsmiExpandCollapse.Click += tsmiExpandCollapse_Click;
-            foreach (ToolStripMenuItem item in tsmiSelectAnim.DropDownItems)
+            m_tsmiExpandCollapse.Click += tsmiExpandCollapse_Click;
+            foreach (ToolStripMenuItem item in m_tsmiSelectAnim.DropDownItems)
             {
                 item.Click += animationSpeedSelect_Click;
             }
@@ -171,12 +153,13 @@ namespace EVEMon.Controls
         /// </summary>
         private void SetAnimationSpeedContextMenuItemCheckState()
         {
-            foreach (ToolStripMenuItem item in tsmiSelectAnim.DropDownItems)
+            foreach (ToolStripMenuItem item in m_tsmiSelectAnim.DropDownItems.Cast<ToolStripMenuItem>().Where(
+                item => Enum.IsDefined(typeof(AnimationSpeed), item.Text)))
             {
-                if (Enum.IsDefined(typeof(AnimationSpeed), item.Text))
-                    item.Checked = (AnimationSpeed)Enum.Parse(typeof(AnimationSpeed), item.Text) == animationSpeed;
+                item.Checked = (AnimationSpeed)Enum.Parse(typeof(AnimationSpeed), item.Text) == AnimationSpeed;
             }
         }
+
         #endregion
 
 
@@ -198,8 +181,8 @@ namespace EVEMon.Controls
                 gr.DrawLine(pen, Width - 1, 0, 0, 0);
             }
 
-            int height = (expandDirection == Direction.Up ? Height - nfpHeader.Height : 0);
-            nfpHeader.Location = new Point(0, height);
+            int height = (ExpandDirection == Direction.Up ? Height - Header.Height : 0);
+            Header.Location = new Point(0, height);
             
             base.OnPaint(e);
         }
@@ -214,19 +197,18 @@ namespace EVEMon.Controls
             Graphics gr = e.Graphics;
             gr.SmoothingMode = SmoothingMode.AntiAlias;
 
-            m_hCenteredStringFormat = new StringFormat();
-            m_hCenteredStringFormat.LineAlignment = StringAlignment.Center;
+            m_hCenteredStringFormat = new StringFormat { LineAlignment = StringAlignment.Center };
 
-            nfpHeader.Width = Width;
+            Header.Width = Width;
             m_headerImage = (IsExpanded ? m_collapseImage : m_expandImage);
 
             if (m_headerImage != null)
             {
-                m_offset = m_headerImage.Width + m_pad;
-                gr.DrawImage(m_headerImage, new Rectangle(m_pad, nfpHeader.Height / 2 - m_headerImage.Height / 2, m_headerImage.Width, m_headerImage.Height));
+                m_offset = m_headerImage.Width + Pad;
+                gr.DrawImage(m_headerImage, new Rectangle(Pad, Header.Height / 2 - m_headerImage.Height / 2, m_headerImage.Width, m_headerImage.Height));
             }
 
-            gr.DrawString(HeaderText, Font, Brushes.Black, new RectangleF(m_pad + m_offset, 0, nfpHeader.Width - m_pad * 4, nfpHeader.Height), m_hCenteredStringFormat);
+            gr.DrawString(HeaderText, Font, Brushes.Black, new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), m_hCenteredStringFormat);
         }
 
         #endregion
@@ -245,13 +227,13 @@ namespace EVEMon.Controls
             {
                 if (value != null)
                 {
-                    if (value.Height > nfpHeader.Height - 4)
+                    if (value.Height > Header.Height - 4)
                     {
                         throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
                     }
                 }
                 m_expandImage = value;
-                nfpHeader.Refresh();
+                Header.Refresh();
             }
         }
 
@@ -266,13 +248,13 @@ namespace EVEMon.Controls
             {
                 if (value != null)
                 {
-                    if (value.Height > nfpHeader.Height - 4)
+                    if (value.Height > Header.Height - 4)
                     {
                         throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
                     }
                 }
                 m_collapseImage = value;
-                nfpHeader.Refresh();
+                Header.Refresh();
 
             }
         }
@@ -281,11 +263,7 @@ namespace EVEMon.Controls
         /// Gets or sets the Expand/Collapse Speed.
         /// </summary>
         [Description("Set the Expand/Collapse Speed.")]
-        public AnimationSpeed AnimationSpeed
-        {
-            get { return animationSpeed; }
-            set { animationSpeed = value; }
-        }
+        public AnimationSpeed AnimationSpeed { get; set; }
 
         /// <summary>
         /// Gets or sets the Header's height of the Panel. Height must be between 30 and 50.
@@ -293,13 +271,13 @@ namespace EVEMon.Controls
         [Description("Set the Header's height of the Panel. Height must be between 30 and 50.")]
         public int HeaderHeight
         {
-            get { return nfpHeader.Height; }
+            get { return Header.Height; }
             set
             {
                 if (value < 30 || value > 50)
                     throw new ArgumentException("Height must be between 30 and 50.");
 
-                nfpHeader.Height = value;
+                Header.Height = value;
             }
         }
 
@@ -307,31 +285,19 @@ namespace EVEMon.Controls
         /// Gets or sets the direction of the Panel expansion.
         /// </summary>
         [Description("Set the direction of the Panel expansion.")]
-        public Direction ExpandDirection
-        {
-            get { return expandDirection; }
-            set { expandDirection = value; }
-        }
+        public Direction ExpandDirection { get; set; }
 
         /// <summary>
         /// Gets or sets  whether the Panel should start expanded.
         /// </summary>
         [Description("Indicates whether the Panel should start expanded.")]
-        public bool ExpandedOnStartup
-        {
-            get { return m_beginExpanded; }
-            set { m_beginExpanded = value; }
-        }
+        public bool ExpandedOnStartup { get; set; }
 
         /// <summary>
         /// Gets or sets whether the contextMenu should be shown by right-clicking on the header.
         /// </summary>
         [Description("Indicates whether the contextMenu should be shown by right-clicking on the header.")]
-        public bool EnableContextMenu
-        {
-            get { return m_enableContextMenu; }
-            set { m_enableContextMenu = value; }
-        }
+        public bool EnableContextMenu { get; set; }
 
         #endregion
 
@@ -351,7 +317,7 @@ namespace EVEMon.Controls
 
             Height = m_expandedHeight;
             m_headerImage = m_collapseImage;
-            panelState = PanelState.Expanded;
+            m_panelState = PanelState.Expanded;
 
             Refresh();
 
@@ -364,15 +330,15 @@ namespace EVEMon.Controls
         /// </summary>
         private void CollapsePanel()
         {
-            while (AnimationSpeed != AnimationSpeed.None && Height > nfpHeader.Height + m_animationStep)
+            while (AnimationSpeed != AnimationSpeed.None && Height > Header.Height + m_animationStep)
             {
                 Height -= m_animationStep;
                 Refresh();
             }
 
-            Height = nfpHeader.Height;
+            Height = Header.Height;
             m_headerImage = m_expandImage;
-            panelState = PanelState.Collapsed;
+            m_panelState = PanelState.Collapsed;
 
             Refresh();
 
@@ -385,7 +351,7 @@ namespace EVEMon.Controls
         /// </summary>
         private void SwitchStatus()
         {
-            switch (panelState)
+            switch (m_panelState)
             {
                 case PanelState.Collapsed:
                     ExpandPanel();
@@ -403,7 +369,7 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContextMenu()
         {
-            tsmiExpandCollapse.Text = (IsExpanded ? "Collapse Panel" : "Expand Panel");
+            m_tsmiExpandCollapse.Text = (IsExpanded ? "Collapse Panel" : "Expand Panel");
         }
 
         /// <summary>
@@ -411,16 +377,16 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateAnimationSpeed()
         {
-            switch (animationSpeed)
+            switch (AnimationSpeed)
             {
                 case AnimationSpeed.None:
                     m_animationStep = ExpandedHeight;
                     break;
                 case AnimationSpeed.High:
-                    m_animationStep = (int)(ExpandedHeight / 4);
+                    m_animationStep = ExpandedHeight / 4;
                     break;
                 case AnimationSpeed.Medium:
-                    m_animationStep = (int)(ExpandedHeight / 20);
+                    m_animationStep = ExpandedHeight / 20;
                     break;
                 case AnimationSpeed.Low:
                     m_animationStep = 1;
@@ -428,7 +394,7 @@ namespace EVEMon.Controls
             }
 
             // Set the check state of the appropriate AnimationSpeed menu item
-            if (m_enableContextMenu)
+            if (EnableContextMenu)
                 SetAnimationSpeedContextMenuItemCheckState();
         }
 
@@ -494,7 +460,7 @@ namespace EVEMon.Controls
 
             // Set the panel status for startup
             m_animationStep = m_expandedHeight;
-            panelState = (m_beginExpanded ? PanelState.Collapsed : PanelState.Expanded);
+            m_panelState = (ExpandedOnStartup ? PanelState.Collapsed : PanelState.Expanded);
             SwitchStatus();
 
             // Set the animation speed
@@ -523,21 +489,21 @@ namespace EVEMon.Controls
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (!m_enableContextMenu)
+                if (!EnableContextMenu)
                     return;
 
-                int X = e.X;
-                int Y = e.Y;
+                int x = e.X;
+                int y = e.Y;
 
                 if (sender != this)
                 {
-                    X += ((Control)sender).Bounds.X;
-                    Y += ((Control)sender).Bounds.Y;
+                    x += ((Control)sender).Bounds.X;
+                    y += ((Control)sender).Bounds.Y;
                 }
 
-                contextMenuStrip.Enabled = m_enableContextMenu;
-                contextMenuStrip.Show(this, new Point(X, Y));
-                contextMenuStrip.BringToFront();
+                m_contextMenuStrip.Enabled = EnableContextMenu;
+                m_contextMenuStrip.Show(this, new Point(x, y));
+                m_contextMenuStrip.BringToFront();
                 return;
             }
 

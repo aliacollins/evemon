@@ -9,9 +9,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 
-using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
-using EVEMon.Common.Notifications;
-
 namespace EVEMon
 {
     /// <summary>

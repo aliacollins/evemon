@@ -152,6 +152,7 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(587, 466);
             this.Controls.Add(this.MainTableLayoutPanel);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(500, 500);
