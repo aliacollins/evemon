@@ -19,11 +19,11 @@ namespace EVEMon.Common.Controls
         {
             InitializeComponent();
 
-            msgText.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
-            cbOption.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
-            button1.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
-            button2.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
-            button3.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
+            msgText.Font = FontFactory.GetFont("Segoe UI", 9f);
+            cbOption.Font = FontFactory.GetFont("Segoe UI", 9f);
+            button1.Font = FontFactory.GetFont("Segoe UI", 9f);
+            button2.Font = FontFactory.GetFont("Segoe UI", 9f);
+            button3.Font = FontFactory.GetFont("Segoe UI", 9f);
         }
 
 

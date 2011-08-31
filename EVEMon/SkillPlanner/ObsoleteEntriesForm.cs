@@ -53,7 +53,7 @@ namespace EVEMon.SkillPlanner
         #region Constructors
 
         /// <summary>
-        /// Displays the dialog and returns the Action Result
+        /// Displays the dialog and returns the Action Result.
         /// </summary>
         /// <returns></returns>
         private ObsoleteEntriesAction ShowObsoleteEntriesDialog()
@@ -88,8 +88,7 @@ namespace EVEMon.SkillPlanner
         #region Private Helper Methods
 
         /// <summary>
-        /// Update the list view with items from the plan, colour if
-        /// required
+        /// Update the list view with items from the plan, colour if required.
         /// </summary>
         private void UpdateListView()
         {
@@ -124,7 +123,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Format a ListViewItem based upon its status and the current
+        /// Format a ListViewItem based upon its status and the current.
         /// preview result.
         /// </summary>
         /// <param name="lvi"><c>ListViewItem</c> to format</param>
@@ -160,13 +159,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Format the ListViewItem in the Normal Style
+        /// Format the ListViewItem in the Normal Style.
         /// </summary>
         /// <param name="lvi"><c>ListViewItem</c> to format</param>
         private static void FormatListViewNormalStyle(ListViewItem lvi)
         {
             lvi.ForeColor = Color.Black;
-            lvi.Font = new Font(lvi.Font, FontStyle.Regular);
+            lvi.Font = FontFactory.GetFont(lvi.Font);
         }
 
         /// <summary>
@@ -176,7 +175,7 @@ namespace EVEMon.SkillPlanner
         private static void FormatListViewRemoveStyle(ListViewItem lvi)
         {
             lvi.ForeColor = Color.Red;
-            lvi.Font = new Font(lvi.Font, FontStyle.Strikeout);
+            lvi.Font = FontFactory.GetFont(lvi.Font, FontStyle.Strikeout);
         }
 
         /// <summary>
@@ -186,7 +185,7 @@ namespace EVEMon.SkillPlanner
         private static void FormatListViewKeepStyle(ListViewItem lvi)
         {
             lvi.ForeColor = Color.DarkGreen;
-            lvi.Font = new Font(lvi.Font, FontStyle.Regular);
+            lvi.Font = FontFactory.GetFont(lvi.Font);
         }
 
         /// <summary>

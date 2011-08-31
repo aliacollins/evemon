@@ -177,12 +177,12 @@ namespace EVEMon
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance)
             {
                 BalanceLabel.ForeColor = Color.Orange;
-                BalanceLabel.Font = new Font(Font, FontStyle.Bold);
+                BalanceLabel.Font = FontFactory.GetFont(Font, FontStyle.Bold);
                 return;
             }
 
             BalanceLabel.ForeColor = SystemColors.ControlText;
-            BalanceLabel.Font = new Font(Font, FontStyle.Regular);
+            BalanceLabel.Font = FontFactory.GetFont(Font);
         }
 
         /// <summary>

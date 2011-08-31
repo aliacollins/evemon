@@ -143,7 +143,7 @@ namespace EVEMon
         {
             base.OnLoad(e);
 
-            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            Font = FontFactory.GetFont("Tahoma");
             lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
 
             // Picks the last selected page

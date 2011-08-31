@@ -54,7 +54,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void SettingsFileStorageControl_Load(object sender, EventArgs e)
         {
-            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            Font = FontFactory.GetFont("Tahoma");
 
             EveMonClient.BCAPICredentialsUpdated += EveMonClient_BCAPICredentialsUpdated;
             Disposed += OnDisposed;

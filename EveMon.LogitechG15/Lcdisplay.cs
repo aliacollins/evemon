@@ -72,7 +72,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private Lcdisplay()
         {
-            m_defaultFont = FontFactory.GetFont("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
+            m_defaultFont = FontFactory.GetFont("Microsoft Sans Serif", 13.5f);
 
             m_bmpLCD = new Bitmap(G15Width, G15Height, PixelFormat.Format24bppRgb);
             m_bmpLCD.SetResolution(G15DpiX, G15DpiY);
@@ -343,7 +343,7 @@ namespace EVEMon.LogitechG15
                     {
                         // If more then one skill is in queue, show queue finish time
                         string time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
-                            DescriptiveTextOptions.SpaceBetween, true);
+                            DescriptiveTextOptions.SpaceBetween);
                         m_lcdLines.Add(new LineProcess(
                             String.Format(CultureConstants.DefaultCulture, "Queue finishes in: {0}", time), m_defaultFont));
                     }
@@ -360,7 +360,7 @@ namespace EVEMon.LogitechG15
                 }
 
                 m_lcdLines.Add(new LineProcess(skill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
-                    DescriptiveTextOptions.SpaceBetween, true).TrimStart(' '), m_defaultFont));
+                    DescriptiveTextOptions.SpaceBetween).TrimStart(' '), m_defaultFont));
             }
             else
             {

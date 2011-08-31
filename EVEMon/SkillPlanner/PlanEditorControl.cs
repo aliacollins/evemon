@@ -110,7 +110,7 @@ namespace EVEMon.SkillPlanner
             m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
 
             m_plannedSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Bold);
-            m_prerequisiteSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Regular);
+            m_prerequisiteSkillFont = FontFactory.GetFont(lvSkills.Font);
             m_nonImmedTrainablePlanEntryColor = SystemColors.GrayText;
             m_remappingForeColor = SystemColors.HotTrack;
             m_remappingBackColor = SystemColors.Info;

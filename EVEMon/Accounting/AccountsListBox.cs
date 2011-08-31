@@ -138,7 +138,7 @@ namespace EVEMon.Accounting
                 g.DrawString(account.APIKey.ToLower(CultureConstants.DefaultCulture),
                              Font, fontBrush, new PointF(left + userIDTextSize.Width, top));
 
-                using (Font middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f, FontStyle.Regular))
+                using (Font middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f))
                 {
                     // Draw the texts on the middle third
                     top = e.Bounds.Top + height / 3 + 4;
@@ -155,7 +155,7 @@ namespace EVEMon.Accounting
                                                                : "Full API Key Required"));
                     g.DrawString(accountExpires, middleFont, fontBrush, new PointF(left, top));
 
-                    using (Font smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f, FontStyle.Regular))
+                    using (Font smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f))
                     {
                         using (Font strikeoutFont = FontFactory.GetFont(smallFont, FontStyle.Strikeout))
                         {
