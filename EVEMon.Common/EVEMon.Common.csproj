@@ -137,6 +137,9 @@
     <Compile Include="Controls\PersistentSplitContainer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\SkillQueueControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Throbber.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -155,6 +158,7 @@
     <Compile Include="CustomEventArgs\IndustryJobsEventArgs.cs" />
     <Compile Include="CustomEventArgs\PlanChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\QueuedSkillsEventArgs.cs" />
+    <Compile Include="CustomEventArgs\SkillClickedEventArgs.cs" />
     <Compile Include="CustomEventArgs\UpdateAvailableEventArgs.cs" />
     <Compile Include="CustomEventArgs\UriCharacterEventArgs.cs" />
     <Compile Include="Data\Agent.cs" />
@@ -176,6 +180,7 @@
     <Compile Include="EveNotificationsComparer.cs" />
     <Compile Include="EveNotificationText.cs" />
     <Compile Include="IGroupingListView.cs" />
+    <Compile Include="IPlanOrderPluggable.cs" />
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />

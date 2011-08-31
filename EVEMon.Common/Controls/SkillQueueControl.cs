@@ -3,11 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
-using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public class SkillQueueControl : Control
     {
@@ -378,7 +376,7 @@ namespace EVEMon.Controls
         /// Rectangle representing the area within the visual
         /// queue the skill occupies.
         /// </returns>
-        internal static Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
+        public static Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
         {
             TimeSpan relativeStart;
             TimeSpan relativeFinish;

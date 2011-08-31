@@ -482,12 +482,14 @@
     <Compile Include="SkillPlanner\CertificateTreeDisplayControl.Designer.cs">
       <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\IPlanOrderPluggable.cs" />
     <Compile Include="SkillPlanner\ObsoleteEntriesForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SkillPlanner\ObsoleteEntriesForm.Designer.cs">
       <DependentUpon>ObsoleteEntriesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\OverridenTreeView.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\PlanColumnSelectWindow.cs">
       <SubType>Form</SubType>
@@ -528,9 +530,6 @@
     </Compile>
     <Compile Include="SkillPlanner\RecommendedCertificatesControl.Designer.cs">
       <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\OverridenTreeView.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\ShipLoadoutSelectWindow.cs">
       <SubType>Form</SubType>
@@ -616,7 +615,6 @@
     <Compile Include="SkillPlanner\ShipBrowserControl.Designer.cs">
       <DependentUpon>ShipBrowserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\SkillClickedEventArgs.cs" />
     <Compile Include="SkillPlanner\SkillExplorerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -634,9 +632,6 @@
     </Compile>
     <Compile Include="SkillPlanner\SkillTreeDisplayControl.Designer.cs">
       <DependentUpon>SkillTreeDisplayControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SkillQueueControl.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="TimeCheckNotification.cs">
       <SubType>Form</SubType>

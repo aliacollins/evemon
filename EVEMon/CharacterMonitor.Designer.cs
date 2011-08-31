@@ -53,7 +53,7 @@ namespace EVEMon
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
-            this.skillQueueControl = new EVEMon.Controls.SkillQueueControl();
+            this.skillQueueControl = new SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
             this.skillsPanel = new BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
@@ -1022,7 +1022,7 @@ namespace EVEMon
         private System.Windows.Forms.Label lblQueueRemaining;
         private System.Windows.Forms.Label lblQueueCompletionTime;
         private System.Windows.Forms.Panel skillQueueTimePanel;
-        private EVEMon.Controls.SkillQueueControl skillQueueControl;
+        private SkillQueueControl skillQueueControl;
         private System.Windows.Forms.ToolStripDropDownButton featuresMenu; 
         private System.Windows.Forms.ToolStripSeparator tsToggleSeparator; 
         private System.Windows.Forms.ContextMenuStrip toolstripContextMenu; 
