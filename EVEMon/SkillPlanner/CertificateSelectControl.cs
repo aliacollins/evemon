@@ -101,7 +101,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Updates the controls
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -110,6 +110,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateControlVisibility();
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates the control visibility.
+        /// </summary>
+        private void UpdateControlVisibility()
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
             UpdateContent();
@@ -557,6 +570,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private Func<CertificateClass, bool> GetFilter()
         {
+            if (cbFilter.SelectedIndex == -1)
+                return x => true;
+            
             // Update the base filter from the combo box
             switch ((CertificateFilter)cbFilter.SelectedIndex)
             {

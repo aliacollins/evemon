@@ -77,7 +77,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Updates the controls
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -86,6 +86,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateControlVisibility();
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates the control visibility.
+        /// </summary>
+        private void UpdateControlVisibility()
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
             UpdateContent();
@@ -312,52 +325,43 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private Func<Skill, bool> GetFilter()
         {
+            if (cbSkillFilter.SelectedIndex == -1)
+                return x => true;
+
             switch ((SkillFilter)cbSkillFilter.SelectedIndex)
             {
-                default:
+                case SkillFilter.All:
                     return x => true;
-
                 case SkillFilter.Known:
                     return x => x.IsKnown;
-
                 case SkillFilter.TrailAccountFriendly:
                     return x => x.IsTrainableOnTrialAccount;
-
                 case SkillFilter.Unknown:
                     return x => !x.IsKnown;
-
                 case SkillFilter.UnknownAndNotOwned:
                     return x => !x.IsKnown && !x.IsOwned;
-
                 case SkillFilter.UnknownButOwned:
                     return x => !x.IsKnown && x.IsOwned;
-
                 case SkillFilter.UnknownButTrainable:
                     return x => !x.IsKnown && x.ArePrerequisitesMet;
-
                 case SkillFilter.UnknownAndNotTrainable:
                     return x => !x.IsKnown && !x.ArePrerequisitesMet;
-
                 case SkillFilter.Planned:
                     return x => m_plan.IsPlanned(x);
-
                 case SkillFilter.Lv1Ready:
                     return x => x.Level == 0 && x.ArePrerequisitesMet && !x.IsPartiallyTrained;
-
                 case SkillFilter.Trainable:
                     return x => x.ArePrerequisitesMet && x.Level < 5;
-
                 case SkillFilter.PartiallyTrained:
                     return x => x.IsPartiallyTrained;
-
                 case SkillFilter.NotPlanned:
                     return x => !(m_plan.IsPlanned(x) || x.Level == 5);
-
                 case SkillFilter.NotPlannedButTrainable:
                     return x => !m_plan.IsPlanned(x) && x.ArePrerequisitesMet && x.Level < 5;
-
                 case SkillFilter.NoLv5:
                     return x => x.Level < 5;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
