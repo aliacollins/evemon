@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-
-using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     /// <summary>
     /// This form allow the user to selected and order the columns he wants to use for plans.

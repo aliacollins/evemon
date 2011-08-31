@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class EFTLoadoutImportationForm
@@ -38,7 +40,7 @@ namespace EVEMon.SkillPlanner
             this.TrainingTimeLabel = new System.Windows.Forms.Label();
             this.CloseButton = new System.Windows.Forms.Button();
             this.splitContainerPanel = new System.Windows.Forms.Panel();
-            this.topSplitContainer = new EVEMon.Controls.PersistentSplitContainer();
+            this.topSplitContainer = new PersistentSplitContainer();
             this.PasteTextBox = new System.Windows.Forms.RichTextBox();
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.ResultsTreeView = new System.Windows.Forms.TreeView();
@@ -221,7 +223,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private EVEMon.Controls.PersistentSplitContainer topSplitContainer;
+        private PersistentSplitContainer topSplitContainer;
         private System.Windows.Forms.TreeView ResultsTreeView;
         private System.Windows.Forms.Panel BottomPanel;
         private System.Windows.Forms.Button AddToPlanButton;

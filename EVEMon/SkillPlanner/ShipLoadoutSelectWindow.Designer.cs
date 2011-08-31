@@ -1,4 +1,6 @@
 
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class ShipLoadoutSelectWindow
@@ -33,7 +35,7 @@ namespace EVEMon.SkillPlanner
             this.lblLoadouts = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.persistentSplitContainer1 = new EVEMon.Controls.PersistentSplitContainer();
+            this.persistentSplitContainer1 = new PersistentSplitContainer();
             this.lvLoadouts = new System.Windows.Forms.ListView();
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -372,7 +374,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader colAuthor;
         private System.Windows.Forms.ColumnHeader colRating;
         private System.Windows.Forms.ColumnHeader colDate;
-        private EVEMon.Controls.PersistentSplitContainer persistentSplitContainer1;
+        private PersistentSplitContainer persistentSplitContainer1;
         private System.Windows.Forms.Panel lowerPanel;
         private System.Windows.Forms.Label lblSubmitDate;
         private System.Windows.Forms.Label SubDateLabel;

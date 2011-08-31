@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Controls;
 
 namespace EVEMon.SkillPlanner
 {

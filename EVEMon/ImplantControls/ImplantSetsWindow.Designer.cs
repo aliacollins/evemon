@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.ImplantControls
 {
     partial class ImplantSetsWindow
@@ -32,16 +34,16 @@ namespace EVEMon.ImplantControls
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.cbSlot10 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot9 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot8 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot7 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot6 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot5 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot4 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot3 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot2 = new EVEMon.Controls.DropDownMouseMoveComboBox();
-            this.cbSlot1 = new EVEMon.Controls.DropDownMouseMoveComboBox();
+            this.cbSlot10 = new DropDownMouseMoveComboBox();
+            this.cbSlot9 = new DropDownMouseMoveComboBox();
+            this.cbSlot8 = new DropDownMouseMoveComboBox();
+            this.cbSlot7 = new DropDownMouseMoveComboBox();
+            this.cbSlot6 = new DropDownMouseMoveComboBox();
+            this.cbSlot5 = new DropDownMouseMoveComboBox();
+            this.cbSlot4 = new DropDownMouseMoveComboBox();
+            this.cbSlot3 = new DropDownMouseMoveComboBox();
+            this.cbSlot2 = new DropDownMouseMoveComboBox();
+            this.cbSlot1 = new DropDownMouseMoveComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -52,7 +54,7 @@ namespace EVEMon.ImplantControls
             this.label1 = new System.Windows.Forms.Label();
             this.lblImplant2 = new System.Windows.Forms.Label();
             this.lblImplant1 = new System.Windows.Forms.Label();
-            this.setsGrid = new EVEMon.Controls.IntuitiveDataGridView();
+            this.setsGrid = new IntuitiveDataGridView();
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -523,17 +525,17 @@ namespace EVEMon.ImplantControls
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot10;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot9;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot8;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot7;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot6;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot5;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot4;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot3;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot2;
-        private EVEMon.Controls.DropDownMouseMoveComboBox cbSlot1;
-        private EVEMon.Controls.IntuitiveDataGridView setsGrid;
+        private DropDownMouseMoveComboBox cbSlot10;
+        private DropDownMouseMoveComboBox cbSlot9;
+        private DropDownMouseMoveComboBox cbSlot8;
+        private DropDownMouseMoveComboBox cbSlot7;
+        private DropDownMouseMoveComboBox cbSlot6;
+        private DropDownMouseMoveComboBox cbSlot5;
+        private DropDownMouseMoveComboBox cbSlot4;
+        private DropDownMouseMoveComboBox cbSlot3;
+        private DropDownMouseMoveComboBox cbSlot2;
+        private DropDownMouseMoveComboBox cbSlot1;
+        private IntuitiveDataGridView setsGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;

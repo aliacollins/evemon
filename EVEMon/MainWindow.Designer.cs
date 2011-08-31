@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon
 {
     partial class MainWindow
@@ -115,11 +117,11 @@ namespace EVEMon
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
-            this.tcCharacterTabs = new EVEMon.Controls.DraggableTabControl();
+            this.tcCharacterTabs = new DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
-            this.trayIcon = new EVEMon.Controls.TrayIcon(this.components);
+            this.trayIcon = new TrayIcon(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -941,7 +943,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem planToolStripMenuItem;
-        private EVEMon.Controls.DraggableTabControl tcCharacterTabs;
+        private DraggableTabControl tcCharacterTabs;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripStatusLabel lblServerStatus;
@@ -994,7 +996,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator plansToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
-        private EVEMon.Controls.TrayIcon trayIcon;
+        private TrayIcon trayIcon;
         private System.Windows.Forms.TabPage tpOverview;
         private Overview overview;
         private System.Windows.Forms.ToolStripSeparator helpAboutKnownProblemsToolStripSeparator;

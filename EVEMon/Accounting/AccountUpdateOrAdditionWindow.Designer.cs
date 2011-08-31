@@ -1,4 +1,6 @@
-﻿using EVEMon.Controls.MultiPanel;
+﻿using EVEMon.Common;
+using EVEMon.Common.Controls;
+using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon.Accounting
 {
@@ -48,7 +50,7 @@ namespace EVEMon.Accounting
             this.apiKeyLabel = new System.Windows.Forms.Label();
             this.UserIDLabel = new System.Windows.Forms.Label();
             this.waitingPage = new MultiPanelPage();
-            this.throbber = new EVEMon.Controls.Throbber();
+            this.throbber = new Throbber();
             this.resultPage = new MultiPanelPage();
             this.keyTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.keyPicture = new System.Windows.Forms.PictureBox();
@@ -235,7 +237,7 @@ namespace EVEMon.Accounting
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.throbber.State = ThrobberState.Stopped;
             this.throbber.TabIndex = 0;
             this.throbber.TabStop = false;
             // 
@@ -385,7 +387,7 @@ namespace EVEMon.Accounting
         private System.Windows.Forms.Button previousButton;
         private System.Windows.Forms.Button cancelButton;
         private MultiPanelPage waitingPage;
-        private EVEMon.Controls.Throbber throbber;
+        private Throbber throbber;
         private MultiPanelPage resultPage;
         private System.Windows.Forms.PictureBox keyPicture;
         private System.Windows.Forms.GroupBox groupBox1;

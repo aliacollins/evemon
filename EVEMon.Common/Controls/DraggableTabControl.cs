@@ -2,9 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
-using EVEMon.Common.Controls;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     /// <summary>
     /// A tab control which support drag and dropping.

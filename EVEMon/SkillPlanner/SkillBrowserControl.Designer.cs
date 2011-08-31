@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class SkillBrowser
@@ -38,7 +40,7 @@ namespace EVEMon.SkillPlanner
             this.miPlanTo4 = new System.Windows.Forms.ToolStripMenuItem();
             this.miPlanTo5 = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrTrainingSkillTick = new System.Windows.Forms.Timer(this.components);
-            this.verticalSplitContainer = new EVEMon.Controls.PersistentSplitContainer();
+            this.verticalSplitContainer = new PersistentSplitContainer();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.rightPanel = new System.Windows.Forms.Panel();
             this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplayControl();
@@ -475,7 +477,7 @@ namespace EVEMon.SkillPlanner
         }
         #endregion
 
-        private EVEMon.Controls.PersistentSplitContainer verticalSplitContainer;
+        private PersistentSplitContainer verticalSplitContainer;
         private EVEMon.SkillPlanner.SkillSelectControl skillSelectControl;
         private System.Windows.Forms.ContextMenuStrip cmsSkillContext;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo1;

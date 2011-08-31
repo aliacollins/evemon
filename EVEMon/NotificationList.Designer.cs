@@ -1,4 +1,6 @@
-﻿namespace EVEMon
+﻿using EVEMon.Common.Controls;
+
+namespace EVEMon
 {
     partial class NotificationList
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.listBox = new EVEMon.Controls.NoFlickerListBox();
+            this.listBox = new NoFlickerListBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
@@ -67,7 +69,7 @@
 
         #endregion
 
-        private EVEMon.Controls.NoFlickerListBox listBox;
+        private NoFlickerListBox listBox;
         private System.Windows.Forms.ToolTip toolTip;
     }
 }

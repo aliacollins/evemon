@@ -1,8 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public class NoFlickerListBox : ListBox
     {

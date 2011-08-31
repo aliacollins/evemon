@@ -1,3 +1,6 @@
+using EVEMon.Common;
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class AttributesOptimizationForm
@@ -36,7 +39,7 @@ namespace EVEMon.SkillPlanner
             this.lbWait = new System.Windows.Forms.Label();
             this.panelNoResult = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.throbber = new EVEMon.Controls.Throbber();
+            this.throbber = new Throbber();
             this.tabControl.SuspendLayout();
             this.tabSummary.SuspendLayout();
             this.panelWait.SuspendLayout();
@@ -133,7 +136,7 @@ namespace EVEMon.SkillPlanner
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.throbber.State = ThrobberState.Stopped;
             this.throbber.TabIndex = 24;
             this.throbber.TabStop = false;
             // 
@@ -170,7 +173,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ListView lvPoints;
         private System.Windows.Forms.ColumnHeader columnHeader;
         private System.Windows.Forms.Panel panelWait;
-        private EVEMon.Controls.Throbber throbber;
+        private Throbber throbber;
         private System.Windows.Forms.Label lbWait;
         private System.Windows.Forms.Panel panelNoResult;
         private System.Windows.Forms.Label label2;

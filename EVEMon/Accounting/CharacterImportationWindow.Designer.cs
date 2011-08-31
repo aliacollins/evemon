@@ -1,4 +1,7 @@
-﻿namespace EVEMon.Accounting
+﻿using EVEMon.Common;
+using EVEMon.Common.Controls;
+
+namespace EVEMon.Accounting
 {
     partial class CharacterImportationWindow
     {
@@ -36,7 +39,7 @@
             this.fileRadio = new System.Windows.Forms.RadioButton();
             this.fileTextBox = new System.Windows.Forms.TextBox();
             this.fileButton = new System.Windows.Forms.Button();
-            this.urlThrobber = new EVEMon.Controls.Throbber();
+            this.urlThrobber = new Throbber();
             this.namePanel = new System.Windows.Forms.Panel();
             this.nameTextBox = new System.Windows.Forms.TextBox();
             this.errorPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -133,7 +136,7 @@
             this.urlThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.urlThrobber.Name = "urlThrobber";
             this.urlThrobber.Size = new System.Drawing.Size(24, 24);
-            this.urlThrobber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.urlThrobber.State = ThrobberState.Stopped;
             this.urlThrobber.TabIndex = 5;
             this.urlThrobber.TabStop = false;
             // 
@@ -247,7 +250,7 @@
         private System.Windows.Forms.RadioButton fileRadio;
         private System.Windows.Forms.TextBox fileTextBox;
         private System.Windows.Forms.Button fileButton;
-        private EVEMon.Controls.Throbber urlThrobber;
+        private Throbber urlThrobber;
         private System.Windows.Forms.Panel namePanel;
         private System.Windows.Forms.TextBox nameTextBox;
         private System.Windows.Forms.Button okButton;

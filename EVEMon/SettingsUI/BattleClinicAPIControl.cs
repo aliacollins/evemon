@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.BattleClinic;
-using EVEMon.Controls;
 
 namespace EVEMon.SettingsUI
 {

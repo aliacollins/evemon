@@ -3,9 +3,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public delegate void DropDownMouseMoveHandler(Object sender, object item, Point point);
 

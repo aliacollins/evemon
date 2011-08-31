@@ -1,3 +1,4 @@
+using EVEMon.Common.Controls;
 using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon
@@ -54,7 +55,7 @@ namespace EVEMon
             this.lblQueueRemaining = new System.Windows.Forms.Label();
             this.skillQueueControl = new EVEMon.Controls.SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.skillsPanel = new EVEMon.Controls.BorderPanel();
+            this.skillsPanel = new BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Controls.MultiPanel.MultiPanel();
             this.standingsPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
@@ -1003,7 +1004,7 @@ namespace EVEMon
         private System.Windows.Forms.Label lblSPPerHour;
         private System.Windows.Forms.Label lblScheduleWarning;
         private System.Windows.Forms.Button btnAddToCalendar;
-        private EVEMon.Controls.BorderPanel skillsPanel;
+        private BorderPanel skillsPanel;
         private System.Windows.Forms.Panel skillQueuePanel;
         private NotificationList notificationList;
         private System.Windows.Forms.Panel corePanel;

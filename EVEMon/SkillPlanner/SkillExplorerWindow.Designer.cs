@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class SkillExplorerWindow
@@ -41,7 +43,7 @@ namespace EVEMon.SkillPlanner
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new EVEMon.Controls.PersistentSplitContainer();
+            this.splitContainer1 = new PersistentSplitContainer();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.tvSkills = new System.Windows.Forms.TreeView();
@@ -504,7 +506,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private EVEMon.Controls.PersistentSplitContainer splitContainer1;
+        private PersistentSplitContainer splitContainer1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox cbShowBaseOnly;
         private System.Windows.Forms.RadioButton rbShowAlpha;

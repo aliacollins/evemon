@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator.StaticData

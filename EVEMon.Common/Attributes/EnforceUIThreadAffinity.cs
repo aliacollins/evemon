@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using EVEMon.Common.Threading;
 
 #if !NO_THREAD_SAFETY
 using PostSharp.Laos;

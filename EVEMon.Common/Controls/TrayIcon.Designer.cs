@@ -1,4 +1,4 @@
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     partial class TrayIcon
     {

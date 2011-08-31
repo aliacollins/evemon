@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     /// <summary>
     /// Simple comparer for <see cref="ListViewItem"/> relying on a <see cref="IComparer{T}"/> for tags comparison. 
@@ -14,7 +14,7 @@ namespace EVEMon.Controls
         private readonly IComparer<T> m_comparer;
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="ListViewItemComparerByTag&lt;T&gt;"/> class.
         /// </summary>
         /// <param name="comparer">The tags comparer</param>
         public ListViewItemComparerByTag(IComparer<T> comparer)

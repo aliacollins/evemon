@@ -137,6 +137,13 @@ namespace EVEMon.Common
 
     #region Simple Enumerations
 
+    public enum ThrobberState
+    {
+        Stopped,
+        Rotating,
+        Strobing
+    }
+
     /// <summary>
     /// The policy to apply when removing obsolete entries from a plan
     /// </summary>
@@ -147,9 +154,6 @@ namespace EVEMon.Common
         ConfirmedOnly = 2
     }
     
-    /// <summary>
-    /// Represents the 
-    /// </summary>
     public enum PlanSort
     {
         Name = 0,

@@ -6,7 +6,6 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Settings;
-using EVEMon.Controls;
 
 namespace EVEMon.ImplantControls
 {

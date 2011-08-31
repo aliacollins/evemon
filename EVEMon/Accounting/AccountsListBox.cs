@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Controls;
+using EVEMon.Common.Controls;
 
 using CommonProperties = EVEMon.Common.Properties;
 

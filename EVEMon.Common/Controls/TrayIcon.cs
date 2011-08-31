@@ -2,9 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using EVEMon.Common.Controls;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     /// <summary>
     /// Wrapper class for the NotifyIcon component. Implements the NotifyIcon properties and events
@@ -332,7 +331,7 @@ namespace EVEMon.Controls
             /// <summary>
             /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
             /// </summary>
-            /// <param name="trayIcon">The <see cref="Controls.TrayIcon"/> whose state is being managed.</param>
+            /// <param name="trayIcon">The <see cref="TrayIcon"/> whose state is being managed.</param>
             /// <param name="mousePosition">A <see cref="System.Drawing.Point"/> representing the last known mouse location.</param>
             protected MouseState(TrayIcon trayIcon, Point mousePosition)
             {
@@ -346,7 +345,7 @@ namespace EVEMon.Controls
             protected Point MousePosition { get; private set; }
 
             /// <summary>
-            /// The <see cref="Controls.TrayIcon"/> whose MouseState we are managing
+            /// The <see cref="TrayIcon"/> whose MouseState we are managing
             /// </summary>
             protected TrayIcon TrayIcon { get; private set; }
 
@@ -407,9 +406,9 @@ namespace EVEMon.Controls
             }
 
             /// <summary>
-            /// Changes the state of the parent <see cref="Controls.TrayIcon"/>.
+            /// Changes the state of the parent <see cref="TrayIcon"/>.
             /// </summary>
-            /// <param name="state">A <see cref="Controls.TrayIcon.MouseState.States"/> indicating the state to change to.</param>
+            /// <param name="state">A <see cref="MouseState.States"/> indicating the state to change to.</param>
             protected void ChangeState(States state)
             {
                 // Change the parent TrayIcon's state

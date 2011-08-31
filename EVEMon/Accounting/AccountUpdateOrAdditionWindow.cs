@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Controls;
 using EVEMon.Controls.MultiPanel;
 using CommonProperties = EVEMon.Common.Properties;
-using Enumerable = System.Linq.Enumerable;
 
 namespace EVEMon.Accounting
 {
@@ -126,7 +124,7 @@ namespace EVEMon.Accounting
 
                 // Are we updating existing account ?
                 multiPanel.SelectedPage = waitingPage;
-                throbber.State = EVEMon.Controls.ThrobberState.Rotating;
+                throbber.State = ThrobberState.Rotating;
                 if (m_account != null)
                 {
                     m_account.TryUpdateAsync(apiKeyTextBox.Text, OnUpdated);
@@ -176,14 +174,13 @@ namespace EVEMon.Accounting
 
             // Updates the characters list
             charactersListView.Items.Clear();
-            foreach (ListViewItem item in Enumerable.Select(args.Identities,
-                                                            id =>
-                                                            new ListViewItem(id.Name)
-                                                                {
-                                                                    Checked = (m_account == null
-                                                                               || !m_account.IgnoreList.Contains(id)),
-                                                                    Tag = id
-                                                                }))
+            foreach (ListViewItem item in args.Identities.Select(id =>
+                                                                 new ListViewItem(id.Name)
+                                                                     {
+                                                                         Checked = (m_account == null
+                                                                                    || !m_account.IgnoreList.Contains(id)),
+                                                                         Tag = id
+                                                                     }))
             {
                 charactersListView.Items.Add(item);
             }

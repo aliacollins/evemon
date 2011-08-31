@@ -1,6 +1,6 @@
 using System;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public class ListViewDragEventArgs : EventArgs
     {

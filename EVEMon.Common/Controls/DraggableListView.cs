@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public class DraggableListView : ListView
     {
@@ -41,21 +41,36 @@ namespace EVEMon.Controls
             }
         }
 
-        public new SortOrder Sorting
+        /// <summary>
+        /// Gets or sets the sort order for items in the control.
+        /// </summary>
+        /// <value></value>
+        /// <returns>One of the <see cref="T:System.Windows.Forms.SortOrder"/> values.
+        /// The default is <see cref="F:System.Windows.Forms.SortOrder.None"/>.</returns>
+        /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException">The value specified is not one of the <see cref="T:System.Windows.Forms.SortOrder"/> values. </exception>
+        public new System.Windows.Forms.SortOrder Sorting
         {
-            get { return SortOrder.None; }
-            set { base.Sorting = SortOrder.None; }
+            get { return System.Windows.Forms.SortOrder.None; }
+            set { base.Sorting = System.Windows.Forms.SortOrder.None; }
         }
 
+        /// <summary>
+        /// Draggables the init.
+        /// </summary>
         private void DraggableInit()
         {
             AllowRowReorder = true;
         }
 
-        private Common.Skill GetDraggingSkill(DragEventArgs e)
+        /// <summary>
+        /// Gets the dragging skill.
+        /// </summary>
+        /// <param name="e">The <see cref="System.Windows.Forms.DragEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private Skill GetDraggingSkill(DragEventArgs e)
         {
             if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode"))
-                return (Common.Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;
+                return (Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;
 
             return null;
         }
@@ -66,7 +81,7 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragDrop(DragEventArgs e)
         {
-            Common.Skill dragSkill = GetDraggingSkill(e);
+            Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
                 base.OnDragDrop(e);
@@ -142,7 +157,7 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragOver(DragEventArgs e)
         {
-            Common.Skill dragSkill = GetDraggingSkill(e);
+            Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
                 base.OnDragOver(e);
@@ -200,7 +215,7 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragEnter(DragEventArgs e)
         {
-            Common.Skill dragSkill = GetDraggingSkill(e);
+            Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
                 base.OnDragEnter(e);

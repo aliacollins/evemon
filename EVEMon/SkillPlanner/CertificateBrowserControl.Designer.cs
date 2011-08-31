@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class CertificateBrowserControl
@@ -29,7 +31,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CertificateBrowserControl));
-            this.leftSplitContainer = new EVEMon.Controls.PersistentSplitContainer();
+            this.leftSplitContainer = new PersistentSplitContainer();
             this.certSelectCtl = new EVEMon.SkillPlanner.CertificateSelectControl();
             this.panelRight = new System.Windows.Forms.Panel();
             this.panelHeader = new System.Windows.Forms.Panel();
@@ -50,7 +52,7 @@ namespace EVEMon.SkillPlanner
             this.lblLevel2Time = new System.Windows.Forms.Label();
             this.lblLevel1Time = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
-            this.rightSplitContainer = new EVEMon.Controls.PersistentSplitContainer();
+            this.rightSplitContainer = new PersistentSplitContainer();
             this.certDisplayCtl = new EVEMon.SkillPlanner.CertificateTreeDisplayControl();
             this.lblHelp = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.leftSplitContainer)).BeginInit();
@@ -364,10 +366,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem tsPlanToStandard;
         private System.Windows.Forms.ToolStripMenuItem tsPlanToImproved;
         private System.Windows.Forms.ToolStripMenuItem tsPlanToElite;
-        private EVEMon.Controls.PersistentSplitContainer leftSplitContainer;
+        private PersistentSplitContainer leftSplitContainer;
         private System.Windows.Forms.ToolStripMenuItem tsPlanToBasic;
         private System.Windows.Forms.Panel panelRight;
-        private EVEMon.Controls.PersistentSplitContainer rightSplitContainer;
+        private PersistentSplitContainer rightSplitContainer;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Label lblHelp;
     }

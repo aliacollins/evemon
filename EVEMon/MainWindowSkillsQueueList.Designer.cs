@@ -1,4 +1,6 @@
-﻿namespace EVEMon
+﻿using EVEMon.Common.Controls;
+
+namespace EVEMon
 {
     partial class MainWindowSkillsQueueList
     {
@@ -32,7 +34,7 @@
             this.noSkillsQueueLabel = new System.Windows.Forms.Label();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStripPlanPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.lbSkillsQueue = new EVEMon.Controls.NoFlickerListBox();
+            this.lbSkillsQueue = new NoFlickerListBox();
             this.SuspendLayout();
             // 
             // noSkillsQueueLabel
@@ -96,7 +98,7 @@
 
         private System.Windows.Forms.Label noSkillsQueueLabel;
         private System.Windows.Forms.ToolTip ttToolTip;
-        private EVEMon.Controls.NoFlickerListBox lbSkillsQueue;
+        private NoFlickerListBox lbSkillsQueue;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPlanPopup;
     }
 }

@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class PlanEditorControl
@@ -78,8 +80,8 @@ namespace EVEMon.SkillPlanner
             this.lblDowntime = new System.Windows.Forms.Label();
             this.lblCurrentlyTraining = new System.Windows.Forms.Label();
             this.lblPartiallyTrained = new System.Windows.Forms.Label();
-            this.pscPlan = new EVEMon.Controls.PersistentSplitContainer();
-            this.lvSkills = new EVEMon.Controls.DraggableListView();
+            this.pscPlan = new PersistentSplitContainer();
+            this.lvSkills = new DraggableListView();
             this.pHeader = new System.Windows.Forms.Panel();
             this.tsPreferences = new System.Windows.Forms.ToolStrip();
             this.tsbSelectColumns = new System.Windows.Forms.ToolStripButton();
@@ -710,7 +712,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private EVEMon.Controls.DraggableListView lvSkills;
+        private DraggableListView lvSkills;
         private System.Windows.Forms.ContextMenuStrip cmsContextMenu;
         private System.Windows.Forms.ToolStripMenuItem miRemoveFromPlan;
         private System.Windows.Forms.SaveFileDialog sfdSave;
@@ -741,7 +743,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miChangeTo4;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo5;
         private SkillSelectControl skillSelectControl;
-        private EVEMon.Controls.PersistentSplitContainer pscPlan;
+        private PersistentSplitContainer pscPlan;
         private System.Windows.Forms.ToolStripButton tsbToggleSkills;
         private System.Windows.Forms.Timer tmrSelect;
         private System.Windows.Forms.ToolStripButton tsbToggleRemapping;

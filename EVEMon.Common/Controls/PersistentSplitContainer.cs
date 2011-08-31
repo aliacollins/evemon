@@ -1,9 +1,8 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using EVEMon.Common;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public class PersistentSplitContainer : SplitContainer
     {

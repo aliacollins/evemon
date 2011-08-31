@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon
 {
     partial class MainWindowIndustryJobsList
@@ -37,7 +39,7 @@ namespace EVEMon
             this.chOutputItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noJobsLabel = new System.Windows.Forms.Label();
-            this.industryExpPanelControl = new EVEMon.Controls.ExpandablePanelControl();
+            this.industryExpPanelControl = new ExpandablePanelControl();
             this.SuspendLayout();
             // 
             // lvJobs
@@ -97,10 +99,10 @@ namespace EVEMon
             // 
             // industryExpPanelControl
             // 
-            this.industryExpPanelControl.AnimationSpeed = EVEMon.Controls.AnimationSpeed.Medium;
+            this.industryExpPanelControl.AnimationSpeed = AnimationSpeed.Medium;
             this.industryExpPanelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.industryExpPanelControl.EnableContextMenu = false;
-            this.industryExpPanelControl.ExpandDirection = EVEMon.Controls.Direction.Down;
+            this.industryExpPanelControl.ExpandDirection = Direction.Down;
             this.industryExpPanelControl.ExpandedOnStartup = false;
             this.industryExpPanelControl.HeaderHeight = 30;
             this.industryExpPanelControl.ImageCollapse = ((System.Drawing.Bitmap)(resources.GetObject("industryExpPanelControl.ImageCollapse")));
@@ -132,6 +134,6 @@ namespace EVEMon
         private System.Windows.Forms.ColumnHeader chInstalledItem;
         private System.Windows.Forms.ColumnHeader chOutputItem;
         private System.Windows.Forms.ImageList ilIcons;
-        private EVEMon.Controls.ExpandablePanelControl industryExpPanelControl;
+        private ExpandablePanelControl industryExpPanelControl;
     }
 }

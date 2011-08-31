@@ -1,4 +1,7 @@
-﻿namespace EVEMon.SettingsUI
+﻿using EVEMon.Common;
+using EVEMon.Common.Controls;
+
+namespace EVEMon.SettingsUI
 {
     partial class BattleClinicAPIControl
     {
@@ -38,7 +41,7 @@
             this.applyButton = new System.Windows.Forms.Button();
             this.apiResponseLabel = new System.Windows.Forms.Label();
             this.bcAPILinkLabel = new System.Windows.Forms.LinkLabel();
-            this.throbber = new EVEMon.Controls.Throbber();
+            this.throbber = new Throbber();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
@@ -136,7 +139,7 @@
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.throbber.State = ThrobberState.Stopped;
             this.throbber.TabIndex = 12;
             this.throbber.TabStop = false;
             // 
@@ -174,6 +177,6 @@
         private System.Windows.Forms.Button applyButton;
         private System.Windows.Forms.Label apiResponseLabel;
         private System.Windows.Forms.LinkLabel bcAPILinkLabel;
-        private Controls.Throbber throbber;
+        private Throbber throbber;
     }
 }

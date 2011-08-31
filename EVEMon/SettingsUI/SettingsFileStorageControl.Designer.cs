@@ -1,4 +1,7 @@
-﻿namespace EVEMon.SettingsUI
+﻿using EVEMon.Common;
+using EVEMon.Common.Controls;
+
+namespace EVEMon.SettingsUI
 {
     partial class SettingsFileStorageControl
     {
@@ -33,7 +36,7 @@
             this.downloadSettingsFileButton = new System.Windows.Forms.Button();
             this.uploadSettingsFileButton = new System.Windows.Forms.Button();
             this.apiResponseLabel = new System.Windows.Forms.Label();
-            this.throbber = new EVEMon.Controls.Throbber();
+            this.throbber = new Throbber();
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,7 +98,7 @@
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.throbber.State = ThrobberState.Stopped;
             this.throbber.TabIndex = 9;
             this.throbber.TabStop = false;
             // 
@@ -125,6 +128,6 @@
         private System.Windows.Forms.Button downloadSettingsFileButton;
         private System.Windows.Forms.Button uploadSettingsFileButton;
         private System.Windows.Forms.Label apiResponseLabel;
-        private Controls.Throbber throbber;
+        private Throbber throbber;
     }
 }

@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class EveObjectBrowserControl
@@ -29,7 +31,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EveObjectBrowserControl));
-            this.scObjectBrowser = new EVEMon.Controls.PersistentSplitContainer();
+            this.scObjectBrowser = new PersistentSplitContainer();
             this.pnlDetails = new System.Windows.Forms.Panel();
             this.scDetails = new EVEMon.Common.Controls.SplitContainerMinFixed();
             this.scDetailsRight = new EVEMon.Common.Controls.SplitContainerMinFixed();
@@ -219,7 +221,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        protected EVEMon.Controls.PersistentSplitContainer scObjectBrowser;
+        protected PersistentSplitContainer scObjectBrowser;
         protected EVEMon.Common.Controls.EveImage eoImage;
         protected System.Windows.Forms.Label lblEveObjCategory;
         protected System.Windows.Forms.Label lblEveObjName;

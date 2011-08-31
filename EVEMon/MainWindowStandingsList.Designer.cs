@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon
 {
     partial class MainWindowStandingsList
@@ -29,7 +31,7 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.noStandingsLabel = new System.Windows.Forms.Label();
-            this.lbStandings = new EVEMon.Controls.NoFlickerListBox();
+            this.lbStandings = new NoFlickerListBox();
             this.SuspendLayout();
             // 
             // noStandingsLabel
@@ -77,6 +79,6 @@ namespace EVEMon
         #endregion
 
         private System.Windows.Forms.Label noStandingsLabel;
-        private Controls.NoFlickerListBox lbStandings;
+        private NoFlickerListBox lbStandings;
     }
 }

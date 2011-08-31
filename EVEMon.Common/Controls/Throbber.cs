@@ -2,17 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-using CommonProperties = EVEMon.Common.Properties;
-
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
-    public enum ThrobberState
-    {
-        Stopped,
-        Rotating,
-        Strobing
-    }
-
     /// <summary>
     /// The little "flower" displayed on the top right of the characters monitors.
     /// </summary>
@@ -186,7 +177,7 @@ namespace EVEMon.Controls
         {
             const int ImageWidth = 24;
             const int ImageHeight = 24;
-            Image b = CommonProperties.Resources.Throbber;
+            Image b = Properties.Resources.Throbber;
 
             //Make the stopped Image
             s_strobeFrame = new Bitmap(ImageWidth, ImageHeight);

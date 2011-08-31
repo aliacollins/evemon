@@ -1,4 +1,7 @@
-﻿namespace EVEMon
+﻿using EVEMon.Common;
+using EVEMon.Common.Controls;
+
+namespace EVEMon
 {
     partial class CharacterMonitorHeader
     {
@@ -33,7 +36,7 @@
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.CharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
             this.ThrobberFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.UpdateThrobber = new EVEMon.Controls.Throbber();
+            this.UpdateThrobber = new Throbber();
             this.ThrobberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ChangeInfoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.QueryEverythingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -136,7 +139,7 @@
             this.UpdateThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.Name = "UpdateThrobber";
             this.UpdateThrobber.Size = new System.Drawing.Size(24, 24);
-            this.UpdateThrobber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.UpdateThrobber.State = ThrobberState.Stopped;
             this.UpdateThrobber.TabIndex = 4;
             this.UpdateThrobber.TabStop = false;
             this.UpdateThrobber.Click += new System.EventHandler(this.UpdateThrobber_Click);
@@ -540,7 +543,7 @@
         private System.Windows.Forms.Label CorporationNameLabel;
         private System.Windows.Forms.Label BalanceLabel;
         private System.Windows.Forms.FlowLayoutPanel ThrobberFlowLayoutPanel;
-        private EVEMon.Controls.Throbber UpdateThrobber;
+        private Throbber UpdateThrobber;
         private System.Windows.Forms.Label UpdateLabel;
         private System.Windows.Forms.TableLayoutPanel tlpAttributes;
         private System.Windows.Forms.Label lblMEMAttribute;

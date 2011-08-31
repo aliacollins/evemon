@@ -4,13 +4,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Accounting;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Net;
-using EVEMon.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Net;
 
 namespace EVEMon
 {

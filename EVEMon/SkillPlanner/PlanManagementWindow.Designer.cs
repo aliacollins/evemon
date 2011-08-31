@@ -1,3 +1,5 @@
+using EVEMon.Common.Controls;
+
 namespace EVEMon.SkillPlanner
 {
     partial class PlanManagementWindow
@@ -33,7 +35,7 @@ namespace EVEMon.SkillPlanner
             this.btnClose = new System.Windows.Forms.Button();
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lbPlanList = new EVEMon.Controls.DraggableListView();
+            this.lbPlanList = new DraggableListView();
             this.PlanName = new System.Windows.Forms.ColumnHeader();
             this.PlanDate = new System.Windows.Forms.ColumnHeader();
             this.PlanSkills = new System.Windows.Forms.ColumnHeader();
@@ -408,7 +410,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem cmiDelete;
         private System.Windows.Forms.ToolStripMenuItem cmiRename;
         private System.Windows.Forms.ToolStripMenuItem cmiOpen;
-        private EVEMon.Controls.DraggableListView lbPlanList;
+        private DraggableListView lbPlanList;
         private System.Windows.Forms.ColumnHeader PlanName;
         private System.Windows.Forms.ColumnHeader PlanDate;
         private System.Windows.Forms.ColumnHeader PlanSkills;

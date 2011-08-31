@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace EVEMon.SkillPlanner
+namespace EVEMon.Common.Controls
 {
     /// <summary>
     /// Renders the text of a ToolStripLabel with an Ellipsis if it

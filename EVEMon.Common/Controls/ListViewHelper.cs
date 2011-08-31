@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     /// <summary>
     /// Contains helper methods to change extended styles on ListView, including enabling double buffering.

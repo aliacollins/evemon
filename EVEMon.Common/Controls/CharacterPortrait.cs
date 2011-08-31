@@ -259,15 +259,16 @@ namespace EVEMon.Common.Controls
                 string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
                                                     String.Format("{0}.png", m_character.Guid));
 
-                FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
-                                                                     {
-                                                                         // We need to create a copy of the image because GDI+ is locking it
-                                                                         Image image = new Bitmap(newImage);
-                                                                         image.Save(fs, ImageFormat.Png);
-                                                                         fs.Flush();
-                                                                         fs.Close();
-                                                                         return true;
-                                                                     });
+                FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                                                  fs =>
+                                                      {
+                                                          // We need to create a copy of the image because GDI+ is locking it
+                                                          Image image = new Bitmap(newImage);
+                                                          image.Save(fs, ImageFormat.Png);
+                                                          fs.Flush();
+                                                          fs.Close();
+                                                          return true;
+                                                      });
 
                 // Notify the other controls we updated this portrait
                 EveMonClient.OnCharacterPortraitUpdated(m_character);

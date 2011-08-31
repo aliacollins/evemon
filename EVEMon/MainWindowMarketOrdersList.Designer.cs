@@ -1,4 +1,6 @@
-﻿namespace EVEMon
+﻿using EVEMon.Common.Controls;
+
+namespace EVEMon
 {
     partial class MainWindowMarketOrdersList
     {
@@ -39,7 +41,7 @@
             this.locationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilListIcons = new System.Windows.Forms.ImageList(this.components);
             this.noOrdersLabel = new System.Windows.Forms.Label();
-            this.marketExpPanelControl = new EVEMon.Controls.ExpandablePanelControl();
+            this.marketExpPanelControl = new ExpandablePanelControl();
             this.SuspendLayout();
             // 
             // lvOrders
@@ -110,10 +112,10 @@
             // 
             // marketExpPanelControl
             // 
-            this.marketExpPanelControl.AnimationSpeed = EVEMon.Controls.AnimationSpeed.Medium;
+            this.marketExpPanelControl.AnimationSpeed = AnimationSpeed.Medium;
             this.marketExpPanelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.marketExpPanelControl.EnableContextMenu = false;
-            this.marketExpPanelControl.ExpandDirection = EVEMon.Controls.Direction.Down;
+            this.marketExpPanelControl.ExpandDirection = Direction.Down;
             this.marketExpPanelControl.ExpandedOnStartup = false;
             this.marketExpPanelControl.HeaderHeight = 30;
             this.marketExpPanelControl.ImageCollapse = ((System.Drawing.Bitmap)(resources.GetObject("marketExpPanelControl.ImageCollapse")));
@@ -145,6 +147,6 @@
         private System.Windows.Forms.ColumnHeader locationColumn;
         private System.Windows.Forms.ColumnHeader priceColumn;
         private System.Windows.Forms.ImageList ilListIcons;
-        private EVEMon.Controls.ExpandablePanelControl marketExpPanelControl;
+        private ExpandablePanelControl marketExpPanelControl;
     }
 }

@@ -87,7 +87,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
+    <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
+    <Compile Include="Controls\BorderPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ColumnSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ColumnSelectWindow.Designer.cs">
+      <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DraggableListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DraggableTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DropDownMouseMoveComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ExpandablePanelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\IntuitiveDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ListViewDragEventArgs.cs" />
+    <Compile Include="Controls\ListViewHelper.cs" />
+    <Compile Include="Controls\ListViewItemComparerByTag.cs" />
     <Compile Include="Controls\NativeMethods.cs" />
+    <Compile Include="Controls\NoFlickerListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NoFlickerPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PersistentSplitContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Throbber.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TrayIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TrayIcon.Designer.cs">
+      <DependentUpon>TrayIcon.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomEventArgs\AccountCreationEventArgs.cs" />
     <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
@@ -414,6 +460,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\ColumnSelectWindow.resx">
+      <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\EVEMonForm.resx">
       <DependentUpon>EVEMonForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -686,6 +736,10 @@
     <None Include="Diagrams\Skills.cd" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\TrayIcon.resx">
+      <DependentUpon>TrayIcon.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="NetworkConstants.resx">
       <SubType>Designer</SubType>
       <Generator>PublicResXFileCodeGenerator</Generator>

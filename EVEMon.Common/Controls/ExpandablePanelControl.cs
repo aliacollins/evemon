@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public class ExpandablePanelControl : NoFlickerPanel
     {
@@ -67,17 +67,20 @@ namespace EVEMon.Controls
         /// <summary>
         /// Gets the Header of the Panel.
         /// </summary>
-        internal NoFlickerPanel Header { get; private set; }
+        [Browsable(false)]
+        public NoFlickerPanel Header { get; private set; }
 
         /// <summary>
         /// Gets or sets the Header text.
         /// </summary>
-        internal string HeaderText { get; set; }
+        [Browsable(false)]
+        public string HeaderText { get; set; }
 
         /// <summary>
         /// Gets or sets the expanded Height of the Panel.
         /// </summary>
-        internal int ExpandedHeight
+        [Browsable(false)]
+        public int ExpandedHeight
         {
             get { return m_expandedHeight; }
             set
@@ -485,7 +488,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void expandablePanelControl_MouseClick(object sender, MouseEventArgs e)
+        public void expandablePanelControl_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {

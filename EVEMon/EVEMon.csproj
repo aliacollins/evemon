@@ -149,34 +149,12 @@
     <Compile Include="ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\BorderPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ListViewDragEventArgs.cs" />
-    <Compile Include="Controls\DraggableListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\DraggableTabControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ExpandablePanelControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ListViewHelper.cs" />
-    <Compile Include="Controls\ColumnSelectWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\ColumnSelectWindow.Designer.cs">
-      <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MultiPanel\Design\MultiPanelDesigner.cs" />
     <Compile Include="Controls\MultiPanel\Design\MultiPanelDesignerHelper.cs" />
     <Compile Include="Controls\MultiPanel\Design\MultiPanelPageDesigner.cs" />
     <Compile Include="Controls\MultiPanel\Design\MultiPanelSelectionEditor.cs" />
     <Compile Include="Controls\MultiPanel\MultiPanelSelectionChangeEventArgs.cs" />
-    <Compile Include="Controls\NoFlickerPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +164,7 @@
     <Compile Include="MainWindowStandingsList.Designer.cs">
       <DependentUpon>MainWindowStandingsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Printing\PlanPrinter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -266,26 +245,10 @@
     <Compile Include="ImplantControls\ImplantTooltip.Designer.cs">
       <DependentUpon>ImplantTooltip.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\IntuitiveDataGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ListViewItemComparerByTag.cs" />
     <Compile Include="Controls\MultiPanel\MultiPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\MultiPanel\MultiPanelPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\NoFlickerListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\PersistentSplitContainer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Throbber.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\DropDownMouseMoveComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MainWindowMarketOrdersList.cs">
@@ -500,7 +463,6 @@
     <Compile Include="SkillPlanner\AttributesOptimizationSettingsForm.Designer.cs">
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="SkillPlanner\BlueprintBrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -531,7 +493,6 @@
     <Compile Include="SkillPlanner\CertificateTreeDisplayControl.Designer.cs">
       <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Printing\PlanPrinter.cs" />
     <Compile Include="SkillPlanner\IPlanOrderPluggable.cs" />
     <Compile Include="SkillPlanner\ObsoleteEntriesForm.cs">
       <SubType>Form</SubType>
@@ -700,12 +661,6 @@
     <Compile Include="TipWindow.Designer.cs">
       <DependentUpon>TipWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TrayIcon.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\TrayIcon.Designer.cs">
-      <DependentUpon>TrayIcon.cs</DependentUpon>
-    </Compile>
     <Compile Include="TrayPopUpWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -718,7 +673,6 @@
     <Compile Include="TrayTooltipWindow.Designer.cs">
       <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="UnhandledExceptionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -901,10 +855,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>TipWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TrayIcon.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>TrayIcon.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="TrayPopUpWindow.resx">
       <DependentUpon>TrayPopUpWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -959,10 +909,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitorHeader.resx">
       <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColumnSelectWindow.resx">
-      <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="IndustryJobsWindow.resx">
       <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
