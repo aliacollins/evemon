@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.Design;
 
-namespace EVEMon.Controls.MultiPanel.Design
+namespace EVEMon.Common.Controls.MultiPanel.Design
 {
     /// <summary>
     /// The editor for selecting the selected page property of the <see cref="MultiPanel"/>.

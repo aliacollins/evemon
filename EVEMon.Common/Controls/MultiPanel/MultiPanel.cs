@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using EVEMon.Controls.MultiPanel.Design;
+using EVEMon.Common.Controls.MultiPanel.Design;
 
-namespace EVEMon.Controls.MultiPanel
+namespace EVEMon.Common.Controls.MultiPanel
 {
     public delegate void MultiPanelSelectionChangeHandler(object sender, MultiPanelSelectionChangeEventArgs args);
 

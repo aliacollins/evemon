@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using EVEMon.Controls.MultiPanel.Design;
+using EVEMon.Common.Controls.MultiPanel.Design;
 
-namespace EVEMon.Controls.MultiPanel
+namespace EVEMon.Common.Controls.MultiPanel
 {
     /// <summary>
     /// A page of the <see cref="MultiPanel"/> control.

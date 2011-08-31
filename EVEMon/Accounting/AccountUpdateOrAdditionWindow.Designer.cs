@@ -1,6 +1,6 @@
 ﻿using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Controls.MultiPanel;
+using EVEMon.Common.Controls.MultiPanel;
 
 namespace EVEMon.Accounting
 {

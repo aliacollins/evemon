@@ -80,6 +80,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -115,6 +116,17 @@
     <Compile Include="Controls\ListViewDragEventArgs.cs" />
     <Compile Include="Controls\ListViewHelper.cs" />
     <Compile Include="Controls\ListViewItemComparerByTag.cs" />
+    <Compile Include="Controls\MultiPanel\Design\MultiPanelDesigner.cs" />
+    <Compile Include="Controls\MultiPanel\Design\MultiPanelDesignerHelper.cs" />
+    <Compile Include="Controls\MultiPanel\Design\MultiPanelPageDesigner.cs" />
+    <Compile Include="Controls\MultiPanel\Design\MultiPanelSelectionEditor.cs" />
+    <Compile Include="Controls\MultiPanel\MultiPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MultiPanel\MultiPanelPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MultiPanel\MultiPanelSelectionChangeEventArgs.cs" />
     <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\NoFlickerListBox.cs">
       <SubType>Component</SubType>

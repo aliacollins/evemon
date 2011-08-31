@@ -1,6 +1,6 @@
 using System;
 
-namespace EVEMon.Controls.MultiPanel
+namespace EVEMon.Common.Controls.MultiPanel
 {
     /// <summary>
     /// Argument for the <see cref="MultiPanel.SelectionChange"/> event.

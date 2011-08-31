@@ -3,8 +3,8 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Controls.MultiPanel;
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.Accounting

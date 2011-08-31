@@ -5,7 +5,7 @@ using System.ComponentModel.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace EVEMon.Controls.MultiPanel.Design
+namespace EVEMon.Common.Controls.MultiPanel.Design
 {
     /// <summary>
     /// A designer hosting a <see cref="MultiPanel"/>.

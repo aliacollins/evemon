@@ -1,5 +1,5 @@
 using EVEMon.Common.Controls;
-using EVEMon.Controls.MultiPanel;
+using EVEMon.Common.Controls.MultiPanel;
 
 namespace EVEMon
 {
@@ -57,22 +57,22 @@ namespace EVEMon
             this.lowerPanel = new System.Windows.Forms.Panel();
             this.skillsPanel = new BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
-            this.multiPanel = new EVEMon.Controls.MultiPanel.MultiPanel();
-            this.standingsPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.multiPanel = new MultiPanel();
+            this.standingsPage = new MultiPanelPage();
             this.standingsList = new EVEMon.MainWindowStandingsList();
-            this.skillsPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.skillsPage = new MultiPanelPage();
             this.skillsList = new EVEMon.MainWindowSkillsList();
-            this.ordersPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.ordersPage = new MultiPanelPage();
             this.ordersList = new EVEMon.MainWindowMarketOrdersList();
-            this.skillQueuePage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.skillQueuePage = new MultiPanelPage();
             this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
-            this.jobsPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.jobsPage = new MultiPanelPage();
             this.jobsList = new EVEMon.MainWindowIndustryJobsList();
-            this.researchPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.researchPage = new MultiPanelPage();
             this.researchList = new EVEMon.MainWindowResearchPointsList();
-            this.mailMessagesPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.mailMessagesPage = new MultiPanelPage();
             this.mailMessagesList = new EVEMon.MainWindowEveMailMessagesList();
-            this.eveNotificationsPage = new EVEMon.Controls.MultiPanel.MultiPanelPage();
+            this.eveNotificationsPage = new MultiPanelPage();
             this.eveNotificationsList = new EVEMon.MainWindowEveNotificationsList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.NotificationList();

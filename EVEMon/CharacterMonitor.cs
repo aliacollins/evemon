@@ -6,12 +6,12 @@ using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Controls.MultiPanel;
 
 namespace EVEMon
 {

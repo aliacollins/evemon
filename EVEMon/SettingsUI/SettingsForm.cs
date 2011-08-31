@@ -11,11 +11,11 @@ using System.Security;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Controls.MultiPanel;
 using Microsoft.Win32;
 
 namespace EVEMon.SettingsUI

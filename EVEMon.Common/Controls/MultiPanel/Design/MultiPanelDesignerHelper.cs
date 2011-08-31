@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace EVEMon.Controls.MultiPanel.Design
+namespace EVEMon.Common.Controls.MultiPanel.Design
 {
     public static class MultiPanelDesignerHelper
     {

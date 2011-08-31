@@ -1,4 +1,4 @@
-﻿using EVEMon.Controls.MultiPanel;
+﻿using EVEMon.Common.Controls.MultiPanel;
 
 namespace EVEMon.SkillPlanner
 {

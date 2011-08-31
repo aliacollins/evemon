@@ -149,11 +149,6 @@
     <Compile Include="ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelDesigner.cs" />
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelDesignerHelper.cs" />
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelPageDesigner.cs" />
-    <Compile Include="Controls\MultiPanel\Design\MultiPanelSelectionEditor.cs" />
-    <Compile Include="Controls\MultiPanel\MultiPanelSelectionChangeEventArgs.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -244,12 +239,6 @@
     </Compile>
     <Compile Include="ImplantControls\ImplantTooltip.Designer.cs">
       <DependentUpon>ImplantTooltip.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MultiPanel\MultiPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\MultiPanel\MultiPanelPage.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="MainWindowMarketOrdersList.cs">
       <SubType>UserControl</SubType>
