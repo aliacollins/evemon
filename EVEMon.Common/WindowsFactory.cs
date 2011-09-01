@@ -153,7 +153,7 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 // Does it already exist ?
-                foreach (var existingWindow in s_taggedWindows)
+                foreach (TForm existingWindow in s_taggedWindows)
                 {
                     try
                     {

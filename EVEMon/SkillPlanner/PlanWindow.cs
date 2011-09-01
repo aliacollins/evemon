@@ -166,6 +166,12 @@ namespace EVEMon.SkillPlanner
                 if (m_plan == value)
                     return;
 
+                // If the EFTLoadoutImportationForm is open, assign the new plan
+                // We do the check here as we need to catch the previous plan value
+                EFTLoadoutImportationForm eftloadoutImportation = WindowsFactory<EFTLoadoutImportationForm>.GetByTag(m_plan);
+                if (eftloadoutImportation != null)
+                    eftloadoutImportation.Plan = value;
+
                 m_plan = value;
 
                 // The tag is used by WindowsFactory.ShowByTag
@@ -191,7 +197,7 @@ namespace EVEMon.SkillPlanner
                 skillBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
-                // If the ShipLoadoutSelectWindow is open assign the new plan
+                // If the ShipLoadoutSelectWindow is open, assign the new plan
                 ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
                 if (loadoutSelect != null)
                     loadoutSelect.Plan = m_plan;
@@ -674,8 +680,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbEFTImport_Click(object sender, EventArgs e)
         {
-            EFTLoadoutImportationForm eftLoadout = new EFTLoadoutImportationForm(m_plan);
-            eftLoadout.Show(this);
+            WindowsFactory<EFTLoadoutImportationForm>.ShowByTag(m_plan);
         }
 
         /// <summary>

@@ -106,6 +106,10 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
+
+                // The tag is used by WindowsFactory.ShowByTag
+                Tag = value;
+
                 m_character = m_plan.Character;
                 UpdatePlanStatus();
             }
@@ -221,7 +225,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnPlan_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
+            IPlanOperation operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
             PlanHelper.Perform(operation);
             UpdatePlanStatus();
         }
