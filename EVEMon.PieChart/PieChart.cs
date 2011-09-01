@@ -36,12 +36,12 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Array of values to be presented by the chart.
         /// </summary>
-        private decimal[] m_values = new decimal[] {};
+        private decimal[] m_values = new decimal[] { };
 
         /// <summary>
         ///   Array of relative displacements from the common center.
         /// </summary>
-        private float[] m_sliceRelativeDisplacements = new[] {0F};
+        private float[] m_sliceRelativeDisplacements = new[] { 0F };
 
         /// <summary>
         ///   Index of the currently highlighted pie slice.
@@ -52,7 +52,6 @@ namespace EVEMon.PieChart
         ///   Flag indicating if object has been disposed.
         /// </summary>
         private bool m_disposed;
-
 
         /// <summary>
         ///   Initializes an empty instance of <c>PieChart3D</c>.
@@ -394,7 +393,7 @@ namespace EVEMon.PieChart
             set
             {
                 Debug.Assert(IsDisplacementValid(value));
-                m_sliceRelativeDisplacements = new[] {value};
+                m_sliceRelativeDisplacements = new[] { value };
             }
         }
 
@@ -528,9 +527,7 @@ namespace EVEMon.PieChart
             }
             DrawBottoms(graphics);
             if (m_sliceRelativeHeight > 0F)
-            {
                 DrawSliceSides(graphics);
-            }
             DrawTops(graphics);
         }
 
@@ -548,7 +545,7 @@ namespace EVEMon.PieChart
             Debug.Assert(Font != null);
             Debug.Assert(ForeColor != Color.Empty);
             StringFormat drawFormat = new StringFormat
-                                          {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
+                                          { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
             using (Brush fontBrush = new SolidBrush(ForeColor))
             {
                 int num = 0;
@@ -572,9 +569,7 @@ namespace EVEMon.PieChart
                                     diffx *= -1;
 
                                 if (diffx < 70 && diffy < 16)
-                                {
                                     point = slice.GetTextPositionOut(x == 0 ? 4.5f : 2.2f);
-                                }
                             }
                         }
 
@@ -605,7 +600,7 @@ namespace EVEMon.PieChart
             {
                 PieSlice slice = m_pieSlices[i];
                 if (slice.PieSliceContainsPoint(point))
-                    return (int) m_pieSlicesMapping[i];
+                    return (int)m_pieSlicesMapping[i];
             }
             // split the backmost (at 270 degrees) pie slice
             ArrayList pieSlicesList = new ArrayList(m_pieSlices);
@@ -614,11 +609,9 @@ namespace EVEMon.PieChart
             {
                 pieSlicesList[0] = splitSlices[1];
                 if (splitSlices[0].SweepAngle > 0F)
-                {
                     pieSlicesList.Add(splitSlices[0]);
-                }
             }
-            PieSlice[] pieSlices = (PieSlice[]) pieSlicesList.ToArray(typeof (PieSlice));
+            PieSlice[] pieSlices = (PieSlice[])pieSlicesList.ToArray(typeof(PieSlice));
             int indexFound = -1;
             // if not found yet, then check for periferies
             int incrementIndex = 0;
@@ -687,13 +680,13 @@ namespace EVEMon.PieChart
                 {
                     PieSlice slice = m_pieSlices[i];
                     if (slice.BottomSurfaceSectionContainsPoint(point))
-                        return (int) m_pieSlicesMapping[i];
+                        return (int)m_pieSlicesMapping[i];
                 }
             }
             if (indexFound > -1)
             {
                 indexFound %= (m_pieSlicesMapping.Count);
-                return (int) m_pieSlicesMapping[indexFound];
+                return (int)m_pieSlicesMapping[indexFound];
             }
             return -1;
         }
@@ -718,9 +711,7 @@ namespace EVEMon.PieChart
                     if (((pieSlice.StartAngle <= 90) && ((pieSlice.StartAngle + pieSlice.SweepAngle) >= 90)) ||
                         ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && ((pieSlice.StartAngle) <= 450) &&
                          (pieSlice.StartAngle + pieSlice.SweepAngle) >= 450))
-                    {
                         return i;
-                    }
                 }
             }
             return -1;
@@ -828,7 +819,7 @@ namespace EVEMon.PieChart
         {
             // calculates the sum of values required to evaluate sweep angles 
             // for individual pies
-            double sum = m_values.Sum(itemValue => (double) itemValue);
+            double sum = m_values.Sum(itemValue => (double)itemValue);
 
             // some values and indices that will be used in the loop
             SizeF topEllipeSize = TopEllipseSize;
@@ -844,31 +835,35 @@ namespace EVEMon.PieChart
             for (int i = 0; i < m_values.Length; ++i)
             {
                 decimal itemValue = m_values[i];
-                double sweepAngle = (double) itemValue / sum * 360;
+                double sweepAngle = (double)itemValue / sum * 360;
                 // displacement from the center of the ellipse
                 float xDisplacement = m_sliceRelativeDisplacements[displacementIndex];
                 float yDisplacement = m_sliceRelativeDisplacements[displacementIndex];
                 if (xDisplacement > 0F)
                 {
                     Debug.Assert(largestDisplacement > 0F);
-                    SizeF pieDisplacement = GetSliceDisplacement((float) (startAngle + sweepAngle / 2),
+                    SizeF pieDisplacement = GetSliceDisplacement((float)(startAngle + sweepAngle / 2),
                                                                  m_sliceRelativeDisplacements[displacementIndex]);
                     xDisplacement = pieDisplacement.Width;
                     yDisplacement = pieDisplacement.Height;
                 }
                 PieSlice slice;
                 if (i == m_highlightedIndex)
+                {
                     slice = CreatePieSliceHighlighted(Left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
                                                       Top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
                                                       topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                                      (float) (startAngle % 360), (float) (sweepAngle), Colors[colorIndex],
+                                                      (float)(startAngle % 360), (float)(sweepAngle), Colors[colorIndex],
                                                       ShadowStyle, EdgeColorType, EdgeLineWidth);
+                }
                 else
+                {
                     slice = CreatePieSlice(Left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
                                            Top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
-                                           topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float) (startAngle % 360),
-                                           (float) (sweepAngle), Colors[colorIndex], ShadowStyle, EdgeColorType,
+                                           topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
+                                           (float)(sweepAngle), Colors[colorIndex], ShadowStyle, EdgeColorType,
                                            EdgeLineWidth);
+                }
                 slice.Text = Texts[i];
                 // the backmost pie is inserted to the front of the list for correct drawing
                 if (backPieIndex > -1 || ((startAngle <= 270) && (startAngle + sweepAngle > 270)) ||
@@ -895,7 +890,7 @@ namespace EVEMon.PieChart
                 if (startAngle > 360)
                     startAngle -= 360;
             }
-            m_pieSlices = (PieSlice[]) listPieSlices.ToArray(typeof (PieSlice));
+            m_pieSlices = (PieSlice[])listPieSlices.ToArray(typeof(PieSlice));
         }
 
         /// <summary>
@@ -1022,8 +1017,8 @@ namespace EVEMon.PieChart
             Debug.Assert(displacementFactor > 0F && displacementFactor <= 1F);
             if (Math.Abs(displacementFactor) < float.Epsilon)
                 return SizeF.Empty;
-            float xDisplacement = (float) (TopEllipseSize.Width * displacementFactor / 2 * Math.Cos(angle * Math.PI / 180));
-            float yDisplacement = (float) (TopEllipseSize.Height * displacementFactor / 2 * Math.Sin(angle * Math.PI / 180));
+            float xDisplacement = (float)(TopEllipseSize.Width * displacementFactor / 2 * Math.Cos(angle * Math.PI / 180));
+            float yDisplacement = (float)(TopEllipseSize.Height * displacementFactor / 2 * Math.Sin(angle * Math.PI / 180));
             return new SizeF(xDisplacement, yDisplacement);
         }
 
@@ -1042,42 +1037,38 @@ namespace EVEMon.PieChart
             if ((m_pieSlices[0].StartAngle > 90) && (m_pieSlices[0].StartAngle <= 270) &&
                 (m_pieSlices[0].StartAngle + m_pieSlices[0].SweepAngle > 450))
             {
-                ps = (PieSlice) pieSlicesList[0];
+                ps = (PieSlice)pieSlicesList[0];
                 // this one is split at 0 deg to avoid line of split to be
                 // visible on the periphery
                 PieSlice[] splitSlices = ps.Split(0F);
                 pieSlicesList[0] = splitSlices[0];
                 if (splitSlices[1].SweepAngle > 0F)
-                {
                     pieSlicesList.Insert(1, splitSlices[1]);
-                }
             }
             else if (((m_pieSlices[0].StartAngle > 270) && (m_pieSlices[0].StartAngle + m_pieSlices[0].SweepAngle > 450)) ||
                      ((m_pieSlices[0].StartAngle < 90) && (m_pieSlices[0].StartAngle + m_pieSlices[0].SweepAngle > 270)))
             {
-                ps = (PieSlice) pieSlicesList[0];
+                ps = (PieSlice)pieSlicesList[0];
                 // this one is split at 180 deg to avoid line of split to be
                 // visible on the periphery
                 PieSlice[] splitSlices = ps.Split(180F);
                 pieSlicesList[0] = splitSlices[1];
                 if (splitSlices[1].SweepAngle > 0F)
-                {
                     pieSlicesList.Add(splitSlices[0]);
-                }
             }
             // first draw the backmost pie slice
-            ps = (PieSlice) pieSlicesList[0];
+            ps = (PieSlice)pieSlicesList[0];
             ps.DrawSides(graphics);
             // draw pie slices from the backmost to forward
             int incrementIndex = 1;
             int decrementIndex = pieSlicesList.Count - 1;
             while (incrementIndex < decrementIndex)
             {
-                PieSlice sliceLeft = (PieSlice) pieSlicesList[decrementIndex];
+                PieSlice sliceLeft = (PieSlice)pieSlicesList[decrementIndex];
                 float angle1 = sliceLeft.StartAngle - 90;
                 if (angle1 > 180 || angle1 < 0)
                     angle1 = 0;
-                PieSlice sliceRight = (PieSlice) pieSlicesList[incrementIndex];
+                PieSlice sliceRight = (PieSlice)pieSlicesList[incrementIndex];
                 float angle2 = (450 - sliceRight.EndAngle) % 360;
                 if (angle2 > 180 || angle2 < 0)
                     angle2 = 0;
@@ -1094,7 +1085,7 @@ namespace EVEMon.PieChart
                     --decrementIndex;
                 }
             }
-            ps = (PieSlice) pieSlicesList[decrementIndex];
+            ps = (PieSlice)pieSlicesList[decrementIndex];
             ps.DrawSides(graphics);
         }
 

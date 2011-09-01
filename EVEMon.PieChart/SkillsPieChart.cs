@@ -62,8 +62,8 @@ namespace EVEMon.PieChart
             // Read settings
             sortBySizeCheck.Checked = Settings.UI.SkillPieChart.SortBySize;
             mergeMinorCheck.Checked = Settings.UI.SkillPieChart.MergeMinorGroups;
-            pieHeight.Value = (decimal) Settings.UI.SkillPieChart.SliceHeight;
-            pieAngle.Value = (decimal) Settings.UI.SkillPieChart.InitialAngle;
+            pieHeight.Value = (decimal)Settings.UI.SkillPieChart.SliceHeight;
+            pieAngle.Value = (decimal)Settings.UI.SkillPieChart.InitialAngle;
 
             // Check there are enough colors or create them
             if (Settings.UI.SkillPieChart.Colors.Count < m_character.SkillGroups.Count)
@@ -79,9 +79,7 @@ namespace EVEMon.PieChart
                 skillPieChartControl.Colors = newColors.ToArray();
             }
             else
-            {
-                skillPieChartControl.Colors = Settings.UI.SkillPieChart.Colors.Select(c => (Color) c).ToArray();
-            }
+                skillPieChartControl.Colors = Settings.UI.SkillPieChart.Colors.Select(c => (Color)c).ToArray();
 
             // Initialize plans combox Box                        
             planSelector.SelectedIndex = 0;
@@ -106,12 +104,12 @@ namespace EVEMon.PieChart
             Settings.UI.SkillPieChart.Colors.Clear();
             foreach (Color c in skillPieChartControl.Colors)
             {
-                Settings.UI.SkillPieChart.Colors.Add((SerializableColor) c);
+                Settings.UI.SkillPieChart.Colors.Add((SerializableColor)c);
             }
 
             // Store other settings
-            Settings.UI.SkillPieChart.SliceHeight = (float) pieHeight.Value;
-            Settings.UI.SkillPieChart.InitialAngle = (float) pieAngle.Value;
+            Settings.UI.SkillPieChart.SliceHeight = (float)pieHeight.Value;
+            Settings.UI.SkillPieChart.InitialAngle = (float)pieAngle.Value;
             Settings.UI.SkillPieChart.MergeMinorGroups = mergeMinorCheck.Checked;
             Settings.UI.SkillPieChart.SortBySize = sortBySizeCheck.Checked;
 
@@ -295,7 +293,7 @@ namespace EVEMon.PieChart
         {
             AngleChangeEventArgs angleChangeEventArgs = e as AngleChangeEventArgs;
             if (angleChangeEventArgs != null)
-                pieAngle.Value = (decimal) angleChangeEventArgs.NewAngle;
+                pieAngle.Value = (decimal)angleChangeEventArgs.NewAngle;
         }
 
         /// <summary>
@@ -305,7 +303,7 @@ namespace EVEMon.PieChart
         /// <param name="e"></param>
         private void pieHeight_ValueChanged(object sender, EventArgs e)
         {
-            skillPieChartControl.SliceRelativeHeight = (float) pieHeight.Value;
+            skillPieChartControl.SliceRelativeHeight = (float)pieHeight.Value;
         }
 
         /// <summary>
@@ -315,7 +313,7 @@ namespace EVEMon.PieChart
         /// <param name="e"></param>
         private void pieAngle_ValueChanged(object sender, EventArgs e)
         {
-            skillPieChartControl.InitialAngle = (float) pieAngle.Value;
+            skillPieChartControl.InitialAngle = (float)pieAngle.Value;
         }
 
         /// <summary>
@@ -336,7 +334,7 @@ namespace EVEMon.PieChart
         private void skillPieChartControl_DoubleClick(object sender, EventArgs e)
         {
             // Retrieve the clicked segment
-            MouseEventArgs ev = (MouseEventArgs) e;
+            MouseEventArgs ev = (MouseEventArgs)e;
             PieChart3D pieChart3D = skillPieChartControl.PieChart;
             int index = pieChart3D.FindPieSliceUnderPoint(new PointF(ev.X, ev.Y));
 
@@ -354,9 +352,7 @@ namespace EVEMon.PieChart
                 skillPieChartControl.Colors[realIndex] = Color.FromArgb(125, m_colorDialog.Color);
             }
             else
-            {
                 skillPieChartControl.Colors[index] = Color.FromArgb(125, m_colorDialog.Color);
-            }
 
             // Forces an update of the control
             skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);

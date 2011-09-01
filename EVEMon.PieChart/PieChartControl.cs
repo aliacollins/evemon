@@ -21,7 +21,7 @@ namespace EVEMon.PieChart
         private decimal[] m_values;
         private Color[] m_colors;
         private float m_sliceRelativeHeight;
-        private float[] m_relativeSliceDisplacements = new[] {0F};
+        private float[] m_relativeSliceDisplacements = new[] { 0F };
         private ShadowStyle m_shadowStyle = ShadowStyle.GradualShadow;
         private EdgeColorType m_edgeColorType = EdgeColorType.SystemColor;
         private float m_edgeLineWidth = 1F;
@@ -36,7 +36,7 @@ namespace EVEMon.PieChart
         // on wether sorting by size is on or off
         private decimal[] m_drawValues;
         private Color[] m_drawColors;
-        private float[] m_drawRelativeSliceDisplacements = new[] {0F};
+        private float[] m_drawRelativeSliceDisplacements = new[] { 0F };
         private string[] m_drawToolTipTexts;
         private string[] m_drawTexts;
         private int[] m_sortOrder;
@@ -290,11 +290,15 @@ namespace EVEMon.PieChart
                 PieChart.Dispose();
 
             if (m_drawColors != null && m_drawColors.Length > 0)
+            {
                 PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_drawColors,
                                           m_sliceRelativeHeight, m_drawTexts);
+            }
             else
+            {
                 PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight,
                                           m_drawTexts);
+            }
             PieChart.FitToBoundingRectangle = m_fitChart;
             PieChart.InitialAngle = m_initialAngle;
             PieChart.SliceRelativeDisplacements = m_drawRelativeSliceDisplacements;
@@ -354,7 +358,6 @@ namespace EVEMon.PieChart
             m_mouseDown = false;
         }
 
-
         /// <summary>
         ///   Handles <c>MouseMove</c> event to display tooltip for the pie
         ///   slice under pointer and to display slice in highlighted color.
@@ -370,9 +373,7 @@ namespace EVEMon.PieChart
                 return;
 
             if (m_mouseDown)
-            {
                 InitialAngle = m_initialAngle - (e.X - m_lastX);
-            }
             else
             {
                 int index = PieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
@@ -387,18 +388,12 @@ namespace EVEMon.PieChart
                 {
                     if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex ||
                         m_drawToolTipTexts[m_highlightedIndex].Length == 0)
-                    {
                         m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
-                    }
                     else
-                    {
                         m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
-                    }
                 }
                 else
-                {
                     m_toolTip.RemoveAll();
-                }
             }
 
             m_lastX = e.X;
@@ -467,11 +462,11 @@ namespace EVEMon.PieChart
         /// </summary>
         private void CopyDataToDrawVars()
         {
-            m_drawValues = (decimal[]) m_values.Clone();
-            m_drawColors = (Color[]) m_colors.Clone();
-            m_drawRelativeSliceDisplacements = (float[]) m_relativeSliceDisplacements.Clone();
-            m_drawToolTipTexts = (string[]) ToolTips.Clone();
-            m_drawTexts = (string[]) Texts.Clone();
+            m_drawValues = (decimal[])m_values.Clone();
+            m_drawColors = (Color[])m_colors.Clone();
+            m_drawRelativeSliceDisplacements = (float[])m_relativeSliceDisplacements.Clone();
+            m_drawToolTipTexts = (string[])ToolTips.Clone();
+            m_drawTexts = (string[])Texts.Clone();
 
 
             // fill the sort order to default:
@@ -495,11 +490,11 @@ namespace EVEMon.PieChart
 
                 // take a copy of the original values
                 // then use it to do the calculations
-                decimal[] values = (decimal[]) m_values.Clone();
-                Color[] colours = (Color[]) m_colors.Clone();
-                float[] displacements = (float[]) m_relativeSliceDisplacements.Clone();
-                string[] tooltips = (string[]) ToolTips.Clone();
-                string[] texts = (string[]) Texts.Clone();
+                decimal[] values = (decimal[])m_values.Clone();
+                Color[] colours = (Color[])m_colors.Clone();
+                float[] displacements = (float[])m_relativeSliceDisplacements.Clone();
+                string[] tooltips = (string[])ToolTips.Clone();
+                string[] texts = (string[])Texts.Clone();
 
                 // reordering the slices
                 for (int num = 0; num < values.Length; num++)

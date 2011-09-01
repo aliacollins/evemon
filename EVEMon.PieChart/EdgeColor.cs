@@ -8,7 +8,6 @@ namespace EVEMon.PieChart
     /// </summary>
     public struct EdgeColor
     {
-
         /// <summary>
         ///   Gets the actual color used for rendering.
         /// </summary>
@@ -54,9 +53,11 @@ namespace EVEMon.PieChart
         {
             Debug.Assert(colorType == EdgeColorType.Contrast || colorType == EdgeColorType.EnhancedContrast);
             if (color.GetBrightness() > BrightnessThreshold)
+            {
                 return colorType == EdgeColorType.Contrast
                            ? EdgeColorType.DarkerThanSurface
                            : EdgeColorType.DarkerDarkerThanSurface;
+            }
 
             return colorType == EdgeColorType.Contrast
                        ? EdgeColorType.LighterThanSurface

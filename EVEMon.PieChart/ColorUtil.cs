@@ -54,7 +54,7 @@ namespace EVEMon.PieChart
                 green = (255 - green) * correctionFactor + green;
                 blue = (255 - blue) * correctionFactor + blue;
             }
-            return Color.FromArgb(color.A, (int) red, (int) green, (int) blue);
+            return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
         }
     }
 }

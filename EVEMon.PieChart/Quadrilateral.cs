@@ -23,11 +23,11 @@ namespace EVEMon.PieChart
         /// </summary>
         private static readonly byte[] s_quadrilateralPointTypes = new byte[]
                                                                        {
-                                                                           (byte) PathPointType.Start,
-                                                                           (byte) PathPointType.Line,
-                                                                           (byte) PathPointType.Line,
-                                                                           (byte) PathPointType.Line |
-                                                                           (byte) PathPointType.CloseSubpath
+                                                                           (byte)PathPointType.Start,
+                                                                           (byte)PathPointType.Line,
+                                                                           (byte)PathPointType.Line,
+                                                                           (byte)PathPointType.Line |
+                                                                           (byte)PathPointType.CloseSubpath
                                                                        };
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace EVEMon.PieChart
         /// </param>
         public Quadrilateral(PointF point1, PointF point2, PointF point3, PointF point4, bool toClose)
         {
-            byte[] pointTypes = (byte[]) s_quadrilateralPointTypes.Clone();
+            byte[] pointTypes = (byte[])s_quadrilateralPointTypes.Clone();
             if (toClose)
-                pointTypes[3] |= (byte) PathPointType.CloseSubpath;
-            m_path = new GraphicsPath(new[] {point1, point2, point3, point4}, pointTypes);
+                pointTypes[3] |= (byte)PathPointType.CloseSubpath;
+            m_path = new GraphicsPath(new[] { point1, point2, point3, point4 }, pointTypes);
         }
 
         /// <summary>
@@ -89,9 +89,7 @@ namespace EVEMon.PieChart
                 return;
 
             if (disposing)
-            {
                 m_path.Dispose();
-            }
             m_disposed = true;
         }
 

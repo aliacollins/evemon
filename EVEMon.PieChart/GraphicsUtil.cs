@@ -7,7 +7,6 @@ namespace EVEMon.PieChart
     /// </summary>
     public struct GraphicsUtil
     {
-
         /// <summary>
         ///   Checks if point is contained within <c>RectangleF</c> structure 
         ///   and extends rectangle bounds if neccessary to include the point.

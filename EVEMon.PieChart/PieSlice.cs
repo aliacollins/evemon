@@ -122,7 +122,6 @@ namespace EVEMon.PieChart
         /// </summary>
         private const float ShadowAngle = 20F;
 
-
         /// <summary>
         ///   Initializes an empty instance of <c>PieSlice</c>.
         /// </summary>
@@ -218,7 +217,7 @@ namespace EVEMon.PieChart
             m_edgeColorType = edgeColorType;
             // create pens for rendering
             Color edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
-            m_pen = new Pen(edgeLineColor) {LineJoin = LineJoin.Round};
+            m_pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
             InitializePieSlice(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight);
         }
 
@@ -466,12 +465,14 @@ namespace EVEMon.PieChart
         public PointF GetTextPosition()
         {
             if (SweepAngle >= 180)
+            {
                 return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
                                        GetActualAngle(StartAngle) + SweepAngle / 2);
+            }
 
             float x = (m_pointStart.X + m_pointEnd.X) / 2;
             float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
-            float angle = (float) (Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
+            float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
             return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
                                    GetActualAngle(angle));
         }
@@ -485,12 +486,14 @@ namespace EVEMon.PieChart
         public PointF GetTextPositionOut(float div)
         {
             if (SweepAngle >= 180)
+            {
                 return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / div, BoundingRectangle.Height / div,
                                        GetActualAngle(StartAngle) + SweepAngle / 2);
+            }
 
             float x = (m_pointStart.X + m_pointEnd.X) / 2;
             float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
-            float angle = (float) (Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
+            float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
             return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / div, BoundingRectangle.Height / div,
                                    GetActualAngle(angle));
         }
@@ -531,7 +534,7 @@ namespace EVEMon.PieChart
         {
             // if split angle equals one of bounding angles, then nothing to split
             if (Math.Abs(StartAngle - splitAngle) < float.Epsilon || Math.Abs(EndAngle - splitAngle) < float.Epsilon)
-                return new[] {(PieSlice) Clone()};
+                return new[] { (PieSlice)Clone() };
 
             float actualStartAngle = GetActualAngle(StartAngle);
             float newSweepAngle = (splitAngle - actualStartAngle + 360) % 360;
@@ -543,7 +546,7 @@ namespace EVEMon.PieChart
             PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle, m_surfaceColor,
                                               m_shadowStyle, m_edgeColorType);
             pieSlice2.InitializeSides(false);
-            return new[] {pieSlice1, pieSlice2};
+            return new[] { pieSlice1, pieSlice2 };
         }
 
         /// <summary>
@@ -885,10 +888,11 @@ namespace EVEMon.PieChart
                                                                                                          -ColorUtil.
                                                                                                               BrightnessEnhancementFactor1)
                                                          },
-                                            Positions = new[] {0F, 0.1F, 1.0F}
+                                            Positions = new[] { 0F, 0.1F, 1.0F }
                                         };
             LinearGradientBrush brush = new LinearGradientBrush(BoundingRectangle, Color.Blue, Color.White,
-                                                                LinearGradientMode.Horizontal) {InterpolationColors = colorBlend};
+                                                                LinearGradientMode.Horizontal)
+                                            { InterpolationColors = colorBlend };
             return brush;
         }
 
@@ -938,7 +942,7 @@ namespace EVEMon.PieChart
         {
             double x = BoundingRectangle.Width * Math.Cos(angle * Math.PI / 180);
             double y = BoundingRectangle.Height * Math.Sin(angle * Math.PI / 180);
-            float result = (float) (Math.Atan2(y, x) * 180 / Math.PI);
+            float result = (float)(Math.Atan2(y, x) * 180 / Math.PI);
             if (result < 0)
                 return result + 360;
             return result;
@@ -957,7 +961,7 @@ namespace EVEMon.PieChart
         {
             double x = BoundingRectangle.Height * Math.Cos(transformedAngle * Math.PI / 180);
             double y = BoundingRectangle.Width * Math.Sin(transformedAngle * Math.PI / 180);
-            float result = (float) (Math.Atan2(y, x) * 180 / Math.PI);
+            float result = (float)(Math.Atan2(y, x) * 180 / Math.PI);
             if (result < 0)
                 return result + 360;
             return result;
@@ -988,8 +992,8 @@ namespace EVEMon.PieChart
         private PointF PeripheralPoint(float xCenter, float yCenter, float semiMajor, float semiMinor, float angleDegrees)
         {
             double angleRadians = angleDegrees * Math.PI / 180;
-            return new PointF(xCenter + (float) (semiMajor * Math.Cos(angleRadians)),
-                              yCenter + (float) (semiMinor * Math.Sin(angleRadians)));
+            return new PointF(xCenter + (float)(semiMajor * Math.Cos(angleRadians)),
+                              yCenter + (float)(semiMinor * Math.Sin(angleRadians)));
         }
 
         /// <summary>
@@ -1108,7 +1112,7 @@ namespace EVEMon.PieChart
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(0, fi2, x1, x2));
                 }
             }
-            return (PeripherySurfaceBounds[]) peripherySurfaceBounds.ToArray(typeof (PeripherySurfaceBounds));
+            return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
         /// <summary>
@@ -1157,7 +1161,7 @@ namespace EVEMon.PieChart
                     }
                 }
             }
-            return (PeripherySurfaceBounds[]) peripherySurfaceBounds.ToArray(typeof (PeripherySurfaceBounds));
+            return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
         /// <summary>
