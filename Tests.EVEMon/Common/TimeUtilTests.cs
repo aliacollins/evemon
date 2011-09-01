@@ -7,7 +7,6 @@ namespace Tests.EVEMon.Common
     [TestFixture]
     public class TimeUtilTests
     {
-
         #region Helper Variables
 
         /// <summary>
@@ -15,10 +14,7 @@ namespace Tests.EVEMon.Common
         /// </summary>
         private string ValidCcpDateTime
         {
-            get
-            {
-                return "2010-05-07 18:23:32";
-            }
+            get { return "2010-05-07 18:23:32"; }
         }
 
         /// <summary>
@@ -26,10 +22,7 @@ namespace Tests.EVEMon.Common
         /// </summary>
         private string InvalidCcpDateTime
         {
-            get
-            {
-                return "18:23:32 2010-05-07";
-            }
+            get { return "18:23:32 2010-05-07"; }
         }
 
         /// <summary>
@@ -37,10 +30,7 @@ namespace Tests.EVEMon.Common
         /// </summary>
         private DateTime PointInTime
         {
-            get
-            {
-                return new DateTime(2010, 05, 07, 18, 23, 32);
-            }
+            get { return new DateTime(2010, 05, 07, 18, 23, 32); }
         }
 
         #endregion
@@ -112,7 +102,7 @@ namespace Tests.EVEMon.Common
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1s", result);
         }
-        
+
         /// <summary>
         /// Test 1m is returned when there is 1 minute to go.
         /// </summary>
@@ -145,7 +135,7 @@ namespace Tests.EVEMon.Common
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1d ", result);
         }
-        
+
         /// <summary>
         /// Test 1m 1s is returned when there is 1 minute, 1 second to go.
         /// </summary>
@@ -178,7 +168,7 @@ namespace Tests.EVEMon.Common
             string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1d 1h 1m 1s", result);
         }
-        
+
         /// <summary>
         /// Test 1d 1m 1s is returned when there is 1 hour, 1 minute, 1 second to go.
         /// </summary>
@@ -202,6 +192,5 @@ namespace Tests.EVEMon.Common
         }
 
         #endregion
-
     }
 }

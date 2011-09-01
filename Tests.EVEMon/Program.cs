@@ -32,8 +32,8 @@ namespace Tests.EVEMon
 
             // Great we found nUnit now lets start it
             ProcessStartInfo psi = new ProcessStartInfo(executable)
-                                       {Arguments = String.Format(Arguments, Assembly.GetEntryAssembly().Location)};
-            Process proc = new Process {StartInfo = psi};
+                                       { Arguments = String.Format(Arguments, Assembly.GetEntryAssembly().Location) };
+            Process proc = new Process { StartInfo = psi };
             proc.Start();
         }
 
@@ -66,14 +66,14 @@ namespace Tests.EVEMon
                 path => Directory.GetDirectories(path, SearchPattern)).Where(
                     matchingFolders => matchingFolders.Length != 0).SelectMany(
                         matchingFolders => matchingFolders,
-                        (matchingFolders, matchingFolder) => new {matchingFolders, matchingFolder}).Select(
-                            folder => new {folder, fileName = Path.GetFileName(folder.matchingFolder)}).Where(
+                        (matchingFolders, matchingFolder) => new { matchingFolders, matchingFolder }).Select(
+                            folder => new { folder, fileName = Path.GetFileName(folder.matchingFolder) }).Where(
                                 folder => folder.fileName != null).Select(
-                                    fileName => new {fileName, versionName = fileName.fileName.Remove(0, 6)}).Select(
-                                        fileVersion => new {fileVersion, version = new Version(fileVersion.versionName)}).Select(
-                                            file => new PathVersion(file.fileVersion.fileName.folder.matchingFolder, file.version)))
+                                    fileName => new { fileName, versionName = fileName.fileName.Remove(0, 6) }).Select(
+                                        fileVersion => new { fileVersion, version = new Version(fileVersion.versionName) }).Select
+                (
+                    file => new PathVersion(file.fileVersion.fileName.folder.matchingFolder, file.version)))
                 .ToList();
-
         }
     }
 }

@@ -22,20 +22,12 @@ namespace Tests.EVEMon
         /// Gets or sets the path.
         /// </summary>
         /// <value>The path.</value>
-        internal String Path
-        {
-            get;
-            private set;
-        }
+        internal String Path { get; private set; }
 
         /// <summary>
         /// Gets or sets the version.
         /// </summary>
         /// <value>The version.</value>
-        internal Version Version
-        {
-            get;
-            private set;
-        }
+        internal Version Version { get; private set; }
     }
 }
