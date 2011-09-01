@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
@@ -31,6 +30,7 @@ namespace EVEMon.Common
             Url = "http://your-custom-API-provider.com";
             Name = "your provider's name";
         }
+
 
         #region Configuration
 
@@ -112,7 +112,7 @@ namespace EVEMon.Common
                 if (s_ccpProvider != null)
                     return s_ccpProvider;
 
-                s_ccpProvider = new APIProvider {Url = NetworkConstants.APIBase, Name = "CCP"};
+                s_ccpProvider = new APIProvider { Url = NetworkConstants.APIBase, Name = "CCP" };
 
                 return s_ccpProvider;
             }
@@ -128,7 +128,7 @@ namespace EVEMon.Common
                 if (s_ccpTestProvider != null)
                     return s_ccpTestProvider;
 
-                s_ccpTestProvider = new APIProvider {Url = NetworkConstants.APITestBase, Name = "CCP Test API"};
+                s_ccpTestProvider = new APIProvider { Url = NetworkConstants.APITestBase, Name = "CCP Test API" };
 
                 return s_ccpTestProvider;
             }
@@ -283,7 +283,7 @@ namespace EVEMon.Common
             // If the result is a character sheet, we store the result
             if (method == APIMethods.CharacterSheet && !result.HasError)
             {
-                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet) (Object) result.Result;
+                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
                 LocalXmlCache.Save(sheet.Name, result.XmlDocument);
             }
 
@@ -323,7 +323,7 @@ namespace EVEMon.Common
                         // If the result is a character sheet, we store the result
                         if (method == APIMethods.CharacterSheet && !result.HasError)
                         {
-                            SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet) (Object) result.Result;
+                            SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
                             LocalXmlCache.Save(sheet.Name, result.XmlDocument);
                         }
 
@@ -356,6 +356,7 @@ namespace EVEMon.Common
         }
 
         #endregion
+
 
         /// <summary>
         /// Returns the configuration name as a String.

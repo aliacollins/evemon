@@ -89,7 +89,7 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="System.Drawing.Printing.PrintPageEventArgs"/> instance containing the event data.</param>
         private void doc_PrintPage(object sender, PrintPageEventArgs e)
         {
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
             string s = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
             int index = 0;
 
@@ -99,7 +99,7 @@ namespace EVEMon.Common
             // Print header
             if (m_settings.IncludeHeader)
             {
-                var size = g.MeasureString(s, m_boldFont);
+                SizeF size = g.MeasureString(s, m_boldFont);
                 m_point.X = (int)((e.MarginBounds.Width - size.Width) / 2);
 
                 size = PrintBold(g, s);
@@ -112,7 +112,7 @@ namespace EVEMon.Common
                 m_currentDate = m_printStartTime;
 
             // Scroll through entries
-            foreach (var pe in m_plan)
+            foreach (PlanEntry pe in m_plan)
             {
                 index++;
 

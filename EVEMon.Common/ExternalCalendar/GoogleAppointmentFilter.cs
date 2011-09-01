@@ -99,9 +99,9 @@ namespace EVEMon.Common.ExternalCalendar
         {
             Exception googleProblem = null;
 
-            EventEntry appointmentItem = (appointmentExists ?
-                                            (EventEntry)AppointmentArray[0] :
-                                            new EventEntry());
+            EventEntry appointmentItem = (appointmentExists
+                                              ? (EventEntry)AppointmentArray[0]
+                                              : new EventEntry());
 
             if (appointmentItem.Times.Count == 0)
                 appointmentItem.Times.Add(new When());
@@ -114,11 +114,11 @@ namespace EVEMon.Common.ExternalCalendar
             if (AlternateReminder)
             {
                 EarlyReminder = new DateTime(StartDate.Year,
-                                            StartDate.Month,
-                                            StartDate.Day,
-                                            EarlyReminder.Hour,
-                                            EarlyReminder.Minute,
-                                            EarlyReminder.Second);
+                                             StartDate.Month,
+                                             StartDate.Day,
+                                             EarlyReminder.Hour,
+                                             EarlyReminder.Minute,
+                                             EarlyReminder.Second);
 
                 LateReminder = new DateTime(StartDate.Year,
                                             StartDate.Month,
@@ -135,13 +135,9 @@ namespace EVEMon.Common.ExternalCalendar
                 SetGoogleReminder(appointmentItem);
             }
             else if (ItemReminder)
-            {
                 SetGoogleReminder(appointmentItem);
-            }
             else
-            {
                 appointmentItem.Reminder = null;
-            }
 
             if (appointmentExists)
             {
@@ -235,7 +231,7 @@ namespace EVEMon.Common.ExternalCalendar
         {
             m_service.setUserCredentials(UserName, Password);
         }
-        
+
         #endregion
 
 

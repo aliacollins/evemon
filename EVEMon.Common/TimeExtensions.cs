@@ -289,9 +289,7 @@ namespace EVEMon.Common
                 sb.Append(dstr);
             }
             else
-            {
                 sb.Append(dstr[0]);
-            }
         }
     }
 }

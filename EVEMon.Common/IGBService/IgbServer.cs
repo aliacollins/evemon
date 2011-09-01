@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 
@@ -129,7 +128,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="e"></param>
         private void OnDataRead(object sender, IgbClientDataReadEventArgs e)
         {
-            IgbTcpClient igbSender = (IgbTcpClient) sender;
+            IgbTcpClient igbSender = (IgbTcpClient)sender;
             byte[] newBuf;
             lock (m_clients)
             {
@@ -176,26 +175,31 @@ namespace EVEMon.Common.IgbService
         private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string request, string requestUrl)
         {
             using (MemoryStream ms = new MemoryStream())
-            using (StreamWriter sw = new StreamWriter(ms))
             {
-                ProcessRequest(request, requestUrl, headers, sw);
-
-                sw.Flush();
-                ms.Seek(0, SeekOrigin.Begin);
-
-                // We should support only the "GET" method
-                client.Write(request.Equals("GET") ? "HTTP/1.1 200 OK\n" : "HTTP/1.1 501 Not Implemented\n");
-                client.Write("Server: EVEMon/1.0\n");
-                client.Write("Content-Type: text/html; charset=utf-8\n");
-                if (headers.ContainsKey("eve_trusted") && headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
-                    client.Write("eve.trustme: http://" + BuildHostAndPort(headers["host"]) +
-                                 "/::EVEMon needs your pilot information.\n");
-
-                client.Write("Connection: close\n");
-                client.Write("Content-Length: " + ms.Length + "\n\n");
-                using (StreamReader sr = new StreamReader(ms))
+                using (StreamWriter sw = new StreamWriter(ms))
                 {
-                    client.Write(sr.ReadToEnd());
+                    ProcessRequest(request, requestUrl, headers, sw);
+
+                    sw.Flush();
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    // We should support only the "GET" method
+                    client.Write(request.Equals("GET") ? "HTTP/1.1 200 OK\n" : "HTTP/1.1 501 Not Implemented\n");
+                    client.Write("Server: EVEMon/1.0\n");
+                    client.Write("Content-Type: text/html; charset=utf-8\n");
+                    if (headers.ContainsKey("eve_trusted") &&
+                        headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
+                    {
+                        client.Write("eve.trustme: http://" + BuildHostAndPort(headers["host"]) +
+                                     "/::EVEMon needs your pilot information.\n");
+                    }
+
+                    client.Write("Connection: close\n");
+                    client.Write("Content-Length: " + ms.Length + "\n\n");
+                    using (StreamReader sr = new StreamReader(ms))
+                    {
+                        client.Write(sr.ReadToEnd());
+                    }
                 }
             }
         }
@@ -253,17 +257,15 @@ namespace EVEMon.Common.IgbService
             bool gotOne = false;
             for (int i = 0; i < length; i++)
             {
-                if (buffer[buffer.Length - i - 1] == ((byte) '\n'))
+                if (buffer[buffer.Length - i - 1] == ((byte)'\n'))
                 {
                     if (gotOne)
                         return true;
 
                     gotOne = true;
                 }
-                else if (buffer[buffer.Length - i - 1] != ((byte) '\r'))
-                {
+                else if (buffer[buffer.Length - i - 1] != ((byte)'\r'))
                     gotOne = false;
-                }
             }
 
             return false;
@@ -361,17 +363,11 @@ namespace EVEMon.Common.IgbService
                                            HttpUtility.UrlEncode(character.Name));
 
             if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))
-            {
                 GeneratePlanOrShoppingOutput(context, requestUrl, sw, character);
-            }
             else if (requestUrl.StartsWith("/skills/bytime"))
-            {
                 GenerateSkillsByTimeOutput(context, sw, character);
-            }
             else
-            {
                 GeneratePlanListOutput(context, sw, character);
-            }
         }
 
         /// <summary>
@@ -636,7 +632,7 @@ namespace EVEMon.Common.IgbService
         {
             lock (m_clients)
             {
-                m_clients.Remove((IgbTcpClient) sender);
+                m_clients.Remove((IgbTcpClient)sender);
             }
         }
 

@@ -5,13 +5,14 @@ using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
-
     /// <summary>
     /// The static list of the certificates.
     /// </summary>
     public static class StaticCertificates
     {
-        private static readonly Dictionary<string, StaticCertificateClass> s_classesByName = new Dictionary<string, StaticCertificateClass>();
+        private static readonly Dictionary<string, StaticCertificateClass> s_classesByName =
+            new Dictionary<string, StaticCertificateClass>();
+
         private static readonly Dictionary<long, StaticCertificate> s_certificatesByID = new Dictionary<long, StaticCertificate>();
 
 
@@ -82,8 +83,8 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                return Categories.SelectMany(category => category, (category, certClass) => new {category, certClass}).
-                        SelectMany(x => x.certClass);
+                return Categories.SelectMany(category => category, (category, certClass) => new { category, certClass }).
+                    SelectMany(x => x.certClass);
             }
         }
 

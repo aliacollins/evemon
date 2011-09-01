@@ -18,9 +18,9 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="apiKey">The API key.</param>
         /// <param name="serialAccountStatus">The serial account status.</param>
         /// <param name="serialCharacterList">The serial character list.</param>
-        internal AccountCreationEventArgs(long userID, string apiKey, 
-            APIResult<SerializableAPIAccountStatus> serialAccountStatus,
-            APIResult<SerializableAPICharacters> serialCharacterList)
+        internal AccountCreationEventArgs(long userID, string apiKey,
+                                          APIResult<SerializableAPIAccountStatus> serialAccountStatus,
+                                          APIResult<SerializableAPICharacters> serialCharacterList)
         {
             UserID = userID;
             ApiKey = apiKey;
@@ -45,9 +45,7 @@ namespace EVEMon.Common.CustomEventArgs
                 // Look for an existing char ID and update its name
                 CharacterIdentity id = EveMonClient.CharacterIdentities[serialID.ID];
                 if (id != null)
-                {
                     id.Name = serialID.Name;
-                }
                 else
                 {
                     // Create an identity if necessary
@@ -125,6 +123,5 @@ namespace EVEMon.Common.CustomEventArgs
 
             return account;
         }
-
     }
 }

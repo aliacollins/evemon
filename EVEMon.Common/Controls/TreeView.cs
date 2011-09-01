@@ -142,26 +142,22 @@ namespace EVEMon.Common.Controls
         protected void OnAfterDeselect(TreeNode tn)
         {
             if (AfterDeselect != null)
-            {
                 AfterDeselect(this, new TreeViewEventArgs(tn));
-            }
         }
 
         protected void OnBeforeDeselect(TreeNode tn)
         {
             if (BeforeDeselect != null)
-            {
                 BeforeDeselect(this, new TreeViewEventArgs(tn));
-            }
         }
 
         protected void OnSelectionsChanged()
         {
             if (m_blnSelectionChanged)
+            {
                 if (SelectionsChanged != null)
-                {
                     SelectionsChanged(this, new EventArgs());
-                }
+            }
         }
 
 
@@ -271,9 +267,7 @@ namespace EVEMon.Common.Controls
             set
             {
                 if (!m_blnInternalCall)
-                {
                     base.SelectedNode = value;
-                }
             }
         }
 
@@ -479,13 +473,9 @@ namespace EVEMon.Common.Controls
             foreach (TreeNode selectedTreeNode in m_listSelectedNodes)
             {
                 if (nodeKeepSelected == null)
-                {
                     arrNodesToDeselect.Add(selectedTreeNode);
-                }
                 else if (selectedTreeNode != nodeKeepSelected)
-                {
                     arrNodesToDeselect.Add(selectedTreeNode);
-                }
             }
 
             // Do the actual unselect
@@ -527,9 +517,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             if (!m_htblSelectedNodesOrigColors.ContainsKey(tn.GetHashCode()))
-            {
-                m_htblSelectedNodesOrigColors.Add(tn.GetHashCode(), new[] {tn.BackColor, tn.ForeColor});
-            }
+                m_htblSelectedNodesOrigColors.Add(tn.GetHashCode(), new[] { tn.BackColor, tn.ForeColor });
         }
 
         /// <summary>
@@ -580,7 +568,7 @@ namespace EVEMon.Common.Controls
                 {
                     OnBeforeDeselect(tn);
 
-                    Color[] originalColors = (Color[]) m_htblSelectedNodesOrigColors[tn.GetHashCode()];
+                    Color[] originalColors = (Color[])m_htblSelectedNodesOrigColors[tn.GetHashCode()];
                     if (originalColors != null)
                     {
                         m_listSelectedNodes.Remove(tn);
@@ -628,9 +616,7 @@ namespace EVEMon.Common.Controls
             {
                 tnTemp = tnTemp.NextVisibleNode;
                 if (tnTemp != null)
-                {
                     SelectNode(tnTemp, true, tva);
-                }
             }
             SelectNode(lastNode, true, tva);
         }
@@ -663,9 +649,7 @@ namespace EVEMon.Common.Controls
             {
                 tnTemp = tnTemp.PrevVisibleNode;
                 if (tnTemp != null)
-                {
                     SelectNode(tnTemp, false, tva);
-                }
             }
 
             tnTemp = lastNode;
@@ -673,9 +657,7 @@ namespace EVEMon.Common.Controls
             {
                 tnTemp = tnTemp.NextVisibleNode;
                 if (tnTemp != null)
-                {
                     SelectNode(tnTemp, false, tva);
-                }
             }
         }
 
@@ -725,7 +707,9 @@ namespace EVEMon.Common.Controls
         {
             int level = 0;
             while ((node = node.Parent) != null)
+            {
                 level++;
+            }
             return level;
         }
 
@@ -783,9 +767,7 @@ namespace EVEMon.Common.Controls
             while (tnTemp != null)
             {
                 if (tnTemp.IsVisible)
-                {
                     intCounter++;
-                }
 
                 tnTemp = tnTemp.NextVisibleNode;
             }
@@ -832,13 +814,9 @@ namespace EVEMon.Common.Controls
                 else
                 {
                     if (tnTemp.PrevVisibleNode != null)
-                    {
                         tnTemp = tnTemp.PrevVisibleNode;
-                    }
                     else
-                    {
                         break;
-                    }
                 }
 
                 intCounter++;
@@ -866,9 +844,11 @@ namespace EVEMon.Common.Controls
             else
             {
                 if (tn.BackColor != SelectionBackColor)
+                {
                     g.DrawRectangle(new Pen(new SolidBrush(BackColor), 1), m_tnMostRecentSelectedNode.Bounds.X,
                                     m_tnMostRecentSelectedNode.Bounds.Y, m_tnMostRecentSelectedNode.Bounds.Width,
                                     m_tnMostRecentSelectedNode.Bounds.Height);
+                }
 
                 Invalidate(rect, false);
                 Update();
@@ -888,9 +868,7 @@ namespace EVEMon.Common.Controls
             if (disposing)
             {
                 if (m_components != null)
-                {
                     m_components.Dispose();
-                }
             }
             base.Dispose(disposing);
         }
@@ -935,7 +913,7 @@ namespace EVEMon.Common.Controls
                     if (IsClickOnNode(tn, e))
                     {
                         ProcessNodeRange(m_tnMostRecentSelectedNode, tn, e, ModifierKeys, TreeViewAction.ByMouse,
-                                              true);
+                                         true);
                     }
                 }
 
@@ -1060,9 +1038,7 @@ namespace EVEMon.Common.Controls
                 m_tnNodeToStartEditOn.BeginEdit();
             }
             else
-            {
                 m_blnWasDoubleClick = false;
-            }
         }
 
         #endregion
@@ -1164,9 +1140,7 @@ namespace EVEMon.Common.Controls
                                 SelectNode(endNode, true, tva);
                             }
                             else
-                            {
                                 SelectNode(endNode, false, tva);
-                            }
                         }
                         else if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) != 0))
                         {
@@ -1187,7 +1161,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1205,7 +1181,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1224,7 +1202,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1249,7 +1229,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1278,7 +1260,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1295,7 +1279,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1313,7 +1299,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1331,7 +1319,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp != null)
                                             SelectNode(tnTemp, true, tva);
                                     }
@@ -1343,7 +1333,9 @@ namespace EVEMon.Common.Controls
                                     // Check each visible node from startNode to endNode and select it if needed
                                     while ((tnTemp != null) && (tnTemp != endNode))
                                     {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y ? tnTemp.PrevVisibleNode : tnTemp.NextVisibleNode;
+                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                                     ? tnTemp.PrevVisibleNode
+                                                     : tnTemp.NextVisibleNode;
                                         if (tnTemp == null)
                                             continue;
 
@@ -1433,24 +1425,16 @@ namespace EVEMon.Common.Controls
 
                     case Keys.Left:
                         if (m_tnMostRecentSelectedNode.IsExpanded)
-                        {
                             m_tnMostRecentSelectedNode.Collapse();
-                        }
                         else
-                        {
                             tnNewlySelectedNodeWithKeys = m_tnMostRecentSelectedNode.Parent;
-                        }
                         break;
 
                     case Keys.Right:
                         if (!m_tnMostRecentSelectedNode.IsExpanded)
-                        {
                             m_tnMostRecentSelectedNode.Expand();
-                        }
                         else
-                        {
                             tnNewlySelectedNodeWithKeys = m_tnMostRecentSelectedNode.Nodes[0];
-                        }
                         break;
 
                     case Keys.Home:
@@ -1543,16 +1527,12 @@ namespace EVEMon.Common.Controls
             foreach (TreeNode tn in e.Node.Nodes)
             {
                 if (IsNodeSelected(tn))
-                {
                     blnChildSelected = true;
-                }
                 UnselectNodesRecursively(tn, TreeViewAction.Collapse);
             }
 
             if (blnChildSelected)
-            {
                 SelectNode(e.Node, true, TreeViewAction.Collapse);
-            }
 
             OnSelectionsChanged();
 
@@ -1578,7 +1558,6 @@ namespace EVEMon.Common.Controls
         }
 
         #endregion
-
     }
 
 
@@ -1621,7 +1600,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public TreeNode this[int index]
         {
-            get { return ((TreeNode) List[index]); }
+            get { return ((TreeNode)List[index]); }
         }
 
         /// <summary>
@@ -1699,7 +1678,6 @@ namespace EVEMon.Common.Controls
         }
 
         #endregion
-
     }
 
     #endregion

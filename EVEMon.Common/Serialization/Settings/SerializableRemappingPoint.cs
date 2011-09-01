@@ -30,7 +30,7 @@ namespace EVEMon.Common.Serialization.Settings
 
         public SerializableRemappingPoint Clone()
         {
-            return (SerializableRemappingPoint) MemberwiseClone();
+            return (SerializableRemappingPoint)MemberwiseClone();
         }
     }
 }

@@ -60,7 +60,7 @@ namespace EVEMon.Common
         {
             private readonly TimeSynchronisationCallback m_callback;
 
-            internal SyncState (TimeSynchronisationCallback callback)
+            internal SyncState(TimeSynchronisationCallback callback)
             {
                 m_callback = callback;
             }

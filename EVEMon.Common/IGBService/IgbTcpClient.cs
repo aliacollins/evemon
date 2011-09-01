@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-
 namespace EVEMon.Common.IgbService
 {
     /// <summary>
@@ -119,9 +118,7 @@ namespace EVEMon.Common.IgbService
             {
                 int bytesRead = m_stream.EndRead(ar);
                 if (bytesRead <= 0)
-                {
                     Close();
-                }
                 else
                 {
                     OnDataRead(m_buffer, 0, bytesRead);
@@ -147,7 +144,6 @@ namespace EVEMon.Common.IgbService
             if (DataRead != null)
                 DataRead(this, new IgbClientDataReadEventArgs(buffer, offset, count));
         }
-
 
         #endregion
 

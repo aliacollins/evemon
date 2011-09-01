@@ -6,10 +6,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class PropertiesDatafile
     {
         [XmlElement("category")]
-        public SerializablePropertyCategory[] Categories
-        {
-            get;
-            set;
-        }
+        public SerializablePropertyCategory[] Categories { get; set; }
     }
 }

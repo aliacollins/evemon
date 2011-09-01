@@ -8,24 +8,12 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableCertificateRecommendation
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("level")]
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; set; }
 
         [XmlAttribute("ship")]
-        public string Ship
-        {
-            get;
-            set;
-        }
+        public string Ship { get; set; }
     }
 }

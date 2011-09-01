@@ -99,7 +99,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnDragDrop(DragEventArgs e)
         {
-            var draggedTab = GetDraggedTab(e);
+            TabPage draggedTab = GetDraggedTab(e);
 
             m_lastPoint = new Point(Int32.MaxValue, Int32.MaxValue);
             m_markerIndex = -1;
@@ -298,13 +298,9 @@ namespace EVEMon.Common.Controls
             m_marker.ShowInactiveTopmost();
 
             if (m_markerOnLeft)
-            {
                 m_marker.SetBounds(topLeft.X, topLeft.Y, 5, rect.Height);
-            }
             else
-            {
                 m_marker.SetBounds(topRight.X - 7, topRight.Y, 5, rect.Height);
-            }
         }
 
 
@@ -359,19 +355,21 @@ namespace EVEMon.Common.Controls
             protected override void OnPaint(PaintEventArgs e)
             {
                 Rectangle rect = ClientRectangle;
-                var startColor = Color.FromArgb(0, 148, 255);
-                var endColor = Color.FromArgb(0, 255, 255);
+                Color startColor = Color.FromArgb(0, 148, 255);
+                Color endColor = Color.FromArgb(0, 255, 255);
 
                 // Computes the marker rectangle and the gradient
                 if (m_reversed)
                 {
-                    var tempColor = startColor;
+                    Color tempColor = startColor;
                     startColor = endColor;
                     endColor = tempColor;
                 }
 
                 // Draws the marker rectangle
-                using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(Width, 0), startColor, endColor))
+                using (
+                    LinearGradientBrush brush = new LinearGradientBrush(new Point(0, 0), new Point(Width, 0), startColor, endColor)
+                    )
                 {
                     e.Graphics.FillRectangle(brush, rect);
                 }
@@ -423,6 +421,5 @@ namespace EVEMon.Common.Controls
         }
 
         #endregion
-
     }
 }

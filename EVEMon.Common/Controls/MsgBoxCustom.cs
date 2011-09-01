@@ -26,7 +26,6 @@ namespace EVEMon.Common.Controls
             button3.Font = FontFactory.GetFont("Segoe UI", 9f);
         }
 
-
         /// <summary>
         /// Displays a message box.
         /// </summary>
@@ -54,9 +53,7 @@ namespace EVEMon.Common.Controls
                                              NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
             }
             else
-            {
                 ControlBox = false;
-            }
 
             SetButtonsToDisplay(buttons);
 
@@ -102,7 +99,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnButtonClick(object sender, EventArgs e)
         {
-            string buttonText = ((ButtonBase) sender).Text;
+            string buttonText = ((ButtonBase)sender).Text;
             m_dialogResult = GetDialogResult(buttonText);
             Close();
         }
@@ -198,7 +195,6 @@ namespace EVEMon.Common.Controls
         {
             switch (icon.GetHashCode())
             {
-
                 case 0:
                     System.Media.SystemSounds.Beep.Play();
                     break;
@@ -218,7 +214,6 @@ namespace EVEMon.Common.Controls
                 case 64:
                     System.Media.SystemSounds.Asterisk.Play();
                     break;
-
             }
         }
 

@@ -53,7 +53,7 @@ namespace EVEMon.Common
             builder.AppendLine();
 
             // Implants
-            IEnumerable<Implant> implants = character.CurrentImplants.Where(x => x != Implant.None && (int) x.Slot < 5);
+            IEnumerable<Implant> implants = character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5);
             if (implants.Count() > 0)
             {
                 builder.AppendLine("IMPLANTS");
@@ -170,10 +170,10 @@ namespace EVEMon.Common
                                          };
 
             // Attributes enhancers
-            foreach (Implant implant in character.CurrentImplants.Where(x => x != Implant.None && (int) x.Slot < 5))
+            foreach (Implant implant in character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5))
             {
                 serial.AttributeEnhancers.Add(new OutputAttributeEnhancer
-                                                  {Attribute = implant.Slot, Bonus = implant.Bonus, Name = implant.Name});
+                                                  { Attribute = implant.Slot, Bonus = implant.Bonus, Name = implant.Name });
             }
 
             // Certificates
@@ -183,7 +183,7 @@ namespace EVEMon.Common
                 if (cert == null)
                     continue;
 
-                serial.Certificates.Add(new OutputCertificate {Name = certClass.Name, Grade = cert.Grade.ToString()});
+                serial.Certificates.Add(new OutputCertificate { Name = certClass.Name, Grade = cert.Grade.ToString() });
             }
 
             // Skills (grouped by skill groups)
@@ -223,7 +223,7 @@ namespace EVEMon.Common
             }
 
             // Serializes to XML and apply a XSLT to generate the HTML doc
-            XmlDocument doc = Util.SerializeToXmlDocument(typeof (OutputCharacter), serial);
+            XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputCharacter), serial);
 
             XslCompiledTransform xslt = Util.LoadXSLT(Properties.Resources.XmlToHtmlXslt);
             XmlDocument htmlDoc = Util.Transform(doc, xslt);
@@ -242,9 +242,11 @@ namespace EVEMon.Common
             SerializableSettingsCharacter serial = character.Export();
 
             if (plan != null)
+            {
                 serial.Skills =
                     character.Skills.Where(x => x.IsKnown || (plan.IsPlanned(x))).Select(x => GetMergedSkill(plan, x)).
                         ToList();
+            }
 
             XmlDocument doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
             return Util.GetXMLStringRepresentation(doc);
@@ -304,8 +306,10 @@ namespace EVEMon.Common
                 }
 
                 if (skillGroupAppended)
+                {
                     result.AppendFormat(CultureConstants.DefaultCulture, "Total Skillpoints in Group: {0}{1}",
                                         skillGroup.TotalSP.ToString("N0"), Environment.NewLine);
+                }
             }
 
             result.AppendLine();

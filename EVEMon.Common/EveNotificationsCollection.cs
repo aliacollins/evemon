@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 
@@ -10,6 +9,7 @@ namespace EVEMon.Common
     public sealed class EveNotificationsCollection : ReadonlyCollection<EveNotification>
     {
         private readonly CCPCharacter m_ccpCharacter;
+
 
         #region Constructor
 

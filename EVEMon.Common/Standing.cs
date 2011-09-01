@@ -10,6 +10,7 @@ namespace EVEMon.Common
     {
         public event EventHandler StandingImageUpdated;
 
+
         #region Fields
 
         private readonly Character m_character;
@@ -104,9 +105,9 @@ namespace EVEMon.Common
         {
             get
             {
-                int skillLevel = (StandingValue < 0 ?
-                    m_character.Skills[DBConstants.DiplomacySkillID] :
-                    m_character.Skills[DBConstants.ConnectionsSkillID])
+                int skillLevel = (StandingValue < 0
+                                      ? m_character.Skills[DBConstants.DiplomacySkillID]
+                                      : m_character.Skills[DBConstants.ConnectionsSkillID])
                     .LastConfirmedLvl;
                 return StandingValue + (10 - StandingValue) * (skillLevel * 0.04);
             }
@@ -158,12 +159,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetImageUrl()
         {
-                if (Group == "Agents")
-                    return String.Format(NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32);
+            if (Group == "Agents")
+                return String.Format(NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32);
 
-                return String.Format(NetworkConstants.CCPIconsFromImageServer,
-                    (Group == "Factions" ? "alliance" : "corporation"),
-                    EntityID, (int)EveImageSize.x32);
+            return String.Format(NetworkConstants.CCPIconsFromImageServer,
+                                 (Group == "Factions" ? "alliance" : "corporation"),
+                                 EntityID, (int)EveImageSize.x32);
         }
 
         /// <summary>
@@ -172,18 +173,18 @@ namespace EVEMon.Common
         private void GetImage()
         {
             ImageService.GetImageAsync(GetImageUrl(), true, img =>
-            {
-                if (img == null)
-                    return;
+                                                                {
+                                                                    if (img == null)
+                                                                        return;
 
-                m_image = img;
+                                                                    m_image = img;
 
-                // Notify the subscriber that we got the image
-                // Note that if the image is in cache the event doesn't get fired
-                // as the event object is null
-                if (StandingImageUpdated != null)
-                    StandingImageUpdated(this, EventArgs.Empty);
-            });
+                                                                    // Notify the subscriber that we got the image
+                                                                    // Note that if the image is in cache the event doesn't get fired
+                                                                    // as the event object is null
+                                                                    if (StandingImageUpdated != null)
+                                                                        StandingImageUpdated(this, EventArgs.Empty);
+                                                                });
         }
 
         #endregion

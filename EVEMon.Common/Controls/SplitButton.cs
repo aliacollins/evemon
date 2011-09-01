@@ -38,7 +38,6 @@ namespace EVEMon.Common.Controls
             }
         }
 
-
         private PushButtonState State
         {
             get { return m_state; }
@@ -128,13 +127,9 @@ namespace EVEMon.Common.Controls
             }
 
             if (m_dropDownRectangle.Contains(e.Location))
-            {
                 ShowContextMenuStrip();
-            }
             else
-            {
                 State = PushButtonState.Pressed;
-            }
         }
 
         protected override void OnMouseEnter(EventArgs e)
@@ -199,9 +194,7 @@ namespace EVEMon.Common.Controls
             }
 
             else
-            {
                 ButtonRenderer.DrawButton(g, bounds, State);
-            }
 
             // calculate the current dropdown rectangle.
             m_dropDownRectangle = new Rectangle(bounds.Right - PushButtonWidth - 1, s_borderSize, PushButtonWidth,
@@ -313,17 +306,11 @@ namespace EVEMon.Common.Controls
         private void SetButtonDrawState()
         {
             if (Bounds.Contains(Parent.PointToClient(Cursor.Position)))
-            {
                 State = PushButtonState.Hot;
-            }
             else if (Focused)
-            {
                 State = PushButtonState.Default;
-            }
             else
-            {
                 State = PushButtonState.Normal;
-            }
         }
     }
 }

@@ -41,7 +41,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            List<QueuedSkill> skills = ((SkillCompletionNotificationEventArgs) other).Skills;
+            List<QueuedSkill> skills = ((SkillCompletionNotificationEventArgs)other).Skills;
             foreach (QueuedSkill skill in skills.Where(skill => !Skills.Contains(skill)))
             {
                 Skills.Add(skill);
@@ -49,16 +49,15 @@ namespace EVEMon.Common.Notifications
             UpdateDescription();
         }
 
-
         /// <summary>
         /// Updates the description.
         /// </summary>
         private void UpdateDescription()
         {
             Description = Skills.Count == 1
-                                ? String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", Skills[0].SkillName,
-                                                Skill.GetRomanFromInt(Skills[0].Level))
-                                : String.Format(CultureConstants.DefaultCulture, "{0} skills completed.", Skills.Count);
+                              ? String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", Skills[0].SkillName,
+                                              Skill.GetRomanFromInt(Skills[0].Level))
+                              : String.Format(CultureConstants.DefaultCulture, "{0} skills completed.", Skills.Count);
         }
     }
 }

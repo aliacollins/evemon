@@ -16,7 +16,6 @@ namespace EVEMon.Common.Controls.MultiPanel
         {
             OldPage = oldPage;
             NewPage = newPage;
-
         }
 
         /// <summary>

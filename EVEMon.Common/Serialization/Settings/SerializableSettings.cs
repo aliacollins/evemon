@@ -39,8 +39,8 @@ namespace EVEMon.Common.Serialization.Settings
         public List<SerializableAccount> Accounts { get; set; }
 
         [XmlArray("characters")]
-        [XmlArrayItem("ccp", typeof (SerializableCCPCharacter))]
-        [XmlArrayItem("uri", typeof (SerializableUriCharacter))]
+        [XmlArrayItem("ccp", typeof(SerializableCCPCharacter))]
+        [XmlArrayItem("uri", typeof(SerializableUriCharacter))]
         public List<SerializableSettingsCharacter> Characters { get; set; }
 
         [XmlArray("plans")]

@@ -59,20 +59,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// <summary>
         /// Gets or sets a value indicating if there was an error.
         /// </summary>
-        public bool HasError
-        {
-            get;
-            private set;
-        }
+        public bool HasError { get; private set; }
 
         /// <summary>
         /// Gets or sets the error which occurred.
         /// </summary>
-        public string Error
-        {
-            get;
-            private set;
-        }
+        public string Error { get; private set; }
 
         /// <summary>
         /// Gets the character's name.
@@ -92,9 +84,7 @@ namespace EVEMon.Common.CustomEventArgs
             // Instantiates characters, adds, notify
             UriCharacter uriCharacter;
             if (m_apiResult != null)
-            {
                 uriCharacter = new UriCharacter(identity, Uri, m_apiResult);
-            }
             else
             {
                 SerializableCCPCharacter ccpCharacter = m_result as SerializableCCPCharacter;
@@ -115,9 +105,7 @@ namespace EVEMon.Common.CustomEventArgs
 
             // Updates
             if (m_apiResult != null)
-            {
                 character.Update(identity, Uri, m_apiResult);
-            }
             else
             {
                 SerializableCCPCharacter ccpCharacter = m_result as SerializableCCPCharacter;

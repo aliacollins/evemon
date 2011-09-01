@@ -8,7 +8,7 @@ namespace EVEMon.Common.Data
     /// Represents a region of the EVE universe.
     /// </summary>
     public sealed class Region : ReadonlyCollection<Constellation>, IComparable<Region>
-    { 
+    {
         # region Constructor
 
         /// <summary>
@@ -26,7 +26,8 @@ namespace EVEMon.Common.Data
                 Items.Add(new Constellation(this, srcConstellation));
             }
         }
-                #endregion
+
+        #endregion
 
 
         # region Public Properties
@@ -55,6 +56,7 @@ namespace EVEMon.Common.Data
         {
             return Name.CompareTo(other.Name);
         }
+
         #endregion
 
 
@@ -70,6 +72,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

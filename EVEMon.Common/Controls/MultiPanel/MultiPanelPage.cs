@@ -68,14 +68,18 @@ namespace EVEMon.Common.Controls.MultiPanel
             {
                 // Should not happen
                 if (owner == null)
+                {
                     throw new ArgumentNullException("owner",
                                                     "Tried to create a MultiPanelPage.ControlCollection with a null owner.");
+                }
 
                 // Should not happen
                 MultiPanelPage c = owner as MultiPanelPage;
                 if (c == null)
+                {
                     throw new ArgumentException(
                         "Tried to create a MultiPanelPage.ControlCollection with a non-MultiPanelPage owner.", "owner");
+                }
             }
 
             /// <summary>
@@ -88,14 +92,15 @@ namespace EVEMon.Common.Controls.MultiPanel
 
                 MultiPanelPage p = value as MultiPanelPage;
                 if (p != null)
+                {
                     throw new ArgumentException("Tried to add a MultiPanelPage control to the MultiPanelPage.ControlCollection.",
                                                 "value");
+                }
 
                 base.Add(value);
             }
         }
 
         #endregion
-
     }
 }

@@ -229,7 +229,7 @@ namespace EVEMon.Common
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
         public bool IsDependentOf(ISkillLevel level)
         {
-            return ((StaticSkillLevel) this).IsDependentOf(level);
+            return ((StaticSkillLevel)this).IsDependentOf(level);
         }
 
 
@@ -299,7 +299,7 @@ namespace EVEMon.Common
             EstimatedTotalSkillPoints = character.SkillPoints + SkillPointsRequired;
             TrainingTime = character.GetTrainingTime(m_skill, m_level);
             NaturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
-            SpPerHour = (int) Math.Round(character.GetBaseSPPerHour(m_skill));
+            SpPerHour = (int)Math.Round(character.GetBaseSPPerHour(m_skill));
             EndTime = time + TrainingTime;
             StartTime = time;
             time = EndTime;
@@ -327,7 +327,7 @@ namespace EVEMon.Common
             // warning. GetHashCode can't possibly be unique for every object
             // there is, additionally GetHashCode() should not be used for
             // equality only grouping; or at least Google says so...
-            return (int) m_skill.ID << 3 | m_level;
+            return (int)m_skill.ID << 3 | m_level;
         }
 
         /// <summary>

@@ -5,25 +5,13 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializablePropertyCategory
     {
         [XmlElement("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("description")]
-        public string Description
-        {
-            get;
-            set;
-        }
+        public string Description { get; set; }
 
         [XmlArray("properties")]
         [XmlArrayItem("property")]
-        public SerializableProperty[] Properties
-        {
-            get;
-            set;
-        }
+        public SerializableProperty[] Properties { get; set; }
     }
 }

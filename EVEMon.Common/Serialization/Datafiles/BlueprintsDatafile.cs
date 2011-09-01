@@ -9,10 +9,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class BlueprintsDatafile
     {
         [XmlElement("group")]
-        public SerializableBlueprintMarketGroup[] MarketGroups
-        {
-            get;
-            set;
-        }
+        public SerializableBlueprintMarketGroup[] MarketGroups { get; set; }
     }
 }

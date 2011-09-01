@@ -56,14 +56,20 @@ namespace EVEMon.Common.Net
         /// </summary>
         public ProxySettings Proxy
         {
-            get { lock(m_syncLock) {return m_proxy;} }
+            get
+            {
+                lock (m_syncLock)
+                {
+                    return m_proxy;
+                }
+            }
             set
             {
-                 lock(m_syncLock)
-                 {
-                     m_proxy = value.Clone();
-                 }
-             }
+                lock (m_syncLock)
+                {
+                    m_proxy = value.Clone();
+                }
+            }
         }
     }
 }

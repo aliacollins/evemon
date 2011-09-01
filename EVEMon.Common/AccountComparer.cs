@@ -113,5 +113,4 @@ namespace EVEMon.Common
             return 0;
         }
     }
-
 }

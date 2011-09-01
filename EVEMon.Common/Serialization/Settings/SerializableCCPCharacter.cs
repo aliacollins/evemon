@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -29,8 +28,8 @@ namespace EVEMon.Common.Serialization.Settings
         public List<SerializableStanding> Standings { get; set; }
 
         [XmlArray("marketOrders")]
-        [XmlArrayItem("buy", typeof (SerializableBuyOrder))]
-        [XmlArrayItem("sell", typeof (SerializableSellOrder))]
+        [XmlArrayItem("buy", typeof(SerializableBuyOrder))]
+        [XmlArrayItem("sell", typeof(SerializableSellOrder))]
         public List<SerializableOrderBase> MarketOrders { get; set; }
 
         [XmlArray("industryJobs")]

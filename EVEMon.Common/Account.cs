@@ -345,7 +345,7 @@ namespace EVEMon.Common
             IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
                 m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
 
-            foreach (var charToRemove in toRemove)
+            foreach (KeyValuePair<string, SkillInTrainingResponse> charToRemove in toRemove)
             {
                 m_skillInTrainingCache.Remove(charToRemove.Key);
             }

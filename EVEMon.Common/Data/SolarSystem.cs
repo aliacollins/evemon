@@ -17,6 +17,7 @@ namespace EVEMon.Common.Data
         private readonly int m_y;
         private readonly int m_z;
 
+
         # region Constructor
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace EVEMon.Common.Data
 
             if (src.Stations == null)
                 return;
-            foreach (var srcStation in src.Stations)
+            foreach (SerializableStation srcStation in src.Stations)
             {
                 Items.Add(new Station(this, srcStation));
             }
@@ -73,7 +74,6 @@ namespace EVEMon.Common.Data
         /// Gets something like Heimatar > Constellation > Pator.
         /// </summary>
         public string FullLocation { get; private set; }
-
 
         #endregion
 
@@ -180,9 +180,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(SolarSystem other)
         {
-            return Constellation != other.Constellation ?
-                    Constellation.CompareTo(other.Constellation) :
-                    Name.CompareTo(other.Name);
+            return Constellation != other.Constellation
+                       ? Constellation.CompareTo(other.Constellation)
+                       : Name.CompareTo(other.Name);
         }
 
         #endregion

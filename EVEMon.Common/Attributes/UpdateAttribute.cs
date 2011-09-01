@@ -5,7 +5,6 @@ namespace EVEMon.Common.Attributes
 {
     public sealed class UpdateAttribute : Attribute
     {
-
         #region Constructors
 
         /// <summary>
@@ -60,6 +59,5 @@ namespace EVEMon.Common.Attributes
         public CacheStyle CacheStyle { get; private set; }
 
         #endregion
-
     }
 }

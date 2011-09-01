@@ -85,7 +85,6 @@ namespace EVEMon.Common
                 throw new InvalidOperationException("value is null");
         }
 
-
         /// <summary>
         /// Enforces the specified check.
         /// </summary>

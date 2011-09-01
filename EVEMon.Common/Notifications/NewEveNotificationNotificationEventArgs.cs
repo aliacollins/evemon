@@ -32,7 +32,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            m_newNotificationsCount += ((NewEveNotificationEventArgsNotificationEventArgs) other).m_newNotificationsCount;
+            m_newNotificationsCount += ((NewEveNotificationEventArgsNotificationEventArgs)other).m_newNotificationsCount;
             UpdateDescription();
         }
 

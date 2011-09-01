@@ -47,8 +47,9 @@ namespace EVEMon.Common.Controls
             cbFooterDate.Checked = m_planTextOptions.FooterDate;
             cbFooterCost.Checked = m_planTextOptions.FooterCost;
             cbShoppingList.Checked = m_planTextOptions.ShoppingList;
-            cmbFormatting.SelectedIndex = m_planTextOptions.Markup == MarkupType.Forum ? 0 :
-                    m_planTextOptions.Markup == MarkupType.Html ? 1 : 2;
+            cmbFormatting.SelectedIndex = m_planTextOptions.Markup == MarkupType.Forum
+                                              ? 0
+                                              : m_planTextOptions.Markup == MarkupType.Html ? 1 : 2;
 
             RecurseUnder(this);
             OptionChange();
@@ -70,7 +71,7 @@ namespace EVEMon.Common.Controls
             {
                 if (c is CheckBox && c != cbRememberOptions)
                 {
-                    CheckBox cb = (CheckBox) c;
+                    CheckBox cb = (CheckBox)c;
                     cb.CheckedChanged += cb_CheckedChanged;
                 }
                 RecurseUnder(c);
@@ -124,8 +125,9 @@ namespace EVEMon.Common.Controls
             m_planTextOptions.FooterCost = cbFooterCost.Checked;
             m_planTextOptions.FooterDate = cbFooterDate.Checked;
             m_planTextOptions.ShoppingList = cbShoppingList.Checked;
-            m_planTextOptions.Markup = cmbFormatting.SelectedIndex == 0 ? MarkupType.Forum :
-                    cmbFormatting.SelectedIndex == 1 ? MarkupType.Html : MarkupType.None;
+            m_planTextOptions.Markup = cmbFormatting.SelectedIndex == 0
+                                           ? MarkupType.Forum
+                                           : cmbFormatting.SelectedIndex == 1 ? MarkupType.Html : MarkupType.None;
         }
 
         /// <summary>

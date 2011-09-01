@@ -20,6 +20,7 @@ namespace EVEMon.Common.ExternalCalendar
 
 
         #region Private Properties
+
         /// <summary>
         /// Gets the Outlook application.
         /// </summary>
@@ -41,9 +42,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="queuePosition">The queue position.</param>
         public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition)
         {
-            AppointmentItem appointmentItem = (appointmentExists ?
-                                                (AppointmentItem)AppointmentArray[0] :
-                                                (AppointmentItem)OutlookApplication.CreateItem(OlItemType.olAppointmentItem));
+            AppointmentItem appointmentItem = (appointmentExists
+                                                   ? (AppointmentItem)AppointmentArray[0]
+                                                   : (AppointmentItem)
+                                                     OutlookApplication.CreateItem(OlItemType.olAppointmentItem));
 
             appointmentItem.Subject = Subject;
             appointmentItem.Start = StartDate;
@@ -51,16 +53,16 @@ namespace EVEMon.Common.ExternalCalendar
 
             string queuePositionString = (queuePosition == 99 ? "End Of Queue" : queuePosition.ToString());
 
-            appointmentItem.Body = (appointmentExists ?
-                                    String.Format(CultureConstants.DefaultCulture,
-                                                    "{0} {3}Updated: {1} Queue Position: {2}",
-                                                    appointmentItem.Body, DateTime.Now,
-                                                    queuePositionString,
-                                                    Environment.NewLine) :
-                                    String.Format(CultureConstants.DefaultCulture,
-                                                    "Added: {0} Queue Position: {1}",
-                                                    DateTime.Now,
-                                                    queuePositionString));
+            appointmentItem.Body = (appointmentExists
+                                        ? String.Format(CultureConstants.DefaultCulture,
+                                                        "{0} {3}Updated: {1} Queue Position: {2}",
+                                                        appointmentItem.Body, DateTime.Now,
+                                                        queuePositionString,
+                                                        Environment.NewLine)
+                                        : String.Format(CultureConstants.DefaultCulture,
+                                                        "Added: {0} Queue Position: {1}",
+                                                        DateTime.Now,
+                                                        queuePositionString));
 
             appointmentItem.ReminderSet = ItemReminder || AlternateReminder;
             appointmentItem.BusyStatus = OlBusyStatus.olBusy;
@@ -70,11 +72,11 @@ namespace EVEMon.Common.ExternalCalendar
             if (AlternateReminder)
             {
                 EarlyReminder = new DateTime(StartDate.Year,
-                                            StartDate.Month,
-                                            StartDate.Day,
-                                            EarlyReminder.Hour,
-                                            EarlyReminder.Minute,
-                                            EarlyReminder.Second);
+                                             StartDate.Month,
+                                             StartDate.Day,
+                                             EarlyReminder.Hour,
+                                             EarlyReminder.Minute,
+                                             EarlyReminder.Second);
 
                 LateReminder = new DateTime(StartDate.Year,
                                             StartDate.Month,
@@ -153,18 +155,18 @@ namespace EVEMon.Common.ExternalCalendar
 
             // Use a Jet Query to filter the details we need initially between the two specified dates
             string dateFilter = String.Format(
-                                    CultureConstants.DefaultCulture,
-                                    "[Start] >= '{0:g}' and [End] <= '{1:g}'",
-                                    StartDate,
-                                    EndDate);
+                CultureConstants.DefaultCulture,
+                "[Start] >= '{0:g}' and [End] <= '{1:g}'",
+                StartDate,
+                EndDate);
             Items calendarItems = folder.Items.Restrict(dateFilter);
             calendarItems.Sort("[Start]", Type.Missing);
             calendarItems.IncludeRecurrences = true;
 
             // Must use 'like' comparison for Find/FindNext
-            string subjectFilter = (!String.IsNullOrEmpty(Subject) ?
-                                    String.Format("@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject) :
-                                    "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'");
+            string subjectFilter = (!String.IsNullOrEmpty(Subject)
+                                        ? String.Format("@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject)
+                                        : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'");
 
             // Use Find and FindNext methods to get all the items
             ArrayList resultArray = new ArrayList();

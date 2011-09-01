@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Controls
@@ -30,7 +29,9 @@ namespace EVEMon.Common.Controls
         /// Gets or sets a key used to store and restore the position and size of the window. When null or empty, the position won't be persisted.
         /// </summary>
         [Category("Behavior")]
-        [Description("A key used to store and restore the position and size of the window. When null or empty, the position won't be persisted.")]
+        [Description(
+            "A key used to store and restore the position and size of the window. When null or empty, the position won't be persisted."
+            )]
         protected string RememberPositionKey { private get; set; }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace EVEMon.Common.Controls
 
             Rectangle r = new Rectangle(Location, Size);
             if (WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
-                Settings.UI.WindowLocations[RememberPositionKey] = (SerializableRectangle) new Rectangle(Location, Size);
+                Settings.UI.WindowLocations[RememberPositionKey] = (SerializableRectangle)new Rectangle(Location, Size);
         }
 
         /// <summary>

@@ -17,11 +17,7 @@ namespace EVEMon.Common.Serialization.API
         /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
         /// This is the variable that needs checking to see if the thing has worked.
         [XmlAttribute("code")]
-        public int ErrorCode
-        {
-            get;
-            set;
-        }
+        public int ErrorCode { get; set; }
 
         /// <summary>
         /// If this is non 0 length or not null then an error has occurred and will this will be the only value in the entire class other than "current time
@@ -32,11 +28,7 @@ namespace EVEMon.Common.Serialization.API
         /// <value>"Character does not belong to account"</value>
         /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
         [XmlText]
-        public string ErrorMessage
-        {
-            get;
-            set;
-        }
+        public string ErrorMessage { get; set; }
 
         /// <summary>
         /// Gets true whether a full key was required.

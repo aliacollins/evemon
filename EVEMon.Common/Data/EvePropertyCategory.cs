@@ -33,7 +33,7 @@ namespace EVEMon.Common.Data
                     break;
             }
         }
-        
+
         #endregion
 
 
@@ -43,6 +43,7 @@ namespace EVEMon.Common.Data
         /// Gets this category's name.
         /// </summary>
         public string Name { get; private set; }
+
         /// <summary>
         /// Gets this category's description.
         /// </summary>

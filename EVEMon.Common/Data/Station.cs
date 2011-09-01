@@ -50,7 +50,7 @@ namespace EVEMon.Common.Data
                 Items.Add(new Agent(this, agent));
             }
         }
-        
+
         #endregion
 
 
@@ -95,7 +95,7 @@ namespace EVEMon.Common.Data
         /// Gets the fraction of reprocessing products taken by the station.
         /// </summary>
         public float ReprocessingStationsTake { get; private set; }
-        
+
         #endregion
 
 

@@ -12,7 +12,6 @@ namespace EVEMon.Common.Data
         private static bool s_initialized;
         private static readonly Dictionary<long, List<Material>> s_itemMaterialsByID = new Dictionary<long, List<Material>>();
 
-
         /// <summary>
         /// Ensures the reprocessing informations have been intialized.
         /// </summary>
@@ -44,7 +43,6 @@ namespace EVEMon.Common.Data
                 return s_itemMaterialsByID.Values;
             }
         }
-
 
         /// <summary>
         /// Gets the materials for the provided itemID.

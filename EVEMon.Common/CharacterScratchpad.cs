@@ -217,7 +217,7 @@ namespace EVEMon.Common
         /// <param name="applyRemappingPoints"></param>
         public void TrainEntries(IEnumerable<PlanEntry> entries, bool applyRemappingPoints)
         {
-            foreach (var entry in entries)
+            foreach (PlanEntry entry in entries)
             {
                 if (entry.Remapping != null && entry.Remapping.Status == RemappingPointStatus.UpToDate &&
                     applyRemappingPoints)
@@ -272,7 +272,7 @@ namespace EVEMon.Common
             if ((options & LearningOptions.IgnorePrereqs) == LearningOptions.None)
             {
                 // Deal with recursive prereqs (like Polaris)
-                foreach (var prereq in skill.Prerequisites.Where(prereq => prereq.Skill != skill))
+                foreach (StaticSkillLevel prereq in skill.Prerequisites.Where(prereq => prereq.Skill != skill))
                 {
                     // Set the prereq's level
                     SetSkillLevel(prereq.Skill, prereq.Level, options | LearningOptions.UpgradeOnly);
@@ -352,13 +352,9 @@ namespace EVEMon.Common
         public void Reset()
         {
             if (Character is CharacterScratchpad)
-            {
                 Reset((CharacterScratchpad)Character);
-            }
             else
-            {
                 ResetFromCharacter();
-            }
         }
 
         /// <summary>
@@ -423,6 +419,5 @@ namespace EVEMon.Common
         }
 
         #endregion
-
     }
 }

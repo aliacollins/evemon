@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -22,11 +21,13 @@ namespace EVEMon.Common
         internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
             m_ccpCharacter = ccpCharacter;
-            State = (src.SenderID != ccpCharacter.CharacterID ?
-                        EVEMailState.Inbox : EVEMailState.SentItem);
+            State = (src.SenderID != ccpCharacter.CharacterID
+                         ? EVEMailState.Inbox
+                         : EVEMailState.SentItem);
             MessageID = src.MessageID;
-            Sender = src.ToListID.Any(x => x == src.SenderID.ToString()) ?
-                        GetMailingListIDToName(src.SenderID.ToString()) : EveIDToName.GetIDToName(src.SenderID.ToString());
+            Sender = src.ToListID.Any(x => x == src.SenderID.ToString())
+                         ? GetMailingListIDToName(src.SenderID.ToString())
+                         : EveIDToName.GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
             Title = src.Title;
             ToCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
@@ -104,7 +105,10 @@ namespace EVEMon.Common
         /// Gets the EVE mail body text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text { get { return EVEMailBody.BodyText; } }
+        public string Text
+        {
+            get { return EVEMailBody.BodyText; }
+        }
 
         #endregion
 
@@ -131,13 +135,9 @@ namespace EVEMon.Common
             foreach (string id in src)
             {
                 if (id == m_ccpCharacter.CharacterID.ToString())
-                {
                     listOfNames.Add(m_ccpCharacter.Name);
-                }
                 else
-                {
                     listOfIDsToQuery.Add(id);
-                }
             }
 
             // We have IDs to query
@@ -237,12 +237,12 @@ namespace EVEMon.Common
             m_queryPending = true;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
-                                                                    APIMethods.MailBodies,
-                                                                    m_ccpCharacter.Identity.Account.UserID,
-                                                                    m_ccpCharacter.Identity.Account.APIKey,
-                                                                    m_ccpCharacter.CharacterID,
-                                                                    MessageID,
-                                                                    OnEVEMailBodyDownloaded);
+                APIMethods.MailBodies,
+                m_ccpCharacter.Identity.Account.UserID,
+                m_ccpCharacter.Identity.Account.APIKey,
+                m_ccpCharacter.CharacterID,
+                MessageID,
+                OnEVEMailBodyDownloaded);
         }
 
         /// <summary>
@@ -263,16 +263,18 @@ namespace EVEMon.Common
 
             // If there is an error response on missing IDs inform the user
             if (!String.IsNullOrEmpty(result.Result.MissingMessageIDs))
+            {
                 result.Result.Bodies.Add(
-                                    new SerializableMailBodiesListItem
-                                    {
-                                        MessageID = long.Parse(result.Result.MissingMessageIDs),
-                                        MessageText = "The text for this message was reported missing."
-                                    });
+                    new SerializableMailBodiesListItem
+                        {
+                            MessageID = long.Parse(result.Result.MissingMessageIDs),
+                            MessageText = "The text for this message was reported missing."
+                        });
+            }
 
             // Quit if for any reason there is no text
             if (result.Result.Bodies.Count == 0)
-                return;            
+                return;
 
             // Import the data
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);

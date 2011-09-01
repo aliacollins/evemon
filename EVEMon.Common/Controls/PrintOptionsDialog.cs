@@ -6,7 +6,7 @@ namespace EVEMon.Common.Controls
 {
     public partial class PrintOptionsDialog : EVEMonForm
     {
-        readonly PlanExportSettings m_pto;
+        private readonly PlanExportSettings m_pto;
 
         public PrintOptionsDialog(PlanExportSettings pto, PrintDocument doc)
         {
@@ -45,7 +45,7 @@ namespace EVEMon.Common.Controls
         /// <value>The name of the printer.</value>
         public String PrinterName
         {
-            get { return comboPrinters.Items[comboPrinters.SelectedIndex].ToString()  ; }
+            get { return comboPrinters.Items[comboPrinters.SelectedIndex].ToString(); }
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnSetAsDefaults(object sender, EventArgs e)
         {
-            OnAccept(sender,e) ;
+            OnAccept(sender, e);
             Settings.Save();
         }
 

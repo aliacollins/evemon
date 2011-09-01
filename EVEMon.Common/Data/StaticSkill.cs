@@ -195,7 +195,7 @@ namespace EVEMon.Common.Data
                         case 1:
                             return 1415;
                         default:
-                            return (int) (Rank * 1414.3f + 0.5f);
+                            return (int)(Rank * 1414.3f + 0.5f);
                     }
                 case 3:
                     return 8000 * Rank;
@@ -257,13 +257,9 @@ namespace EVEMon.Common.Data
                 {
                     //Handle filenames inside html tags
                     if (currentLine.EndsWith("."))
-                    {
                         currentLine += currentWord;
-                    }
                     else
-                    {
                         currentLine += " " + currentWord;
-                    }
 
                     if (currentWord.IndexOf(">") > -1)
                         inTag = false;
@@ -324,6 +320,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

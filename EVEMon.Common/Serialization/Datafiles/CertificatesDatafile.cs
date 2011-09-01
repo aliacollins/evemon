@@ -9,10 +9,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class CertificatesDatafile
     {
         [XmlElement("certificateCategory")]
-        public SerializableCertificateCategory[] Categories
-        {
-            get;
-            set;
-        }
+        public SerializableCertificateCategory[] Categories { get; set; }
     }
 }

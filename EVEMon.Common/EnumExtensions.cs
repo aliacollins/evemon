@@ -115,6 +115,5 @@ namespace EVEMon.Common
                     yield return (T)value;
             }
         }
-
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 
@@ -19,7 +18,6 @@ namespace EVEMon.Common
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
         private static bool s_isLoaded;
-
 
         /// <summary>
         /// Gets the owner name from its ID.
@@ -46,7 +44,7 @@ namespace EVEMon.Common
             if (id == "0")
                 return "Unknown";
 
-            List<string> list = new List<string> {id};
+            List<string> list = new List<string> { id };
 
             List<string> name = GetIDsToNames(list);
             return name[0];
@@ -90,7 +88,7 @@ namespace EVEMon.Common
             SerializableEveIDToName cache = Util.DeserializeXML<SerializableEveIDToName>(s_file);
 
             // Reset the cache if anything went wrong
-            if (cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x=> x.Name == String.Empty))
+            if (cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name == String.Empty))
                 cache = null;
 
             if (cache == null)
@@ -113,13 +111,9 @@ namespace EVEMon.Common
         private static void LookupForName()
         {
             if (!s_cacheList.IsEmpty())
-            {
                 QueryCacheList();
-            }
             else
-            {
                 s_listOfIDsToQuery = s_listOfIDs;
-            }
 
             if (!s_listOfIDsToQuery.IsEmpty())
                 QueryAPICharacterName();
@@ -139,13 +133,9 @@ namespace EVEMon.Common
                 string name = s_cacheList.FirstOrDefault(x => x.Key.ToString() == id).Value;
 
                 if (name == null)
-                {
                     s_listOfIDsToQuery.Add(id);
-                }
                 else
-                {
                     s_listOfNames.Add(name);
-                }
             }
         }
 
@@ -170,7 +160,7 @@ namespace EVEMon.Common
                 // Checks if EVE Backend Database is temporarily disabled
                 if (result.EVEBackendDatabaseDisabled)
                     return;
-                
+
                 EveMonClient.Notifications.NotifyCharacterNameError(result);
                 return;
             }
@@ -212,11 +202,11 @@ namespace EVEMon.Common
 
             // Save in file
             FileHelper.OverwriteOrWarnTheUser(s_file, fs =>
-            {
-                xs.Serialize(fs, serial);
-                fs.Flush();
-                return true;
-            });
+                                                          {
+                                                              xs.Serialize(fs, serial);
+                                                              fs.Flush();
+                                                              return true;
+                                                          });
         }
 
         /// <summary>

@@ -11,10 +11,12 @@ namespace EVEMon.Common.Threading
         /// Gets or sets the timer's period, in milliseconds.
         /// </summary>
         int Period { get; set; }
+
         /// <summary>
         /// Starts or resumes the timer.
         /// </summary>
         void Start();
+
         /// <summary>
         /// Pauses the timer, it will be resumable with <see cref="Start"/>.
         /// </summary>

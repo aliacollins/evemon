@@ -156,41 +156,42 @@ namespace EVEMon.Common.Data
 
                     switch (UnitID)
                     {
-                        // Format a value of Mass
+                            // Format a value of Mass
                         case DBConstants.MassUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000 ?
-                                                    "{0:#,##0.0#} {1}" : "{0:N0} {1}", numericValue, Unit);
+                            return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000
+                                                                                      ? "{0:#,##0.0#} {1}"
+                                                                                      : "{0:N0} {1}", numericValue, Unit);
 
                             // Format a value of Millseconds
                         case DBConstants.MillsecondsUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:N2} {1}", numericValue / 1000, Unit);
 
-                        // Format a value of Absolute Percentage
+                            // Format a value of Absolute Percentage
                         case DBConstants.AbsolutePercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (numericValue) * 100, Unit);
 
-                        // Format a value of Inverse Absolute Percentage
+                            // Format a value of Inverse Absolute Percentage
                         case DBConstants.InverseAbsolutePercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (1 - numericValue) * 100, Unit);
 
-                        // Format a value of Modifier Percentage
+                            // Format a value of Modifier Percentage
                         case DBConstants.ModifierPercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (numericValue - 1) * 100, Unit);
 
-                        // Format a value of Inverse Modifier Percentage
+                            // Format a value of Inverse Modifier Percentage
                         case DBConstants.InversedModifierPercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - numericValue) * 100, Unit);
 
-                        // A reference to a group (groupID), it has been pre-transformed on XmlGenerator
+                            // A reference to a group (groupID), it has been pre-transformed on XmlGenerator
                         case DBConstants.GroupIDUnitID:
                             return value;
 
-                        // A reference to an item or a skill (typeID)
+                            // A reference to an item or a skill (typeID)
                         case DBConstants.TypeUnitID:
                             int id = Int32.Parse(value);
                             return StaticItems.GetItemByID(id).Name;
 
-                        // Format a Sizeclass ("1=small 2=medium 3=l")
+                            // Format a Sizeclass ("1=small 2=medium 3=l")
                         case DBConstants.SizeclassUnitID:
                             int size = Int32.Parse(value);
                             switch (size)
@@ -207,7 +208,7 @@ namespace EVEMon.Common.Data
                                     return "Unknown";
                             }
 
-                        // Format all other values (use of thousand and decimal separator)
+                            // Format all other values (use of thousand and decimal separator)
                         default:
                             return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.###} {1}", numericValue, Unit);
                     }

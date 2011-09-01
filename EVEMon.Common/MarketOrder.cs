@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -127,9 +126,7 @@ namespace EVEMon.Common
                 m_state = OrderState.Modified;
             }
             else if (m_state == OrderState.Modified)
-            {
                 m_state = OrderState.Active;
-            }
 
             // Update state
             OrderState state = GetState(src);
@@ -154,12 +151,12 @@ namespace EVEMon.Common
         private static long GetItemID(SerializableOrderBase src)
         {
             // Try get item ID by source
-            var itemID = src.ItemID;
+            long itemID = src.ItemID;
 
             // We failed? Try get item ID by name
             if (itemID == 0)
             {
-                var item = StaticItems.GetItemByName(src.Item);
+                Item item = StaticItems.GetItemByName(src.Item);
                 itemID = (item == null ? 0 : item.ID);
             }
 
@@ -397,7 +394,7 @@ namespace EVEMon.Common
             // Explanations : 999.99 was displayed as 1000 because only three digits were required.
             // So we do the truncation at hand for the number of digits we exactly request.
 
-            var abs = Math.Abs(value);
+            decimal abs = Math.Abs(value);
             if (abs < 1.0M)
                 return (((int)value * 100) / 100.0M).ToString("0.##") + suffix;
             if (abs < 10.0M)

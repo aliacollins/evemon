@@ -7,7 +7,6 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class BlueprintBrowserSettings
     {
-
         #region Constructors
 
         /// <summary>
@@ -61,6 +60,5 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         #endregion
-
     }
 }

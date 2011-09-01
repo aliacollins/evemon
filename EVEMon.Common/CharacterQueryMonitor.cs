@@ -1,5 +1,4 @@
-﻿
-namespace EVEMon.Common
+﻿namespace EVEMon.Common
 {
     /// <summary>
     /// Represents a monitor for all queries related to characters and their corporations.

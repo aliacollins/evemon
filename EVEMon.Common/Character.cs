@@ -83,14 +83,8 @@ namespace EVEMon.Common
         /// </summary>
         public bool Monitored
         {
-            get
-            {
-                return EveMonClient.MonitoredCharacters.Contains(this);
-            }
-            set
-            {
-                EveMonClient.MonitoredCharacters.OnCharacterMonitoringChanged(this, value);
-            }
+            get { return EveMonClient.MonitoredCharacters.Contains(this); }
+            set { EveMonClient.MonitoredCharacters.OnCharacterMonitoringChanged(this, value); }
         }
 
         /// <summary>
@@ -218,7 +212,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the character's  employment history.
         /// </summary>
-        public EmploymentHistoryCollection EmploymentHistory { get; set; } 
+        public EmploymentHistoryCollection EmploymentHistory { get; set; }
 
         #endregion
 
@@ -387,6 +381,7 @@ namespace EVEMon.Common
 
         #endregion
 
+
         #region Importation / exportation
 
         /// <summary>
@@ -394,7 +389,6 @@ namespace EVEMon.Common
         /// </summary>
         /// <returns></returns>
         public abstract SerializableSettingsCharacter Export();
-
 
         /// <summary>
         /// Fetches the data to the given serialization object, used by inheritors.
@@ -557,6 +551,7 @@ namespace EVEMon.Common
         }
 
         #endregion
+
 
         /// <summary>
         /// Gets the UI settings for this character.

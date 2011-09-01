@@ -10,7 +10,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
         bool Enabled { get; set; }
-        
+
         /// <summary>
         /// Gets the status of the query.
         /// </summary>

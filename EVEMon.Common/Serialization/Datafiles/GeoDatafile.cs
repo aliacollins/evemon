@@ -10,18 +10,10 @@ namespace EVEMon.Common.Serialization.Datafiles
     {
         [XmlArray("regions")]
         [XmlArrayItem("region")]
-        public SerializableRegion[] Regions
-        {
-            get;
-            set;
-        }
+        public SerializableRegion[] Regions { get; set; }
 
         [XmlArray("jumps")]
         [XmlArrayItem("jump")]
-        public SerializableJump[] Jumps
-        {
-            get;
-            set;
-        }
+        public SerializableJump[] Jumps { get; set; }
     }
 }

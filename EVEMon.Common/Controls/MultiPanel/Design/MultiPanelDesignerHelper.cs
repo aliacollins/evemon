@@ -95,6 +95,5 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
             panel.SelectedPage = page;
             dt.Commit();
         }
-
     }
 }

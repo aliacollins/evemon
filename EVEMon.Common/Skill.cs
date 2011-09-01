@@ -595,6 +595,5 @@ namespace EVEMon.Common
         }
 
         #endregion
-
     }
 }

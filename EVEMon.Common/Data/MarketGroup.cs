@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -52,7 +51,7 @@ namespace EVEMon.Common.Data
         /// <param name="parent">The Market Group this Market Group is contained within</param>
         /// <param name="src">Source Blueprint Group</param>
         protected MarketGroup(MarketGroup parent, SerializableBlueprintMarketGroup src)
-            :this (src)
+            : this(src)
         {
             ParentGroup = parent;
         }
@@ -106,7 +105,6 @@ namespace EVEMon.Common.Data
             }
         }
 
-
         #endregion
 
 
@@ -146,6 +144,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

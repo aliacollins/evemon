@@ -250,7 +250,6 @@ namespace EVEMon.Common
             // Notify changes
             if ((change & PlanChange.Notification) != PlanChange.None && IsConnected)
                 EveMonClient.OnPlanChanged(this);
-
         }
 
         #endregion
@@ -376,7 +375,6 @@ namespace EVEMon.Common
             IEnumerable<PlanEntry> allEntriesToAdd = GetAllEntriesToAdd(skillsToAdd, note, out lowestPrereqPriority);
 
             return new PlanOperation(this, skillsToAdd.Cast<ISkillLevel>(), allEntriesToAdd, lowestPrereqPriority);
-
         }
 
         /// <summary>
@@ -566,7 +564,6 @@ namespace EVEMon.Common
             private readonly List<ISkillLevel> m_skillsToRemove = new List<ISkillLevel>();
             private readonly List<PlanEntry> m_allEntriesToRemove = new List<PlanEntry>();
             private readonly List<PlanEntry> m_removablePrerequisites = new List<PlanEntry>();
-
 
             /// <summary>
             /// Constructor for an empty operation.
@@ -765,14 +762,10 @@ namespace EVEMon.Common
                         {
                             // If existing entry's notes is null, we replace it 
                             if (String.IsNullOrEmpty(existingEntry.Notes))
-                            {
                                 existingEntry.Notes = entry.Notes;
-                            }
                                 // Else, we concatenate the notes
                             else if (entry.Notes.Contains(entry.Notes))
-                            {
                                 existingEntry.Notes += (", " + entry.Notes);
-                            }
 
                             // Update the priority
                             if (existingEntry.Priority > priority)

@@ -94,7 +94,7 @@ namespace EVEMon.Common.Data
                 foreach (PathFinder child in best.GetChildren(depth, bestDepthes))
                 {
                     // Gets the heuristic key: the shorter, the better the candidate.
-                    var key = child.m_system.GetSquareDistanceWith(target) * (float)(depth * depth);
+                    float key = child.m_system.GetSquareDistanceWith(target) * (float)(depth * depth);
                     if (child.m_system.SecurityLevel < minSecurityLevel)
                         key *= 100.0f;
                     while (paths.ContainsKey(key))
@@ -105,7 +105,6 @@ namespace EVEMon.Common.Data
                     paths.Add(key, child);
                 }
             }
-
         }
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace EVEMon.Common.Data
             get
             {
                 int count = 0;
-                for (var parent = m_parent; parent != null; parent = parent.m_parent)
+                for (PathFinder parent = m_parent; parent != null; parent = parent.m_parent)
                 {
                     count++;
                 }

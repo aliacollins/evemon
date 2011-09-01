@@ -11,7 +11,7 @@ namespace EVEMon.Common
         /// Not recommended for use on a <c>ListView</c> that contains thousands of items.
         /// </remarks>
         /// <param name="lv"><c>ListView</c> to select all items in</param>
-        public static void SelectAll (this ListView lv)
+        public static void SelectAll(this ListView lv)
         {
             if (lv == null)
                 return;

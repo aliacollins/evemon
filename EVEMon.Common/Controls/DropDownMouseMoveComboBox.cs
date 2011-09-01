@@ -48,7 +48,6 @@ namespace EVEMon.Common.Controls
                     // Enact selection.
                     ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
                     e.Handled = true;
-
                 }
                 // If no Enter or Esc keys presses, let the base class handle it.
                 base.OnKeyDown(e);
@@ -235,7 +234,8 @@ namespace EVEMon.Common.Controls
                 {
                     const float Offset = 3.0f;
                     SizeF size = e.Graphics.MeasureString(m_displayText, Font);
-                    RectangleF rect = new RectangleF(Offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - Offset, size.Height);
+                    RectangleF rect = new RectangleF(Offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - Offset,
+                                                     size.Height);
                     e.Graphics.DrawString(m_displayText, Font, foreBrush, rect, StringFormat.GenericTypographic);
                 }
             }

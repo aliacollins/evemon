@@ -165,9 +165,7 @@ namespace EVEMon.Common.Controls
 
             // When animated and visible, restart
             if (m_state != ThrobberState.Stopped)
-            {
                 Start();
-            }
         }
 
         /// <summary>
@@ -183,7 +181,8 @@ namespace EVEMon.Common.Controls
             s_strobeFrame = new Bitmap(ImageWidth, ImageHeight);
             using (Graphics g = Graphics.FromImage(s_strobeFrame))
             {
-                g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight), new Rectangle(0, 0, ImageWidth, ImageHeight), GraphicsUnit.Pixel);
+                g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight), new Rectangle(0, 0, ImageWidth, ImageHeight),
+                            GraphicsUnit.Pixel);
             }
 
             //Make the moving Images
@@ -193,7 +192,8 @@ namespace EVEMon.Common.Controls
                 Bitmap ib = new Bitmap(ImageWidth, ImageHeight);
                 using (Graphics g = Graphics.FromImage(ib))
                 {
-                    g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight), new Rectangle(i * ImageWidth, 0, ImageWidth, ImageHeight),
+                    g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight),
+                                new Rectangle(i * ImageWidth, 0, ImageWidth, ImageHeight),
                                 GraphicsUnit.Pixel);
                 }
                 s_movingFrames[i - 1] = ib;

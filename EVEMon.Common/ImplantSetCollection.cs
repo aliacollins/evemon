@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;

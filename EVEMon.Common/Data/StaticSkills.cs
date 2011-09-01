@@ -15,6 +15,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<string, StaticSkill> s_skillsByName = new Dictionary<string, StaticSkill>();
         private static readonly Dictionary<long, StaticSkillGroup> s_skillGroupsByID = new Dictionary<long, StaticSkillGroup>();
 
+
         #region Initialization
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace EVEMon.Common.Data
             // Fetch deserialized data
             s_arrayIndicesCount = 0;
             List<SerializableSkillPrerequisite[]> prereqs = new List<SerializableSkillPrerequisite[]>();
-            foreach (var srcGroup in datafile.Groups)
+            foreach (SerializableSkillGroup srcGroup in datafile.Groups)
             {
                 StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref s_arrayIndicesCount);
                 s_skillGroupsByID[group.ID] = group;
@@ -70,9 +71,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<StaticSkillGroup> AllGroups
         {
-            get {
-                return s_skillGroupsByID.Values;
-            }
+            get { return s_skillGroupsByID.Values; }
         }
 
         /// <summary>
@@ -80,9 +79,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<StaticSkill> AllSkills
         {
-            get {
-                return s_skillGroupsByID.Values.SelectMany(group => group);
-            }
+            get { return s_skillGroupsByID.Values.SelectMany(group => group); }
         }
 
         #endregion
@@ -101,7 +98,7 @@ namespace EVEMon.Common.Data
         /// </remarks>
         public static StaticSkill GetSkill(this SerializableSkillPrerequisite src)
         {
-           return GetSkillByID(src.ID) ?? GetSkillByName(src.Name);
+            return GetSkillByID(src.ID) ?? GetSkillByName(src.Name);
         }
 
         /// <summary>

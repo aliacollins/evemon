@@ -92,6 +92,5 @@ namespace EVEMon.Common
         }
 
         #endregion
-
     }
 }

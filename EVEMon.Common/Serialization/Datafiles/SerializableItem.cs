@@ -8,87 +8,39 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableItem
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("description")]
-        public string Description
-        {
-            get;
-            set;
-        }
+        public string Description { get; set; }
 
         [XmlAttribute("icon")]
-        public string Icon
-        {
-            get;
-            set;
-        }
+        public string Icon { get; set; }
 
         [XmlAttribute("race")]
-        public Race Race
-        {
-            get;
-            set;
-        }
+        public Race Race { get; set; }
 
         [XmlAttribute("metaLevel")]
-        public int MetaLevel
-        {
-            get;
-            set;
-        }
+        public int MetaLevel { get; set; }
 
         [XmlAttribute("metaGroup")]
-        public ItemMetaGroup MetaGroup
-        {
-            get;
-            set;
-        }
+        public ItemMetaGroup MetaGroup { get; set; }
 
         [XmlAttribute("slot")]
-        public ItemSlot Slot
-        {
-            get;
-            set;
-        }
+        public ItemSlot Slot { get; set; }
 
         [XmlAttribute("family")]
-        public ItemFamily Family
-        {
-            get;
-            set;
-        }
+        public ItemFamily Family { get; set; }
 
         [XmlAttribute("portionSize")]
-        public int PortionSize
-        {
-            get;
-            set;
-        }
+        public int PortionSize { get; set; }
 
         [XmlElement("s")]
-        public SerializablePrerequisiteSkill[] Prereqs
-        {
-            get;
-            set;
-        }
+        public SerializablePrerequisiteSkill[] Prereqs { get; set; }
 
         [XmlElement("p")]
-        public SerializablePropertyValue[] Properties
-        {
-            get;
-            set;
-        }
+        public SerializablePropertyValue[] Properties { get; set; }
     }
 }

@@ -37,6 +37,7 @@
 
         #endregion
 
+
         #region API Order State
 
         /// <summary>
@@ -53,6 +54,7 @@
         }
 
         #endregion
+
 
         #region API Job Completed Status
 

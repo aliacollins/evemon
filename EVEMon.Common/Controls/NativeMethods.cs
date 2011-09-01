@@ -65,7 +65,6 @@ namespace EVEMon.Common.Controls
         [DllImport("shell32.dll")]
         public static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
-
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
@@ -77,7 +76,7 @@ namespace EVEMon.Common.Controls
             public static AppBarData Create()
             {
                 AppBarData appBarData = new AppBarData();
-                appBarData.cbSize = Marshal.SizeOf(typeof (AppBarData));
+                appBarData.cbSize = Marshal.SizeOf(typeof(AppBarData));
                 return appBarData;
             }
 
@@ -96,7 +95,6 @@ namespace EVEMon.Common.Controls
         public const int ABE_TOP = 1;
         public const int ABE_RIGHT = 2;
         public const int ABE_BOTTOM = 3;
-
 
         [Serializable, StructLayout(LayoutKind.Sequential)]
         public struct RECT
@@ -152,6 +150,7 @@ namespace EVEMon.Common.Controls
                        ^ ((Height << 7) | (Height >> 0x19));
             }
 
+
             #region Operator overloads
 
             public static implicit operator Rectangle(RECT rect)
@@ -165,12 +164,11 @@ namespace EVEMon.Common.Controls
             }
 
             #endregion
-
         }
 
         #endregion
-        
-        
+
+
         #region Custom Message Box
 
         public const int SC_CLOSE = 0xF060;
@@ -183,7 +181,7 @@ namespace EVEMon.Common.Controls
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
-        
+
         #endregion
     }
 }

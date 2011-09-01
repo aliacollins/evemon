@@ -378,13 +378,9 @@ namespace EVEMon.Common
                     return false;
 
                 if (loweringPriorities)
-                {
                     LowerDependenciesPriorities(i);
-                }
                 else
-                {
                     pe.Priority = highestDepPriority;
-                }
 
                 planOK = false;
             }
@@ -485,7 +481,9 @@ namespace EVEMon.Common
             {
                 Items.Clear();
                 for (int i = 0; i < m_lookup.Length; i++)
+                {
                     m_lookup[i] = null;
+                }
 
                 foreach (PlanEntry entry in entries)
                 {
@@ -531,17 +529,11 @@ namespace EVEMon.Common
 
                     PlanEntry entryToAdd;
                     if (entry.Plan != this)
-                    {
                         entryToAdd = entry.Clone(this);
-                    }
                     else if (oldEntry != null)
-                    {
                         entryToAdd = oldEntry;
-                    }
                     else
-                    {
                         entryToAdd = entry;
-                    }
 
                     AddCore(entryToAdd);
                 }
@@ -647,7 +639,7 @@ namespace EVEMon.Common
         private PlanEntry CreateEntryToAdd(StaticSkill skill, int level, PlanEntryType type, string note,
                                            ref int lowestPrereqPriority)
         {
-            var entry = GetEntry(skill, level);
+            PlanEntry entry = GetEntry(skill, level);
 
             // If the entry is already in the plan, we create an entry that will never be added to the plan.
             // However, the existing entry's notes and priotity will be updated from this new entry
@@ -701,6 +693,7 @@ namespace EVEMon.Common
         public void CleanObsoleteEntries(ObsoleteRemovalPolicy policy)
         {
             using (SuspendingEvents())
+            {
                 for (int i = 0; i < Items.Count; i++)
                 {
                     PlanEntry pe = Items[i];
@@ -715,6 +708,7 @@ namespace EVEMon.Common
                     Items.RemoveAt(i);
                     i--;
                 }
+            }
         }
 
         #endregion
@@ -791,12 +785,12 @@ namespace EVEMon.Common
         /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
         public void UpdateStatistics(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
-            var scratchpadWithoutImplants = scratchpad.Clone();
+            CharacterScratchpad scratchpadWithoutImplants = scratchpad.Clone();
             scratchpadWithoutImplants.ClearImplants();
             DateTime time = DateTime.Now;
 
             // Update the statistics
-            foreach (var entry in Items)
+            foreach (PlanEntry entry in Items)
             {
                 // Apply the remapping
                 if (applyRemappingPoints && entry.Remapping != null &&

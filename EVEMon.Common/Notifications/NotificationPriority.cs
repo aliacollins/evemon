@@ -1,5 +1,4 @@
-﻿
-namespace EVEMon.Common.Notifications
+﻿namespace EVEMon.Common.Notifications
 {
     /// <summary>
     /// Represents the priority of a <see cref="NotificationEventArgs"/>.
@@ -10,10 +9,12 @@ namespace EVEMon.Common.Notifications
         /// This notification is a mere information.
         /// </summary>
         Information = 0,
+
         /// <summary>
         /// The notification is a warnining.
         /// </summary>
         Warning = 1,
+
         /// <summary>
         /// The notification is an error.
         /// </summary>

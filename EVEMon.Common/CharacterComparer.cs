@@ -10,6 +10,7 @@ namespace EVEMon.Common
     public struct CharacterComparer : IComparer<Character>
     {
         #region Constructors
+
         /// <summary>
         /// Constructor for an ascending sort along the given criteria.
         /// </summary>
@@ -29,7 +30,7 @@ namespace EVEMon.Common
             Criteria = criteria;
             Order = order;
         }
-        
+
         /// <summary>
         /// Constructor from a tray popup setting
         /// </summary>
@@ -59,6 +60,7 @@ namespace EVEMon.Common
                     throw new NotImplementedException();
             }
         }
+
         #endregion
 
 

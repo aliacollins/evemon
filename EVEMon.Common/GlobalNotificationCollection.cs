@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
@@ -48,8 +47,8 @@ namespace EVEMon.Common
 
                 case NotificationBehaviour.Merge:
                     // Merge the notifications with the same key
-                    var key = notification.InvalidationKey;
-                    foreach (var other in Items.Where(x => x.InvalidationKey == key))
+                    long key = notification.InvalidationKey;
+                    foreach (NotificationEventArgs other in Items.Where(x => x.InvalidationKey == key))
                     {
                         notification.Append(other);
                     }
@@ -86,9 +85,7 @@ namespace EVEMon.Common
             while (index < Items.Count)
             {
                 if (Items[index].InvalidationKey != key)
-                {
                     index++;
-                }
                 else
                 {
                     Items.RemoveAt(index);
@@ -330,12 +327,12 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableAPISkillQueue> result)
         {
-            var notification = new APIErrorNotificationEventArgs(character, result)
-                                   {
-                                       Description = "An error occurred while querying the skill queue.",
-                                       Behaviour = NotificationBehaviour.Overwrite,
-                                       Priority = NotificationPriority.Error
-                                   };
+            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
+                                                             {
+                                                                 Description = "An error occurred while querying the skill queue.",
+                                                                 Behaviour = NotificationBehaviour.Overwrite,
+                                                                 Priority = NotificationPriority.Error
+                                                             };
             Notify(notification);
         }
 
@@ -762,7 +759,7 @@ namespace EVEMon.Common
                 case ServerStatus.Unknown:
                     break;
                 default:
-                    throw  new NotImplementedException();
+                    throw new NotImplementedException();
             }
 
             if (String.IsNullOrEmpty(text))
@@ -890,6 +887,5 @@ namespace EVEMon.Common
         }
 
         #endregion
-
     }
 }

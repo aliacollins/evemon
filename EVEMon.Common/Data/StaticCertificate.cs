@@ -5,12 +5,12 @@ using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
-	/// <summary>
-	/// Represents a certificate from the datafiles.
-	/// Every category (i.e. "Business and Industry")
-	/// contains certificate classes (i.e. "Production Manager"),
-	/// which contain certificates (i.e. "Production Manager Basic").
-	/// </summary>
+    /// <summary>
+    /// Represents a certificate from the datafiles.
+    /// Every category (i.e. "Business and Industry")
+    /// contains certificate classes (i.e. "Production Manager"),
+    /// which contain certificates (i.e. "Production Manager Basic").
+    /// </summary>
     public sealed class StaticCertificate
     {
         private readonly List<StaticCertificate> m_prerequisiteCertificates = new List<StaticCertificate>();
@@ -47,7 +47,7 @@ namespace EVEMon.Common.Data
                 }
             }
         }
-        
+
         #endregion
 
 
@@ -150,10 +150,8 @@ namespace EVEMon.Common.Data
             {
                 // Skills
                 if (prereq.Kind == SerializableCertificatePrerequisiteKind.Skill)
-                {
                     m_prerequisiteSkills.Add(new StaticSkillLevel(prereq.Name, Int32.Parse(prereq.Level)));
-                }
-                // Certificates
+                    // Certificates
                 else
                 {
                     CertificateGrade grade = GetGrade(prereq.Level);
@@ -162,13 +160,13 @@ namespace EVEMon.Common.Data
             }
         }
 
-	    /// <summary>
-	    /// Gets the grade from the provided grade key. No need to previously interns the key, it will be interned in this method.
-	    /// </summary>
-	    /// <param name="key"></param>
-	    /// <exception cref="NotImplementedException"></exception>
-	    /// <returns></returns>
-	    private static CertificateGrade GetGrade(string key)
+        /// <summary>
+        /// Gets the grade from the provided grade key. No need to previously interns the key, it will be interned in this method.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        /// <returns></returns>
+        private static CertificateGrade GetGrade(string key)
         {
             switch (key)
             {
@@ -213,4 +211,3 @@ namespace EVEMon.Common.Data
         }
     }
 }
-

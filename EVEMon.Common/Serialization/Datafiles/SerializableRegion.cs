@@ -8,24 +8,12 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableRegion
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("constellations")]
-        public SerializableConstellation[] Constellations
-        {
-            get;
-            set;
-        }
+        public SerializableConstellation[] Constellations { get; set; }
     }
 }

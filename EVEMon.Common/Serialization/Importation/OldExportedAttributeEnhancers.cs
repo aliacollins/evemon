@@ -18,35 +18,19 @@ namespace EVEMon.Common.Serialization.Importation
     public sealed class OldExportedAttributeEnhancers
     {
         [XmlElement("intelligenceBonus")]
-        public int Inteligence
-        {
-            get;
-            set;
-        }
+        public int Inteligence { get; set; }
+
         [XmlElement("charismaBonus")]
-        public int Charisma
-        {
-            get;
-            set;
-        }
+        public int Charisma { get; set; }
+
         [XmlElement("perceptionBonus")]
-        public int Perception
-        {
-            get;
-            set;
-        }
+        public int Perception { get; set; }
+
         [XmlElement("memoryBonus")]
-        public int Memory
-        {
-            get;
-            set;
-        }
+        public int Memory { get; set; }
+
         [XmlElement("willpowerBonus")]
-        public int Willpower
-        {
-            get;
-            set;
-        }
+        public int Willpower { get; set; }
 
         /// <summary>
         /// Returns a serializable implant set.

@@ -351,7 +351,6 @@ namespace EVEMon.Common
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
                 url, postData,
-
                 // Callback
                 (asyncResult, userState) =>
                     {
@@ -360,9 +359,7 @@ namespace EVEMon.Common
 
                         // Was there an HTTP error ??
                         if (asyncResult.Error != null)
-                        {
                             errorMessage = asyncResult.Error.Message;
-                        }
                             // No http error, let's try to deserialize
                         else
                         {

@@ -42,7 +42,6 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("installedItemME")]
         public int InstalledItemME { get; set; }
 
-
         [XmlAttribute("installedItemPE")]
         public int InstalledItemPE { get; set; }
 

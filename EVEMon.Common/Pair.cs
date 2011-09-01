@@ -18,6 +18,5 @@ namespace EVEMon.Common
         public TypeA A { get; set; }
 
         public TypeB B { get; set; }
-
     }
 }

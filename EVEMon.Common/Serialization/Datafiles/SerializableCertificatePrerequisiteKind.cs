@@ -9,6 +9,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     {
         [XmlEnum("skill")]
         Skill,
+
         [XmlEnum("cert")]
         Certificate
     }

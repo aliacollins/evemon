@@ -22,7 +22,6 @@ namespace EVEMon.Common.Threading
         private readonly AutoResetEvent m_waitHandle;
         private volatile int m_shutdown;
 
-
         /// <summary>
         /// Default constructor with a normal priority
         /// </summary>

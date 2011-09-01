@@ -22,7 +22,7 @@ namespace EVEMon.Common.Controls
             Padding = new Padding(0);
             Margin = new Padding(0);
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ContainerControl | 
+                     ControlStyles.ContainerControl |
                      ControlStyles.DoubleBuffer |
                      ControlStyles.UserPaint |
                      ControlStyles.ResizeRedraw |

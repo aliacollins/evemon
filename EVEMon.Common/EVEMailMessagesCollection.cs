@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 
@@ -22,10 +21,10 @@ namespace EVEMon.Common
         {
             m_ccpCharacter = ccpCharacter;
         }
-        
+
         #endregion
-        
-        
+
+
         #region Properties
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <value>The new messages.</value>
         internal int NewMessages { get; private set; }
-        
+
         #endregion
 
 
@@ -57,7 +56,7 @@ namespace EVEMon.Common
                                                  {
                                                      MessageID = id
                                                  }));
-                
+
                 // Find the last received ID 
                 m_highestID = Math.Max(m_highestID, id);
             }
@@ -76,7 +75,7 @@ namespace EVEMon.Common
             // Import the mail messages from the API
             // To distinguish new EVE mails from old EVE mails that have been added to the API list
             // due to deletion of some EVE mails in-game, we need to sort the received data 
-            foreach (var srcEVEMailMessage in src.OrderBy(x=> x.MessageID))
+            foreach (SerializableMailMessagesListItem srcEVEMailMessage in src.OrderBy(x => x.MessageID))
             {
                 // Is it an Inbox message ?
                 if (m_ccpCharacter.CharacterID != srcEVEMailMessage.SenderID)
@@ -112,7 +111,7 @@ namespace EVEMon.Common
 
             return String.Join(",", serial);
         }
-        
+
         #endregion
     }
 }

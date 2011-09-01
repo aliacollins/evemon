@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -33,13 +32,9 @@ namespace EVEMon.Common
             foreach (SerializableOrderBase srcOrder in src)
             {
                 if (srcOrder is SerializableBuyOrder)
-                {
                     Items.Add(new BuyOrder((SerializableBuyOrder)srcOrder));
-                }
                 else
-                {
                     Items.Add(new SellOrder((SerializableSellOrder)srcOrder));
-                }
             }
         }
 

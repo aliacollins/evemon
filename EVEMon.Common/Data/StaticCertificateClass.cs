@@ -34,7 +34,7 @@ namespace EVEMon.Common.Data
             foreach (StaticCertificate cert in src.Certificates.Select(
                 srcCert => new StaticCertificate(this, srcCert)))
             {
-                m_certificates[(int) cert.Grade] = cert;
+                m_certificates[(int)cert.Grade] = cert;
             }
         }
 
@@ -77,7 +77,6 @@ namespace EVEMon.Common.Data
                 throw new NotImplementedException();
             }
         }
-
 
         /// <summary>
         /// Gets the highest grade certificate.

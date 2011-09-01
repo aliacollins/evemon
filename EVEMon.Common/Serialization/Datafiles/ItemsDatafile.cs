@@ -9,10 +9,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class ItemsDatafile
     {
         [XmlElement("marketGroup")]
-        public SerializableMarketGroup[] MarketGroups
-        {
-            get;
-            set;
-        }
+        public SerializableMarketGroup[] MarketGroups { get; set; }
     }
 }

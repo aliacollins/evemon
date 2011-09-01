@@ -109,17 +109,11 @@ namespace EVEMon.Common
 
             // Updates status
             if (claimable)
-            {
                 Status = CertificateStatus.Claimable;
-            }
             else if (noPrereq)
-            {
                 Status = CertificateStatus.Untrained;
-            }
             else
-            {
                 Status = CertificateStatus.PartiallyTrained;
-            }
             m_initialized = true;
             return true;
         }

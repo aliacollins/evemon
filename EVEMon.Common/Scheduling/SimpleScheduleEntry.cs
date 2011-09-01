@@ -47,9 +47,7 @@ namespace EVEMon.Common.Scheduling
         public override IEnumerable<ScheduleDateTimeRange> GetRangesInPeriod(DateTime fromDt, DateTime toDt)
         {
             if ((StartDate < fromDt && EndDate > fromDt) || (StartDate >= fromDt && StartDate <= toDt))
-            {
                 yield return new ScheduleDateTimeRange(StartDate, EndDate);
-            }
         }
 
         /// <summary>

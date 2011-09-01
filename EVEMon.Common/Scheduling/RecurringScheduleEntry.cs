@@ -157,9 +157,7 @@ namespace EVEMon.Common.Scheduling
                                 return null;
                         }
                         else
-                        {
                             return null;
-                        }
                     }
                     break;
             }
@@ -206,7 +204,7 @@ namespace EVEMon.Common.Scheduling
         {
             DateTime testtime = (Options & ScheduleEntryOptions.EVETime) != 0 ? timeToTest.ToUniversalTime() : timeToTest;
 
-            var range = GetRangeForDay(testtime.Date);
+            ScheduleDateTimeRange range = GetRangeForDay(testtime.Date);
             if (range == null)
                 return false;
 

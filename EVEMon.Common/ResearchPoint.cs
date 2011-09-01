@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -91,10 +90,7 @@ namespace EVEMon.Common
         /// </summary>
         public double CurrentRP
         {
-            get
-            {
-                return (m_remainderPoints + (PointsPerDay * DateTime.UtcNow.Subtract(StartDate).TotalDays));
-            }
+            get { return (m_remainderPoints + (PointsPerDay * DateTime.UtcNow.Subtract(StartDate).TotalDays)); }
         }
 
         /// <summary>

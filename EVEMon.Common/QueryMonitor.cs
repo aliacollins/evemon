@@ -186,7 +186,7 @@ namespace EVEMon.Common
             if (!m_forceUpdate)
             {
                 // If not due time yet, quits
-                var nextUpdate = NextUpdate;
+                DateTime nextUpdate = NextUpdate;
                 if (nextUpdate > DateTime.UtcNow)
                 {
                     Status = QueryStatus.Pending;

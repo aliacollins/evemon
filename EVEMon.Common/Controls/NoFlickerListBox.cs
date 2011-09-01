@@ -14,15 +14,17 @@ namespace EVEMon.Common.Controls
 
             // stacked using blocks to avoid indentation, don't need to call IDisposable.Dispose explicitly
             using (BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current)
-            using (BufferedGraphics bufferedGraphics = currentContext.Allocate(e.Graphics, newBounds))
             {
-                DrawItemEventArgs newArgs = new DrawItemEventArgs(
-                    bufferedGraphics.Graphics, e.Font, newBounds, e.Index, e.State, e.ForeColor, e.BackColor);
+                using (BufferedGraphics bufferedGraphics = currentContext.Allocate(e.Graphics, newBounds))
+                {
+                    DrawItemEventArgs newArgs = new DrawItemEventArgs(
+                        bufferedGraphics.Graphics, e.Font, newBounds, e.Index, e.State, e.ForeColor, e.BackColor);
 
-                // Supply the real DrawItem with the off-screen graphics context
-                base.OnDrawItem(newArgs);
+                    // Supply the real DrawItem with the off-screen graphics context
+                    base.OnDrawItem(newArgs);
 
-                NativeMethods.CopyGraphics(e.Graphics, e.Bounds, bufferedGraphics.Graphics, new Point(0, 0));
+                    NativeMethods.CopyGraphics(e.Graphics, e.Bounds, bufferedGraphics.Graphics, new Point(0, 0));
+                }
             }
         }
 
@@ -47,15 +49,17 @@ namespace EVEMon.Common.Controls
         private void PaintNonItemRegion()
         {
             using (Graphics g = Graphics.FromHwnd(Handle))
-            using (Region r = new Region(ClientRectangle))
             {
-                for (int i = 0; i < Items.Count; i++)
+                using (Region r = new Region(ClientRectangle))
                 {
-                    Rectangle itemRect = GetItemRectangle(i);
-                    r.Exclude(itemRect);
-                }
+                    for (int i = 0; i < Items.Count; i++)
+                    {
+                        Rectangle itemRect = GetItemRectangle(i);
+                        r.Exclude(itemRect);
+                    }
 
-                g.FillRegion(SystemBrushes.Window, r);
+                    g.FillRegion(SystemBrushes.Window, r);
+                }
             }
         }
     }

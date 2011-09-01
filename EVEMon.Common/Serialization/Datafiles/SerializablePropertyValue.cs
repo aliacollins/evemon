@@ -8,17 +8,9 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializablePropertyValue
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("value")]
-        public string Value
-        {
-            get;
-            set;
-        }
+        public string Value { get; set; }
     }
 }

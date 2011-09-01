@@ -32,6 +32,5 @@ namespace EVEMon.Common
         {
             get { return GetByKey(name); }
         }
-
     }
 }

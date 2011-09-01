@@ -48,7 +48,8 @@ namespace EVEMon.Common.Data
         /// <param name="list"></param>
         /// <param name="item"></param>
         /// <param name="includeRoots"></param>
-        internal static void FillPrerequisites(int[] highestLevels, List<StaticSkillLevel> list, StaticSkillLevel item, bool includeRoots)
+        internal static void FillPrerequisites(int[] highestLevels, List<StaticSkillLevel> list, StaticSkillLevel item,
+                                               bool includeRoots)
         {
             // Prerequisites
             if (highestLevels[item.Skill.ArrayIndex] == 0)

@@ -39,7 +39,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
         public static explicit operator SerializableRectangle(Rectangle rect)
         {
-            return new SerializableRectangle {Left = rect.Left, Top = rect.Top, Width = rect.Width, Height = rect.Height};
+            return new SerializableRectangle { Left = rect.Left, Top = rect.Top, Width = rect.Width, Height = rect.Height };
         }
 
         /// <summary>

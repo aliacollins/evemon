@@ -80,16 +80,14 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Add(SerializableUriCharacter serial)
         {
-            var uriCharacter = this[new Uri(serial.Uri)];
+            UriCharacter uriCharacter = this[new Uri(serial.Uri)];
             if (uriCharacter == null)
             {
                 m_uriCharacters.Add(new UriCharacter(m_characterID, serial));
                 EveMonClient.OnCharacterCollectionChanged();
             }
             else
-            {
                 uriCharacter.Import(serial);
-            }
         }
 
         /// <summary>

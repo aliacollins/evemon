@@ -6,7 +6,6 @@ namespace EVEMon.Common
 {
     public abstract class BaseCharacter
     {
-
         #region Abstract methods and properties
 
         protected abstract int GetTotalSkillPoints();
@@ -52,7 +51,7 @@ namespace EVEMon.Common
         public CharacterScratchpad After<T>(IEnumerable<T> trainings)
             where T : ISkillLevel
         {
-            var scratchpad = new CharacterScratchpad(this);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(this);
             scratchpad.Train(trainings);
             return scratchpad;
         }
@@ -64,14 +63,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         public CharacterScratchpad After(ImplantSet set)
         {
-            var scratchpad = new CharacterScratchpad(this);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(this);
             for (int i = 0; i < 5; i++)
             {
-                var attribute = (EveAttribute)i;
+                EveAttribute attribute = (EveAttribute)i;
                 scratchpad[attribute].ImplantBonus = set[attribute].Bonus;
             }
             return scratchpad;
-
         }
 
         /// <summary>
@@ -117,12 +115,12 @@ namespace EVEMon.Common
             int result;
             switch (origin)
             {
-                // Include current SP
+                    // Include current SP
                 case TrainingOrigin.FromCurrent:
                     result = sp - GetSkillPoints(skill);
                     break;
 
-                // This level only (previous are known)
+                    // This level only (previous are known)
                 case TrainingOrigin.FromPreviousLevel:
                     result = sp - skill.GetPointsRequiredForLevel(level - 1);
                     break;
@@ -131,7 +129,7 @@ namespace EVEMon.Common
                     result = sp - Math.Max(GetSkillPoints(skill), skill.GetPointsRequiredForLevel(level - 1));
                     break;
 
-                // Include nothing
+                    // Include nothing
                 default:
                     result = sp;
                     break;
@@ -165,7 +163,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public TimeSpan GetTrainingTime(StaticSkill skill, int level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
         {
-            var spPerHour = GetBaseSPPerHour(skill); 
+            float spPerHour = GetBaseSPPerHour(skill);
             int sp = GetSPToTrain(skill, level, origin);
             return GetTrainingTime(sp, spPerHour);
         }
@@ -229,6 +227,5 @@ namespace EVEMon.Common
         }
 
         #endregion
-    
     }
 }

@@ -2,7 +2,6 @@
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.API

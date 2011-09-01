@@ -8,53 +8,25 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableStation
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("corporationID")]
-        public int CorporationID
-        {
-            get;
-            set;
-        }
+        public int CorporationID { get; set; }
 
         [XmlAttribute("corporationName")]
-        public string CorporationName
-        {
-            get;
-            set;
-        }
+        public string CorporationName { get; set; }
 
         [XmlElement("reprocessingEfficiency")]
-        public float ReprocessingEfficiency
-        {
-            get;
-            set;
-        }
+        public float ReprocessingEfficiency { get; set; }
 
         [XmlElement("reprocessingStationsTake")]
-        public float ReprocessingStationsTake
-        {
-            get;
-            set;
-        }
+        public float ReprocessingStationsTake { get; set; }
 
         [XmlArray("agents")]
         [XmlArrayItem("agent")]
-        public SerializableAgent[] Agents
-        {
-            get;
-            set;
-        }
+        public SerializableAgent[] Agents { get; set; }
     }
 }

@@ -1,120 +1,171 @@
-﻿
-namespace EVEMon.Common.Data
+﻿namespace EVEMon.Common.Data
 {
     /// <summary>
     /// Provides constants about the CCP databases.
     /// </summary>
     public static class DBConstants
     {
-
         #region Collections
 
         // Group of PropertyIDs
-        public static readonly int[] RequiredSkillPropertyIDs = new[] 
-            {
-                RequiredSkill1PropertyID, RequiredSkill2PropertyID, RequiredSkill3PropertyID,
-                RequiredSkill4PropertyID, RequiredSkill5PropertyID, RequiredSkill6PropertyID
-            };
+        public static readonly int[] RequiredSkillPropertyIDs = new[]
+                                                                    {
+                                                                        RequiredSkill1PropertyID, RequiredSkill2PropertyID,
+                                                                        RequiredSkill3PropertyID,
+                                                                        RequiredSkill4PropertyID, RequiredSkill5PropertyID,
+                                                                        RequiredSkill6PropertyID
+                                                                    };
 
         public static readonly int[] RequiredSkillLevelPropertyIDs = new[]
-            {
-                RequiredSkill1LevelPropertyID, RequiredSkill2LevelPropertyID, RequiredSkill3LevelPropertyID,
-                RequiredSkill4LevelPropertyID, RequiredSkill5LevelPropertyID, RequiredSkill6LevelPropertyID 
-            };
+                                                                         {
+                                                                             RequiredSkill1LevelPropertyID,
+                                                                             RequiredSkill2LevelPropertyID,
+                                                                             RequiredSkill3LevelPropertyID,
+                                                                             RequiredSkill4LevelPropertyID,
+                                                                             RequiredSkill5LevelPropertyID,
+                                                                             RequiredSkill6LevelPropertyID
+                                                                         };
 
         public static readonly int[] AlwaysVisibleForShipPropertyIDs = new[]
-            { 
-                CPUOutputPropertyID, PGOutputPropertyID, UpgradeCapacityPropertyID, HiSlotsPropertyID,
-                MedSlotsPropertyID,LowSlotsPropertyID, DroneCapacityPropertyID, DroneBandwidthPropertyID,
-                CargoCapacityPropertyID, MassPropertyID,VolumePropertyID, CapacitorCapacityPropertyID,
-                CapacitorRechargeRatePropertyID, MaxTargetRangePropertyID, ScanResolutionPropertyID,
-                SignatureRadiusPropertyID, MaxVelocityPropertyID, ShipWarpSpeedPropertyID, StructureHitpointsPropertyID,
-                ShieldHitpointsPropertyID, ArmorHitpointsPropertyID, ShieldRechargeRatePropertyID,
-                ShieldEMResistancePropertyID, ShieldExplosiveResistancePropertyID, ShieldKineticResistancePropertyID,
-                ShieldThermalResistancePropertyID, ArmorEMResistancePropertyID, ArmorExplosiveResistancePropertyID,
-                ArmorKineticResistancePropertyID, ArmorThermalResistancePropertyID
-            };
+                                                                           {
+                                                                               CPUOutputPropertyID, PGOutputPropertyID,
+                                                                               UpgradeCapacityPropertyID, HiSlotsPropertyID,
+                                                                               MedSlotsPropertyID, LowSlotsPropertyID,
+                                                                               DroneCapacityPropertyID, DroneBandwidthPropertyID,
+                                                                               CargoCapacityPropertyID, MassPropertyID,
+                                                                               VolumePropertyID, CapacitorCapacityPropertyID,
+                                                                               CapacitorRechargeRatePropertyID,
+                                                                               MaxTargetRangePropertyID, ScanResolutionPropertyID,
+                                                                               SignatureRadiusPropertyID, MaxVelocityPropertyID,
+                                                                               ShipWarpSpeedPropertyID,
+                                                                               StructureHitpointsPropertyID,
+                                                                               ShieldHitpointsPropertyID, ArmorHitpointsPropertyID
+                                                                               , ShieldRechargeRatePropertyID,
+                                                                               ShieldEMResistancePropertyID,
+                                                                               ShieldExplosiveResistancePropertyID,
+                                                                               ShieldKineticResistancePropertyID,
+                                                                               ShieldThermalResistancePropertyID,
+                                                                               ArmorEMResistancePropertyID,
+                                                                               ArmorExplosiveResistancePropertyID,
+                                                                               ArmorKineticResistancePropertyID,
+                                                                               ArmorThermalResistancePropertyID
+                                                                           };
 
         public static readonly int[] HideIfDefaultPropertyIDs = new[]
-            { 
-                LauncherSlotsLeftPropertyID, TurretSlotsLeftPropertyID, TurretHardPointModifierPropertyID, 
-                LauncherHardPointModifierPropertyID, HiSlotModifierPropertyID, MedSlotModifierPropertyID,
-                LowSlotModifierPropertyID, ScanRadarStrengthPropertyID, ScanLadarStrengthPropertyID,
-                ScanMagnetometricStrengthPropertyID, ScanGravimetricStrengthPropertyID, HullEMResistancePropertyID,
-                HullExplosiveResistancePropertyID, HullKineticResistancePropertyID, HullThermalResistancePropertyID,
-                EmDamagePropertyID, ExplosiveDamagePropertyID, KineticDamagePropertyID, ThermalDamagePropertyID, 
-                CharismaModifierPropertyID, IntelligenceModifierPropertyID, MemoryModifierPropertyID, 
-                PerceptionModifierPropertyID, WillpowerModifierPropertyID, MetaLevelPropertyID
-            };
+                                                                    {
+                                                                        LauncherSlotsLeftPropertyID, TurretSlotsLeftPropertyID,
+                                                                        TurretHardPointModifierPropertyID,
+                                                                        LauncherHardPointModifierPropertyID,
+                                                                        HiSlotModifierPropertyID, MedSlotModifierPropertyID,
+                                                                        LowSlotModifierPropertyID, ScanRadarStrengthPropertyID,
+                                                                        ScanLadarStrengthPropertyID,
+                                                                        ScanMagnetometricStrengthPropertyID,
+                                                                        ScanGravimetricStrengthPropertyID,
+                                                                        HullEMResistancePropertyID,
+                                                                        HullExplosiveResistancePropertyID,
+                                                                        HullKineticResistancePropertyID,
+                                                                        HullThermalResistancePropertyID,
+                                                                        EmDamagePropertyID, ExplosiveDamagePropertyID,
+                                                                        KineticDamagePropertyID, ThermalDamagePropertyID,
+                                                                        CharismaModifierPropertyID, IntelligenceModifierPropertyID
+                                                                        , MemoryModifierPropertyID,
+                                                                        PerceptionModifierPropertyID, WillpowerModifierPropertyID,
+                                                                        MetaLevelPropertyID
+                                                                    };
 
         public static readonly int[] LauncherGroupPropertyIDs = new[]
-            { 
-                LauncherGroupPropertyID, LauncherGroup2PropertyID, LauncherGroup3PropertyID
-            };
+                                                                    {
+                                                                        LauncherGroupPropertyID, LauncherGroup2PropertyID,
+                                                                        LauncherGroup3PropertyID
+                                                                    };
 
         public static readonly int[] ChargeGroupPropertyIDs = new[]
-            { 
-                ChargeGroup1PropertyID, ChargeGroup2PropertyID, ChargeGroup3PropertyID,
-                ChargeGroup4PropertyID, ChargeGroup5PropertyID
-            };
+                                                                  {
+                                                                      ChargeGroup1PropertyID, ChargeGroup2PropertyID,
+                                                                      ChargeGroup3PropertyID,
+                                                                      ChargeGroup4PropertyID, ChargeGroup5PropertyID
+                                                                  };
 
-        public static readonly int[] CanFitShipGroupPropertyIDs = new[] 
-            {
-                CanFitShipGroup1PropertyID, CanFitShipGroup2PropertyID,
-                CanFitShipGroup3PropertyID, CanFitShipGroup4PropertyID
-            };
+        public static readonly int[] CanFitShipGroupPropertyIDs = new[]
+                                                                      {
+                                                                          CanFitShipGroup1PropertyID, CanFitShipGroup2PropertyID,
+                                                                          CanFitShipGroup3PropertyID, CanFitShipGroup4PropertyID
+                                                                      };
 
         public static readonly int[] ModuleShipGroupPropertyIDs = new[]
-            {
-                ModuleShipGroup1PropertyID, ModuleShipGroup2PropertyID, ModuleShipGroup3PropertyID
-            };
+                                                                      {
+                                                                          ModuleShipGroup1PropertyID, ModuleShipGroup2PropertyID,
+                                                                          ModuleShipGroup3PropertyID
+                                                                      };
 
         public static readonly int[] ReactionGroupPropertyIDs = new[]
-            {
-                ReactionGroup1PropertyID, ReactionGroup2PropertyID
-            };
+                                                                    {
+                                                                        ReactionGroup1PropertyID, ReactionGroup2PropertyID
+                                                                    };
 
         public static readonly int[] IndustryModifyingPropertyIDs = new[]
-            { 
-                ManufacturingTimeBonusPropertyID, ManufactureCostBonusPropertyID, CopySpeedBonusPropertyID,
-                BlueprintManufactureTimeBonusPropertyID, MineralNeedResearchBonusPropertyID
-            };
+                                                                        {
+                                                                            ManufacturingTimeBonusPropertyID,
+                                                                            ManufactureCostBonusPropertyID,
+                                                                            CopySpeedBonusPropertyID,
+                                                                            BlueprintManufactureTimeBonusPropertyID,
+                                                                            MineralNeedResearchBonusPropertyID
+                                                                        };
 
-        public static readonly int[] SpecialisationAsteroidGroupPropertyIDs = new[] 
-            { SpecialisationAsteroidGroupPropertyID };
+        public static readonly int[] SpecialisationAsteroidGroupPropertyIDs = new[]
+                                                                                  { SpecialisationAsteroidGroupPropertyID };
 
         public static readonly int[] PosCargobayAcceptGroupPropertyIDs = new[]
-            { PosCargobayAcceptGroupPropertyID };
+                                                                             { PosCargobayAcceptGroupPropertyID };
 
         // Group of MarketGroupIDs
         public static readonly int[] StategicComponentsMarketGroupIDs = new[]
-            {
-                SubsystemsMarketGroupID, StrategicCruisersMarketGroupID
-            };
+                                                                            {
+                                                                                SubsystemsMarketGroupID,
+                                                                                StrategicCruisersMarketGroupID
+                                                                            };
 
         public static readonly int[] SmallToXLargeShipsMarketGroupIDs = new[]
-            {
-                StandardFrigatesMarketGroupID, StandardCruisersMarketGroupID, StandardBattleshipsMarketGroupID,
-                StandardIndustrialShipsMarketGroupID, ShuttlessMarketGroupID, StandardDestroyersMarketGroupID,
-                StandardBattlecruisersMarketGroupID, MiningBargesMarketGroupID, DreadnoughtsMarketGroupID,
-                FreightersMarketGroupID, CarriersMarketGroupID, FightersMarketGroupID,
-                CapitalIndustrialShipsMarketGroupID, FighterBombersMarketGroupID
-            };
+                                                                            {
+                                                                                StandardFrigatesMarketGroupID,
+                                                                                StandardCruisersMarketGroupID,
+                                                                                StandardBattleshipsMarketGroupID,
+                                                                                StandardIndustrialShipsMarketGroupID,
+                                                                                ShuttlessMarketGroupID,
+                                                                                StandardDestroyersMarketGroupID,
+                                                                                StandardBattlecruisersMarketGroupID,
+                                                                                MiningBargesMarketGroupID,
+                                                                                DreadnoughtsMarketGroupID,
+                                                                                FreightersMarketGroupID, CarriersMarketGroupID,
+                                                                                FightersMarketGroupID,
+                                                                                CapitalIndustrialShipsMarketGroupID,
+                                                                                FighterBombersMarketGroupID
+                                                                            };
 
-        public static readonly int[] CapitalShipsMarketGroupIDs = new[] 
-            {
-                DreadnoughtsMarketGroupID, FreightersMarketGroupID, TitansMarketGroupID, CarriersMarketGroupID
-            };
+        public static readonly int[] CapitalShipsMarketGroupIDs = new[]
+                                                                      {
+                                                                          DreadnoughtsMarketGroupID, FreightersMarketGroupID,
+                                                                          TitansMarketGroupID, CarriersMarketGroupID
+                                                                      };
 
         public static readonly int[] AdvancedSmallToLargeShipsMarketGroupIDs = new[]
-            { 
-                InterceptorsMarketGroupID, CovertOpsMarketGroupID, AssaultShipsMarketGroupID, LogisticsMarketGroupID,
-                HeavyAssaultShipsMarketGroupID, TransportShipsMarketGroupID, CommandShipsMarketGroupID,
-                InterdictorsMarketGroupID, ReconShipsMarketGroupID, ExhumersMarketGroupID,
-                ElectronicAttackFrigatesMarketGroupID, HeavyInterdictorsMarketGroupID, BlackOpsMarketGroupID,
-                MaraudersMarketGroupID, JumpFreightersMarketGroupID 
-            };
-
+                                                                                   {
+                                                                                       InterceptorsMarketGroupID,
+                                                                                       CovertOpsMarketGroupID,
+                                                                                       AssaultShipsMarketGroupID,
+                                                                                       LogisticsMarketGroupID,
+                                                                                       HeavyAssaultShipsMarketGroupID,
+                                                                                       TransportShipsMarketGroupID,
+                                                                                       CommandShipsMarketGroupID,
+                                                                                       InterdictorsMarketGroupID,
+                                                                                       ReconShipsMarketGroupID,
+                                                                                       ExhumersMarketGroupID,
+                                                                                       ElectronicAttackFrigatesMarketGroupID,
+                                                                                       HeavyInterdictorsMarketGroupID,
+                                                                                       BlackOpsMarketGroupID,
+                                                                                       MaraudersMarketGroupID,
+                                                                                       JumpFreightersMarketGroupID
+                                                                                   };
 
         #endregion
 
@@ -419,7 +470,6 @@ namespace EVEMon.Common.Data
         public const int StrategicCruisersMarketGroupID = 1138;
         public const int FighterBombersMarketGroupID = 1310;
         public const int OREIndustrialsMarketGroupID = 1390;
-
 
         #endregion
 

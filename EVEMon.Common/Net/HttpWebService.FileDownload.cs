@@ -29,7 +29,7 @@ namespace EVEMon.Common.Net
                 {
                     responseStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw HttpWebServiceException.FileError(url, ex);
                 }
@@ -51,15 +51,18 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="progressCallback"></param>
         /// <returns></returns>
-        public object DownloadFileAsync(string url, string filePath, DownloadFileCompletedCallback callback, DownloadProgressChangedCallback progressCallback)
+        public object DownloadFileAsync(string url, string filePath, DownloadFileCompletedCallback callback,
+                                        DownloadProgressChangedCallback progressCallback)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
-            FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback, DownloadFileAsyncCompleted);
+            FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
+                                                                    DownloadFileAsyncCompleted);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None), IMAGE_ACCEPT, null, state);
+            request.GetResponseAsync(url, new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None),
+                                     IMAGE_ACCEPT, null, state);
             return request;
         }
 
@@ -85,7 +88,8 @@ namespace EVEMon.Common.Net
             if (requestState.Request.ResponseStream != null)
                 requestState.Request.ResponseStream.Close();
 
-            requestState.DownloadFileCompleted(new DownloadFileAsyncResult(fileResult, requestState.Error, requestState.Request.Cancelled));
+            requestState.DownloadFileCompleted(new DownloadFileAsyncResult(fileResult, requestState.Error,
+                                                                           requestState.Request.Cancelled));
         }
 
         /// <summary>
@@ -100,7 +104,9 @@ namespace EVEMon.Common.Net
             /// <param name="callback">The callback.</param>
             /// <param name="progressCallback">The progress callback.</param>
             /// <param name="webRequestCallback">The web request callback.</param>
-            public FileRequestAsyncState(string filepath, DownloadFileCompletedCallback callback, DownloadProgressChangedCallback progressCallback, WebRequestAsyncCallback webRequestCallback)
+            public FileRequestAsyncState(string filepath, DownloadFileCompletedCallback callback,
+                                         DownloadProgressChangedCallback progressCallback,
+                                         WebRequestAsyncCallback webRequestCallback)
                 : base(webRequestCallback, progressCallback)
             {
                 FilePath = filepath;

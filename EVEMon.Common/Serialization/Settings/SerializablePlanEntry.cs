@@ -40,7 +40,7 @@ namespace EVEMon.Common.Serialization.Settings
 
         internal SerializablePlanEntry Clone()
         {
-            SerializablePlanEntry clone = (SerializablePlanEntry) MemberwiseClone();
+            SerializablePlanEntry clone = (SerializablePlanEntry)MemberwiseClone();
             clone.PlanGroups = new List<string>(PlanGroups);
             clone.Remapping = Remapping.Clone();
             return clone;

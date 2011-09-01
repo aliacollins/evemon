@@ -12,12 +12,14 @@ namespace EVEMon.Common.Controls
     public abstract class CustomComboBox : ComboBox
     {
         #region CustomComboBoxEventArgs
+
         /// <summary>
         /// Custom EventArgs encapsulating value as to whether the combo box value(s) should be assignd to or not.
         /// </summary>
         protected class CustomComboBoxEventArgs : EventArgs
         {
             private bool validate;
+
             public bool Validate
             {
                 get { return validate; }
@@ -30,10 +32,12 @@ namespace EVEMon.Common.Controls
                 this.validate = validate;
             }
         }
+
         #endregion
 
 
         #region Dropdown
+
         /// <summary>
         /// Internal class to represent the dropdown list of the CheckedComboBox
         /// </summary>
@@ -45,19 +49,16 @@ namespace EVEMon.Common.Controls
             // Keeps track of whether checked item(s) changed, hence the value of the CheckedComboBox as a whole changed.
             // This is simply done via maintaining the old string-representation of the value(s) and the new one and comparing them!
             private string oldStrValue = String.Empty;
+
             public bool ValueChanged
             {
                 get
                 {
                     string newStrValue = ccbParent.Text;
                     if ((oldStrValue.Length > 0) && (newStrValue.Length > 0))
-                    {
                         return (oldStrValue.CompareTo(newStrValue) != 0);
-                    }
                     else
-                    {
                         return (oldStrValue.Length != newStrValue.Length);
-                    }
                 }
             }
 
@@ -93,8 +94,6 @@ namespace EVEMon.Common.Controls
                 this.ResumeLayout(false);
             }
 
-
-
             /// <summary>
             /// Closes the dropdown portion and enacts any changes according to the specified boolean parameter.
             /// NOTE: even though the caller might ask for changes to be enacted, this doesn't necessarily mean
@@ -105,12 +104,11 @@ namespace EVEMon.Common.Controls
             public void CloseDropdown(bool validate)
             {
                 if (dropdownClosed)
-                {
                     return;
-                }
                 //Debug.WriteLine("CloseDropdown");
                 // Cancel parent's selection before we close
-                if (validate) ccbParent.SelectedIndex = -1;
+                if (validate)
+                    ccbParent.SelectedIndex = -1;
                 ccbParent.OnDropDownDeactivated(validate);
                 // From now on the dropdown is considered closed. We set the flag here to prevent OnDeactivate() calling
                 // this method once again after hiding this window.
@@ -140,9 +138,7 @@ namespace EVEMon.Common.Controls
                 base.OnDeactivate(e);
                 CustomComboBoxEventArgs ce = e as CustomComboBoxEventArgs;
                 if (ce != null)
-                {
                     CloseDropdown(ce.Validate);
-                }
                 else
                 {
                     // If not custom event arguments passed, means that this method was called from the
@@ -156,6 +152,7 @@ namespace EVEMon.Common.Controls
                 OnDeactivate(e);
             }
         }
+
         #endregion
 
 
@@ -174,6 +171,7 @@ namespace EVEMon.Common.Controls
         }
 
         private ToolTip toolTip;
+
         public ToolTip ToolTip
         {
             get { return this.toolTip; }
@@ -214,7 +212,6 @@ namespace EVEMon.Common.Controls
         protected abstract void OnDropDownActivated();
         protected abstract void OnDropDownDeactivated(bool validate);
 
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -222,9 +219,7 @@ namespace EVEMon.Common.Controls
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
@@ -237,11 +232,8 @@ namespace EVEMon.Common.Controls
         private void UpdateToolTip()
         {
             if (this.toolTip != null)
-            {
                 this.toolTip.SetToolTip(this, this.Text + "\n(use del and shift + del to unselect/select all)");
-            }
         }
-
 
         private void DoDropDown()
         {
@@ -268,9 +260,7 @@ namespace EVEMon.Common.Controls
             // NOTE: that is because the events were being fired in a wrong order, due to the actual dropdown list
             //       of the ComboBox which lies underneath our dropdown and gets involved every time.
             if (e is CustomComboBoxEventArgs)
-            {
                 base.OnDropDownClosed(e);
-            }
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -285,7 +275,8 @@ namespace EVEMon.Common.Controls
             }
             // Make sure that certain keys or combinations are not blocked.
             e.Handled = !e.Alt && !(e.KeyCode == Keys.Tab) &&
-                !((e.KeyCode == Keys.Left) || (e.KeyCode == Keys.Right) || (e.KeyCode == Keys.Home) || (e.KeyCode == Keys.End));
+                        !((e.KeyCode == Keys.Left) || (e.KeyCode == Keys.Right) || (e.KeyCode == Keys.Home) ||
+                          (e.KeyCode == Keys.End));
 
             base.OnKeyDown(e);
         }

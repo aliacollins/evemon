@@ -37,7 +37,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">The enumeration of serializable research points from the API.</param>
         internal void Import(IEnumerable<SerializableResearchListItem> src)
-        {            
+        {
             Items.Clear();
 
             // Import the research points from the API

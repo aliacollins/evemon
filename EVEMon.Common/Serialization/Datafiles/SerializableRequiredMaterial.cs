@@ -8,38 +8,18 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableRequiredMaterial
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("quantity")]
-        public int Quantity
-        {
-            get;
-            set;
-        }
+        public int Quantity { get; set; }
 
         [XmlAttribute("damagePerJob")]
-        public double DamagePerJob
-        {
-            get;
-            set;
-        }
+        public double DamagePerJob { get; set; }
 
         [XmlAttribute("activityId")]
-        public int Activity
-        {
-            get;
-            set;
-        }
+        public int Activity { get; set; }
 
         [XmlAttribute("wasted")]
-        public int WasteAffected
-        {
-            get;
-            set;
-        }
+        public int WasteAffected { get; set; }
     }
 }

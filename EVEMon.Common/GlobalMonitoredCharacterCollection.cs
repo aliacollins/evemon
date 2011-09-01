@@ -88,7 +88,7 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<MonitoredCharacterSettings> monitoredCharacters)
         {
             Items.Clear();
-            foreach (var characterSettings in monitoredCharacters)
+            foreach (MonitoredCharacterSettings characterSettings in monitoredCharacters)
             {
                 Character character = EveMonClient.Characters[characterSettings.CharacterGuid];
                 if (character == null)

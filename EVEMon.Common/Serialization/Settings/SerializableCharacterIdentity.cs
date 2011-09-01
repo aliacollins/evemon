@@ -19,7 +19,7 @@ namespace EVEMon.Common.Serialization.Settings
         /// <returns></returns>
         internal SerializableCharacterIdentity Clone()
         {
-            return (SerializableCharacterIdentity) MemberwiseClone();
+            return (SerializableCharacterIdentity)MemberwiseClone();
         }
     }
 }

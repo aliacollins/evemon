@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
-
 using EVEMon.Common.Attributes;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
+
 
     #region Flag Enumerations
 
@@ -30,16 +30,22 @@ namespace EVEMon.Common
     {
         [XmlEnum("Caldari")]
         Caldari = 1,
+
         [XmlEnum("Minmatar")]
         Minmatar = 2,
+
         [XmlEnum("Amarr")]
         Amarr = 4,
+
         [XmlEnum("Gallente")]
         Gallente = 8,
+
         [XmlEnum("Jove")]
         Jove = 16,
+
         [XmlEnum("Faction")]
         Faction = 32,
+
         [XmlEnum("ORE")]
         Ore = 64,
 
@@ -114,18 +120,22 @@ namespace EVEMon.Common
         /// None, regular learning.
         /// </summary>
         None = 0,
+
         /// <summary>
         /// Do not update the total SP count.
         /// </summary>
         FreezeSP = 1,
+
         /// <summary>
         /// Do not update the training time and the trained skills enumeration.
         /// </summary>
         IgnoreTraining = 2,
+
         /// <summary>
         /// Assume the prerequisites are already known.
         /// </summary>
         IgnorePrereqs = 4,
+
         /// <summary>
         /// Ignore the changes when the given target level is lower than the current one
         /// </summary>
@@ -153,7 +163,7 @@ namespace EVEMon.Common
         RemoveAll = 1,
         ConfirmedOnly = 2
     }
-    
+
     public enum PlanSort
     {
         Name = 0,
@@ -184,26 +194,31 @@ namespace EVEMon.Common
         /// </summary>
         [Description("Pending...")]
         Pending,
+
         /// <summary>
         /// The query is being updated.
         /// </summary>
         [Description("Updating...")]
         Updating,
+
         /// <summary>
         /// The query is disabled by the settings.
         /// </summary>
         [Description("Disabled by settings.")]
         Disabled,
+
         /// <summary>
         /// There is no network connection.
         /// </summary>
         [Description("No TCP/IP connection.")]
         NoNetwork,
+
         /// <summary>
         /// A full key was needed.
         /// </summary>
         [Description("Full API Key required.")]
         NoFullKey,
+
         /// <summary>
         /// The character is not on any account.
         /// </summary>
@@ -217,6 +232,7 @@ namespace EVEMon.Common
         /// Accounts are sorted by their ids
         /// </summary>
         ID = 0,
+
         /// <summary>
         /// Accounts are sorted by their training completion time or, when not in training, their ids.
         /// </summary>
@@ -276,14 +292,17 @@ namespace EVEMon.Common
         /// The certificate has been granted to this character
         /// </summary>
         Granted,
+
         /// <summary>
         /// The certificate can be claimed by the char, all prerequisites are met.
         /// </summary>
         Claimable,
+
         /// <summary>
         /// The certificate is not claimable yet but at least one prerequisite is satisfied
         /// </summary>
         PartiallyTrained,
+
         /// <summary>
         /// The certificate is not claimable and none of its prerequisites are satisfied
         /// </summary>
@@ -334,14 +353,17 @@ namespace EVEMon.Common
         /// The training starts at level 0 with no SP.
         /// </summary>
         FromScratch,
+
         /// <summary>
         /// The training starts at the end of the previous level, the skill not being partially trained.
         /// </summary>
         FromPreviousLevel,
+
         /// <summary>
         /// The training starts from the current SP, including the ones for the partially trained level.
         /// </summary>
         FromCurrent,
+
         /// <summary>
         /// The training starts at the end of the previous level, or current if this level is already partially trained
         /// </summary>
@@ -357,10 +379,12 @@ namespace EVEMon.Common
         /// None, there is nothing to do.
         /// </summary>
         None,
+
         /// <summary>
         /// The operation is an addition.
         /// </summary>
         Addition,
+
         /// <summary>
         /// The operation is a suppression.
         /// </summary>
@@ -376,6 +400,7 @@ namespace EVEMon.Common
         /// This entry is a top-level one, no entries depend on it.
         /// </summary>
         Planned,
+
         /// <summary>
         /// This entry is required by another entry
         /// </summary>
@@ -391,14 +416,17 @@ namespace EVEMon.Common
         /// The server is offline
         /// </summary>
         Offline,
+
         /// <summary>
         /// The server is online
         /// </summary>
         Online,
+
         /// <summary>
         /// The API couldn't be queried or has not been queried yet.
         /// </summary>
         Unknown,
+
         /// <summary>
         /// The server's status checks have been disabled.
         /// </summary>
@@ -414,10 +442,12 @@ namespace EVEMon.Common
         /// Everything normal, we're online
         /// </summary>
         Online,
+
         /// <summary>
         /// The user requested to stay offline after connection failures
         /// </summary>
         Offline,
+
         /// <summary>
         /// The connection has not been tested yet
         /// </summary>
@@ -433,10 +463,12 @@ namespace EVEMon.Common
         /// The account credentials wouldn't be checked because of an error.
         /// </summary>
         Unknown = 0,
+
         /// <summary>
         /// This is a limited API key.
         /// </summary>
         Limited = 1,
+
         /// <summary>
         /// This is a full API key.
         /// </summary>
@@ -590,7 +622,7 @@ namespace EVEMon.Common
     public enum Gender
     {
         Female = 0,
-        Male =1
+        Male = 1
     }
 
     /// <summary>
@@ -626,6 +658,7 @@ namespace EVEMon.Common
         /// Characters are sorted by their names
         /// </summary>
         Name = 0,
+
         /// <summary>
         /// Characters are sorted by their training completion time or, when not in training, their names.
         /// </summary>
@@ -645,14 +678,19 @@ namespace EVEMon.Common
     {
         [XmlEnum("perception")]
         Perception = 1,
+
         [XmlEnum("memory")]
         Memory = 4,
+
         [XmlEnum("willpower")]
         Willpower = 3,
+
         [XmlEnum("intelligence")]
         Intelligence = 0,
+
         [XmlEnum("charisma")]
         Charisma = 2,
+
         [XmlEnum("none")]
         None = -1
     }
@@ -664,20 +702,28 @@ namespace EVEMon.Common
     {
         [Description("None")]
         None = 0,
+
         [Description("Manufacturing")]
         Manufacturing = 1,
+
         [Description("Researching Technology")]
         ResearchingTechnology = 2,
+
         [Description("Time Efficiency Research")]
         ResearchingTimeProductivity = 3,
+
         [Description("Material Research")]
         ResearchingMaterialProductivity = 4,
+
         [Description("Copying")]
         Copying = 5,
+
         [Description("Duplicating")]
         Duplicating = 6,
+
         [Description("Reverse Engineering")]
         ReverseEngineering = 7,
+
         [Description("Invention")]
         Invention = 8
     }
@@ -690,12 +736,16 @@ namespace EVEMon.Common
     {
         [Header("Active orders")]
         Active = 0,
+
         [Header("Canceled orders")]
         Canceled = 1,
+
         [Header("Expired orders")]
         Expired = 2,
+
         [Header("Fulfilled orders")]
         Fulfilled = 3,
+
         [Header("Modified orders")]
         Modified = 4
     }
@@ -708,12 +758,16 @@ namespace EVEMon.Common
     {
         [Header("Active jobs")]
         Active = 0,
+
         [Header("Delivered jobs")]
         Delivered = 1,
+
         [Header("Canceled jobs")]
         Canceled = 2,
+
         [Header("Paused jobs")]
         Paused = 3,
+
         [Header("Failed jobs")]
         Failed = 4
     }
@@ -724,10 +778,13 @@ namespace EVEMon.Common
     public enum ActiveJobState
     {
         None,
+
         [Description("Pending")]
         Pending,
+
         [Description("In progress")]
         InProgress,
+
         [Description("Ready")]
         Ready
     }
@@ -740,6 +797,7 @@ namespace EVEMon.Common
     {
         [Header("Inbox")]
         Inbox = 0,
+
         [Header("Sent Items")]
         SentItem = 1,
     }
@@ -911,5 +969,4 @@ namespace EVEMon.Common
     }
 
     #endregion
-
 }

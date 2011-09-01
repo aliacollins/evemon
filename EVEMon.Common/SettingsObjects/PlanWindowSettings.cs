@@ -28,7 +28,7 @@ namespace EVEMon.Common.SettingsObjects
             Columns = EnumExtensions.GetValues<PlanColumn>().Where(
                 x => x != PlanColumn.None).Select(x =>
                                                   new PlanColumnSettings
-                                                      {Column = x, Visible = displayedColumns.Contains(x), Width = -1}).ToArray();
+                                                      { Column = x, Visible = displayedColumns.Contains(x), Width = -1 }).ToArray();
         }
 
         [XmlElement("highlightPlannedSkills")]

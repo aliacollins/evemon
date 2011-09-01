@@ -104,7 +104,6 @@ namespace EVEMon.Common.IgbService
                     ar = null;
                     if (m_running)
                         ar = m_listener.BeginAcceptTcpClient(EndAcceptTcpClient, null);
-
                 } while (ar != null && ar.CompletedSynchronously);
             }
             finally
@@ -155,9 +154,7 @@ namespace EVEMon.Common.IgbService
             try
             {
                 if (m_running && ClientConnected != null)
-                {
                     ClientConnected(this, new ClientConnectedEventArgs(client));
-                }
                 else
                 {
                     try

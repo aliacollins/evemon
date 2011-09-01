@@ -32,10 +32,11 @@ namespace EVEMon.Common
                 Items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
                 Items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
             }
-            // Don't worry if we can't create MD5 maybe they have FIPS enforced
+                // Don't worry if we can't create MD5 maybe they have FIPS enforced
             catch (Exception)
             {
-                EveMonClient.Trace("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");
+                EveMonClient.Trace(
+                    "Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");
             }
         }
     }

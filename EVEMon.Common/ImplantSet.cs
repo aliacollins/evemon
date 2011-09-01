@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -185,6 +184,5 @@ namespace EVEMon.Common
             int index = (int)slot;
             m_values[index] = (src == null ? Implant.None : StaticItems.GetImplants(slot)[src.Name]);
         }
-
     }
 }

@@ -151,7 +151,7 @@ namespace EVEMon.Common.ExternalCalendar
                 googleAppointmentFilter.EarlyReminder = Settings.Calendar.EarlyReminding;
                 googleAppointmentFilter.LateReminder = Settings.Calendar.LateReminding;
                 googleAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
-                googleAppointmentFilter.ReminderMethod = (int) Settings.Calendar.GoogleReminder;
+                googleAppointmentFilter.ReminderMethod = (int)Settings.Calendar.GoogleReminder;
 
                 try
                 {

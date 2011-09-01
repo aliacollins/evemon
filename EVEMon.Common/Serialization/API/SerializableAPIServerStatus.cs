@@ -20,6 +20,5 @@ namespace EVEMon.Common.Serialization.API
             get { return Boolean.Parse(CCPOpen.ToLower(CultureConstants.DefaultCulture)); }
             set { CCPOpen = (value ? "True" : "False"); }
         }
-
     }
 }

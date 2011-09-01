@@ -36,7 +36,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            Orders.AddRange(((MarketOrdersNotificationEventArgs) other).Orders);
+            Orders.AddRange(((MarketOrdersNotificationEventArgs)other).Orders);
             UpdateDescription();
         }
 

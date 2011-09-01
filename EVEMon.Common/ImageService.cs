@@ -64,7 +64,6 @@ namespace EVEMon.Common
                     }
                     callback(image);
                     return;
-
                 }
                 catch (Exception e)
                 {

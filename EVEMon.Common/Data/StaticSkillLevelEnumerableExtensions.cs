@@ -8,7 +8,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class StaticSkillLevelEnumerableExtensions
     {
-        
         #region Methods on Enumerations of StaticSkillLevel
 
         /// <summary>
@@ -56,7 +55,8 @@ namespace EVEMon.Common.Data
         /// <param name="list"></param>
         /// <param name="item"></param>
         /// <param name="includeRoots"></param>
-        internal static void FillDependencies(SkillLevelSet<StaticSkillLevel> set, List<StaticSkillLevel> list, StaticSkillLevel item, bool includeRoots)
+        internal static void FillDependencies(SkillLevelSet<StaticSkillLevel> set, List<StaticSkillLevel> list,
+                                              StaticSkillLevel item, bool includeRoots)
         {
             StaticSkill skill = item.Skill;
 
@@ -77,7 +77,7 @@ namespace EVEMon.Common.Data
 
             // Add greater levels
             int max = (includeRoots ? item.Level : item.Level - 1);
-            for (int i = 2; i <= max; i++) 
+            for (int i = 2; i <= max; i++)
             {
                 if (set.Contains(skill, i))
                     continue;
@@ -89,6 +89,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

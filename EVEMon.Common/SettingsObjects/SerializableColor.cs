@@ -47,7 +47,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
         public static explicit operator SerializableColor(Color src)
         {
-            return new SerializableColor {A = src.A, R = src.R, G = src.G, B = src.B};
+            return new SerializableColor { A = src.A, R = src.R, G = src.G, B = src.B };
         }
 
         #endregion

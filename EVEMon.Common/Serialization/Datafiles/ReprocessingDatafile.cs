@@ -6,10 +6,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class ReprocessingDatafile
     {
         [XmlElement("item")]
-        public SerializableItemMaterials[] Items
-        {
-            get;
-            set;
-        }
+        public SerializableItemMaterials[] Items { get; set; }
     }
 }

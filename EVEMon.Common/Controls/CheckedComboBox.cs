@@ -15,6 +15,7 @@ namespace EVEMon.Common.Controls
     public class CheckedComboBox : CustomComboBox
     {
         #region CustomCheckedListBox
+
         /// <summary>
         /// A custom CheckedListBox being shown within the dropdown form representing the dropdown list of the CheckedComboBox.
         /// </summary>
@@ -39,7 +40,6 @@ namespace EVEMon.Common.Controls
                     // Enact selection.
                     ((Dropdown)Parent).ForceDeactivate(new CustomComboBoxEventArgs(true));
                     e.Handled = true;
-
                 }
                 else if (e.KeyCode == Keys.Delete)
                 {
@@ -69,10 +69,9 @@ namespace EVEMon.Common.Controls
                     SetSelected(index, true);
                 }
             }
-
         }
-        #endregion
 
+        #endregion
 
 
         // The content of the popup
@@ -96,6 +95,7 @@ namespace EVEMon.Common.Controls
         }
 
         public delegate string CheckedComboBoxTextBuilderDelegate(CheckedComboBox box);
+
         public CheckedComboBoxTextBuilderDelegate CustomTextBuilder { get; set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -104,9 +104,10 @@ namespace EVEMon.Common.Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public string TextForNone { get; set; }
 
-
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        [Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
+        [Editor(
+            "System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+            , typeof(UITypeEditor))]
         public new CheckedListBox.ObjectCollection Items
         {
             get { return listBox.Items; }
@@ -168,19 +169,20 @@ namespace EVEMon.Common.Controls
 
         public override string GetTextValue()
         {
-            if (listBox.CheckedItems.Count == 0) return TextForNone;
-            if (listBox.CheckedItems.Count == listBox.Items.Count) return TextForAll;
+            if (listBox.CheckedItems.Count == 0)
+                return TextForNone;
+            if (listBox.CheckedItems.Count == listBox.Items.Count)
+                return TextForAll;
 
             if (CustomTextBuilder != null)
-            {
                 return CustomTextBuilder(this);
-            }
             else
             {
                 StringBuilder sb = new StringBuilder("");
                 for (int i = 0; i < listBox.CheckedItems.Count; i++)
                 {
-                    if (i != 0) sb.Append(ValueSeparator);
+                    if (i != 0)
+                        sb.Append(ValueSeparator);
                     sb.Append(listBox.GetItemText(listBox.CheckedItems[i]));
                 }
                 return sb.ToString();
@@ -227,21 +229,15 @@ namespace EVEMon.Common.Controls
         public bool GetItemChecked(int index)
         {
             if (index < 0 || index > Items.Count)
-            {
                 throw new ArgumentOutOfRangeException("index", "value out of range");
-            }
             else
-            {
                 return listBox.GetItemChecked(index);
-            }
         }
 
         public void SetItemChecked(int index, bool isChecked)
         {
             if (index < 0 || index > Items.Count)
-            {
                 throw new ArgumentOutOfRangeException("index", "value out of range");
-            }
             else
             {
                 listBox.SetItemChecked(index, isChecked);
@@ -253,21 +249,15 @@ namespace EVEMon.Common.Controls
         public CheckState GetItemCheckState(int index)
         {
             if (index < 0 || index > Items.Count)
-            {
                 throw new ArgumentOutOfRangeException("index", "value out of range");
-            }
             else
-            {
                 return listBox.GetItemCheckState(index);
-            }
         }
 
         public void SetItemCheckState(int index, CheckState state)
         {
             if (index < 0 || index > Items.Count)
-            {
                 throw new ArgumentOutOfRangeException("index", "value out of range");
-            }
             else
             {
                 listBox.SetItemCheckState(index, state);
@@ -277,6 +267,7 @@ namespace EVEMon.Common.Controls
         }
 
         private bool manuallyFired;
+
         private void listBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (!manuallyFired)
@@ -297,9 +288,7 @@ namespace EVEMon.Common.Controls
                 Invalidate();
 
                 if (ItemCheck != null)
-                {
                     ItemCheck(sender, e);
-                }
             }
         }
 
@@ -308,7 +297,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void CheckedComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        private void CheckedComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             using (Brush backBrush = new SolidBrush(BackColor))
             {
@@ -320,8 +309,9 @@ namespace EVEMon.Common.Controls
                 using (Brush foreBrush = new SolidBrush(ForeColor))
                 {
                     const float offset = 3.0f;
-                    var size = e.Graphics.MeasureString(displayText, Font);
-                    var rect = new RectangleF(offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - offset, size.Height);
+                    SizeF size = e.Graphics.MeasureString(displayText, Font);
+                    RectangleF rect = new RectangleF(offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - offset,
+                                                     size.Height);
                     e.Graphics.DrawString(displayText, Font, foreBrush, rect, StringFormat.GenericTypographic);
                 }
             }
@@ -329,5 +319,4 @@ namespace EVEMon.Common.Controls
             e.DrawFocusRectangle();
         }
     }
-
 }

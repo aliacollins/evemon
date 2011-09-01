@@ -9,10 +9,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SkillsDatafile
     {
         [XmlElement("group")]
-        public SerializableSkillGroup[] Groups
-        {
-            get;
-            set;
-        }
+        public SerializableSkillGroup[] Groups { get; set; }
     }
 }

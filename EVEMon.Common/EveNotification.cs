@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -176,12 +175,14 @@ namespace EVEMon.Common
 
             // If there is an error response on missing IDs inform the user
             if (!String.IsNullOrEmpty(result.Result.MissingMessageIDs))
+            {
                 result.Result.Texts.Add(
                     new SerializableNotificationTextsListItem
                         {
                             NotificationID = long.Parse(result.Result.MissingMessageIDs),
                             NotificationText = "The text for this notification was reported missing."
                         });
+            }
 
             // Quit if for any reason there is no text
             if (result.Result.Texts.Count == 0)

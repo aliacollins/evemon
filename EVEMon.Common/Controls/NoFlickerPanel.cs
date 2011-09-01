@@ -10,10 +10,9 @@ namespace EVEMon.Common.Controls
                      ControlStyles.DoubleBuffer |
                      ControlStyles.UserPaint |
                      ControlStyles.ResizeRedraw |
-                     ControlStyles.ContainerControl | 
+                     ControlStyles.ContainerControl |
                      ControlStyles.AllPaintingInWmPaint, true);
             UpdateStyles();
         }
     }
 }
-

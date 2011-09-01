@@ -1,5 +1,4 @@
 using System;
-
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -29,10 +28,11 @@ namespace EVEMon.Common
         /// </summary>
         private static string Name
         {
-            get 
-            { 
-                return (EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider ?
-                        "Tranquility" : "Sinqularity");
+            get
+            {
+                return (EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider
+                            ? "Tranquility"
+                            : "Sinqularity");
             }
         }
 
@@ -42,12 +42,12 @@ namespace EVEMon.Common
         public string StatusText
         {
             get
-            {               
-                switch(m_status)
+            {
+                switch (m_status)
                 {
                     case ServerStatus.Online:
                         return String.Format(CultureConstants.TidyInteger,
-                            "{0} Server Online ({1:n} Pilots)", Name, m_users);
+                                             "{0} Server Online ({1:n} Pilots)", Name, m_users);
                     case ServerStatus.Offline:
                         return String.Format("{0} Server Offline", Name);
                     case ServerStatus.CheckDisabled:

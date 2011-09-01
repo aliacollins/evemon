@@ -162,9 +162,7 @@ namespace EVEMon.Common
                 // Imports the character
                 SerializableCCPCharacter ccpCharacter = serialCharacter as SerializableCCPCharacter;
                 if (ccpCharacter != null)
-                {
                     Items.Add(new CCPCharacter(id, ccpCharacter));
-                }
                 else
                 {
                     SerializableUriCharacter uriCharacter = serialCharacter as SerializableUriCharacter;

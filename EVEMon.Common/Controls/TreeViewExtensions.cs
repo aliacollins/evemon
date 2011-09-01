@@ -38,7 +38,7 @@ namespace EVEMon.Common.Controls
                         // Return this node
                         yield return node;
                     }
-                    // Is there a previous level ?
+                        // Is there a previous level ?
                     else if (enumerators.Count != 0)
                     {
                         // Clean up
@@ -49,11 +49,9 @@ namespace EVEMon.Common.Controls
                         // Previous level
                         currentEnumerator = enumerators.Pop();
                     }
-                    // Then, we're done
+                        // Then, we're done
                     else
-                    {
                         yield break;
-                    }
                 }
             }
             finally

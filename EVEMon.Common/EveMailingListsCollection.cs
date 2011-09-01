@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 
@@ -8,7 +7,6 @@ namespace EVEMon.Common
     public sealed class EveMailingListsCollection : ReadonlyCollection<EveMailingList>
     {
         private readonly Character m_character;
-
 
         /// <summary>
         /// Constructor.
@@ -28,7 +26,7 @@ namespace EVEMon.Common
             Items.Clear();
 
             // Import the mail messages from the API
-            foreach (var srcEVEMailingList in src)
+            foreach (SerializableMailingListsListItem srcEVEMailingList in src)
             {
                 Items.Add(new EveMailingList(srcEVEMailingList));
             }

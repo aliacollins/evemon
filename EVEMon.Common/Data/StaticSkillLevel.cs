@@ -8,7 +8,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class StaticSkillLevel : ISkillLevel
     {
-
         #region Constructors
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace EVEMon.Common.Data
         {
             Skill = StaticSkills.GetSkillByID(id);
             Level = level;
-            Activity = (BlueprintActivity) Enum.ToObject(typeof (BlueprintActivity), activityId);
+            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
         }
 
         #endregion
@@ -120,9 +119,7 @@ namespace EVEMon.Common.Data
         {
             // Same skill, lower level ?
             if (Skill == skillLevel.Skill)
-            {
                 return Level > skillLevel.Level;
-            }
 
             // Prerequisite
             int neededLevel;
@@ -160,6 +157,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

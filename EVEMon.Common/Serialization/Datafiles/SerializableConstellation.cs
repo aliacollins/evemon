@@ -8,23 +8,12 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableConstellation
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
+
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("systems")]
-        public SerializableSolarSystem[] Systems
-        {
-            get;
-            set;
-        }
+        public SerializableSolarSystem[] Systems { get; set; }
     }
 }

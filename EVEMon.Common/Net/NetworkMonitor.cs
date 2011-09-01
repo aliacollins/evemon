@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         public static bool IsNetworkAvailable
         {
-            get 
+            get
             {
                 // edge case: Wine/Darwine user with broken .NET Networking Stack
                 if (Settings.Updates.IgnoreNetworkStatus)
@@ -110,15 +110,11 @@ namespace EVEMon.Common.Net
                 int index = 0;
                 while (index < s_subscribers.Count)
                 {
-                    var reference = s_subscribers[index];
+                    WeakReference<INetworkChangeSubscriber> reference = s_subscribers[index];
                     if (reference.TryDo(x => x.SetNetworkStatus(e.IsAvailable)))
-                    {
                         index++;
-                    }
                     else
-                    {
                         s_subscribers.RemoveAt(index);
-                    }
                 }
             }
         }

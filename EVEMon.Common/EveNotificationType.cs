@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-
 using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common
@@ -13,7 +12,6 @@ namespace EVEMon.Common
     {
         private static SerializableNotificationRefTypeIDs s_notificationTypes;
         private static bool s_isLoaded;
-
 
         /// <summary>
         /// Gets the description of the notification type.
@@ -39,7 +37,7 @@ namespace EVEMon.Common
             // Read the resource file
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(Properties.Resources.NotificationRefTypeIDs);
-            
+
             // Read the nodes
             using (XmlNodeReader reader = new XmlNodeReader(xmlDoc))
             {
@@ -65,6 +63,5 @@ namespace EVEMon.Common
 
             s_isLoaded = true;
         }
-
     }
 }

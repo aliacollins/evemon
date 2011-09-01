@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -39,7 +38,7 @@ namespace EVEMon.Common
         private bool m_corpJobsUpdated;
         private bool m_charJobsAdded;
         private bool m_corpJobsAdded;
-        
+
         #endregion
 
 
@@ -80,7 +79,8 @@ namespace EVEMon.Common
             m_charMarketOrdersMonitor.Updated += OnCharacterMarketOrdersUpdated;
             QueryMonitors.Add(m_charMarketOrdersMonitor);
 
-            m_corpMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIMarketOrders>(this, APIMethods.CorporationMarketOrders);
+            m_corpMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIMarketOrders>(this,
+                                                                                               APIMethods.CorporationMarketOrders);
             m_corpMarketOrdersMonitor.Updated += OnCorporationMarketOrdersUpdated;
             QueryMonitors.Add(m_corpMarketOrdersMonitor);
 
@@ -88,7 +88,8 @@ namespace EVEMon.Common
             m_charIndustryJobsMonitor.Updated += OnCharacterJobsUpdated;
             QueryMonitors.Add(m_charIndustryJobsMonitor);
 
-            m_corpIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIIndustryJobs>(this, APIMethods.CorporationIndustryJobs);
+            m_corpIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIIndustryJobs>(this,
+                                                                                               APIMethods.CorporationIndustryJobs);
             m_corpIndustryJobsMonitor.Updated += OnCorporationJobsUpdated;
             QueryMonitors.Add(m_corpIndustryJobsMonitor);
 
@@ -135,7 +136,7 @@ namespace EVEMon.Common
             m_skillQueueMonitor.ForceUpdate(true);
             m_charStandingsMonitor.ForceUpdate(true);
         }
-        
+
         #endregion
 
 
@@ -228,7 +229,7 @@ namespace EVEMon.Common
             {
                 IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = MarketOrders
                     .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                    && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
+                                && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
 
                 decimal activeTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
                 decimal activeEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
@@ -332,10 +333,10 @@ namespace EVEMon.Common
             // Fire the global event
             EveMonClient.OnCharacterUpdated(this);
         }
-        
+
         #endregion
-        
-        
+
+
         #region Querying
 
         /// <summary>
@@ -357,7 +358,6 @@ namespace EVEMon.Common
             // If industry jobs monitoring is enabled, update job timers
             if (m_charIndustryJobsMonitor.Enabled)
                 IndustryJobs.UpdateOnTimerTick();
-
         }
 
         /// <summary>
@@ -366,11 +366,11 @@ namespace EVEMon.Common
         private void QueryCharacterMailingList()
         {
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
-                                                                        APIMethods.MailingLists,
-                                                                        Identity.Account.UserID,
-                                                                        Identity.Account.APIKey,
-                                                                        CharacterID,
-                                                                        OnCharacterMailingListUpdated);
+                APIMethods.MailingLists,
+                Identity.Account.UserID,
+                Identity.Account.APIKey,
+                CharacterID,
+                OnCharacterMailingListUpdated);
         }
 
         /// <summary>
@@ -379,11 +379,11 @@ namespace EVEMon.Common
         private void QueryCharacterInfo()
         {
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
-                                                                        APIMethods.CharacterInfo,
-                                                                        Identity.Account.UserID,
-                                                                        Identity.Account.APIKey,
-                                                                        CharacterID,
-                                                                        OnCharacterInfoUpdated);
+                APIMethods.CharacterInfo,
+                Identity.Account.UserID,
+                Identity.Account.APIKey,
+                CharacterID,
+                OnCharacterInfoUpdated);
         }
 
         /// <summary>
@@ -408,25 +408,17 @@ namespace EVEMon.Common
 
             // Check the character has a sufficient clone or send a notification
             if (Monitored && (CloneSkillPoints < SkillPoints))
-            {
                 EveMonClient.Notifications.NotifyInsufficientClone(this);
-            }
             else
-            {
                 EveMonClient.Notifications.InvalidateInsufficientClone(this);
-            }
 
             // Check for claimable certificates
             List<Certificate> claimableCertifitates = new List<Certificate>();
             claimableCertifitates.AddRange(Certificates.Where(x => x.CanBeClaimed));
             if (Monitored && claimableCertifitates.Count > 0)
-            {
                 EveMonClient.Notifications.NotifyClaimableCertificate(this, claimableCertifitates);
-            }
             else
-            {
                 EveMonClient.Notifications.InvalidateClaimableCertificate(this);
-            }
         }
 
         /// <summary>
@@ -599,7 +591,7 @@ namespace EVEMon.Common
             }
 
             // Import the data if all queried
-            if (m_charJobsUpdated) 
+            if (m_charJobsUpdated)
                 Import(m_jobs);
         }
 
@@ -686,6 +678,7 @@ namespace EVEMon.Common
             if (EVENotifications.NewNotifications != 0)
                 EveMonClient.Notifications.NotifyNewEVENotifications(this, EVENotifications.NewNotifications);
         }
+
         #endregion
 
 
@@ -741,7 +734,7 @@ namespace EVEMon.Common
         /// <param name="issuedFor"></param>
         /// <returns>True if orders get added, false otherwise</returns>
         private bool AddOrders(APIResult<SerializableAPIMarketOrders> result, bool ordersAdded, IssuedFor issuedFor)
-        {           
+        {
             // Add orders if there isn't an error
             if (result.HasError)
                 return false;

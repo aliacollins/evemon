@@ -1,4 +1,5 @@
-﻿#if !NO_THREAD_SAFETY
+﻿
+#if !NO_THREAD_SAFETY
 using System;
 using System.Collections.Generic;
 using System.Text;

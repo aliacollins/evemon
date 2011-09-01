@@ -123,9 +123,9 @@ namespace EVEMon.Common
             // Apply simple sort operators
             switch (sort)
             {
-                    case PlanEntrySort.None:
+                case PlanEntrySort.None:
                     break;
-                    case PlanEntrySort.Name:
+                case PlanEntrySort.Name:
                     Items.StableSort(PlanSorter.CompareByName);
                     break;
                 case PlanEntrySort.Cost:
@@ -165,7 +165,7 @@ namespace EVEMon.Common
                     Items.StableSort(PlanSorter.CompareByTrainingTimeNatural);
                     break;
                 case PlanEntrySort.SkillGroupDuration:
-                    var skillGroupsDurations = new Dictionary<StaticSkillGroup, TimeSpan>();
+                    Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations = new Dictionary<StaticSkillGroup, TimeSpan>();
                     Items.StableSort((x, y) => PlanSorter.CompareBySkillGroupDuration(x, y, Items, skillGroupsDurations));
                     break;
                 case PlanEntrySort.SPPerHour:

@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
             GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
 
             // Generate the nodes
-            foreach (var srcRegion in datafile.Regions)
+            foreach (SerializableRegion srcRegion in datafile.Regions)
             {
                 Region region = new Region(srcRegion);
                 s_regionsByID[srcRegion.ID] = region;
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Data
             }
 
             // Connects the systems
-            foreach (var srcJump in datafile.Jumps)
+            foreach (SerializableJump srcJump in datafile.Jumps)
             {
                 SolarSystem a = s_solarSystemsByID[srcJump.FirstSystemID];
                 SolarSystem b = s_solarSystemsByID[srcJump.SecondSystemID];
@@ -310,6 +310,5 @@ namespace EVEMon.Common.Data
                     return String.Empty;
             }
         }
-
     }
 }

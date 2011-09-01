@@ -44,6 +44,5 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         [XmlIgnore]
         public DateTime CreateDate { get; private set; }
-
     }
 }

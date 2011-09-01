@@ -69,14 +69,14 @@ namespace EVEMon.Common
                 body.AppendLine();
             }
             else
-            {
                 body.AppendFormat(CultureConstants.DefaultCulture, "Character is not training.{0}{0}", Environment.NewLine);
-            }
 
             // Free room in skill queue
             if (freeTime)
+            {
                 body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText,
                                   Environment.NewLine);
+            }
 
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)
@@ -128,19 +128,13 @@ namespace EVEMon.Common
 
                     // Notes
                     if (!string.IsNullOrEmpty(entry.Notes))
-                    {
                         body.AppendFormat(CultureConstants.DefaultCulture, " ({0})", entry.Notes);
-                    }
 
                     // Training time
                     if (trainTime.Days > 0)
-                    {
                         body.AppendFormat(CultureConstants.DefaultCulture, " - {0}d, {1}", trainTime.Days, trainTime);
-                    }
                     else
-                    {
                         body.AppendFormat(CultureConstants.DefaultCulture, " - {0}", trainTime);
-                    }
 
                     body.AppendLine();
                 }
@@ -161,18 +155,14 @@ namespace EVEMon.Common
         private static void SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled)
-            {
                 EveMonClient.Trace("Emailer.SendCompleted - The last message was cancelled");
-            }
             if (e.Error != null)
             {
                 EveMonClient.Trace("Emailer.SendCompleted - An error occurred");
                 ExceptionHandler.LogException(e.Error, false);
             }
             else
-            {
                 EveMonClient.Trace("Emailer.SendCompleted - Message sent.");
-            }
         }
 
         /// <summary>
@@ -206,9 +196,7 @@ namespace EVEMon.Common
                 SmtpClient client = new SmtpClient(settings.EmailSmtpServer);
                 client.SendCompleted += SendCompleted;
                 if (settings.EmailPortNumber > 0)
-                {
                     client.Port = settings.EmailPortNumber;
-                }
 
                 // Enter crendtials
                 if (settings.EmailAuthenticationRequired)

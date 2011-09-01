@@ -40,7 +40,7 @@ namespace EVEMon.Common.Net
 
             m_timeout = (timeoutSetting < TimeSpan.FromSeconds(1) || timeoutSetting > TimeSpan.FromMinutes(5)
                              ? 20000
-                             : (int) timeoutSetting.TotalMilliseconds);
+                             : (int)timeoutSetting.TotalMilliseconds);
         }
 
         /// <summary>
@@ -60,12 +60,12 @@ namespace EVEMon.Common.Net
         {
             get
             {
-                lock(m_syncLock)
+                lock (m_syncLock)
                     return m_cancelled;
             }
             set
-            { 
-                lock(m_syncLock)
+            {
+                lock (m_syncLock)
                     m_cancelled = value;
             }
         }
@@ -98,13 +98,17 @@ namespace EVEMon.Common.Net
                 int bytesRead = 0;
                 long totalBytesRead = 0;
                 long rawBufferSize = webResponse.ContentLength / 100;
-                int bufferSize = (int)(rawBufferSize > m_webServiceState.MaxBufferSize  ? m_webServiceState.MaxBufferSize : (rawBufferSize < m_webServiceState.MinBufferSize ? m_webServiceState.MinBufferSize : rawBufferSize));
+                int bufferSize =
+                    (int)
+                    (rawBufferSize > m_webServiceState.MaxBufferSize
+                         ? m_webServiceState.MaxBufferSize
+                         : (rawBufferSize < m_webServiceState.MinBufferSize ? m_webServiceState.MinBufferSize : rawBufferSize));
                 do
                 {
                     byte[] buffer = new byte[bufferSize];
                     if (webResponseStream != null)
                         bytesRead = webResponseStream.Read(buffer, 0, bufferSize);
-                    
+
                     if (bytesRead <= 0)
                         continue;
 
@@ -113,8 +117,11 @@ namespace EVEMon.Common.Net
                         continue;
 
                     totalBytesRead += bytesRead;
-                    int progressPercentage = webResponse.ContentLength == 0 ? 0 : (int)((totalBytesRead * 100)/webResponse.ContentLength);
-                    m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead, progressPercentage));
+                    int progressPercentage = webResponse.ContentLength == 0
+                                                 ? 0
+                                                 : (int)((totalBytesRead * 100) / webResponse.ContentLength);
+                    m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead,
+                                                                                  progressPercentage));
                 } while (bytesRead > 0 && !Cancelled);
             }
             catch (HttpWebServiceException)
@@ -142,7 +149,8 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
-        public void GetResponseAsync(string url, Stream responseStream, string accept, HttpPostData postData, WebRequestAsyncState state)
+        public void GetResponseAsync(string url, Stream responseStream, string accept, HttpPostData postData,
+                                     WebRequestAsyncState state)
         {
             m_asyncState = state;
             m_asyncState.Request = this;
@@ -152,9 +160,7 @@ namespace EVEMon.Common.Net
                 caller.BeginInvoke(url, responseStream, accept, postData, GetResponseAsyncCompleted, caller);
             }
             else
-            {
                 GetResponseAsyncCompletedCore(() => GetResponse(url, responseStream, accept, postData));
-            }
         }
 
         /// <summary>
@@ -186,7 +192,6 @@ namespace EVEMon.Common.Net
             m_asyncState.Callback(m_asyncState);
         }
 
-
         /// <summary>
         /// Get the HttpWebResponse for the specified URL.
         /// </summary>
@@ -206,7 +211,8 @@ namespace EVEMon.Common.Net
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             // When the address has been redirected, connects to the redirection
-            if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.MovedPermanently)
+            if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.Moved ||
+                response.StatusCode == HttpStatusCode.MovedPermanently)
             {
                 string target = response.GetResponseHeader("Location");
                 response.Close();
@@ -270,7 +276,8 @@ namespace EVEMon.Common.Net
                         break;
                     case ProxyAuthentication.Specified:
                         proxy.UseDefaultCredentials = false;
-                        proxy.Credentials = new NetworkCredential(m_webServiceState.Proxy.Username, m_webServiceState.Proxy.Password);
+                        proxy.Credentials = new NetworkCredential(m_webServiceState.Proxy.Username,
+                                                                  m_webServiceState.Proxy.Password);
                         break;
                 }
                 request.Proxy = proxy;

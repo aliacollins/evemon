@@ -13,7 +13,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         public BlueprintMarketGroup(SerializableBlueprintMarketGroup src)
-            :base(src)
+            : base(src)
         {
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
             Blueprints = new BlueprintCollection(this, src.Blueprints);
@@ -66,6 +66,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

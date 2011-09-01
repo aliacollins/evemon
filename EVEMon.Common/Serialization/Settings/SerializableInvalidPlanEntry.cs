@@ -22,7 +22,7 @@ namespace EVEMon.Common.Serialization.Settings
         /// <returns></returns>
         internal SerializableInvalidPlanEntry Clone()
         {
-            return (SerializableInvalidPlanEntry) MemberwiseClone();
+            return (SerializableInvalidPlanEntry)MemberwiseClone();
         }
     }
 }

@@ -1,4 +1,3 @@
-
 namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>

@@ -23,7 +23,6 @@ namespace EVEMon.Common.Controls.MultiPanel
 
         private MultiPanelPage m_selectedPage;
 
-
         /// <summary>
         /// Gets or sets the selected page.
         /// </summary>
@@ -62,7 +61,9 @@ namespace EVEMon.Common.Controls.MultiPanel
             Graphics g = e.Graphics;
 
             using (SolidBrush br = new SolidBrush(BackColor))
+            {
                 g.FillRectangle(br, ClientRectangle);
+            }
         }
 
         /// <summary>
@@ -100,8 +101,10 @@ namespace EVEMon.Common.Controls.MultiPanel
 
                 m_owner = owner as MultiPanel;
                 if (m_owner == null)
+                {
                     throw new ArgumentException("Tried to create a MultiPanelPagesCollection with a non-MultiPanel owner.",
                                                 "owner");
+                }
             }
 
             /// <summary>
@@ -115,8 +118,10 @@ namespace EVEMon.Common.Controls.MultiPanel
 
                 MultiPanelPage p = value as MultiPanelPage;
                 if (p == null)
+                {
                     throw new ArgumentException("Tried to add a non-MultiPanelPage control to the MultiPanelPagesCollection",
                                                 "value");
+                }
 
                 p.SendToBack();
                 base.Add(p);

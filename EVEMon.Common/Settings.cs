@@ -308,13 +308,9 @@ namespace EVEMon.Common
 
             // Loading from file failed, we create settings from scratch
             if (settings == null)
-            {
                 Reset();
-            }
             else
-            {
                 Import(settings, false);
-            }
         }
 
         /// <summary>

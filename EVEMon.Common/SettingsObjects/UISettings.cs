@@ -9,7 +9,6 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class UISettings
     {
-
         #region Constructors
 
         /// <summary>
@@ -139,6 +138,5 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         #endregion
-
     }
 }

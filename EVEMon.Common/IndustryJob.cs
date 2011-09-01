@@ -1,5 +1,4 @@
 using System;
-
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -12,6 +11,7 @@ namespace EVEMon.Common
         /// The maximum number of days after job ended. Beyond this limit, we do not import jobs anymore.
         /// </summary>
         public const int MaxEndedDays = 7;
+
 
         #region Constructor
 
@@ -100,7 +100,6 @@ namespace EVEMon.Common
                            LastStateChange = LastStateChange,
                            IssuedFor = IssuedFor
                        };
-
         }
 
         #endregion
@@ -146,9 +145,11 @@ namespace EVEMon.Common
             get
             {
                 if (State == JobState.Paused)
+                {
                     return
                         EndProductionTime.Subtract(PauseProductionTime).ToDescriptiveText(
                             DescriptiveTextOptions.SpaceBetween);
+                }
 
                 if (State == JobState.Active && EndProductionTime > DateTime.UtcNow)
                     return EndProductionTime.ToRemainingTimeShortDescription(DateTimeKind.Utc);

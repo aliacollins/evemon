@@ -8,24 +8,12 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableSkillGroup
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("skill")]
-        public SerializableSkill[] Skills
-        {
-            get;
-            set;
-        }
+        public SerializableSkill[] Skills { get; set; }
     }
 }

@@ -59,14 +59,16 @@ namespace EVEMon.Common.Collections
         public void RebuildFrom(IEnumerable<T> items)
         {
             // Removing old items
-            foreach (var item in Items)
+            foreach (T item in Items)
+            {
                 OnRemoving(item);
+            }
             Items.Clear();
 
             // Adding new items
-            foreach (var item in items)
+            foreach (T item in items)
             {
-                var copy = item;
+                T copy = item;
                 OnAdding(ref copy);
                 Items.Add(copy);
             }
@@ -167,8 +169,10 @@ namespace EVEMon.Common.Collections
         /// </summary>
         public void Clear()
         {
-            foreach (var item in Items)
+            foreach (T item in Items)
+            {
                 OnRemoving(item);
+            }
             Items.Clear();
             OnChanged();
         }

@@ -99,7 +99,6 @@ namespace EVEMon.Common
             }
         }
 
-
         /// <summary>
         /// Gets the highest grade certificate.
         /// </summary>

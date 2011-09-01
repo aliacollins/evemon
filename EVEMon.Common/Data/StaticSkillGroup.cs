@@ -87,6 +87,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

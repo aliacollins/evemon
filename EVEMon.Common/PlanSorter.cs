@@ -53,15 +53,13 @@ namespace EVEMon.Common
                     m_entries.GroupBy(x => x.Priority).OrderBy(x => x.Key).Select(group => new PlanScratchpad(scratchpad, group)));
             }
             else
-            {
                 groupedPlan.Add(new PlanScratchpad(scratchpad, m_entries));
-            }
 
             // Apply second pass (sorts)
             // We sort every group, and merge them once they're sorted
             List<PlanEntry> list = new List<PlanEntry>();
 
-            foreach (var group in groupedPlan)
+            foreach (PlanScratchpad group in groupedPlan)
             {
                 group.UpdateStatistics(scratchpad, false, false);
                 group.SimpleSort(m_sort, m_reverseOrder);
@@ -247,8 +245,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static int CompareByTimeDifference(PlanEntry x, PlanEntry y)
         {
-            var xDuration = x.TrainingTime - x.OldTrainingTime;
-            var yDuration = y.TrainingTime - y.OldTrainingTime;
+            TimeSpan xDuration = x.TrainingTime - x.OldTrainingTime;
+            TimeSpan yDuration = y.TrainingTime - y.OldTrainingTime;
             return xDuration.CompareTo(yDuration);
         }
 

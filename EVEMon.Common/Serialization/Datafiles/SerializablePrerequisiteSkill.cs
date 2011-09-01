@@ -8,17 +8,9 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializablePrerequisiteSkill
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("lv")]
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; set; }
     }
 }

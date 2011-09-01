@@ -106,7 +106,7 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    var destFile = new FileInfo(destFileName);
+                    FileInfo destFile = new FileInfo(destFileName);
 
                     // We need to make sure this file is not read-only
                     // If it is, this method will request the user the permission to automatically remove the readonly attributes

@@ -30,9 +30,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public IEnumerable<IColumnSettings> Columns
         {
-            get {
-                return m_columns;
-            }
+            get { return m_columns; }
         }
 
         /// <summary>
@@ -51,9 +49,9 @@ namespace EVEMon.Common.Controls
         private void UpdateContent()
         {
             clbColumns.Items.Clear();
-            foreach (var key in GetAllKeys())
+            foreach (int key in GetAllKeys())
             {
-                var column = m_columns.First(x => x.Key == key);
+                IColumnSettings column = m_columns.First(x => x.Key == key);
                 clbColumns.Items.Add(GetHeader(key), column.Visible);
             }
         }

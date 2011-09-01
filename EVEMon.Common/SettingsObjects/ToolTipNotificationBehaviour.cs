@@ -1,4 +1,3 @@
-
 namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>
@@ -10,15 +9,17 @@ namespace EVEMon.Common.SettingsObjects
         /// Never notify
         /// </summary>
         Never = 0,
+
         /// <summary>
         /// Notify only once
         /// </summary>
         Once = 1,
+
         /// <summary>
         /// Every minute, the warning is repeated until the user clicks the tooltip
         /// </summary>
         RepeatUntilClicked = 2,
-        
+
         // TODO: Deprecate after version 1.3.6
         RepeatUntiClicked = 3
     }

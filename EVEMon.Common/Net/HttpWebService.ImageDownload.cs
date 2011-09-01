@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
                 if (!requestState.Request.Cancelled && requestState.Error == null)
                     imageResult = GetImage(requestState.Request);
             }
-            catch(HttpWebServiceException ex)
+            catch (HttpWebServiceException ex)
             {
                 requestState.Error = ex;
             }
@@ -75,7 +75,8 @@ namespace EVEMon.Common.Net
             if (requestState.Request.ResponseStream != null)
                 requestState.Request.ResponseStream.Close();
 
-            requestState.DownloadImageCompleted(new DownloadImageAsyncResult(imageResult, requestState.Error), requestState.UserState);
+            requestState.DownloadImageCompleted(new DownloadImageAsyncResult(imageResult, requestState.Error),
+                                                requestState.UserState);
         }
 
         /// <summary>
@@ -108,8 +109,9 @@ namespace EVEMon.Common.Net
             /// <param name="callback">The callback.</param>
             /// <param name="webRequestCallback">The web request callback.</param>
             /// <param name="userState">State of the user.</param>
-            public ImageRequestAsyncState(DownloadImageCompletedCallback callback, WebRequestAsyncCallback webRequestCallback, object userState)
-                :base(webRequestCallback)
+            public ImageRequestAsyncState(DownloadImageCompletedCallback callback, WebRequestAsyncCallback webRequestCallback,
+                                          object userState)
+                : base(webRequestCallback)
             {
                 DownloadImageCompleted = callback;
                 UserState = userState;

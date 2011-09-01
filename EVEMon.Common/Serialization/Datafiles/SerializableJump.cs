@@ -8,17 +8,9 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableJump
     {
         [XmlAttribute("id1")]
-        public int FirstSystemID
-        {
-            get;
-            set;
-        }
+        public int FirstSystemID { get; set; }
 
         [XmlAttribute("id2")]
-        public int SecondSystemID
-        {
-            get;
-            set;
-        }
+        public int SecondSystemID { get; set; }
     }
 }

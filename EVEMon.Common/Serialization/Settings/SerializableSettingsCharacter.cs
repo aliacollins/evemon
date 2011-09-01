@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Serialization;
-
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Serialization.Settings

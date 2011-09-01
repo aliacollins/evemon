@@ -8,7 +8,6 @@ using PostSharp.Extensibility;
 
 namespace EVEMon.Common.Attributes
 {
-
 #if NO_THREAD_SAFETY
     internal sealed class EnforceUIThreadAffinityAttribute : Attribute
     {

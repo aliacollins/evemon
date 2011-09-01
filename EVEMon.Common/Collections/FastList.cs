@@ -141,7 +141,7 @@ namespace EVEMon.Common.Collections
         /// <returns>The index where the item was found, -1 otherwise</returns>
         public int IndexOf(T item)
         {
-            var comparer = EqualityComparer<T>.Default;
+            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
             for (int i = 0; i < Count; i++)
             {
@@ -178,7 +178,7 @@ namespace EVEMon.Common.Collections
         public void AddRange(IEnumerable<T> enumerable)
         {
             // Scroll through the items to add
-            foreach (var item in enumerable)
+            foreach (T item in enumerable)
             {
                 // Ensure size is enough
                 if (Count == m_items.Length)
@@ -241,9 +241,7 @@ namespace EVEMon.Common.Collections
 
             // Do we need to shift items before ? (insertion rather than addition)
             if (index < Count)
-            {
                 Array.Copy(m_items, index, m_items, index + 1, Count - index);
-            }
             m_items[index] = item;
 
             // Finally, we increase the count
@@ -258,9 +256,7 @@ namespace EVEMon.Common.Collections
         {
             // When item is not the last item, shift the items after it to the left
             if (index < Count - 1)
-            {
                 Array.Copy(m_items, index + 1, m_items, index, Count - (index + 1));
-            }
 
             // Make sure we don't hold a reference anymore over the left item
             m_items[Count - 1] = default(T);
@@ -276,7 +272,7 @@ namespace EVEMon.Common.Collections
         /// <returns>True if the item was found, false otherwise</returns>
         public bool Remove(T item)
         {
-            var comparer = EqualityComparer<T>.Default;
+            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
             for (int i = 0; i < Count; i++)
             {
@@ -305,7 +301,7 @@ namespace EVEMon.Common.Collections
         /// <returns>True if the item was found in this list, false otherwise</returns>
         public bool Contains(T item)
         {
-            var comparer = EqualityComparer<T>.Default;
+            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
             for (int i = 0; i < Count; i++)
             {

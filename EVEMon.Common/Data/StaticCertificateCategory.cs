@@ -29,7 +29,7 @@ namespace EVEMon.Common.Data
                 Items.Add(new StaticCertificateClass(this, srcClass));
             }
         }
-        
+
         #endregion
 
 
@@ -49,7 +49,7 @@ namespace EVEMon.Common.Data
         /// Gets this category's description.
         /// </summary>
         public string Description { get; private set; }
-        
+
         #endregion
 
 

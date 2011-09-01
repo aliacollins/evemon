@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Resources;
 using System.Windows.Forms;
-
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Controls
@@ -22,7 +21,6 @@ namespace EVEMon.Common.Controls
     /// </remarks>
     public partial class EveImage : UserControl
     {
-
         /// <summary>
         /// Holds configuration data for different image types.
         /// </summary>
@@ -92,7 +90,7 @@ namespace EVEMon.Common.Controls
 
                 if (m_sizeMode == EveImageSizeMode.AutoSize)
                 {
-                    pbImage.Size = new Size((int) m_imageSize, (int) m_imageSize);
+                    pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
                     Size = pbImage.Size;
                 }
             }
@@ -107,7 +105,7 @@ namespace EVEMon.Common.Controls
             set
             {
                 base.Size = (m_sizeMode == EveImageSizeMode.AutoSize
-                                 ? new Size((int) m_imageSize, (int) m_imageSize)
+                                 ? new Size((int)m_imageSize, (int)m_imageSize)
                                  : value);
             }
         }
@@ -129,7 +127,7 @@ namespace EVEMon.Common.Controls
                         pbImage.SizeMode = PictureBoxSizeMode.Normal;
                         break;
                     case EveImageSizeMode.AutoSize:
-                        pbImage.Size = new Size((int) m_imageSize, (int) m_imageSize);
+                        pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
                         Size = pbImage.Size;
                         pbImage.SizeMode = PictureBoxSizeMode.AutoSize;
                         break;
@@ -153,27 +151,27 @@ namespace EVEMon.Common.Controls
             m_imageTypeAttributes = new Dictionary<ImageType, ImageTypeData>();
 
             // Ships
-            ArrayList validSizes = new ArrayList {EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256};
+            ArrayList validSizes = new ArrayList { EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256 };
             m_imageTypeAttributes.Add(ImageType.Ship,
                                       new ImageTypeData("Ships", "icons", ImageNameFrom.TypeID, validSizes));
 
             // Items
-            validSizes = new ArrayList {EveImageSize.x16, EveImageSize.x32, EveImageSize.x64, EveImageSize.x128};
+            validSizes = new ArrayList { EveImageSize.x16, EveImageSize.x32, EveImageSize.x64, EveImageSize.x128 };
             m_imageTypeAttributes.Add(ImageType.Item,
                                       new ImageTypeData("Items", "icons", ImageNameFrom.Icon, validSizes));
 
             // Drones
-            validSizes = new ArrayList {EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256};
+            validSizes = new ArrayList { EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256 };
             m_imageTypeAttributes.Add(ImageType.Drone,
                                       new ImageTypeData("Drones", "icons", ImageNameFrom.TypeID, validSizes));
 
             // Structures
-            validSizes = new ArrayList {EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256};
+            validSizes = new ArrayList { EveImageSize.x32, EveImageSize.x64, EveImageSize.x128, EveImageSize.x256 };
             m_imageTypeAttributes.Add(ImageType.Structure,
                                       new ImageTypeData("", "icons", ImageNameFrom.TypeID, validSizes));
 
             // Blueprints
-            validSizes = new ArrayList {EveImageSize.x64};
+            validSizes = new ArrayList { EveImageSize.x64 };
             m_imageTypeAttributes.Add(ImageType.Blueprint,
                                       new ImageTypeData("Blueprints", "icons", ImageNameFrom.TypeID, validSizes));
         }
@@ -254,13 +252,13 @@ namespace EVEMon.Common.Controls
             string urlPath = "type";
             bool drawOverlayIcon = false;
 
-            if ((int) m_imageSize > 64)
+            if ((int)m_imageSize > 64)
             {
                 urlPath = "render";
                 drawOverlayIcon = true;
             }
 
-            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int) m_imageSize);
+            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize);
 
             ImageService.GetImageAsync(imageURL, true, img =>
                                                            {
@@ -278,7 +276,7 @@ namespace EVEMon.Common.Controls
         private void GetImageFromAlternativeSource(ImageTypeData typeData)
         {
             // Set file & pathname variables
-            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int) m_imageSize);
+            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int)m_imageSize);
 
             string imageWebName;
             string imageResourceName;
@@ -331,7 +329,7 @@ namespace EVEMon.Common.Controls
                     if (basicx.Key.ToString() != imageResourceName)
                         continue;
 
-                    pbImage.Image = (Image) basicx.Value;
+                    pbImage.Image = (Image)basicx.Value;
                     return true;
                 }
             }
@@ -360,9 +358,7 @@ namespace EVEMon.Common.Controls
                     DrawOverlayIcon();
             }
             else
-            {
                 ShowBlankImage();
-            }
         }
 
         /// <summary>
@@ -370,7 +366,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void DrawOverlayIcon()
         {
-            var overlayIcon = new Bitmap(16, 16);
+            Bitmap overlayIcon = new Bitmap(16, 16);
             switch (m_item.MetaGroup)
             {
                 case ItemMetaGroup.T2:
@@ -395,7 +391,7 @@ namespace EVEMon.Common.Controls
 
             using (Graphics graph = Graphics.FromImage(pbImage.Image))
             {
-                graph.DrawImage(overlayIcon, 0, 0, (int) m_imageSize / 4, (int) m_imageSize / 4);
+                graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
             }
         }
 

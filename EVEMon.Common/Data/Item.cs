@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 

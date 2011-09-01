@@ -59,15 +59,16 @@ namespace EVEMon.Common
                 string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
-                {
-                    using (var writer = new StreamWriter(fs, Encoding.UTF8))
-                    {
-                        writer.Write(content);
-                        writer.Flush();
-                        writer.Close();
-                    }
-                    return true;
-                });
+                                                                {
+                                                                    using (
+                                                                        StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                                                                    {
+                                                                        writer.Write(content);
+                                                                        writer.Flush();
+                                                                        writer.Close();
+                                                                    }
+                                                                    return true;
+                                                                });
             }
         }
 
@@ -96,8 +97,8 @@ namespace EVEMon.Common
         /// </returns>
         internal static bool CheckFileUpToDate(string filename, DateTime updateTime, TimeSpan period)
         {
-            var file = GetFile(filename);
-            var previousUpdateTime = updateTime.Subtract(period);
+            FileInfo file = GetFile(filename);
+            DateTime previousUpdateTime = updateTime.Subtract(period);
 
             // File is already downloaded ?
             if (File.Exists(file.FullName))

@@ -51,7 +51,8 @@ namespace EVEMon.Common.Net
                 Uri tempUri = new Uri(url);
                 if (tempUri.Scheme != Uri.UriSchemeHttp && tempUri.Scheme != Uri.UriSchemeHttps)
                 {
-                    errorMsg = String.Format(CultureConstants.DefaultCulture, "The specified scheme ({0}) is not supported.", tempUri.Scheme);
+                    errorMsg = String.Format(CultureConstants.DefaultCulture, "The specified scheme ({0}) is not supported.",
+                                             tempUri.Scheme);
                     return false;
                 }
             }
@@ -71,7 +72,7 @@ namespace EVEMon.Common.Net
         public void CancelRequest(object request)
         {
             if (request.GetType() == typeof(HttpWebServiceRequest))
-                ((HttpWebServiceRequest) request).Cancelled = true;
+                ((HttpWebServiceRequest)request).Cancelled = true;
         }
 
         /// <summary>

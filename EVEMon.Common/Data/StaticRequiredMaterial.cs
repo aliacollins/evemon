@@ -12,7 +12,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         internal StaticRequiredMaterial(SerializableRequiredMaterial src)
-            : base(src.ID,  GetName(src.ID))
+            : base(src.ID, GetName(src.ID))
         {
             Quantity = src.Quantity;
             DamagePerJob = src.DamagePerJob;
@@ -63,6 +63,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

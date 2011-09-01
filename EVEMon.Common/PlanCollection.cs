@@ -37,13 +37,9 @@ namespace EVEMon.Common
         protected override void OnAdding(ref Plan item)
         {
             if (item.Character != m_owner)
-            {
                 item = item.Clone(m_owner);
-            }
             else if (Contains(item))
-            {
                 item = item.Clone();
-            }
 
             item.IsConnected = true;
         }
@@ -84,13 +80,9 @@ namespace EVEMon.Common
                 Plan plan = this[serialPlan.Name];
 
                 if (plan != null)
-                {
                     plan.Import(serialPlan);
-                }
                 else
-                {
                     plan = new Plan(m_owner, serialPlan);
-                }
 
                 newPlanList.Add(plan);
             }

@@ -18,7 +18,6 @@ namespace EVEMon.Common.Controls
         private int m_dropMarkerOn = -1;
         private bool m_dropMarkerBelow;
 
-
         public DraggableListView()
         {
             DraggableInit();
@@ -142,13 +141,9 @@ namespace EVEMon.Common.Controls
 
             // if the item was dragged to the end of the plan.
             if (dropIndex >= Items.Count)
-            {
                 EnsureVisible(Items.Count - 1);
-            }
             else
-            {
                 EnsureVisible(dropIndex);
-            }
         }
 
         /// <summary>
@@ -240,9 +235,7 @@ namespace EVEMon.Common.Controls
             base.OnDragEnter(e);
             String text = (String)e.Data.GetData(Reorder.GetType());
             if (text.CompareTo(Reorder) == 0)
-            {
                 e.Effect = DragDropEffects.Move;
-            }
             else
             {
                 e.Effect = DragDropEffects.None;
@@ -253,9 +246,7 @@ namespace EVEMon.Common.Controls
         public void ClearDropMarker()
         {
             if (m_dropMarkerOn != -1)
-            {
                 RestrictedPaint();
-            }
             m_dropMarkerOn = -1;
         }
 
@@ -292,9 +283,7 @@ namespace EVEMon.Common.Controls
             base.OnPaint(e);
 
             if (m_dragging)
-            {
                 RestrictedPaint();
-            }
         }
 
         /// <summary>

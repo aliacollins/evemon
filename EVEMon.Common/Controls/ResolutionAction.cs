@@ -1,4 +1,3 @@
-
 namespace EVEMon.Common.Controls
 {
     /// <summary>
@@ -10,10 +9,12 @@ namespace EVEMon.Common.Controls
         /// No action.
         /// </summary>
         None,
+
         /// <summary>
         /// Close the window.
         /// </summary>
         Close,
+
         /// <summary>
         /// Hide the troubleshooter.
         /// </summary>

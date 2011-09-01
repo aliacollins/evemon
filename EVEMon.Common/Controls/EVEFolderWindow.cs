@@ -28,7 +28,7 @@ namespace EVEMon.Common.Controls
                 SpecifyFolderRadioButton.Checked = true;
                 DefaultFolderRadioButton.Enabled = false;
             }
-            
+
             if (m_specifiedPortraitFolder == m_defaultFolderLocation)
             {
                 DefaultFolderRadioButton.Checked = true;

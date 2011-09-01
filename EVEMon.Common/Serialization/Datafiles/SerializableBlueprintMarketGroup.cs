@@ -8,32 +8,16 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableBlueprintMarketGroup
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlElement("blueprint")]
-        public SerializableBlueprint[] Blueprints
-        {
-            get;
-            set;
-        }
+        public SerializableBlueprint[] Blueprints { get; set; }
 
         [XmlArray("subGroups")]
         [XmlArrayItem("subGroup")]
-        public SerializableBlueprintMarketGroup[] SubGroups
-        {
-            get;
-            set;
-        }
+        public SerializableBlueprintMarketGroup[] SubGroups { get; set; }
     }
 }

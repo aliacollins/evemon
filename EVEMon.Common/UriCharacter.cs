@@ -1,5 +1,4 @@
 ﻿using System;
-
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
 

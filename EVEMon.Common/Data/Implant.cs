@@ -2,7 +2,10 @@
 
 namespace EVEMon.Common.Data
 {
+
+
     #region Implant
+
     /// <summary>
     /// Represents an implant.
     /// </summary>
@@ -167,5 +170,6 @@ namespace EVEMon.Common.Data
 
         #endregion
     }
+
     #endregion
 }

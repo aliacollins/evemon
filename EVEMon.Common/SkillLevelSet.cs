@@ -58,13 +58,9 @@ namespace EVEMon.Common
                 T oldValue = m_items[skillArrayIndex * 5 + level - 1];
 
                 if (value.Skill == null)
-                {
                     Count--;
-                }
                 else if (oldValue == null || oldValue.Skill == null)
-                {
                     Count++;
-                }
                 m_items[skillArrayIndex * 5 + level - 1] = value;
             }
         }

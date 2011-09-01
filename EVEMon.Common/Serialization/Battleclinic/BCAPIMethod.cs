@@ -38,7 +38,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static IEnumerable<BCAPIMethod> CreateDefaultSet()
         {
             return Enum.GetNames(typeof(BCAPIMethods)).Select(
-                methodName => new {methodName, methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName)}).
+                methodName => new { methodName, methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName) }).
                 Select(method => new
                                      {
                                          method,

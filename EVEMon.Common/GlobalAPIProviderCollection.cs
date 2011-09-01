@@ -62,19 +62,13 @@ namespace EVEMon.Common
             {
                 // Is it a custom provider stored in this collection ?
                 if (m_customProviders.Contains(value))
-                {
                     m_currentProvider = value;
-                }
                     // Is it the default provider ?
                 else if (APIProvider.DefaultProvider == value)
-                {
                     m_currentProvider = value;
-                }
                     // is it the test provider
                 else if (APIProvider.TestProvider == value)
-                {
                     m_currentProvider = value;
-                }
                     // Then it's a non-register provider, we messed up since it should be in this global collection
                 else
                     throw new InvalidOperationException("The given provider is not in the list");
@@ -112,12 +106,12 @@ namespace EVEMon.Common
             m_currentProvider = DefaultProvider;
 
             // Providers
-            foreach (var sProvider in serial.CustomProviders)
+            foreach (SerializableAPIProvider sProvider in serial.CustomProviders)
             {
                 APIProvider provider = new APIProvider { Name = sProvider.Name, Url = sProvider.Url };
 
                 // Providers' methods
-                foreach (var sMethod in sProvider.Methods)
+                foreach (SerializableAPIMethod sMethod in sProvider.Methods)
                 {
                     APIMethod method = provider.GetMethod(sMethod.Method);
                     if (method != null)
@@ -174,7 +168,7 @@ namespace EVEMon.Common
         {
             yield return APIProvider.DefaultProvider;
 
-            foreach (var provider in m_customProviders)
+            foreach (APIProvider provider in m_customProviders)
             {
                 yield return provider;
             }

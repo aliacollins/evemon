@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common

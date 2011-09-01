@@ -3,7 +3,10 @@ using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
+
+
     #region ImplantSlot
+
     /// <summary>
     /// Represents a collection of all the implants bound to a given group.
     /// </summary>
@@ -60,7 +63,7 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
+
     #endregion
 }

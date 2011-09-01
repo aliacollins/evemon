@@ -77,13 +77,9 @@ namespace EVEMon.Common.Threading
         {
             IActor actor = Actor;
             if (HasAccess || (actor == null))
-            {
                 action();
-            }
             else
-            {
                 actor.Invoke(action);
-            }
         }
 
         /// <summary>
@@ -95,13 +91,9 @@ namespace EVEMon.Common.Threading
         {
             IActor actor = Actor;
             if (HasAccess || (actor == null))
-            {
                 action();
-            }
             else
-            {
                 actor.BeginInvoke(action);
-            }
         }
 
         /// <summary>
@@ -159,13 +151,9 @@ namespace EVEMon.Common.Threading
         public static void BackgroundInvoke(Action action)
         {
             if (IsMultiThreaded)
-            {
                 action.BeginInvoke(null, null);
-            }
             else
-            {
                 action.Invoke();
-            }
         }
 
         /// <summary>
@@ -178,13 +166,9 @@ namespace EVEMon.Common.Threading
         public static void BackgroundInvoke(Action action, AsyncCallback callback, object @object)
         {
             if (IsMultiThreaded)
-            {
                 action.BeginInvoke(callback, @object);
-            }
             else
-            {
                 action.Invoke();
-            }
         }
 
         /// <summary>
@@ -210,7 +194,8 @@ namespace EVEMon.Common.Threading
             lock (s_syncLock)
             {
                 // Collect all the actions scheduled before now
-                actionsToInvoke.AddRange(s_delayedOperations.TakeWhile(pair => pair.Key <= DateTime.UtcNow).Select(pair => pair.Value));
+                actionsToInvoke.AddRange(
+                    s_delayedOperations.TakeWhile(pair => pair.Key <= DateTime.UtcNow).Select(pair => pair.Value));
 
                 foreach (Action action in actionsToInvoke)
                 {

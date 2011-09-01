@@ -48,9 +48,7 @@ namespace EVEMon.Common
                                      (EveMonClient.Accounts.Count == 1 ? "Your account" : "One of your accounts"));
             }
             else
-            {
                 builder.Append("Some of your accounts are not in training.");
-            }
 
             foreach (Account account in accountsNotTraining)
             {
@@ -109,7 +107,7 @@ namespace EVEMon.Common
         public void Remove(Account account)
         {
             // Clears the account on the owned identities.
-            foreach (var identity in account.CharacterIdentities.Where(x => x.Account == account))
+            foreach (CharacterIdentity identity in account.CharacterIdentities.Where(x => x.Account == account))
             {
                 identity.Account = null;
             }
@@ -140,7 +138,7 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<SerializableAccount> serial)
         {
             Items.Clear();
-            foreach (var serialAccount in serial)
+            foreach (SerializableAccount serialAccount in serial)
             {
                 try
                 {

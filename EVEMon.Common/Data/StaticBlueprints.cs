@@ -21,7 +21,7 @@ namespace EVEMon.Common.Data
         {
             if (BlueprintMarketGroups != null)
                 return;
-            
+
             BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
 
             BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
@@ -51,7 +51,7 @@ namespace EVEMon.Common.Data
 
         #endregion
 
-        
+
         #region Public Properties
 
         /// <summary>
@@ -97,6 +97,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

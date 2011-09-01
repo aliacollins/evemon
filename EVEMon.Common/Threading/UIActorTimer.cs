@@ -24,7 +24,8 @@ namespace EVEMon.Common.Threading
             m_timer = new Timer();
             m_timer.Tick += m_timer_Tick;
             m_timer.Interval = period;
-            if (start) m_timer.Start();
+            if (start)
+                m_timer.Start();
         }
 
         /// <summary>

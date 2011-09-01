@@ -8,50 +8,24 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableSolarSystem
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlAttribute("x")]
-        public int X
-        {
-            get;
-            set;
-        }
+        public int X { get; set; }
+
         [XmlAttribute("y")]
-        public int Y
-        {
-            get;
-            set;
-        }
+        public int Y { get; set; }
+
         [XmlAttribute("z")]
-        public int Z
-        {
-            get;
-            set;
-        }
+        public int Z { get; set; }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("securityLevel")]
-        public float SecurityLevel
-        {
-            get;
-            set;
-        }
+        public float SecurityLevel { get; set; }
 
         [XmlElement("stations")]
-        public SerializableStation[] Stations
-        {
-            get;
-            set;
-        }
+        public SerializableStation[] Stations { get; set; }
     }
 }

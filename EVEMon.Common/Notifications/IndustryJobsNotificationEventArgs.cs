@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace EVEMon.Common.Notifications
 {
     /// <summary>
@@ -40,7 +39,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            Jobs.AddRange(((IndustryJobsNotificationEventArgs) other).Jobs);
+            Jobs.AddRange(((IndustryJobsNotificationEventArgs)other).Jobs);
             UpdateDescription();
         }
 

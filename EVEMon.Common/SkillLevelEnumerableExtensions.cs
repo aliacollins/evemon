@@ -51,7 +51,7 @@ namespace EVEMon.Common
         public static bool Contains(this IEnumerable<SkillLevel> src, Skill skill, out int neededLevel)
         {
             neededLevel = 0;
-            foreach (var prereq in src.Where(prereq => prereq.Skill == skill))
+            foreach (SkillLevel prereq in src.Where(prereq => prereq.Skill == skill))
             {
                 neededLevel = prereq.Level;
                 return true;
@@ -99,7 +99,7 @@ namespace EVEMon.Common
                                                     ref bool isCurrentlyTraining)
         {
             TimeSpan result = TimeSpan.Zero;
-            foreach (var item in src)
+            foreach (SkillLevel item in src)
             {
                 Skill skill = item.Skill;
                 isCurrentlyTraining |= skill.IsTraining;

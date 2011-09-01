@@ -39,6 +39,7 @@ namespace EVEMon.Common
         /// completed processing either the successful call or the timeout.
         /// </remarks>
         private static readonly TimeSpan s_idleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
+
         private static readonly TimeSpan s_infinite = new TimeSpan(0, 0, 0, 0, -1);
         private static readonly Timer s_dirtyTimer = new Timer(DirtyCallback);
 

@@ -27,7 +27,7 @@ namespace EVEMon.Common.Data
             // Create the implants slots
             for (int i = 0; i < s_implantSlots.Length; i++)
             {
-                s_implantSlots[i] = new ImplantCollection((ImplantSlots) i) {new Implant()};
+                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i) { new Implant() };
             }
 
             // Deserialize the items datafile
@@ -107,7 +107,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static ImplantCollection GetImplants(ImplantSlots slot)
         {
-            return s_implantSlots[(int) slot];
+            return s_implantSlots[(int)slot];
         }
 
         /// <summary>
@@ -135,6 +135,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

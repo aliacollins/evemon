@@ -41,7 +41,7 @@ namespace EVEMon.Common
         public void Remove(CharacterIdentity id)
         {
             // If the id was not in list, returns the existing character or null if it does not exist
-            var ccpCharacter = id.CCPCharacter;
+            CCPCharacter ccpCharacter = id.CCPCharacter;
             if (!Items.Remove(id))
                 return;
 
@@ -80,7 +80,8 @@ namespace EVEMon.Common
         {
             Items.Clear();
             foreach (CharacterIdentity id in serialIDList.Select(serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
-                                                                             EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
+                                                                             EveMonClient.CharacterIdentities.Add(serialID.ID,
+                                                                                                                  serialID.Name)))
             {
                 Items.Add(id);
             }

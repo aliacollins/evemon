@@ -8,30 +8,15 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableCertificateClass
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
+
         [XmlAttribute("name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("descr")]
-        public string Description
-        {
-            get;
-            set;
-        }
+        public string Description { get; set; }
 
         [XmlElement("certificate")]
-        public SerializableCertificate[] Certificates
-        {
-            get;
-            set;
-        }
+        public SerializableCertificate[] Certificates { get; set; }
     }
 }

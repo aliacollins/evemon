@@ -10,6 +10,7 @@ namespace EVEMon.Common.Data
         private readonly FastList<int> m_inventBlueprint;
         private readonly FastList<StaticRequiredMaterial> m_materialRequirements;
 
+
         #region Constructors
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace EVEMon.Common.Data
             ProducesItem = StaticItems.GetItemByID(src.ProduceItemID);
             ProductionTime = src.ProductionTime;
             ProductivityModifier = src.ProductivityModifier;
-            ResearchCopyTime = src.ResearchCopyTime*2;
+            ResearchCopyTime = src.ResearchCopyTime * 2;
             ResearchMaterialTime = src.ResearchMaterialTime;
             ResearchProductivityTime = src.ResearchProductivityTime;
             ResearchTechTime = src.ResearchTechTime;
@@ -125,6 +126,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
     }
 }

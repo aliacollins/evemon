@@ -123,19 +123,19 @@ namespace EVEMon.Common.Controls
             m_tsmiMedAnim = new ToolStripMenuItem();
             m_tsmiLowAnim = new ToolStripMenuItem();
             m_tsmiSeparator = new ToolStripSeparator();
-            
+
             // Add menu items
             m_contextMenuStrip.Items.Add(m_tsmiExpandCollapse);
             m_contextMenuStrip.Items.Add(m_tsmiSeparator);
             m_contextMenuStrip.Items.Add(m_tsmiSelectAnim);
             m_tsmiSelectAnim.DropDownItems.AddRange(new ToolStripItem[]
-            {
-                m_tsmiNoAnim,
-                m_tsmiHighAnim,
-                m_tsmiMedAnim,
-                m_tsmiLowAnim
-            });
-            
+                                                        {
+                                                            m_tsmiNoAnim,
+                                                            m_tsmiHighAnim,
+                                                            m_tsmiMedAnim,
+                                                            m_tsmiLowAnim
+                                                        });
+
             // Apply properties
             m_tsmiSelectAnim.Text = "Animation Speed";
             m_tsmiNoAnim.Text = "None";
@@ -186,7 +186,7 @@ namespace EVEMon.Common.Controls
 
             int height = (ExpandDirection == Direction.Up ? Height - Header.Height : 0);
             Header.Location = new Point(0, height);
-            
+
             base.OnPaint(e);
         }
 
@@ -208,10 +208,13 @@ namespace EVEMon.Common.Controls
             if (m_headerImage != null)
             {
                 m_offset = m_headerImage.Width + Pad;
-                gr.DrawImage(m_headerImage, new Rectangle(Pad, Header.Height / 2 - m_headerImage.Height / 2, m_headerImage.Width, m_headerImage.Height));
+                gr.DrawImage(m_headerImage,
+                             new Rectangle(Pad, Header.Height / 2 - m_headerImage.Height / 2, m_headerImage.Width,
+                                           m_headerImage.Height));
             }
 
-            gr.DrawString(HeaderText, Font, Brushes.Black, new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), m_hCenteredStringFormat);
+            gr.DrawString(HeaderText, Font, Brushes.Black,
+                          new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), m_hCenteredStringFormat);
         }
 
         #endregion
@@ -231,9 +234,7 @@ namespace EVEMon.Common.Controls
                 if (value != null)
                 {
                     if (value.Height > Header.Height - 4)
-                    {
                         throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
-                    }
                 }
                 m_expandImage = value;
                 Header.Refresh();
@@ -252,13 +253,10 @@ namespace EVEMon.Common.Controls
                 if (value != null)
                 {
                     if (value.Height > Header.Height - 4)
-                    {
                         throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
-                    }
                 }
                 m_collapseImage = value;
                 Header.Refresh();
-
             }
         }
 
@@ -514,8 +512,8 @@ namespace EVEMon.Common.Controls
         }
 
         #endregion
-
     }
+
 
     #region Enumerations
 

@@ -194,7 +194,7 @@ namespace EVEMon.Common.Controls
                     // Yes it does, so invoke the handler using the target's BeginInvoke method, but wait for it to finish
                     // This is preferable to using Invoke so that if an exception is thrown its presented
                     // in the context of the handler, not the current thread
-                    IAsyncResult result = sync.BeginInvoke(handler, new object[] {this, e});
+                    IAsyncResult result = sync.BeginInvoke(handler, new object[] { this, e });
                     sync.EndInvoke(result);
                     return;
                 }
@@ -296,6 +296,7 @@ namespace EVEMon.Common.Controls
 
         #region State Management
 
+
         #region Private Abstract Class "MouseState"
 
         /// <summary>
@@ -326,7 +327,6 @@ namespace EVEMon.Common.Controls
                 MouseOver,
                 MouseHovering
             };
-
 
             /// <summary>
             /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
@@ -459,7 +459,6 @@ namespace EVEMon.Common.Controls
                 DisableMouseTracking();
                 ChangeState(States.MouseOver);
             }
-
         }
 
         #endregion
@@ -648,7 +647,7 @@ namespace EVEMon.Common.Controls
 
         #endregion
 
-        #endregion
 
+        #endregion
     }
 }

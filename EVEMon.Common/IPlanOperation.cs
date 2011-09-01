@@ -9,10 +9,12 @@ namespace EVEMon.Common
         /// Gets the plan affected by this operation.
         /// </summary>
         Plan Plan { get; }
+
         /// <summary>
         /// Gets the type of operation to perform
         /// </summary>
         PlanOperations Type { get; }
+
         /// <summary>
         /// Gets the highest possible priority (lowest possible number) for new entries when an addition is performed. 
         /// This limit is due to the prerequisites, since they cannot have a lower priority than the entries to add.
@@ -23,6 +25,7 @@ namespace EVEMon.Common
         /// Gets all the entries to add when an addition is performed, including the prerequisites.
         /// </summary>
         IEnumerable<PlanEntry> AllEntriesToAdd { get; }
+
         /// <summary>
         /// Gets the skill levels the user originally wanted to add.
         /// </summary>
@@ -32,10 +35,12 @@ namespace EVEMon.Common
         /// Gets all the entries to remove when a suppression is performed, including the dependencies.
         /// </summary>
         ReadOnlyCollection<PlanEntry> AllEntriesToRemove { get; }
+
         /// <summary>
         /// Gets the entries that can be optionally removed when a suppression is performed.
         /// </summary>
         ReadOnlyCollection<PlanEntry> RemovablePrerequisites { get; }
+
         /// <summary>
         /// Gets the skill levels the user originally wanted to remove.
         /// </summary>
@@ -58,6 +63,5 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="removePrerequisites">When true, also remove the prerequisites that are not used anymore.</param>
         void PerformSuppression(bool removePrerequisites);
-
     }
 }

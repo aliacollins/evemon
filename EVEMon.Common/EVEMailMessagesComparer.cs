@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -80,7 +79,7 @@ namespace EVEMon.Common
 
                 case EveMailMessagesColumn.ToMailingList:
                     return x.ToMailingLists[0].CompareTo(y.ToMailingLists[0]);
-                
+
                 default:
                     return 0;
             }

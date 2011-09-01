@@ -24,7 +24,7 @@ namespace EVEMon.Common
             Filename = filename;
 
             // Compute the MD5 sum
-            var fullpath = GetFullPath(filename);
+            string fullpath = GetFullPath(filename);
             MD5 md5 = MD5.Create();
             StringBuilder builder = new StringBuilder();
 

@@ -5,17 +5,9 @@ namespace EVEMon.Common.Serialization.Datafiles
     public sealed class SerializableItemMaterials
     {
         [XmlAttribute("id")]
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
         [XmlElement("material")]
-        public SerializableMaterialQuantity[] Materials
-        {
-            get;
-            set;
-        }
+        public SerializableMaterialQuantity[] Materials { get; set; }
     }
 }

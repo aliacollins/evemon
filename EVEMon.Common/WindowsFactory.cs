@@ -52,13 +52,9 @@ namespace EVEMon.Common
                     {
                         // Bring to front or show
                         if (s_uniqueWindow.Visible)
-                        {
                             s_uniqueWindow.BringToFront();
-                        }
                         else
-                        {
                             s_uniqueWindow.Show();
-                        }
 
                         // Give focus and return
                         s_uniqueWindow.Activate();
@@ -104,13 +100,9 @@ namespace EVEMon.Common
                     {
                         // Bring to front or show
                         if (s_uniqueWindow.Visible)
-                        {
                             s_uniqueWindow.BringToFront();
-                        }
                         else
-                        {
                             s_uniqueWindow.Show();
-                        }
 
                         // Give focus and return
                         s_uniqueWindow.Activate();
@@ -172,7 +164,6 @@ namespace EVEMon.Common
             }
         }
 
-
         /// <summary>
         /// Show the window with the given tag.
         /// When none exist, it is created using the public constructor accepting an argument of type <see cref="TTag"/>,
@@ -203,7 +194,7 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 // Does it already exist ?
-                foreach (var existingWindow in s_taggedWindows)
+                foreach (TForm existingWindow in s_taggedWindows)
                 {
                     try
                     {
@@ -212,13 +203,9 @@ namespace EVEMon.Common
 
                         // Bring to front or show
                         if (existingWindow.Visible)
-                        {
                             existingWindow.BringToFront();
-                        }
                         else
-                        {
                             existingWindow.Show();
-                        }
 
                         // Give focus and return
                         existingWindow.Activate();
@@ -319,13 +306,9 @@ namespace EVEMon.Common
                         return;
 
                     if (isDisposed)
-                    {
                         s_taggedWindows.Remove(formToRemove);
-                    }
                     else
-                    {
                         formToRemove.Close();
-                    }
                 }
             }
         }

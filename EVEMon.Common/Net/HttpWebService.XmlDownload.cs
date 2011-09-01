@@ -69,7 +69,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         private void DownloadXmlAsyncCompleted(WebRequestAsyncState state)
         {
-            XmlRequestAsyncState requestState = (XmlRequestAsyncState) state;
+            XmlRequestAsyncState requestState = (XmlRequestAsyncState)state;
             XmlDocument xdocResult = new XmlDocument();
             if (!requestState.Request.Cancelled && requestState.Error == null && requestState.Request.ResponseStream != null)
             {

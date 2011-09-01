@@ -31,7 +31,7 @@ namespace EVEMon.Common
         {
             StringReader sr = new StringReader(text);
             StringWriter sw = new StringWriter();
-            
+
             //Loop while next character exists
             while (sr.Peek() > -1)
             {

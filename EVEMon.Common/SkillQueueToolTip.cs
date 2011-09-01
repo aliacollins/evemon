@@ -80,7 +80,7 @@ namespace EVEMon.Common
                 return;
             m_text = text;
             m_toolTip.Hide(m_owner);
-            m_toolTip.Show(text, m_owner,pt.X - m_size.Width / 2, -m_size.Height);
+            m_toolTip.Show(text, m_owner, pt.X - m_size.Width / 2, -m_size.Height);
 
             // Cancel means new height and new position
             if (!m_canceled)

@@ -79,7 +79,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            var ccpCharacter = e.Character as CCPCharacter;
+            CCPCharacter ccpCharacter = e.Character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.
             if (ccpCharacter == null)
@@ -196,13 +196,9 @@ namespace EVEMon.Common.Controls
 
             // If we are in DesignMode we just paint a dummy queue
             if (DesignMode)
-            {
                 PaintDesignerQueue(g, width, height);
-            }
             else
-            {
                 PaintQueue(g, width, height);
-            }
 
             // We need to update the painting only every (24h / width in pixels)
             m_nextRepainting = DateTime.Now.AddSeconds((double)(24 * 3600) / width);
@@ -339,9 +335,7 @@ namespace EVEMon.Common.Controls
 
                 // If there are more than 24 hours in the queue show the point
                 if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(24))
-                {
                     PaintPoint(g, width, height);
-                }
                     // Else, draw a dark region at the end and the border
                 else
                 {
@@ -386,7 +380,6 @@ namespace EVEMon.Common.Controls
             {
                 relativeStart = skill.StartTime.Subtract(DateTime.UtcNow);
                 relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
-
             }
                 // Timespan is stable
             else
@@ -484,6 +477,5 @@ namespace EVEMon.Common.Controls
         }
 
         #endregion
-
     }
 }

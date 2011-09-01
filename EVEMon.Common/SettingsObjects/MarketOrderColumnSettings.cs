@@ -33,7 +33,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns></returns>
         public MarketOrderColumnSettings Clone()
         {
-            return new MarketOrderColumnSettings {Column = Column, Visible = Visible, Width = Width};
+            return new MarketOrderColumnSettings { Column = Column, Visible = Visible, Width = Width };
         }
 
         /// <summary>

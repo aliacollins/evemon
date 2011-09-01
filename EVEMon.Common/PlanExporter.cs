@@ -32,7 +32,7 @@ namespace EVEMon.Common
             StringBuilder builder = new StringBuilder();
             const DescriptiveTextOptions TimeFormat =
                 DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText;
-            Character character = (Character) plan.Character;
+            Character character = (Character)plan.Character;
 
             // Initialize constants
             string lineFeed = Environment.NewLine;
@@ -233,11 +233,11 @@ namespace EVEMon.Common
         {
             // Generates a settings plan and transforms it to an output plan
             SerializablePlan serial = plan.Export();
-            OutputPlan output = new OutputPlan {Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision};
+            OutputPlan output = new OutputPlan { Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision };
             output.Entries.AddRange(serial.Entries);
 
             // Serializes to XML document and gets a string representation
-            XmlDocument doc = Util.SerializeToXmlDocument(typeof (OutputPlan), output);
+            XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlan), output);
             return Util.GetXMLStringRepresentation(doc);
         }
 

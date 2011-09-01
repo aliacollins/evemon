@@ -6,7 +6,6 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
 
-
 namespace EVEMon.Common
 {
     /// <summary>
@@ -24,7 +23,9 @@ namespace EVEMon.Common
         /// </summary>
         public static void DeleteInstallationFiles()
         {
-            foreach (string file in Directory.GetFiles(EveMonClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
+            foreach (
+                string file in
+                    Directory.GetFiles(EveMonClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
@@ -43,7 +44,7 @@ namespace EVEMon.Common
         public static bool Enabled
         {
             get { return s_enabled; }
-            set 
+            set
             {
                 s_enabled = value;
 
@@ -121,7 +122,7 @@ namespace EVEMon.Common
             {
                 ScanUpdateFeed(result);
             }
-            // An error occurred during the deserialization
+                // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
@@ -158,7 +159,7 @@ namespace EVEMon.Common
             {
                 // Requests a notification to subscribers and quit
                 EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
-                                            newestVersion, canAutoInstall, installArgs);
+                                               newestVersion, canAutoInstall, installArgs);
                 return;
             }
 

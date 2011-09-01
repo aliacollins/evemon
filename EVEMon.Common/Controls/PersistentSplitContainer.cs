@@ -35,9 +35,7 @@ namespace EVEMon.Common.Controls
                             SplitterDistance = d;
                         }
                         else
-                        {
                             Settings.UI.Splitters.Add(m_rememberDistanceKey, Math.Min(Width / 4, 100));
-                        }
                     }
                 }
                 catch (Exception err)
@@ -48,7 +46,6 @@ namespace EVEMon.Common.Controls
                     ExceptionHandler.LogException(err, true);
                     return;
                 }
-
             }
         }
 
