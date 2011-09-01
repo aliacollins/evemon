@@ -117,7 +117,7 @@ namespace EVEMon.Sales
                 parsersSorted.Add(p.B.Title, new Pair<string, string>(p.A, p.B.Title));
             }
 
-            foreach (ToolStripMenuItem mi in parsersSorted.Values.Select(p => new ToolStripMenuItem {Text = p.B, Tag = p.A}))
+            foreach (ToolStripMenuItem mi in parsersSorted.Values.Select(p => new ToolStripMenuItem { Text = p.B, Tag = p.A }))
             {
                 mi.Click += mi_Click;
                 tsddFetch.DropDownItems.Add(mi);
@@ -134,7 +134,6 @@ namespace EVEMon.Sales
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDiposed;
         }
-
 
         /// <summary>
         /// Tiles the subtotal changed.

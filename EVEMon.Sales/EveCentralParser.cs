@@ -11,7 +11,6 @@ namespace EVEMon.Sales
     [DefaultMineralParser("evecentral")]
     public class EveCentralParser : IMineralParser
     {
-
         private static readonly Regex s_mineralTokenizer =
             new Regex(@"<name>(?<name>.+?)</name>.+?<price>(?<price>.+?)</price>",
                       RegexOptions.Compiled

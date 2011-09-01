@@ -22,7 +22,7 @@ namespace EVEMon.Sales
             foreach (Type type in asm.GetTypes())
             {
                 foreach (DefaultMineralParserAttribute dmpa in type.GetCustomAttributes(
-                    typeof (DefaultMineralParserAttribute), false))
+                    typeof(DefaultMineralParserAttribute), false))
                 {
                     IMineralParser mp = Activator.CreateInstance(type) as IMineralParser;
                     if (mp != null)

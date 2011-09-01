@@ -11,7 +11,6 @@ namespace EVEMon.Sales
     [DefaultMineralParser("battleclinic")]
     public class BattleclinicParser : IMineralParser
     {
-
         private static readonly Regex s_mineralTokenizer =
             new Regex(@"<name>(?<name>.+?)</name>.+?<price>(?<price>.+?)</price>",
                       RegexOptions.Compiled
