@@ -11,6 +11,6 @@ namespace EVEMon.XmlGenerator.StaticData
         public string Key;
 
         [XmlElement("v")]
-        public int Value;
+        public string Value;
     }
 }
