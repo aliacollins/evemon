@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator

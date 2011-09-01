@@ -1,87 +1,154 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+      <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient"
+              ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
+              xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="EveStaticDataModelStoreContainer">
-          <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.Store.agtConfig" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="chrBloodlines" EntityType="EveStaticDataModel.Store.chrBloodlines" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="chrFactions" EntityType="EveStaticDataModel.Store.chrFactions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="chrBloodlines" EntityType="EveStaticDataModel.Store.chrBloodlines" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="chrFactions" EntityType="EveStaticDataModel.Store.chrFactions" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="chrRaces" EntityType="EveStaticDataModel.Store.chrRaces" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporationResearchFields" EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crtClasses" EntityType="EveStaticDataModel.Store.crtClasses" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crtRecommendations" EntityType="EveStaticDataModel.Store.crtRecommendations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crtRelationships" EntityType="EveStaticDataModel.Store.crtRelationships" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmAttributeCategories" EntityType="EveStaticDataModel.Store.dgmAttributeCategories" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmAttributeTypes" EntityType="EveStaticDataModel.Store.dgmAttributeTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.Store.dgmEffects" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.Store.dgmTypeAttributes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationResearchFields"
+                     EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="crtClasses" EntityType="EveStaticDataModel.Store.crtClasses" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="crtRecommendations" EntityType="EveStaticDataModel.Store.crtRecommendations"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtRelationships" EntityType="EveStaticDataModel.Store.crtRelationships" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="dgmAttributeCategories" EntityType="EveStaticDataModel.Store.dgmAttributeCategories"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmAttributeTypes" EntityType="EveStaticDataModel.Store.dgmAttributeTypes"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.Store.dgmEffects" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.Store.dgmTypeAttributes"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="eveIcons" EntityType="EveStaticDataModel.Store.eveIcons" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="eveLocations" EntityType="EveStaticDataModel.Store.eveLocations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveLocations" EntityType="EveStaticDataModel.Store.eveLocations" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="eveNames" EntityType="EveStaticDataModel.Store.eveNames" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveOwners" EntityType="EveStaticDataModel.Store.eveOwners" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.Store.eveUnits" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.Store.invContrabandTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invControlTowerResourcePurposes" EntityType="EveStaticDataModel.Store.invControlTowerResourcePurposes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.Store.invContrabandTypes"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invControlTowerResourcePurposes"
+                     EntityType="EveStaticDataModel.Store.invControlTowerResourcePurposes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources"
+                     store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invFlags" EntityType="EveStaticDataModel.Store.invFlags" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invGroups" EntityType="EveStaticDataModel.Store.invGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invItems" EntityType="EveStaticDataModel.Store.invItems" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invTypeMaterials" EntityType="EveStaticDataModel.Store.invTypeMaterials" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invTypeReactions" EntityType="EveStaticDataModel.Store.invTypeReactions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="invTypeMaterials" EntityType="EveStaticDataModel.Store.invTypeMaterials" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="invTypeReactions" EntityType="EveStaticDataModel.Store.invTypeReactions" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="invTypes" EntityType="EveStaticDataModel.Store.invTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapCelestialStatistics" EntityType="EveStaticDataModel.Store.mapCelestialStatistics" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapConstellationJumps" EntityType="EveStaticDataModel.Store.mapConstellationJumps" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapConstellations" EntityType="EveStaticDataModel.Store.mapConstellations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapDenormalize" EntityType="EveStaticDataModel.Store.mapDenormalize" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapCelestialStatistics" EntityType="EveStaticDataModel.Store.mapCelestialStatistics"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapConstellationJumps" EntityType="EveStaticDataModel.Store.mapConstellationJumps"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapConstellations" EntityType="EveStaticDataModel.Store.mapConstellations"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapDenormalize" EntityType="EveStaticDataModel.Store.mapDenormalize" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="mapJumps" EntityType="EveStaticDataModel.Store.mapJumps" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapLandmarks" EntityType="EveStaticDataModel.Store.mapLandmarks" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapLocationScenes" EntityType="EveStaticDataModel.Store.mapLocationScenes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapLocationWormholeClasses" EntityType="EveStaticDataModel.Store.mapLocationWormholeClasses" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapRegionJumps" EntityType="EveStaticDataModel.Store.mapRegionJumps" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapRegions" EntityType="EveStaticDataModel.Store.mapRegions" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapSolarSystemJumps" EntityType="EveStaticDataModel.Store.mapSolarSystemJumps" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapSolarSystems" EntityType="EveStaticDataModel.Store.mapSolarSystems" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.Store.mapUniverse" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="planetSchematics" EntityType="EveStaticDataModel.Store.planetSchematics" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.Store.planetSchematicsPinMap" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.Store.planetSchematicsTypeMap" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramInstallationTypeContents" EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLandmarks" EntityType="EveStaticDataModel.Store.mapLandmarks" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="mapLocationScenes" EntityType="EveStaticDataModel.Store.mapLocationScenes"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLocationWormholeClasses" EntityType="EveStaticDataModel.Store.mapLocationWormholeClasses"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapRegionJumps" EntityType="EveStaticDataModel.Store.mapRegionJumps" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="mapRegions" EntityType="EveStaticDataModel.Store.mapRegions" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="mapSolarSystemJumps" EntityType="EveStaticDataModel.Store.mapSolarSystemJumps"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapSolarSystems" EntityType="EveStaticDataModel.Store.mapSolarSystems" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.Store.mapUniverse" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="planetSchematics" EntityType="EveStaticDataModel.Store.planetSchematics" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.Store.planetSchematicsPinMap"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.Store.planetSchematicsTypeMap"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory"
+                     EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup"
+                     EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="ramInstallationTypeContents"
+                     EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables"
+                     Schema="dbo" />
         </EntityContainer>
         <EntityType Name="agtAgentTypes">
           <Key>
@@ -1034,7 +1101,8 @@
           <Property Name="languageID" Type="char" Nullable="false" MaxLength="2" />
           <Property Name="text" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EveStaticDataModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -1050,7 +1118,8 @@
           <EntitySet Name="chrRaces" EntityType="EveStaticDataModel.chrRaces" />
           <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.crpActivities" />
           <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.crpNPCCorporationDivisions" />
-          <EntitySet Name="crpNPCCorporationResearchFields" EntityType="EveStaticDataModel.crpNPCCorporationResearchFields" />
+          <EntitySet Name="crpNPCCorporationResearchFields"
+                     EntityType="EveStaticDataModel.crpNPCCorporationResearchFields" />
           <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.crpNPCCorporationTrades" />
           <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.crpNPCCorporations" />
           <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.crpNPCDivisions" />
@@ -1069,7 +1138,8 @@
           <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.invBlueprintTypes" />
           <EntitySet Name="invCategories" EntityType="EveStaticDataModel.invCategories" />
           <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.invContrabandTypes" />
-          <EntitySet Name="invControlTowerResourcePurposes" EntityType="EveStaticDataModel.invControlTowerResourcePurposes" />
+          <EntitySet Name="invControlTowerResourcePurposes"
+                     EntityType="EveStaticDataModel.invControlTowerResourcePurposes" />
           <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.invControlTowerResources" />
           <EntitySet Name="invFlags" EntityType="EveStaticDataModel.invFlags" />
           <EntitySet Name="invGroups" EntityType="EveStaticDataModel.invGroups" />
@@ -1094,8 +1164,10 @@
           <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.mapUniverse" />
           <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.ramActivities" />
           <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.ramAssemblyLineStations" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerCategory" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerGroup" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory"
+                     EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerCategory" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup"
+                     EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerGroup" />
           <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.ramAssemblyLineTypes" />
           <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.ramAssemblyLines" />
           <EntitySet Name="ramInstallationTypeContents" EntityType="EveStaticDataModel.ramInstallationTypeContents" />
@@ -1994,7 +2066,8 @@
           </Key>
           <Property Type="Int32" Name="iconID" Nullable="false" />
           <Property Type="String" Name="iconFile" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false"
+                    Unicode="true" />
         </EntityType>
         <EntityType Name="planetSchematics">
           <Key>
@@ -2027,8 +2100,10 @@
             <PropertyRef Name="graphicID" />
           </Key>
           <Property Type="Int32" Name="graphicID" Nullable="false" />
-          <Property Type="String" Name="graphicFile" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="graphicFile" Nullable="false" MaxLength="500" FixedLength="false"
+                    Unicode="false" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false"
+                    Unicode="true" />
           <Property Type="Boolean" Name="obsolete" Nullable="false" />
           <Property Type="String" Name="graphicType" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="collidable" />
@@ -2041,7 +2116,8 @@
             <PropertyRef Name="locationID" />
           </Key>
           <Property Type="Int64" Name="locationID" Nullable="false" />
-          <Property Type="String" Name="locationName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="locationName" Nullable="false" MaxLength="100" FixedLength="false"
+                    Unicode="true" />
           <Property Type="Double" Name="x" Nullable="false" />
           <Property Type="Double" Name="y" Nullable="false" />
           <Property Type="Double" Name="z" Nullable="false" />
@@ -2072,7 +2148,8 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EveStaticDataModelStoreContainer" CdmEntityContainer="EveStaticDataEntities">
+        <EntityContainerMapping StorageEntityContainer="EveStaticDataModelStoreContainer"
+                                CdmEntityContainer="EveStaticDataEntities">
           <EntitySetMapping Name="agtAgentTypes">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.agtAgentTypes)">
               <MappingFragment StoreEntitySet="agtAgentTypes">
@@ -3095,81 +3172,159 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram Name="EveStaticData" ZoomLevel="101" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
-        <EntityTypeShape EntityType="EveStaticDataModel.agtAgentTypes" Width="1.5" PointX="0.75" PointY="0.75" Height="1.4033821614583331" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.agtAgents" Width="1.5" PointX="2.75" PointY="0.75" Height="2.3648893229166665" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.agtConfig" Width="1.5" PointX="4.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.agtResearchAgents" Width="1.5" PointX="0.75" PointY="4.75" Height="1.4033821614583335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.chrAncestries" Width="1.5" PointX="2.75" PointY="4.75" Height="3.1340950520833326" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.chrAttributes" Width="1.5" PointX="4.75" PointY="3.75" Height="2.1725878906249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.chrBloodlines" Width="1.5" PointX="6.75" PointY="0.75" Height="4.2879036458333326" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.chrFactions" Width="1.5" PointX="4.75" PointY="6.75" Height="2.9417936197916674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.chrRaces" Width="1.5" PointX="6.75" PointY="6.75" Height="1.9802864583333335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crpActivities" Width="1.5" PointX="8.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationDivisions" Width="1.5" PointX="0.75" PointY="8.75" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationResearchFields" Width="1.5" PointX="8.75" PointY="3.75" Height="1.4033821614583335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationTrades" Width="1.5" PointX="8.75" PointY="6.75" Height="1.4033821614583335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporations" Width="1.5" PointX="6.75" PointY="9.75" Height="6.21091796875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCDivisions" Width="1.5" PointX="8.75" PointY="9.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crtCategories" Width="1.5" PointX="10.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crtCertificates" Width="1.5" PointX="2.75" PointY="10.75" Height="2.3648893229166674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crtClasses" Width="1.5" PointX="10.75" PointY="3.75" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crtRecommendations" Width="1.5" PointX="10.75" PointY="6.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crtRelationships" Width="1.5" PointX="10.75" PointY="9.75" Height="1.9802864583333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeCategories" Width="1.5" PointX="12.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeTypes" Width="1.5" PointX="12.75" PointY="3.75" Height="3.1340950520833326" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.dgmEffects" Width="1.5" PointX="12.75" PointY="7.75" Height="6.21091796875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeAttributes" Width="1.5" PointX="8.75" PointY="12.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeEffects" Width="1.5" PointX="14.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveNames" Width="1.5" PointX="2.75" PointY="14.75" Height="1.9802864583333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveUnits" Width="1.5" PointX="14.75" PointY="3.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invBlueprintTypes" Width="1.5" PointX="14.75" PointY="6.75" Height="3.5186979166666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invCategories" Width="1.5" PointX="10.75" PointY="12.5" Height="1.9802864583333335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invContrabandTypes" Width="1.5" PointX="14.75" PointY="11.75" Height="2.1725878906249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResourcePurposes" Width="1.5" PointX="12.75" PointY="14.75" Height="1.4033821614583317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResources" Width="1.5" PointX="14.75" PointY="14.75" Height="2.1725878906249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invFlags" Width="1.5" PointX="16.75" PointY="0.75" Height="1.787985026041667" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invGroups" Width="1.5" PointX="16.75" PointY="3.75" Height="3.3263964843749996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invMarketGroups" Width="1.5" PointX="4.75" PointY="16.75" Height="2.1725878906250031" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invMetaGroups" Width="1.5" PointX="6.75" PointY="16.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invMetaTypes" Width="1.5" PointX="16.75" PointY="8.75" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invTypeMaterials" Width="1.5" PointX="16.75" PointY="11.75" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invTypeReactions" Width="1.5" PointX="16.75" PointY="14.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="8.875" PointY="14.875" Height="4.0956022135416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapCelestialStatistics" Width="1.5" PointX="10.875" PointY="14.875" Height="4.8648079427083317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapConstellationJumps" Width="1.5" PointX="12.75" PointY="17.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapConstellations" Width="1.5" PointX="14.75" PointY="17.75" Height="3.7109993489583317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapDenormalize" Width="1.5" PointX="16.75" PointY="17.75" Height="3.903300781249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapJumps" Width="1.5" PointX="18.75" PointY="0.75" Height="1.4033821614583333" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapLandmarks" Width="1.5" PointX="0.75" PointY="18.75" Height="2.9417936197916674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapLocationScenes" Width="1.5" PointX="18.75" PointY="3.75" Height="1.4033821614583335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapLocationWormholeClasses" Width="1.5" PointX="18.75" PointY="6.75" Height="1.4033821614583326" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapRegionJumps" Width="1.5" PointX="18.75" PointY="9.75" Height="1.4033821614583317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapRegions" Width="1.5" PointX="18.75" PointY="12.75" Height="3.5186979166666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapSolarSystemJumps" Width="1.5" PointX="18.75" PointY="17.75" Height="2.1725878906250031" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapSolarSystems" Width="1.5" PointX="2.75" PointY="19.75" Height="6.0186165364583317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapUniverse" Width="1.5" PointX="4.75" PointY="19.75" Height="3.326396484374996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramActivities" Width="1.5" PointX="20.75" PointY="0.75" Height="1.9802864583333333" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineStations" Width="1.5" PointX="20.75" PointY="3.75" Height="2.364889322916667" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerCategory" Width="1.5" PointX="20.75" PointY="7.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerGroup" Width="1.5" PointX="20.75" PointY="10.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypes" Width="1.5" PointX="20.75" PointY="13.75" Height="2.5571907552083317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLines" Width="1.5" PointX="20.75" PointY="17.75" Height="4.2879036458333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramInstallationTypeContents" Width="1.5" PointX="22.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramTypeRequirements" Width="1.5" PointX="22.75" PointY="3.75" Height="2.1725878906249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staOperationServices" Width="1.5" PointX="22.75" PointY="6.75" Height="1.4033821614583326" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staOperations" Width="1.5" PointX="10.875" PointY="22.75" Height="3.7109993489583317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staServices" Width="1.5" PointX="22.75" PointY="9.75" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staStationTypes" Width="1.5" PointX="22.75" PointY="12.75" Height="3.1340950520833335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staStations" Width="1.5" PointX="12.75" PointY="22.75" Height="4.480205078124996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslationColumns" Width="1.5" PointX="14.75" PointY="22.75" Height="1.9802864583333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="16.75" PointY="22.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveIcons" Width="1.5" PointX="2.75" PointY="17.25" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematics" Width="1.5" PointX="8.625" PointY="20" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="8.625" PointY="21.875" Height="1.4033821614583246" />
-        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="6.625" PointY="20" Height="1.7879850260416674" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.625" PointY="14.125" Height="2.7494921874999818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveLocations" Width="1.5" PointX="23.375" PointY="16.75" Height="1.9802864583333246" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveOwners" Width="1.5" PointX="23.375" PointY="19.75" Height="1.9802864583333246" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invItems" Width="1.5" PointX="19.375" PointY="23.75" Height="2.1725878906249818" /></Diagram></edmx:Diagrams>
+        <EntityTypeShape EntityType="EveStaticDataModel.agtAgentTypes" Width="1.5" PointX="0.75" PointY="0.75"
+                         Height="1.4033821614583331" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.agtAgents" Width="1.5" PointX="2.75" PointY="0.75"
+                         Height="2.3648893229166665" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.agtConfig" Width="1.5" PointX="4.75" PointY="0.75"
+                         Height="1.5956835937499998" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.agtResearchAgents" Width="1.5" PointX="0.75" PointY="4.75"
+                         Height="1.4033821614583335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.chrAncestries" Width="1.5" PointX="2.75" PointY="4.75"
+                         Height="3.1340950520833326" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.chrAttributes" Width="1.5" PointX="4.75" PointY="3.75"
+                         Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.chrBloodlines" Width="1.5" PointX="6.75" PointY="0.75"
+                         Height="4.2879036458333326" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.chrFactions" Width="1.5" PointX="4.75" PointY="6.75"
+                         Height="2.9417936197916674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.chrRaces" Width="1.5" PointX="6.75" PointY="6.75"
+                         Height="1.9802864583333335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crpActivities" Width="1.5" PointX="8.75" PointY="0.75"
+                         Height="1.5956835937499998" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationDivisions" Width="1.5" PointX="0.75"
+                         PointY="8.75" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationResearchFields" Width="1.5" PointX="8.75"
+                         PointY="3.75" Height="1.4033821614583335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationTrades" Width="1.5" PointX="8.75"
+                         PointY="6.75" Height="1.4033821614583335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporations" Width="1.5" PointX="6.75" PointY="9.75"
+                         Height="6.21091796875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crpNPCDivisions" Width="1.5" PointX="8.75" PointY="9.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crtCategories" Width="1.5" PointX="10.75" PointY="0.75"
+                         Height="1.5956835937499998" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crtCertificates" Width="1.5" PointX="2.75" PointY="10.75"
+                         Height="2.3648893229166674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crtClasses" Width="1.5" PointX="10.75" PointY="3.75"
+                         Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crtRecommendations" Width="1.5" PointX="10.75" PointY="6.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.crtRelationships" Width="1.5" PointX="10.75" PointY="9.75"
+                         Height="1.9802864583333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeCategories" Width="1.5" PointX="12.75"
+                         PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeTypes" Width="1.5" PointX="12.75" PointY="3.75"
+                         Height="3.1340950520833326" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmEffects" Width="1.5" PointX="12.75" PointY="7.75"
+                         Height="6.21091796875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeAttributes" Width="1.5" PointX="8.75" PointY="12.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeEffects" Width="1.5" PointX="14.75" PointY="0.75"
+                         Height="1.5956835937499998" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveNames" Width="1.5" PointX="2.75" PointY="14.75"
+                         Height="1.9802864583333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveUnits" Width="1.5" PointX="14.75" PointY="3.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invBlueprintTypes" Width="1.5" PointX="14.75" PointY="6.75"
+                         Height="3.5186979166666674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invCategories" Width="1.5" PointX="10.75" PointY="12.5"
+                         Height="1.9802864583333335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invContrabandTypes" Width="1.5" PointX="14.75" PointY="11.75"
+                         Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResourcePurposes" Width="1.5" PointX="12.75"
+                         PointY="14.75" Height="1.4033821614583317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResources" Width="1.5" PointX="14.75"
+                         PointY="14.75" Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invFlags" Width="1.5" PointX="16.75" PointY="0.75"
+                         Height="1.787985026041667" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invGroups" Width="1.5" PointX="16.75" PointY="3.75"
+                         Height="3.3263964843749996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invMarketGroups" Width="1.5" PointX="4.75" PointY="16.75"
+                         Height="2.1725878906250031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invMetaGroups" Width="1.5" PointX="6.75" PointY="16.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invMetaTypes" Width="1.5" PointX="16.75" PointY="8.75"
+                         Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invTypeMaterials" Width="1.5" PointX="16.75" PointY="11.75"
+                         Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invTypeReactions" Width="1.5" PointX="16.75" PointY="14.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="8.875" PointY="14.875"
+                         Height="4.0956022135416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapCelestialStatistics" Width="1.5" PointX="10.875"
+                         PointY="14.875" Height="4.8648079427083317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapConstellationJumps" Width="1.5" PointX="12.75"
+                         PointY="17.75" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapConstellations" Width="1.5" PointX="14.75" PointY="17.75"
+                         Height="3.7109993489583317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapDenormalize" Width="1.5" PointX="16.75" PointY="17.75"
+                         Height="3.903300781249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapJumps" Width="1.5" PointX="18.75" PointY="0.75"
+                         Height="1.4033821614583333" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapLandmarks" Width="1.5" PointX="0.75" PointY="18.75"
+                         Height="2.9417936197916674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapLocationScenes" Width="1.5" PointX="18.75" PointY="3.75"
+                         Height="1.4033821614583335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapLocationWormholeClasses" Width="1.5" PointX="18.75"
+                         PointY="6.75" Height="1.4033821614583326" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapRegionJumps" Width="1.5" PointX="18.75" PointY="9.75"
+                         Height="1.4033821614583317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapRegions" Width="1.5" PointX="18.75" PointY="12.75"
+                         Height="3.5186979166666674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapSolarSystemJumps" Width="1.5" PointX="18.75" PointY="17.75"
+                         Height="2.1725878906250031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapSolarSystems" Width="1.5" PointX="2.75" PointY="19.75"
+                         Height="6.0186165364583317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapUniverse" Width="1.5" PointX="4.75" PointY="19.75"
+                         Height="3.326396484374996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramActivities" Width="1.5" PointX="20.75" PointY="0.75"
+                         Height="1.9802864583333333" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineStations" Width="1.5" PointX="20.75"
+                         PointY="3.75" Height="2.364889322916667" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerCategory" Width="1.5"
+                         PointX="20.75" PointY="7.75" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerGroup" Width="1.5" PointX="20.75"
+                         PointY="10.75" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypes" Width="1.5" PointX="20.75" PointY="13.75"
+                         Height="2.5571907552083317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLines" Width="1.5" PointX="20.75" PointY="17.75"
+                         Height="4.2879036458333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramInstallationTypeContents" Width="1.5" PointX="22.75"
+                         PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.ramTypeRequirements" Width="1.5" PointX="22.75" PointY="3.75"
+                         Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staOperationServices" Width="1.5" PointX="22.75" PointY="6.75"
+                         Height="1.4033821614583326" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staOperations" Width="1.5" PointX="10.875" PointY="22.75"
+                         Height="3.7109993489583317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staServices" Width="1.5" PointX="22.75" PointY="9.75"
+                         Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staStationTypes" Width="1.5" PointX="22.75" PointY="12.75"
+                         Height="3.1340950520833335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staStations" Width="1.5" PointX="12.75" PointY="22.75"
+                         Height="4.480205078124996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslationColumns" Width="1.5" PointX="14.75"
+                         PointY="22.75" Height="1.9802864583333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="16.75" PointY="22.75"
+                         Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveIcons" Width="1.5" PointX="2.75" PointY="17.25"
+                         Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematics" Width="1.5" PointX="8.625" PointY="20"
+                         Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="8.625"
+                         PointY="21.875" Height="1.4033821614583246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="6.625" PointY="20"
+                         Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.625" PointY="14.125"
+                         Height="2.7494921874999818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveLocations" Width="1.5" PointX="23.375" PointY="16.75"
+                         Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveOwners" Width="1.5" PointX="23.375" PointY="19.75"
+                         Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invItems" Width="1.5" PointX="19.375" PointY="23.75"
+                         Height="2.1725878906249818" />
+      </Diagram>
+    </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -15,6 +15,5 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("recommendationLevel")]
         public int Level;
-
     }
 }

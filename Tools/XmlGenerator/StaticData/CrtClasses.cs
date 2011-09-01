@@ -12,6 +12,5 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("className")]
         public string ClassName;
-
     }
 }

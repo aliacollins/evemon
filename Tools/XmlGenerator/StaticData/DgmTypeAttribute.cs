@@ -23,7 +23,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <returns></returns>
         public int GetIntValue()
         {
-            return ValueInt.HasValue ? ValueInt.Value : (int) (ValueFloat.HasValue ? ValueFloat.Value : 0);
+            return ValueInt.HasValue ? ValueInt.Value : (int)(ValueFloat.HasValue ? ValueFloat.Value : 0);
         }
 
 

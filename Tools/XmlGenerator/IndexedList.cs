@@ -9,7 +9,7 @@ namespace EVEMon.XmlGenerator
     /// <typeparam name="T"></typeparam>
     [XmlRoot("list")]
     public sealed class IndexedList<T>
-        where T:IHasID
+        where T : IHasID
     {
         /// <summary>
         /// Constructor
@@ -23,11 +23,7 @@ namespace EVEMon.XmlGenerator
         /// List of items in the list.
         /// </summary>
         [XmlElement("item")]
-        public List<T> Items
-        {
-            get;
-            set;
-        }
+        public List<T> Items { get; set; }
 
         /// <summary>
         /// Converts list to a Bag.

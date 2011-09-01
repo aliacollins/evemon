@@ -12,6 +12,5 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("categoryDescription")]
         public string Description;
-
     }
 }

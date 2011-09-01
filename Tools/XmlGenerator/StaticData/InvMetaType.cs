@@ -35,6 +35,5 @@ namespace EVEMon.XmlGenerator.StaticData
         }
 
         #endregion
-
     }
 }

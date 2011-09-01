@@ -33,6 +33,5 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("highIsGood")]
         public bool HigherIsBetter;
-
     }
 }

@@ -8,7 +8,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-
 using EVEMon.Common;
 
 namespace EVEMon.XmlGenerator
@@ -125,7 +124,7 @@ namespace EVEMon.XmlGenerator
         {
             string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
 
-            using(FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
+            using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
             {
                 using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
                 {
@@ -168,9 +167,9 @@ namespace EVEMon.XmlGenerator
             {
                 md5File.WriteLine(CreateMD5From(datafile));
             }
-            
+
             md5File.Close();
-                
+
             Console.WriteLine("MD5Sums File Created Successfully");
             Console.WriteLine();
         }
@@ -183,7 +182,7 @@ namespace EVEMon.XmlGenerator
             FileInfo datafile = new FileInfo(filename);
             if (!datafile.Exists)
                 throw new ApplicationException(datafile + " not found!");
-            
+
             StringBuilder sb = new StringBuilder();
 
             MD5 md5 = MD5.Create();
@@ -220,9 +219,7 @@ namespace EVEMon.XmlGenerator
                                                         fi.Directory.Parent.Name, fi.Directory.Name));
                     }
                     else
-                    {
                         Trace.WriteLine("{0} doesn't exist, copy failed", fi.Directory.FullName);
-                    }
                 }
             }
             catch (Exception exc)
@@ -239,7 +236,7 @@ namespace EVEMon.XmlGenerator
         private static string GetXMLStringRepresentation(XmlDocument doc)
         {
             // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings {Indent = true, NewLineHandling = NewLineHandling.Replace};
+            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
 
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();

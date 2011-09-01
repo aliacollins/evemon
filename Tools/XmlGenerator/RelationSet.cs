@@ -74,7 +74,7 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return ((IEnumerable<T>) m_dictionary.Values).GetEnumerator();
+            return ((IEnumerable<T>)m_dictionary.Values).GetEnumerator();
         }
 
         /// <summary>

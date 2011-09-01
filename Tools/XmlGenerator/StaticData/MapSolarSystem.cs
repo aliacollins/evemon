@@ -24,6 +24,5 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("z")]
         public double Z;
-
     }
 }

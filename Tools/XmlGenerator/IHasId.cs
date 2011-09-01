@@ -1,5 +1,4 @@
-﻿
-namespace EVEMon.XmlGenerator
+﻿namespace EVEMon.XmlGenerator
 {
     /// <summary>
     /// Implementors have an ID attribute

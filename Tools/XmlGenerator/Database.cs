@@ -40,10 +40,8 @@ namespace EVEMon.XmlGenerator
                                 // Set the Metadata location
                                 Metadata =
                                     @"res://*/EveStaticData.csdl|res://*/EveStaticData.ssdl|res://*/EveStaticData.msl",
-
                                 //Set the provider name
                                 Provider = "System.Data.SqlClient",
-
                                 // Set the provider-specific connection string
                                 ProviderConnectionString = sqlBuilder.ToString(),
                             };
@@ -372,7 +370,7 @@ namespace EVEMon.XmlGenerator
                     item.ConstellationID = solarsystem.constellationID.Value;
 
                 if (solarsystem.security.HasValue)
-                    item.SecurityLevel = (float) solarsystem.security.Value;
+                    item.SecurityLevel = (float)solarsystem.security.Value;
 
                 if (solarsystem.x.HasValue)
                     item.X = solarsystem.x.Value;
@@ -406,10 +404,10 @@ namespace EVEMon.XmlGenerator
                                       };
 
                 if (station.reprocessingEfficiency.HasValue)
-                    item.ReprocessingEfficiency = (float) station.reprocessingEfficiency.Value;
+                    item.ReprocessingEfficiency = (float)station.reprocessingEfficiency.Value;
 
                 if (station.reprocessingStationsTake.HasValue)
-                    item.ReprocessingStationsTake = (float) station.reprocessingStationsTake.Value;
+                    item.ReprocessingStationsTake = (float)station.reprocessingStationsTake.Value;
 
                 if (station.security.HasValue)
                     item.SecurityLevel = station.security.Value;

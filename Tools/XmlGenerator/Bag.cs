@@ -44,14 +44,8 @@ namespace EVEMon.XmlGenerator
         /// <value></value>
         public T this[int id]
         {
-            get
-            {
-                return m_items[id];
-            }
-            private set
-            {
-                m_items[id] = value;
-            }
+            get { return m_items[id]; }
+            private set { m_items[id] = value; }
         }
 
         /// <summary>
@@ -60,7 +54,7 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return ((IEnumerable<T>) m_items.Values).GetEnumerator();
+            return ((IEnumerable<T>)m_items.Values).GetEnumerator();
         }
 
         /// <summary>
