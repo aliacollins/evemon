@@ -546,9 +546,11 @@ namespace EVEMon.SkillPlanner
 
                             // We display the text in the SkillName column for better visibility
                             if (columnSettings != null && columnSettings.Column == PlanColumn.SkillName)
+                            {
                                 lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive
                                                                       ? point.ToString()
                                                                       : "Remapping (ignored)");
+                            }
                         }
                     }
                 }
@@ -1305,9 +1307,11 @@ namespace EVEMon.SkillPlanner
             ColumnHeader column = GetColumn(m_plan.SortingPreferences.Criteria);
 
             if (column != null)
+            {
                 column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending
                                          ? ArrowUpIndex
                                          : ArrowDownIndex);
+            }
         }
 
         #endregion
