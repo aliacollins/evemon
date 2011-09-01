@@ -324,7 +324,7 @@ namespace EVEMon
                     // Retrieve the current page, or null if we're past the limits
                     TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
 
-                    // Is it the overview ? We'll deal with it later.
+                    // Is it the overview ? We'll deal with it later
                     if (currentPage == tpOverview)
                     {
                         index++;
@@ -354,7 +354,7 @@ namespace EVEMon
                         tcCharacterTabs.TabPages.Insert(index, page);
                     }
 
-                    // Remove processed character from the dictionary and move forward.
+                    // Remove processed character from the dictionary and move forward
                     if (character != null)
                         pages.Remove(character);
                     index++;
@@ -371,6 +371,10 @@ namespace EVEMon
 
                         // Inserts it
                         tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
+
+                        // Select the Overview tab if it's the first tab
+                        if (overviewIndex == 0)
+                            tcCharacterTabs.SelectedTab = tpOverview;
                     }
                 }
                     // Or remove it when it should not be here anymore
@@ -465,7 +469,6 @@ namespace EVEMon
             {
                 item.Enabled = GetCurrentCharacter() != null;
             }
-
         }
 
         /// <summary>
@@ -1855,14 +1858,13 @@ namespace EVEMon
             if (m_apiProviderName == EveMonClient.APIProviders.CurrentProvider.Name)
                 return;
 
+            m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             EveMonClient.EVEServer.ForceUpdate();
 
             foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
             {
                 character.QueryMonitors.QueryEverything();
             }
-
-            m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
         }
 
         /// <summary>
