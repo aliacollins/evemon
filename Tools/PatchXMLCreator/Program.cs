@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace PatchXmlCreator
 {
-    static class Program
+    internal static class Program
     {
         private static bool s_exitRequested;
 
@@ -12,7 +12,7 @@ namespace PatchXmlCreator
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -30,7 +30,7 @@ namespace PatchXmlCreator
         /// <summary>
         /// Ensures that the prerequisites to run the application are met.
         /// </summary>
-        static void EnsurePrerequisites()
+        private static void EnsurePrerequisites()
         {
             // Ensure that a release version of EVEMon has been created
             string eveMonExecFilePath = Path.Combine(PatchXmlCreatorWindow.EVEMonExecDir, PatchXmlCreatorWindow.EVEMonExecFilename);

@@ -101,7 +101,7 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void OnClick(object sender, EventArgs e)
         {
-            ((Control) sender).Focus();
+            ((Control)sender).Focus();
             btnCreate.Focus();
         }
 
@@ -217,16 +217,14 @@ namespace PatchXmlCreator
             foreach (Datafile datafile in s_datafiles)
             {
                 foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>()
-                    .Where(x => x is DatafileControl && ((DatafileControl) x).gbDatafile.Text == datafile.Filename).Select(
+                    .Where(x => x is DatafileControl && ((DatafileControl)x).gbDatafile.Text == datafile.Filename).Select(
                         control => control as DatafileControl))
                 {
                     dfControl.rtbDatafileMessage.BackColor = SystemColors.Window;
                     dfControl.rtbDatafileMessage.ForeColor = SystemColors.WindowText;
 
                     if (m_init)
-                    {
                         EnsureHeaderMessage(dfControl.rtbDatafileMessage);
-                    }
                     else
                     {
                         dfControl.rtbDatafileMessage.Text = String.Format(
@@ -299,7 +297,7 @@ namespace PatchXmlCreator
                     s_listOfInitMessages.Add(control, control.Text);
 
                 if (control is DatafileControl)
-                    s_listOfInitMessages.Add(control, ((DatafileControl) control).rtbDatafileMessage.Text);
+                    s_listOfInitMessages.Add(control, ((DatafileControl)control).rtbDatafileMessage.Text);
             }
         }
 
@@ -476,7 +474,7 @@ namespace PatchXmlCreator
                 datafiles.Add(serialDatafile);
 
                 foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>()
-                    .Where(x => x is DatafileControl && ((DatafileControl) x).gbDatafile.Text == datafile.Filename).Select(
+                    .Where(x => x is DatafileControl && ((DatafileControl)x).gbDatafile.Text == datafile.Filename).Select(
                         control => control as DatafileControl))
                 {
                     serialDatafile.Name = dfControl.gbDatafile.Text;
@@ -613,7 +611,7 @@ namespace PatchXmlCreator
                 tbExpRevision.Text = revision;
 
                 foreach (DatafileControl dfControl in gbDatafiles.Controls.Cast<Control>().Where(
-                    x => x is DatafileControl && ((DatafileControl) x).gbDatafile.Text == datafile.Name).Select(
+                    x => x is DatafileControl && ((DatafileControl)x).gbDatafile.Text == datafile.Name).Select(
                         control => control as DatafileControl))
                 {
                     DateTime date;
@@ -677,13 +675,13 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void Control_DoubleClick(object sender, EventArgs e)
         {
-            Control control = (sender is DatafileControl ? ((DatafileControl) sender).rtbDatafileMessage : null);
+            Control control = (sender is DatafileControl ? ((DatafileControl)sender).rtbDatafileMessage : null);
 
             if (sender is RichTextBox)
-                control = (RichTextBox) sender;
+                control = (RichTextBox)sender;
 
             if (sender is TextBox)
-                control = (TextBox) sender;
+                control = (TextBox)sender;
 
             if (control == null)
                 return;
@@ -701,10 +699,10 @@ namespace PatchXmlCreator
         private void Control_Enter(object sender, EventArgs e)
         {
             if (sender is TextBox)
-                ((TextBox) sender).ForeColor = SystemColors.WindowText;
+                ((TextBox)sender).ForeColor = SystemColors.WindowText;
 
             if (sender is RichTextBox)
-                ((RichTextBox) sender).ForeColor = SystemColors.WindowText;
+                ((RichTextBox)sender).ForeColor = SystemColors.WindowText;
         }
 
         /// <summary>
@@ -717,12 +715,12 @@ namespace PatchXmlCreator
             Control control;
 
             if (sender is RichTextBox)
-                control = (RichTextBox) sender;
+                control = (RichTextBox)sender;
             else
                 control = null;
 
             if (sender is TextBox)
-                control = (TextBox) sender;
+                control = (TextBox)sender;
 
             if (control == null)
                 return;
