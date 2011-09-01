@@ -1,5 +1,4 @@
-﻿
-namespace EVEMon.LogitechG15
+﻿namespace EVEMon.LogitechG15
 {
     public enum LcdState
     {

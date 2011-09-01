@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Threading;
@@ -59,9 +58,7 @@ namespace EVEMon.LogitechG15
                         return;
                 }
                 else
-                {
                     Stop();
-                }
             }
 
             // Run
@@ -168,13 +165,9 @@ namespace EVEMon.LogitechG15
                 return;
 
             if (e.CompletedSkills.Count == 1)
-            {
                 s_lcd.SkillCompleted(e.Character);
-            }
             else
-            {
                 s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
-            }
         }
 
         #endregion

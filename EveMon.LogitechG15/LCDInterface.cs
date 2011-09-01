@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 namespace lgLcdClassLibrary
 {
     public delegate int ButtonDelegate(int device, int dwButtons, IntPtr pContext);
+
     public delegate int ConfigureDelegate(int connection, IntPtr pContext);
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace lgLcdClassLibrary
         private static bool s_lcdAvailable;
         private static bool s_lcdInterfaceInitialized;
         private static int s_result;
-                
+
         private static lgLcdConnectContext s_connectContext;
         private static lgLcdOpenContext s_openContext;
         private static lgLcdBitmap160x43x1 s_lcdBitmap;
@@ -234,33 +235,37 @@ namespace lgLcdClassLibrary
 
             return s_lcdAvailable;
         }
-        
+
         #endregion
 
 
         #region Native Methods
 
         ///<summary>
-		/// Invalid connection constant
-		/// </summary>
+        /// Invalid connection constant
+        /// </summary>
         public const int LGLCD_INVALID_CONNECTION = -1;
+
         /// <summary>
         /// Invalid device constant
         /// </summary>
         public const int LGLCD_INVALID_DEVICE = -1;
 
-		/// <summary>
-		/// Button mask for button 0 (first from left)
-		/// </summary>
+        /// <summary>
+        /// Button mask for button 0 (first from left)
+        /// </summary>
         public const uint LGLCDBUTTON_BUTTON0 = 0x00000001;
+
         /// <summary>
         /// Button mask for button 1 (second from left)
         /// </summary>
         public const uint LGLCDBUTTON_BUTTON1 = 0x00000002;
+
         /// <summary>
         /// Button mask for button 2 (third from left)
         /// </summary>
         public const uint LGLCDBUTTON_BUTTON2 = 0x00000004;
+
         /// <summary>
         /// Button mask for button 3 (fourth from left)
         /// </summary>
@@ -270,10 +275,12 @@ namespace lgLcdClassLibrary
         /// Constant for G15 display resolution (160x43x1)
         /// </summary>
         public const uint LGLCD_BMP_FORMAT_160x43x1 = 0x00000001;
+
         /// <summary>
         /// Constant for G15 display width
         /// </summary>
         public const uint LGLCD_BMP_WIDTH = 160;
+
         /// <summary>
         /// Constant for G15 display height
         /// </summary>
@@ -284,14 +291,17 @@ namespace lgLcdClassLibrary
         /// anything to show.
         /// </summary>
         public const uint LGLCD_PRIORITY_IDLE_NO_SHOW = 0;
+
         /// <summary>
         /// Priority used for low priority items.
         /// </summary>
-        public const uint LGLCD_PRIORITY_BACKGROUND = 64;	
+        public const uint LGLCD_PRIORITY_BACKGROUND = 64;
+
         /// <summary>
         /// Normal priority, to be used by most applications most of the time.
         /// </summary>
         public const uint LGLCD_PRIORITY_NORMAL = 128;
+
         /// <summary>
         /// Highest priority. To be used only for critical screens, such as “your CPU 
         /// temperature is too high” 
@@ -307,6 +317,7 @@ namespace lgLcdClassLibrary
         /// <param name="pContext">Current context</param>
         /// <returns></returns>
         internal delegate int lgLcdOnConfigureCB(int connection, IntPtr pContext);
+
         /// <summary>
         /// Function that should be called when the state of the soft buttons changes. 
         /// If no notification is needed, leave this parameter NULL.
@@ -321,61 +332,65 @@ namespace lgLcdClassLibrary
         /// The lgLcdDeviceDesc structure describes the properties of an attached device. 
         /// This information is returned through a call to lgLcdEnumerate().
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdDeviceDesc
-		{
+        {
             /// <summary>
             /// Specifies the width of the display in pixels.
             /// </summary>
-            internal int Width; 
+            internal int Width;
+
             /// <summary>
             /// Specifies the height of the display in pixels.
             /// </summary>
             internal int Height;
+
             /// <summary>
             /// Specifies the depth of the bitmap in bits per pixel.
             /// </summary>
-            internal int Bpp; 
+            internal int Bpp;
+
             /// <summary>
             /// Specifies the number of soft buttons that the device has.
             /// </summary>
-            internal int NumSoftButtons;			
-		}
+            internal int NumSoftButtons;
+        }
 
         /// <summary>
         /// The lgLcdBitmapHeader exists at the beginning of any bitmap structure 
         /// defined in lgLcd. Following the header is the actual bitmap as an array 
         /// of bytes, as illustrated by lgLcdBitmap160x43x1.
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdBitmapHeader
-		{
+        {
             /// <summary>
             /// Specifies the format of the structure following the header. 
             /// Currently, only LGLCD_BMP_FORMAT_160x43x1 is supported
             /// </summary>
             internal uint Format;
-		}
+        }
 
         /// <summary>
         /// 160x43x1 bitmap.  This includes a header and an array
         /// of bytes (1 for each pixel.)
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdBitmap160x43x1
-		{
+        {
             /// <summary>
             /// Header information telling what kind of bitmap this structure
             /// represents (currently only one format exists, see lgLcdBitmapHeader.)
             /// </summary>
             internal lgLcdBitmapHeader hdr;
-		    /// <summary>
-		    /// Contains the display bitmap with 160x43 pixels. Every byte represents
+
+            /// <summary>
+            /// Contains the display bitmap with 160x43 pixels. Every byte represents
             /// one pixel, with &gt;=128 being “on” and &lt;128 being “off”.
-		    /// </summary>
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=6880)]
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6880)]
             internal byte[] pixels;
-		}
+        }
 
         /// <summary>
         /// The lgLcdConfigureContext is part of the lgLcdConnectContext and 
@@ -383,22 +398,23 @@ namespace lgLcdClassLibrary
         /// to configure your application. The registered callback is called when the user 
         /// clicks the “Configure…” button in the LCDMon list of applications.
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdConfigureContext
-		{
+        {
             /// <summary>
             /// Specifies a pointer to a function that should be called when the 
             /// user wants to configure your application. If no configuration panel 
             /// is provided or needed, leave this parameter NULL.
             /// </summary>
             internal lgLcdOnConfigureCB configCallback;
+
             /// <summary>
             /// Specifies an arbitrary context value of the application that is passed
             /// back to the client in the event that the registered configCallback 
             /// function is invoked.
             /// </summary>
             internal IntPtr configContext;
-		}
+        }
 
         /// <summary>
         /// The lgLcdConnectContext contains all the information that is needed to 
@@ -406,52 +422,57 @@ namespace lgLcdClassLibrary
         /// it also contains the connection handle that has to be used in subsequent calls to 
         /// lgLcdEnumerate() and lgLcdOpen().
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdConnectContext
-		{
+        {
             /// <summary>
             /// Specifies a string that contains the “friendly name” of your application. 
             /// This name is presented to the user whenever a list of applications is shown.
             /// </summary>
             internal string appFriendlyName;
+
             /// <summary>
             /// Specifies whether your connection is temporary (.isPersistent = FALSE) or 
             /// whether it is a regular connection that should be added to the list 
             /// (.isPersistent = TRUE).
             /// </summary>
             internal bool isPersistent;
+
             /// <summary>
             /// Specifies whether your application can be started by LCDMon or not.
             /// </summary>
             internal bool isAutostartable;
+
             /// <summary>
             /// Specifies context that is necessary to call back for configuration of 
             /// your application. See lgLcdConfigureContext for more details.
             /// </summary>
             internal lgLcdConfigureContext onConfigure;
+
             /// <summary>
             /// Upon successful connection, this member holds the “connection handle” 
             /// which is used in subsequent calls to lgLcdEnumerate() and lgLcdOpen(). 
             /// A value of LGLCD_INVALID_CONNECTION denotes an invalid connection.
             /// </summary>
-            internal int connection;			
-		}
-		
+            internal int connection;
+        }
+
         /// <summary>
         /// The lgLcdSoftbuttonsChangedContext is part of the lgLcdOpenContext and 
         /// is used to give the library enough information to allow changes in the 
         /// state of the soft buttons to be signaled into the calling application 
         /// through a callback.
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdSoftbuttonsChangedContext
-		{
+        {
             /// <summary>
             /// Specifies a pointer to a function that should be called when the 
             /// state of the soft buttons changes. If no notification is needed, 
             /// leave this parameter NULL.
             /// </summary>
-            internal lgLcdOnSoftButtonsCB softbuttonsChangedCallback; 
+            internal lgLcdOnSoftButtonsCB softbuttonsChangedCallback;
+
             /// <summary>
             /// Specifies an arbitrary context value of the application that is 
             /// passed back to the client in the event that soft buttons are being 
@@ -459,7 +480,7 @@ namespace lgLcdClassLibrary
             /// in the dwButtons parameter of the callback function.
             /// </summary>
             internal IntPtr softbuttonsChangedContext;
-		}
+        }
 
         /// <summary>
         /// The lgLcdOpenContext contains all the information that is needed to open 
@@ -467,45 +488,55 @@ namespace lgLcdClassLibrary
         /// of the open it contains the device handle that has to be used in subsequent 
         /// calls to lgLcdReadSoftButtons(), lgLcdUpdateBitmap() and lgLcdClose().
         /// </summary>
-		[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct lgLcdOpenContext
-		{
+        {
             /// <summary>
             /// Specifies the connection (previously opened through lgLcdConnect()) which 
             /// this lgLcdOpen() call is for.
             /// </summary>
             internal int connection;
+
             /// <summary>
             /// Specifies the index of the device to open (see lgLcdEnumerate() for details).
             /// </summary>
             internal int index;
+
             /// <summary>
             /// Specifies the details for the callback function that should be invoked when
             /// device has changes in its soft button status, i.e. the user has pressed or
             /// a soft button. For details, see lgLcdSoftbuttonsChangedContext.
             /// </summary>
             internal lgLcdSoftbuttonsChangedContext onSoftbuttonsChanged;
+
             /// <summary>
             /// Upon successful opening, this member holds the device handle which is used 
             /// in subsequent calls to lgLcdReadSoftButtons(), lgLcdUpdateBitmap() and 
             /// lgLcdClose(). A value of LGLCD_INVALID_DEVICE denotes an invalid device.
             /// </summary>
             internal int device;
-		}
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="priority"></param>
         /// <returns></returns>
-        public static uint LGLCD_SYNC_UPDATE(uint priority) { return 0x80000000 | priority; }
+        public static uint LGLCD_SYNC_UPDATE(uint priority)
+        {
+            return 0x80000000 | priority;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="priority"></param>
         /// <returns></returns>
-        public static uint LGLCD_ASYNC_UPDATE(uint priority) { return priority; }
-		
+        public static uint LGLCD_ASYNC_UPDATE(uint priority)
+        {
+            return priority;
+        }
+
         /// <summary>
         /// The lgLcdInit() function initializes the Logitech LCD library. You must call this 
         /// function prior to any other function of the library.
@@ -532,7 +563,9 @@ namespace lgLcdClassLibrary
         /// ERROR_ALREADY_INITIALIZED
         ///     lgLcdInit() has been called before.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdInit();
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdInit();
+
         /// <summary>
         /// Use lgLcdDeInit() after you are done using the library in order to release all resources 
         /// that were allocated during lgLcdInit().
@@ -546,7 +579,9 @@ namespace lgLcdClassLibrary
         /// If the function succeeds, the return value is ERROR_SUCCESS.
         /// This function does not fail.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdDeInit();
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdDeInit();
+
         /// <summary>
         /// Use lgLcdConnect() to establish a connection to the LCD monitor process. This 
         /// connection is required for any other function to find, open and communicate with LCDs.
@@ -586,7 +621,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdConnect(ref lgLcdConnectContext ctx);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdConnect(ref lgLcdConnectContext ctx);
+
         /// <summary>
         /// Use lgLcdDisconnect() to close an existing connection to the LCD monitor process.
         /// </summary>
@@ -613,7 +650,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdDisconnect(int connection);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdDisconnect(int connection);
+
         /// <summary>
         /// The lgLcdEnumerate() function is used to retrieve information about all the 
         /// currently attached and supported Logitech LCD devices.
@@ -642,7 +681,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdEnumerate(int connection, int index, out lgLcdDeviceDesc description);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdEnumerate(int connection, int index, out lgLcdDeviceDesc description);
+
         /// <summary>
         /// The lgLcdOpen() function starts the communication with an attached device. You have 
         /// to call this function before retrieving button information or updating LCD bitmaps.
@@ -683,7 +724,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-        [DllImport("LgLcd.dll")] private static extern int lgLcdOpen(ref lgLcdOpenContext ctx);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdOpen(ref lgLcdOpenContext ctx);
+
         /// <summary>
         /// The lgLcdClose() function stops the communication with the previously opened device.
         /// </summary>
@@ -705,7 +748,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-        [DllImport("LgLcd.dll")] private static extern int lgLcdClose(int device);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdClose(int device);
+
         /// <summary>
         /// The lgLcdReadSoftButtons() function reads the current state of the soft buttons 
         /// for the specified device.
@@ -738,7 +783,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdReadSoftButtons(int device, out int buttons);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdReadSoftButtons(int device, out int buttons);
+
         /// <summary>
         /// The lgLcdUpdateBitmap() function updates the bitmap of the device.
         /// </summary>
@@ -823,7 +870,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-		[DllImport("LgLcd.dll")] private static extern int lgLcdUpdateBitmap(int device, ref lgLcdBitmap160x43x1 bitmap, uint priority);
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdUpdateBitmap(int device, ref lgLcdBitmap160x43x1 bitmap, uint priority);
+
         /// <summary>
         /// The lgLcdSetAsLCDForegroundApp() allows an application to become the one shown on 
         /// the LCD and prevents the LCD library from switching to other applications, when the 
@@ -861,8 +910,9 @@ namespace lgLcdClassLibrary
         /// Xxx
         ///     Other (system) error with appropriate error code.
         /// </returns>
-        [DllImport("LgLcd.dll")] private static extern int lgLcdSetAsLCDForegroundApp(int device, int foregroundYesNoFlag);
- 
-	#endregion
+        [DllImport("LgLcd.dll")]
+        private static extern int lgLcdSetAsLCDForegroundApp(int device, int foregroundYesNoFlag);
+
+        #endregion
     }
 }

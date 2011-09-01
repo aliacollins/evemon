@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-
 using EVEMon.Common;
 
 namespace EVEMon.LogitechG15
@@ -65,13 +64,9 @@ namespace EVEMon.LogitechG15
         internal void Render(Graphics canvas, Graphics overlay, float offset)
         {
             if (m_text == null)
-            {
                 RenderProgressLine(canvas, overlay, offset);
-            }
             else
-            {
                 RenderTextLine(canvas, offset);
-            }
         }
 
         /// <summary>
@@ -104,7 +99,7 @@ namespace EVEMon.LogitechG15
             {
                 string eveTime = DateTime.UtcNow.ToString("HH:mm");
                 SizeF eveTimeSize = canvas.MeasureString(eveTime, m_font);
-                left = (int) eveTimeSize.Width + Pad;
+                left = (int)eveTimeSize.Width + Pad;
                 size = Lcdisplay.G15Width - left - Pad;
             }
 
@@ -113,7 +108,7 @@ namespace EVEMon.LogitechG15
                 string systemTime = DateTime.Now.ToCustomShortTimeString();
                 SizeF systemTimeSize = canvas.MeasureString(systemTime, m_font);
 
-                size = size - (int) systemTimeSize.Width;
+                size = size - (int)systemTimeSize.Width;
             }
 
 

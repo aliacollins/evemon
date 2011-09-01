@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-
 using EVEMon.Common;
-
 using lgLcdClassLibrary;
 
 namespace EVEMon.LogitechG15
 {
     public class Lcdisplay : IDisposable
     {
-        internal const int G15Width = (int) LCDInterface.LGLCD_BMP_WIDTH;
-        private const int G15Height = (int) LCDInterface.LGLCD_BMP_HEIGHT;
+        internal const int G15Width = (int)LCDInterface.LGLCD_BMP_WIDTH;
+        private const int G15Height = (int)LCDInterface.LGLCD_BMP_HEIGHT;
         private const float G15DpiX = 46;
         private const float G15DpiY = 46;
 
@@ -41,10 +39,10 @@ namespace EVEMon.LogitechG15
         private bool m_disposed;
 
 
-
         #region Delegates and Events
 
         public delegate void CharacterHandler(Character character);
+
         public delegate void CharAutoCycleHandler(bool cycle);
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace EVEMon.LogitechG15
         /// Fired whenever the auto cycle should change (because of a button press).
         /// </summary>
         public static event CharAutoCycleHandler AutoCycleChanged;
-        
+
         #endregion
 
 
@@ -106,7 +104,7 @@ namespace EVEMon.LogitechG15
         {
             return s_singleInstance ?? (s_singleInstance = new Lcdisplay());
         }
-        
+
         #endregion
 
 
@@ -183,7 +181,7 @@ namespace EVEMon.LogitechG15
                     m_currentCharacterIndex = 0;
             }
         }
-        
+
         #endregion
 
 
@@ -345,7 +343,8 @@ namespace EVEMon.LogitechG15
                         string time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                             DescriptiveTextOptions.SpaceBetween);
                         m_lcdLines.Add(new LineProcess(
-                            String.Format(CultureConstants.DefaultCulture, "Queue finishes in: {0}", time), m_defaultFont));
+                                           String.Format(CultureConstants.DefaultCulture, "Queue finishes in: {0}", time),
+                                           m_defaultFont));
                     }
                     else
                     {
@@ -447,7 +446,8 @@ namespace EVEMon.LogitechG15
 
             DateTime completionDateTime = CurrentCharacter.CurrentlyTrainingSkill.EndTime.ToLocalTime();
             string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
-                                                          completionDateTime.ToShortDateString(), completionDateTime.ToCustomShortTimeString());
+                                                          completionDateTime.ToShortDateString(),
+                                                          completionDateTime.ToCustomShortTimeString());
             SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             timeLine.Offset(0f, 22f);
@@ -716,6 +716,7 @@ namespace EVEMon.LogitechG15
                 LCDInterface.DisplayBitmap(ref buffer, priority);
             }
         }
+
         #endregion
 
 
@@ -749,7 +750,7 @@ namespace EVEMon.LogitechG15
                     case 3:
                         balance = String.Format(CultureConstants.DefaultCulture, "{0} B ISK", value.ToString("#,###.#0"));
                         break;
-                    // We have no room to show the wallet balance
+                        // We have no room to show the wallet balance
                     default:
                         balance = String.Empty;
                         break;
@@ -757,8 +758,7 @@ namespace EVEMon.LogitechG15
 
                 SizeF size = m_lcdCanvas.MeasureString(balance, m_defaultFont);
                 newWidth = size.Width;
-            }
-            while (width < newWidth);
+            } while (width < newWidth);
 
             return balance;
         }
@@ -776,7 +776,7 @@ namespace EVEMon.LogitechG15
         /// <param name="pContext"></param>
         /// <returns></returns>
         private int OnButtonsPressed(int device, int dwButtons, IntPtr pContext)
-         {
+        {
             if (m_oldButtonState == dwButtons)
                 return 0;
 
