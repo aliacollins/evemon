@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
-using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Printing
+namespace EVEMon.Common
 {
     /// <summary>
     /// Prints a plan.
@@ -48,7 +48,7 @@ namespace EVEMon.Printing
         /// <param name="plan"></param>
         public static void Print(Plan plan)
         {
-            var printer = new PlanPrinter(plan);
+            PlanPrinter printer = new PlanPrinter(plan);
             printer.PrintPlan();
         }
 

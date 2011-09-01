@@ -137,6 +137,12 @@
     <Compile Include="Controls\PersistentSplitContainer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\PrintOptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\PrintOptionsDialog.Designer.cs">
+      <DependentUpon>PrintOptionsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SkillQueueControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -220,6 +226,7 @@
     <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PlanPrinter.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
       <DependentUpon>IconSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -753,6 +760,10 @@
     <None Include="Diagrams\Skills.cd" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\PrintOptionsDialog.resx">
+      <DependentUpon>PrintOptionsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\TrayIcon.resx">
       <DependentUpon>TrayIcon.cs</DependentUpon>
       <SubType>Designer</SubType>

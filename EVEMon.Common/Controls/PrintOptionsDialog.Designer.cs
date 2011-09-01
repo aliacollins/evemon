@@ -1,4 +1,4 @@
-namespace EVEMon.Printing
+namespace EVEMon.Common.Controls
 {
     partial class PrintOptionsDialog
     {

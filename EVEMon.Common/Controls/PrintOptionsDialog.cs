@@ -1,10 +1,8 @@
 using System;
 using System.Drawing.Printing;
-using EVEMon.Common;
-using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Printing
+namespace EVEMon.Common.Controls
 {
     public partial class PrintOptionsDialog : EVEMonForm
     {
