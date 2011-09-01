@@ -18,7 +18,6 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ShipLoadoutSelectWindow : EVEMonForm
     {
-
         // TODO : This class needs totally re-writing to split the data components from the UI components.
 
         private Item m_ship;
@@ -261,11 +260,11 @@ namespace EVEMon.SkillPlanner
 
             // Fill the items tree
             IEnumerable<IGrouping<string, SerializableLoadoutSlot>> slotTypes = loadout.Slots.GroupBy(x => x.SlotType);
-            foreach (var slotType in slotTypes)
+            foreach (IGrouping<string, SerializableLoadoutSlot> slotType in slotTypes)
             {
                 TreeNode typeNode = new TreeNode(s_typeMap[slotType.Key]);
 
-                foreach (var slot in slotType)
+                foreach (SerializableLoadoutSlot slot in slotType)
                 {
                     Item item = StaticItems.GetItemByID(slot.ItemID);
                     if (item == null)
@@ -312,7 +311,7 @@ namespace EVEMon.SkillPlanner
 
             // Compute the training time
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
-            foreach (var entry in m_plan)
+            foreach (PlanEntry entry in m_plan)
             {
                 scratchpad.Train(entry);
             }
@@ -424,7 +423,6 @@ namespace EVEMon.SkillPlanner
                 MessageBox.Show("Please select a loadout to discuss.", "No Loadout Selected", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
             }
-
         }
 
         /// <summary>
@@ -548,7 +546,7 @@ namespace EVEMon.SkillPlanner
 
             if (items.ContainsKey(s_typeMap["lo"]))
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["lo"]].ToArray()));
-            
+
             if (items.ContainsKey(s_typeMap["med"]))
                 exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["med"]].ToArray()));
 
@@ -690,17 +688,13 @@ namespace EVEMon.SkillPlanner
                         break;
                     case 2: // Rating
                         if (slb != null && (sla != null && sla.Rating < slb.Rating))
-                        {
                             compareResult = -1;
-                        }
                         else if (slb != null && (sla != null && sla.Rating > slb.Rating))
-                        {
                             compareResult = 1;
-                        }
                         break;
                     case 3: // Date
                         if (sla != null && slb != null)
-                                compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
+                            compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
                         break;
                 }
 
@@ -709,6 +703,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

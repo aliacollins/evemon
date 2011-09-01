@@ -20,6 +20,7 @@ namespace EVEMon
         private Character m_character;
         private int m_spAtLastRedraw;
 
+
         #region Constructor
 
         /// <summary>
@@ -104,11 +105,12 @@ namespace EVEMon
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
                 BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "{0} - {1} - {2} - {3}", m_character.Gender, m_character.Race, m_character.Bloodline, m_character.Ancestry);
+                                                  "{0} - {1} - {2} - {3}", m_character.Gender, m_character.Race,
+                                                  m_character.Bloodline, m_character.Ancestry);
                 BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "Birthday: {0}", m_character.Birthday.ToLocalTime());
+                                                   "Birthday: {0}", m_character.Birthday.ToLocalTime());
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "Corporation: {0}", m_character.CorporationName);
+                                                          "Corporation: {0}", m_character.CorporationName);
 
                 AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
 
@@ -137,13 +139,13 @@ namespace EVEMon
                 SuspendLayout();
 
                 SecurityStatusLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "Security Status: {0:N2}", m_character.SecurityStatus);
+                                                         "Security Status: {0:N2}", m_character.SecurityStatus);
                 ActiveShipLabel.Text = GetActiveShipText();
 
                 Account account = m_character.Identity.Account;
                 LocationInfoIndicationPictureBox.Visible = account != null &&
-                                                            account.KeyLevel == CredentialsLevel.Full &&
-                                                            !String.IsNullOrEmpty(m_character.LastKnownLocation);
+                                                           account.KeyLevel == CredentialsLevel.Full &&
+                                                           !String.IsNullOrEmpty(m_character.LastKnownLocation);
             }
             finally
             {
@@ -165,7 +167,7 @@ namespace EVEMon
                 return;
 
             BalanceLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                "Balance: {0:N} ISK", m_character.Balance);
+                                              "Balance: {0:N} ISK", m_character.Balance);
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
@@ -355,7 +357,7 @@ namespace EVEMon
                 return;
 
             // Add new separator before monitor items
-            ThrobberSeparator = new ToolStripSeparator {Name = "throbberSeparator"};
+            ThrobberSeparator = new ToolStripSeparator { Name = "throbberSeparator" };
             ThrobberContextMenu.Items.Add(ThrobberSeparator);
         }
 
@@ -393,7 +395,6 @@ namespace EVEMon
                        : String.Format(CultureConstants.DefaultCulture, "({0}m)", Math.Floor(timeToNextUpdate.TotalMinutes));
         }
 
-
         /// <summary>
         /// Gets the update status for a monitor.
         /// </summary>
@@ -429,9 +430,9 @@ namespace EVEMon
             if (remainingTime.Minutes > 0)
             {
                 return remainingTime.ToDescriptiveText(
-                   DescriptiveTextOptions.FullText |
-                   DescriptiveTextOptions.SpaceText |
-                   DescriptiveTextOptions.SpaceBetween, false);
+                    DescriptiveTextOptions.FullText |
+                    DescriptiveTextOptions.SpaceText |
+                    DescriptiveTextOptions.SpaceBetween, false);
             }
 
             return "Less than a minute";
@@ -445,13 +446,13 @@ namespace EVEMon
         private ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
             string menuText = String.Format(CultureConstants.DefaultCulture,
-                "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));
+                                            "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));
 
             ToolStripMenuItem menu = new ToolStripMenuItem(menuText)
-            {
-                Tag = monitor.Method,
-                Enabled = !monitor.ForceUpdateWillCauseError
-            };
+                                         {
+                                             Tag = monitor.Method,
+                                             Enabled = !monitor.ForceUpdateWillCauseError
+                                         };
 
             return menu;
         }
@@ -481,9 +482,11 @@ namespace EVEMon
             // string in this case as it is an interface requirement,
             // rather than a cultural preference.
             output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5)).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5)).
+                AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:#,##0}", m_character.SkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}", m_character.CloneSkillPoints).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}", m_character.CloneSkillPoints).
+                AppendLine();
             output.Append(m_character.CloneName);
 
             return output.ToString();
@@ -496,12 +499,13 @@ namespace EVEMon
         private string GetActiveShipText()
         {
             return String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
-                (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName) ?
-                String.Format("{0} [{1}]", m_character.ShipTypeName, m_character.ShipName) : "Unknown"));
+                                 (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
+                                      ? String.Format("{0} [{1}]", m_character.ShipTypeName, m_character.ShipName)
+                                      : "Unknown"));
         }
 
         #endregion
-        
+
 
         #region Event Handlers
 
@@ -636,7 +640,7 @@ namespace EVEMon
             // This is not a CCP account, it can't be updated
             if (ccpCharacter == null)
                 return;
-            
+
             // There has been an error in the past (Authorization, Server Error, etc.)
             if (UpdateThrobber.State == ThrobberState.Strobing)
             {
@@ -749,7 +753,8 @@ namespace EVEMon
                 if (skillLevel > 0)
                     sb.AppendLine();
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel, count.ToString().PadLeft(5));
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel,
+                                count.ToString().PadLeft(5));
             }
 
             ToolTip.SetToolTip((Label)sender, sb.ToString());
@@ -783,7 +788,8 @@ namespace EVEMon
             if (m_character.AllianceID == 0)
                 return;
 
-            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}", m_character.AllianceName);
+            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}",
+                                               m_character.AllianceName);
             ToolTip.SetToolTip((Label)sender, tooltipText);
         }
 
@@ -803,7 +809,7 @@ namespace EVEMon
                 return;
 
             string location = "Lost in space";
-            
+
             // Check if in an NPC station or in an outpost
             Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation) ??
                               ConquerableStation.GetStationByName(m_character.LastKnownLocation);
@@ -813,7 +819,7 @@ namespace EVEMon
             {
                 // Has to be in a solar system at least
                 SolarSystem system = StaticGeography.GetSolarSystemByName(m_character.LastKnownLocation);
-                
+
                 // Not in a solar system ??? Then show default location
                 if (system != null)
                     location = String.Format("{0} ({1:N1})", system.FullLocation, system.SecurityLevel);
@@ -821,7 +827,8 @@ namespace EVEMon
             else
             {
                 location = String.Format("{0} ({1:N1})\nDocked in {2}", station.SolarSystem.FullLocation,
-                    station.SolarSystem.SecurityLevel, (station is ConquerableStation ? ((ConquerableStation)station).FullName : station.Name));
+                                         station.SolarSystem.SecurityLevel,
+                                         (station is ConquerableStation ? ((ConquerableStation)station).FullName : station.Name));
             }
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);

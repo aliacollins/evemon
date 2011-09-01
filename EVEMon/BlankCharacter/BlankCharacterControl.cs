@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
@@ -67,7 +66,6 @@ namespace EVEMon.BlankCharacter
         {
             InitializeComponent();
         }
-
 
         /// <summary>
         /// Handles the Load event of the BlankCharacterControl.
@@ -361,7 +359,6 @@ namespace EVEMon.BlankCharacter
                            CloneName = "Clone Grade Alpha",
                            CloneSkillPoints = 900000,
                            Balance = 0,
-
                            Attributes = new SerializableCharacterAttributes
                                             {
                                                 Intelligence = EveConstants.CharacterBaseAttributePoints + 3,
@@ -370,7 +367,6 @@ namespace EVEMon.BlankCharacter
                                                 Willpower = EveConstants.CharacterBaseAttributePoints + 3,
                                                 Charisma = EveConstants.CharacterBaseAttributePoints + 2
                                             },
-
                            ImplantSets = new SerializableImplantSetCollection
                                              {
                                                  API = new SerializableSettingsImplantSet { Name = "Implants from API" },
@@ -378,9 +374,7 @@ namespace EVEMon.BlankCharacter
                                                      new SerializableSettingsImplantSet
                                                          { Name = "Previous implants from the API" },
                                              },
-
                            Skills = GetSkillsForRace(),
-
                            Certificates = new List<SerializableCharacterCertificate>(),
                        };
         }
@@ -434,6 +428,5 @@ namespace EVEMon.BlankCharacter
         }
 
         #endregion
-
     }
 }

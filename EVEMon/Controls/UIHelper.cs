@@ -6,7 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
@@ -18,7 +17,6 @@ namespace EVEMon.Controls
     /// </summary>
     public static class UIHelper
     {
-
         public static CharacterMonitor CurrentMonitor { get; set; }
 
         /// <summary>
@@ -27,7 +25,7 @@ namespace EVEMon.Controls
         /// <param name="plan"></param>
         public static void ExportPlan(Plan plan)
         {
-            Character character = (Character) plan.Character;
+            Character character = (Character)plan.Character;
 
             // Assemble an initial filename and remove prohibited characters
             string planSaveName = String.Format("{0} - {1}", character.Name, plan.Name);
@@ -46,7 +44,7 @@ namespace EVEMon.Controls
                                              Title = "Save to File",
                                              Filter =
                                                  "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt",
-                                             FilterIndex = (int) PlanFormat.Emp
+                                             FilterIndex = (int)PlanFormat.Emp
                                          };
 
             DialogResult dr = sfdSave.ShowDialog();
@@ -57,7 +55,7 @@ namespace EVEMon.Controls
             // Serialize
             try
             {
-                PlanFormat format = (PlanFormat) sfdSave.FilterIndex;
+                PlanFormat format = (PlanFormat)sfdSave.FilterIndex;
 
                 string content;
                 switch (format)
@@ -89,12 +87,14 @@ namespace EVEMon.Controls
                                 s = new GZipStream(fs, CompressionMode.Compress);
 
                             using (s)
-                            using (StreamWriter writer = new StreamWriter(s, Encoding.UTF8))
                             {
-                                writer.Write(content);
-                                writer.Flush();
-                                s.Flush();
-                                fs.Flush();
+                                using (StreamWriter writer = new StreamWriter(s, Encoding.UTF8))
+                                {
+                                    writer.Write(content);
+                                    writer.Flush();
+                                    s.Flush();
+                                    fs.Flush();
+                                }
                             }
                             return true;
                         });
@@ -149,7 +149,7 @@ namespace EVEMon.Controls
                     "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml";
                 characterSaveDialog.FileName = String.Format(CultureConstants.DefaultCulture, " {0} (after plan {1})",
                                                              character.Name, plan.Name);
-                characterSaveDialog.FilterIndex = (int) CharacterSaveFormat.EVEMonXML;
+                characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.EVEMonXML;
 
                 DialogResult result = characterSaveDialog.ShowDialog();
                 if (result == DialogResult.Cancel)
@@ -159,7 +159,7 @@ namespace EVEMon.Controls
                 try
                 {
                     // Save character to string with the chosen format
-                    CharacterSaveFormat format = (CharacterSaveFormat) characterSaveDialog.FilterIndex;
+                    CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
                     string content = CharacterExporter.Export(format, character, plan);
                     // Save character with the chosen format to our file
                     FileHelper.OverwriteOrWarnTheUser(
@@ -197,7 +197,7 @@ namespace EVEMon.Controls
                 characterSaveDialog.Filter =
                     "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml|XML Format (CCP API)|*.xml|PNG Image|*.png";
                 characterSaveDialog.FileName = character.Name;
-                characterSaveDialog.FilterIndex = (int) CharacterSaveFormat.CCPXML;
+                characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.CCPXML;
 
                 DialogResult result = characterSaveDialog.ShowDialog();
                 if (result == DialogResult.Cancel)
@@ -206,7 +206,7 @@ namespace EVEMon.Controls
                 // Serialize
                 try
                 {
-                    CharacterSaveFormat format = (CharacterSaveFormat) characterSaveDialog.FilterIndex;
+                    CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
                     // Save character with the chosen format to our file
                     FileHelper.OverwriteOrWarnTheUser(
                         characterSaveDialog.FileName,

@@ -444,9 +444,7 @@ namespace EVEMon.Schedule
         {
             bool valid = true;
             if (String.IsNullOrEmpty(tbTitle.Text) || String.IsNullOrEmpty(tbTitle.Text.Trim()))
-            {
                 valid = false;
-            }
             else
             {
                 if (rbOneTime.Checked)
@@ -455,17 +453,13 @@ namespace EVEMon.Schedule
                     int endSec;
                     if (!TryParseTime(tbOneTimeStartTime.Text, out startSec) ||
                         !TryParseTime(tbOneTimeEndTime.Text, out endSec))
-                    {
                         valid = false;
-                    }
                     else
                     {
                         DateTime startDate = m_oneTimeStartDate + TimeSpan.FromSeconds(startSec);
                         DateTime endDate = m_oneTimeEndDate + TimeSpan.FromSeconds(endSec);
                         if (startDate >= endDate)
-                        {
                             valid = false;
-                        }
                         else
                         {
                             m_oneTimeStartTime = startSec;
@@ -476,18 +470,14 @@ namespace EVEMon.Schedule
                 else if (rbRecurring.Checked)
                 {
                     if (m_recurringDateFrom > m_recurringDateTo)
-                    {
                         valid = false;
-                    }
                     else
                     {
                         int startSec;
                         int endSec;
                         if (!TryParseTime(tbRecurringTimeFrom.Text, out startSec) ||
                             !TryParseTime(tbRecurringTimeTo.Text, out endSec))
-                        {
                             valid = false;
-                        }
                         else
                         {
                             if (startSec >= endSec)
@@ -499,9 +489,7 @@ namespace EVEMon.Schedule
                     }
                 }
                 else
-                {
                     valid = false;
-                }
             }
 
             btnOk.Enabled = valid;
@@ -585,9 +573,7 @@ namespace EVEMon.Schedule
         private void button1_Click(object sender, EventArgs e)
         {
             if (!btnOk.Enabled)
-            {
                 return;
-            }
 
             ScheduleEntry ise = GenerateScheduleEntry();
             ScheduleEntry = ise;
@@ -653,13 +639,9 @@ namespace EVEMon.Schedule
             using (DateSelectWindow f = new DateSelectWindow())
             {
                 if (res == DateTime.MinValue || res == DateTime.MaxValue)
-                {
                     f.SelectedDate = DateTime.Today;
-                }
                 else
-                {
                     f.SelectedDate = res;
-                }
 
                 DialogResult dr = f.ShowDialog();
 

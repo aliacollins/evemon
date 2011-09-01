@@ -4,12 +4,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
-
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
@@ -168,13 +166,9 @@ namespace EVEMon
 
             object item = lbStandings.Items[e.Index];
             if (item is Standing)
-            {
                 DrawItem(item as Standing, e);
-            }
             else if (item is String)
-            {
                 DrawItem(item as String, e);
-            }
         }
 
         /// <summary>
@@ -401,13 +395,9 @@ namespace EVEMon
 
                 // If found a new item as top or bottom
                 if (item != null)
-                {
                     numberOfPixelsToMove[i - 1] = GetItemHeight(item) * direction;
-                }
                 else
-                {
                     lines -= direction;
-                }
             }
 
             // Scroll 
@@ -443,7 +433,7 @@ namespace EVEMon
                 return;
 
             // Left button : expand/collapse
-            String sg = (String) item;
+            String sg = (String)item;
             if (e.Button != MouseButtons.Right)
             {
                 ToggleGroupExpandCollapse(sg);

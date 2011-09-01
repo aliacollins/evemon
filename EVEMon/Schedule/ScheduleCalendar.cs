@@ -22,7 +22,6 @@ namespace EVEMon.Schedule
         private const int LegendSpacingX = 110;
         private const int LegendSpacingY = 18;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleCalendar"/> class.
         /// </summary>
@@ -87,7 +86,6 @@ namespace EVEMon.Schedule
         {
             get { return m_entries; }
         }
-
 
         protected override void Dispose(bool disposing)
         {
@@ -168,7 +166,6 @@ namespace EVEMon.Schedule
 
                     using (fillBrush)
                     {
-
                         Size textsize = TextRenderer.MeasureText(entry.Title, EntryFont);
                         if (textsize.Width <= rect.Width)
                         {
@@ -184,9 +181,7 @@ namespace EVEMon.Schedule
                                 shorttext = entry.Title.Substring(0, i) + "..";
                                 textsize = TextRenderer.MeasureText(shorttext, EntryFont);
                                 if (textsize.Width <= rect.Width)
-                                {
                                     break;
-                                }
                             }
                             g.FillRectangle(fillBrush, rect);
                             TextRenderer.DrawText(g, shorttext, EntryFont, new Point(rect.X + 1, rect.Y), TextColor);

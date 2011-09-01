@@ -120,7 +120,7 @@ namespace EVEMon.SkillPlanner
             int sparePoints = EveConstants.SpareAttributePointsOnRemap;
             for (int i = 0; i < 5; i++)
             {
-                sparePoints -= (remapping.BestScratchpad[(EveAttribute) i].Base) -
+                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base) -
                                EveConstants.CharacterBaseAttributePoints;
             }
             pbUnassigned.Value = sparePoints;
@@ -180,6 +180,7 @@ namespace EVEMon.SkillPlanner
             if (AttributeChanged != null)
                 AttributeChanged(this, manualRemapping);
         }
+
 
         #region Events
 
@@ -305,7 +306,7 @@ namespace EVEMon.SkillPlanner
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));
             for (int i = 0; i < 5; i++)
             {
-                scratchpad[(EveAttribute) i].Base = point[(EveAttribute) i];
+                scratchpad[(EveAttribute)i].Base = point[(EveAttribute)i];
             }
 
             AttributesOptimizer.RemappingResult remapping = new AttributesOptimizer.RemappingResult(m_remapping,

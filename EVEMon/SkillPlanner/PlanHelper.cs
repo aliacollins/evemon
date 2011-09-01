@@ -18,18 +18,14 @@ namespace EVEMon.SkillPlanner
         public static bool UpdatesRegularPlanToMenu(ToolStripItem menu, Plan plan, Skill skill, int level)
         {
             if (level == 0)
-            {
                 menu.Text = "Remove";
-            }
             else
-            {
                 menu.Text = "Level " + level.ToString();
-            }
 
             menu.Enabled = EnablePlanTo(plan, skill, level);
             if (menu.Enabled)
             {
-                var operation = plan.TryPlanTo(skill, level);
+                IPlanOperation operation = plan.TryPlanTo(skill, level);
                 menu.Tag = operation;
                 if (RequiresWindow(operation))
                     menu.Text += "...";
@@ -53,15 +49,11 @@ namespace EVEMon.SkillPlanner
         {
             // The entry actually wants to remove the item
             if (level == 0)
-            {
                 return plan.IsPlanned(skill);
-            }
 
             // The entry is already known
             if (skill.Level >= level)
-            {
                 return false;
-            }
 
             // The entry is already planned at this very level ?
             return plan.GetPlannedLevel(skill) != level;
@@ -91,7 +83,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static bool PerformSilently(IPlanOperation operation)
         {
-            var window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
+            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
             return PerformSilently(window, operation);
         }
 
@@ -122,7 +114,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public static bool Perform(IPlanOperation operation)
         {
-            var window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
+            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
             return Perform(window, operation);
         }
 
@@ -134,7 +126,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static bool Perform(Form parentForm, IPlanOperation operation)
         {
-            using (var window = new PlanToOperationForm(operation))
+            using (PlanToOperationForm window = new PlanToOperationForm(operation))
             {
                 DialogResult result = window.ShowDialog(parentForm);
                 return result == DialogResult.OK;

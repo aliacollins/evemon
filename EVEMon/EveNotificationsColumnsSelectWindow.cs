@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
@@ -34,7 +33,8 @@ namespace EVEMon
         /// <returns></returns>
         protected override IEnumerable<int> GetAllKeys()
         {
-            return EnumExtensions.GetValues<EveNotificationsColumn>().Where(x => x != EveNotificationsColumn.None).Select(x => (int)x);
+            return
+                EnumExtensions.GetValues<EveNotificationsColumn>().Where(x => x != EveNotificationsColumn.None).Select(x => (int)x);
         }
 
         /// <summary>

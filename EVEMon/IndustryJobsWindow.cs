@@ -25,7 +25,7 @@ namespace EVEMon
         public Enum Grouping
         {
             get { return jobsList.Grouping; }
-            set 
+            set
             {
                 jobsList.Grouping = value;
 
@@ -43,7 +43,7 @@ namespace EVEMon
         public IssuedFor ShowIssuedFor
         {
             get { return jobsList.ShowIssuedFor; }
-            set 
+            set
             {
                 jobsList.ShowIssuedFor = value;
 

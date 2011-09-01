@@ -288,9 +288,7 @@ namespace EVEMon.ImplantControls
         {
             // Enable/disable the top buttons
             if (setsGrid.SelectedRows.Count == 0)
-            {
                 importButton.Enabled = false;
-            }
             else
             {
                 importButton.Enabled = true;

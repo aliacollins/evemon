@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
@@ -34,7 +33,8 @@ namespace EVEMon
         /// <returns></returns>
         protected override IEnumerable<int> GetAllKeys()
         {
-            return EnumExtensions.GetValues<EveMailMessagesColumn>().Where(x => x != EveMailMessagesColumn.None).Select(x => (int)x);
+            return
+                EnumExtensions.GetValues<EveMailMessagesColumn>().Where(x => x != EveMailMessagesColumn.None).Select(x => (int)x);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace EVEMon
         /// <returns></returns>
         protected override IEnumerable<IColumnSettings> GetDefaultColumns()
         {
-            var settings = new EveMailMessagesSettings();
+            EveMailMessagesSettings settings = new EveMailMessagesSettings();
             return settings.Columns;
         }
     }

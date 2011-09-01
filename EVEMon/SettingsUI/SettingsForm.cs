@@ -332,17 +332,11 @@ namespace EVEMon.SettingsUI
             m_settings.UI.PlanWindow.UseAdvanceEntryAddition = cbAdvanceEntryAdd.Checked;
 
             if (alwaysAskRadioButton.Checked)
-            {
                 m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.AlwaysAsk;
-            }
             else if (removeAllRadioButton.Checked)
-            {
                 m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveAll;
-            }
             else
-            {
                 m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
-            }
 
             // Skill Browser icon sets
             m_settings.UI.SkillBrowser.IconsGroupIndex = cbSkillIconSet.SelectedIndex + 1;
@@ -354,31 +348,19 @@ namespace EVEMon.SettingsUI
 
             // System tray icon behaviour
             if (rbSystemTrayOptionsNever.Checked)
-            {
                 m_settings.UI.SystemTrayIcon = SystemTrayBehaviour.Disabled;
-            }
             else if (rbSystemTrayOptionsMinimized.Checked)
-            {
                 m_settings.UI.SystemTrayIcon = SystemTrayBehaviour.ShowWhenMinimized;
-            }
             else if (rbSystemTrayOptionsAlways.Checked)
-            {
                 m_settings.UI.SystemTrayIcon = SystemTrayBehaviour.AlwaysVisible;
-            }
 
             // Main window close behaviour
             if (rbMinToTaskBar.Checked)
-            {
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.MinimizeToTaskbar;
-            }
             else if (rbMinToTray.Checked)
-            {
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.MinimizeToTray;
-            }
             else
-            {
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.Exit;
-            }
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -421,17 +403,11 @@ namespace EVEMon.SettingsUI
 
             // Tray icon window style
             if (trayPopupRadio.Checked)
-            {
                 m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.PopupForm;
-            }
             else if (trayTooltipRadio.Checked)
-            {
                 m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.WindowsTooltip;
-            }
             else
-            {
                 m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.Disabled;
-            }
 
             // Proxy
             m_settings.Proxy.Enabled = customProxyCheckBox.Checked;
@@ -487,9 +463,7 @@ namespace EVEMon.SettingsUI
                                                     "\"{0}\" {1}", Application.ExecutablePath, "-startMinimized"));
             }
             else
-            {
                 rk.DeleteValue("EVEMon", false);
-            }
         }
 
         /// <summary>
@@ -527,7 +501,7 @@ namespace EVEMon.SettingsUI
             cbAPIServer.Items.Clear();
             cbAPIServer.Items.Add(GlobalAPIProviderCollection.DefaultProvider.Name);
             cbAPIServer.Items.Add(GlobalAPIProviderCollection.TestProvider.Name);
-            foreach (var provider in m_settings.APIProviders.CustomProviders)
+            foreach (SerializableAPIProvider provider in m_settings.APIProviders.CustomProviders)
             {
                 cbAPIServer.Items.Add(provider.Name);
                 if (provider.Name == m_settings.APIProviders.CurrentProviderName)
@@ -735,9 +709,7 @@ namespace EVEMon.SettingsUI
             PopulateNotificationsFromControls(out configuredValues);
 
             if (!Emailer.SendTestMail(configuredValues))
-            {
                 MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
             else
             {
                 MessageBox.Show("The message sent successfully. Please verify that the message was received.",
@@ -933,9 +905,7 @@ namespace EVEMon.SettingsUI
                 || !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                                               Path.DirectorySeparatorChar,
                                               AppDomain.CurrentDomain.BaseDirectory)))
-            {
                 groupname = null;
-            }
 
             if (groupname != null)
             {

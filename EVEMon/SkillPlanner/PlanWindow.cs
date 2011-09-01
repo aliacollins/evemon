@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -24,6 +23,7 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
+
 
         #region Initialization and Lifecycle
 
@@ -151,7 +151,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public Character Character
         {
-            get { return (Character) m_plan.Character; }
+            get { return (Character)m_plan.Character; }
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace EVEMon.SkillPlanner
         {
             tabControl.ImageList = (!Settings.UI.SafeForWork
                                         ? ilTabIcons
-                                        : new ImageList {ImageSize = new Size(24, 24)});
+                                        : new ImageList { ImageSize = new Size(24, 24) });
 
             foreach (ToolStripItem button in upperToolStrip.Items)
             {
@@ -595,14 +595,10 @@ namespace EVEMon.SkillPlanner
 
                         // Put current plan to bold
                         if (plan == m_plan)
-                        {
                             menuPlanItem.Enabled = false;
-                        }
                             // Is it already opened in another plan ?
                         else if (WindowsFactory<PlanWindow>.GetByTag(plan) != null)
-                        {
                             menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
-                        }
                     });
         }
 
@@ -620,18 +616,14 @@ namespace EVEMon.SkillPlanner
             // Is it another plan ?
             if (e.ClickedItem.Tag != null)
             {
-                Plan plan = (Plan) e.ClickedItem.Tag;
+                Plan plan = (Plan)e.ClickedItem.Tag;
                 PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(plan);
 
                 // Opens the existing window when there is one, or switch to this plan when no window opened
                 if (window != null)
-                {
                     window.BringToFront();
-                }
                 else
-                {
                     Plan = plan;
-                }
 
                 return;
             }
@@ -738,7 +730,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-
         /// <summary>
         /// Toolbar > Attributes optimizer.
         /// </summary>
@@ -782,6 +773,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

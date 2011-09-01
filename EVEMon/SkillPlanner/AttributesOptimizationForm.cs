@@ -49,7 +49,6 @@ namespace EVEMon.SkillPlanner
         private readonly BasePlan m_plan;
         private readonly string m_description;
 
-
         private Thread m_thread;
         private PlanEditorControl m_planEditor;
         private CharacterScratchpad m_statisticsScratchpad;
@@ -59,7 +58,6 @@ namespace EVEMon.SkillPlanner
         // Variables for manual edition of a plan
         private RemappingPoint m_manuallyEditedRemappingPoint;
         private AttributesOptimizer.RemappingResult m_remapping;
-
 
         /// <summary>
         /// Constructor for designer.
@@ -205,7 +203,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 // Update the controls for every attribute
-                Invoke((MethodInvoker) (() => UpdateForm(remapping, remappingList)));
+                Invoke((MethodInvoker)(() => UpdateForm(remapping, remappingList)));
             }
         }
 
@@ -234,9 +232,7 @@ namespace EVEMon.SkillPlanner
                 UpdateForRemapping(remapping);
             }
             else
-            {
                 UpdateForRemappingList(remappingList);
-            }
 
             // Update the plan order's column
             if (m_planEditor != null && (remapping != null || remappingList.Count != 0))
@@ -334,13 +330,11 @@ namespace EVEMon.SkillPlanner
                 }
             }
             else
-            {
                 lvPoints.Items.Add(new ListViewItem("Your attributes are already optimal.", globalGroup));
-            }
 
             // Notify plan updated
             ListViewItem lvi = new ListViewItem("Your plan has been updated.", globalGroup)
-                                   {Font = FontFactory.GetFont(lvPoints.Font, FontStyle.Bold)};
+                                   { Font = FontFactory.GetFont(lvPoints.Font, FontStyle.Bold) };
             lvPoints.Items.Add(lvi);
 
             // Add pages and summary informations
@@ -375,7 +369,7 @@ namespace EVEMon.SkillPlanner
                                                    "The previous remap point was only {0} ago.",
                                                    timeSinceLastRemap.ToDescriptiveText(
                                                        DescriptiveTextOptions.IncludeCommas)), group)
-                        {ForeColor = Color.DarkRed};
+                        { ForeColor = Color.DarkRed };
                 lvPoints.Items.Add(item);
             }
 
@@ -464,6 +458,7 @@ namespace EVEMon.SkillPlanner
             m_remapping = remapping;
         }
 
+
         #region IPlanOrderPluggable Members
 
         /// <summary>
@@ -476,13 +471,9 @@ namespace EVEMon.SkillPlanner
             areRemappingPointsActive = m_areRemappingPointsActive;
 
             if (m_areRemappingPointsActive)
-            {
                 plan.UpdateStatistics(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), true, true);
-            }
             else
-            {
                 plan.UpdateStatistics(m_statisticsScratchpad.Clone(), false, true);
-            }
 
             plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), false,
                                         true);

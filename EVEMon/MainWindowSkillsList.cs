@@ -5,12 +5,10 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Controls;
 using EVEMon.SkillPlanner;
-
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
@@ -194,13 +192,9 @@ namespace EVEMon
 
             object item = lbSkills.Items[e.Index];
             if (item is SkillGroup)
-            {
                 DrawItem(item as SkillGroup, e);
-            }
             else if (item is Skill)
-            {
                 DrawItem(item as Skill, e);
-            }
         }
 
         /// <summary>
@@ -409,8 +403,10 @@ namespace EVEMon
             if (hasTrainingSkill)
                 skillInTrainingSuffix = "  ( 1 in training )";
             if (hasQueuedSkill)
+            {
                 skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture,
                                                     "  ( {0} in queue )", group.Count(x => x.IsQueued && !x.IsTraining));
+            }
 
             string detailText = String.Format(CultureConstants.DefaultCulture,
                                               ", {0} of {1} skills, {2:#,##0} Points{3}",
@@ -472,9 +468,7 @@ namespace EVEMon
         {
             // When at least one group collapsed, expand all
             if (Character.UISettings.CollapsedGroups.Count != 0)
-            {
                 Character.UISettings.CollapsedGroups.Clear();
-            }
                 // When none collapsed, collapse all
             else
             {
@@ -495,13 +489,9 @@ namespace EVEMon
         private void ToggleGroupExpandCollapse(SkillGroup group)
         {
             if (Character.UISettings.CollapsedGroups.Contains(group.Name))
-            {
                 ExpandSkillGroup(group);
-            }
             else
-            {
                 CollapseSkillGroup(group);
-            }
         }
 
         /// <summary>
@@ -583,13 +573,9 @@ namespace EVEMon
 
                 // If found a new item as top or bottom
                 if (item != null)
-                {
                     numberOfPixelsToMove[i - 1] = GetItemHeight(item) * direction;
-                }
                 else
-                {
                     lines -= direction;
-                }
             }
 
             // Scroll 
@@ -732,13 +718,9 @@ namespace EVEMon
 
             ttToolTip.Active = false;
             if (item is SkillGroup)
-            {
                 ttToolTip.SetToolTip(lbSkills, GetTooltip(item as SkillGroup));
-            }
             else
-            {
                 ttToolTip.SetToolTip(lbSkills, GetTooltip(item as Skill));
-            }
             ttToolTip.Active = true;
         }
 

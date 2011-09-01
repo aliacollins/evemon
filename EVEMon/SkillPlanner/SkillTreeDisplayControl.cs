@@ -15,7 +15,6 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class SkillTreeDisplayControl : UserControl
     {
-
         #region Fields
 
         private const int SkillboxMarginUd = 20;
@@ -212,9 +211,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
             else
-            {
                 g.FillRectangle(SystemBrushes.Control, e.ClipRectangle);
-            }
 
             // Returns when no root skill
             if (m_rootSkill == null)
@@ -322,9 +319,7 @@ namespace EVEMon.SkillPlanner
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
-                        {
                             fillBrush = new LinearGradientBrush(rect, Color.LightPink, Color.DarkRed, 90.0F);
-                        }
                         else
                         {
                             fillBrush = new LinearGradientBrush(rect, Color.Red, Color.Black, 90.0F);
@@ -340,9 +335,7 @@ namespace EVEMon.SkillPlanner
                 }
                     // Skill at level 0, prerequisites met
                 else if (cell.Skill.ArePrerequisitesMet)
-                {
                     fillBrush = new LinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
-                }
                     // Skill unknown, not trainable
                 else
                 {
@@ -357,7 +350,6 @@ namespace EVEMon.SkillPlanner
                     prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}",
                                                pts.ToDescriptiveText(TimeFormat));
                 }
-
 
 
                 // Fill the background
@@ -601,7 +593,7 @@ namespace EVEMon.SkillPlanner
                 RequiredLevel = -1;
 
                 // Create the top row
-                List<Row> rows = new List<Row> {new Row(this)};
+                List<Row> rows = new List<Row> { new Row(this) };
 
                 // Create the children
                 Cells = new List<Cell>();
@@ -628,13 +620,9 @@ namespace EVEMon.SkillPlanner
 
                 // Put on the appropriate row
                 if (rows.Count == level)
-                {
                     rows.Add(new Row(this));
-                }
                 else
-                {
                     rows[level].Add(this);
-                }
 
                 // Create the children
                 Cells = new List<Cell>();

@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 
@@ -93,7 +92,7 @@ namespace EVEMon.SkillPlanner
         public CertificateClass CertificateClass
         {
             get { return m_class; }
-            set 
+            set
             {
                 if (value == m_class)
                     return;
@@ -138,7 +137,7 @@ namespace EVEMon.SkillPlanner
                 return null;
             }
         }
-                
+
         /// <summary>
         /// Expands the node representing this certificate.
         /// </summary>
@@ -159,7 +158,7 @@ namespace EVEMon.SkillPlanner
 
 
         #region Event Handlers
- 
+
         /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
@@ -276,7 +275,7 @@ namespace EVEMon.SkillPlanner
             TreeNode newSelection = null;
 
             // Blank image list for 'Safe for work' setting
-            ImageList newImageList = new ImageList {ImageSize = new Size(24, 24)};
+            ImageList newImageList = new ImageList { ImageSize = new Size(24, 24) };
             newImageList.Images.Add(new Bitmap(24, 24));
 
             treeView.ImageList = (Settings.UI.SafeForWork ? newImageList : imageList);
@@ -294,7 +293,7 @@ namespace EVEMon.SkillPlanner
                 // Create the nodes when not done, yet
                 if (treeView.Nodes.Count == 0)
                 {
-                    foreach (Certificate cert in m_class) 
+                    foreach (Certificate cert in m_class)
                     {
                         TreeNode node = CreateNode(cert);
                         treeView.Nodes.Add(node);
@@ -304,7 +303,7 @@ namespace EVEMon.SkillPlanner
                             newSelection = node;
                     }
                 }
-                
+
                 // Update the nodes
                 foreach (TreeNode node in treeView.Nodes)
                 {
@@ -406,28 +405,20 @@ namespace EVEMon.SkillPlanner
                         throw new NotImplementedException();
                 }
             }
-            // The node represents a skill prerequisite
+                // The node represents a skill prerequisite
             else
             {
                 SkillLevel skillPrereq = (SkillLevel)node.Tag;
                 Skill skill = m_character.Skills[skillPrereq.Skill];
 
                 if (skillPrereq.IsTrained)
-                {
                     node.ImageIndex = GrantedIcon;
-                }
                 else if (m_plan.IsPlanned(skill, skillPrereq.Level))
-                {
                     node.ImageIndex = Planned;
-                }
                 else if (skill.IsKnown)
-                {
                     node.ImageIndex = UnknownButTrainableIcon;
-                }
                 else
-                {
                     node.ImageIndex = UnknownIcon;
-                }
             }
 
             // When selected, the image remains the same
@@ -474,7 +465,7 @@ namespace EVEMon.SkillPlanner
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
-            // Or a skill prerequisite ?
+                // Or a skill prerequisite ?
             else
             {
                 if (!Settings.UI.SafeForWork)
@@ -521,9 +512,7 @@ namespace EVEMon.SkillPlanner
                     }
                 }
                 else
-                {
                     e.Graphics.DrawString(line1, m_boldFont, foreground, new PointF(left, e.Bounds.Top));
-                }
             }
 
             // Draws the icon for skill/cert on the far right
@@ -532,8 +521,8 @@ namespace EVEMon.SkillPlanner
 
             int imgOfssetX = e.Bounds.Left;
             float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height) * 0.5f);
-            e.Graphics.DrawImageUnscaled(imageList.Images[supIcon], 
-                                         (imgOfssetX), 
+            e.Graphics.DrawImageUnscaled(imageList.Images[supIcon],
+                                         (imgOfssetX),
                                          (int)(e.Bounds.Top + imgOffsetY));
         }
 
@@ -547,7 +536,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void cmListSkills_Opening(object sender, CancelEventArgs e)
+        private void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = treeView.SelectedNode;
 
@@ -582,7 +571,7 @@ namespace EVEMon.SkillPlanner
                     // Update "show in skill explorer" menu
                     showInExplorerMenu.Visible = false;
                 }
-                // When a skill is selected
+                    // When a skill is selected
                 else
                 {
                     // Update "add to" menu
@@ -606,15 +595,16 @@ namespace EVEMon.SkillPlanner
             tsmCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
             tsmExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
 
-            tsmExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded ?
-                String.Format("Expand {0}", node.Text) : String.Empty);
-            tsmCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded ?
-                String.Format("Collapse {0}", node.Text) : String.Empty);
+            tsmExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
+                                          ? String.Format("Expand {0}", node.Text)
+                                          : String.Empty);
+            tsmCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
+                                            ? String.Format("Collapse {0}", node.Text)
+                                            : String.Empty);
 
             // "Expand All" and "Collapse All" menus
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
             tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
-
         }
 
         /// <summary>
@@ -699,10 +689,8 @@ namespace EVEMon.SkillPlanner
             Certificate cert = treeView.SelectedNode.Tag as Certificate;
             // When a certificate is selected, we select its class in the left tree
             if (cert != null)
-            {
                 npw.ShowCertInBrowser(cert);
-            }
-            // When a skill is selected, we select it in the skill browser
+                // When a skill is selected, we select it in the skill browser
             else
             {
                 SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;

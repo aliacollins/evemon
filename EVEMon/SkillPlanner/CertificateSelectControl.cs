@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
@@ -17,7 +16,7 @@ namespace EVEMon.SkillPlanner
         private readonly char[] m_upperCertificatesLetters = new[] { 'B', 'S', 'I', 'E' };
 
         private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4' };
-                                // Stupid insensitive images keys' comparison, we cannot use bsie
+        // Stupid insensitive images keys' comparison, we cannot use bsie
 
         private Plan m_plan;
         private Character m_character;
@@ -466,7 +465,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-
         /// <summary>
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
@@ -572,7 +570,7 @@ namespace EVEMon.SkillPlanner
         {
             if (cbFilter.SelectedIndex == -1)
                 return x => true;
-            
+
             // Update the base filter from the combo box
             switch ((CertificateFilter)cbFilter.SelectedIndex)
             {
@@ -670,9 +668,7 @@ namespace EVEMon.SkillPlanner
                     chars[index] = m_upperCertificatesLetters[(int)cert.Grade]; // Gets "B" for granted basic
                 }
                 else
-                {
                     chars[index] = m_lowerCertificatesLetters[(int)cert.Grade]; // Gets "b" for non-granted basic
-                }
 
                 index++;
             }
@@ -960,6 +956,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 
@@ -52,6 +51,7 @@ namespace EVEMon
             Disposed -= OnDisposed;
         }
 
+
         #region Content creation and layout
 
         /// <summary>
@@ -66,9 +66,9 @@ namespace EVEMon
 
                 // Updates the visibility of the label for when no characters are loaded
                 bool noCharacters = EveMonClient.MonitoredCharacters.IsEmpty();
-                
+
                 labelNoCharacters.Visible = noCharacters;
-                
+
                 if (noCharacters)
                     return;
 
@@ -80,9 +80,7 @@ namespace EVEMon
                     characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => !x.IsTraining));
                 }
                 else
-                {
                     characters.AddRange(EveMonClient.MonitoredCharacters);
-                }
 
                 foreach (OverviewItem item in characters.Select(character => new OverviewItem(character, Settings.UI.MainWindow)))
                 {
@@ -113,7 +111,7 @@ namespace EVEMon
         private void CleanUp()
         {
             List<Control> itemsToRemove = Controls.Cast<Control>().Where(item => item != labelNoCharacters).ToList();
-            
+
             // Compile a list of items to remove, if we remove them
             // within the loop one object will be leaked every time
             // we call this method
@@ -258,7 +256,7 @@ namespace EVEMon
         {
             OverviewItem item = sender as OverviewItem;
             if (CharacterClicked != null && item != null)
-                    CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
+                CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
         }
 
         #endregion

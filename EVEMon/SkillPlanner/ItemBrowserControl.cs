@@ -26,7 +26,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Exports item info to CSV format.
         /// </summary>
-        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e) 
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListViewExporter.CreateCSV(PropertiesList);
         }
@@ -65,11 +65,11 @@ namespace EVEMon.SkillPlanner
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth ?
-                                         reqSkillPanelMinWidth : reqSkillControlMinWidth );
+            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
+                                           ? reqSkillPanelMinWidth
+                                           : reqSkillControlMinWidth);
         }
 
         #endregion
-
     }
 }

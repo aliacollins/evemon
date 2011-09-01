@@ -54,7 +54,6 @@ namespace EVEMon.SkillPlanner
         private bool m_columnsOrderChanged;
         private readonly List<PlanColumnSettings> m_columns = new List<PlanColumnSettings>();
 
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -129,7 +128,7 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_plan == value)
                     return;
-                
+
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
                 DisplayPlan = new PlanScratchpad(m_character);
@@ -170,7 +169,7 @@ namespace EVEMon.SkillPlanner
         {
             get { return SelectedEntries.GetUniqueSkillsCount(); }
         }
-        
+
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
@@ -178,7 +177,7 @@ namespace EVEMon.SkillPlanner
         {
             get { return SelectedEntries.GetNotKnownSkillsCount(); }
         }
-        
+
         /// <summary>
         /// Gets the cost of known skills selected.
         /// </summary>
@@ -186,7 +185,7 @@ namespace EVEMon.SkillPlanner
         {
             get { return SelectedEntries.GetTotalBooksCost(); }
         }
-        
+
         /// <summary>
         /// Gets the cost of not known skills selected.
         /// </summary>
@@ -261,7 +260,7 @@ namespace EVEMon.SkillPlanner
         {
             if (!Visible)
                 return;
-            
+
             if (m_columnsOrderChanged)
             {
                 Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
@@ -288,7 +287,7 @@ namespace EVEMon.SkillPlanner
                 cbChooseImplantSet.Items.Add(set);
             }
         }
-        
+
         /// <summary>
         /// Whenever the sorting option or the base plan changed, we update the sorted plan.
         /// </summary>
@@ -323,7 +322,9 @@ namespace EVEMon.SkillPlanner
 
             // Stores selection and focus, to restore them after the update
             Dictionary<int, bool> selection = (restoreSelectionAndFocus ? StoreSelection() : null);
-            int focusedHashCode = (restoreSelectionAndFocus && lvSkills.FocusedItem != null ? lvSkills.FocusedItem.Tag.GetHashCode() : 0);
+            int focusedHashCode = (restoreSelectionAndFocus && lvSkills.FocusedItem != null
+                                       ? lvSkills.FocusedItem.Tag.GetHashCode()
+                                       : 0);
 
             lvSkills.BeginUpdate();
             try
@@ -337,22 +338,25 @@ namespace EVEMon.SkillPlanner
                     if (entry.Remapping != null)
                     {
                         ListViewItem rlv = new ListViewItem
-                                              {
-                                                  UseItemStyleForSubItems = true,
-                                                  Tag = entry.Remapping,
-                                                  ImageIndex = 3
-                                              };
+                                               {
+                                                   UseItemStyleForSubItems = true,
+                                                   Tag = entry.Remapping,
+                                                   ImageIndex = 3
+                                               };
                         items.Add(rlv);
                     }
 
                     // Insert the entry
-                    ListViewItem lvi = new ListViewItem {Tag = entry};
+                    ListViewItem lvi = new ListViewItem { Tag = entry };
                     items.Add(lvi);
 
                     // Is it a prerequisite or a top level entry ?
                     if (!Settings.UI.SafeForWork)
-                        lvi.Font = (Settings.UI.PlanWindow.HighlightPlannedSkills && entry.Type == PlanEntryType.Planned ?
-                        m_plannedSkillFont : m_prerequisiteSkillFont);
+                    {
+                        lvi.Font = (Settings.UI.PlanWindow.HighlightPlannedSkills && entry.Type == PlanEntryType.Planned
+                                        ? m_plannedSkillFont
+                                        : m_prerequisiteSkillFont);
+                    }
 
                     // Gray out entries that cannot be trained immediately
                     if (!entry.CanTrainNow && Settings.UI.PlanWindow.DimUntrainable)
@@ -366,7 +370,9 @@ namespace EVEMon.SkillPlanner
 
                 // We avoid clear + AddRange because it causes the sliders position to reset
                 while (lvSkills.Items.Count > 1)
+                {
                     lvSkills.Items.RemoveAt(lvSkills.Items.Count - 1);
+                }
 
                 bool isEmpty = (lvSkills.Items.Count == 0);
                 lvSkills.Items.AddRange(items.ToArray());
@@ -380,10 +386,11 @@ namespace EVEMon.SkillPlanner
                 if (restoreSelectionAndFocus)
                 {
                     RestoreSelection(selection);
-                    ListViewItem focusedItem = lvSkills.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
+                    ListViewItem focusedItem =
+                        lvSkills.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
                     if (focusedItem != null)
                         focusedItem.Focused = true;
-                    
+
                     lvSkills.Select();
                 }
             }
@@ -445,14 +452,16 @@ namespace EVEMon.SkillPlanner
                             lvi.ForeColor = Color.DarkRed;
 
                         // Checks if this entry is not known but has prereq-met
-                        if (!entry.CharacterSkill.IsKnown && entry.CharacterSkill.IsPublic && entry.CharacterSkill.ArePrerequisitesMet)
+                        if (!entry.CharacterSkill.IsKnown && entry.CharacterSkill.IsPublic &&
+                            entry.CharacterSkill.ArePrerequisitesMet)
                             lvi.ForeColor = Color.LightSlateGray;
-                        
+
                         // Checks if this entry is partially trained
                         bool level = (entry.Level == entry.CharacterSkill.Level + 1);
                         if (Settings.UI.PlanWindow.HighlightPartialSkills)
                         {
-                            bool partiallyTrained = (entry.CharacterSkill.FractionCompleted > 0 && entry.CharacterSkill.FractionCompleted < 1);
+                            bool partiallyTrained = (entry.CharacterSkill.FractionCompleted > 0 &&
+                                                     entry.CharacterSkill.FractionCompleted < 1);
                             if (level && partiallyTrained)
                                 lvi.ForeColor = Color.Green;
                         }
@@ -460,10 +469,10 @@ namespace EVEMon.SkillPlanner
                         HighlightQueuedSkills(lvi, entry);
 
                         // Checks if this entry is currently training (even if it's paused)
-                        if (entry.CharacterSkill.IsTraining && level) 
-                        { 
+                        if (entry.CharacterSkill.IsTraining && level)
+                        {
                             lvi.BackColor = Color.LightSteelBlue;
-                            lvi.ForeColor = Color.Black; 
+                            lvi.ForeColor = Color.Black;
                         }
 
                         // Checks whether this entry will be blocked
@@ -489,9 +498,10 @@ namespace EVEMon.SkillPlanner
 
                                 lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
                                 lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
-                                lvi.SubItems[columnIndex].Text = GetColumnTextForItem(entry, columnSettings.Column, blockingEntry, nfi);
+                                lvi.SubItems[columnIndex].Text = GetColumnTextForItem(entry, columnSettings.Column, blockingEntry,
+                                                                                      nfi);
                             }
-                            // Training time differences
+                                // Training time differences
                             else
                             {
                                 TimeSpan timeDifference;
@@ -500,7 +510,7 @@ namespace EVEMon.SkillPlanner
                                 {
                                     result = "+";
                                     timeDifference = entry.TrainingTime - entry.OldTrainingTime;
-                                    lvi.SubItems[columnIndex].BackColor = lvi.BackColor;                                    
+                                    lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
                                     lvi.SubItems[columnIndex].ForeColor = Color.DarkRed;
                                 }
                                 else if (entry.OldTrainingTime > entry.TrainingTime)
@@ -522,21 +532,23 @@ namespace EVEMon.SkillPlanner
                             }
                         }
                     }
-                    // The item represents a remapping point
+                        // The item represents a remapping point
                     else
                     {
                         RemappingPoint point = (RemappingPoint)lvi.Tag;
                         for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
                         {
                             PlanColumnSettings columnSettings = (PlanColumnSettings)lvSkills.Columns[columnIndex].Tag;
-                            
+
                             lvi.SubItems[columnIndex].Text = String.Empty;
                             lvi.SubItems[columnIndex].BackColor = m_remappingBackColor;
                             lvi.SubItems[columnIndex].ForeColor = m_remappingForeColor;
 
                             // We display the text in the SkillName column for better visibility
                             if (columnSettings != null && columnSettings.Column == PlanColumn.SkillName)
-                                lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive ? point.ToString() : "Remapping (ignored)");
+                                lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive
+                                                                      ? point.ToString()
+                                                                      : "Remapping (ignored)");
                         }
                     }
                 }
@@ -577,7 +589,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="format"></param>
         /// <exception cref="NotImplementedException"></exception>
         /// <returns></returns>
-        private static string GetColumnTextForItem(PlanEntry entry, PlanColumn column, string blockingEntry, NumberFormatInfo format)
+        private static string GetColumnTextForItem(PlanEntry entry, PlanColumn column, string blockingEntry,
+                                                   NumberFormatInfo format)
         {
             const int MaxNotesLength = 60;
 
@@ -669,14 +682,14 @@ namespace EVEMon.SkillPlanner
                 {
                     // Add the column
                     ColumnHeader header = new ColumnHeader
-                                              {Text = column.Column.GetHeader(), Tag = column, Width = column.Width};
+                                              { Text = column.Column.GetHeader(), Tag = column, Width = column.Width };
                     lvSkills.Columns.Add(header);
 
                     // Add a temporary column when there is a pluggable (implants calc, attributes optimizer, etc)
                     if (m_pluggable == null || column.Column != PlanColumn.TrainingTime)
                         continue;
 
-                    header = new ColumnHeader {Tag = null, Text = "Diff with Calc Atts"};
+                    header = new ColumnHeader { Tag = null, Text = "Diff with Calc Atts" };
                     lvSkills.Columns.Add(header);
                 }
 
@@ -687,9 +700,9 @@ namespace EVEMon.SkillPlanner
                 UpdateSortVisualFeedback();
 
                 // Force the auto-resize of the columns with -1 width
-                ColumnHeaderAutoResizeStyle resizeStyle = (lvSkills.Items.Count == 0 ? 
-                    ColumnHeaderAutoResizeStyle.HeaderSize : 
-                    ColumnHeaderAutoResizeStyle.ColumnContent);
+                ColumnHeaderAutoResizeStyle resizeStyle = (lvSkills.Items.Count == 0
+                                                               ? ColumnHeaderAutoResizeStyle.HeaderSize
+                                                               : ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
                 foreach (PlanColumnSettings column in m_columns.Where(x => x.Visible))
@@ -795,7 +808,7 @@ namespace EVEMon.SkillPlanner
                 window.UpdateStatusBar();
                 return;
             }
-            
+
             // 0 items selected
             if (lvSkills.SelectedItems.Count < 1)
             {
@@ -1100,7 +1113,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Retrieve the column and skip if null
                 PlanColumnSettings column = columnHeader.Tag as PlanColumnSettings;
-                if (column == null) 
+                if (column == null)
                     continue;
 
                 if (column.Width != -1)
@@ -1138,7 +1151,8 @@ namespace EVEMon.SkillPlanner
 
         private IPlanOperation PrepareSelectionRemoval()
         {
-            IEnumerable<PlanEntry> entriesToRemove = lvSkills.SelectedItems.Cast<ListViewItem>().Where(x => x.Tag is PlanEntry).Select(x => (PlanEntry)x.Tag);
+            IEnumerable<PlanEntry> entriesToRemove =
+                lvSkills.SelectedItems.Cast<ListViewItem>().Where(x => x.Tag is PlanEntry).Select(x => (PlanEntry)x.Tag);
             IPlanOperation operation = m_plan.TryRemoveSet(entriesToRemove);
             return operation;
         }
@@ -1189,9 +1203,7 @@ namespace EVEMon.SkillPlanner
                     }
                 }
                 else
-                {
                     m_plan.SortingPreferences.Order = ThreeStateSortOrder.Ascending;
-                }
             }
 
             // Updates the criteria
@@ -1293,7 +1305,9 @@ namespace EVEMon.SkillPlanner
             ColumnHeader column = GetColumn(m_plan.SortingPreferences.Criteria);
 
             if (column != null)
-                column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending ? ArrowUpIndex : ArrowDownIndex);
+                column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending
+                                         ? ArrowUpIndex
+                                         : ArrowDownIndex);
         }
 
         #endregion
@@ -1351,7 +1365,7 @@ namespace EVEMon.SkillPlanner
                 // If "Change Planned Level" disabled, "remove from plan" is visible 
                 if (!miChangeLevel.Enabled)
                     miRemoveFromPlan.Enabled = true;
-                
+
                 // "Plan groups"
                 if (entry.PlanGroups.Count > 0)
                 {
@@ -1369,9 +1383,8 @@ namespace EVEMon.SkillPlanner
                         miPlanGroups.DropDownItems.Add(tsb);
                     }
                 }
-
             }
-            // Multiple items selected
+                // Multiple items selected
             else
             {
                 miCopyToNewPlan.Enabled = true;
@@ -1480,13 +1493,9 @@ namespace EVEMon.SkillPlanner
             ListView.SelectedListViewItemCollection items = lvSkills.SelectedItems;
 
             if (items.Count == 1 && items[0].Tag is RemappingPoint)
-            {
                 tsbToggleRemapping_Click(null, null);
-            }
             else
-            {
                 RemoveSelectedEntries();
-            }
         }
 
         /// <summary>
@@ -1498,7 +1507,7 @@ namespace EVEMon.SkillPlanner
         private void miChangePriority_Click(object sender, EventArgs e)
         {
             // TODO: Unscramble
-            
+
             IEnumerable<PlanEntry> entries = SelectedEntries;
 
             using (PlanPrioritiesEditorForm form = new PlanPrioritiesEditorForm())
@@ -1508,7 +1517,8 @@ namespace EVEMon.SkillPlanner
                 if (lvSkills.SelectedItems.Count == 1)
                 {
                     PlanEntry pe = GetPlanEntry(lvSkills.SelectedItems[0]);
-                    if (pe != null) form.Priority = pe.Priority;
+                    if (pe != null)
+                        form.Priority = pe.Priority;
                 }
 
                 // User canceled ?
@@ -1533,7 +1543,8 @@ namespace EVEMon.SkillPlanner
 
                     // Shows the custom dialog box
                     MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
-                    DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                    DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo,
+                                                         MessageBoxIcon.Exclamation);
                     Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = msgBoxCustom.CbUnchecked;
 
                     // When the checkbox is checked we store the dialog result
@@ -1542,13 +1553,10 @@ namespace EVEMon.SkillPlanner
 
                     if (drb == DialogResult.Yes)
                         m_plan.SetPriority(DisplayPlan, entries, form.Priority);
-
                 }
                     // User wishes the dialog not to be displayed and has set the dialog result to "Yes"
                 else if (Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult == DialogResult.Yes)
-                {
                     m_plan.SetPriority(DisplayPlan, entries, form.Priority);
-                }
             }
         }
 
@@ -1609,7 +1617,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(Character) {Name = planName};
+            Plan newPlan = new Plan(Character) { Name = planName };
             IPlanOperation operation = newPlan.TryAddSet(entries, String.Format("Exported from {0}", m_plan.Name));
             operation.Perform();
 
@@ -1696,7 +1704,7 @@ namespace EVEMon.SkillPlanner
                     Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
 
                     // If the user is dropping on the lower half of the item, increase the dragging index
-                    if (cp.Y > (hoverBounds.Top + (hoverBounds.Height/2)))
+                    if (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2)))
                         dragIndex++;
                 }
 
@@ -1740,9 +1748,7 @@ namespace EVEMon.SkillPlanner
                 lvSkills.DrawDropMarker(hoverItem.Index, (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2))));
             }
             else
-            {
                 lvSkills.ClearDropMarker();
-            }
         }
 
         /// <summary>
@@ -1803,7 +1809,7 @@ namespace EVEMon.SkillPlanner
 
             // Creates the plan entry and list item for this level
             PlanEntry newEntry = new PlanEntry(m_plan, skill, newLevel);
-            ListViewItem newItem = new ListViewItem(newEntry.ToString()) {Tag = newEntry};
+            ListViewItem newItem = new ListViewItem(newEntry.ToString()) { Tag = newEntry };
 
             return newItem;
         }
@@ -1815,13 +1821,9 @@ namespace EVEMon.SkillPlanner
         private void SetDragMouseButton(DragEventArgs e)
         {
             if ((e.KeyState & (int)Keys.LButton) != 0)
-            {
                 m_dragButton = MouseButtons.Left;
-            }
             else if ((e.KeyState & (int)Keys.RButton) != 0)
-            {
                 m_dragButton = MouseButtons.Right;
-            }
         }
 
         #endregion
@@ -1841,9 +1843,7 @@ namespace EVEMon.SkillPlanner
 
             // When the first entry is a skill, shows it in the skill browser.
             if (GetFirstSelectedEntry() != null)
-            {
                 miShowInSkillBrowser_Click(sender, e);
-            }
                 // When it is a remapping point, edit it
             else
             {
@@ -1865,7 +1865,7 @@ namespace EVEMon.SkillPlanner
                     form.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
                     form.PlanEditor = this;
                     form.Show(this);
-                        
+
                     // Update variables for forms display control
                     m_formTag = point;
                     m_oldForm = form;
@@ -1980,25 +1980,15 @@ namespace EVEMon.SkillPlanner
 
                 // Color depends on the entry's status
                 if (current.Tag is RemappingPoint)
-                {
                     current.ImageIndex = 3;
-                }
                 else if (isSameSkill)
-                {
                     current.ImageIndex = 1;
-                }
                 else if (isPreRequisite)
-                {
                     current.ImageIndex = 2;
-                }
                 else if (isPostRequisite)
-                {
                     current.ImageIndex = 0;
-                }
                 else
-                {
                     current.ImageIndex = -1;
-                }
             }
 
             UpdateStatusBar();
@@ -2042,7 +2032,7 @@ namespace EVEMon.SkillPlanner
                 }
                 lvi.ToolTipText = builder.ToString();
             }
-            // Then it is a remapping point
+                // Then it is a remapping point
             else if (lvi.Tag is RemappingPoint)
             {
                 RemappingPoint point = lvi.Tag as RemappingPoint;
@@ -2105,7 +2095,7 @@ namespace EVEMon.SkillPlanner
                 PlanEntry originalEntry = GetOriginalEntry(entry);
                 originalEntry.Remapping = null;
             }
-            // Toggle on a skill
+                // Toggle on a skill
             else
             {
                 // Retrieves the focused item's hash code.
@@ -2117,7 +2107,7 @@ namespace EVEMon.SkillPlanner
                 // Add a remapping point
                 originalEntry.Remapping = originalEntry.Remapping == null ? new RemappingPoint() : null;
             }
-       }
+        }
 
         /// <summary>
         /// Left toolbar > Toggle color key panel.
@@ -2187,6 +2177,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

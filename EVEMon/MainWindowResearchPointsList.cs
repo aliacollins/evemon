@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -214,7 +213,6 @@ namespace EVEMon
                             header.TextAlign = HorizontalAlignment.Center;
                             break;
                     }
-
                 }
 
                 // We update the content
@@ -271,7 +269,8 @@ namespace EVEMon
                     if (String.IsNullOrEmpty(researchPoint.AgentName) || String.IsNullOrEmpty(researchPoint.Field))
                         continue;
 
-                    ListViewItem item = new ListViewItem(researchPoint.AgentName) { UseItemStyleForSubItems = false, Tag = researchPoint };
+                    ListViewItem item = new ListViewItem(researchPoint.AgentName)
+                                            { UseItemStyleForSubItems = false, Tag = researchPoint };
 
                     // Add enough subitems to match the number of columns
                     while (item.SubItems.Count < lvResearchPoints.Columns.Count + 1)
@@ -333,13 +332,9 @@ namespace EVEMon
             {
                 ResearchColumn column = (ResearchColumn)lvResearchPoints.Columns[i].Tag;
                 if (m_sortCriteria == column)
-                {
                     lvResearchPoints.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
-                }
                 else
-                {
                     lvResearchPoints.Columns[i].ImageIndex = 2;
-                }
             }
         }
 
@@ -477,9 +472,7 @@ namespace EVEMon
         {
             ResearchColumn column = (ResearchColumn)lvResearchPoints.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
-            {
                 m_sortAscending = !m_sortAscending;
-            }
             else
             {
                 m_sortCriteria = column;

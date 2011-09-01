@@ -4,10 +4,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
@@ -30,7 +28,6 @@ namespace EVEMon
         {
             m_exception = err;
         }
-
 
         /// <summary>
         /// Loads resources, generates the report

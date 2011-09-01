@@ -4,10 +4,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.Accounting
@@ -188,13 +186,9 @@ namespace EVEMon.Accounting
                                     // Selects font
                                     Font font = smallFont;
                                     if (account.IgnoreList.Contains(id))
-                                    {
                                         font = strikeoutFont;
-                                    }
                                     else if (ccpCharacter.Monitored)
-                                    {
                                         font = smallBoldFont;
-                                    }
 
                                     // Draws character's name
                                     g.DrawString(id.Name, font, fontBrush, new PointF(left, top));

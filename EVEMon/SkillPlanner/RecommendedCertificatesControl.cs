@@ -4,11 +4,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
-
 
 namespace EVEMon.SkillPlanner
 {
@@ -195,7 +193,6 @@ namespace EVEMon.SkillPlanner
             foreach (StaticCertificate childCert in cert.StaticData.PrerequisiteCertificates)
             {
                 node.Nodes.Add(GetCertNode(childCert));
-
             }
 
             // Generate prerequisites skill nodes if required
@@ -268,9 +265,7 @@ namespace EVEMon.SkillPlanner
 
                 // Skill requirement met
                 if (skillPrereq.IsTrained)
-                {
                     node.ImageIndex = GrantedIcon;
-                }
                     // Requirement not met, but planned
                 else if (m_plan.IsPlanned(skill, skillPrereq.Level))
                 {
@@ -549,9 +544,7 @@ namespace EVEMon.SkillPlanner
             Certificate cert = tvCertList.SelectedNode.Tag as Certificate;
             // When a certificate is selected
             if (cert != null)
-            {
                 npw.ShowCertInBrowser(cert);
-            }
                 // When a skill is selected
             else
             {

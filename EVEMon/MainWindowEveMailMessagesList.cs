@@ -137,7 +137,8 @@ namespace EVEMon
                 List<EveMailMessagesColumnSettings> newColumns = new List<EveMailMessagesColumnSettings>();
                 foreach (ColumnHeader header in lvMailMessages.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    var columnSetting = m_columns.First(x => x.Column == (EveMailMessagesColumn)header.Tag);
+                    EveMailMessagesColumnSettings columnSetting =
+                        m_columns.First(x => x.Column == (EveMailMessagesColumn)header.Tag);
                     if (columnSetting.Width != -1)
                         columnSetting.Width = header.Width;
 
@@ -273,67 +274,81 @@ namespace EVEMon
             splitContainerMailMessages.Visible = false;
             try
             {
-                var text = m_textFilter.ToLowerInvariant();
-                var eveMailMessages = m_list.Where(x => IsTextMatching(x, text));
+                string text = m_textFilter.ToLowerInvariant();
+                IEnumerable<EveMailMessage> eveMailMessages = m_list.Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
                 switch (m_grouping)
                 {
                     case EVEMailMessagesGrouping.State:
-                        var groups0 = eveMailMessages.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
+                        IOrderedEnumerable<IGrouping<EVEMailState, EveMailMessage>> groups0 =
+                            eveMailMessages.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
                         UpdateContent(groups0);
                         break;
                     case EVEMailMessagesGrouping.StateDesc:
-                        var groups1 = eveMailMessages.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
+                        IOrderedEnumerable<IGrouping<EVEMailState, EveMailMessage>> groups1 =
+                            eveMailMessages.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
                         UpdateContent(groups1);
                         break;
                     case EVEMailMessagesGrouping.SentDate:
-                        var groups2 = eveMailMessages.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, EveMailMessage>> groups2 =
+                            eveMailMessages.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
                         UpdateContent(groups2);
                         break;
                     case EVEMailMessagesGrouping.SentDateDesc:
-                        var groups3 = eveMailMessages.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, EveMailMessage>> groups3 =
+                            eveMailMessages.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
                         UpdateContent(groups3);
                         break;
                     case EVEMailMessagesGrouping.Sender:
-                        var groups4 = eveMailMessages.GroupBy(x => x.Sender).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups4 =
+                            eveMailMessages.GroupBy(x => x.Sender).OrderBy(x => x.Key);
                         UpdateContent(groups4);
                         break;
                     case EVEMailMessagesGrouping.SenderDesc:
-                        var groups5 = eveMailMessages.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups5 =
+                            eveMailMessages.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
                         UpdateContent(groups5);
                         break;
                     case EVEMailMessagesGrouping.Subject:
-                        var groups6 = eveMailMessages.GroupBy(x => x.Title).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups6 =
+                            eveMailMessages.GroupBy(x => x.Title).OrderBy(x => x.Key);
                         UpdateContent(groups6);
                         break;
                     case EVEMailMessagesGrouping.SubjectDesc:
-                        var groups7 = eveMailMessages.GroupBy(x => x.Title).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups7 =
+                            eveMailMessages.GroupBy(x => x.Title).OrderByDescending(x => x.Key);
                         UpdateContent(groups7);
                         break;
                     case EVEMailMessagesGrouping.Recipient:
-                        var groups8 = eveMailMessages.GroupBy(x => x.ToCharacters[0]).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups8 =
+                            eveMailMessages.GroupBy(x => x.ToCharacters[0]).OrderBy(x => x.Key);
                         UpdateContent(groups8);
                         break;
                     case EVEMailMessagesGrouping.RecipientDesc:
-                        var groups9 = eveMailMessages.GroupBy(x => x.ToCharacters[0]).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups9 =
+                            eveMailMessages.GroupBy(x => x.ToCharacters[0]).OrderByDescending(x => x.Key);
                         UpdateContent(groups9);
                         break;
                     case EVEMailMessagesGrouping.CorpOrAlliance:
-                        var groups10 = eveMailMessages.GroupBy(x => x.ToCorpOrAlliance).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups10 =
+                            eveMailMessages.GroupBy(x => x.ToCorpOrAlliance).OrderBy(x => x.Key);
                         UpdateContent(groups10);
                         break;
                     case EVEMailMessagesGrouping.CorpOrAllianceDesc:
-                        var groups11 = eveMailMessages.GroupBy(x => x.ToCorpOrAlliance).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups11 =
+                            eveMailMessages.GroupBy(x => x.ToCorpOrAlliance).OrderByDescending(x => x.Key);
                         UpdateContent(groups11);
                         break;
                     case EVEMailMessagesGrouping.MailingList:
-                        var groups12 = eveMailMessages.GroupBy(x => x.ToMailingLists[0]).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups12 =
+                            eveMailMessages.GroupBy(x => x.ToMailingLists[0]).OrderBy(x => x.Key);
                         UpdateContent(groups12);
                         break;
                     case EVEMailMessagesGrouping.MailingListDesc:
-                        var groups13 = eveMailMessages.GroupBy(x => x.ToMailingLists[0]).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups13 =
+                            eveMailMessages.GroupBy(x => x.ToMailingLists[0]).OrderByDescending(x => x.Key);
                         UpdateContent(groups13);
                         break;
                 }
@@ -372,27 +387,21 @@ namespace EVEMon
             lvMailMessages.Groups.Clear();
 
             // Add the groups
-            foreach (var group in groups)
+            foreach (IGrouping<TKey, EveMailMessage> group in groups)
             {
                 string groupText;
                 if (group.Key is EVEMailState)
-                {
                     groupText = ((EVEMailState)(Object)group.Key).GetHeader();
-                }
                 else if (group.Key is DateTime)
-                {
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
-                }
                 else
-                {
                     groupText = group.Key.ToString();
-                }
 
                 ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvMailMessages.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (var eveMailMessage in group)
+                foreach (EveMailMessage eveMailMessage in group)
                 {
                     if (String.IsNullOrEmpty(eveMailMessage.MessageID.ToString()))
                         continue;
@@ -409,8 +418,8 @@ namespace EVEMon
                     // Creates the subitems
                     for (int i = 0; i < lvMailMessages.Columns.Count; i++)
                     {
-                        var header = lvMailMessages.Columns[i];
-                        var column = (EveMailMessagesColumn)header.Tag;
+                        ColumnHeader header = lvMailMessages.Columns[i];
+                        EveMailMessagesColumn column = (EveMailMessagesColumn)header.Tag;
                         SetColumn(eveMailMessage, item.SubItems[i], column);
                     }
 
@@ -439,13 +448,9 @@ namespace EVEMon
             {
                 EveMailMessagesColumn column = (EveMailMessagesColumn)lvMailMessages.Columns[i].Tag;
                 if (m_sortCriteria == column)
-                {
                     lvMailMessages.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
-                }
                 else
-                {
                     lvMailMessages.Columns[i].ImageIndex = 2;
-                }
             }
         }
 
@@ -667,9 +672,7 @@ namespace EVEMon
         {
             EveMailMessagesColumn column = (EveMailMessagesColumn)lvMailMessages.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
-            {
                 m_sortAscending = !m_sortAscending;
-            }
             else
             {
                 m_sortCriteria = column;

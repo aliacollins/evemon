@@ -108,9 +108,7 @@ namespace EVEMon.APIErrorHandling
                         builder.AppendFormat("{0} Minute{1}", minutes, minutes == 1 ? String.Empty : "s");
                     }
                     else
-                    {
                         builder.AppendFormat("{0} Seconds", Seconds);
-                    }
 
                     if (!String.IsNullOrEmpty(Text))
                         builder.AppendFormat(" ({0})", Text);

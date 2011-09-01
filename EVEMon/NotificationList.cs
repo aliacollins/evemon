@@ -5,12 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.ApiErrorHandling;
 using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
-
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
@@ -63,19 +61,19 @@ namespace EVEMon
 
             List<NotificationEventArgs> list = new List<NotificationEventArgs>();
             NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
-                                            {
-                                                Priority = NotificationPriority.Information,
-                                                Description = "Some information"
-                                            };
-                
+                                                     {
+                                                         Priority = NotificationPriority.Information,
+                                                         Description = "Some information"
+                                                     };
+
             list.Add(notification);
 
             notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
-                               {Priority = NotificationPriority.Warning, Description = "Some warning"};
+                               { Priority = NotificationPriority.Warning, Description = "Some warning" };
             list.Add(notification);
 
             notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
-                               {Priority = NotificationPriority.Error, Description = "Some error"};
+                               { Priority = NotificationPriority.Error, Description = "Some error" };
             list.Add(notification);
 
             Notifications = list;
@@ -136,7 +134,8 @@ namespace EVEMon
             int magnifierIconSize = itemWithDetails != null ? IconMagnifierPositionFromRight : 0;
 
             // Calculates the available text space
-            int availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
+            int availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight -
+                                     RightPadding;
 
             // If any text length exceeds our bounds we decrease the font size
             while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
@@ -241,17 +240,22 @@ namespace EVEMon
             }
 
             // Left icon
-            g.DrawImageUnscaled(icon, new Point(e.Bounds.Left + LeftPadding, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
+            g.DrawImageUnscaled(icon,
+                                new Point(e.Bounds.Left + LeftPadding, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Delete icon
             icon = (m_hoveredIndex == e.Index ? CommonProperties.Resources.CrossBlack : CommonProperties.Resources.CrossGray);
-            g.DrawImageUnscaled(icon, new Point(e.Bounds.Right - IconDeletePositionFromRight, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
+            g.DrawImageUnscaled(icon,
+                                new Point(e.Bounds.Right - IconDeletePositionFromRight,
+                                          e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Magnifier icon
             if (notification.HasDetails)
             {
                 icon = CommonProperties.Resources.Magnifier;
-                g.DrawImageUnscaled(icon, new Point(e.Bounds.Right - IconMagnifierPositionFromRight, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
+                g.DrawImageUnscaled(icon,
+                                    new Point(e.Bounds.Right - IconMagnifierPositionFromRight,
+                                              e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
             }
 
             // Text
@@ -259,7 +263,8 @@ namespace EVEMon
             {
                 string text = notification.ToString();
                 SizeF size = g.MeasureString(text, Font);
-                g.DrawString(text, Font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
+                g.DrawString(text, Font, foreBrush,
+                             new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
@@ -311,7 +316,7 @@ namespace EVEMon
             // First test whether the "delete" and "magnifier" icons have been clicked
             for (int i = 0; i < listBox.Items.Count; i++)
             {
-                Rectangle rect = listBox.GetItemRectangle(i);                
+                Rectangle rect = listBox.GetItemRectangle(i);
                 if (!rect.Contains(e.Location))
                     continue;
 
@@ -424,7 +429,7 @@ namespace EVEMon
                 foreach (QueuedSkill skill in skillNotifications.Skills)
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture,
-                        "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine();
+                                         "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine();
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());
                 toolTip.Active = true;
@@ -434,14 +439,15 @@ namespace EVEMon
             // Claimable certificate ?
             if (notification is ClaimableCertificateNotificationEventArgs)
             {
-                ClaimableCertificateNotificationEventArgs certNotifications = (ClaimableCertificateNotificationEventArgs)notification;
+                ClaimableCertificateNotificationEventArgs certNotifications =
+                    (ClaimableCertificateNotificationEventArgs)notification;
                 StringBuilder builder = new StringBuilder();
                 foreach (Certificate cert in certNotifications.Certificates)
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture,
-                        "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
+                                         "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
                 }
-                toolTip.SetToolTip(listBox, builder.ToString());    
+                toolTip.SetToolTip(listBox, builder.ToString());
                 toolTip.Active = true;
                 return;
             }
@@ -466,7 +472,7 @@ namespace EVEMon
                         // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                         if (order.State == OrderState.Expired)
                             builder.Append(MarketOrder.Format(order.RemainingVolume, Format)).Append("/");
-                        
+
                         builder.Append(MarketOrder.Format(order.InitialVolume, Format)).Append(" ");
                         builder.Append(order.Item.Name).Append(" at ");
                         builder.AppendLine(order.Station.Name);
@@ -486,7 +492,8 @@ namespace EVEMon
                 foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
                 {
                     builder.Append(job.InstalledItem.Name).Append(" at ");
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}", job.SolarSystem.Name, job.Installation).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}", job.SolarSystem.Name, job.Installation).
+                        AppendLine();
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());
                 toolTip.Active = true;
@@ -518,7 +525,8 @@ namespace EVEMon
             Rectangle rect = listBox.GetItemRectangle(index);
             Bitmap icon = CommonProperties.Resources.Magnifier;
             int yOffset = (rect.Height - icon.Height) / 2;
-            Rectangle magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
+            Rectangle magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset,
+                                                        icon.Width, icon.Height);
             magnifierIconRect.Inflate(2, 8);
             return magnifierIconRect;
         }
@@ -533,7 +541,8 @@ namespace EVEMon
             Rectangle rect = listBox.GetItemRectangle(index);
             Bitmap icon = CommonProperties.Resources.CrossBlack;
             int yOffset = (rect.Height - icon.Height) / 2;
-            Rectangle deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
+            Rectangle deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width,
+                                                     icon.Height);
             deleteIconRect.Inflate(2, 8);
             return deleteIconRect;
         }

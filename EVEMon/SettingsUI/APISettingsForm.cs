@@ -79,7 +79,8 @@ namespace EVEMon.SettingsUI
             foreach (DataGridViewRow row in dgMethods.Rows)
             {
                 SerializableAPIMethod rowMethod = (SerializableAPIMethod)row.Tag;
-                foreach (APIMethod defaultMethod in defaultMethods.Where(defaultMethod => defaultMethod.Method == rowMethod.Method))
+                foreach (
+                    APIMethod defaultMethod in defaultMethods.Where(defaultMethod => defaultMethod.Method == rowMethod.Method))
                 {
                     row.Cells[1].Value = defaultMethod.Path;
                 }
@@ -186,7 +187,8 @@ namespace EVEMon.SettingsUI
                 return;
 
             ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture,
-                    "Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
+                                                         "Path for method {0} cannot be blank",
+                                                         dgMethods.Rows[e.RowIndex].Cells[0].Value));
             e.Cancel = true;
         }
 

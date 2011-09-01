@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Scheduling;
@@ -374,9 +373,7 @@ namespace EVEMon
 
             // Character still training ? Jump to next skill
             if (Character.IsTraining)
-            {
                 UpdateContent();
-            }
             else
             {
                 lblRemainingTime.Text = "Completed";
@@ -501,29 +498,19 @@ namespace EVEMon
             // Retrieve margin
             int margin = 10;
             if (portraitSize <= 48)
-            {
                 margin = 1;
-            }
             else if (portraitSize <= 64)
-            {
                 margin = 3;
-            }
             else if (portraitSize <= 80)
-            {
                 margin = 6;
-            }
 
             // Label height
             int labelHeight = 18;
             int smallLabelHeight = 13;
             if (portraitSize <= 48)
-            {
                 labelHeight = 13;
-            }
             else if (portraitSize <= 64)
-            {
                 labelHeight = 16;
-            }
 
             // Label width
             int labelWidth = 0;
@@ -533,13 +520,9 @@ namespace EVEMon
             // Big font size
             float bigFontSize = 11.25f;
             if (portraitSize <= 48)
-            {
                 bigFontSize = 8.25f;
-            }
             else if (portraitSize <= 64)
-            {
                 bigFontSize = 9.75f;
-            }
 
             // Medium font size
             float mediumFontSize = 9.75f;
@@ -581,9 +564,7 @@ namespace EVEMon
             }
 
             if (lblRemainingTime.Visible || lblSkillInTraining.Visible || lblCompletionTime.Visible)
-            {
                 top += verticalMargin;
-            }
 
             if (lblRemainingTime.Visible)
             {

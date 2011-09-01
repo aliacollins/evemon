@@ -27,7 +27,7 @@ namespace EVEMon.SettingsUI
             // Add the controls for every member of the enumeration
             int height = RowHeight;
             IEnumerable<APIMethods> methods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>();
-            foreach (var method in methods)
+            foreach (APIMethods method in methods)
             {
                 // Skip if there is no header
                 if (!method.HasHeader())
@@ -92,7 +92,6 @@ namespace EVEMon.SettingsUI
 
             Height = height;
         }
-
 
         /// <summary>
         /// Gets or sets the settings to edit (should be a copy of the actual settings).

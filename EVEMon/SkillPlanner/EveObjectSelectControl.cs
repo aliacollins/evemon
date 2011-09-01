@@ -362,7 +362,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            var node = tvItems.SelectedNode;
+            TreeNode node = tvItems.SelectedNode;
 
             tsSeparator.Visible = (node != null && node.GetNodeCount(true) > 0);
 
@@ -483,6 +483,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

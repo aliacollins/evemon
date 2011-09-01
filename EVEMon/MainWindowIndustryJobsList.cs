@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -425,17 +424,11 @@ namespace EVEMon
             {
                 string groupText;
                 if (group.Key is JobState)
-                {
                     groupText = ((JobState)(Object)group.Key).GetHeader();
-                }
                 else if (group.Key is DateTime)
-                {
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
-                }
                 else
-                {
                     groupText = group.Key.ToString();
-                }
 
                 ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvJobs.Groups.Add(listGroup);
@@ -470,7 +463,6 @@ namespace EVEMon
                     lvJobs.Items.Add(item);
                 }
             }
-
         }
 
         /// <summary>
@@ -493,13 +485,9 @@ namespace EVEMon
             {
                 IndustryJobColumn column = (IndustryJobColumn)lvJobs.Columns[i].Tag;
                 if (m_sortCriteria == column)
-                {
                     lvJobs.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
-                }
                 else
-                {
                     lvJobs.Columns[i].ImageIndex = 2;
-                }
             }
         }
 
@@ -738,9 +726,7 @@ namespace EVEMon
         {
             IndustryJobColumn column = (IndustryJobColumn)lvJobs.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
-            {
                 m_sortAscending = !m_sortAscending;
-            }
             else
             {
                 m_sortCriteria = column;
@@ -843,9 +829,7 @@ namespace EVEMon
                         lvJobs.Columns[m_displayIndexTTC].Width = columnWidth + 22;
                     }
                     else
-                    {
                         lvJobs.AutoResizeColumn(m_displayIndexTTC, ColumnHeaderAutoResizeStyle.ColumnContent);
-                    }
                 }
 
                 // Job was pending and its time to start

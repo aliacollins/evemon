@@ -189,9 +189,7 @@ namespace EVEMon.Accounting
         private void accountsListBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
-            {
                 deleteAccountMenu_Click(sender, e);
-            }
         }
 
         #endregion
@@ -270,26 +268,18 @@ namespace EVEMon.Accounting
                         if (uriCharacter != null)
                         {
                             if (uriCharacter.Uri.IsFile)
-                            {
                                 hasFileChars = true;
-                            }
                             else
-                            {
                                 hasUrlChars = true;
-                            }
                         }
                             // CCP character ?
                         else
                         {
                             Account account = character.Identity.Account;
                             if (account == null)
-                            {
                                 hasNoAccount = true;
-                            }
                             else if (!accountGroups.ContainsKey(account))
-                            {
                                 accountGroups.Add(account, new ListViewGroup(String.Format("Account #{0}", account.UserID)));
-                            }
                         }
                     }
 
@@ -331,9 +321,7 @@ namespace EVEMon.Accounting
                     }
                         // Grouping CCP characters
                     else if (isGrouping)
-                    {
                         item.Group = (account == null ? noAccountsGroup : accountGroups[account]);
-                    }
 
                     // Add the item and its subitems
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, typeText));
@@ -422,7 +410,6 @@ namespace EVEMon.Accounting
 
             // Delete char enabled if one character selected.
             deleteCharacterMenu.Enabled = true;
-
         }
 
         /// <summary>

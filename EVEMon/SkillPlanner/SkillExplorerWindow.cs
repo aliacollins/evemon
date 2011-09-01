@@ -310,7 +310,6 @@ namespace EVEMon.SkillPlanner
                 // No enabled skill found for any level ?
                 if (tvSkills.Nodes.Count == 0)
                     tvSkills.Nodes.Add(new TreeNode("No skills enabled by this skill"));
-
             }
             finally
             {
@@ -859,8 +858,10 @@ namespace EVEMon.SkillPlanner
 
             List<string> listOfActivities = GetSelectedItemActivities(entity);
             IEnumerable<SkillLevel> prereqList = CreatePrereqList(entity.Prerequisites
-                                                               .Where(x => listOfActivities.Contains(x.Activity.GetDescription()))
-                                                               .ToCharacter(m_character));
+                                                                      .Where(
+                                                                          x =>
+                                                                          listOfActivities.Contains(x.Activity.GetDescription()))
+                                                                      .ToCharacter(m_character));
 
             int index = 0;
             StringBuilder sb = new StringBuilder();

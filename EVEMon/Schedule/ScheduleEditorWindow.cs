@@ -91,7 +91,9 @@ namespace EVEMon.Schedule
             base.OnClosing(e);
         }
 
+
         #region Content creation & update
+
         /// <summary>
         /// Anytime the scheduler changed, we update the entries.
         /// </summary>
@@ -160,24 +162,24 @@ namespace EVEMon.Schedule
                 sb.AppendLine();
                 sb.AppendLine("Options");
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
-                    (simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
+                                (simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
-                    (simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
+                                (simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
-                    (simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+                                (simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
             }
-            // Or recurring entry ?
+                // Or recurring entry ?
             else
             {
                 RecurringScheduleEntry recurringEntry = (RecurringScheduleEntry)temp;
 
                 sb.AppendLine("Recurring Entry");
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}",
-                    recurringEntry.StartDate.ToShortDateString()).AppendLine();
+                                recurringEntry.StartDate.ToShortDateString()).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}",
-                    recurringEntry.EndDate.ToShortDateString()).AppendLine();
+                                recurringEntry.EndDate.ToShortDateString()).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Frequency: {0}",
-                    recurringEntry.Frequency).AppendLine();
+                                recurringEntry.Frequency).AppendLine();
 
                 switch (recurringEntry.Frequency)
                 {
@@ -217,18 +219,18 @@ namespace EVEMon.Schedule
                     recurringEntry.EndTimeInSeconds -= OneDaysSeconds;
 
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Start Time: {0}",
-                    TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)).AppendLine();
+                                TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " End Time: {0}",
-                    TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)).AppendLine();
+                                TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds)).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", recurringEntry.Expired).AppendLine();
                 sb.AppendLine();
                 sb.AppendLine("Options");
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
-                    (recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
+                                (recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
-                    (recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
+                                (recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
-                    (recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+                                (recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
             }
 
             // Update the description
@@ -248,10 +250,12 @@ namespace EVEMon.Schedule
             if (m_lbEntriesData.IsEmpty())
                 lbEntries_SelectedIndexChanged(null, EventArgs.Empty);
         }
+
         #endregion
 
 
         #region Calendar control events
+
         /// <summary>
         /// Anytime the mouse leaves the calendar control, hide the tooltip.
         /// </summary>
@@ -296,7 +300,7 @@ namespace EVEMon.Schedule
         /// <param name="datetime"></param>
         /// <param name="mouse"></param>
         /// <param name="location"></param>
-        void calControl_DayClicked(DateTime datetime, MouseEventArgs mouse, Point location)
+        private void calControl_DayClicked(DateTime datetime, MouseEventArgs mouse, Point location)
         {
             switch (mouse.Button)
             {
@@ -362,7 +366,7 @@ namespace EVEMon.Schedule
                     from = simple.StartDate;
                     to = simple.EndDate;
                 }
-                // Or recurring entry ?
+                    // Or recurring entry ?
                 else
                 {
                     RecurringScheduleEntry recurring = (RecurringScheduleEntry)entry;
@@ -401,16 +405,15 @@ namespace EVEMon.Schedule
                 {
                     // In case local time conversion extends beyond the entry date,
                     // we display also the ending date
-                    string toLocalTime = (to.Day == to.ToLocalTime().Day ?
-                        to.ToLocalTime().ToString("HH:mm") : to.ToLocalTime().ToString());
+                    string toLocalTime = (to.Day == to.ToLocalTime().Day
+                                              ? to.ToLocalTime().ToString("HH:mm")
+                                              : to.ToLocalTime().ToString());
 
                     content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
                     content.AppendFormat(" [ Local Time: {0} - {1} ] ", from.ToLocalTime().ToString("HH:mm"), toLocalTime);
                 }
                 else
-                {
                     content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
-                }
                 content.AppendLine();
             }
 
@@ -442,7 +445,6 @@ namespace EVEMon.Schedule
             }
         }
 
-
         /// <summary>
         /// Context menu > New schedule entry
         /// </summary>
@@ -464,10 +466,12 @@ namespace EVEMon.Schedule
                 Scheduler.Add(f.ScheduleEntry);
             }
         }
+
         #endregion
 
 
         #region Controls' handlers
+
         /// <summary>
         /// Toolbar > Delete entry.
         /// </summary>
@@ -508,7 +512,6 @@ namespace EVEMon.Schedule
 
             UpdateEntryDescription();
         }
-
 
         /// <summary>
         /// When the user double-clicks an entry on the left list box, we open the edition box for this entry.
@@ -594,8 +597,10 @@ namespace EVEMon.Schedule
                     CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
 
                 if (nudDay.Value == 0)
+                {
                     nudDay.Value =
                         CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
+                }
 
                 donex = true;
             }
@@ -609,7 +614,7 @@ namespace EVEMon.Schedule
 
                     doney = true;
                 }
-                
+
                 if (!doney)
                 {
                     m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
@@ -619,7 +624,7 @@ namespace EVEMon.Schedule
                 }
                 donex = true;
             }
-            
+
             if (!donex)
                 m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
 
@@ -669,6 +674,7 @@ namespace EVEMon.Schedule
                     break;
             }
         }
+
         #endregion
     }
 }

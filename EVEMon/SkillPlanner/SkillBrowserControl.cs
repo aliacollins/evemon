@@ -12,7 +12,6 @@ namespace EVEMon.SkillPlanner
         private Skill m_selectedSkill;
         private Plan m_plan;
 
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -59,7 +58,6 @@ namespace EVEMon.SkillPlanner
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
-
 
         /// <summary>
         /// Gets or sets the plan this control is bound to.

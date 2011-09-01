@@ -156,8 +156,10 @@ namespace EVEMon
             StringBuilder labelText = new StringBuilder();
             labelText.AppendLine("An EVEMon update is available.");
             labelText.AppendLine();
-            labelText.AppendFormat(CultureConstants.DefaultCulture, "Current version: {0}{1}", m_args.CurrentVersion, Environment.NewLine);
-            labelText.AppendFormat(CultureConstants.DefaultCulture, "Newest version: {0}{1}", m_args.NewestVersion, Environment.NewLine);
+            labelText.AppendFormat(CultureConstants.DefaultCulture, "Current version: {0}{1}", m_args.CurrentVersion,
+                                   Environment.NewLine);
+            labelText.AppendFormat(CultureConstants.DefaultCulture, "Newest version: {0}{1}", m_args.NewestVersion,
+                                   Environment.NewLine);
             labelText.AppendLine("The newest version has the following updates:");
             label1.Text = labelText.ToString();
 

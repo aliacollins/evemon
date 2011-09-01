@@ -127,9 +127,7 @@ namespace EVEMon
                 }
             }
             else
-            {
                 DialogResult = DialogResult.OK;
-            }
             Close();
         }
 

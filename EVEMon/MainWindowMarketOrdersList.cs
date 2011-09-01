@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -461,17 +460,11 @@ namespace EVEMon
             {
                 string groupText;
                 if (group.Key is OrderState)
-                {
                     groupText = ((OrderState)(Object)group.Key).GetHeader();
-                }
                 else if (group.Key is DateTime)
-                {
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
-                }
                 else
-                {
                     groupText = group.Key.ToString();
-                }
 
                 ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvOrders.Groups.Add(listGroup);
@@ -543,13 +536,9 @@ namespace EVEMon
             {
                 MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
                 if (m_sortCriteria == column)
-                {
                     lvOrders.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
-                }
                 else
-                {
                     lvOrders.Columns[i].ImageIndex = 2;
-                }
             }
         }
 
@@ -782,9 +771,7 @@ namespace EVEMon
         {
             MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
-            {
                 m_sortAscending = !m_sortAscending;
-            }
             else
             {
                 m_sortCriteria = column;

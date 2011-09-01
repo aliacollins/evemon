@@ -234,7 +234,7 @@ namespace EVEMon
             // Remove controls and dispose them
             Control[] oldControls = mainPanel.Controls.Cast<Control>().ToArray();
             mainPanel.Controls.Clear();
-            foreach (var ctl in oldControls)
+            foreach (Control ctl in oldControls)
             {
                 ctl.Dispose();
             }
@@ -270,9 +270,7 @@ namespace EVEMon
                 }
             }
             else
-            {
                 mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
-            }
 
             // Return if the user do not want to be warned about accounts not in training
             if (Settings.UI.SystemTrayPopup.ShowWarning)
@@ -428,6 +426,5 @@ namespace EVEMon
         }
 
         #endregion
-
     }
 }

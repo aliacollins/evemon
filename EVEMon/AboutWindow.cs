@@ -30,20 +30,19 @@ namespace EVEMon
 
             // list of headings
             m_headers = new SortedList
-                             {
-                                 { "01", "Guru" },
-                                 { "02", "Guru (Retired)" },
-                                 { "03", "Developers" },
-                                 { "04", "Developers (Retired)" },
-                                 { "05", "Contributors" }
-                             };
+                            {
+                                { "01", "Guru" },
+                                { "02", "Guru (Retired)" },
+                                { "03", "Developers" },
+                                { "04", "Developers (Retired)" },
+                                { "05", "Contributors" }
+                            };
 
             // list of developers by heading
             m_developers = new SortedList
                                {
                                    // EVEMon Guru
                                    { "Jimi", "01" },
-
                                    // Guru (Retired)
                                    { "Araan Sunn", "02" },
                                    { "Six Anari", "02" },
@@ -52,11 +51,9 @@ namespace EVEMon
                                    { "Eewec Ourbyni", "02" },
                                    { "Richard Slater", "02" },
                                    { "Vehlin", "02" },
-
                                    // Developers
                                    { "MrCue", "03" },
                                    { "Tonto Auri", "03" },
-
                                    // Developers (Retired)
                                    { "Collin Grady", "04" },
                                    { "DCShadow", "04" },
@@ -68,7 +65,6 @@ namespace EVEMon
                                    { "Safrax", "04" },
                                    { "Stevil Knevil", "04" },
                                    { "TheBelgarion", "04" },
-
                                    // Contributors
                                    { "Abomb", "05" },
                                    { "Adam Butt", "05" },
@@ -235,7 +231,6 @@ namespace EVEMon
 
             devsList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
-
 
         /// <summary>
         /// Handles the Click event of the btnOk control.

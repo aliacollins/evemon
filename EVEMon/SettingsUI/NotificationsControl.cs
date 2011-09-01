@@ -15,7 +15,6 @@ namespace EVEMon.SettingsUI
         // Would have love to use tableLayoutPanel, unfortunately, they are just a piece of trash.
         private const int RowHeight = 28;
 
-
         private readonly List<ComboBox> m_combos = new List<ComboBox>();
         private readonly List<CheckBox> m_checkboxes = new List<CheckBox>();
         private NotificationSettings m_settings;
@@ -99,11 +98,11 @@ namespace EVEMon.SettingsUI
                 {
                     NotificationCategory cat = (NotificationCategory)combo.Tag;
                     int index = (int)m_settings.Categories[cat].ToolTipBehaviour;
-                    
+
                     // TODO: Remove the following code line after deprecating ToolTipNotificationBehaviour.RepeatUntiClicked
                     if (index > 2)
                         index = 2;
-                    
+
                     combo.SelectedIndex = index;
                 }
 

@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
 
             // Set the min and max values of the NumericUpDown controls
             // based on character attributes value
-            foreach (var control in AtrributesPanel.Controls)
+            foreach (object control in AtrributesPanel.Controls)
             {
                 NumericUpDown nud = control as NumericUpDown;
 
@@ -200,7 +200,6 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TimeSpan UpdateTimesForCharacter(BaseCharacter character, Label lblSpan, Label lblDate)
         {
-
             TimeSpan ts = character.GetTrainingTimeToMultipleSkills(m_plan);
             DateTime dt = DateTime.Now + ts;
 
@@ -284,9 +283,9 @@ namespace EVEMon.SkillPlanner
         {
             // Add the menus for the sets
             mnLoadAtts.DropDownItems.Clear();
-            foreach (var set in m_character.ImplantSets)
+            foreach (ImplantSet set in m_character.ImplantSets)
             {
-                var item = mnLoadAtts.DropDownItems.Add(set.Name);
+                ToolStripItem item = mnLoadAtts.DropDownItems.Add(set.Name);
                 item.Click += implantSetMenuitem_Click;
                 item.Tag = set;
             }

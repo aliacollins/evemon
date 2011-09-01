@@ -126,9 +126,7 @@ namespace EVEMon.Accounting
                 multiPanel.SelectedPage = waitingPage;
                 throbber.State = ThrobberState.Rotating;
                 if (m_account != null)
-                {
                     m_account.TryUpdateAsync(apiKeyTextBox.Text, OnUpdated);
-                }
                     // Or creating a new one ?
                 else
                 {
@@ -204,9 +202,7 @@ namespace EVEMon.Accounting
             {
                 CharacterIdentity id = (CharacterIdentity)item.Tag;
                 if (item.Checked)
-                {
                     m_account.IgnoreList.Remove(id);
-                }
                 else
                 {
                     CCPCharacter ccpCharacter = id.CCPCharacter;

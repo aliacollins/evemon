@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Notifications;
 
@@ -27,11 +28,11 @@ namespace EVEMon
         public SkillCompletionNotificationEventArgs Notification
         {
             get { return m_notification; }
-            set 
-            { 
+            set
+            {
                 m_notification = value;
                 StringBuilder text = new StringBuilder();
-                foreach (var skill in m_notification.Skills)
+                foreach (QueuedSkill skill in m_notification.Skills)
                 {
                     text.AppendLine(skill.ToString());
                 }

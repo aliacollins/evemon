@@ -18,13 +18,9 @@ namespace EVEMon.SkillPlanner
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WmLButtonDblClk)
-            {
                 HandleDoubleClick(ref m);
-            }
             else
-            {
                 base.WndProc(ref m);
-            }
         }
 
         /// <summary>

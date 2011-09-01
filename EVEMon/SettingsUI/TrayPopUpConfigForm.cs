@@ -12,14 +12,17 @@ namespace EVEMon.SettingsUI
     public partial class TrayPopupConfigForm : EVEMonForm
     {
         private readonly string[] m_characterGrouping = {
-                                                            "None", "Training / Not Training", "Not Training / Training", "Account"
+                                                            "None", "Training / Not Training", "Not Training / Training",
+                                                            "Account"
                                                         };
+
         private readonly string[] m_sortOrder = {
                                                     "Training completion, earliest at bottom",
                                                     "Training completion, earliest at top",
                                                     "Alphabetical, first at top",
                                                     "Alphabetical, first at bottom"
                                                 };
+
         private readonly TrayPopupSettings m_settings;
         private readonly string[] m_portraitSize;
 
@@ -71,9 +74,7 @@ namespace EVEMon.SettingsUI
             cbGroupBy.SelectedIndex = (int)config.GroupBy;
             UpdateDisplayOrders();
             if (cbHideNotTraining.Checked)
-            {
                 cbDisplayOrder1.SelectedItem = m_sortOrder[(int)config.PrimarySortOrder];
-            }
             else
             {
                 switch (config.GroupBy)

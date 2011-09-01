@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -275,18 +274,14 @@ namespace EVEMon.SkillPlanner
             }
 
             if (lastEligibleCert == null)
-            {
                 tslbEligible.Text = "(none)";
-            }
             else
             {
                 tslbEligible.Text = lastEligibleCert.Grade.ToString();
 
                 Certificate highestClaimedCertificate = certClass.HighestClaimedGrade;
                 if (highestClaimedCertificate == null)
-                {
                     tslbEligible.Text += " (improved from \"none\")";
-                }
                 else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                 {
                     tslbEligible.Text += String.Format(" (improved from \"{0}\")",
@@ -294,9 +289,7 @@ namespace EVEMon.SkillPlanner
                                                            CultureConstants.DefaultCulture));
                 }
                 else
-                {
                     tslbEligible.Text += " (no change)";
-                }
             }
 
             UpdatePlanningMenuStatus(tsPlanToBasic, certClass, CertificateGrade.Basic, lastEligibleCert);
@@ -317,15 +310,12 @@ namespace EVEMon.SkillPlanner
         {
             Certificate cert = certClass[grade];
             if (cert == null)
-            {
                 menu.Visible = false;
-            }
             else
             {
                 menu.Visible = true;
                 menu.Enabled = (lastEligibleCert == null || ((int)cert.Grade > (int)lastEligibleCert.Grade));
             }
-
         }
 
         #endregion

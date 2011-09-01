@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Accounting;
 using EVEMon.BlankCharacter;
 using EVEMon.Common;
@@ -379,9 +378,7 @@ namespace EVEMon
                 }
                     // Or remove it when it should not be here anymore
                 else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
-                {
                     tcCharacterTabs.TabPages.Remove(tpOverview);
-                }
 
                 // Reselect
                 if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
@@ -562,8 +559,10 @@ namespace EVEMon
                                                                                                        return 0;
 
                                                                                                    if (x.SenderAccount != null)
+                                                                                                   {
                                                                                                        return
                                                                                                            x.SenderAccount.UserID;
+                                                                                                   }
 
                                                                                                    return
                                                                                                        x.SenderCharacter.Identity.
@@ -1722,13 +1721,9 @@ namespace EVEMon
 
             // Create the popup.
             if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm)
-            {
                 m_trayPopup = new TrayPopUpWindow();
-            }
             else
-            {
                 m_trayPopup = new TrayTooltipWindow();
-            }
 
             m_trayPopup.Show();
         }
@@ -1886,9 +1881,7 @@ namespace EVEMon
 
             // We are using the IGB server create one if we don't already have one
             if (m_igbServer == null)
-            {
                 m_igbServer = new IgbServer(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
-            }
             else if (Settings.IGB.IGBServerPort != m_igbServer.IgbServerPort)
             {
                 // The port has changed reset the IGB server
@@ -1984,6 +1977,5 @@ namespace EVEMon
         }
 
         #endregion
-
     }
 }

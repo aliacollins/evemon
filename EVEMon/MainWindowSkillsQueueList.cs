@@ -3,13 +3,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Controls;
 using EVEMon.SkillPlanner;
-
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
@@ -276,13 +274,9 @@ namespace EVEMon
                                   e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
                 if (skill.Skill != null && level <= skill.Skill.Level)
-                {
                     g.FillRectangle(Brushes.Black, brect);
-                }
                 else
-                {
                     g.FillRectangle(Brushes.DarkGray, brect);
-                }
 
                 // Color indicator for a queued level
                 SkillQueue skillQueue = m_ccpCharacter.SkillQueue;
@@ -429,13 +423,9 @@ namespace EVEMon
 
                 // If found a new item as top or bottom
                 if (item != null)
-                {
                     numberOfPixelsToMove[i - 1] = GetItemHeight * direction;
-                }
                 else
-                {
                     lines -= direction;
-                }
             }
 
             // Scroll 

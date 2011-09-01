@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -177,9 +176,7 @@ namespace EVEMon.SkillPlanner
             string shipTypeName = line.Substring(1, commaIndex - 1);
             Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
             if (ship != null)
-            {
                 m_objects.Add(ship);
-            }
             else
             {
                 // Couldn't find that ship
@@ -428,6 +425,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

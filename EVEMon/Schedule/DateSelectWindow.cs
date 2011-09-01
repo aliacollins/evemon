@@ -61,9 +61,7 @@ namespace EVEMon.Schedule
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
             if (m_numClicks >= 2)
-            {
                 btnOk_Click(this, new EventArgs());
-            }
         }
 
         /// <summary>

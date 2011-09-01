@@ -3,7 +3,6 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;

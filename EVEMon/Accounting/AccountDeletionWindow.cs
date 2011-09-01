@@ -47,7 +47,7 @@ namespace EVEMon.Accounting
             EveMonClient.Accounts.Remove(m_account);
 
             // Remove the characters
-            foreach (var ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
+            foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
                 item => item.Checked).Select(item => item.Tag as CCPCharacter))
             {
                 EveMonClient.Characters.Remove(ccpCharacter);

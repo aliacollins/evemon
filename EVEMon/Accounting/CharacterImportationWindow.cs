@@ -107,7 +107,7 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         private void fileButton_Click(object sender, EventArgs e)
         {
-            using (var form = new OpenFileDialog())
+            using (OpenFileDialog form = new OpenFileDialog())
             {
                 form.Title = "Import character file";
                 form.Filter = "CCP XML Character (*.xml)|*.xml";
@@ -180,13 +180,9 @@ namespace EVEMon.Accounting
 
             // Generates or updates the character
             if (Character == null)
-            {
                 Character = m_args.CreateCharacter();
-            }
             else
-            {
                 m_args.UpdateCharacter(Character);
-            }
 
             Character.Name = nameTextBox.Text;
 

@@ -25,6 +25,7 @@ namespace EVEMon.SkillPlanner
 
         private bool m_hover;
         private bool m_pressed;
+
         /// <summary>
         /// Initializes new instance of <see cref="AttributeButtonControl"/>.
         /// </summary>
@@ -33,7 +34,7 @@ namespace EVEMon.SkillPlanner
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.DoubleBuffer |
                      ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint | 
+                     ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.SupportsTransparentBackColor |
                      ControlStyles.StandardDoubleClick, false);
             UpdateStyles();
@@ -52,7 +53,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         [Category("Behavior"), DefaultValue(null)]
         public AttributeBarControl AttributeBar { get; set; }
-
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Control.ForeColorChanged"/> event.

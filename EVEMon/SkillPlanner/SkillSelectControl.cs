@@ -8,10 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-
 using CommonResources = EVEMon.Common.Resources;
 
 namespace EVEMon.SkillPlanner
@@ -409,25 +407,15 @@ namespace EVEMon.SkillPlanner
                         // Choose image index
                         int imageIndex;
                         if (skill.Level != 0)
-                        {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl" + skill.Level);
-                        }
                         else if (skill.IsKnown)
-                        {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl0");
-                        }
                         else if (skill.IsOwned)
-                        {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("book");
-                        }
                         else if (skill.ArePrerequisitesMet)
-                        {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsMet");
-                        }
                         else
-                        {
                             imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet");
-                        }
 
                         // Create node and adds it
                         TreeNode node = new TreeNode
@@ -590,7 +578,6 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string GetSortedListData(ref IEnumerable<Skill> skills, ref IEnumerable<string> labels)
         {
-
             switch ((SkillSort)cbSorting.SelectedIndex)
             {
                     // Sort by name, default, occurs on initialization
@@ -611,9 +598,7 @@ namespace EVEMon.SkillPlanner
                     {
                         TimeSpan time = timesArray[i];
                         if (time == TimeSpan.Zero)
-                        {
                             labelsArray[i] = "-";
-                        }
                         else
                         {
                             labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
@@ -641,13 +626,9 @@ namespace EVEMon.SkillPlanner
                     {
                         TimeSpan time = timesArray[i];
                         if (time == TimeSpan.Zero)
-                        {
                             labelsArray[i] = "-";
-                        }
                         else
-                        {
                             labelsArray[i] = time.ToDescriptiveText(DescriptiveTextOptions.Default);
-                        }
                     }
 
                     skills = skillsArray;
@@ -745,9 +726,7 @@ namespace EVEMon.SkillPlanner
         private void lvSortedSkillList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvSortedSkillList.SelectedItems.Count == 0)
-            {
                 SelectedSkill = null;
-            }
             else
             {
                 ListViewItem lvi = lvSortedSkillList.SelectedItems[0];
@@ -1021,6 +1000,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
@@ -11,6 +10,7 @@ namespace EVEMon.SkillPlanner
     public partial class BlueprintSelectControl : EveObjectSelectControl
     {
         private Func<Item, Boolean> m_metaGroupPredicate = x => true;
+
 
         #region Initialization
 
@@ -85,7 +85,7 @@ namespace EVEMon.SkillPlanner
         private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update settings
-            Settings.UI.BlueprintBrowser.UsabilityFilter = (ObjectUsabilityFilter) cbUsabilityFilter.SelectedIndex;
+            Settings.UI.BlueprintBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
 
             // Enable/Disable the activity filter
             cbActivityFilter.Enabled = Settings.UI.BlueprintBrowser.UsabilityFilter != ObjectUsabilityFilter.All;
@@ -121,7 +121,7 @@ namespace EVEMon.SkillPlanner
         private void cbActivity_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update settings
-            Settings.UI.BlueprintBrowser.ActivityFilter = (ObjectActivityFilter) cbActivityFilter.SelectedIndex;
+            Settings.UI.BlueprintBrowser.ActivityFilter = (ObjectActivityFilter)cbActivityFilter.SelectedIndex;
             ActivityFilter = Settings.UI.BlueprintBrowser.ActivityFilter;
 
             switch (ActivityFilter)

@@ -60,7 +60,6 @@ namespace EVEMon
             pictureBox1.Image = b;
         }
 
-
         /// <summary>
         /// Show a "tip of the day"-like message on the top right corner of the given window.
         /// </summary>

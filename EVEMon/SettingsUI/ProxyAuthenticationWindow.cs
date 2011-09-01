@@ -75,13 +75,9 @@ namespace EVEMon.SettingsUI
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (rbNoAuth.Checked)
-            {
                 m_proxySetting.Authentication = ProxyAuthentication.None;
-            }
             else if (rbSystemDefault.Checked)
-            {
                 m_proxySetting.Authentication = ProxyAuthentication.SystemDefault;
-            }
             else if (rbSuppliedAuth.Checked)
             {
                 m_proxySetting.Authentication = ProxyAuthentication.Specified;

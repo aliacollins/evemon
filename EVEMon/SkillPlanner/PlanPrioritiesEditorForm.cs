@@ -38,5 +38,4 @@ namespace EVEMon.SkillPlanner
             nudPriority.Select(0, 3);
         }
     }
-
 }

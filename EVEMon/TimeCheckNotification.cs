@@ -27,7 +27,7 @@ namespace EVEMon
         /// <param name="serverTime">The server time.</param>
         /// <param name="localTime">The local time.</param>
         public TimeCheckNotification(DateTime serverTime, DateTime localTime)
-            : this ()
+            : this()
         {
             m_serverTime = serverTime;
             m_localTime = localTime;
@@ -67,4 +67,3 @@ namespace EVEMon
         }
     }
 }
-

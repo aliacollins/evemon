@@ -67,6 +67,5 @@ namespace EVEMon.SkillPlanner
             textBox1.Text = PlanName;
             textBox1.SelectAll();
         }
-
     }
 }

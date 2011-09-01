@@ -40,8 +40,9 @@ namespace EVEMon.SkillPlanner
         {
             string title = String.Format("Attributes optimization ({0}, remapping points)", m_plan.Name);
             string description = String.Format("Based on {0}; using the remapping points you defined.", m_plan.Name);
-            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan, 
-                AttributesOptimizationForm.Strategy.RemappingPoints, title, description);
+            OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
+                                                              AttributesOptimizationForm.Strategy.RemappingPoints, title,
+                                                              description);
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace EVEMon.SkillPlanner
             string title = String.Format("Attributes optimization ({0}, first year)", m_plan.Name);
             string description = String.Format("Based on {0}; best attributes for the first year.", m_plan.Name);
             OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
-                AttributesOptimizationForm.Strategy.OneYearPlan, title, description);
+                                                              AttributesOptimizationForm.Strategy.OneYearPlan, title, description);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace EVEMon.SkillPlanner
             string description = String.Format("Based on {0}", m_character.Name);
             description += (description.EndsWith("s") ? "' skills" : "'s skills");
             OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
-                AttributesOptimizationForm.Strategy.Character, title, description);
+                                                              AttributesOptimizationForm.Strategy.Character, title, description);
         }
     }
 }

@@ -44,7 +44,6 @@ namespace EVEMon.SkillPlanner
         private int m_tileHeight = 20;
         private int m_highlightedItem = -1;
 
-
         /// <summary>
         /// Initializes a new instance of <see cref="AttributeBarControl"/>.
         /// </summary>
@@ -241,14 +240,10 @@ namespace EVEMon.SkillPlanner
 
             // Invalidate changed areas
             if (m_highlightedItem >= 0)
-            {
                 Invalidate(new Rectangle(m_highlightedItem * m_tileWidth + 1, 2, m_tileWidth, m_tileHeight));
-            }
 
             if (previousHighlighted >= 0)
-            {
                 Invalidate(new Rectangle(previousHighlighted * m_tileWidth + 1, 2, m_tileWidth, m_tileHeight));
-            }
         }
 
         /// <summary>

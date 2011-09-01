@@ -354,9 +354,7 @@ namespace EVEMon.Schedule
             if (p.X < m_calTopLeft.X || p.Y < m_calTopLeft.Y ||
                 (p.X > m_calTopLeft.X + m_cellSize.Width * 7) ||
                 (p.Y > m_calTopLeft.Y + (m_cellSize.Height * MaxRows) + HeaderHeight + DayHeaderHeight))
-            {
                 return new DateTime(0);
-            }
 
             // We need an int value for the first day of the month
             DayOfWeek nFirstDayOfMonth = (new DateTime(m_date.Year, m_date.Month, 1)).DayOfWeek;
@@ -384,9 +382,7 @@ namespace EVEMon.Schedule
                     month = 1;
                 }
                 else
-                {
                     month++;
-                }
                 day -= DateTime.DaysInMonth(dt.Year, dt.Month);
             }
             else if (day <= 0)
@@ -397,9 +393,7 @@ namespace EVEMon.Schedule
                     month = 12;
                 }
                 else
-                {
                     month--;
-                }
                 day += DateTime.DaysInMonth(year, month);
             }
             dt = new DateTime(year, month, day);

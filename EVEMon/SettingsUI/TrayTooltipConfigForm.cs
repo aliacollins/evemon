@@ -90,9 +90,7 @@ namespace EVEMon.SettingsUI
             for (int i = 0; i < m_tooltipCodes.Length; i++)
             {
                 if (m_tooltipCodes[i].Equals(tbTooltipString.Text))
-                {
                     index = i;
-                }
             }
 
             cbTooltipDisplay.SelectedIndex = index;

@@ -5,12 +5,12 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 
-
 namespace EVEMon.SkillPlanner
 {
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
         private Func<Item, Boolean> m_racePredicate = x => true;
+
 
         #region Initialization
 
@@ -274,6 +274,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Notifications;
 
@@ -31,7 +32,7 @@ namespace EVEMon
             {
                 m_notification = value;
                 StringBuilder text = new StringBuilder();
-                foreach (var skill in m_notification.Certificates)
+                foreach (Certificate skill in m_notification.Certificates)
                 {
                     text.AppendLine(skill.ToString());
                 }

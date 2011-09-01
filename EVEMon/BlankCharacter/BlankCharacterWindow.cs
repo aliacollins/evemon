@@ -34,8 +34,8 @@ namespace EVEMon.BlankCharacter
 
             buttonOK.Enabled = false;
         }
-        
-        
+
+
         #region Event Handlers
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace EVEMon.BlankCharacter
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
-        
+
         #endregion
 
 
@@ -78,14 +78,10 @@ namespace EVEMon.BlankCharacter
             // Two choices for one button
             // Save blank character ?
             if (!m_fileSaved)
-            {
                 Save(serial);
-            }
-            // Add blank character ?
+                // Add blank character ?
             else
-            {
                 AddBlankCharacter();
-            }
 
             buttonOK.DialogResult = (m_fileSaved ? DialogResult.OK : DialogResult.None);
         }
@@ -123,27 +119,30 @@ namespace EVEMon.BlankCharacter
                 {
                     // Disabling control edit ability
                     blankCharacterControl.Enabled = false;
-                    
+
                     XmlDocument xmlDoc = Util.SerializeToXmlDocument(serial.GetType(), serial);
                     string content = Util.GetXMLStringRepresentation(xmlDoc);
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName, fs =>
-                    {
-                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                        {
-                            writer.Write(content);
-                            writer.Flush();
-                            writer.Close();
-                        }
-                        return true;
-                    });
+                                                                               {
+                                                                                   using (
+                                                                                       StreamWriter writer = new StreamWriter(fs,
+                                                                                                                              Encoding
+                                                                                                                                  .
+                                                                                                                                  UTF8)
+                                                                                       )
+                                                                                   {
+                                                                                       writer.Write(content);
+                                                                                       writer.Flush();
+                                                                                       writer.Close();
+                                                                                   }
+                                                                                   return true;
+                                                                               });
 
                     m_filename = fileDialog.FileName;
                     m_fileSaved = true;
                 }
                 else
-                {
                     m_fileSaved = false;
-                }
             }
         }
 
@@ -154,13 +153,14 @@ namespace EVEMon.BlankCharacter
         {
             // Add blank character
             EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(m_filename), (send, args) =>
-            {
-                if (args == null || args.HasError)
-                    return;
+                                                                                        {
+                                                                                            if (args == null || args.HasError)
+                                                                                                return;
 
-                UriCharacter character = args.CreateCharacter();
-                character.Monitored = true;
-            });
+                                                                                            UriCharacter character =
+                                                                                                args.CreateCharacter();
+                                                                                            character.Monitored = true;
+                                                                                        });
         }
 
         #endregion

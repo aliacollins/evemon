@@ -45,9 +45,7 @@ namespace EVEMon.Accounting
                 EveMonClient.Accounts.Remove(m_account);
             }
             else
-            {
                 EveMonClient.Characters.Remove(m_character);
-            }
 
             Close();
         }

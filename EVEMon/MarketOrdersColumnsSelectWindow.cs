@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
@@ -43,9 +42,8 @@ namespace EVEMon
         /// <returns></returns>
         protected override IEnumerable<IColumnSettings> GetDefaultColumns()
         {
-            var settings = new MarketOrderSettings();
+            MarketOrderSettings settings = new MarketOrderSettings();
             return settings.Columns;
         }
     }
-
 }

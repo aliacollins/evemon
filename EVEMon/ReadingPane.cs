@@ -88,8 +88,10 @@ namespace EVEMon
             {
                 string matchValue = match.Groups[1].Value;
                 if (matchValue.StartsWith("http://") || matchValue.StartsWith("https://"))
+                {
                     links[match.ToString()] = String.Format("<span title=\"{0}{1}Click to follow link\">{2}</span>",
                                                             matchValue, Environment.NewLine, match);
+                }
             }
 
             return links.Aggregate(m_selectedObject.Text,

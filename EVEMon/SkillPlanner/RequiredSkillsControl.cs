@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -19,6 +18,7 @@ namespace EVEMon.SkillPlanner
         private BlueprintActivity m_activity;
         private Item m_object;
         private Plan m_plan;
+
 
         #region Object Lifecycle
 
@@ -51,7 +51,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdateDisplay();
         }
@@ -67,7 +67,7 @@ namespace EVEMon.SkillPlanner
         {
             get { return m_activity; }
             set
-            { 
+            {
                 m_activity = value;
                 UpdateDisplay();
             }
@@ -122,9 +122,12 @@ namespace EVEMon.SkillPlanner
             // Treeview update
             tvSkillList.BeginUpdate();
 
-            IEnumerable<StaticSkillLevel> prerequisites = (Activity == BlueprintActivity.None ?
-                m_object.Prerequisites.Where(x => !x.Level.Equals(0) && x.Activity.Equals(Activity)) :
-                m_object.Prerequisites.Where(x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).OrderBy(x => x.Skill.Name));
+            IEnumerable<StaticSkillLevel> prerequisites = (Activity == BlueprintActivity.None
+                                                               ? m_object.Prerequisites.Where(
+                                                                   x => !x.Level.Equals(0) && x.Activity.Equals(Activity))
+                                                               : m_object.Prerequisites.Where(
+                                                                   x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).
+                                                                     OrderBy(x => x.Skill.Name));
 
             try
             {
@@ -143,9 +146,7 @@ namespace EVEMon.SkillPlanner
 
             // Set training time required label
             if (allSkillsKnown)
-            {
                 lblTimeRequired.Text = "No training required";
-            }
             else
             {
                 TimeSpan trainTime = m_plan.Character.GetTrainingTimeToMultipleSkills(prerequisites);
@@ -174,7 +175,7 @@ namespace EVEMon.SkillPlanner
             Character character = (Character)m_plan.Character;
             Skill skill = character.Skills[prereq.Skill];
 
-            TreeNode node = new TreeNode(prereq.ToString()) {Tag = new SkillLevel(skill, prereq.Level)};
+            TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 
             // Skill requirement met
             if (skill.Level >= prereq.Level)
@@ -182,14 +183,14 @@ namespace EVEMon.SkillPlanner
                 node.ImageIndex = 1;
                 node.SelectedImageIndex = 1;
             }
-            // Requirement not met, but planned
+                // Requirement not met, but planned
             else if (m_plan.IsPlanned(skill, prereq.Level))
             {
                 node.ImageIndex = 2;
                 node.SelectedImageIndex = 2;
                 allSkillsKnown = false;
             }
-            // Requirement not met, but trainable
+                // Requirement not met, but trainable
             else if (skill.Level < prereq.Level && skill.IsKnown)
             {
                 node.ImageIndex = 3;
@@ -197,7 +198,7 @@ namespace EVEMon.SkillPlanner
                 allSkillsKnown = false;
                 skillsUnplanned = true;
             }
-            // Requirement not met
+                // Requirement not met
             else
             {
                 node.ImageIndex = 0;
@@ -257,7 +258,8 @@ namespace EVEMon.SkillPlanner
         private void btnAddSkills_Click(object sender, EventArgs e)
         {
             // Add skills to plan
-            IPlanOperation operation = m_plan.TryAddSet(m_object.Prerequisites.Where(x => x.Activity.Equals(Activity)), m_object.Name);
+            IPlanOperation operation = m_plan.TryAddSet(m_object.Prerequisites.Where(x => x.Activity.Equals(Activity)),
+                                                        m_object.Name);
             PlanHelper.Perform(operation);
 
             // Refresh display to reflect plan changes
@@ -291,7 +293,7 @@ namespace EVEMon.SkillPlanner
 
             // Open skill browser tab for this skill
             PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            Skill skill = ((SkillLevel) thisNode.Tag).Skill;
+            Skill skill = ((SkillLevel)thisNode.Tag).Skill;
             pw.ShowSkillInBrowser(skill);
         }
 
@@ -322,7 +324,7 @@ namespace EVEMon.SkillPlanner
                 showInMenuSeparator.Visible = true;
                 showInSkillBrowserMenu.Visible = true;
                 showInSkillExplorerMenu.Visible = true;
-                
+
                 // "Plan to N" menus
                 SkillLevel skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
                 Skill skill = skillLevel.Skill;
@@ -400,6 +402,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
@@ -36,7 +35,6 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
         }
-
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -210,7 +208,6 @@ namespace EVEMon.SkillPlanner
 
             // Fill the list view
             UpdatePropertiesList();
-
         }
 
         /// <summary>
@@ -271,12 +268,14 @@ namespace EVEMon.SkillPlanner
 
                     // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
                     if (prop.HideIfDefault)
+                    {
                         visibleProperty = SelectControl.SelectedObjects
                             .Any(x =>
                                      {
                                          EvePropertyValue? eveProperty = x.Properties[prop];
                                          return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
                                      });
+                    }
 
                     // We hide the reprocessing skill here and make it visible in the "Reprocessing Info" section
                     if (prop.ID == DBConstants.ReprocessingSkillPropertyID)
@@ -361,13 +360,9 @@ namespace EVEMon.SkillPlanner
                 if (!allEqual)
                 {
                     if (Math.Abs(values[index] - max) < float.Epsilon)
-                    {
                         subItem.ForeColor = Color.DarkGreen;
-                    }
                     else if (Math.Abs(values[index] - min) < float.Epsilon)
-                    {
                         subItem.ForeColor = Color.DarkRed;
-                    }
 
                     item.UseItemStyleForSubItems = false;
                 }

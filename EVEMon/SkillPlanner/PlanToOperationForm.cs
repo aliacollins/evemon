@@ -136,20 +136,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="args"></param>
         private void rootMultiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
         {
-
             // When there are useless prereqs, we offer the user to remove them on a second page.
             // When there aren't any, we just have one page.
 
             // Guess whether we're on the final page (2/2 or 1/1)
             bool isFinal;
             if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage)
-            {
                 isFinal = true;
-            }
             else
-            {
                 isFinal = (m_operation.RemovablePrerequisites.Count == 0);
-            }
 
             // Final page ? 
             if (isFinal)
@@ -192,13 +187,9 @@ namespace EVEMon.SkillPlanner
 
             // Then we're on the last page and the button is now "OK"
             if (m_operation.Type == PlanOperations.Addition)
-            {
                 m_operation.PerformAddition((int)priorityNumericBox.Value);
-            }
             else
-            {
                 m_operation.PerformSuppression(uselessPrereqsCheckbox.Checked);
-            }
 
             DialogResult = DialogResult.OK;
             Close();

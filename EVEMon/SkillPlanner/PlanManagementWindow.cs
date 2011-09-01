@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -116,7 +115,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateContent(bool restoreSelectionAndFocus)
         {
             // Store selection and focus
-            List<Plan> selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).ToList();
+            List<Plan> selection =
+                lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).ToList();
             Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
 
             lbPlanList.BeginUpdate();
@@ -519,9 +519,7 @@ namespace EVEMon.SkillPlanner
                 cmiOpen.Text = "Open";
             }
             else
-            {
                 e.Cancel = true;
-            }
         }
 
         /// <summary>

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
@@ -77,9 +76,7 @@ namespace EVEMon
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
             if (ccpCharacter != null)
-            {
                 skillQueueControl.SkillQueue = ccpCharacter.SkillQueue;
-            }
             else
             {
                 pnlTraining.Visible = false;
@@ -238,9 +235,7 @@ namespace EVEMon
                     lblScheduleWarning.Visible = true;
                 }
                 else
-                {
                     lblScheduleWarning.Visible = false;
-                }
 
                 if (ccpCharacter != null)
                 {
@@ -370,7 +365,6 @@ namespace EVEMon
             // Enables/Disables the EVE notifications page related controls
             if (multiPanel.SelectedPage == eveNotificationsPage)
                 toolStripContextual.Enabled = !ccpCharacter.EVENotifications.IsEmpty();
-
         }
 
         /// <summary>
@@ -542,7 +536,6 @@ namespace EVEMon
             // Read the settings
             if (!Settings.UI.SafeForWork)
             {
-
                 UpdateFeaturesTextVisibility();
 
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
@@ -613,7 +606,6 @@ namespace EVEMon
             // Remaining queue time label
             DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
             lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
-
         }
 
         /// <summary>

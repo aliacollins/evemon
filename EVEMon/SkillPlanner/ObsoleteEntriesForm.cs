@@ -28,6 +28,7 @@ namespace EVEMon.SkillPlanner
         private ObsoleteEntriesAction m_result = ObsoleteEntriesAction.None;
         private ObsoleteEntriesAction m_previewResult = ObsoleteEntriesAction.None;
 
+
         #region Static Methods
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace EVEMon.SkillPlanner
             ObsoleteEntriesListView.BeginUpdate();
             ObsoleteEntriesListView.Items.Clear();
 
-            foreach (var entry in m_plan.ObsoleteEntries)
+            foreach (PlanEntry entry in m_plan.ObsoleteEntries)
             {
                 ListViewItem lvi = new ListViewItem(entry.ToString());
 
@@ -142,13 +143,9 @@ namespace EVEMon.SkillPlanner
                     break;
                 case ObsoleteEntriesAction.RemoveConfirmed:
                     if (confirmed)
-                    {
                         FormatListViewRemoveStyle(lvi);
-                    }
                     else
-                    {
                         FormatListViewKeepStyle(lvi);
-                    }
                     break;
                 case ObsoleteEntriesAction.None:
                     FormatListViewNormalStyle(lvi);
@@ -282,6 +279,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }

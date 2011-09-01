@@ -135,7 +135,7 @@ namespace EVEMon
             {
                 // Add the visible columns; matching the display order
                 List<EveNotificationsColumnSettings> newColumns = new List<EveNotificationsColumnSettings>();
-                foreach (var header in lvNotifications.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
+                foreach (ColumnHeader header in lvNotifications.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
                     EveNotificationsColumnSettings columnSetting =
                         m_columns.First(x => x.Column == (EveNotificationsColumn)header.Tag);
@@ -196,7 +196,7 @@ namespace EVEMon
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            var ccpCharacter = Character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
             EVENotifications = (ccpCharacter == null ? null : ccpCharacter.EVENotifications);
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
             Grouping = (Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy);
@@ -241,7 +241,7 @@ namespace EVEMon
                                                                : ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
-                foreach (var column in m_columns.Where(x => x.Visible))
+                foreach (EveNotificationsColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     if (column.Width == -1)
                         lvNotifications.AutoResizeColumn(index, resizeStyle);
@@ -282,27 +282,33 @@ namespace EVEMon
                 switch (m_grouping)
                 {
                     case EVENotificationsGrouping.Type:
-                        var groups0 = eveNotifications.GroupBy(x => x.Type).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups0 =
+                            eveNotifications.GroupBy(x => x.Type).OrderBy(x => x.Key);
                         UpdateContent(groups0);
                         break;
                     case EVENotificationsGrouping.TypeDesc:
-                        var groups1 = eveNotifications.GroupBy(x => x.Type).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups1 =
+                            eveNotifications.GroupBy(x => x.Type).OrderByDescending(x => x.Key);
                         UpdateContent(groups1);
                         break;
                     case EVENotificationsGrouping.SentDate:
-                        var groups2 = eveNotifications.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups2 =
+                            eveNotifications.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
                         UpdateContent(groups2);
                         break;
                     case EVENotificationsGrouping.SentDateDesc:
-                        var groups3 = eveNotifications.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups3 =
+                            eveNotifications.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
                         UpdateContent(groups3);
                         break;
                     case EVENotificationsGrouping.Sender:
-                        var groups4 = eveNotifications.GroupBy(x => x.Sender).OrderBy(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups4 =
+                            eveNotifications.GroupBy(x => x.Sender).OrderBy(x => x.Key);
                         UpdateContent(groups4);
                         break;
                     case EVENotificationsGrouping.SenderDesc:
-                        var groups5 = eveNotifications.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
+                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups5 =
+                            eveNotifications.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
                         UpdateContent(groups5);
                         break;
                 }
@@ -341,27 +347,21 @@ namespace EVEMon
             lvNotifications.Groups.Clear();
 
             // Add the groups
-            foreach (var group in groups)
+            foreach (IGrouping<TKey, EveNotification> group in groups)
             {
                 string groupText;
                 if (group.Key is EVEMailState)
-                {
                     groupText = ((EVEMailState)(Object)group.Key).GetHeader();
-                }
                 else if (group.Key is DateTime)
-                {
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
-                }
                 else
-                {
                     groupText = group.Key.ToString();
-                }
 
                 ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvNotifications.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (var eveNotification in group)
+                foreach (EveNotification eveNotification in group)
                 {
                     if (String.IsNullOrEmpty(eveNotification.NotificationID.ToString()))
                         continue;
@@ -408,13 +408,9 @@ namespace EVEMon
             {
                 EveNotificationsColumn column = (EveNotificationsColumn)lvNotifications.Columns[i].Tag;
                 if (m_sortCriteria == column)
-                {
                     lvNotifications.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
-                }
                 else
-                {
                     lvNotifications.Columns[i].ImageIndex = 2;
-                }
             }
         }
 
@@ -625,9 +621,7 @@ namespace EVEMon
         {
             EveNotificationsColumn column = (EveNotificationsColumn)lvNotifications.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
-            {
                 m_sortAscending = !m_sortAscending;
-            }
             else
             {
                 m_sortCriteria = column;
