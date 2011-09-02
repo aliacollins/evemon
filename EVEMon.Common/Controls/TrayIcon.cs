@@ -416,6 +416,8 @@ namespace EVEMon.Common.Controls
                 {
                     case States.MouseOut:
                         TrayIcon.m_mouseState = new MouseStateOut(TrayIcon);
+                        // Restore the default icon text
+                        TrayIcon.notifyIcon.Text = TrayIcon.m_iconText;
                         break;
                     case States.MouseOver:
                         TrayIcon.m_mouseState = new MouseStateOver(TrayIcon, MousePosition);
@@ -487,6 +489,10 @@ namespace EVEMon.Common.Controls
             public MouseStateOver(TrayIcon trayIcon, Point mousePosition)
                 : base(trayIcon, mousePosition)
             {
+                // Store the existing icon text, then reset it
+                trayIcon.m_iconText = trayIcon.notifyIcon.Text;
+                trayIcon.notifyIcon.Text = String.Empty;
+
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure
                 // initialisation completes before the timeout occurs
@@ -588,10 +594,6 @@ namespace EVEMon.Common.Controls
             public MouseStateHovering(TrayIcon trayIcon, Point mousePosition)
                 : base(trayIcon, mousePosition)
             {
-                // Store the existing icon text, then reset it
-                trayIcon.m_iconText = trayIcon.notifyIcon.Text;
-                trayIcon.notifyIcon.Text = String.Empty;
-
                 // Fire the MouseHover event
                 TrayIcon.OnMouseHover(new EventArgs());
 
@@ -632,9 +634,6 @@ namespace EVEMon.Common.Controls
 
                     // Switch of mouse tracking
                     DisableMouseTracking();
-
-                    // Restore the default icon text
-                    TrayIcon.notifyIcon.Text = TrayIcon.m_iconText;
 
                     // Fire the MouseLeave event
                     TrayIcon.OnMouseLeave(new EventArgs());
