@@ -542,12 +542,12 @@ namespace EVEMon.Common.Controls
                     if (m_timer == null)
                         return;
 
-                    // Stops and disposes the timer.
+                    // Stops and disposes the timer
                     try
                     {
                         // Stop the timer in case its been restarted by a MouseMove
                         // in the event we were blocked
-                        m_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                        m_timer.Change(0, 0);
                     }
                     finally
                     {
