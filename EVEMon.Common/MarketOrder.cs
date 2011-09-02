@@ -6,10 +6,6 @@ using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
-
-
-    #region MarketOrder
-
     /// <summary>
     /// A base class for market orders.
     /// </summary>
@@ -23,6 +19,9 @@ namespace EVEMon.Common
         private OrderState m_state;
 
         private readonly long m_itemID;
+
+
+        #region Constructors
 
         /// <summary>
         /// Constructor from the API.
@@ -66,6 +65,11 @@ namespace EVEMon.Common
             Issued = src.Issued;
             IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
         }
+
+        #endregion
+
+
+        #region Importation, Exportation
 
         /// <summary>
         /// Exports the given object to a serialization object.
@@ -143,85 +147,10 @@ namespace EVEMon.Common
             return true;
         }
 
-        /// <summary>
-        /// Gets an items ID either by source or by name.
-        /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private static long GetItemID(SerializableOrderBase src)
-        {
-            // Try get item ID by source
-            long itemID = src.ItemID;
+        #endregion
 
-            // We failed? Try get item ID by name
-            if (itemID == 0)
-            {
-                Item item = StaticItems.GetItemByName(src.Item);
-                itemID = (item == null ? 0 : item.ID);
-            }
 
-            return itemID;
-        }
-
-        /// <summary>
-        /// Gets an item by its ID or its name.
-        /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private static Item GetItem(SerializableOrderBase src)
-        {
-            // Try get item by its ID, if we faile try get it by its name
-            Item item = StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
-            return item;
-        }
-
-        /// <summary>
-        /// Gets the station of an order.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private static Station GetStationByID(long id)
-        {
-            // Look for the station in datafile, if we fail then it may be a conquerable outpost station
-            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
-
-            // We failed again ? It's not in any data we can access
-            // We set it to a fixed one and notify about it in the trace file
-            if (station == null)
-            {
-                station = StaticGeography.GetStationByID(60013747);
-                EveMonClient.Trace("Could not find station id {0}", id);
-                EveMonClient.Trace("Setting to {0}", station.Name);
-            }
-
-            return station;
-        }
-
-        /// <summary>
-        /// Gets the state of an order.
-        /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private static OrderState GetState(SerializableOrderListItem src)
-        {
-            switch ((APIEnumerations.CCPOrderState)src.State)
-            {
-                case APIEnumerations.CCPOrderState.Closed:
-                case APIEnumerations.CCPOrderState.Canceled:
-                case APIEnumerations.CCPOrderState.CharacterDeleted:
-                    return OrderState.Canceled;
-
-                case APIEnumerations.CCPOrderState.Pending:
-                case APIEnumerations.CCPOrderState.Opened:
-                    return OrderState.Active;
-
-                case APIEnumerations.CCPOrderState.ExpiredOrFulfilled:
-                    return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
-
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+        #region Properties
 
         /// <summary>
         /// When true, the order will be deleted unless it was found on the API feed.
@@ -334,6 +263,91 @@ namespace EVEMon.Common
             get { return (m_state == OrderState.Active || m_state == OrderState.Modified) && !IsExpired; }
         }
 
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets an items ID either by source or by name.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static long GetItemID(SerializableOrderBase src)
+        {
+            // Try get item ID by source
+            long itemID = src.ItemID;
+
+            // We failed? Try get item ID by name
+            if (itemID == 0)
+            {
+                Item item = StaticItems.GetItemByName(src.Item);
+                itemID = (item == null ? 0 : item.ID);
+            }
+
+            return itemID;
+        }
+
+        /// <summary>
+        /// Gets an item by its ID or its name.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static Item GetItem(SerializableOrderBase src)
+        {
+            // Try get item by its ID, if we faile try get it by its name
+            Item item = StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
+            return item;
+        }
+
+        /// <summary>
+        /// Gets the station of an order.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private static Station GetStationByID(long id)
+        {
+            // Look for the station in datafile, if we fail then it may be a conquerable outpost station
+            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
+
+            // We failed again ? It's not in any data we can access
+            // We set it to a fixed one and notify about it in the trace file
+            if (station == null)
+            {
+                station = StaticGeography.GetStationByID(60013747);
+                EveMonClient.Trace("Could not find station id {0}", id);
+                EveMonClient.Trace("Setting to {0}", station.Name);
+            }
+
+            return station;
+        }
+
+        /// <summary>
+        /// Gets the state of an order.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static OrderState GetState(SerializableOrderListItem src)
+        {
+            switch ((APIEnumerations.CCPOrderState)src.State)
+            {
+                case APIEnumerations.CCPOrderState.Closed:
+                case APIEnumerations.CCPOrderState.Canceled:
+                case APIEnumerations.CCPOrderState.CharacterDeleted:
+                    return OrderState.Canceled;
+
+                case APIEnumerations.CCPOrderState.Pending:
+                case APIEnumerations.CCPOrderState.Opened:
+                    return OrderState.Active;
+
+                case APIEnumerations.CCPOrderState.ExpiredOrFulfilled:
+                    return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Checks whether the given API object matches with this order.
         /// </summary>
@@ -404,7 +418,7 @@ namespace EVEMon.Common
 
             return (((int)value * 1000) / 1000.0M).ToString("###") + suffix;
         }
-    }
 
-    #endregion
+        #endregion
+    }
 }

@@ -96,7 +96,6 @@ namespace EVEMon
             this.testNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testCharacterNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testTimeoutOneSecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ttMainWindow = new System.Windows.Forms.ToolTip(this.components);
             this.standardToolbar = new System.Windows.Forms.ToolStrip();
             this.accountsManagementTbMenu = new System.Windows.Forms.ToolStripButton();
             this.addAccountTbMenu = new System.Windows.Forms.ToolStripButton();
@@ -117,11 +116,11 @@ namespace EVEMon
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
-            this.tcCharacterTabs = new DraggableTabControl();
+            this.tcCharacterTabs = new EVEMon.Common.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
-            this.trayIcon = new TrayIcon(this.components);
+            this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -913,6 +912,7 @@ namespace EVEMon
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.standardToolbar);
             this.Controls.Add(this.mainMenuBar);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MainMenuStrip = this.mainMenuBar;
             this.MinimumSize = new System.Drawing.Size(480, 350);
             this.Name = "MainWindow";
@@ -973,7 +973,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem showOwnedSkillbooksMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel lblTraining;
-        private System.Windows.Forms.ToolTip ttMainWindow;
         private System.Windows.Forms.ContextMenuStrip toolbarContext;
         private System.Windows.Forms.ToolStripMenuItem menubarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem standardToolStripMenuItem;
