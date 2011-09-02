@@ -464,7 +464,7 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region Private Class "MaouseStateOver"
+        #region Private Class "MouseStateOver"
 
         /// <summary>
         /// Mouse tracking state where the mouse has moved over the tray icon
@@ -487,10 +487,6 @@ namespace EVEMon.Common.Controls
             public MouseStateOver(TrayIcon trayIcon, Point mousePosition)
                 : base(trayIcon, mousePosition)
             {
-                // Store the existing icon text, then reset it
-                trayIcon.m_iconText = trayIcon.notifyIcon.Text;
-                trayIcon.notifyIcon.Text = String.Empty;
-
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure
                 // initialisation completes before the timeout occurs
@@ -587,11 +583,15 @@ namespace EVEMon.Common.Controls
             /// <summary>
             /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
             /// </summary>
-            /// <param name="trayicon">The <see cref="TrayIcon"/> whose state is being managed.</param>
+            /// <param name="trayIcon">The <see cref="TrayIcon"/> whose state is being managed.</param>
             /// <param name="mousePosition">A <see cref="System.Drawing.Point"/> representing the last known mouse location.</param>
-            public MouseStateHovering(TrayIcon trayicon, Point mousePosition)
-                : base(trayicon, mousePosition)
+            public MouseStateHovering(TrayIcon trayIcon, Point mousePosition)
+                : base(trayIcon, mousePosition)
             {
+                // Store the existing icon text, then reset it
+                trayIcon.m_iconText = trayIcon.notifyIcon.Text;
+                trayIcon.notifyIcon.Text = String.Empty;
+
                 // Fire the MouseHover event
                 TrayIcon.OnMouseHover(new EventArgs());
 
