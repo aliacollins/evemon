@@ -898,8 +898,7 @@ namespace EVEMon
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             Skill skill = (Skill)item.Tag;
 
-            SkillExplorerWindow window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
-            window.Skill = skill;
+            WindowsFactory<SkillExplorerWindow>.ShowUnique(() => new SkillExplorerWindow(skill, null));
         }
 
         #endregion
