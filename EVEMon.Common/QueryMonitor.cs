@@ -83,12 +83,16 @@ namespace EVEMon.Common
             {
                 // If there was an error on last try, we use the cached time
                 // (we exclude the corporation roles error for characters corporation issued queries)
+                // The 'return' condition have been placed to prevent 'CCP screw up' with the cachedUntil timer
+                // as they have done in Incarna 1.0.1 expansion
                 if (LastResult != null
                     && LastResult.HasError
                     && LastResult.CCPError != null
                     && !LastResult.CCPError.IsOrdersRelatedCorpRolesError
                     && !LastResult.CCPError.IsJobsRelatedCorpRolesError)
-                    return LastResult.CachedUntil;
+                    return (LastResult.CachedUntil > LastResult.CurrentTime
+                                ? LastResult.CachedUntil
+                                : LastResult.CachedUntil.AddMinutes(30));
 
                 // No error ? Then we compute the next update according to the settings.
                 UpdatePeriod period = Settings.Updates.Periods[Method];
