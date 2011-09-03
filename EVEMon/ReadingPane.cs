@@ -83,7 +83,7 @@ namespace EVEMon
         {
             Dictionary<string, string> links = new Dictionary<string, string>();
 
-            Regex regex = new Regex(@"<a\shref=""(.*?)"">.*?</a>", RegexOptions.IgnoreCase);
+            Regex regex = new Regex(@"<a\shref=""(.+?)"">.+?</a>", RegexOptions.IgnoreCase);
             foreach (Match match in regex.Matches(m_selectedObject.Text))
             {
                 string matchValue = match.Groups[1].Value;
