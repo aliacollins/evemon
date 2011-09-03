@@ -12,12 +12,13 @@ using EVEMon.Common.SettingsObjects;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a character's plan
+    /// Represents a character's plan.
     /// </summary>
     [EnforceUIThreadAffinity]
     public sealed class Plan : BasePlan
     {
         private string m_name;
+        private string m_description;
         private int m_changedNotificationSuppressions;
         private PlanChange m_change;
         private InvalidPlanEntry[] m_invalidEntries;
@@ -26,7 +27,7 @@ namespace EVEMon.Common
         #region Construction, importation, exportation
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         public Plan(BaseCharacter character)
@@ -37,7 +38,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="serial"></param>
@@ -48,13 +49,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from a serialization object
+        /// Imports data from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
         public void Import(SerializablePlan serial)
         {
             // Update name
             m_name = serial.Name;
+            m_description = serial.Description;
             SortingPreferences = serial.SortingPreferences.Clone();
 
             // Update entries
@@ -93,13 +95,13 @@ namespace EVEMon.Common
 
             m_invalidEntries = invalidEntries.ToArray();
 
-            // Notify name change
+            // Notify name or decription change
             if (IsConnected)
                 EveMonClient.OnPlanNameChanged(this);
         }
 
         /// <summary>
-        /// Generates a serialization object
+        /// Generates a serialization object.
         /// </summary>
         /// <returns></returns>
         public SerializablePlan Export()
@@ -110,6 +112,7 @@ namespace EVEMon.Common
                                           {
                                               Name = m_name,
                                               Owner = character.Guid,
+                                              Description = m_description,
                                               SortingPreferences = SortingPreferences.Clone()
                                           };
 
@@ -170,7 +173,7 @@ namespace EVEMon.Common
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the plan's name
+        /// Gets or sets the plan's name.
         /// </summary>
         public string Name
         {
@@ -184,7 +187,29 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// List of invalid entries in the plan
+        /// Gets or sets the plan's description.
+        /// </summary>
+        public string Description
+        {
+            get { return m_description; }
+            set
+            {
+                m_description = value;
+                if (IsConnected)
+                    EveMonClient.OnPlanNameChanged(this);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the plan's description.
+        /// </summary>
+        public string DescriptionNL
+        {
+            get { return StaticSkill.WordWrap(m_description, 100).Trim(); }
+        }
+
+        /// <summary>
+        /// List of invalid entries in the plan.
         /// </summary>
         public IEnumerable<InvalidPlanEntry> InvalidEntries
         {
@@ -192,7 +217,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Does the plan contain one or more invalid entries
+        /// Does the plan contain one or more invalid entries.
         /// </summary>
         public bool ContainsInvalidEntries
         {
@@ -200,7 +225,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets sorting preferences for this plan. Those are only preferences, it does not change the plan.
+        /// Gets sorting preferences for this plan.
+        /// Those are only preferences, it does not change the plan.
         /// </summary>
         public PlanSorting SortingPreferences { get; private set; }
 
@@ -228,7 +254,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notify changes happened in the entries
+        /// Notify changes happened in the entries.
         /// </summary>
         internal override void OnChanged(PlanChange change)
         {
@@ -363,7 +389,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Adds a set of skills to this plan
+        /// Adds a set of skills to this plan.
         /// </summary>
         /// <param name="skillsToAdd">The skill levels to add.</param>
         /// <param name="note">The note for the new entries.</param>
@@ -419,7 +445,7 @@ namespace EVEMon.Common
         #region Certificates
 
         /// <summary>
-        /// Adds the provided certificate's prerequisites to the plan
+        /// Adds the provided certificate's prerequisites to the plan.
         /// </summary>
         /// <param name="certificate">The certificate.</param>
         /// <returns></returns>
@@ -548,7 +574,8 @@ namespace EVEMon.Common
         #region Private Class "PlanOperation"
 
         /// <summary>
-        /// This class is used to add entries. It enumerates the prerequisites to add, their lowest prioties, etc.
+        /// This class is used to add entries.
+        /// It enumerates the prerequisites to add, their lowest prioties, etc.
         /// </summary>
         private sealed class PlanOperation : IPlanOperation
         {
@@ -612,7 +639,7 @@ namespace EVEMon.Common
             }
 
             /// <summary>
-            /// Gets the type of operation to perform
+            /// Gets the type of operation to perform.
             /// </summary>
             public PlanOperations Type
             {

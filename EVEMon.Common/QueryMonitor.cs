@@ -90,9 +90,11 @@ namespace EVEMon.Common
                     && LastResult.CCPError != null
                     && !LastResult.CCPError.IsOrdersRelatedCorpRolesError
                     && !LastResult.CCPError.IsJobsRelatedCorpRolesError)
+                {
                     return (LastResult.CachedUntil > LastResult.CurrentTime
                                 ? LastResult.CachedUntil
                                 : LastResult.CachedUntil.AddMinutes(30));
+                }
 
                 // No error ? Then we compute the next update according to the settings.
                 UpdatePeriod period = Settings.Updates.Periods[Method];

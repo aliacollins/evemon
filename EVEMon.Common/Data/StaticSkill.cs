@@ -33,7 +33,7 @@ namespace EVEMon.Common.Data
             ArrayIndex = arrayIndex;
             Group = group;
             Prerequisites = new List<StaticSkillLevel>();
-            FormattedCost = String.Format(CultureConstants.DefaultCulture, "{0:#,##0}", Cost);
+            FormattedCost = String.Format(CultureConstants.DefaultCulture, "{0:N0}", Cost);
         }
 
         #endregion
@@ -224,7 +224,7 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Private Methods
+        #region Public Static Methods
 
         /// <summary>
         /// Remove line feeds and some other characters to format the string.
@@ -232,7 +232,7 @@ namespace EVEMon.Common.Data
         /// <param name="text"></param>
         /// <param name="maxLength"></param>
         /// <returns></returns>
-        private string WordWrap(string text, int maxLength)
+        public static string WordWrap(string text, int maxLength)
         {
             text = text.Replace("\n", " ");
             text = text.Replace("\r", " ");

@@ -1104,10 +1104,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void addAccountMenu_Click(object sender, EventArgs e)
         {
-            using (AccountUpdateOrAdditionWindow window = new AccountUpdateOrAdditionWindow())
-            {
-                window.ShowDialog(this);
-            }
+            WindowsFactory<AccountUpdateOrAdditionWindow>.ShowUnique();
         }
 
         /// <summary>
@@ -1118,10 +1115,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void manageAccountsMenuItem_Click(object sender, EventArgs e)
         {
-            using (AccountsManagementWindow window = new AccountsManagementWindow())
-            {
-                window.ShowDialog(this);
-            }
+            WindowsFactory<AccountsManagementWindow>.ShowUnique();
         }
 
         /// <summary>
@@ -1150,10 +1144,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            using (CharacterDeletionWindow window = new CharacterDeletionWindow(character))
-            {
-                window.ShowDialog(this);
-            }
+            WindowsFactory<CharacterDeletionWindow>.ShowUnique();
         }
 
         /// <summary>
@@ -1345,18 +1336,20 @@ namespace EVEMon
                 return;
 
             // Ask the user for a new name
-            string planName;
+            string planName,
+                   planDescription;
             using (NewPlanWindow npw = new NewPlanWindow())
             {
                 DialogResult dr = npw.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
 
-                planName = npw.Result;
+                planName = npw.PlanName;
+                planDescription = npw.PlanDescription;
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(character) { Name = planName };
+            Plan newPlan = new Plan(character) { Name = planName, Description = planDescription };
 
             // Add plan and save
             character.Plans.Add(newPlan);
@@ -1396,7 +1389,8 @@ namespace EVEMon
                 if (xdr == DialogResult.Cancel)
                     return;
 
-                loadedPlan.Name = npw.Result;
+                loadedPlan.Name = npw.PlanName;
+                loadedPlan.Description = npw.PlanDescription;
                 character.Plans.Add(loadedPlan);
             }
         }

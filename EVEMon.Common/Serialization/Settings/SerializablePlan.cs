@@ -23,6 +23,9 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("owner")]
         public Guid Owner { get; set; }
 
+        [XmlAttribute("description")]
+        public string Description { get; set; }
+
         [XmlElement("sorting")]
         public PlanSorting SortingPreferences { get; set; }
 

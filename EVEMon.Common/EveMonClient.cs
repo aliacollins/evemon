@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-
 using EVEMon.Common.Attributes;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -280,7 +279,7 @@ namespace EVEMon.Common
         /// </summary>
         private static void InitializeDefaultEvePortraitCachePath()
         {
-            DefaultEvePortraitCacheFolders = new string[] {};
+            DefaultEvePortraitCacheFolders = new string[] { };
             string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE",
                                                   Path.DirectorySeparatorChar, localApplicationData);
@@ -871,7 +870,6 @@ namespace EVEMon.Common
                 CharacterPlanCollectionChanged(null, new CharacterChangedEventArgs(character));
         }
 
-
         /// <summary>
         /// Called when a plan changed.
         /// </summary>
@@ -970,8 +968,10 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
                   currentVersion, newestVersion, canAutoInstall, installArgs);
             if (UpdateAvailable != null)
+            {
                 UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage,
                                                                    currentVersion, newestVersion, canAutoInstall, installArgs));
+            }
         }
 
         /// <summary>

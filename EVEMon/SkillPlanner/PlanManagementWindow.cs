@@ -126,11 +126,12 @@ namespace EVEMon.SkillPlanner
                 lbPlanList.Items.Clear();
                 foreach (Plan plan in m_character.Plans)
                 {
-                    // Create the item and add it.
+                    // Create the item and add it
                     ListViewItem lvi = new ListViewItem(plan.Name) { Tag = plan };
                     lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
                         DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString());
+                    lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.DescriptionNL) ? "(None)" : plan.DescriptionNL);
                     lbPlanList.Items.Add(lvi);
 
                     // Restore selection and focus
@@ -187,7 +188,8 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // Change the plan's name and add it
-                result.Name = npw.Result;
+                result.Name = npw.PlanName;
+                result.Description = npw.PlanDescription;
                 m_character.Plans.Add(result);
             }
         }
@@ -285,7 +287,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 // Create the plan and add it
-                Plan plan = new Plan(m_character) { Name = npw.Result };
+                Plan plan = new Plan(m_character) { Name = npw.PlanName, Description = npw.PlanDescription };
                 m_character.Plans.Add(plan);
 
                 // Open a window for this plan
@@ -324,7 +326,8 @@ namespace EVEMon.SkillPlanner
                 if (xdr == DialogResult.Cancel)
                     return;
 
-                loadedPlan.Name = npw.Result;
+                loadedPlan.Name = npw.PlanName;
+                loadedPlan.Description = npw.PlanDescription;
                 m_character.Plans.Add(loadedPlan);
             }
         }
@@ -359,7 +362,8 @@ namespace EVEMon.SkillPlanner
                     if (dr == DialogResult.Cancel)
                         return;
 
-                    plan.Name = f.Result;
+                    plan.Name = f.PlanName;
+                    plan.Description = f.PlanDescription;
                 }
 
                 // Add the plan to the character's list
@@ -368,7 +372,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// File > Delete
+        /// File > Delete.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -407,11 +411,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Edit > Rename
+        /// Edit > Rename.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miRename_Click(object sender, EventArgs e)
+        private void miRenameEdit_Click(object sender, EventArgs e)
         {
             // Quit if none selected
             if (lbPlanList.SelectedItems.Count == 0)
@@ -421,14 +425,16 @@ namespace EVEMon.SkillPlanner
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             using (NewPlanWindow f = new NewPlanWindow())
             {
-                f.Text = "Rename Plan";
+                f.Text = "Rename Plan or Edit Description";
                 f.PlanName = plan.Name;
+                f.PlanDescription = plan.Description;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
 
                 // Change the name
-                plan.Name = f.Result;
+                plan.Name = f.PlanName;
+                plan.Description = f.PlanDescription;
                 UpdateContent(true);
             }
         }
@@ -506,14 +512,14 @@ namespace EVEMon.SkillPlanner
             if (lbPlanList.SelectedItems.Count > 1)
             {
                 cmiDelete.Enabled = true;
-                cmiRename.Enabled = false;
+                cmiRenameEdit.Enabled = false;
                 cmiExport.Enabled = false;
                 cmiOpen.Text = "Merge";
             }
             else if (lbPlanList.SelectedItems.Count == 1)
             {
                 cmiDelete.Enabled = true;
-                cmiRename.Enabled = true;
+                cmiRenameEdit.Enabled = true;
                 cmiExport.Enabled = true;
                 cmiOpen.Enabled = true;
                 cmiOpen.Text = "Open";
@@ -540,7 +546,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void mEdit_DropDownOpening(object sender, EventArgs e)
         {
-            miRename.Enabled = lbPlanList.SelectedItems.Count == 1;
+            miRenameEdit.Enabled = lbPlanList.SelectedItems.Count == 1;
             miExport.Enabled = lbPlanList.SelectedItems.Count == 1;
             miDelete.Enabled = lbPlanList.SelectedItems.Count >= 1;
         }

@@ -68,6 +68,7 @@ namespace EVEMon
                                    // Contributors
                                    { "Abomb", "05" },
                                    { "Adam Butt", "05" },
+                                   { "Aethlyn", "05" },
                                    { "Aevum Decessus", "05" },
                                    { "aliceturing", "05" },
                                    { "aMUSiC", "05" },

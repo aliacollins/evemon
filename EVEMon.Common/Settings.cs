@@ -484,7 +484,12 @@ namespace EVEMon.Common
                     continue;
 
                 // Imports the plan
-                SerializablePlan plan = new SerializablePlan { Owner = owner.Guid, Name = oldPlan.Name };
+                SerializablePlan plan = new SerializablePlan
+                                            {
+                                                Owner = owner.Guid,
+                                                Name = oldPlan.Name,
+                                                Description = String.Empty,
+                                            };
                 plan.Entries.AddRange(oldPlan.Entries);
                 serial.Plans.Add(plan);
             }

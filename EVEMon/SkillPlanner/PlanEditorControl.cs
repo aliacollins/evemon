@@ -1611,17 +1611,19 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Ask the user for a new name
-            string planName;
+            string planName,
+                   planDescription;
             using (NewPlanWindow npw = new NewPlanWindow())
             {
                 DialogResult dr = npw.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
-                planName = npw.Result;
+                planName = npw.PlanName;
+                planDescription = npw.PlanDescription;
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(Character) { Name = planName };
+            Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
             IPlanOperation operation = newPlan.TryAddSet(entries, String.Format("Exported from {0}", m_plan.Name));
             operation.Perform();
 

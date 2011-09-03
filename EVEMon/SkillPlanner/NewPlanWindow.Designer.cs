@@ -28,34 +28,36 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.PlanNameLabel = new System.Windows.Forms.Label();
+            this.PlanNameTextBox = new System.Windows.Forms.TextBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.PlanDescriptionTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // label1
+            // PlanNameLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Enter a name for this plan:";
+            this.PlanNameLabel.AutoSize = true;
+            this.PlanNameLabel.Location = new System.Drawing.Point(15, 13);
+            this.PlanNameLabel.Name = "PlanNameLabel";
+            this.PlanNameLabel.Size = new System.Drawing.Size(135, 13);
+            this.PlanNameLabel.TabIndex = 0;
+            this.PlanNameLabel.Text = "Enter a name for this plan:";
             // 
-            // textBox1
+            // PlanNameTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 30);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(264, 21);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.PlanNameTextBox.Location = new System.Drawing.Point(16, 30);
+            this.PlanNameTextBox.Name = "PlanNameTextBox";
+            this.PlanNameTextBox.Size = new System.Drawing.Size(264, 21);
+            this.PlanNameTextBox.TabIndex = 1;
+            this.PlanNameTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Enabled = false;
-            this.btnOk.Location = new System.Drawing.Point(124, 61);
+            this.btnOk.Location = new System.Drawing.Point(124, 159);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 2;
@@ -67,7 +69,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(205, 61);
+            this.btnCancel.Location = new System.Drawing.Point(205, 159);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -75,17 +77,40 @@ namespace EVEMon.SkillPlanner
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // PlanDescriptionTextBox
+            // 
+            this.PlanDescriptionTextBox.AcceptsReturn = true;
+            this.PlanDescriptionTextBox.Location = new System.Drawing.Point(16, 79);
+            this.PlanDescriptionTextBox.MaxLength = 255;
+            this.PlanDescriptionTextBox.Multiline = true;
+            this.PlanDescriptionTextBox.Name = "PlanDescriptionTextBox";
+            this.PlanDescriptionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.PlanDescriptionTextBox.Size = new System.Drawing.Size(264, 72);
+            this.PlanDescriptionTextBox.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 62);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(210, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Enter a description for this plan (optional):";
+            // 
             // NewPlanWindow
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(292, 96);
+            this.ClientSize = new System.Drawing.Size(292, 194);
+            this.Controls.Add(this.PlanDescriptionTextBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.PlanNameTextBox);
+            this.Controls.Add(this.PlanNameLabel);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -100,9 +125,11 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label PlanNameLabel;
+        private System.Windows.Forms.TextBox PlanNameTextBox;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.TextBox PlanDescriptionTextBox;
+        private System.Windows.Forms.Label label2;
     }
 }

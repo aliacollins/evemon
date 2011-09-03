@@ -12,17 +12,21 @@ namespace EVEMon.SkillPlanner
         public NewPlanWindow()
         {
             InitializeComponent();
-            Result = String.Empty;
             PlanName = String.Empty;
+            PlanDescription = String.Empty;
         }
 
         /// <summary>
         /// Gets or sets the name of the plan.
         /// </summary>
         /// <value>The name of the plan.</value>
-        public string PlanName { private get; set; }
+        public string PlanName { get; set; }
 
-        public string Result { get; private set; }
+        /// <summary>
+        /// Gets or sets the plan description.
+        /// </summary>
+        /// <value>The plan description.</value>
+        public string PlanDescription { get; set; }
 
         /// <summary>
         /// Handles the Click event of the btnCancel control.
@@ -42,7 +46,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            Result = textBox1.Text;
+            PlanName = PlanNameTextBox.Text;
+            PlanDescription = PlanDescriptionTextBox.Text;
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -54,7 +59,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            btnOk.Enabled = (!String.IsNullOrEmpty(textBox1.Text));
+            btnOk.Enabled = (!String.IsNullOrEmpty(PlanNameTextBox.Text));
         }
 
         /// <summary>
@@ -64,8 +69,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void NewPlanWindow_Shown(object sender, EventArgs e)
         {
-            textBox1.Text = PlanName;
-            textBox1.SelectAll();
+            PlanNameTextBox.Text = PlanName;
+            PlanDescriptionTextBox.Text = PlanDescription;
+            PlanNameTextBox.SelectAll();
         }
     }
 }
