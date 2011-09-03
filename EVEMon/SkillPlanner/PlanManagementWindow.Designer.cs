@@ -40,6 +40,7 @@ namespace EVEMon.SkillPlanner
             this.PlanName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PlanDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PlanSkills = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.PlanDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiRenameEdit = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +62,6 @@ namespace EVEMon.SkillPlanner
             this.miRenameEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miExport = new System.Windows.Forms.ToolStripMenuItem();
             this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.PlanDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1.SuspendLayout();
             this.contextMenu.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -146,6 +146,11 @@ namespace EVEMon.SkillPlanner
             // 
             this.PlanSkills.Text = "Skills";
             // 
+            // PlanDescription
+            // 
+            this.PlanDescription.Text = "Description";
+            this.PlanDescription.Width = 170;
+            // 
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -192,6 +197,7 @@ namespace EVEMon.SkillPlanner
             // toolStrip2
             // 
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.tsbMoveUp,
@@ -341,7 +347,7 @@ namespace EVEMon.SkillPlanner
             // miRenameEdit
             // 
             this.miRenameEdit.Image = ((System.Drawing.Image)(resources.GetObject("miRenameEdit.Image")));
-            this.miRenameEdit.Name = "miRename";
+            this.miRenameEdit.Name = "miRenameEdit";
             this.miRenameEdit.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.miRenameEdit.Size = new System.Drawing.Size(136, 22);
             this.miRenameEdit.Text = "&Rename";
@@ -363,11 +369,6 @@ namespace EVEMon.SkillPlanner
             this.miDelete.Size = new System.Drawing.Size(136, 22);
             this.miDelete.Text = "&Delete";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
-            // 
-            // PlanDescription
-            // 
-            this.PlanDescription.Text = "Description";
-            this.PlanDescription.Width = 170;
             // 
             // PlanManagementWindow
             // 

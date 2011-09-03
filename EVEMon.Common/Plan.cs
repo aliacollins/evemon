@@ -56,7 +56,7 @@ namespace EVEMon.Common
         {
             // Update name
             m_name = serial.Name;
-            m_description = serial.Description;
+            m_description = serial.Description ?? String.Empty;
             SortingPreferences = serial.SortingPreferences.Clone();
 
             // Update entries
