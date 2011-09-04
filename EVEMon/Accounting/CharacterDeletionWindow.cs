@@ -49,5 +49,15 @@ namespace EVEMon.Accounting
 
             Close();
         }
+
+        /// <summary>
+        /// Closes the window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

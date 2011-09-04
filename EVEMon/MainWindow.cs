@@ -1120,7 +1120,9 @@ namespace EVEMon
 
         /// <summary>
         /// File > Hide Character...
-        /// Unmonitor this character. It will still be in the settings unless the users removes the account and confirm the deletion of characters.
+        /// Unmonitor this character.
+        /// It will still be in the settings unless the users removes the account
+        /// and confirm the deletion of characters.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1144,7 +1146,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<CharacterDeletionWindow>.ShowUnique();
+            WindowsFactory<CharacterDeletionWindow>.ShowByTag(character);
         }
 
         /// <summary>

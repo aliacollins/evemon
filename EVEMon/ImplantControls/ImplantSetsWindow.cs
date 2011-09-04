@@ -357,7 +357,6 @@ namespace EVEMon.ImplantControls
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -371,7 +370,7 @@ namespace EVEMon.ImplantControls
             SerializableSettingsImplantSet set = GetSelectedSet();
             if (set != null && !String.IsNullOrEmpty(set.Name))
                 m_character.ImplantSets.Import(m_sets);
-            DialogResult = DialogResult.OK;
+
             Close();
         }
 
