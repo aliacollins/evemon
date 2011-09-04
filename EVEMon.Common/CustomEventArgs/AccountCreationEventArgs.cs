@@ -29,7 +29,7 @@ namespace EVEMon.Common.CustomEventArgs
             KeyLevel = CredentialsLevel.Unknown;
             FullKeyTestError = String.Empty;
 
-            //Determine the API key level
+            // Determine the API key level
             KeyLevel = Account.GetCredentialsLevel(serialAccountStatus);
 
             // On error, retrieve the error message
@@ -75,11 +75,6 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets the possible error message gotten when testing the key security (excluding the error meaning the key was a limited one).
         /// </summary>
         public string FullKeyTestError { get; private set; }
-
-        /// <summary>
-        /// Gets the result which occurred when the characters list was queried.
-        /// </summary>
-        public IAPIResult Result { get; private set; }
 
         /// <summary>
         /// Gets the result which occurred when the characters list was queried.

@@ -154,7 +154,7 @@ namespace EVEMon.Accounting
             {
                 default:
                     keyPicture.Image = CommonProperties.Resources.APIKeyWrong;
-                    keyLabel.Text = m_creationArgs.Result.ErrorMessage;
+                    keyLabel.Text = m_creationArgs.FullKeyTestError;
                     errorGuideLabel.Visible = true;
                     errorGuideLabel.BringToFront();
                     break;

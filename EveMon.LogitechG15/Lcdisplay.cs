@@ -22,7 +22,6 @@ namespace EVEMon.LogitechG15
         private readonly Bitmap m_bmpLCDX;
         private readonly Graphics m_lcdCanvas;
         private readonly Graphics m_lcdOverlay;
-        private readonly ButtonDelegate m_buttonDelegate;
         private readonly List<LineProcess> m_lcdLines = new List<LineProcess>();
 
         private int m_currentCharacterIndex;
@@ -91,8 +90,7 @@ namespace EVEMon.LogitechG15
             ShowSystemTime = false;
             CycleSkillQueueTime = false;
 
-            m_buttonDelegate = OnButtonsPressed;
-            LCDInterface.AssignButtonDelegate(m_buttonDelegate);
+            LCDInterface.AssignButtonDelegate(OnButtonsPressed);
             LCDInterface.Open("EVEMon", false);
         }
 
