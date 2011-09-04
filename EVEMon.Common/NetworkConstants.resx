@@ -264,4 +264,22 @@
   <data name="BCAPIFileGetByName" xml:space="preserve">
     <value>/files/fileGetByName.php</value>
   </data>
+  <data name="EVEGateMailOpen" xml:space="preserve">
+    <value>/Mail/ReadMessage/{0}</value>
+  </data>
+  <data name="EVEGateMailForward" xml:space="preserve">
+    <value>/Mail/ComposeForward/{0}</value>
+  </data>
+  <data name="EVEGateMailReply" xml:space="preserve">
+    <value>/Mail/ComposeReply/{0}</value>
+  </data>
+  <data name="EVEGateMailReplyAll" xml:space="preserve">
+    <value>/Mail/ComposeReplyAll/{0}</value>
+  </data>
+  <data name="EVEGate" xml:space="preserve">
+    <value>https://gate.eveonline.com</value>
+  </data>
+  <data name="EveGateCharacterProfile" xml:space="preserve">
+    <value>/Profile/{0}</value>
+  </data>
 </root>

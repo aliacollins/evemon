@@ -518,6 +518,66 @@ namespace EVEMon
         #region Helper Methods
 
         /// <summary>
+        /// Tries to open the selected mail in the EVEMon Mail Window.
+        /// </summary>
+        private void ReadMailLocal()
+        {
+            ListViewItem item = lvMailMessages.SelectedItems[0];
+            EveMailMessage message = (EveMailMessage)item.Tag;
+
+            // Quit if we haven't downloaded the mail message body yet
+            if (message.EVEMailBody == null)
+                return;
+
+            // Show or bring to front if a window with the same EVE mail message already exists
+            WindowsFactory<EveMessageWindow>.ShowByTag(message);
+        }
+
+        /// <summary>
+        /// Tries to open the selected mail in EVE Gate.
+        /// </summary>
+        private void ReadMailExternal()
+        {
+            ListViewItem item = lvMailMessages.SelectedItems[0];
+            EveMailMessage message = (EveMailMessage)item.Tag;
+            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(NetworkConstants.EVEGateMailOpen, message.MessageID)));
+        }
+
+        /// <summary>
+        /// Tries to reply the selected mail in EVE Gate.
+        /// </summary>
+        private void ReplyMailExternal()
+        {
+            ListViewItem item = lvMailMessages.SelectedItems[0];
+            EveMailMessage message = (EveMailMessage)item.Tag;
+            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(NetworkConstants.EVEGateMailReply, message.MessageID)));
+        }
+
+        /// <summary>
+        /// Tries to reply the selected mail in EVE Gate (reply to all).
+        /// </summary>
+        private void ReplyAllMailExternal()
+        {
+            ListViewItem item = lvMailMessages.SelectedItems[0];
+            EveMailMessage message = (EveMailMessage)item.Tag;
+            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(NetworkConstants.EVEGateMailReplyAll, message.MessageID)));
+        }
+
+        /// <summary>
+        /// Tries to forward the selected mail in EVE Gate.
+        /// </summary>
+        private void ForwardMailExternal()
+        {
+            ListViewItem item = lvMailMessages.SelectedItems[0];
+            EveMailMessage message = (EveMailMessage)item.Tag;
+            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(NetworkConstants.EVEGateMailForward, message.MessageID)));
+        }
+
+        /// <summary>
         /// Checks the given text matches the item.
         /// </summary>
         /// <param name="x">The x.</param>
@@ -571,6 +631,16 @@ namespace EVEMon
 
 
         #region Local Event Handlers
+
+        /// <summary>
+        /// Shows the context menu only when a message is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = lvMailMessages.SelectedItems.Count == 0;
+        }
 
         /// <summary>
         /// Handles the MouseHover event of the lvMailMessages control.
@@ -628,15 +698,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void lvMailMessages_DoubleClick(object sender, EventArgs e)
         {
-            ListViewItem item = lvMailMessages.SelectedItems[0];
-            EveMailMessage message = (EveMailMessage)item.Tag;
-
-            // Quit if we haven't downloaded the mail message body yet
-            if (message.EVEMailBody == null)
-                return;
-
-            // Show or bring to front if a window with the same EVE mail message already exists
-            WindowsFactory<EveMessageWindow>.ShowByTag(message);
+            ReadMailLocal();
         }
 
         /// <summary>
@@ -680,6 +742,56 @@ namespace EVEMon
             }
 
             UpdateContent();
+        }
+
+        /// <summary>
+        /// Picking "Open mail" in the context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mailReadLocal_Click(object sender, EventArgs e)
+        {
+            ReadMailLocal();
+        }
+
+        /// <summary>
+        /// Picking "Open" in the EVE Gate context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mailGateRead_Click(object sender, EventArgs e)
+        {
+            ReadMailExternal();
+        }
+
+        /// <summary>
+        /// Picking "Reply" in the EVE Gate context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mailGateReply_Click(object sender, EventArgs e)
+        {
+            ReplyMailExternal();
+        }
+
+        /// <summary>
+        /// Picking "Reply all" in the EVE Gate context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mailGateReplyAll_Click(object sender, EventArgs e)
+        {
+            ReplyAllMailExternal();
+        }
+
+        /// <summary>
+        /// Picking "Forward" in the EVE Gate context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mailGateForward_Click(object sender, EventArgs e)
+        {
+            ForwardMailExternal();
         }
 
         # endregion

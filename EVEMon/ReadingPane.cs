@@ -62,7 +62,7 @@ namespace EVEMon
 
             // Parce the mail body text to the web browser
             // so for the text to be formatted accordingly
-            wbMailBody.DocumentText = SpecialFormattedTextForLinks();
+            wbMailBody.DocumentText = TidyUpHTML();
 
             // We need to wait for the Document to be loaded
             do
@@ -76,26 +76,42 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Formats the text in a special way to enable tooltip when mouse is over a link.
+        /// Prepares the text to be shown as common HTML.
         /// </summary>
         /// <returns></returns>
-        private string SpecialFormattedTextForLinks()
+        private string TidyUpHTML()
         {
-            Dictionary<string, string> links = new Dictionary<string, string>();
+            Dictionary<string, string> replacements = new Dictionary<string, string>();
 
-            Regex regex = new Regex(@"<a\shref=""(.+?)"">.+?</a>", RegexOptions.IgnoreCase);
+            Regex regex = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.IgnoreCase);
             foreach (Match match in regex.Matches(m_selectedObject.Text))
             {
                 string matchValue = match.Groups[1].Value;
+                string matchText = match.Groups[2].Value;
+                string url = String.Empty;
+
                 if (matchValue.StartsWith("http://") || matchValue.StartsWith("https://"))
+                    url = matchValue;
+
+                if (matchValue.StartsWith("showinfo:"))
                 {
-                    links[match.ToString()] = String.Format("<span title=\"{0}{1}Click to follow link\">{2}</span>",
-                                                            matchValue, Environment.NewLine, match);
+                    url = String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                        String.Format(NetworkConstants.EveGateCharacterProfile,
+                                                      Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                 }
+
+                replacements[match.ToString()] = String.Format("<a href=\"{0}\" title=\"{0}{1}Click to follow link\">{2}</a>",
+                                                               url, Environment.NewLine, matchText);
             }
 
-            return links.Aggregate(m_selectedObject.Text,
-                                   (specialFormattedText, link) => specialFormattedText.Replace(link.Key, link.Value));
+            Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.IgnoreCase);
+            foreach (Match match in regexColor.Matches(m_selectedObject.Text))
+            {
+                replacements[match.ToString()] = String.Format("color=\"#{0}\"", match.Groups[1].Value);
+            }
+
+            return replacements.Aggregate(m_selectedObject.Text,
+                                   (specialFormattedText, replacement) => specialFormattedText.Replace(replacement.Key, replacement.Value));
         }
 
         /// <summary>

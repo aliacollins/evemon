@@ -32,6 +32,14 @@ namespace EVEMon
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowEveMailMessagesList));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noEVEMailMessagesLabel = new System.Windows.Forms.Label();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mailReadLocal = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailOpenExternal = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailGateRead = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailGateSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mailGateReply = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailGateReplyAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailGateForward = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMailMessages = new EVEMon.Common.Controls.SplitContainerMinFixed();
             this.lvMailMessages = new System.Windows.Forms.ListView();
             this.chSenderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,6 +50,7 @@ namespace EVEMon
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.eveMailReadingPane = new EVEMon.ReadingPane();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
             this.splitContainerMailMessages.Panel2.SuspendLayout();
@@ -66,6 +75,69 @@ namespace EVEMon
             this.noEVEMailMessagesLabel.TabIndex = 1;
             this.noEVEMailMessagesLabel.Text = "No EVE mail messages are available.";
             this.noEVEMailMessagesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mailReadLocal,
+            this.mailOpenExternal});
+            this.contextMenu.Name = "mailListContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(180, 70);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // mailReadLocal
+            // 
+            this.mailReadLocal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.mailReadLocal.Name = "mailReadLocal";
+            this.mailReadLocal.Size = new System.Drawing.Size(179, 22);
+            this.mailReadLocal.Text = "Read";
+            this.mailReadLocal.Click += new System.EventHandler(this.mailReadLocal_Click);
+            // 
+            // mailOpenExternal
+            // 
+            this.mailOpenExternal.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mailGateRead,
+            this.mailGateSep1,
+            this.mailGateReply,
+            this.mailGateReplyAll,
+            this.mailGateForward});
+            this.mailOpenExternal.Name = "mailOpenExternal";
+            this.mailOpenExternal.Size = new System.Drawing.Size(179, 22);
+            this.mailOpenExternal.Text = "Open in EVE Gate to";
+            // 
+            // mailGateRead
+            // 
+            this.mailGateRead.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.mailGateRead.Name = "mailGateRead";
+            this.mailGateRead.Size = new System.Drawing.Size(152, 22);
+            this.mailGateRead.Text = "Read";
+            this.mailGateRead.Click += new System.EventHandler(this.mailGateRead_Click);
+            // 
+            // mailGateSep1
+            // 
+            this.mailGateSep1.Name = "mailGateSep1";
+            this.mailGateSep1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // mailGateReply
+            // 
+            this.mailGateReply.Name = "mailGateReply";
+            this.mailGateReply.Size = new System.Drawing.Size(152, 22);
+            this.mailGateReply.Text = "Reply";
+            this.mailGateReply.Click += new System.EventHandler(this.mailGateReply_Click);
+            // 
+            // mailGateReplyAll
+            // 
+            this.mailGateReplyAll.Name = "mailGateReplyAll";
+            this.mailGateReplyAll.Size = new System.Drawing.Size(152, 22);
+            this.mailGateReplyAll.Text = "Reply all";
+            this.mailGateReplyAll.Click += new System.EventHandler(this.mailGateReplyAll_Click);
+            // 
+            // mailGateForward
+            // 
+            this.mailGateForward.Name = "mailGateForward";
+            this.mailGateForward.Size = new System.Drawing.Size(152, 22);
+            this.mailGateForward.Text = "Forward";
+            this.mailGateForward.Click += new System.EventHandler(this.mailGateForward_Click);
             // 
             // splitContainerMailMessages
             // 
@@ -97,6 +169,7 @@ namespace EVEMon
             this.chToCharacterIDs,
             this.chToCorpOrAlliance,
             this.chToListID});
+            this.lvMailMessages.ContextMenuStrip = this.contextMenu;
             this.lvMailMessages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvMailMessages.FullRowSelect = true;
             this.lvMailMessages.HideSelection = false;
@@ -162,6 +235,7 @@ namespace EVEMon
             this.Name = "MainWindowEveMailMessagesList";
             this.Size = new System.Drawing.Size(454, 434);
             this.Resize += new System.EventHandler(this.MainWindowEVEMailMessagesList_Resize);
+            this.contextMenu.ResumeLayout(false);
             this.splitContainerMailMessages.Panel1.ResumeLayout(false);
             this.splitContainerMailMessages.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).EndInit();
@@ -184,5 +258,13 @@ namespace EVEMon
         protected internal System.Windows.Forms.ListView lvMailMessages;
         private System.Windows.Forms.Timer timer;
         private ReadingPane eveMailReadingPane;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem mailReadLocal;
+        private System.Windows.Forms.ToolStripMenuItem mailOpenExternal;
+        private System.Windows.Forms.ToolStripMenuItem mailGateRead;
+        private System.Windows.Forms.ToolStripSeparator mailGateSep1;
+        private System.Windows.Forms.ToolStripMenuItem mailGateReply;
+        private System.Windows.Forms.ToolStripMenuItem mailGateReplyAll;
+        private System.Windows.Forms.ToolStripMenuItem mailGateForward;
     }
 }
