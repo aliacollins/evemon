@@ -796,23 +796,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Sql.Server.Express.1.0">
-      <Visible>False</Visible>
-      <ProductName>SQL Server 2005 Express Edition</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Controls\ApiErrorTroubleshooter.resx">
       <DependentUpon>ApiErrorTroubleshooter.cs</DependentUpon>
     </EmbeddedResource>
@@ -855,6 +838,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt" />
+    <EmbeddedResource Include="Serialization\Datafiles\datafile-transform.xslt" />
     <EmbeddedResource Include="Serialization\Datafiles\DatafileConstants.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DatafileConstants.Designer.cs</LastGenOutput>
@@ -996,7 +980,6 @@
     <Content Include="Resources\Audio\SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\info_balloon.png" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
   </ItemGroup>

@@ -136,20 +136,44 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the datafile</typeparam>
         /// <param name="filename">The datafile name</param>
+        /// <param name="transform"></param>
         /// <returns></returns>
-        internal static T DeserializeDatafile<T>(string filename)
+        internal static T DeserializeDatafile<T>(string filename, XslCompiledTransform transform = null)
         {
             // Gets the full path
             string path = Datafile.GetFullPath(filename);
 
             try
             {
-                // Deserializes
                 using (Stream s = FileHelper.OpenRead(path, false))
                 {
                     using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                     {
                         XmlSerializer xs = new XmlSerializer(typeof(T));
+
+                        // Deserialization with transform
+                        if (transform != null)
+                        {
+                            using (XmlTextReader reader = new XmlTextReader(zs))
+                            {
+                                using (MemoryStream stream = new MemoryStream())
+                                {
+                                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
+                                    {
+                                        // Apply the XSL transform
+                                        writer.Formatting = Formatting.Indented;
+                                        transform.Transform(reader, writer);
+                                        writer.Flush();
+
+                                        // Deserialize from the given stream
+                                        stream.Seek(0, SeekOrigin.Begin);
+                                        return (T)xs.Deserialize(stream);
+                                    }
+                                }
+                            }
+                        }
+
+                        // Deserialization without transform
                         return (T)xs.Deserialize(zs);
                     }
                 }

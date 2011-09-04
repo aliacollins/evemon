@@ -10,7 +10,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         [XmlAttribute("id")]
         public int ID { get; set; }
 
-        [XmlAttribute("Name")]
+        [XmlAttribute("name")]
         public string Name { get; set; }
 
         [XmlArray("items")]
