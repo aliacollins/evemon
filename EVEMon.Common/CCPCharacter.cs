@@ -93,15 +93,18 @@ namespace EVEMon.Common
             m_corpIndustryJobsMonitor.Updated += OnCorporationJobsUpdated;
             QueryMonitors.Add(m_corpIndustryJobsMonitor);
 
-            m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearch>(this, APIMethods.ResearchPoints);
+            m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearch>(this, APIMethods.ResearchPoints)
+                                              { QueryOnStartup = true };
             m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
             QueryMonitors.Add(m_charResearchPointsMonitor);
 
-            m_charEVEMailMessagesMonitor = new CharacterQueryMonitor<SerializableAPIMailMessages>(this, APIMethods.MailMessages);
+            m_charEVEMailMessagesMonitor = new CharacterQueryMonitor<SerializableAPIMailMessages>(this, APIMethods.MailMessages)
+                                               { QueryOnStartup = true };
             m_charEVEMailMessagesMonitor.Updated += OnCharacterEVEMailMessagesUpdated;
             QueryMonitors.Add(m_charEVEMailMessagesMonitor);
 
-            m_charEVENotificationsMonitor = new CharacterQueryMonitor<SerializableAPINotifications>(this, APIMethods.Notifications);
+            m_charEVENotificationsMonitor = new CharacterQueryMonitor<SerializableAPINotifications>(this, APIMethods.Notifications)
+                                                { QueryOnStartup = true };
             m_charEVENotificationsMonitor.Updated += OnCharacterEVENotificationsUpdated;
             QueryMonitors.Add(m_charEVENotificationsMonitor);
 
@@ -250,7 +253,7 @@ namespace EVEMon.Common
         #region Importing & Exporting
 
         /// <summary>
-        /// Create a serializable character sheet for this character
+        /// Create a serializable character sheet for this character.
         /// </summary>
         /// <returns></returns>
         public override SerializableSettingsCharacter Export()
@@ -270,9 +273,6 @@ namespace EVEMon.Common
             // Industry jobs
             serial.IndustryJobs = IndustryJobs.Export();
 
-            // Research points
-            serial.ResearchPoints = ResearchPoints.Export();
-
             // Eve mail messages IDs
             serial.EveMailMessagesIDs = EVEMailMessages.Export();
 
@@ -280,11 +280,12 @@ namespace EVEMon.Common
             serial.EveNotificationsIDs = EVENotifications.Export();
 
             // Last API updates
-            foreach (SerializableAPIUpdate update in QueryMonitors.Select(monitor => new SerializableAPIUpdate
-                                                                                         {
-                                                                                             Method = monitor.Method,
-                                                                                             Time = monitor.LastUpdate
-                                                                                         }))
+            foreach (SerializableAPIUpdate update in QueryMonitors.Select(
+                monitor => new SerializableAPIUpdate
+                               {
+                                   Method = monitor.Method,
+                                   Time = monitor.LastUpdate
+                               }))
             {
                 serial.LastUpdates.Add(update);
             }
@@ -312,9 +313,6 @@ namespace EVEMon.Common
 
             // Industry jobs
             IndustryJobs.Import(serial.IndustryJobs);
-
-            // Research points
-            ResearchPoints.Import(serial.ResearchPoints);
 
             // EVE mail messages IDs
             EVEMailMessages.Import(serial.EveMailMessagesIDs);

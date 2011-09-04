@@ -12,6 +12,11 @@ namespace EVEMon.Common
         bool Enabled { get; set; }
 
         /// <summary>
+        /// Gets true whether the monitor has to do a query on application startup.
+        /// </summary>
+        bool QueryOnStartup { get; }
+
+        /// <summary>
         /// Gets the status of the query.
         /// </summary>
         QueryStatus Status { get; }

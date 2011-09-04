@@ -34,22 +34,6 @@ namespace EVEMon.Common
             m_remainderPoints = src.RemainderPoints;
         }
 
-        /// <summary>
-        /// Constructor from an object deserialized from the settings file.
-        /// </summary>
-        /// <param name="src"></param>
-        internal ResearchPoint(SerializableResearchPoint src)
-        {
-            GetAgentInfoByID(src.AgentID);
-
-            AgentID = src.AgentID;
-            m_skillID = src.SkillID;
-            Field = src.SkillName;
-            StartDate = src.StartDate;
-            PointsPerDay = src.PointsPerDay;
-            m_remainderPoints = src.RemainderPoints;
-        }
-
         #endregion
 
 
@@ -122,28 +106,6 @@ namespace EVEMon.Common
             AgentLevel = agent.Level;
             AgentQuality = agent.Quality;
             Station = StaticGeography.GetStationByID(agent.Station.ID);
-        }
-
-        #endregion
-
-
-        #region Export Method
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        internal SerializableResearchPoint Export()
-        {
-            return new SerializableResearchPoint
-                       {
-                           AgentID = AgentID,
-                           AgentName = AgentName,
-                           SkillID = m_skillID,
-                           SkillName = Field,
-                           StartDate = StartDate,
-                           PointsPerDay = PointsPerDay,
-                           RemainderPoints = m_remainderPoints
-                       };
         }
 
         #endregion

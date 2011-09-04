@@ -33,6 +33,7 @@ namespace EVEMon.Common
             m_forceUpdate = true;
             Method = method;
             Enabled = true;
+            QueryOnStartup = false;
 
             NetworkMonitor.Register(this);
         }
@@ -41,6 +42,11 @@ namespace EVEMon.Common
         /// Gets true if the query is enabled.
         /// </summary>
         public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Gets true whether the monitor has to do a query on application startup.
+        /// </summary>
+        public bool QueryOnStartup { get; set; }
 
         /// <summary>
         /// Gets the API method monitored by this instance.

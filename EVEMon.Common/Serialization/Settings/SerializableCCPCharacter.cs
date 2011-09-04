@@ -16,7 +16,6 @@ namespace EVEMon.Common.Serialization.Settings
             Standings = new List<SerializableStanding>();
             MarketOrders = new List<SerializableOrderBase>();
             IndustryJobs = new List<SerializableJob>();
-            ResearchPoints = new List<SerializableResearchPoint>();
         }
 
         [XmlArray("queue")]
@@ -35,10 +34,6 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlArray("industryJobs")]
         [XmlArrayItem("job")]
         public List<SerializableJob> IndustryJobs { get; set; }
-
-        [XmlArray("researchPoints")]
-        [XmlArrayItem("researchPoint")]
-        public List<SerializableResearchPoint> ResearchPoints { get; set; }
 
         [XmlElement("eveMailMessages")]
         public string EveMailMessagesIDs { get; set; }

@@ -374,7 +374,6 @@
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializablePlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableRemappingPoint.cs" />
-    <Compile Include="Serialization\Settings\SerializableResearchPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableSettings.cs" />
     <Compile Include="Serialization\Settings\SerializableUriCharacter.cs" />
     <Compile Include="Settings.cs" />

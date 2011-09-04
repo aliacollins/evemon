@@ -387,10 +387,7 @@ namespace EVEMon
                     monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
                 }
 
-                if (monitor.Method == APIMethods.MailMessages && monitor.Enabled && monitor.LastResult == null)
-                    ccpCharacter.ForceUpdate(monitor);
-
-                if (monitor.Method == APIMethods.Notifications && monitor.Enabled && monitor.LastResult == null)
+                if (monitor.QueryOnStartup && monitor.Enabled && monitor.LastResult == null)
                     ccpCharacter.ForceUpdate(monitor);
             }
         }

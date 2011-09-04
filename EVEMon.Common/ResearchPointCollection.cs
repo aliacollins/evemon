@@ -19,20 +19,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports an enumeration of serialization objects.
-        /// </summary>
-        /// <param name="src"></param>
-        internal void Import(IEnumerable<SerializableResearchPoint> src)
-        {
-            Items.Clear();
-
-            foreach (SerializableResearchPoint srcResearchPoint in src)
-            {
-                Items.Add(new ResearchPoint(srcResearchPoint));
-            }
-        }
-
-        /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable research points from the API.</param>
@@ -48,17 +34,6 @@ namespace EVEMon.Common
 
             // Fires the event regarding research points update
             EveMonClient.OnCharacterResearchPointsUpdated(m_character);
-        }
-
-        /// <summary>
-        /// Exports the research points to a serialization object for the settings file.
-        /// </summary>
-        /// <returns>List of serializable research points.</returns>
-        internal List<SerializableResearchPoint> Export()
-        {
-            List<SerializableResearchPoint> serial = new List<SerializableResearchPoint>(Items.Count);
-            serial.AddRange(Items.Select(researchPoint => researchPoint.Export()));
-            return serial;
         }
     }
 }
