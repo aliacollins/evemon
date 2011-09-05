@@ -94,6 +94,7 @@ namespace EVEMon
         private void EveMonClient_CharacterEVEMailBodyDownloaded(object sender, CharacterChangedEventArgs e)
         {
             throbber.State = ThrobberState.Stopped;
+            throbber.Visible = false;
             readingPane.SelectedObject = (EveMailMessage)Tag;
         }
 
@@ -105,6 +106,7 @@ namespace EVEMon
         private void EveMonClient_CharacterEVENotificationTextDownloaded(object sender, CharacterChangedEventArgs e)
         {
             throbber.State = ThrobberState.Stopped;
+            throbber.Visible = false;
             readingPane.SelectedObject = (EveNotification)Tag;
         }
 
