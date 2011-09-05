@@ -18,7 +18,7 @@ namespace EVEMon.Common
         /// Gets or sets the message ID.
         /// </summary>
         /// <value>The message ID.</value>
-        private long MessageID { get; set; }
+        public long MessageID { get; private set; }
 
         /// <summary>
         /// Gets or sets the body text.

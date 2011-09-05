@@ -28,8 +28,22 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
+            this.throbber = new EVEMon.Common.Controls.Throbber();
             this.readingPane = new EVEMon.ReadingPane();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
+            // 
+            // throbber
+            // 
+            this.throbber.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.throbber.Location = new System.Drawing.Point(195, 104);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbber.TabIndex = 1;
+            this.throbber.TabStop = false;
             // 
             // readingPane
             // 
@@ -46,10 +60,12 @@ namespace EVEMon
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(414, 232);
             this.Controls.Add(this.readingPane);
+            this.Controls.Add(this.throbber);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(400, 250);
             this.Name = "EveMessageWindow";
             this.Text = "EVE Mail Message";
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -57,5 +73,6 @@ namespace EVEMon
         #endregion
 
         private ReadingPane readingPane;
+        private Common.Controls.Throbber throbber;
     }
 }

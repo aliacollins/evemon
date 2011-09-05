@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
@@ -52,6 +54,7 @@ namespace EVEMon
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
             EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             Disposed += OnDisposed;
         }
 
@@ -176,6 +179,7 @@ namespace EVEMon
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
             EveMonClient.CharacterEVEMailBodyDownloaded -= EveMonClient_CharacterEVEMailBodyDownloaded;
+            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             Disposed -= OnDisposed;
         }
 
@@ -525,10 +529,6 @@ namespace EVEMon
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
 
-            // Quit if we haven't downloaded the mail message body yet
-            if (message.EVEMailBody == null)
-                return;
-
             // Show or bring to front if a window with the same EVE mail message already exists
             WindowsFactory<EveMessageWindow>.ShowByTag(message);
         }
@@ -592,7 +592,7 @@ namespace EVEMon
                    || x.Title.ToLowerInvariant().Contains(text)
                    || x.ToCorpOrAlliance.ToLowerInvariant().Contains(text)
                    || x.ToCharacters.Any(y => y.ToLowerInvariant().Contains(text))
-                   || (x.EVEMailBody != null && x.EVEMailBody.BodyText.ToLowerInvariant().Contains(text));
+                   || (x.EVEMailBody.BodyText.ToLowerInvariant().Contains(text));
         }
 
         /// <summary>
@@ -614,13 +614,9 @@ namespace EVEMon
             }
 
             // If we haven't done it yet, download the mail body
-            if (selectedObject.EVEMailBody == null)
-                selectedObject.GetMailBody();
-
-            // In case there was an error, hide the pane and quit
-            if (selectedObject.EVEMailBody == null)
+            if (selectedObject.EVEMailBody.MessageID == 0)
             {
-                eveMailReadingPane.HidePane();
+                selectedObject.GetMailBody();
                 return;
             }
 
@@ -844,6 +840,24 @@ namespace EVEMon
                 return;
 
             OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Handles the NotificationSent event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
+        {
+            if (!(e is APIErrorNotificationEventArgs))
+                return;
+
+            if (!(((APIErrorNotificationEventArgs)e).Result is APIResult<SerializableAPIMailBodies>))
+                return;
+
+            // In case there was an error, hide the pane
+            if (((APIErrorNotificationEventArgs)e).Result.HasError)
+                eveMailReadingPane.HidePane();
         }
 
         # endregion

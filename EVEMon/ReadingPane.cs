@@ -43,8 +43,7 @@ namespace EVEMon
         /// </summary>
         internal void HidePane()
         {
-            flPanelHeader.Visible = false;
-            wbMailBody.Visible = false;
+            Visible = false;
         }
 
         /// <summary>
@@ -71,8 +70,9 @@ namespace EVEMon
             } while (wbMailBody.IsBusy);
 
             // Show the controls
-            flPanelHeader.Visible = true;
-            wbMailBody.Visible = true;
+            Visible = ((m_selectedObject is EveMailMessage) && ((EveMailMessage)m_selectedObject).EVEMailBody.MessageID != 0)
+                      || ((m_selectedObject is EveNotification) &&
+                          ((EveNotification)m_selectedObject).EVENotificationText.NotificationID != 0);
         }
 
         /// <summary>

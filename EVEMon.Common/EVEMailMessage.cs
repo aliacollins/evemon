@@ -34,6 +34,11 @@ namespace EVEMon.Common
             ToCharacters = GetIDsToNames(src.ToCharacterIDs);
             ToMailingLists = GetMailingListIDsToNames(src.ToListID);
             Recipient = GetRecipient();
+            EVEMailBody = new EveMailBody(new SerializableMailBodiesListItem
+                                              {
+                                                  MessageID = 0,
+                                                  MessageText = String.Empty
+                                              });
         }
 
         #endregion

@@ -19,7 +19,7 @@ namespace EVEMon.Common
         /// Gets or sets the notification ID.
         /// </summary>
         /// <value>The notification ID.</value>
-        public long NotificationID { get; set; }
+        public long NotificationID { get; private set; }
 
         /// <summary>
         /// Gets or sets the notification text.
@@ -27,6 +27,11 @@ namespace EVEMon.Common
         /// <value>The notification text.</value>
         public string NotificationText { get; private set; }
 
+        /// <summary>
+        /// Converts new lines to break lines.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
         private static string NewLinesToBreakLines(string text)
         {
             StringReader sr = new StringReader(text);

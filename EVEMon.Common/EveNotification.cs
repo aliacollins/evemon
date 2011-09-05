@@ -27,6 +27,11 @@ namespace EVEMon.Common
             Sender = GetIDToName(src.SenderID);
             SentDate = src.SentDate;
             Recipient = GetRecipient();
+            EVENotificationText = new EveNotificationText(new SerializableNotificationTextsListItem
+                                                              {
+                                                                  NotificationID = 0,
+                                                                  NotificationText = String.Empty
+                                                              });
         }
 
         #endregion

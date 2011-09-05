@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
@@ -52,6 +54,7 @@ namespace EVEMon
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
             EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             Disposed += OnDisposed;
         }
 
@@ -176,6 +179,7 @@ namespace EVEMon
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_CharacterEVENotificationsUpdated;
             EveMonClient.CharacterEVENotificationTextDownloaded -= EveMonClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             Disposed -= OnDisposed;
         }
 
@@ -481,7 +485,7 @@ namespace EVEMon
             return String.IsNullOrEmpty(text)
                    || x.Sender.ToLowerInvariant().Contains(text)
                    || x.Type.ToLowerInvariant().Contains(text)
-                   || (x.EVENotificationText != null && x.EVENotificationText.NotificationText.ToLowerInvariant().Contains(text));
+                   || (x.EVENotificationText.NotificationText.ToLowerInvariant().Contains(text));
         }
 
         /// <summary>
@@ -502,14 +506,10 @@ namespace EVEMon
                 return;
             }
 
-            // If we haven't done it yet, download the mail body
-            if (selectedObject.EVENotificationText == null)
-                selectedObject.GetNotificationText();
-
-            // In case there was an error, hide the pane and quit
-            if (selectedObject.EVENotificationText == null)
+            // If we haven't done it yet, download the notification text
+            if (selectedObject.EVENotificationText.NotificationID == 0)
             {
-                eveNotificationReadingPane.HidePane();
+                selectedObject.GetNotificationText();
                 return;
             }
 
@@ -681,6 +681,24 @@ namespace EVEMon
                 return;
 
             OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Handles the NotificationSent event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
+        {
+            if (!(e is APIErrorNotificationEventArgs))
+                return;
+
+            if (!(((APIErrorNotificationEventArgs)e).Result is APIResult<SerializableAPINotificationTexts>))
+                return;
+
+            // In case there was an error, hide the pane
+            if (((APIErrorNotificationEventArgs)e).Result.HasError)
+                eveNotificationReadingPane.HidePane();
         }
 
         # endregion
