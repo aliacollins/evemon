@@ -421,11 +421,29 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /Alliance/{0}.
+        /// </summary>
+        public static string EveGateAllianceProfile {
+            get {
+                return ResourceManager.GetString("EveGateAllianceProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /Profile/{0}.
         /// </summary>
         public static string EveGateCharacterProfile {
             get {
                 return ResourceManager.GetString("EveGateCharacterProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /Corporation/{0}.
+        /// </summary>
+        public static string EveGateCorporationProfile {
+            get {
+                return ResourceManager.GetString("EveGateCorporationProfile", resourceCulture);
             }
         }
         

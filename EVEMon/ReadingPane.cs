@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Data;
 
 namespace EVEMon
 {
@@ -83,35 +84,101 @@ namespace EVEMon
         {
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
-            Regex regex = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.IgnoreCase);
-            foreach (Match match in regex.Matches(m_selectedObject.Text))
+            FormatLinks(replacements);
+
+            FormatColorToRGB(replacements);
+
+            return replacements.Aggregate(m_selectedObject.Text,
+                                          (specialFormattedText, replacement) =>
+                                          specialFormattedText.Replace(replacement.Key, replacement.Value));
+        }
+
+        /// <summary>
+        /// Formats the links.
+        /// </summary>
+        /// <param name="replacements">The replacements.</param>
+        private void FormatLinks(IDictionary<string, string> replacements)
+        {
+            // Regural expression for all HTML links
+            Regex regexLinks = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.IgnoreCase);
+
+            // Regural expression for all showinfo URLs
+            Regex regexShowInfo = new Regex(@"^showinfo:(\d+)//(\d+)$");
+
+            // Regural expression for clickable/valid URLs
+            Regex regexWebProtocol = new Regex(@"(?:f|ht)tps?://", RegexOptions.IgnoreCase);
+
+            foreach (Match match in regexLinks.Matches(m_selectedObject.Text))
             {
                 string matchValue = match.Groups[1].Value;
                 string matchText = match.Groups[2].Value;
                 string url = String.Empty;
+                Match showInfoMatch = regexShowInfo.Match(matchValue);
+                bool igbOnly = false;
 
-                if (matchValue.StartsWith("http://") || matchValue.StartsWith("https://"))
+                if (regexWebProtocol.IsMatch(matchValue))
                     url = matchValue;
-
-                if (matchValue.StartsWith("showinfo:"))
+                else if (showInfoMatch.Success)
                 {
-                    url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                        String.Format(NetworkConstants.EveGateCharacterProfile,
-                                                      Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                    long typeID = Convert.ToInt64(showInfoMatch.Groups[1].Value);
+
+                    if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
+                    {
+                        url = String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                            String.Format(NetworkConstants.EveGateCharacterProfile,
+                                                          Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                    }
+                    else
+                    {
+                        switch (typeID)
+                        {
+                            case DBConstants.AllianceID:
+                                url = String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                                    String.Format(NetworkConstants.EveGateAllianceProfile,
+                                                                  Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                                break;
+                            case DBConstants.CorporationID:
+                                url = String.Format("{0}{1}", NetworkConstants.EVEGate,
+                                                    String.Format(NetworkConstants.EveGateCorporationProfile,
+                                                                  Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                                break;
+                            default:
+                                igbOnly = true;
+                                break;
+                        }
+                    }
                 }
+                else
+                    igbOnly = true;
 
-                replacements[match.ToString()] = String.Format("<a href=\"{0}\" title=\"{0}{1}Click to follow link\">{2}</a>",
-                                                               url, Environment.NewLine, matchText);
+                if (!igbOnly)
+                {
+                    replacements[match.ToString()] =
+                        String.Format("<a href=\"{0}\" title=\"{0}{2}Click to follow the link\">{1}</a>",
+                                      url, matchText, Environment.NewLine);
+                }
+                else
+                {
+                    replacements[match.ToString()] =
+                        String.Format(
+                            "<span style=\"color: #000000; text-decoration: underline; cursor: pointer;\" title=\"{0}{2}Link works only in IGB\">{1}</span>",
+                            matchValue, matchText, Environment.NewLine);
+                }
             }
+        }
 
+        /// <summary>
+        /// Formats the color to RGB.
+        /// </summary>
+        /// <param name="replacements">The replacements.</param>
+        private void FormatColorToRGB(IDictionary<string, string> replacements)
+        {
+            // Regural expression for fixing text coloring
             Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.IgnoreCase);
             foreach (Match match in regexColor.Matches(m_selectedObject.Text))
             {
                 replacements[match.ToString()] = String.Format("color=\"#{0}\"", match.Groups[1].Value);
             }
-
-            return replacements.Aggregate(m_selectedObject.Text,
-                                   (specialFormattedText, replacement) => specialFormattedText.Replace(replacement.Key, replacement.Value));
         }
 
         /// <summary>

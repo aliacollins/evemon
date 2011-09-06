@@ -282,4 +282,10 @@
   <data name="EveGateCharacterProfile" xml:space="preserve">
     <value>/Profile/{0}</value>
   </data>
+  <data name="EveGateAllianceProfile" xml:space="preserve">
+    <value>/Alliance/{0}</value>
+  </data>
+  <data name="EveGateCorporationProfile" xml:space="preserve">
+    <value>/Corporation/{0}</value>
+  </data>
 </root>

@@ -530,6 +530,7 @@
 
         #region Types IDs
 
+        public const int CorporationID = 2;
         public const int TemperatePlanetID = 11;
         public const int IcePlanetID = 12;
         public const int GasPlanetID = 13;
@@ -538,6 +539,8 @@
         public const int IbisID = 601;
         public const int VelatorID = 606;
         public const int CapsuleID = 670;
+        public const int CharacterAmarrID = 1373;
+        public const int CharacterVherokiorID = 1386;
         public const int OceanicPlanetID = 2014;
         public const int LavaPlanetID = 2015;
         public const int BarrenPlanetID = 2016;
@@ -578,6 +581,7 @@
         public const int AmarrFactoryOutpostPlatformID = 10260;
         public const int ScrapMetalProcessingSkillID = 12196;
         public const int MegathronFederateIssueID = 13202;
+        public const int AllianceID = 16159;
         public const int ProcurementSkillID = 16594;
         public const int DaytradingSkillID = 16595;
         public const int WholesaleSkillID = 16596;
