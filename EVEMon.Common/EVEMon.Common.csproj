@@ -227,6 +227,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlanPrinter.cs" />
+    <Compile Include="RemappingResult.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
       <DependentUpon>IconSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>

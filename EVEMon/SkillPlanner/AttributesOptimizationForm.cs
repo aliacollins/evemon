@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
             ManualRemappingPointEdition
         }
 
-        private readonly Dictionary<AttributesOptimizationControl, AttributesOptimizer.RemappingResult>
+        private readonly Dictionary<AttributesOptimizationControl, RemappingResult>
             m_remappingDictionary;
 
         private readonly BaseCharacter m_baseCharacter;
@@ -57,7 +57,7 @@ namespace EVEMon.SkillPlanner
 
         // Variables for manual edition of a plan
         private RemappingPoint m_manuallyEditedRemappingPoint;
-        private AttributesOptimizer.RemappingResult m_remapping;
+        private RemappingResult m_remapping;
 
         /// <summary>
         /// Constructor for designer.
@@ -65,7 +65,7 @@ namespace EVEMon.SkillPlanner
         private AttributesOptimizationForm()
         {
             InitializeComponent();
-            m_remappingDictionary = new Dictionary<AttributesOptimizationControl, AttributesOptimizer.RemappingResult>();
+            m_remappingDictionary = new Dictionary<AttributesOptimizationControl, RemappingResult>();
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace EVEMon.SkillPlanner
         private void Run()
         {
             // Compute best scratchpad
-            AttributesOptimizer.RemappingResult remapping = null;
-            List<AttributesOptimizer.RemappingResult> remappingList = null;
+            RemappingResult remapping = null;
+            List<RemappingResult> remappingList = null;
 
             switch (m_strategy)
             {
@@ -210,10 +210,10 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates controls on the form.
         /// </summary>
-        /// <param name="remapping">An <see cref="AttributesOptimizer.RemappingResult"/> object</param>
+        /// <param name="remapping">An <see cref="RemappingResult"/> object</param>
         /// <param name="remappingList">List of remappings</param>
-        private void UpdateForm(AttributesOptimizer.RemappingResult remapping,
-                                List<AttributesOptimizer.RemappingResult> remappingList)
+        private void UpdateForm(RemappingResult remapping,
+                                List<RemappingResult> remappingList)
         {
             // If the thread has been canceled, we stop right now to prevent an exception
             if (m_thread == null)
@@ -243,7 +243,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the UI once the computation has been done (for whole plan or character from birth)
         /// </summary>
         /// <param name="remapping"></param>
-        private void UpdateForRemapping(AttributesOptimizer.RemappingResult remapping)
+        private void UpdateForRemapping(RemappingResult remapping)
         {
             // Create control
             AttributesOptimizationControl ctl = CreateAttributesOptimizationControl(remapping, m_description);
@@ -255,7 +255,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the UI once the computations with remapping points strategy have been done.
         /// </summary>
         /// <param name="remappingList">The remapping list.</param>
-        private void UpdateForRemappingList(List<AttributesOptimizer.RemappingResult> remappingList)
+        private void UpdateForRemappingList(List<RemappingResult> remappingList)
         {
             // Display "no result" or "summary"
             if (remappingList.Count == 0)
@@ -272,7 +272,7 @@ namespace EVEMon.SkillPlanner
 
             // Adds a tab page for every remapping
             int index = 1;
-            foreach (AttributesOptimizer.RemappingResult remap in remappingList)
+            foreach (RemappingResult remap in remappingList)
             {
                 AddTabPage(remap, "#" + index, m_description);
                 index++;
@@ -286,7 +286,7 @@ namespace EVEMon.SkillPlanner
         /// Updates information in summary page.
         /// </summary>
         /// <param name="remappingList">List of remappings</param>
-        private void UpdateSummaryInformation(IEnumerable<AttributesOptimizer.RemappingResult> remappingList)
+        private void UpdateSummaryInformation(IEnumerable<RemappingResult> remappingList)
         {
             TimeSpan baseDuration = m_plan.GetTotalTime(m_character.After(m_plan.ChosenImplantSet), false);
             lvPoints.Items.Clear();
@@ -339,7 +339,7 @@ namespace EVEMon.SkillPlanner
 
             // Add pages and summary informations
             TimeSpan lastRemap = TimeSpan.Zero;
-            foreach (AttributesOptimizer.RemappingResult remap in remappingList)
+            foreach (RemappingResult remap in remappingList)
             {
                 AddSummaryForRemapping(remap, ref lastRemap);
             }
@@ -352,7 +352,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remap">Remapping object</param>
         /// <param name="lastRemap">Time of previous remapping</param>
-        private void AddSummaryForRemapping(AttributesOptimizer.RemappingResult remap, ref TimeSpan lastRemap)
+        private void AddSummaryForRemapping(RemappingResult remap, ref TimeSpan lastRemap)
         {
             // Create the group
             string text = String.Format(CultureConstants.DefaultCulture, "{0} at {1}", remap,
@@ -389,7 +389,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="remap"></param>
         /// <param name="group"></param>
         /// <param name="attrib"></param>
-        private void AddItemForAttribute(AttributesOptimizer.RemappingResult remap, ListViewGroup group,
+        private void AddItemForAttribute(RemappingResult remap, ListViewGroup group,
                                          EveAttribute attrib)
         {
             // Add the list view item for this attribute
@@ -403,7 +403,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="remapping">The remapping.</param>
         /// <param name="tabName">Name of the tab.</param>
         /// <param name="description">The description.</param>
-        private void AddTabPage(AttributesOptimizer.RemappingResult remapping, string tabName, string description)
+        private void AddTabPage(RemappingResult remapping, string tabName, string description)
         {
             AttributesOptimizationControl ctl = CreateAttributesOptimizationControl(remapping, description);
             m_remappingDictionary[ctl] = remapping;
@@ -421,7 +421,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="description">The description.</param>
         /// <returns>The created control.</returns>
         private AttributesOptimizationControl CreateAttributesOptimizationControl(
-            AttributesOptimizer.RemappingResult remapping, string description)
+            RemappingResult remapping, string description)
         {
             AttributesOptimizationControl ctl = new AttributesOptimizationControl(m_character, m_plan, remapping,
                                                                                   description);
@@ -441,7 +441,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="control"></param>
         /// <param name="remapping"></param>
         private void AttributesOptimizationControl_AttributeChanged(AttributesOptimizationControl control,
-                                                                    AttributesOptimizer.RemappingResult remapping)
+                                                                    RemappingResult remapping)
         {
             // Update the plan order's column
             if (m_planEditor == null)

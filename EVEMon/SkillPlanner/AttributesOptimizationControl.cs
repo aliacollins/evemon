@@ -11,8 +11,7 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     /// <param name="control">Source attribute optimization control</param>
     /// <param name="remapping">Current remapping in control</param>
-    public delegate void AttributeChangedHandler(
-        AttributesOptimizationControl control, AttributesOptimizer.RemappingResult remapping);
+    public delegate void AttributeChangedHandler(AttributesOptimizationControl control, RemappingResult remapping);
 
     /// <summary>
     /// Control that shows attribute remapping and allows to adjust it.
@@ -21,7 +20,7 @@ namespace EVEMon.SkillPlanner
     {
         private readonly Character m_character;
         private readonly BasePlan m_plan;
-        private readonly AttributesOptimizer.RemappingResult m_remapping;
+        private readonly RemappingResult m_remapping;
         private readonly string m_description;
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="remapping">Optimized remapping</param>
         /// <param name="description"></param>
         public AttributesOptimizationControl(Character character, BasePlan plan,
-                                             AttributesOptimizer.RemappingResult remapping, string description)
+                                             RemappingResult remapping, string description)
         {
             InitializeComponent();
 
@@ -73,7 +72,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="plan">Skill plan</param>
         /// <param name="remapping">Remapping with attributes and training time</param>
         /// <param name="description"></param>
-        private void UpdateControls(Character character, BasePlan plan, AttributesOptimizer.RemappingResult remapping,
+        private void UpdateControls(Character character, BasePlan plan, RemappingResult remapping,
                                     string description)
         {
             UpdateAttributeControls(remapping, EveAttribute.Perception, lbPER, pbPERRemappable, pbPERImplants);
@@ -120,8 +119,7 @@ namespace EVEMon.SkillPlanner
             int sparePoints = EveConstants.SpareAttributePointsOnRemap;
             for (int i = 0; i < 5; i++)
             {
-                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base) -
-                               EveConstants.CharacterBaseAttributePoints;
+                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base) - EveConstants.CharacterBaseAttributePoints;
             }
             pbUnassigned.Value = sparePoints;
 
@@ -137,7 +135,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="lb">Label control</param>
         /// <param name="pbRemappable">Attribute bar for remappable value</param>
         /// <param name="pbImplants">Attribute bar for implants</param>
-        private void UpdateAttributeControls(AttributesOptimizer.RemappingResult remapping,
+        private void UpdateAttributeControls(RemappingResult remapping,
                                              EveAttribute attrib,
                                              Label lb,
                                              AttributeBarControl pbRemappable,
@@ -171,8 +169,8 @@ namespace EVEMon.SkillPlanner
             scratchpad.Intelligence.Base = pbINTRemappable.Value + EveConstants.CharacterBaseAttributePoints;
 
             // Get remapping for provided attributes
-            AttributesOptimizer.RemappingResult manualRemapping = new AttributesOptimizer.RemappingResult(m_remapping,
-                                                                                                          scratchpad);
+            RemappingResult manualRemapping = new RemappingResult(m_remapping,
+                                                                  scratchpad);
             manualRemapping.Update();
             UpdateControls(m_character, m_plan, manualRemapping, m_description);
 
@@ -246,10 +244,7 @@ namespace EVEMon.SkillPlanner
         private void buttonCurrent_Click(object sender, EventArgs e)
         {
             // Make unoptimized remap
-            AttributesOptimizer.RemappingResult zeroRemapping = new AttributesOptimizer.RemappingResult(m_remapping,
-                                                                                                        m_remapping.
-                                                                                                            BaseScratchpad
-                                                                                                            .Clone());
+            RemappingResult zeroRemapping = new RemappingResult(m_remapping, m_remapping.BaseScratchpad.Clone());
             zeroRemapping.Update();
 
             // Update the controls
@@ -309,8 +304,7 @@ namespace EVEMon.SkillPlanner
                 scratchpad[(EveAttribute)i].Base = point[(EveAttribute)i];
             }
 
-            AttributesOptimizer.RemappingResult remapping = new AttributesOptimizer.RemappingResult(m_remapping,
-                                                                                                    scratchpad);
+            RemappingResult remapping = new RemappingResult(m_remapping, scratchpad);
             remapping.Update();
 
             // Update the controls
