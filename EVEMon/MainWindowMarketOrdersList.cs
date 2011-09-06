@@ -647,7 +647,6 @@ namespace EVEMon
                     }
                     break;
                 default:
-                    //return;
                     throw new NotImplementedException();
             }
         }

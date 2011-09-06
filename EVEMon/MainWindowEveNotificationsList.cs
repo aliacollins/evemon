@@ -44,6 +44,7 @@ namespace EVEMon
 
             eveNotificationReadingPane.HidePane();
             splitContainerNotifications.Visible = false;
+            lvNotifications.Visible = false;
             lvNotifications.AllowColumnReorder = true;
             lvNotifications.Columns.Clear();
 
@@ -233,7 +234,7 @@ namespace EVEMon
                 {
                     ColumnHeader header = lvNotifications.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(),
                                                                       column.Width);
-                    header.Tag = (object)column.Column;
+                    header.Tag = column.Column;
                 }
 
                 // We update the content
@@ -330,8 +331,10 @@ namespace EVEMon
                 // Display or hide the "no EVE mail messages" label
                 if (m_init)
                 {
-                    noEVENotificationsLabel.Visible = eveNotifications.IsEmpty();
-                    splitContainerNotifications.Visible = !eveNotifications.IsEmpty();
+                    noEVENotificationsLabel.Visible = eveNotifications.IsEmpty() ||
+                                                      eveNotifications.All(x => x.SentDate == DateTime.MinValue);
+                    lvNotifications.Visible = !eveNotifications.IsEmpty();
+                    splitContainerNotifications.Visible = !noEVENotificationsLabel.Visible;
                 }
             }
             finally
@@ -439,7 +442,6 @@ namespace EVEMon
                                               "{0:ddd} {0:G}", eveNotification.SentDate.ToLocalTime());
                     break;
                 default:
-                    //return;
                     throw new NotImplementedException();
             }
         }

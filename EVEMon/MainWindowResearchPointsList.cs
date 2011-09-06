@@ -382,7 +382,6 @@ namespace EVEMon
                     item.Text = researchPoint.Station.Name;
                     break;
                 default:
-                    //return;
                     throw new NotImplementedException();
             }
         }

@@ -48,8 +48,8 @@ namespace EVEMon
             this.chToCharacterIDs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.eveMailReadingPane = new EVEMon.ReadingPane();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.eveMailReadingPane = new EVEMon.ReadingPane();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
@@ -82,7 +82,7 @@ namespace EVEMon
             this.mailReadLocal,
             this.mailOpenExternal});
             this.contextMenu.Name = "mailListContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(180, 70);
+            this.contextMenu.Size = new System.Drawing.Size(180, 48);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mailReadLocal
@@ -109,33 +109,33 @@ namespace EVEMon
             // 
             this.mailGateRead.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.mailGateRead.Name = "mailGateRead";
-            this.mailGateRead.Size = new System.Drawing.Size(152, 22);
+            this.mailGateRead.Size = new System.Drawing.Size(118, 22);
             this.mailGateRead.Text = "Read";
             this.mailGateRead.Click += new System.EventHandler(this.mailGateRead_Click);
             // 
             // mailGateSep1
             // 
             this.mailGateSep1.Name = "mailGateSep1";
-            this.mailGateSep1.Size = new System.Drawing.Size(149, 6);
+            this.mailGateSep1.Size = new System.Drawing.Size(115, 6);
             // 
             // mailGateReply
             // 
             this.mailGateReply.Name = "mailGateReply";
-            this.mailGateReply.Size = new System.Drawing.Size(152, 22);
+            this.mailGateReply.Size = new System.Drawing.Size(118, 22);
             this.mailGateReply.Text = "Reply";
             this.mailGateReply.Click += new System.EventHandler(this.mailGateReply_Click);
             // 
             // mailGateReplyAll
             // 
             this.mailGateReplyAll.Name = "mailGateReplyAll";
-            this.mailGateReplyAll.Size = new System.Drawing.Size(152, 22);
+            this.mailGateReplyAll.Size = new System.Drawing.Size(118, 22);
             this.mailGateReplyAll.Text = "Reply all";
             this.mailGateReplyAll.Click += new System.EventHandler(this.mailGateReplyAll_Click);
             // 
             // mailGateForward
             // 
             this.mailGateForward.Name = "mailGateForward";
-            this.mailGateForward.Size = new System.Drawing.Size(152, 22);
+            this.mailGateForward.Size = new System.Drawing.Size(118, 22);
             this.mailGateForward.Text = "Forward";
             this.mailGateForward.Click += new System.EventHandler(this.mailGateForward_Click);
             // 
@@ -214,6 +214,10 @@ namespace EVEMon
             // 
             this.chToListID.Text = "To Mailing List";
             // 
+            // timer
+            // 
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
             // eveMailReadingPane
             // 
             this.eveMailReadingPane.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -221,10 +225,6 @@ namespace EVEMon
             this.eveMailReadingPane.Name = "eveMailReadingPane";
             this.eveMailReadingPane.Size = new System.Drawing.Size(454, 140);
             this.eveMailReadingPane.TabIndex = 0;
-            // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // MainWindowEveMailMessagesList
             // 

@@ -576,7 +576,6 @@ namespace EVEMon
                     item.Text = job.LastStateChange.ToLocalTime().ToString();
                     break;
                 default:
-                    //return;
                     throw new NotImplementedException();
             }
         }

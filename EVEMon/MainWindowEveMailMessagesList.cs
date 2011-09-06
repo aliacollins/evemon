@@ -44,6 +44,7 @@ namespace EVEMon
 
             eveMailReadingPane.HidePane();
             splitContainerMailMessages.Visible = false;
+            lvMailMessages.Visible = false;
             lvMailMessages.AllowColumnReorder = true;
             lvMailMessages.Columns.Clear();
 
@@ -370,8 +371,10 @@ namespace EVEMon
                 // Display or hide the "no EVE mail messages" label
                 if (m_init)
                 {
-                    noEVEMailMessagesLabel.Visible = eveMailMessages.IsEmpty();
-                    splitContainerMailMessages.Visible = !eveMailMessages.IsEmpty();
+                    noEVEMailMessagesLabel.Visible = eveMailMessages.IsEmpty() ||
+                                                     eveMailMessages.All(x => x.SentDate == DateTime.MinValue);
+                    lvMailMessages.Visible = !eveMailMessages.IsEmpty();
+                    splitContainerMailMessages.Visible = !noEVEMailMessagesLabel.Visible;
                 }
             }
             finally
@@ -488,7 +491,6 @@ namespace EVEMon
                     item.Text = string.Join(", ", eveMailMessage.ToMailingLists);
                     break;
                 default:
-                    //return;
                     throw new NotImplementedException();
             }
         }
