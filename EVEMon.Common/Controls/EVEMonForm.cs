@@ -32,7 +32,7 @@ namespace EVEMon.Common.Controls
         [Description(
             "A key used to store and restore the position and size of the window. When null or empty, the position won't be persisted."
             )]
-        protected string RememberPositionKey { private get; set; }
+        public string RememberPositionKey { get; set; }
 
         /// <summary>
         /// On load, restores the window rectangle from the settings.
