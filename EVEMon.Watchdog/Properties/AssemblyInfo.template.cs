@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("EVEMon.Watchdog")]
 [assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: $WCREV$ Local Changes: $WCMODS?Yes:No$ Repository URL: $WCURL$/EVEMon.Watchdog")]
@@ -12,3 +12,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: AssemblyVersion("1.4.1.$WCREV$")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]

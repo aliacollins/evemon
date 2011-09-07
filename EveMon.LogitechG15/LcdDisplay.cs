@@ -565,7 +565,6 @@ namespace EVEMon.LogitechG15
             UpdateLcdDisplay();
         }
 
-
         /// <summary>
         /// Renders the selector.
         /// </summary>

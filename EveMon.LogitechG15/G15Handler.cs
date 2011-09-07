@@ -127,7 +127,8 @@ namespace EVEMon.LogitechG15
             s_lcd.ShowEVETime = Settings.G15.ShowEVETime;
 
             // Current character
-            s_lcd.CurrentCharacter = s_lcd.CurrentCharacter ?? EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().FirstOrDefault();
+            s_lcd.CurrentCharacter = s_lcd.CurrentCharacter ??
+                                     EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().FirstOrDefault();
 
             // First character to complete a skill
             CCPCharacter nextChar = EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().Where(
