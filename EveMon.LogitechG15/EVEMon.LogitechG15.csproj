@@ -72,7 +72,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Properties\AssemblyInfo.template.cs" />
-    <Compile Include="Lcdisplay.cs" />
+    <Compile Include="LcdDisplay.cs" />
     <Compile Include="LcdState.cs" />
     <Compile Include="LineProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

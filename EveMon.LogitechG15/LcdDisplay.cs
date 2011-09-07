@@ -10,14 +10,14 @@ using lgLcdClassLibrary;
 
 namespace EVEMon.LogitechG15
 {
-    public class Lcdisplay : IDisposable
+    public class LcdDisplay : IDisposable
     {
         internal const int G15Width = (int)LCDInterface.LGLCD_BMP_WIDTH;
         private const int G15Height = (int)LCDInterface.LGLCD_BMP_HEIGHT;
         private const float G15DpiX = 46;
         private const float G15DpiY = 46;
 
-        private static Lcdisplay s_singleInstance;
+        private static LcdDisplay s_singleInstance;
 
         private readonly Font m_defaultFont;
         private readonly Bitmap m_bmpLCD;
@@ -63,9 +63,9 @@ namespace EVEMon.LogitechG15
         #region Instantiation
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Lcdisplay"/> class.
+        /// Initializes a new instance of the <see cref="LcdDisplay"/> class.
         /// </summary>
-        private Lcdisplay()
+        private LcdDisplay()
         {
             m_defaultFont = FontFactory.GetFont("Microsoft Sans Serif", 13.5f);
 
@@ -96,9 +96,9 @@ namespace EVEMon.LogitechG15
         /// Instances this instance.
         /// </summary>
         /// <returns></returns>
-        public static Lcdisplay Instance()
+        public static LcdDisplay Instance()
         {
-            return s_singleInstance ?? (s_singleInstance = new Lcdisplay());
+            return s_singleInstance ?? (s_singleInstance = new LcdDisplay());
         }
 
         #endregion
@@ -188,9 +188,9 @@ namespace EVEMon.LogitechG15
 
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Lcdisplay"/> is reclaimed by garbage collection.
+        /// <see cref="LcdDisplay"/> is reclaimed by garbage collection.
         /// </summary>
-        ~Lcdisplay()
+        ~LcdDisplay()
         {
             Dispose(false);
         }
@@ -218,6 +218,8 @@ namespace EVEMon.LogitechG15
                 if (isDisposing || s_singleInstance != null)
                     LCDInterface.Close();
 
+                m_bmpLCD.Dispose();
+                m_bmpLCDX.Dispose();
                 s_singleInstance = null;
             }
             m_disposed = true;
@@ -537,7 +539,6 @@ namespace EVEMon.LogitechG15
             }
 
             // Creates a reordered list with the selected character on top
-
             List<CCPCharacter> charList = new List<CCPCharacter>();
 
             int currentCharacterIndex = MonitoredCharacters.IndexOf(CurrentCharacter);

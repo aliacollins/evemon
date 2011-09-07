@@ -7,13 +7,13 @@ using EVEMon.Common.Threading;
 namespace EVEMon.LogitechG15
 {
     /// <summary>
-    /// This class takes care to drive the <see cref="Lcdisplay"/> according to the settings, the characters, the global events, etc. 
-    /// <para>It malaxes and fetches data to the <see cref="Lcdisplay"/> while this last one holds the responsibility to cycle between chars, 
+    /// This class takes care to drive the <see cref="LcdDisplay"/> according to the settings, the characters, the global events, etc. 
+    /// <para>It malaxes and fetches data to the <see cref="LcdDisplay"/> while this last one holds the responsibility to cycle between chars, 
     /// format the display, and update to the device.</para>
     /// </summary>
     public static class G15Handler
     {
-        private static Lcdisplay s_lcd;
+        private static LcdDisplay s_lcd;
         private static bool s_running;
         private static bool s_startupError;
 
@@ -29,9 +29,9 @@ namespace EVEMon.LogitechG15
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
 
             // Subscribe to events which occur of G15 buttons pressed
-            Lcdisplay.APIUpdateRequested += LcdDisplay_APIUpdateRequested;
-            Lcdisplay.AutoCycleChanged += LcdDisplay_AutoCycleChanged;
-            Lcdisplay.CurrentCharacterChanged += LcdDisplay_CurrentCharacterChanged;
+            LcdDisplay.APIUpdateRequested += LcdDisplay_APIUpdateRequested;
+            LcdDisplay.AutoCycleChanged += LcdDisplay_AutoCycleChanged;
+            LcdDisplay.CurrentCharacterChanged += LcdDisplay_CurrentCharacterChanged;
         }
 
         #endregion
@@ -81,7 +81,7 @@ namespace EVEMon.LogitechG15
         {
             try
             {
-                s_lcd = Lcdisplay.Instance();
+                s_lcd = LcdDisplay.Instance();
                 s_lcd.SwitchState(LcdState.SplashScreen);
                 s_running = true;
             }

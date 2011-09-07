@@ -92,7 +92,7 @@ namespace EVEMon.LogitechG15
             string text = m_percentage.ToString("P2");
             SizeF textSize = canvas.MeasureString(text, m_font);
             int left = 0;
-            int size = Lcdisplay.G15Width;
+            int size = LcdDisplay.G15Width;
             const int Pad = 2;
 
             if (Settings.G15.ShowEVETime)
@@ -100,7 +100,7 @@ namespace EVEMon.LogitechG15
                 string eveTime = DateTime.UtcNow.ToString("HH:mm");
                 SizeF eveTimeSize = canvas.MeasureString(eveTime, m_font);
                 left = (int)eveTimeSize.Width + Pad;
-                size = Lcdisplay.G15Width - left - Pad;
+                size = LcdDisplay.G15Width - left - Pad;
             }
 
             if (Settings.G15.ShowSystemTime)
