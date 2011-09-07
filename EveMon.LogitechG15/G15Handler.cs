@@ -29,9 +29,9 @@ namespace EVEMon.LogitechG15
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
 
             // Subscribe to events which occur of G15 buttons pressed
-            Lcdisplay.APIUpdateRequested += Lcdisplay_APIUpdateRequested;
-            Lcdisplay.AutoCycleChanged += Lcdisplay_AutoCycleChanged;
-            Lcdisplay.CurrentCharacterChanged += Lcdisplay_CurrentCharacterChanged;
+            Lcdisplay.APIUpdateRequested += LcdDisplay_APIUpdateRequested;
+            Lcdisplay.AutoCycleChanged += LcdDisplay_AutoCycleChanged;
+            Lcdisplay.CurrentCharacterChanged += LcdDisplay_CurrentCharacterChanged;
         }
 
         #endregion
@@ -126,14 +126,12 @@ namespace EVEMon.LogitechG15
             s_lcd.ShowSystemTime = Settings.G15.ShowSystemTime;
             s_lcd.ShowEVETime = Settings.G15.ShowEVETime;
 
-            // Characters names
-            s_lcd.Characters =
-                EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter).Select(character => character as CCPCharacter).
-                    ToArray();
+            // Current character
+            s_lcd.CurrentCharacter = s_lcd.CurrentCharacter ?? EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().FirstOrDefault();
 
             // First character to complete a skill
-            Character nextChar = EveMonClient.MonitoredCharacters.Where(
-                x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
+            CCPCharacter nextChar = EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().Where(
+                x => x.IsTraining).OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
 
             if (nextChar != null)
                 s_lcd.FirstCharacterToCompleteSkill = nextChar;
@@ -178,7 +176,7 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Occurs whenever the current character changed (because of a button press or cycling).
         /// </summary>
-        private static void Lcdisplay_CurrentCharacterChanged(Character character)
+        private static void LcdDisplay_CurrentCharacterChanged(object sender, CharacterChangedEventArgs e)
         {
             Dispatcher.Invoke(UpdateOnTimerTick);
         }
@@ -186,22 +184,28 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Occurs whenever a G15 button has been pressed which requires EVEMon to requery the API for the specified character.
         /// </summary>
-        private static void Lcdisplay_APIUpdateRequested(Character character)
+        private static void LcdDisplay_APIUpdateRequested(object sender, CharacterChangedEventArgs e)
         {
             Dispatcher.Invoke(() =>
                                   {
-                                      CCPCharacter ccpCharacter = character as CCPCharacter;
+                                      CCPCharacter ccpCharacter = e.Character as CCPCharacter;
                                       if (ccpCharacter != null)
-                                          ccpCharacter.QueryMonitors.QueryEverything();
+                                      {
+                                          ccpCharacter.QueryMonitors.Query(new[]
+                                                                               {
+                                                                                   APIMethods.CharacterSheet,
+                                                                                   APIMethods.SkillQueue
+                                                                               });
+                                      }
                                   });
         }
 
         /// <summary>
         /// Occurs whenever the auto cycle should change (because of a button press).
         /// </summary>
-        private static void Lcdisplay_AutoCycleChanged(bool cycle)
+        private static void LcdDisplay_AutoCycleChanged(object sender, CycleEventArgs e)
         {
-            Settings.G15.UseCharactersCycle = cycle;
+            Settings.G15.UseCharactersCycle = e.Cycle;
         }
 
         #endregion

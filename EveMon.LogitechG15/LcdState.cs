@@ -2,11 +2,11 @@
 {
     public enum LcdState
     {
-        SplashScreen = 1,
-        CharacterList = 2,
-        SkillComplete = 3,
-        Character = 4,
-        CycleSettings = 5,
-        Refreshing = 6
+        SplashScreen = 0,
+        CharacterList = 1,
+        SkillComplete = 2,
+        Character = 3,
+        CycleSettings = 4,
+        Refreshing = 5
     }
 }

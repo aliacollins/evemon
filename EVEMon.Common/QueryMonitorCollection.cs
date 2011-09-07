@@ -104,7 +104,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Requests an update from CCP now.
+        /// Requests an update for the specified methods.
+        /// </summary>
+        /// <param name="methods">The methods.</param>
+        public void Query(IEnumerable<APIMethods> methods)
+        {
+            IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod]).OfType<IQueryMonitorEx>();
+            foreach (IQueryMonitorEx monitor in monitors)
+            {
+                monitor.ForceUpdate(false);
+            }
+        }
+
+        /// <summary>
+        /// Requests an update for all monitor.
         /// </summary>
         public void QueryEverything()
         {

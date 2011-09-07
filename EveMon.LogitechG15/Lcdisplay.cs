@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Linq;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 using lgLcdClassLibrary;
 
 namespace EVEMon.LogitechG15
@@ -24,7 +26,8 @@ namespace EVEMon.LogitechG15
         private readonly Graphics m_lcdOverlay;
         private readonly List<LineProcess> m_lcdLines = new List<LineProcess>();
 
-        private int m_currentCharacterIndex;
+        private CCPCharacter m_currentCharacter;
+        private CCPCharacter m_refreshCharacter;
         private int m_oldButtonState;
         private DateTime m_buttonStateHld;
         private DateTime m_paintTime;
@@ -32,32 +35,27 @@ namespace EVEMon.LogitechG15
         private LcdState m_state;
         private DateTime m_cycleTime;
         private DateTime m_cycleQueueInfoTime;
-        private Character m_refreshCharacter;
         private bool m_showingCycledQueueInfo;
         private int m_completedSkills;
         private bool m_disposed;
 
 
-        #region Delegates and Events
-
-        public delegate void CharacterHandler(Character character);
-
-        public delegate void CharAutoCycleHandler(bool cycle);
+        #region Events
 
         /// <summary>
         /// Fired whenever a button has been pressed which require EVEMon to requery the API for the specified character.
         /// </summary>
-        public static event CharacterHandler APIUpdateRequested;
+        public static event EventHandler<CharacterChangedEventArgs> APIUpdateRequested;
 
         /// <summary>
         /// Fired whenever the current character changed (because of a button press).
         /// </summary>
-        public static event CharacterHandler CurrentCharacterChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CurrentCharacterChanged;
 
         /// <summary>
         /// Fired whenever the auto cycle should change (because of a button press).
         /// </summary>
-        public static event CharAutoCycleHandler AutoCycleChanged;
+        public static event EventHandler<CycleEventArgs> AutoCycleChanged;
 
         #endregion
 
@@ -112,25 +110,25 @@ namespace EVEMon.LogitechG15
         /// Gets or sets a value indicating whether to cycle the displayed info.
         /// </summary>
         /// <value><c>true</c> if set to cycle; otherwise, <c>false</c>.</value>
-        public bool Cycle { private get; set; }
+        public bool Cycle { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle interval.
         /// </summary>
         /// <value>The cycle interval.</value>
-        public int CycleInterval { private get; set; }
+        public int CycleInterval { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the system's time.
         /// </summary>
         /// <value><c>true</c> if set to show the system's time; otherwise, <c>false</c>.</value>
-        public bool ShowSystemTime { private get; set; }
+        public bool ShowSystemTime { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the EVE's time.
         /// </summary>
         /// <value><c>true</c> if set to show the EVE's time; otherwise, <c>false</c>.</value>
-        public bool ShowEVETime { private get; set; }
+        public bool ShowEVETime { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to cycle the skill queue time.
@@ -138,46 +136,49 @@ namespace EVEMon.LogitechG15
         /// <value>
         /// 	<c>true</c> if set to cycle skill queue time; otherwise, <c>false</c>.
         /// </value>
-        public bool CycleSkillQueueTime { private get; set; }
+        public bool CycleSkillQueueTime { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle completion interval.
         /// </summary>
         /// <value>The cycle completion interval.</value>
-        public int CycleCompletionInterval { private get; set; }
+        public int CycleCompletionInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the first character to complete skill.
         /// </summary>
         /// <value>The first character to complete skill.</value>
-        public Character FirstCharacterToCompleteSkill { private get; set; }
-
-        /// <summary>
-        /// Gets or sets the characters.
-        /// </summary>
-        /// <value>The characters.</value>
-        public CCPCharacter[] Characters { private get; set; }
+        public CCPCharacter FirstCharacterToCompleteSkill { get; set; }
 
         /// <summary>
         /// Gets or sets the current character.
         /// </summary>
         /// <value>The current character.</value>
-        private CCPCharacter CurrentCharacter
+        public CCPCharacter CurrentCharacter
         {
             get
             {
-                if (m_currentCharacterIndex < 0 || Characters == null || m_currentCharacterIndex >= Characters.Length)
+                if (MonitoredCharacters == null || !MonitoredCharacters.Contains(m_currentCharacter))
                     return null;
 
-                return Characters[m_currentCharacterIndex];
+                return m_currentCharacter;
             }
             set
             {
-                m_currentCharacterIndex = Array.IndexOf(Characters, value);
+                if (m_currentCharacter == value)
+                    return;
 
-                if (m_currentCharacterIndex == -1)
-                    m_currentCharacterIndex = 0;
+                m_currentCharacter = value;
             }
+        }
+
+        /// <summary>
+        /// Gets the monitored characters.
+        /// </summary>
+        /// <value>The characters.</value>
+        private static IEnumerable<CCPCharacter> MonitoredCharacters
+        {
+            get { return EveMonClient.MonitoredCharacters.OfType<CCPCharacter>(); }
         }
 
         #endregion
@@ -527,7 +528,7 @@ namespace EVEMon.LogitechG15
         {
             m_lcdLines.Clear();
 
-            if (Characters.Length == 0)
+            if (MonitoredCharacters.Count() == 0)
             {
                 m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
@@ -536,15 +537,18 @@ namespace EVEMon.LogitechG15
             }
 
             // Creates a reordered list with the selected character on top
+
             List<CCPCharacter> charList = new List<CCPCharacter>();
 
-            for (int i = m_currentCharacterIndex; i < Characters.Length; i++)
+            int currentCharacterIndex = MonitoredCharacters.IndexOf(CurrentCharacter);
+            for (int i = currentCharacterIndex; i < MonitoredCharacters.Count(); i++)
             {
-                charList.Add(Characters[i]);
+                charList.Add(MonitoredCharacters.ElementAt(i));
             }
-            for (int i = 0; i < m_currentCharacterIndex; i++)
+
+            for (int i = 0; i < currentCharacterIndex; i++)
             {
-                charList.Add(Characters[i]);
+                charList.Add(MonitoredCharacters.ElementAt(i));
             }
 
             // Perform the painting
@@ -559,6 +563,7 @@ namespace EVEMon.LogitechG15
             RenderSelector();
             UpdateLcdDisplay();
         }
+
 
         /// <summary>
         /// Renders the selector.
@@ -789,13 +794,13 @@ namespace EVEMon.LogitechG15
             if ((press & LCDInterface.LGLCDBUTTON_BUTTON1) != 0)
             {
                 // Select next skill ready char
-                if (Characters == null)
+                if (MonitoredCharacters == null)
                     return 0;
 
-                CurrentCharacter = FirstCharacterToCompleteSkill as CCPCharacter;
+                CurrentCharacter = FirstCharacterToCompleteSkill;
 
                 if (AutoCycleChanged != null)
-                    AutoCycleChanged(false);
+                    AutoCycleChanged(this, new CycleEventArgs(false));
 
                 SwitchState(LcdState.Character);
             }
@@ -807,7 +812,7 @@ namespace EVEMon.LogitechG15
                 {
                     m_refreshCharacter = CurrentCharacter;
                     if (APIUpdateRequested != null)
-                        APIUpdateRequested(m_refreshCharacter);
+                        APIUpdateRequested(this, new CharacterChangedEventArgs(m_refreshCharacter));
 
                     SwitchState(LcdState.Refreshing);
                 }
@@ -820,7 +825,7 @@ namespace EVEMon.LogitechG15
                 SwitchCycle();
 
                 if (AutoCycleChanged != null)
-                    AutoCycleChanged(Cycle);
+                    AutoCycleChanged(this, new CycleEventArgs(Cycle));
 
                 SwitchState(LcdState.CycleSettings);
                 m_cycleTime = DateTime.Now;
@@ -835,17 +840,20 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void MoveToNextChar()
         {
-            if (Characters == null)
+            if (MonitoredCharacters == null)
                 return;
 
             // Move to next char
-            m_currentCharacterIndex++;
-            if (m_currentCharacterIndex >= Characters.Length)
-                m_currentCharacterIndex = 0;
+            int index = MonitoredCharacters.IndexOf(CurrentCharacter);
+            index++;
+            if (index >= MonitoredCharacters.Count())
+                index = 0;
+
+            CurrentCharacter = MonitoredCharacters.ElementAt(index);
 
             // Requests new data
             if (CurrentCharacterChanged != null)
-                CurrentCharacterChanged(CurrentCharacter);
+                CurrentCharacterChanged(this, new CharacterChangedEventArgs(CurrentCharacter));
         }
 
         /// <summary>
@@ -860,7 +868,8 @@ namespace EVEMon.LogitechG15
         }
 
         /// <summary>
-        /// Updates the characters' list. First call displays the list, the second one moves the selection
+        /// Updates the characters' list.
+        /// First call displays the list, the second one moves the selection
         /// </summary>
         private void DisplayCharactersList()
         {
