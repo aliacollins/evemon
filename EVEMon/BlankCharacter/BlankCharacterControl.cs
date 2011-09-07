@@ -86,6 +86,15 @@ namespace EVEMon.BlankCharacter
             UpdateBloodlineControl();
         }
 
+        /// <summary>
+        /// Gets the name of the character.
+        /// </summary>
+        /// <value>The name of the character.</value>
+        internal string CharacterName
+        {
+            get { return tbCharacterName.Text; }
+        }
+
 
         #region Update Methods
 

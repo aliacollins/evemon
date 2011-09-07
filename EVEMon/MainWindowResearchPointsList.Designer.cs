@@ -122,6 +122,6 @@ namespace EVEMon
         private System.Windows.Forms.ColumnHeader chSkill;
         private System.Windows.Forms.ColumnHeader chCurrentRP;
         private System.Windows.Forms.ColumnHeader chPRPerDay;
-        protected internal System.Windows.Forms.ListView lvResearchPoints;
+        private System.Windows.Forms.ListView lvResearchPoints;
     }
 }

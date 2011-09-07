@@ -45,7 +45,7 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            buttonOK.Enabled = !String.IsNullOrEmpty(blankCharacterControl.tbCharacterName.Text);
+            buttonOK.Enabled = !String.IsNullOrEmpty(blankCharacterControl.CharacterName);
             buttonOK.Text = (!buttonOK.Enabled || m_fileSaved ? "Import" : "Save");
         }
 

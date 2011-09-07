@@ -670,9 +670,9 @@
         private System.Windows.Forms.ImageList ilAncestry;
         private System.Windows.Forms.Label lblAncestry1;
         private System.Windows.Forms.Label lblAncestry3;
-        protected internal System.Windows.Forms.TextBox tbCharacterName;
         private System.Windows.Forms.PictureBox pbAncestry1;
         private System.Windows.Forms.PictureBox pbAncestry2;
         private System.Windows.Forms.PictureBox pbAncestry3;
+        private System.Windows.Forms.TextBox tbCharacterName;
     }
 }

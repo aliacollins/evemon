@@ -81,6 +81,16 @@ namespace EVEMon
         public Character Character { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="lvJobs"/> is visible.
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        public bool Visibility
+        {
+            get { return lvJobs.Visible; }
+            set { lvJobs.Visible = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
         public string TextFilter

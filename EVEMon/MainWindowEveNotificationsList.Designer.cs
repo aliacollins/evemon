@@ -155,7 +155,7 @@
         #endregion
 
         private Common.Controls.SplitContainerMinFixed splitContainerNotifications;
-        protected internal System.Windows.Forms.ListView lvNotifications;
+        private System.Windows.Forms.ListView lvNotifications;
         private System.Windows.Forms.ColumnHeader chSenderName;
         private System.Windows.Forms.ColumnHeader chType;
         private System.Windows.Forms.ColumnHeader chSentDate;

@@ -255,7 +255,7 @@ namespace EVEMon
         private System.Windows.Forms.ColumnHeader chToCharacterIDs;
         private System.Windows.Forms.ColumnHeader chToListID;
         private EVEMon.Common.Controls.SplitContainerMinFixed splitContainerMailMessages;
-        protected internal System.Windows.Forms.ListView lvMailMessages;
+        private System.Windows.Forms.ListView lvMailMessages;
         private System.Windows.Forms.Timer timer;
         private ReadingPane eveMailReadingPane;
         private System.Windows.Forms.ContextMenuStrip contextMenu;

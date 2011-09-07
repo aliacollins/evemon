@@ -140,7 +140,7 @@ namespace EVEMon
 
         #endregion
 
-        internal protected System.Windows.Forms.ListView lvOrders;
+        private System.Windows.Forms.ListView lvOrders;
         private System.Windows.Forms.Label noOrdersLabel;
         private System.Windows.Forms.ColumnHeader itemColumn;
         private System.Windows.Forms.ColumnHeader volumeColumn;

@@ -33,7 +33,7 @@ namespace EVEMon
                     return;
 
                 ordersList.UpdateColumns();
-                ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
+                ordersList.Visibility = !ordersList.Orders.IsEmpty();
             }
         }
 
@@ -51,7 +51,7 @@ namespace EVEMon
                     return;
 
                 ordersList.UpdateColumns();
-                ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
+                ordersList.Visibility = !ordersList.Orders.IsEmpty();
             }
         }
 
@@ -82,7 +82,7 @@ namespace EVEMon
                     return;
 
                 ordersList.UpdateColumns();
-                ordersList.lvOrders.Visible = !ordersList.Orders.IsEmpty();
+                ordersList.Visibility = !ordersList.Orders.IsEmpty();
             }
         }
     }

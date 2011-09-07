@@ -127,7 +127,7 @@ namespace EVEMon
 
         #endregion
 
-        internal protected System.Windows.Forms.ListView lvJobs;
+        private System.Windows.Forms.ListView lvJobs;
         private System.Windows.Forms.Label noJobsLabel;
         private System.Windows.Forms.ColumnHeader chState;
         private System.Windows.Forms.ColumnHeader chTTC;
