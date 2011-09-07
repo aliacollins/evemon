@@ -72,6 +72,7 @@ namespace EVEMon
             // Global events
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
@@ -388,6 +389,19 @@ namespace EVEMon
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != Character)
+                return;
+
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// On character skill queue changed, update everything.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;
