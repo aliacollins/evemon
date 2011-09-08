@@ -26,7 +26,7 @@ namespace EVEMon.Common
             m_customSets = new List<ImplantSet>();
             OldAPI = new ImplantSet(owner, "Previous implants from the API");
             API = new ImplantSet(owner, "Implants from API");
-            None = new ImplantSet(owner, "<None>");
+            None = new ImplantSet(owner, "None");
             m_current = API;
         }
 
@@ -41,7 +41,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the none im
+        /// Gets the none implant.
         /// </summary>
         public ImplantSet None { get; private set; }
 
@@ -109,11 +109,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from a deserialization object
+        /// Imports data from a deserialization object.
         /// </summary>
         /// <param name="serial"></param>
         public void Import(SerializableImplantSetCollection serial)
         {
+            if (serial == null)
+                return;
+
             API.Import(serial.API, false);
             OldAPI.Import(serial.API, false);
 

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
-    /// Represents a collection of implants sets
+    /// Represents a collection of implants sets.
     /// </summary>
     public sealed class SerializableImplantSetCollection
     {

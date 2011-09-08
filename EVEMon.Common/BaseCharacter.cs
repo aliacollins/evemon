@@ -20,7 +20,7 @@ namespace EVEMon.Common
         #region Computation methods
 
         /// <summary>
-        /// Gets the total skill points for this character
+        /// Gets the total skill points for this character.
         /// </summary>
         public int SkillPoints
         {
@@ -89,17 +89,17 @@ namespace EVEMon.Common
         #region GetSPToTrain
 
         /// <summary>
-        /// Computes the number of SP to train
+        /// Computes the number of SP to train.
         /// </summary>
-        /// <param name="level"></param>
+        /// <param name="skillLevel"></param>
         /// <returns></returns>
-        public int GetSPToTrain(ISkillLevel level)
+        public int GetSPToTrain(ISkillLevel skillLevel)
         {
-            return GetSPToTrain(level.Skill, level.Level);
+            return GetSPToTrain(skillLevel.Skill, skillLevel.Level);
         }
 
         /// <summary>
-        /// Computes the number of SP to train
+        /// Computes the number of SP to train.
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
@@ -147,11 +147,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Computes the training time for the given skill.
         /// </summary>
-        /// <param name="level"></param>
+        /// <param name="skillLevel"></param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime(ISkillLevel level)
+        public TimeSpan GetTrainingTime(ISkillLevel skillLevel)
         {
-            return GetTrainingTime(level.Skill, level.Level);
+            return GetTrainingTime(skillLevel.Skill, skillLevel.Level);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the time require to train the given skills and their prerequisites
+        /// Gets the time require to train the given skills and their prerequisites.
         /// </summary>
         /// <param name="trainings">A sequence of pairs of skills and the target levels.</param>
         /// <returns></returns>
@@ -196,31 +196,55 @@ namespace EVEMon.Common
 
         #region ICharacter non-abstract explicit members
 
+        /// <summary>
+        /// Gets the <see cref="EVEMon.Common.ICharacterAttribute"/> with the specified attribute.
+        /// </summary>
+        /// <value></value>
         public ICharacterAttribute this[EveAttribute attribute]
         {
             get { return GetAttribute(attribute); }
         }
 
+        /// <summary>
+        /// Gets the intelligence.
+        /// </summary>
+        /// <value>The intelligence.</value>
         public ICharacterAttribute Intelligence
         {
             get { return GetAttribute(EveAttribute.Intelligence); }
         }
 
+        /// <summary>
+        /// Gets the perception.
+        /// </summary>
+        /// <value>The perception.</value>
         public ICharacterAttribute Perception
         {
             get { return GetAttribute(EveAttribute.Perception); }
         }
 
+        /// <summary>
+        /// Gets the willpower.
+        /// </summary>
+        /// <value>The willpower.</value>
         public ICharacterAttribute Willpower
         {
             get { return GetAttribute(EveAttribute.Willpower); }
         }
 
+        /// <summary>
+        /// Gets the charisma.
+        /// </summary>
+        /// <value>The charisma.</value>
         public ICharacterAttribute Charisma
         {
             get { return GetAttribute(EveAttribute.Charisma); }
         }
 
+        /// <summary>
+        /// Gets the memory.
+        /// </summary>
+        /// <value>The memory.</value>
         public ICharacterAttribute Memory
         {
             get { return GetAttribute(EveAttribute.Memory); }

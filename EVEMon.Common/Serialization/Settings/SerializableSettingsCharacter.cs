@@ -5,7 +5,7 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
-    /// Represents a base for character serialization in the settings
+    /// Represents a base for character serialization in the settings.
     /// </summary>
     public class SerializableSettingsCharacter : SerializableCharacterSheetBase
     {

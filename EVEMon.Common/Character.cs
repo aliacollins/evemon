@@ -15,16 +15,11 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public abstract class Character : BaseCharacter
     {
-        // Attributes
+        // Character
         private string m_name;
 
         // Attributes
         private readonly CharacterAttribute[] m_attributes = new CharacterAttribute[5];
-
-        // Certificates
-        private readonly CertificateCategoryCollection m_certificateCategories;
-        private readonly CertificateClassCollection m_certificateClasses;
-        private readonly CertificateCollection m_certificates;
 
         // Skill Point Caching
         private DateTime m_skillPointTotalUpdated = DateTime.MinValue;
@@ -49,9 +44,9 @@ namespace EVEMon.Common
             Skills = new SkillCollection(this);
 
             EmploymentHistory = new EmploymentHistoryCollection(this);
-            m_certificateCategories = new CertificateCategoryCollection(this);
-            m_certificateClasses = new CertificateClassCollection(this);
-            m_certificates = new CertificateCollection(this);
+            CertificateCategories = new CertificateCategoryCollection(this);
+            CertificateClasses = new CertificateClassCollection(this);
+            Certificates = new CertificateCollection(this);
             ImplantSets = new ImplantSetCollection(this);
             Plans = new PlanCollection(this);
 
@@ -327,26 +322,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of certificate categories.
         /// </summary>
-        public IEnumerable<CertificateCategory> CertificateCategories
-        {
-            get { return m_certificateCategories; }
-        }
+        public CertificateCategoryCollection CertificateCategories { get; private set; }
 
         /// <summary>
         /// Gets the collection of certificate classes.
         /// </summary>
-        public CertificateClassCollection CertificateClasses
-        {
-            get { return m_certificateClasses; }
-        }
+        public CertificateClassCollection CertificateClasses { get; private set; }
 
         /// <summary>
         /// Gets the collection of certificates.
         /// </summary>
-        public CertificateCollection Certificates
-        {
-            get { return m_certificates; }
-        }
+        public CertificateCollection Certificates { get; private set; }
 
         #endregion
 
@@ -529,7 +515,7 @@ namespace EVEMon.Common
             Skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
 
             // Certificates
-            m_certificates.Import(serial.Certificates);
+            Certificates.Import(serial.Certificates);
         }
 
         /// <summary>
