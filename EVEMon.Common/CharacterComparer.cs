@@ -64,6 +64,8 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Properties
+
         /// <summary>
         /// Gets or sets the sort order
         /// </summary>
@@ -73,6 +75,11 @@ namespace EVEMon.Common
         /// Gets or sets the sort criteria
         /// </summary>
         public CharacterSortCriteria Criteria { get; set; }
+
+        #endregion
+
+
+        #region Compare Methods
 
         /// <summary>
         /// Performs the comparison
@@ -95,10 +102,8 @@ namespace EVEMon.Common
             {
                 case CharacterSortCriteria.TrainingCompletion:
                     return CompareByCompletionTime(x, y);
-
                 case CharacterSortCriteria.Name:
                     return CompareByName(x, y);
-
                 default:
                     throw new NotImplementedException();
             }
@@ -117,9 +122,9 @@ namespace EVEMon.Common
             if (skillX == null && skillY == null)
                 return String.Compare(x.Name, y.Name);
             if (skillX == null)
-                return -1;
+                return 1;
             if (skillY == null)
-                return +1;
+                return -1;
 
             // Compare end time
             return DateTime.Compare(skillX.EndTime, skillY.EndTime);
@@ -134,5 +139,7 @@ namespace EVEMon.Common
         {
             return String.Compare(x.Name, y.Name);
         }
+
+        #endregion
     }
 }
