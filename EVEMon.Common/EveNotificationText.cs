@@ -12,7 +12,7 @@ namespace EVEMon.Common
         public EveNotificationText(SerializableNotificationTextsListItem src)
         {
             NotificationID = src.NotificationID;
-            NotificationText = NewLinesToBreakLines(src.NotificationText.Normalize());
+            NotificationText = NewLinesToBreakLines(src.NotificationText);
         }
 
         /// <summary>

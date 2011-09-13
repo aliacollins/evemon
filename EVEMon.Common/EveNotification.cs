@@ -90,7 +90,7 @@ namespace EVEMon.Common
         /// <value>The text.</value>
         public string Text
         {
-            get { return EVENotificationText.NotificationText; }
+            get { return EVENotificationText.NotificationText.Normalize(); }
         }
 
         #endregion

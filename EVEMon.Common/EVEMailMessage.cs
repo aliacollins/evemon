@@ -112,7 +112,7 @@ namespace EVEMon.Common
         /// <value>The text.</value>
         public string Text
         {
-            get { return EVEMailBody.BodyText; }
+            get { return EVEMailBody.BodyText.Normalize(); }
         }
 
         #endregion

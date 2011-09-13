@@ -13,6 +13,9 @@ namespace EVEMon
     {
         private IEveMessage m_selectedObject;
 
+
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadingPane"/> class.
         /// </summary>
@@ -24,6 +27,12 @@ namespace EVEMon
             lblSender.Font = FontFactory.GetDefaultFont(10F);
             flPanelHeader.ForeColor = SystemColors.ControlText;
         }
+
+
+        #endregion
+
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the selected object.
@@ -38,6 +47,11 @@ namespace EVEMon
                 UpdatePane();
             }
         }
+
+        #endregion
+
+
+        #region Main Methods
 
         /// <summary>
         /// Hides the reading pane.
@@ -86,12 +100,19 @@ namespace EVEMon
 
             FormatLinks(replacements);
 
-            FormatColorToRGB(replacements);
+            FormatHTMLColorToRGB(replacements);
+
+            FixFontSize(replacements);
 
             return replacements.Aggregate(m_selectedObject.Text,
                                           (specialFormattedText, replacement) =>
                                           specialFormattedText.Replace(replacement.Key, replacement.Value));
         }
+
+        #endregion
+
+
+        #region Formatting Methods
 
         /// <summary>
         /// Formats the links.
@@ -125,7 +146,7 @@ namespace EVEMon
                     if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
                     {
                         url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                            String.Format(NetworkConstants.EveGateCharacterProfile,
+                                            String.Format(NetworkConstants.EVEGateCharacterProfile,
                                                           Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                     }
                     else
@@ -134,12 +155,12 @@ namespace EVEMon
                         {
                             case DBConstants.AllianceID:
                                 url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                                    String.Format(NetworkConstants.EveGateAllianceProfile,
+                                                    String.Format(NetworkConstants.EVEGateAllianceProfile,
                                                                   Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                                 break;
                             case DBConstants.CorporationID:
                                 url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                                    String.Format(NetworkConstants.EveGateCorporationProfile,
+                                                    String.Format(NetworkConstants.EVEGateCorporationProfile,
                                                                   Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                                 break;
                             default:
@@ -161,7 +182,7 @@ namespace EVEMon
                 {
                     replacements[match.ToString()] =
                         String.Format(
-                            "<span style=\"color: #000000; text-decoration: underline; cursor: pointer;\" title=\"{0}{2}Link works only in IGB\">{1}</span>",
+                            "<span style=\"text-decoration: underline; cursor: pointer;\" title=\"{0}{2}Link works only in IGB\">{1}</span>",
                             matchValue, matchText, Environment.NewLine);
                 }
             }
@@ -171,15 +192,58 @@ namespace EVEMon
         /// Formats the color to RGB.
         /// </summary>
         /// <param name="replacements">The replacements.</param>
-        private void FormatColorToRGB(IDictionary<string, string> replacements)
+        private void FormatHTMLColorToRGB(IDictionary<string, string> replacements)
         {
-            // Regural expression for fixing text coloring
+            Color backColor = flPanelHeader.BackColor;
+
+            // Regural expression for fixing text color
             Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.IgnoreCase);
             foreach (Match match in regexColor.Matches(m_selectedObject.Text))
             {
-                replacements[match.ToString()] = String.Format("color=\"#{0}\"", match.Groups[1].Value);
+                replacements[match.ToString()] = String.Format("color=\"#{0}\"", CheckTextColorNotMatchBackColor(backColor, match));
             }
         }
+
+        /// <summary>
+        /// Checks the text color does not match the background color.
+        /// </summary>
+        /// <param name="backColor">The controls' background back.</param>
+        /// <param name="match">The text color.</param>
+        /// <returns>The text color as it was or a black colored text</returns>
+        private static string CheckTextColorNotMatchBackColor(Color backColor, Match match)
+        {
+            string color = match.Groups[1].Value;
+            Color textColor = ColorTranslator.FromHtml(String.Format("#{0}", color));
+            bool textColorIsShadeOfWhite = (textColor.R == textColor.G && textColor.G == textColor.B);
+            bool backColorIsShadeOfWhite = (backColor.R == backColor.G && backColor.G == backColor.B);
+            if (textColorIsShadeOfWhite && backColorIsShadeOfWhite)
+            {
+                const int ContrastDiff = 64;
+                int colorValue = (textColor.R <= backColor.R - ContrastDiff) ? textColor.R : 0;
+                string colorElement = Convert.ToString(colorValue, 16);
+                color = String.Format("{0}{0}{0}", colorElement);
+            }
+            return color;
+        }
+
+        /// <summary>
+        /// Fixes the size of the font.
+        /// </summary>
+        /// <param name="replacements">The replacements.</param>
+        private void FixFontSize(IDictionary<string, string> replacements)
+        {
+            Regex regexFontSize = new Regex(@"size(?:=""|:\s*)([0-9]+)(?:;|"")", RegexOptions.IgnoreCase);
+            foreach (Match match in regexFontSize.Matches(m_selectedObject.Text))
+            {
+                int newFontSize = Convert.ToByte(match.Groups[1].Value) / 4;
+                replacements[match.ToString()] = String.Format("size=\"{0}\"", newFontSize);
+            }
+        }
+
+        #endregion
+
+
+        #region Local Events
 
         /// <summary>
         /// Every time the mail header panel gets painted we add a line at the bottom.
@@ -229,5 +293,7 @@ namespace EVEMon
             // Disables the reload shortcut key
             wbMailBody.WebBrowserShortcutsEnabled = e.KeyData != Keys.F5;
         }
+
+        #endregion
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -11,7 +12,7 @@ namespace EVEMon.Common
         internal EveMailBody(SerializableMailBodiesListItem src)
         {
             MessageID = src.MessageID;
-            BodyText = src.MessageText.Normalize();
+            BodyText = src.MessageText ?? String.Empty;
         }
 
         /// <summary>

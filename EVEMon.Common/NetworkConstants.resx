@@ -279,13 +279,13 @@
   <data name="EVEGate" xml:space="preserve">
     <value>https://gate.eveonline.com</value>
   </data>
-  <data name="EveGateCharacterProfile" xml:space="preserve">
+  <data name="EVEGateCharacterProfile" xml:space="preserve">
     <value>/Profile/{0}</value>
   </data>
-  <data name="EveGateAllianceProfile" xml:space="preserve">
+  <data name="EVEGateAllianceProfile" xml:space="preserve">
     <value>/Alliance/{0}</value>
   </data>
-  <data name="EveGateCorporationProfile" xml:space="preserve">
+  <data name="EVEGateCorporationProfile" xml:space="preserve">
     <value>/Corporation/{0}</value>
   </data>
 </root>
