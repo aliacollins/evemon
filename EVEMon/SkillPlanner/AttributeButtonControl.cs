@@ -31,12 +31,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public AttributeButtonControl()
         {
-            SetStyle(ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.DoubleBuffer |
-                     ControlStyles.UserPaint |
+            SetStyle(ControlStyles.UserPaint |
                      ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.SupportsTransparentBackColor |
-                     ControlStyles.StandardDoubleClick, false);
+                     ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(ControlStyles.StandardDoubleClick, false);
             UpdateStyles();
 
             m_borderPath = CreateBorderPath();
