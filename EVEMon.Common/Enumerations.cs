@@ -198,7 +198,7 @@ namespace EVEMon.Common
         [Header("Character Sheet")]
         [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        CharacterSheet = 1<<3,
+        CharacterSheet = 1 << 3,
 
         /// <summary>
         /// A character's skill queue.
@@ -206,7 +206,7 @@ namespace EVEMon.Common
         [Header("Skill Queue")]
         [Description("A character's skill queue.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        SkillQueue = 1<<18,
+        SkillQueue = 1 << 18,
 
         /// <summary>
         /// A character's standings towards NPC's.
@@ -214,7 +214,7 @@ namespace EVEMon.Common
         [Header("NPC Standings")]
         [Description("A character's NPC standings.")]
         [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
-        Standings = 1<<19,
+        Standings = 1 << 19,
 
         /// <summary>
         /// The account status. Used to retreive account create and expiration date.
@@ -223,7 +223,7 @@ namespace EVEMon.Common
         [Description("The status of an account.")]
         [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
         [ForcedOnStartup]
-        AccountStatus = 1<<25,
+        AccountStatus = 1 << 25,
 
         /// <summary>
         /// The personal issued market orders of a character.
@@ -231,7 +231,7 @@ namespace EVEMon.Common
         [Header("Market Orders")]
         [Description("The market orders of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        MarketOrders = 1<<12,
+        MarketOrders = 1 << 12,
 
         /// <summary>
         /// The personal issued industry jobs of a character.
@@ -239,7 +239,7 @@ namespace EVEMon.Common
         [Header("Industry Jobs")]
         [Description("The industry jobs of a character.")]
         [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        IndustryJobs = 1<<7,
+        IndustryJobs = 1 << 7,
 
         /// <summary>
         /// The research points of a character.
@@ -247,7 +247,7 @@ namespace EVEMon.Common
         [Header("Research Points")]
         [Description("Research Points for a character.")]
         [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        ResearchPoints = 1<<16,
+        ResearchPoints = 1 << 16,
 
         /// <summary>
         /// Mail messages for a character.
@@ -255,7 +255,7 @@ namespace EVEMon.Common
         [Header("EVE Mail Messages")]
         [Description("Mail messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
-        MailMessages = 1<<11,
+        MailMessages = 1 << 11,
 
         /// <summary>
         /// Notifications for a character.
@@ -263,7 +263,7 @@ namespace EVEMon.Common
         [Header("EVE Notifications")]
         [Description("Notifications messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
-        Notifications = 1<<14,
+        Notifications = 1 << 14,
 
         /// <summary>
         /// The skill in training of a character. Used to determine if an account type API key has a character in training.
@@ -273,7 +273,7 @@ namespace EVEMon.Common
         /// <summary>
         /// A character's wallet balance.
         /// </summary>
-        CharacterAccountBalance = 1<<0,
+        CharacterAccountBalance = 1 << 0,
 
         /// <summary>
         /// The character mailing lists. Used to convert mailing list IDs to Names.
@@ -307,12 +307,12 @@ namespace EVEMon.Common
         /// <summary>
         /// The conquerable station list.
         /// </summary>
-        ConquerableStationList = 7,
+        ConquerableStationList = 12,
 
         /// <summary>
         /// The character name. Used to convert IDs to Names.
         /// </summary>
-        CharacterName = 9,
+        CharacterName = 18,
 
         /// <summary>
         /// The character info. Used to fetch active ship, security status and last known location. 
@@ -321,7 +321,9 @@ namespace EVEMon.Common
 
         SupportMethods = ServerStatus | CharacterList,
         BasicFeatures = CharacterSheet | CharacterInfo | SkillQueue | CharacterSkillInTraining,
-        AdvancedFeatures = AccountStatus | EVEMailMessages | EVENotifications | IndustryJobs | MarketOrders | ResearchPoints | Standings,
+
+        AdvancedFeatures =
+            AccountStatus | EVEMailMessages | EVENotifications | IndustryJobs | MarketOrders | ResearchPoints | Standings,
         AllFeatures = BasicFeatures | AdvancedFeatures,
 
         EVEMailMessages = MailMessages | MailBodies | MailingLists,
