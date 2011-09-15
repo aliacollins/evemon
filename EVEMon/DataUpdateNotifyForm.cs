@@ -1,8 +1,8 @@
 using System;
-using System.Text;
-using System.IO;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;

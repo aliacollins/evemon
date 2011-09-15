@@ -60,7 +60,7 @@ namespace EVEMon.Common
                 Notifications = new GlobalNotificationCollection();
                 Characters = new GlobalCharacterCollection();
                 Datafiles = new GlobalDatafileCollection();
-                Accounts = new GlobalAccountCollection();
+                APIKeys = new GlobalAPIKeyCollection();
                 EVEServer = new EveServer();
 
                 // Load static datas (min order to follow : skills before anything else, items before certs)
@@ -387,12 +387,12 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Accounts management
+        #region API Keys management
 
         /// <summary>
-        /// Gets the collection of all known accounts.
+        /// Gets the collection of all known API keys.
         /// </summary>
-        public static GlobalAccountCollection Accounts { get; private set; }
+        public static GlobalAPIKeyCollection APIKeys { get; private set; }
 
         /// <summary>
         /// Gets the collection of all characters.
@@ -425,10 +425,10 @@ namespace EVEMon.Common
             // Updates EVE server status
             EVEServer.UpdateOnOneSecondTick();
 
-            // Updates the accounts
-            foreach (Account account in Accounts)
+            // Updates the API key
+            foreach (APIKey apiKey in APIKeys)
             {
-                account.UpdateOnOneSecondTick();
+                apiKey.UpdateOnOneSecondTick();
             }
 
             // Updates the characters
@@ -466,14 +466,19 @@ namespace EVEMon.Common
         public static event EventHandler SettingsChanged;
 
         /// <summary>
-        /// Occurs when the collection of accounts changed.
+        /// Occurs when the collection of API Keys changed.
         /// </summary>
-        public static event EventHandler AccountCollectionChanged;
+        public static event EventHandler APIKeyCollectionChanged;
 
         /// <summary>
         /// Occurs when the collection of characters changed.
         /// </summary>
         public static event EventHandler CharacterCollectionChanged;
+
+        /// <summary>
+        /// Occurs when the API key info have been updated.
+        /// </summary>
+        public static event EventHandler APIKeyInfoUpdated;
 
         /// <summary>
         /// Occurs when the list of characters in an account has been updated.
@@ -488,7 +493,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when a character training check on an account has been updated.
         /// </summary>
-        public static event EventHandler AccountCharactersSkillInTrainingUpdated;
+        public static event EventHandler CharactersSkillInTrainingUpdated;
 
         /// <summary>
         /// Occurs when an account status has been updated.
@@ -639,14 +644,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the account collection changed.
+        /// Called when the API Key collection changed.
         /// </summary>
-        internal static void OnAccountCollectionChanged()
+        internal static void OnAPIKeyCollectionChanged()
         {
-            Trace("EveMonClient.OnAccountCollectionChanged");
+            Trace("EveMonClient.OnAPIKeyCollectionChanged");
             Settings.Save();
-            if (AccountCollectionChanged != null)
-                AccountCollectionChanged(null, EventArgs.Empty);
+            if (APIKeyCollectionChanged != null)
+                APIKeyCollectionChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -682,12 +687,24 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the API key info updated.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        internal static void OnAPIKeyInfoUpdated(APIKey apiKey)
+        {
+            Trace("EveMonClient.OnAPIKeyInfoUpdated - {0}", apiKey);
+            Settings.Save();
+            if (APIKeyInfoUpdated != null)
+                APIKeyInfoUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Called when the character list updated.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal static void OnCharacterListUpdated(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal static void OnCharacterListUpdated(APIKey apiKey)
         {
-            Trace("EveMonClient.OnCharacterListUpdated - {0}", account);
+            Trace("EveMonClient.OnCharacterListUpdated - {0}", apiKey);
             Settings.Save();
             if (CharacterListUpdated != null)
                 CharacterListUpdated(null, EventArgs.Empty);
@@ -908,23 +925,23 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when all account characters 'skill in training' check has been updated.
+        /// Called when all characters, exposed throu the API key, 'skill in training' check has been updated.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal static void OnAccountCharactersSkillInTrainingUpdated(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal static void OnCharactersSkillInTrainingUpdated(APIKey apiKey)
         {
-            Trace("EveMonClient.OnAccountCharactersSkillInTrainingUpdated - {0}", account);
-            if (AccountCharactersSkillInTrainingUpdated != null)
-                AccountCharactersSkillInTrainingUpdated(null, EventArgs.Empty);
+            Trace("EveMonClient.OnCharactersSkillInTrainingUpdated - {0}", apiKey);
+            if (CharactersSkillInTrainingUpdated != null)
+                CharactersSkillInTrainingUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>
         /// Called when an account status has been updated.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal static void OnAccountStatusUpdated(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal static void OnAccountStatusUpdated(APIKey apiKey)
         {
-            Trace("EveMonClient.OnAccountStatusUpdated - {0}", account);
+            Trace("EveMonClient.OnAccountStatusUpdated - {0}", apiKey);
             if (AccountStatusUpdated != null)
                 AccountStatusUpdated(null, EventArgs.Empty);
         }

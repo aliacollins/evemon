@@ -140,41 +140,15 @@ namespace EVEMon.Common
         #region Queries
 
         /// <summary>
-        /// Query the account balance for a character. Requires full api key. Used to test whether a key is a full or limited one.
+        /// Query the info for an API key.
         /// </summary>
-        /// <param name="userID"></param>
-        /// <param name="apiKey"></param>
-        /// <param name="charID"></param>
+        /// <param name="id"></param>
+        /// <param name="verificationCode"></param>
         /// <returns></returns>
-        public APIResult<SerializableAPIAccountBalance> QueryCharacterAccountBalance(long userID, string apiKey,
-                                                                                     long charID)
+        public APIResult<SerializableAPIKeyInfo> QueryAPIKeyInfo(long id, string verificationCode)
         {
-            HttpPostData postData =
-                new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
-            return QueryMethod<SerializableAPIAccountBalance>(APIMethods.CharacterAccountBalance, postData,
-                                                              RowsetsTransform);
-        }
-
-        /// <summary>
-        /// Query the status for the provided account. Requires full api key.
-        /// </summary>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
-        public APIResult<SerializableAPIAccountStatus> QueryAccountStatus(long userID, string apiKey)
-        {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
-            return QueryMethod<SerializableAPIAccountStatus>(APIMethods.AccountStatus, postData, RowsetsTransform);
-        }
-
-        /// <summary>
-        /// Query the characters list for the provided account.
-        /// </summary>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
-        public APIResult<SerializableAPICharacters> QueryCharactersList(long userID, string apiKey)
-        {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
-            return QueryMethod<SerializableAPICharacters>(APIMethods.CharacterList, postData, RowsetsTransform);
+            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataBase, id, verificationCode));
+            return QueryMethod<SerializableAPIKeyInfo>(APIMethods.APIKeyInfo, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -193,7 +167,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public APIResult<SerializableAPICharacterName> QueryCharacterName(string ids)
         {
-            HttpPostData postData = new HttpPostData(String.Format("ids={0}", ids));
+            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataIDsOnly, ids));
             return QueryMethod<SerializableAPICharacterName>(APIMethods.CharacterName, postData, RowsetsTransform);
         }
 
@@ -218,7 +192,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
+            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataBase, userID, apiKey));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -234,8 +208,8 @@ namespace EVEMon.Common
         public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long charID,
                                         QueryCallback<T> callback)
         {
-            HttpPostData postData =
-                new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
+            HttpPostData postData = new HttpPostData(String.Format(
+                NetworkConstants.PostDataWithCharID, userID, apiKey, charID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -253,7 +227,7 @@ namespace EVEMon.Common
                                         QueryCallback<T> callback)
         {
             HttpPostData postData = new HttpPostData(
-                String.Format("userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
+                String.Format(NetworkConstants.PostDataWithCharIDAndIDS, userID, apiKey, characterID, messageID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -263,7 +237,7 @@ namespace EVEMon.Common
         #region Querying helpers
 
         /// <summary>
-        /// Query this method with the provided HTTP POST data
+        /// Query this method with the provided HTTP POST data.
         /// </summary>
         /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult{T}"/>).</typeparam>
         /// <param name="method">The method to query</param>
@@ -296,7 +270,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Asynchrnoneously queries this method with the provided HTTP POST data
+        /// Asynchrnoneously queries this method with the provided HTTP POST data.
         /// </summary>
         /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult{T}"/>).</typeparam>
         /// <param name="method">The method to query</param>

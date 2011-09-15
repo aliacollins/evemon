@@ -4,34 +4,27 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
-namespace EVEMon.Accounting
+namespace EVEMon.ApiCredentialsManagement
 {
-    public partial class AccountDeletionWindow : EVEMonForm
+    public partial class ApiKeyDeletionWindow : EVEMonForm
     {
-        private readonly Account m_account;
+        private readonly APIKey m_apiKey;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="account"></param>
-        public AccountDeletionWindow(Account account)
+        /// <param name="apiKey"></param>
+        public ApiKeyDeletionWindow(APIKey apiKey)
         {
             InitializeComponent();
-            m_account = account;
+            m_apiKey = apiKey;
 
             // Add characters
             charactersListView.Items.Clear();
-            foreach (CharacterIdentity id in account.CharacterIdentities)
+            foreach (ListViewItem item in apiKey.CharacterIdentities.Select(
+                id => id.CCPCharacter).Where(ccpCharacter => ccpCharacter != null).Select(
+                    ccpCharacter => new ListViewItem(ccpCharacter.Name) { Tag = ccpCharacter, Checked = true }))
             {
-                // Skip if there is no CCP character for this identity.
-                CCPCharacter ccpCharacter = id.CCPCharacter;
-                if (ccpCharacter == null)
-                    continue;
-
-                // Add an item for this character
-                ListViewItem item = new ListViewItem(ccpCharacter.Name);
-                item.Tag = ccpCharacter;
-                item.Checked = true;
                 charactersListView.Items.Add(item);
             }
         }
@@ -41,10 +34,10 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void validationButton_Click(object sender, EventArgs e)
+        private void deleteButton_Click(object sender, EventArgs e)
         {
-            // Remove the account
-            EveMonClient.Accounts.Remove(m_account);
+            // Remove the API Key
+            EveMonClient.APIKeys.Remove(m_apiKey);
 
             // Remove the characters
             foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(

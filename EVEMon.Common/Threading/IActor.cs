@@ -11,13 +11,13 @@ namespace EVEMon.Common.Threading
         /// Invoke the provided delegate on the bound thread and immediately returns without waiting for the completion. Note that, when the calling thread and the bound thread are the same, we execute the action immediately without waiting.
         /// </summary>
         /// <param name="action">The action to invoke</param>
-        bool BeginInvoke(Action action);
+        void BeginInvoke(Action action);
 
         /// <summary>
         /// Invoke the provided delegate on the bound thread and wait for completion
         /// </summary>
         /// <param name="action">The action to invoke</param>
-        bool Invoke(Action action);
+        void Invoke(Action action);
 
         /// <summary>
         /// Asserts the calling thread is this actor's underlying thread or throws an exception

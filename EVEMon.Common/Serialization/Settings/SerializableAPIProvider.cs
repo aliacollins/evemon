@@ -18,6 +18,8 @@ namespace EVEMon.Common.Serialization.Settings
             {
                 APIMethods methodEnum = (APIMethods)Enum.Parse(typeof(APIMethods), methodName);
                 string methodURL = NetworkConstants.ResourceManager.GetString(methodName);
+                if (methodEnum == APIMethods.CorporationMarketOrders || methodEnum == APIMethods.CorporationIndustryJobs)
+                    continue;
                 Methods.Add(new SerializableAPIMethod { Method = methodEnum, Path = methodURL });
             }
         }

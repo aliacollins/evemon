@@ -52,10 +52,10 @@ namespace EVEMon.Common.Controls
         /// <param name="src"></param>
         /// <param name="bltFrom">Upper-left point on src to blt from</param>
         /// <returns></returns>
-        public static bool CopyGraphics(Graphics dest, Rectangle destClip, Graphics src, Point bltFrom)
+        public static void CopyGraphics(Graphics dest, Rectangle destClip, Graphics src, Point bltFrom)
         {
-            return BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
-                          src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
+            BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
+                   src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
 
 
@@ -75,8 +75,7 @@ namespace EVEMon.Common.Controls
         {
             public static AppBarData Create()
             {
-                AppBarData appBarData = new AppBarData();
-                appBarData.cbSize = Marshal.SizeOf(typeof(AppBarData));
+                AppBarData appBarData = new AppBarData { cbSize = Marshal.SizeOf(typeof(AppBarData)) };
                 return appBarData;
             }
 

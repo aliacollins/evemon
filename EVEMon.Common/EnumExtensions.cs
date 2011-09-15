@@ -10,6 +10,16 @@ namespace EVEMon.Common
     public static class EnumExtensions
     {
         /// <summary>
+        /// Checks whether the given member has an access mask.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static bool HasForcedOnStartup(this Enum item)
+        {
+            return GetAttribute<ForcedOnStartupAttribute>(item) != null;
+        }
+
+        /// <summary>
         /// Gets the description bound to the given enumeration member.
         /// </summary>
         /// <param name="item"></param>
@@ -40,13 +50,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the default value bound to the given enumeration member.
+        /// Gets the header bound to the given enumeration member.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static object GetDefaultValue(this Enum item)
+        public static UpdateAttribute GetUpdatePeriod(this Enum item)
         {
-            return GetAttribute<DefaultValueAttribute>(item).Value;
+            return GetAttribute<UpdateAttribute>(item);
         }
 
         /// <summary>
@@ -54,18 +64,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static bool HasAttribute<TAttribute>(this Enum item)
-            where TAttribute : Attribute
-        {
-            return GetAttribute<TAttribute>(item) != null;
-        }
-
-        /// <summary>
-        /// Gets the attribute associated to the given enumeration item.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static TAttribute GetAttribute<TAttribute>(this Enum item)
+        private static TAttribute GetAttribute<TAttribute>(this Enum item)
             where TAttribute : Attribute
         {
             MemberInfo[] members = item.GetType().GetMember(item.ToString());
@@ -93,7 +92,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> GetBaseValues<T>()
+        public static IEnumerable<T> GetBitValues<T>()
         {
             foreach (object value in Enum.GetValues(typeof(T)))
             {
@@ -105,7 +104,7 @@ namespace EVEMon.Common
                         continue;
                     found = !found;
 
-                    // If two bits matched, found is false again and value is not a power of two.
+                    // If two bits matched, found is false again and value is not a power of two
                     if (!found)
                         break;
                 }

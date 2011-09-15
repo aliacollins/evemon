@@ -32,6 +32,11 @@ namespace EVEMon.Common
         DateTime LastUpdate { get; }
 
         /// <summary>
+        /// Gets true when the API provider is not CCP or the cache timer has expired.
+        /// </summary>
+        bool CanForceUpdate { get; }
+
+        /// <summary>
         /// Gets the next time this instance should be updated (UTC), based on both the CCP cache time and the user preferences.
         /// </summary>
         DateTime NextUpdate { get; }
@@ -47,13 +52,8 @@ namespace EVEMon.Common
         IAPIResult LastResult { get; }
 
         /// <summary>
-        /// Gets true whether a full key is needed.
+        /// Gets true whether this monitor has access to data.
         /// </summary>
-        bool IsFullKeyNeeded { get; }
-
-        /// <summary>
-        /// Gets true when a force update is within CCP cache time.
-        /// </summary>
-        bool ForceUpdateWillCauseError { get; }
+        bool HasAccess { get; }
     }
 }

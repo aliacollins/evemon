@@ -221,7 +221,7 @@ namespace EVEMon
                 const int ContrastDiff = 64;
                 int colorValue = (textColor.R <= backColor.R - ContrastDiff) ? textColor.R : 0;
                 string colorElement = Convert.ToString(colorValue, 16);
-                color = String.Format("{0}{0}{0}", colorElement);
+                color = String.Format("{0}{0}{0}", (colorElement.Length == 1 ? String.Format("0{0}", colorElement) : colorElement));
             }
             return color;
         }

@@ -6,18 +6,6 @@ namespace EVEMon.Common.Serialization.Settings
 {
     public sealed class SerializableRecurringScheduleEntry : SerializableScheduleEntry
     {
-        [XmlAttribute("startDate")]
-        public DateTime StartDate { get; set; }
-
-        [XmlAttribute("endDate")]
-        public DateTime EndDate { get; set; }
-
-        [XmlElement("title")]
-        public string Title { get; set; }
-
-        [XmlElement("options")]
-        public ScheduleEntryOptions Options { get; set; }
-
         [XmlElement("frequency")]
         public RecurringFrequency Frequency { get; set; }
 

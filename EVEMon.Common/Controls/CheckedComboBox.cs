@@ -1,9 +1,9 @@
 using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Design;
 using System.Text;
 using System.Windows.Forms;
-using System.Drawing;
-using System.ComponentModel;
-using System.Drawing.Design;
 
 namespace EVEMon.Common.Controls
 {

@@ -63,25 +63,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize</typeparam>
-        /// <param name="filename">The file to deserialize from</param>
-        /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        public static T DeserializeXML<T>(string filename)
-            where T : class
-        {
-            return DeserializeXML<T>(filename, null);
-        }
-
-        /// <summary>
-        /// Process XML document.
+        ///Deserializes an XML document.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="filename">The XML document to deserialize from.</param>
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXML<T>(string filename, XslCompiledTransform transform)
+        public static T DeserializeXML<T>(string filename, XslCompiledTransform transform = null)
             where T : class
         {
             try

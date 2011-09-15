@@ -1,4 +1,4 @@
-﻿namespace EVEMon.APIErrorHandling
+﻿namespace EVEMon.ApiErrorHandling
 {
     partial class HttpTimeoutTroubleshooter
     {

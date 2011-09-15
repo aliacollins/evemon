@@ -419,13 +419,6 @@ namespace EVEMon.Common.Controls
 
         #region Private Enumerations and Structs
 
-        public enum EveImageSizeMode
-        {
-            Normal,
-            AutoSize,
-            StretchImage
-        };
-
         /// <summary>
         /// Identifies the image type being handled.
         /// </summary>

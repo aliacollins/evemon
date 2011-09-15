@@ -136,19 +136,19 @@
   <data name="AddAccount" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\addaccount.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="APIKeyFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="KeyGold32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\apikeyfull.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="APIKeyFull16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="KeyGold16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\apikeyfull16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="APIKeyLimited" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="KeyGrey32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\apikeylimited.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="APIKeyLimited16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="KeyGrey16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\apikeylimited16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="APIKeyWrong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="KeyWrong32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\apikeywrong.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="AttributeOptimize" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -426,5 +426,8 @@
   </data>
   <data name="DatafilesXSLT" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\serialization\datafiles\datafile-transform.xslt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AccountWide32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\accountwide32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

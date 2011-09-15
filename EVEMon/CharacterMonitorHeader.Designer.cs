@@ -38,7 +38,7 @@ namespace EVEMon
             this.ThrobberFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.UpdateThrobber = new Throbber();
             this.ThrobberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ChangeInfoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangeAPIKeyInfoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.QueryEverythingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ThrobberSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.UpdateLabel = new System.Windows.Forms.Label();
@@ -147,7 +147,7 @@ namespace EVEMon
             // ThrobberContextMenu
             // 
             this.ThrobberContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ChangeInfoMenuItem,
+            this.ChangeAPIKeyInfoMenuItem,
             this.QueryEverythingMenuItem,
             this.ThrobberSeparator});
             this.ThrobberContextMenu.Name = "cmsThrobberMenu";
@@ -155,12 +155,12 @@ namespace EVEMon
             this.ThrobberContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ThrobberContextMenu_Opening);
             this.ThrobberContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ThrobberContextMenu_ItemClicked);
             // 
-            // ChangeInfoMenuItem
+            // ChangeAPIKeyInfoMenuItem
             // 
-            this.ChangeInfoMenuItem.Name = "ChangeInfoMenuItem";
-            this.ChangeInfoMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.ChangeInfoMenuItem.Text = "Change API Key information...";
-            this.ChangeInfoMenuItem.Click += new System.EventHandler(this.ChangeInfoMenuItem_Click);
+            this.ChangeAPIKeyInfoMenuItem.Name = "ChangeInfoMenuItem";
+            this.ChangeAPIKeyInfoMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.ChangeAPIKeyInfoMenuItem.Text = "Change API Key Information...";
+            this.ChangeAPIKeyInfoMenuItem.Click += new System.EventHandler(this.ChangeAPIKeyInfoMenuItem_Click);
             // 
             // QueryEverythingMenuItem
             // 
@@ -528,7 +528,7 @@ namespace EVEMon
         private EVEMon.Common.Controls.CharacterPortrait CharacterPortrait;
         private System.Windows.Forms.Label SkillSummaryLabel;
         private System.Windows.Forms.ContextMenuStrip ThrobberContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem ChangeInfoMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ChangeAPIKeyInfoMenuItem;
         private System.Windows.Forms.ToolStripMenuItem QueryEverythingMenuItem;
         private System.Windows.Forms.ToolStripSeparator ThrobberSeparator;
         private System.Windows.Forms.ToolTip ToolTip;

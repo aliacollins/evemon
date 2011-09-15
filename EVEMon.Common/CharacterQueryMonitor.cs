@@ -20,23 +20,23 @@
         }
 
         /// <summary>
-        /// Check all the required account informations are known.
+        /// Gets the required API key information are known.
         /// </summary>
-        /// <returns>False if an account was required and not found.</returns>
-        protected override bool CheckAccount()
+        /// <returns>False if an API key was required and not found.</returns>
+        protected override bool HasAPIKey
         {
-            Account account = m_character.Identity.Account;
-            return account != null;
+            get { return m_character.Identity.APIKey != null; }
         }
 
         /// <summary>
-        /// Check whether there is a full key.
+        /// Gets a value indicating whether this monitor has access to data.
         /// </summary>
-        /// <returns></returns>
-        protected override bool HasFullKey()
+        /// <value>
+        /// 	<c>true</c> if this monitor has access; otherwise, <c>false</c>.
+        /// </value>
+        public override bool HasAccess
         {
-            Account account = m_character.Identity.Account;
-            return account != null && account.KeyLevel == CredentialsLevel.Full;
+            get { return (int)Method == (m_character.Identity.APIKey.AccessMask & (int)Method); }
         }
 
         /// <summary>
@@ -46,8 +46,8 @@
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            Account account = m_character.Identity.Account;
-            provider.QueryMethodAsync(Method, account.UserID, account.APIKey, m_character.CharacterID, callback);
+            APIKey apiKey = m_character.Identity.APIKey;
+            provider.QueryMethodAsync(Method, apiKey.ID, apiKey.VerificationCode, m_character.CharacterID, callback);
         }
     }
 }

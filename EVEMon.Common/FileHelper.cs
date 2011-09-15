@@ -72,7 +72,7 @@ namespace EVEMon.Common
         /// if the user denied to remove the read-only attribute or 
         /// if he didn't have the permissions to write the file;
         /// true otherwise.</returns>
-        public static bool OverwriteOrWarnTheUser(string destFileName, Func<Stream, bool> writeContentFunc)
+        public static void OverwriteOrWarnTheUser(string destFileName, Func<Stream, bool> writeContentFunc)
         {
             string tempFileName = Path.GetTempFileName();
             try
@@ -80,10 +80,10 @@ namespace EVEMon.Common
                 using (FileStream fs = new FileStream(tempFileName, FileMode.Open))
                 {
                     if (!writeContentFunc(fs))
-                        return false;
+                        return;
                 }
 
-                return OverwriteOrWarnTheUser(tempFileName, destFileName);
+                OverwriteOrWarnTheUser(tempFileName, destFileName);
             }
             finally
             {
@@ -99,7 +99,7 @@ namespace EVEMon.Common
         /// <param name="srcFileName">The source file name.</param>
         /// <param name="destFileName">The destination file name, it does not have to already exist</param>
         /// <returns>False if the user denied to remove the read-only attribute or if he didn't have the permissions to write the file; true otherwise.</returns>
-        public static bool OverwriteOrWarnTheUser(string srcFileName, string destFileName)
+        public static void OverwriteOrWarnTheUser(string srcFileName, string destFileName)
         {
             // While problems happen and the user ask to retry...
             while (true)
@@ -111,7 +111,7 @@ namespace EVEMon.Common
                     // We need to make sure this file is not read-only
                     // If it is, this method will request the user the permission to automatically remove the readonly attributes
                     if (!EnsureWritable(destFile))
-                        return false;
+                        return;
 
                     // Overwrite the file
                     File.Copy(srcFileName, destFileName, true);
@@ -122,7 +122,7 @@ namespace EVEMon.Common
                         destFile.IsReadOnly = false;
 
                     // Quit the loop
-                    return true;
+                    return;
                 }
                 catch (UnauthorizedAccessException exc)
                 {
@@ -141,12 +141,12 @@ namespace EVEMon.Common
                     if (result == DialogResult.Abort)
                     {
                         Application.Exit();
-                        return false;
+                        return;
                     }
 
                     // The loop will begin again if the users asked to retry
                     if (result == DialogResult.Ignore)
-                        return false;
+                        return;
                 }
             }
         }

@@ -8,6 +8,12 @@ namespace EVEMon.Common.Notifications
     public enum NotificationCategory
     {
         /// <summary>
+        /// An API key is to expire.
+        /// </summary>
+        [Header("API key expiration")]
+        APIKeyExpiration,
+        
+        /// <summary>
         /// An account is to expire.
         /// </summary>
         [Header("Account expiration")]
@@ -56,9 +62,9 @@ namespace EVEMon.Common.Notifications
         QueryingError,
 
         /// <summary>
-        /// The status of Tranquility changed.
+        /// The status of EVE server changed.
         /// </summary>
-        [Header("Tranquility status change")]
+        [Header("EVE server status change")]
         ServerStatusChange,
 
         /// <summary>

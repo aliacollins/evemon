@@ -114,13 +114,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyConquerableStationListError(APIResult<SerializableAPIConquerableStationList> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(null, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the conquerable station list.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                    {
+                        Description = "An error occurred while querying the conquerable station list.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -130,13 +130,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterNameError(APIResult<SerializableAPICharacterName> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(null, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the ID to Name conversion.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                    {
+                        Description = "An error occurred while querying the ID to Name conversion.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -146,12 +146,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyEVEBackendDatabaseDisabled(IAPIResult result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(null, result)
-                                                             {
-                                                                 Description = result.ErrorMessage,
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                    {
+                        Description = result.ErrorMessage,
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -174,84 +175,77 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyServerStatusError(APIResult<SerializableAPIServerStatus> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(null, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the server status.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                    {
+                        Description = "An error occurred while querying the server status.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
         #endregion
 
 
-        #region Account API errors
+        #region API key info errors
 
         /// <summary>
-        /// Invalidates the notification for an account's error.
+        /// Invalidates the notification for an API key's info error.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal void InvalidateAccountError(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal void InvalidateAPIKeyInfoError(APIKey apiKey)
         {
-            Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.QueryingError));
+            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.QueryingError));
         }
 
         /// <summary>
-        /// Notifies an account's characters list querying error.
+        /// Notifies an API key's characters list querying error.
         /// </summary>
-        /// <param name="account">The account.</param>
+        /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterListError(Account account, APIResult<SerializableAPICharacters> result)
+        internal void NotifyCharacterListError(APIKey apiKey, APIResult<SerializableAPIKeyInfo> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(account, result)
-                                                             {
-                                                                 Description =
-                                                                     String.Format(
-                                                                         "An error occurred while querying the character list for account {0}.",
-                                                                         account),
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(apiKey, result)
+                    {
+                        Description = String.Format(
+                            "An error occurred while querying the character list for API key {0}.", apiKey),
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
+        #endregion
+
+
+        #region Account status errors
+
         /// <summary>
-        /// Notifies an account's status querying error.
+        /// Invalidates the notification for an account status error.
         /// </summary>
-        /// <param name="account">The account.</param>
-        /// <param name="result">The result.</param>
-        internal void NotifyAccountStatusError(Account account, APIResult<SerializableAPIAccountStatus> result)
+        /// <param name="apiKey">The API key.</param>
+        internal void InvalidateAccountStatusError(APIKey apiKey)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(account, result)
-                                                             {
-                                                                 Description =
-                                                                     String.Format(
-                                                                         "An error occurred while querying the account status for account {0}.",
-                                                                         account),
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
-            Notify(notification);
+            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.QueryingError));
         }
 
         /// <summary>
-        /// Notifies an API key level querying error.
+        /// Notifies an account status querying error.
         /// </summary>
-        /// <param name="account">The account.</param>
+        /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyKeyLevelError(Account account, APIResult<SerializableAPIAccountStatus> result)
+        internal void NotifyAccountStatusError(APIKey apiKey, APIResult<SerializableAPIAccountStatus> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(account, result)
-                                                             {
-                                                                 Description =
-                                                                     String.Format(
-                                                                         "An error occurred while checking the API key level for account {0}.",
-                                                                         account),
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(apiKey, result)
+                    {
+                        Description = String.Format(
+                            "An error occurred while querying the account status for API key {0}.", apiKey),
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -276,13 +270,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifySkillInTrainingError(CCPCharacter character, APIResult<SerializableAPISkillInTraining> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the skill in training.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the skill in training.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -293,13 +287,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableAPICharacterSheet> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the character sheet.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the character sheet.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -310,13 +304,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterInfoError(CCPCharacter character, APIResult<SerializableAPICharacterInfo> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the character info.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the character info.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -327,12 +321,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableAPISkillQueue> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description = "An error occurred while querying the skill queue.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the skill queue.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -360,13 +355,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the personal market orders.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal market orders.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -377,13 +372,13 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCorporationMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the corporation market orders.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the corporation market orders.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -394,13 +389,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the personal industry jobs.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal industry jobs.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -411,13 +406,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the corporation industry jobs.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the corporation industry jobs.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -428,13 +423,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyResearchPointsError(CCPCharacter character, APIResult<SerializableAPIResearch> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occured while querying the research points.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the research points.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -445,13 +440,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyEVEMailMessagesError(CCPCharacter character, APIResult<SerializableAPIMailMessages> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occured while querying the EVE mail messages.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the EVE mail messages.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -462,13 +457,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyEVEMailBodiesError(CCPCharacter character, APIResult<SerializableAPIMailBodies> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occured while querying the EVE mail message body.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the EVE mail message body.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -496,13 +491,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyEVENotificationsError(CCPCharacter character, APIResult<SerializableAPINotifications> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occured while querying the EVE notifications.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the EVE notifications.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -513,46 +508,81 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyEVENotificationTextsError(CCPCharacter character, APIResult<SerializableAPINotificationTexts> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occured while querying the EVE notification text.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the EVE notification text.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
         #endregion
 
 
-        #region Account Expiration
+        #region API key expiration
+
+        /// <summary>
+        /// Invalidates the notification for an API key expiration.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        internal void InvalidateAPIKeyExpiration(APIKey apiKey)
+        {
+            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.APIKeyExpiration));
+        }
+
+        /// <summary>
+        /// Notifies an API key is to expire within a week.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        /// <param name="expireDate">The expire date.</param>
+        /// <param name="priority">The priority.</param>
+        internal void NotifyAPIKeyExpiration(APIKey apiKey, DateTime expireDate, NotificationPriority priority)
+        {
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.APIKeyExpiration, apiKey)
+                {
+                    Description = String.Format(
+                        "This API key expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
+                        apiKey),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = priority
+                };
+            Notify(notification);
+        }
+
+        #endregion
+
+
+        #region Account expiration
 
         /// <summary>
         /// Invalidates the notification for an account expiration.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal void InvalidateAccountExpiration(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal void InvalidateAccountExpiration(APIKey apiKey)
         {
-            Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountExpiration));
+            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.AccountExpiration));
         }
 
         /// <summary>
         /// Notifies an account is to expire within a week.
         /// </summary>
-        /// <param name="account">The account.</param>
+        /// <param name="apiKey">The API key.</param>
         /// <param name="expireDate">The expire date.</param>
         /// <param name="priority">The priority.</param>
-        internal void NotifyAccountExpiration(Account account, DateTime expireDate, NotificationPriority priority)
+        internal void NotifyAccountExpiration(APIKey apiKey, DateTime expireDate, NotificationPriority priority)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.AccountExpiration, account)
-                                                     {
-                                                         Description = String.Format("This account expires in {0}: {1}.",
-                                                                                     expireDate.ToRemainingTimeShortDescription(
-                                                                                         DateTimeKind.Utc), account),
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = priority
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.AccountExpiration, apiKey)
+                    {
+                        Description = String.Format(
+                            "This account expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
+                            apiKey),
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = priority
+                    };
             Notify(notification);
         }
 
@@ -564,33 +594,32 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an account's characters list querying error.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal void InvalidateAccountNotInTraining(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal void InvalidateAccountNotInTraining(APIKey apiKey)
         {
-            Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountNotInTraining));
+            Invalidate(new NotificationInvalidationEventArgs(apiKey, NotificationCategory.AccountNotInTraining));
         }
 
         /// <summary>
         /// Notifies an account has no character training.
         /// </summary>
-        /// <param name="account">The account.</param>
-        internal void NotifyAccountNotInTraining(Account account)
+        /// <param name="apiKey">The API key.</param>
+        internal void NotifyAccountNotInTraining(APIKey apiKey)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, account)
-                                                     {
-                                                         Description =
-                                                             String.Format("This account has no characters in training: {0}.",
-                                                                           account),
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = NotificationPriority.Warning
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.AccountNotInTraining, apiKey)
+                    {
+                        Description = String.Format("This account has no characters in training: {0}.", apiKey),
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Warning
+                    };
             Notify(notification);
         }
 
         #endregion
 
 
-        #region Insufficient Balance
+        #region Insufficient balance
 
         /// <summary>
         /// Invalidates the notification for an insufficient balance.
@@ -607,13 +636,13 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal void NotifyInsufficientBalance(CCPCharacter character)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.InsufficientBalance, character)
-                                                     {
-                                                         Description =
-                                                             "This character has insufficient balance to fulfill its buying orders.",
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = NotificationPriority.Warning
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.InsufficientBalance, character)
+                    {
+                        Description = "This character has insufficient balance to fulfill its buying orders.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Warning
+                    };
             Notify(notification);
         }
 
@@ -637,12 +666,13 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal void NotifyInsufficientClone(CCPCharacter character)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.InsufficientClone, character)
-                                                     {
-                                                         Description = "This character has an insufficient clone.",
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = NotificationPriority.Warning
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.InsufficientClone, character)
+                    {
+                        Description = "This character has an insufficient clone.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Warning
+                    };
             Notify(notification);
         }
 
@@ -658,12 +688,12 @@ namespace EVEMon.Common
         /// <param name="skillsCompleted">The completed skills.</param>
         internal void NotifySkillCompletion(CCPCharacter character, IEnumerable<QueuedSkill> skillsCompleted)
         {
-            SkillCompletionNotificationEventArgs notification = new SkillCompletionNotificationEventArgs(character,
-                                                                                                         skillsCompleted)
-                                                                    {
-                                                                        Behaviour = NotificationBehaviour.Merge,
-                                                                        Priority = NotificationPriority.Information
-                                                                    };
+            SkillCompletionNotificationEventArgs notification =
+                new SkillCompletionNotificationEventArgs(character, skillsCompleted)
+                    {
+                        Behaviour = NotificationBehaviour.Merge,
+                        Priority = NotificationPriority.Information
+                    };
             Notify(notification);
         }
 
@@ -687,12 +717,13 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal void NotifySkillQueueRoomAvailable(CCPCharacter character)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.SkillQueueRoomAvailable, character)
-                                                     {
-                                                         Description = "This character has free room in the skill queue.",
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = NotificationPriority.Warning
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.SkillQueueRoomAvailable, character)
+                    {
+                        Description = "This character has free room in the skill queue.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Warning
+                    };
             Notify(notification);
         }
 
@@ -717,12 +748,12 @@ namespace EVEMon.Common
         /// <param name="claimableCertificates">The claimable certificates.</param>
         internal void NotifyClaimableCertificate(CCPCharacter character, IEnumerable<Certificate> claimableCertificates)
         {
-            ClaimableCertificateNotificationEventArgs notification = new ClaimableCertificateNotificationEventArgs(character,
-                                                                                                                   claimableCertificates)
-                                                                         {
-                                                                             Behaviour = NotificationBehaviour.Overwrite,
-                                                                             Priority = NotificationPriority.Information
-                                                                         };
+            ClaimableCertificateNotificationEventArgs notification =
+                new ClaimableCertificateNotificationEventArgs(character, claimableCertificates)
+                    {
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Information
+                    };
             Notify(notification);
         }
 
@@ -765,19 +796,20 @@ namespace EVEMon.Common
             if (String.IsNullOrEmpty(text))
                 return;
 
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.ServerStatusChange, null)
-                                                     {
-                                                         Description = text,
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = NotificationPriority.Information
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.ServerStatusChange, null)
+                    {
+                        Description = text,
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Information
+                    };
             Notify(notification);
         }
 
         #endregion
 
 
-        #region IGB Service Initilization Exception
+        #region IGB service initilization exception
 
         /// <summary>
         /// Invalidates the notification for an socket error on starting IGB service.
@@ -793,14 +825,14 @@ namespace EVEMon.Common
         /// <param name="port">The port.</param>
         internal void NotifyIgbServiceException(int port)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.IgbServiceException, null)
-                                                     {
-                                                         Description =
-                                                             String.Format(CultureConstants.DefaultCulture,
-                                                                           "Failed to start the IGB server on port {0}.", port),
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Priority = NotificationPriority.Error
-                                                     };
+            NotificationEventArgs notification =
+                new NotificationEventArgs(NotificationCategory.IgbServiceException, null)
+                    {
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "Failed to start the IGB server on port {0}.", port),
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -816,11 +848,12 @@ namespace EVEMon.Common
         /// <param name="expiredOrders">The expired orders.</param>
         internal void NotifyMarkerOrdersEnding(Character character, IEnumerable<MarketOrder> expiredOrders)
         {
-            MarketOrdersNotificationEventArgs notification = new MarketOrdersNotificationEventArgs(character, expiredOrders)
-                                                                 {
-                                                                     Behaviour = NotificationBehaviour.Merge,
-                                                                     Priority = NotificationPriority.Information
-                                                                 };
+            MarketOrdersNotificationEventArgs notification =
+                new MarketOrdersNotificationEventArgs(character, expiredOrders)
+                    {
+                        Behaviour = NotificationBehaviour.Merge,
+                        Priority = NotificationPriority.Information
+                    };
             Notify(notification);
         }
 
@@ -836,11 +869,12 @@ namespace EVEMon.Common
         /// <param name="jobsCompleted">The completed jobs.</param>
         internal void NotifyIndustryJobCompletion(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
-            IndustryJobsNotificationEventArgs notification = new IndustryJobsNotificationEventArgs(character, jobsCompleted)
-                                                                 {
-                                                                     Behaviour = NotificationBehaviour.Merge,
-                                                                     Priority = NotificationPriority.Information
-                                                                 };
+            IndustryJobsNotificationEventArgs notification =
+                new IndustryJobsNotificationEventArgs(character, jobsCompleted)
+                    {
+                        Behaviour = NotificationBehaviour.Merge,
+                        Priority = NotificationPriority.Information
+                    };
             Notify(notification);
         }
 

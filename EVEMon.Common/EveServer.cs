@@ -10,7 +10,7 @@ namespace EVEMon.Common
     {
         private int m_users;
         private ServerStatus m_status;
-        private readonly QueryMonitor<SerializableAPIServerStatus> m_monitor;
+        private readonly QueryMonitor<SerializableAPIServerStatus> m_serverStatusMonitor;
 
         /// <summary>
         /// Constructor.
@@ -19,8 +19,8 @@ namespace EVEMon.Common
         {
             m_status = ServerStatus.Online;
 
-            m_monitor = new QueryMonitor<SerializableAPIServerStatus>(APIMethods.ServerStatus);
-            m_monitor.Updated += OnMonitorUpdated;
+            m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(APIMethods.ServerStatus);
+            m_serverStatusMonitor.Updated += OnServerStatusMonitorUpdated;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace EVEMon.Common
         /// </summary>
         public void UpdateOnOneSecondTick()
         {
-            m_monitor.UpdateOnOneSecondTick();
+            m_serverStatusMonitor.UpdateOnOneSecondTick();
         }
 
         /// <summary>
@@ -71,14 +71,14 @@ namespace EVEMon.Common
         /// </summary>
         public void ForceUpdate()
         {
-            m_monitor.ForceUpdate(false);
+            m_serverStatusMonitor.ForceUpdate(false);
         }
 
         /// <summary>
         /// Occurs when CCP returns new data.
         /// </summary>
         /// <param name="result"></param>
-        private void OnMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
+        private void OnServerStatusMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
         {
             // Was there an error ?
             ServerStatus lastStatus = m_status;

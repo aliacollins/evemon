@@ -276,11 +276,11 @@ namespace EVEMon.Common.Collections
 
             for (int i = 0; i < Count; i++)
             {
-                if (comparer.Equals(m_items[i], item))
-                {
-                    RemoveAt(i);
-                    return true;
-                }
+                if (!comparer.Equals(m_items[i], item))
+                    continue;
+
+                RemoveAt(i);
+                return true;
             }
             return false;
         }

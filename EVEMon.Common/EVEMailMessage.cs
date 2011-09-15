@@ -243,8 +243,8 @@ namespace EVEMon.Common
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
                 APIMethods.MailBodies,
-                m_ccpCharacter.Identity.Account.UserID,
-                m_ccpCharacter.Identity.Account.APIKey,
+                m_ccpCharacter.Identity.APIKey.ID,
+                m_ccpCharacter.Identity.APIKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
                 MessageID,
                 OnEVEMailBodyDownloaded);

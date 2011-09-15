@@ -42,7 +42,7 @@ namespace EVEMon.SkillPlanner
             // Call the base method
             base.EveObjectSelectControl_Load(sender, e);
 
-            m_metaGroups.AddRange(EnumExtensions.GetBaseValues<ItemMetaGroup>());
+            m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
 
             // Set the presets
             m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesMarketGroupID));

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Diagnostics;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace EVEMon.Watchdog
 {

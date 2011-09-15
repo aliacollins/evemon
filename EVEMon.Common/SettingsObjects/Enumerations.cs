@@ -381,29 +381,6 @@ namespace EVEMon.Common.SettingsObjects
     #endregion
 
 
-    #region Full API Key Features
-
-    public enum FullAPIKeyFeatures
-    {
-        [Header("Market")]
-        MarketOrders,
-
-        [Header("Industry")]
-        IndustryJobs,
-
-        [Header("Research")]
-        ResearchPoints,
-
-        [Header("Mail")]
-        MailMessages,
-
-        [Header("Notification")]
-        Notifications,
-    }
-
-    #endregion
-
-
     #region EVE API Update Period
 
     public enum UpdatePeriod

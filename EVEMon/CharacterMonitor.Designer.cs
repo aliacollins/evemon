@@ -53,26 +53,26 @@ namespace EVEMon
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
-            this.skillQueueControl = new SkillQueueControl();
+            this.skillQueueControl = new EVEMon.Common.Controls.SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.skillsPanel = new BorderPanel();
+            this.skillsPanel = new EVEMon.Common.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
-            this.multiPanel = new MultiPanel();
-            this.standingsPage = new MultiPanelPage();
+            this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
+            this.standingsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.standingsList = new EVEMon.MainWindowStandingsList();
-            this.skillsPage = new MultiPanelPage();
+            this.skillsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.skillsList = new EVEMon.MainWindowSkillsList();
-            this.ordersPage = new MultiPanelPage();
+            this.ordersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.ordersList = new EVEMon.MainWindowMarketOrdersList();
-            this.skillQueuePage = new MultiPanelPage();
+            this.skillQueuePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
-            this.jobsPage = new MultiPanelPage();
+            this.jobsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.jobsList = new EVEMon.MainWindowIndustryJobsList();
-            this.researchPage = new MultiPanelPage();
+            this.researchPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.researchList = new EVEMon.MainWindowResearchPointsList();
-            this.mailMessagesPage = new MultiPanelPage();
+            this.mailMessagesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mailMessagesList = new EVEMon.MainWindowEveMailMessagesList();
-            this.eveNotificationsPage = new MultiPanelPage();
+            this.eveNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.eveNotificationsList = new EVEMon.MainWindowEveNotificationsList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.NotificationList();
@@ -433,6 +433,7 @@ namespace EVEMon
             this.standingsPage.Name = "standingsPage";
             this.standingsPage.Size = new System.Drawing.Size(568, 74);
             this.standingsPage.TabIndex = 7;
+            this.standingsPage.Tag = "Standings";
             this.standingsPage.Text = "standingsPage";
             // 
             // standingsList
@@ -452,6 +453,7 @@ namespace EVEMon
             this.skillsPage.Name = "skillsPage";
             this.skillsPage.Size = new System.Drawing.Size(568, 74);
             this.skillsPage.TabIndex = 0;
+            this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
             // 
             // skillsList
@@ -470,8 +472,9 @@ namespace EVEMon
             this.ordersPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ordersPage.Location = new System.Drawing.Point(0, 0);
             this.ordersPage.Name = "ordersPage";
-            this.ordersPage.Size = new System.Drawing.Size(568, 108);
+            this.ordersPage.Size = new System.Drawing.Size(568, 74);
             this.ordersPage.TabIndex = 2;
+            this.ordersPage.Tag = "MarketOrders";
             this.ordersPage.Text = "ordersPage";
             // 
             // ordersList
@@ -482,9 +485,10 @@ namespace EVEMon
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
             this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.ordersList.Size = new System.Drawing.Size(568, 108);
+            this.ordersList.Size = new System.Drawing.Size(568, 74);
             this.ordersList.TabIndex = 13;
             this.ordersList.TextFilter = "";
+            this.ordersList.Visibility = false;
             // 
             // skillQueuePage
             // 
@@ -492,8 +496,9 @@ namespace EVEMon
             this.skillQueuePage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillQueuePage.Location = new System.Drawing.Point(0, 0);
             this.skillQueuePage.Name = "skillQueuePage";
-            this.skillQueuePage.Size = new System.Drawing.Size(568, 108);
+            this.skillQueuePage.Size = new System.Drawing.Size(568, 74);
             this.skillQueuePage.TabIndex = 1;
+            this.skillQueuePage.Tag = "SkillQueue";
             this.skillQueuePage.Text = "skillQueuePage";
             // 
             // skillQueueList
@@ -502,7 +507,7 @@ namespace EVEMon
             this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillQueueList.Location = new System.Drawing.Point(0, 0);
             this.skillQueueList.Name = "skillQueueList";
-            this.skillQueueList.Size = new System.Drawing.Size(568, 108);
+            this.skillQueueList.Size = new System.Drawing.Size(568, 74);
             this.skillQueueList.TabIndex = 0;
             // 
             // jobsPage
@@ -511,8 +516,9 @@ namespace EVEMon
             this.jobsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jobsPage.Location = new System.Drawing.Point(0, 0);
             this.jobsPage.Name = "jobsPage";
-            this.jobsPage.Size = new System.Drawing.Size(568, 108);
+            this.jobsPage.Size = new System.Drawing.Size(568, 74);
             this.jobsPage.TabIndex = 3;
+            this.jobsPage.Tag = "IndustryJobs";
             this.jobsPage.Text = "industryJobsPage";
             // 
             // jobsList
@@ -523,9 +529,10 @@ namespace EVEMon
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
             this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.jobsList.Size = new System.Drawing.Size(568, 108);
+            this.jobsList.Size = new System.Drawing.Size(568, 74);
             this.jobsList.TabIndex = 0;
             this.jobsList.TextFilter = "";
+            this.jobsList.Visibility = false;
             // 
             // researchPage
             // 
@@ -533,8 +540,9 @@ namespace EVEMon
             this.researchPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.researchPage.Location = new System.Drawing.Point(0, 0);
             this.researchPage.Name = "researchPage";
-            this.researchPage.Size = new System.Drawing.Size(568, 108);
+            this.researchPage.Size = new System.Drawing.Size(568, 74);
             this.researchPage.TabIndex = 4;
+            this.researchPage.Tag = "ResearchPoints";
             this.researchPage.Text = "researchPage";
             // 
             // researchList
@@ -543,7 +551,7 @@ namespace EVEMon
             this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.researchList.Location = new System.Drawing.Point(0, 0);
             this.researchList.Name = "researchList";
-            this.researchList.Size = new System.Drawing.Size(568, 108);
+            this.researchList.Size = new System.Drawing.Size(568, 74);
             this.researchList.TabIndex = 0;
             this.researchList.TextFilter = "";
             // 
@@ -553,8 +561,9 @@ namespace EVEMon
             this.mailMessagesPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mailMessagesPage.Location = new System.Drawing.Point(0, 0);
             this.mailMessagesPage.Name = "mailMessagesPage";
-            this.mailMessagesPage.Size = new System.Drawing.Size(568, 108);
+            this.mailMessagesPage.Size = new System.Drawing.Size(568, 74);
             this.mailMessagesPage.TabIndex = 5;
+            this.mailMessagesPage.Tag = "MailMessages";
             this.mailMessagesPage.Text = "mailMessagesPage";
             // 
             // mailMessagesList
@@ -565,7 +574,7 @@ namespace EVEMon
             this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
             this.mailMessagesList.Name = "mailMessagesList";
             this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.mailMessagesList.Size = new System.Drawing.Size(568, 108);
+            this.mailMessagesList.Size = new System.Drawing.Size(568, 74);
             this.mailMessagesList.TabIndex = 0;
             this.mailMessagesList.TextFilter = "";
             // 
@@ -575,9 +584,9 @@ namespace EVEMon
             this.eveNotificationsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eveNotificationsPage.Location = new System.Drawing.Point(0, 0);
             this.eveNotificationsPage.Name = "eveNotificationsPage";
-            this.eveNotificationsPage.Size = new System.Drawing.Size(568, 108);
+            this.eveNotificationsPage.Size = new System.Drawing.Size(568, 74);
             this.eveNotificationsPage.TabIndex = 6;
-            this.eveNotificationsPage.Tag = "";
+            this.eveNotificationsPage.Tag = "Notifications";
             this.eveNotificationsPage.Text = "eveNotificationsPage";
             // 
             // eveNotificationsList
@@ -588,7 +597,7 @@ namespace EVEMon
             this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
             this.eveNotificationsList.Name = "eveNotificationsList";
             this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.eveNotificationsList.Size = new System.Drawing.Size(568, 108);
+            this.eveNotificationsList.Size = new System.Drawing.Size(568, 74);
             this.eveNotificationsList.TabIndex = 0;
             this.eveNotificationsList.TextFilter = "";
             // 
@@ -604,7 +613,7 @@ namespace EVEMon
             this.warningLabel.Name = "warningLabel";
             this.warningLabel.Size = new System.Drawing.Size(568, 17);
             this.warningLabel.TabIndex = 1;
-            this.warningLabel.Text = "Key level warning.";
+            this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // notificationList
@@ -938,8 +947,8 @@ namespace EVEMon
             this.featuresMenu.Name = "featuresMenu";
             this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.featuresMenu.Size = new System.Drawing.Size(29, 22);
-            this.featuresMenu.Text = "Features";
-            this.featuresMenu.ToolTipText = "Full API key features";
+            this.featuresMenu.Text = "More features";
+            this.featuresMenu.ToolTipText = "Advanced features";
             this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
             this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
             // 

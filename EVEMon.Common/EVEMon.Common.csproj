@@ -87,6 +87,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIKeyQueryMonitor.cs" />
+    <Compile Include="CharacterIdentityIgnoreList.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">
@@ -155,7 +157,7 @@
     <Compile Include="Controls\TrayIcon.Designer.cs">
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomEventArgs\AccountCreationEventArgs.cs" />
+    <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />
     <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
+    <Compile Include="GlobalAPIKeyCollection.cs" />
     <Compile Include="IEveMessage.cs" />
     <Compile Include="EveNotification.cs" />
     <Compile Include="EveNotificationsCollection.cs" />
@@ -233,6 +236,8 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAPIKeyInfo.cs" />
+    <Compile Include="Serialization\API\SerializableAPIKeyItem.cs" />
     <Compile Include="Serialization\API\SerializableEmploymentHistory.cs" />
     <Compile Include="Serialization\API\SerializableAgentStanding.cs" />
     <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
@@ -294,6 +299,7 @@
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
+    <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
@@ -303,10 +309,10 @@
     <Compile Include="Standing.cs" />
     <Compile Include="StandingCollection.cs" />
     <Compile Include="Data\StaticSkillExtensions.cs" />
+    <Compile Include="APIKey.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
-    <Compile Include="Account.cs" />
     <Compile Include="BuyOrder.cs" />
     <Compile Include="Datafile.cs" />
     <Compile Include="APIProvider.cs" />
@@ -457,7 +463,6 @@
     <Compile Include="SettingsObjects\SerializableColor.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="SkillGroup.cs" />
-    <Compile Include="CharacterCollection.cs" />
     <Compile Include="LocalXmlCache.cs" />
     <Compile Include="SettingsObjects\PlanExportSettings.cs" />
     <Compile Include="Character.cs" />
@@ -494,12 +499,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountComparer.cs" />
-    <Compile Include="AccountIgnoreList.cs" />
-    <Compile Include="AccountQueryMonitor.cs" />
     <Compile Include="Attributes\EnforceUIThreadAffinity.cs" />
     <Compile Include="Attributes\ForcedOnStartupAttribute.cs" />
-    <Compile Include="Attributes\FullKeyAttribute.cs" />
     <Compile Include="Attributes\HeaderAttribute.cs" />
     <Compile Include="Attributes\Internals\NotifyPropertyChanged.Subs.cs" />
     <Compile Include="Attributes\NotifyPropertyChanged.cs" />
@@ -690,7 +691,7 @@
     <Compile Include="Serialization\API\SerializableCharacterCertificate.cs" />
     <Compile Include="Serialization\API\SerializableImplantSet.cs" />
     <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />
-    <Compile Include="Serialization\Settings\SerializableSimpleScheduleEntry.cs" />
+    <Compile Include="Serialization\Settings\SerializableScheduleEntry.cs" />
     <Compile Include="SettingsObjects\CalendarSettings.cs" />
     <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\ItemBrowserSettings.cs" />
@@ -706,7 +707,6 @@
     <Compile Include="SettingsObjects\NotificationSettings.cs" />
     <Compile Include="Serialization\Settings\SerializableScheduler.cs" />
     <Compile Include="SettingsObjects\SerializableDictionary.cs" />
-    <Compile Include="Serialization\Settings\SerializableAccount.cs" />
     <Compile Include="Serialization\Settings\SerializableSettingsImplantSet.cs" />
     <Compile Include="Serialization\Settings\SerializablePlan.cs" />
     <Compile Include="Serialization\Datafiles\SkillsDatafile.cs" />
@@ -737,7 +737,6 @@
     <Compile Include="Threading\UIActorTimer.cs" />
     <Compile Include="TimeExtensions.cs" />
     <Compile Include="UriCharacter.cs" />
-    <Compile Include="GlobalAccountCollection.cs" />
     <Compile Include="GlobalAPIProviderCollection.cs" />
     <Compile Include="GlobalCharacterIdentityCollection.cs" />
     <Compile Include="GlobalMonitoredCharacterCollection.cs" />
@@ -973,6 +972,7 @@
     <None Include="Resources\Images\Warning16.png" />
     <None Include="Resources\Images\Window.png" />
     <Content Include="Resources\Images\EVEMonLogoBlue.png" />
+    <Content Include="Resources\Images\AccountWide32.png" />
     <Content Include="Resources\Images\logo-100.png" />
     <Content Include="Resources\Images\MoveDown.png" />
     <Content Include="Resources\Images\MoveUp.png" />

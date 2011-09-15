@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.Settings
         public SerializableSettings()
         {
             Plans = new List<SerializablePlan>();
-            Accounts = new List<SerializableAccount>();
+            APIKeys = new List<SerializableAPIKey>();
             Characters = new List<SerializableSettingsCharacter>();
             MonitoredCharacters = new List<MonitoredCharacterSettings>();
             APIProviders = new SerializableAPIProviders();
@@ -34,9 +34,9 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlElement("compatibility")]
         public CompatibilityMode Compatibility { get; set; }
 
-        [XmlArray("accounts")]
-        [XmlArrayItem("account")]
-        public List<SerializableAccount> Accounts { get; set; }
+        [XmlArray("apiKeys")]
+        [XmlArrayItem("apikey")]
+        public List<SerializableAPIKey> APIKeys { get; set; }
 
         [XmlArray("characters")]
         [XmlArrayItem("ccp", typeof(SerializableCCPCharacter))]

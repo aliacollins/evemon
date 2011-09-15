@@ -62,6 +62,10 @@ namespace EVEMon.SettingsUI
                 if (String.IsNullOrEmpty(method.Path))
                     method.Path = APIProvider.DefaultProvider.Methods.First(x => x.Method == method.Method).Path;
 
+                // Skip method with no path
+                if (String.IsNullOrWhiteSpace(method.Path))
+                    continue;
+
                 // Add row
                 int rowIndex = dgMethods.Rows.Add(method.Method, method.Path);
                 dgMethods.Rows[rowIndex].Tag = method;

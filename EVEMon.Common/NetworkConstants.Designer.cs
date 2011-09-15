@@ -61,20 +61,20 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.eveonline.com/api/default.asp.
-        /// </summary>
-        public static string APIAccountCredentials {
-            get {
-                return ResourceManager.GetString("APIAccountCredentials", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /account/AccountStatus.xml.aspx.
         /// </summary>
         public static string APIAccountStatus {
             get {
                 return ResourceManager.GetString("APIAccountStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /account/APIKeyInfo.xml.aspx.
+        /// </summary>
+        public static string APIAPIKeyInfo {
+            get {
+                return ResourceManager.GetString("APIAPIKeyInfo", resourceCulture);
             }
         }
         
@@ -151,20 +151,47 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /corp/IndustryJobs.xml.aspx.
-        /// </summary>
-        public static string APICorporationIndustryJobs {
-            get {
-                return ResourceManager.GetString("APICorporationIndustryJobs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /corp/MarketOrders.xml.aspx.
         /// </summary>
         public static string APICorporationMarketOrders {
             get {
                 return ResourceManager.GetString("APICorporationMarketOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://support.eveonline.com/api.
+        /// </summary>
+        public static string APICredentials {
+            get {
+                return ResourceManager.GetString("APICredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://support.eveonline.com/api/key/activeinstalllinks.
+        /// </summary>
+        public static string APICredentialsInstallLinks {
+            get {
+                return ResourceManager.GetString("APICredentialsInstallLinks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://support.eveonline.com/api/key/createpredefined/{0}.
+        /// </summary>
+        public static string APICredentialsPredefined {
+            get {
+                return ResourceManager.GetString("APICredentialsPredefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://support.eveonline.com/api/key/update/{0}.
+        /// </summary>
+        public static string APICredentialsUpdate {
+            get {
+                return ResourceManager.GetString("APICredentialsUpdate", resourceCulture);
             }
         }
         
@@ -385,6 +412,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://secure.eveonline.com/AccountManMenu.aspx.
+        /// </summary>
+        public static string CCPAccountManage {
+            get {
+                return ResourceManager.GetString("CCPAccountManage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://eve.no-ip.de/{0}/{1}/{2}.png.
         /// </summary>
         public static string CCPIcons {
@@ -543,6 +579,42 @@ namespace EVEMon.Common {
         public static string MyEVELevelImage {
             get {
                 return ResourceManager.GetString("MyEVELevelImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to keyID={0}&amp;vCode={1}.
+        /// </summary>
+        public static string PostDataBase {
+            get {
+                return ResourceManager.GetString("PostDataBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ids={0}.
+        /// </summary>
+        public static string PostDataIDsOnly {
+            get {
+                return ResourceManager.GetString("PostDataIDsOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to keyID={0}&amp;vCode={1}&amp;characterID={2}.
+        /// </summary>
+        public static string PostDataWithCharID {
+            get {
+                return ResourceManager.GetString("PostDataWithCharID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;ids={3}.
+        /// </summary>
+        public static string PostDataWithCharIDAndIDS {
+            get {
+                return ResourceManager.GetString("PostDataWithCharIDAndIDS", resourceCulture);
             }
         }
         

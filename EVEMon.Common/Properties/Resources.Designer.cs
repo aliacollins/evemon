@@ -67,44 +67,16 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap AccountWide32 {
+            get {
+                object obj = ResourceManager.GetObject("AccountWide32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap AddAccount {
             get {
                 object obj = ResourceManager.GetObject("AddAccount", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap APIKeyFull {
-            get {
-                object obj = ResourceManager.GetObject("APIKeyFull", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap APIKeyFull16 {
-            get {
-                object obj = ResourceManager.GetObject("APIKeyFull16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap APIKeyLimited {
-            get {
-                object obj = ResourceManager.GetObject("APIKeyLimited", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap APIKeyLimited16 {
-            get {
-                object obj = ResourceManager.GetObject("APIKeyLimited16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap APIKeyWrong {
-            get {
-                object obj = ResourceManager.GetObject("APIKeyWrong", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -213,7 +185,6 @@ namespace EVEMon.Common.Properties {
         ///&lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;
         ///                xmlns:msxsl=&quot;urn:schemas-microsoft-com:xslt&quot; exclude-result-prefixes=&quot;msxsl&quot;&gt;
         ///  &lt;xsl:output method=&quot;xml&quot; indent=&quot;yes&quot;/&gt;
-        ///
         ///  &lt;xsl:template match=&quot;@* | node()&quot;&gt;
         ///    &lt;xsl:copy&gt;
         ///      &lt;xsl:apply-templates select=&quot;@* | node()&quot;/&gt;
@@ -223,7 +194,7 @@ namespace EVEMon.Common.Properties {
         ///  &lt;xsl:template match=&quot;@Name&quot;&gt;
         ///    &lt;xsl:attribute name=&quot;name&quot;&gt;
         ///      &lt;xsl:value-of select=&quot;.&quot;/&gt;
-        ///    &lt;/xs [rest of string was truncated]&quot;;.
+        ///    &lt;/xsl: [rest of string was truncated]&quot;;.
         /// </summary>
         public static string DatafilesXSLT {
             get {
@@ -441,6 +412,41 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap KeyGold16 {
+            get {
+                object obj = ResourceManager.GetObject("KeyGold16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap KeyGold32 {
+            get {
+                object obj = ResourceManager.GetObject("KeyGold32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap KeyGrey16 {
+            get {
+                object obj = ResourceManager.GetObject("KeyGrey16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap KeyGrey32 {
+            get {
+                object obj = ResourceManager.GetObject("KeyGrey32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap KeyWrong32 {
+            get {
+                object obj = ResourceManager.GetObject("KeyWrong32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap LeadsTo {
             get {
                 object obj = ResourceManager.GetObject("LeadsTo", resourceCulture);
@@ -641,8 +647,8 @@ namespace EVEMon.Common.Properties {
         ///    &lt;/xsl:copy&gt;
         ///  &lt;/xsl:template&gt;
         ///
-        ///  &lt;!-- Rowsets are transformed into something else--&gt;
-        ///  &lt;xsl:templat [rest of string was truncated]&quot;;.
+        ///  &lt;!-- Transform APIKeyInfo &apos;characterName&apos; to &apos;name&apos;--&gt;
+        ///  &lt;xsl:temp [rest of string was truncated]&quot;;.
         /// </summary>
         public static string RowsetsXSLT {
             get {

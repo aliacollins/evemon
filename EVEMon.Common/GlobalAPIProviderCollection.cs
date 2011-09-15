@@ -17,7 +17,7 @@ namespace EVEMon.Common
         private APIProvider m_currentProvider;
 
         /// <summary>
-        /// Private constructor, only the mother class can instantiate it
+        /// Private constructor, only the mother class can instantiate it.
         /// </summary>
         internal GlobalAPIProviderCollection()
         {
@@ -28,7 +28,7 @@ namespace EVEMon.Common
         #region Public properties and methods
 
         /// <summary>
-        /// Gets the default provider
+        /// Gets the default provider.
         /// </summary>
         public static APIProvider DefaultProvider
         {
@@ -36,7 +36,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the default provider
+        /// Gets the default provider.
         /// </summary>
         public static APIProvider TestProvider
         {
@@ -44,7 +44,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets an enumeration over the used-defined providers
+        /// Gets an enumeration over the used-defined providers.
         /// </summary>
         public IEnumerable<APIProvider> CustomProviders
         {
@@ -52,7 +52,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the used provider
+        /// Gets the used provider.
         /// </summary>
         /// <exception cref="InvalidOperationException">The given provider is not in the list</exception>
         public APIProvider CurrentProvider
@@ -76,7 +76,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets an API provider by its name, returning null when not found
+        /// Gets an API provider by its name, returning null when not found.
         /// </summary>
         /// <param name="name"></param>
         /// <returns>The wanted API provider when found; null otherwise.</returns>
@@ -97,7 +97,7 @@ namespace EVEMon.Common
         #region Importation/exportation and other internals
 
         /// <summary>
-        /// Update the providers with the provided serialization object
+        /// Update the providers with the provided serialization object.
         /// </summary>
         /// <param name="serial"></param>
         internal void Import(SerializableAPIProviders serial)
@@ -133,7 +133,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports the providers to a serialization object
+        /// Exports the providers to a serialization object.
         /// </summary>
         /// <returns></returns>
         internal SerializableAPIProviders Export()
@@ -148,7 +148,11 @@ namespace EVEMon.Common
 
                 // Methods
                 serialProvider.Methods.Clear();
-                foreach (APIMethod method in provider.Methods)
+                foreach (APIMethod method in provider.Methods.Where(
+                    method => !String.IsNullOrWhiteSpace(method.Path)).Where(
+                        method => method.Method != APIMethods.CorporationMarketOrders &&
+                                  method.Method != APIMethods.CorporationIndustryJobs)
+                    )
                 {
                     serialProvider.Methods.Add(new SerializableAPIMethod { Method = method.Method, Path = method.Path });
                 }
@@ -161,7 +165,7 @@ namespace EVEMon.Common
 
 
         /// <summary>
-        /// Core method to implement for collection services
+        /// Core method to implement for collection services.
         /// </summary>
         /// <returns></returns>
         protected override IEnumerable<APIProvider> Enumerate()

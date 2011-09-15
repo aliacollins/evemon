@@ -15,7 +15,7 @@ namespace EVEMon.Common.SettingsObjects
                                                           {
                                                               EveNotificationsColumn.SenderName,
                                                               EveNotificationsColumn.Type,
-                                                              EveNotificationsColumn.SentDate,
+                                                              EveNotificationsColumn.SentDate
                                                           };
 
             Columns = EnumExtensions.GetValues<EveNotificationsColumn>().Where(

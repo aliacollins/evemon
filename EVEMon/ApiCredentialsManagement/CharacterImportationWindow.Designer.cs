@@ -1,7 +1,7 @@
 ﻿using EVEMon.Common;
 using EVEMon.Common.Controls;
 
-namespace EVEMon.Accounting
+namespace EVEMon.ApiCredentialsManagement
 {
     partial class CharacterImportationWindow
     {

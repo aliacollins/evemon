@@ -106,11 +106,7 @@ namespace EVEMon.Common
         /// </summary>
         internal List<MonitoredCharacterSettings> Export()
         {
-            return Items.Select(character => new MonitoredCharacterSettings
-                                                 {
-                                                     CharacterGuid = character.Guid,
-                                                     Settings = character.UISettings.Clone()
-                                                 }).ToList();
+            return Items.Select(character => new MonitoredCharacterSettings(character)).ToList();
         }
     }
 }

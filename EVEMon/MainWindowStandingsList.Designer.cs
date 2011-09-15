@@ -31,11 +31,12 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.noStandingsLabel = new System.Windows.Forms.Label();
-            this.lbStandings = new NoFlickerListBox();
+            this.lbStandings = new EVEMon.Common.Controls.NoFlickerListBox();
             this.SuspendLayout();
             // 
             // noStandingsLabel
             // 
+            this.noStandingsLabel.BackColor = System.Drawing.Color.WhiteSmoke;
             this.noStandingsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.noStandingsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.noStandingsLabel.Location = new System.Drawing.Point(0, 0);

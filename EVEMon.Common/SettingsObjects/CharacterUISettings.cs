@@ -11,19 +11,16 @@ namespace EVEMon.Common.SettingsObjects
     {
         public CharacterUISettings()
         {
-            CollapsedGroups = new List<String>();
-            FullAPIKeyEnabledPages = new List<String>();
             SelectedPage = String.Empty;
+            CollapsedGroups = new List<string>();
+            AdvancedFeaturesEnabledPages = new List<string>();
         }
 
         [XmlElement("selectedPage")]
         public string SelectedPage { get; set; }
 
         [XmlElement("collapsedGroup")]
-        public List<String> CollapsedGroups { get; set; }
-
-        [XmlElement("fullAPIKeyEnabledPage")]
-        public List<String> FullAPIKeyEnabledPages { get; set; }
+        public List<string> CollapsedGroups { get; set; }
 
         [XmlElement("ordersGroupBy")]
         public MarketOrderGrouping OrdersGroupBy { get; set; }
@@ -36,6 +33,9 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("eveNotificationsGroupBy")]
         public EVENotificationsGrouping EVENotificationsGroupBy { get; set; }
+
+        [XmlElement("advancedFeaturesEnabledPages")]
+        public List<string> AdvancedFeaturesEnabledPages { get; set; }
 
         /// <summary>
         /// Clones this serialization object.

@@ -1,7 +1,7 @@
 ﻿namespace EVEMon.Common.Notifications
 {
     /// <summary>
-    /// How the notification interacts with the ones which share the same <see cref="NotificationBase.InvalidationKey"/>.
+    /// How the notification interacts with the ones which share the same <see cref="NotificationEventArgs.InvalidationKey"/>.
     /// </summary>
     public enum NotificationBehaviour
     {

@@ -8,7 +8,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="EveNotificationText"/> class.
         /// </summary>
-        /// <param name="src">The SRC.</param>
+        /// <param name="src">The source.</param>
         public EveNotificationText(SerializableNotificationTextsListItem src)
         {
             NotificationID = src.NotificationID;

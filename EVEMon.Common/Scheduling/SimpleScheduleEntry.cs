@@ -20,10 +20,10 @@ namespace EVEMon.Common.Scheduling
         /// Deserialization constructor
         /// </summary>
         /// <param name="serial"></param>
-        internal SimpleScheduleEntry(SerializableSimpleScheduleEntry serial)
+        internal SimpleScheduleEntry(SerializableScheduleEntry serial)
         {
-            StartDate = serial.StartDateTime;
-            EndDate = serial.EndDateTime;
+            StartDate = serial.StartDate;
+            EndDate = serial.EndDate;
             Title = serial.Title;
             Options = serial.Options;
         }
@@ -78,10 +78,10 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         internal override SerializableScheduleEntry Export()
         {
-            return new SerializableSimpleScheduleEntry
+            return new SerializableScheduleEntry
                        {
-                           StartDateTime = StartDate,
-                           EndDateTime = EndDate,
+                           StartDate = StartDate,
+                           EndDate = EndDate,
                            Title = Title,
                            Options = Options
                        };

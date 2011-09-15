@@ -19,7 +19,7 @@ namespace EVEMon.Common.SettingsObjects
                                                          IndustryJobColumn.State,
                                                          IndustryJobColumn.TTC,
                                                          IndustryJobColumn.InstalledItem,
-                                                         IndustryJobColumn.OutputItem,
+                                                         IndustryJobColumn.OutputItem
                                                      };
 
             Columns = EnumExtensions.GetValues<IndustryJobColumn>().Where(

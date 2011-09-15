@@ -37,7 +37,6 @@ namespace EVEMon
         private QueuedSkill m_item;
         private Object m_lastTooltipItem;
         private DateTime m_nextRepainting = DateTime.MinValue;
-        private QueuedSkill[] m_skillQueue;
 
         /// <summary>
         /// Constructor.
@@ -52,7 +51,7 @@ namespace EVEMon
             m_boldSkillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noSkillsQueueLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -82,7 +81,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
@@ -107,7 +106,7 @@ namespace EVEMon
         #region Display update
 
         /// <summary>
-        /// Updates all the content
+        /// Updates all the content.
         /// </summary>
         private void UpdateContent()
         {
@@ -129,12 +128,6 @@ namespace EVEMon
             // If the character is not a CCPCharacter it does not have a skill queue
             if (m_ccpCharacter == null)
                 return;
-
-            // When the skill queue hasn't changed don't do anything
-            if (!QueueHasChanged(m_ccpCharacter.SkillQueue.ToArray()))
-                return;
-
-            m_skillQueue = m_ccpCharacter.SkillQueue.ToArray();
 
             // Update the skills queue list
             lbSkillsQueue.BeginUpdate();
@@ -158,17 +151,6 @@ namespace EVEMon
             {
                 lbSkillsQueue.EndUpdate();
             }
-        }
-
-        /// <summary>
-        /// Check if the queue list has changed
-        /// </summary>
-        public bool QueueHasChanged(QueuedSkill[] queue)
-        {
-            if (m_skillQueue == null)
-                return true;
-
-            return queue.Length != m_skillQueue.Length || queue.Where((queuedSkill, i) => queuedSkill != m_skillQueue[i]).Any();
         }
 
         #endregion
@@ -715,7 +697,7 @@ namespace EVEMon
         #region Global events
 
         /// <summary>
-        /// On timer tick, we invalidate the training skill display
+        /// On timer tick, we invalidate the training skill display.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -737,16 +719,14 @@ namespace EVEMon
             // When there are more than one skill level rows in queue, we invalidate them on a timer
             if (lbSkillsQueue.Items.Count > 1 && DateTime.Now > m_nextRepainting)
                 lbSkillsQueue.Invalidate();
-
-            UpdateContent();
         }
 
         /// <summary>
-        /// When the character changed, we refresh the content
+        /// When the skill queue changed, we refresh the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;
@@ -755,7 +735,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When the queue changed, we refresh the content
+        /// When the queue changed, we refresh the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -765,7 +745,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When the settings changed, we refresh the content
+        /// When the settings changed, we refresh the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

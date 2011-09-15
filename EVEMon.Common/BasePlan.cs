@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Data;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {

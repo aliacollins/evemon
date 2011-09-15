@@ -289,7 +289,7 @@ namespace EVEMon
             m_hoveredIndex = -1;
             for (int i = 0; i < listBox.Items.Count; i++)
             {
-                Rectangle rect = GetDeleteIconRect(i);
+                Rectangle rect = GetDeleteIconRect(listBox.GetItemRectangle(i));
                 if (!rect.Contains(e.Location))
                     continue;
 
@@ -325,7 +325,7 @@ namespace EVEMon
                 // Did he click on the "magnifier" icon ?
                 if (notification != null && notification.HasDetails)
                 {
-                    rect = GetMagnifierIconRect(i);
+                    rect = GetMagnifierIconRect(rect);
                     if (rect.Contains(e.Location))
                     {
                         ShowDetails(notification);
@@ -334,7 +334,7 @@ namespace EVEMon
                 }
 
                 // Did he click on the "delete" icon or did a wheel-click?
-                rect = GetDeleteIconRect(i);
+                rect = GetDeleteIconRect(rect);
                 if (e.Button != MouseButtons.Middle && !rect.Contains(e.Location))
                     continue;
 
@@ -354,7 +354,7 @@ namespace EVEMon
             // API error ?
             if (notification is APIErrorNotificationEventArgs)
             {
-                APIErrorWindow window = WindowsFactory<APIErrorWindow>.ShowUnique();
+                ApiErrorWindow window = WindowsFactory<ApiErrorWindow>.ShowUnique();
                 window.Notification = (APIErrorNotificationEventArgs)notification;
                 return;
             }
@@ -518,11 +518,10 @@ namespace EVEMon
         /// <summary>
         /// Gets the rectangle of the "magnifier" icon for the listbox item at the given index.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="rect"></param>
         /// <returns></returns>
-        private Rectangle GetMagnifierIconRect(int index)
+        private Rectangle GetMagnifierIconRect(Rectangle rect)
         {
-            Rectangle rect = listBox.GetItemRectangle(index);
             Bitmap icon = CommonProperties.Resources.Magnifier;
             int yOffset = (rect.Height - icon.Height) / 2;
             Rectangle magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset,
@@ -534,11 +533,10 @@ namespace EVEMon
         /// <summary>
         /// Gets the rectangle of the "delete" icon for the listbox item at the given index.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="rect"></param>
         /// <returns></returns>
-        private Rectangle GetDeleteIconRect(int index)
+        private Rectangle GetDeleteIconRect(Rectangle rect)
         {
-            Rectangle rect = listBox.GetItemRectangle(index);
             Bitmap icon = CommonProperties.Resources.CrossBlack;
             int yOffset = (rect.Height - icon.Height) / 2;
             Rectangle deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width,

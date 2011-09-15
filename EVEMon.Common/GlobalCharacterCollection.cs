@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Importation;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -22,7 +22,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a character by its guid
+        /// Gets a character by its guid.
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
@@ -44,32 +44,22 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Removes a character from all the collections.
-        /// Also removes it from the monitored characters collection, and assign it to the ignore list of its account.
-        /// </summary>
-        /// <param name="character"></param>
-        public void Remove(Character character)
-        {
-            Remove(character, true);
-        }
-
-        /// <summary>
         /// Removes a character from this collection.
         /// Also removes it from the monitored characters collection, and assign it to the ignore list of its account.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="notify"></param>
-        internal void Remove(Character character, bool notify)
+        public void Remove(Character character, bool notify = true)
         {
             Items.Remove(character);
             character.Monitored = false;
 
-            // For CCP characters, also put it on the account's ignore list.
+            // For CCP characters, also put it on the account's ignore list
             if (character is CCPCharacter)
             {
-                Account account = character.Identity.Account;
-                if (account != null)
-                    account.IgnoreList.Add(character as CCPCharacter);
+                APIKey apiKey = character.Identity.APIKey;
+                if (apiKey != null)
+                    apiKey.IdentityIgnoreList.Add(character);
             }
 
             if (notify)
@@ -81,7 +71,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="uri">The uri to load the character sheet from</param>
         /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
-        public void TryAddOrUpdateFromUriAsync(Uri uri, EventHandler<UriCharacterEventArgs> callback)
+        public static void TryAddOrUpdateFromUriAsync(Uri uri, EventHandler<UriCharacterEventArgs> callback)
         {
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
@@ -130,7 +120,7 @@ namespace EVEMon.Common
                         break;
                 }
             }
-                // So, it's a web address, let's do it in an async way.
+                // So, it's a web address, let's do it in an async way
             else
             {
                 Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri.ToString(), null, APIProvider.RowsetsTransform,
@@ -140,15 +130,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports the character identities from a serialization object
+        /// Imports the character identities from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableSettingsCharacter> serial)
         {
-            // Clear the accounts on every identity
+            // Clear the API key on every identity
             foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
             {
-                id.Account = null;
+                id.APIKey = null;
             }
 
             // Import the characters, their identies, etc
@@ -175,7 +165,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports this collection to a serialization object
+        /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
         internal List<SerializableSettingsCharacter> Export()

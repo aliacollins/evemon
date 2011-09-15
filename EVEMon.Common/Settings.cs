@@ -137,7 +137,7 @@ namespace EVEMon.Common
                     EveMonClient.Characters.Import(serial.Characters);
                     EveMonClient.Characters.ImportPlans(serial.Plans);
                     EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-                    EveMonClient.Accounts.Import(serial.Accounts);
+                    EveMonClient.APIKeys.Import(serial.APIKeys);
                 }
 
                 // Global settings
@@ -183,77 +183,109 @@ namespace EVEMon.Common
         private static void OnImportCompleted()
         {
             // Add missing notification behaviours
-            foreach (NotificationCategory cat in Enum.GetValues(
+            foreach (NotificationCategory category in Enum.GetValues(
                 typeof(NotificationCategory)).Cast<NotificationCategory>().Where(
-                    cat => !Notifications.Categories.ContainsKey(cat)))
+                    category => !Notifications.Categories.ContainsKey(category)))
             {
-                Notifications.Categories[cat] = new NotificationCategorySettings();
+                Notifications.Categories[category] = new NotificationCategorySettings();
             }
 
             // Add missing API methods update periods
             foreach (APIMethods method in Enum.GetValues(typeof(APIMethods)))
             {
+                // Special condition to exclude corp related methods
+                // (We had them implemented on pre CAK system,
+                // they are kept in enumeration for settings file backwards compatibility)
+                if (method == APIMethods.CorporationMarketOrders || method == APIMethods.CorporationIndustryJobs)
+                {
+                    Updates.Periods.Remove(method);
+                    continue;
+                }
+
                 if (Updates.Periods.ContainsKey(method))
                     continue;
 
-                UpdateAttribute updateAttribute = method.GetAttribute<UpdateAttribute>();
+                UpdateAttribute updateAttribute = method.GetUpdatePeriod();
                 if (updateAttribute != null)
                     Updates.Periods.Add(method, updateAttribute.DefaultPeriod);
+
+                // Bind the APIKeyInfo and CharacterList update period
+                if (method == APIMethods.APIKeyInfo && Updates.Periods[method] != Updates.Periods[APIMethods.CharacterList])
+                    Updates.Periods[method] = Updates.Periods[APIMethods.CharacterList];
             }
 
             // Add missing plan order columns
             List<PlanColumnSettings> planColumns = UI.PlanWindow.Columns.ToList();
             planColumns.AddRange(EnumExtensions.GetValues<PlanColumn>().
                                      Where(x => x != PlanColumn.None && planColumns.All(y => y.Column != x)).
-                                     Select(x => new PlanColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+                                     Select(x => new PlanColumnSettings
+                                                     {
+                                                         Column = x,
+                                                         Visible = false,
+                                                         Width = -1
+                                                     }).ToArray());
             UI.PlanWindow.Columns = planColumns.ToArray();
 
             // Add missing market order columns
             List<MarketOrderColumnSettings> ordersColumns = UI.MainWindow.MarketOrders.Columns.ToList();
             ordersColumns.AddRange(EnumExtensions.GetValues<MarketOrderColumn>().
                                        Where(x => x != MarketOrderColumn.None && ordersColumns.All(y => y.Column != x)).
-                                       Select(x => new MarketOrderColumnSettings { Column = x, Visible = false, Width = -1 }).
-                                       ToArray());
+                                       Select(x => new MarketOrderColumnSettings
+                                                       {
+                                                           Column = x,
+                                                           Visible = false,
+                                                           Width = -1
+                                                       }).ToArray());
             UI.MainWindow.MarketOrders.Columns = ordersColumns.ToArray();
 
             // Add missing industry jobs columns
             List<IndustryJobColumnSettings> jobsColumns = UI.MainWindow.IndustryJobs.Columns.ToList();
             jobsColumns.AddRange(EnumExtensions.GetValues<IndustryJobColumn>().
                                      Where(x => x != IndustryJobColumn.None && jobsColumns.All(y => y.Column != x)).
-                                     Select(x => new IndustryJobColumnSettings { Column = x, Visible = false, Width = -1 }).
-                                     ToArray());
+                                     Select(x => new IndustryJobColumnSettings
+                                                     {
+                                                         Column = x,
+                                                         Visible = false,
+                                                         Width = -1
+                                                     }).ToArray());
             UI.MainWindow.IndustryJobs.Columns = jobsColumns.ToArray();
 
             // Add missing research points columns
             List<ResearchColumnSettings> researchColumns = UI.MainWindow.Research.Columns.ToList();
             researchColumns.AddRange(EnumExtensions.GetValues<ResearchColumn>().
                                          Where(x => x != ResearchColumn.None && researchColumns.All(y => y.Column != x)).
-                                         Select(x => new ResearchColumnSettings { Column = x, Visible = false, Width = -1 }).
-                                         ToArray());
+                                         Select(x => new ResearchColumnSettings
+                                                         {
+                                                             Column = x,
+                                                             Visible = false,
+                                                             Width = -1
+                                                         }).ToArray());
             UI.MainWindow.Research.Columns = researchColumns.ToArray();
 
             // Add missing EVE mail messages columns
             List<EveMailMessagesColumnSettings> eveMailMessagesColumns = UI.MainWindow.EVEMailMessages.Columns.ToList();
             eveMailMessagesColumns.AddRange(EnumExtensions.GetValues<EveMailMessagesColumn>().
-                                                Where(
-                                                    x => x != EveMailMessagesColumn.None &&
-                                                         eveMailMessagesColumns.All(y => y.Column != x)).
-                                                Select(
-                                                    x =>
-                                                    new EveMailMessagesColumnSettings { Column = x, Visible = false, Width = -1 })
-                                                .ToArray());
+                                                Where(x => x != EveMailMessagesColumn.None &&
+                                                           eveMailMessagesColumns.All(y => y.Column != x)).
+                                                Select(x => new EveMailMessagesColumnSettings
+                                                                {
+                                                                    Column = x,
+                                                                    Visible = false,
+                                                                    Width = -1
+                                                                }).ToArray());
             UI.MainWindow.EVEMailMessages.Columns = eveMailMessagesColumns.ToArray();
 
             // Add missing EVE notifications columns
             List<EveNotificationsColumnSettings> eveNotificationsColumns = UI.MainWindow.EVENotifications.Columns.ToList();
             eveNotificationsColumns.AddRange(EnumExtensions.GetValues<EveNotificationsColumn>().
-                                                 Where(
-                                                     x => x != EveNotificationsColumn.None &&
-                                                          eveNotificationsColumns.All(y => y.Column != x)).
-                                                 Select(
-                                                     x =>
-                                                     new EveNotificationsColumnSettings
-                                                         { Column = x, Visible = false, Width = -1 }).ToArray());
+                                                 Where(x => x != EveNotificationsColumn.None &&
+                                                            eveNotificationsColumns.All(y => y.Column != x)).
+                                                 Select(x => new EveNotificationsColumnSettings
+                                                                 {
+                                                                     Column = x,
+                                                                     Visible = false,
+                                                                     Width = -1
+                                                                 }).ToArray());
             UI.MainWindow.EVENotifications.Columns = eveNotificationsColumns.ToArray();
         }
 
@@ -268,7 +300,7 @@ namespace EVEMon.Common
                            Revision = Revision,
                            Compatibility = Compatibility,
                            Characters = EveMonClient.Characters.Export(),
-                           Accounts = EveMonClient.Accounts.Export(),
+                           APIKeys =  EveMonClient.APIKeys.Export(),
                            Plans = EveMonClient.Characters.ExportPlans(),
                            MonitoredCharacters = EveMonClient.MonitoredCharacters.Export(),
                            APIProviders = EveMonClient.APIProviders.Export(),
@@ -458,9 +490,6 @@ namespace EVEMon.Common
                 return null;
 
             SerializableSettings serial = new SerializableSettings();
-
-            // Accounts
-            serial.Accounts.AddRange(oldSerial.Accounts);
 
             // Characters
             foreach (SerializableCCPCharacter character in oldSerial.Characters.Select(

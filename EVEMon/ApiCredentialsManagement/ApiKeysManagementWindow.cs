@@ -8,16 +8,16 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 
-namespace EVEMon.Accounting
+namespace EVEMon.ApiCredentialsManagement
 {
-    public partial class AccountsManagementWindow : EVEMonForm
+    public partial class ApiKeysManagementWindow : EVEMonForm
     {
         private int m_refreshingCharactersCounter;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public AccountsManagementWindow()
+        public ApiKeysManagementWindow()
         {
             InitializeComponent();
         }
@@ -32,22 +32,16 @@ namespace EVEMon.Accounting
             if (DesignMode)
                 return;
 
-            accountsListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
-            accountsListBox.SelectedIndexChanged += accountsListBox_SelectedIndexChanged;
-            accountsListBox.DoubleClick += accountsListBox_DoubleClick;
-            accountsListBox.KeyDown += accountsListBox_KeyDown;
-
+            apiKeysListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
             charactersListView.Font = FontFactory.GetFont("Tahoma", 9.75f);
-            charactersListView.SelectedIndexChanged += charactersListView_SelectedIndexChanged;
-            charactersListView.DoubleClick += charactersListView_DoubleClick;
-            charactersListView.KeyDown += charactersListView_KeyDown;
-            charactersListView.ItemChecked += charactersListView_ItemChecked;
 
-            EveMonClient.AccountCollectionChanged += EveMonClient_AccountCollectionChanged;
+            EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
+            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
 
-            EveMonClient_AccountCollectionChanged(null, null);
+            EveMonClient_APIKeyCollectionChanged(null, null);
             EveMonClient_CharacterCollectionChanged(null, null);
             AdjustColumns();
 
@@ -62,9 +56,11 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveMonClient.AccountCollectionChanged -= EveMonClient_AccountCollectionChanged;
+            EveMonClient.APIKeyCollectionChanged -= EveMonClient_APIKeyCollectionChanged;
+            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
             base.OnClosing(e);
         }
 
@@ -81,121 +77,28 @@ namespace EVEMon.Accounting
         }
 
 
-        #region Accounts management
+        #region Global Events Handlers
 
         /// <summary>
-        /// When the accounts collection changes, we update the content.
+        /// When the API key collection changes, we update the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_AccountCollectionChanged(object sender, EventArgs e)
+        private void EveMonClient_APIKeyCollectionChanged(object sender, EventArgs e)
         {
-            accountsListBox.Accounts = EveMonClient.Accounts;
-            accountsMultiPanel.SelectedPage = (EveMonClient.Accounts.IsEmpty() ? noAccountsPage : accountsListPage);
+            apiKeysListBox.APIKeys = EveMonClient.APIKeys;
+            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.IsEmpty() ? noAPIKeysPage : apiKeysListPage);
         }
 
         /// <summary>
-        /// When the selection changes, we update the controls.
+        /// When the API key info updates, we update the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void accountsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
-            deleteAccountMenu.Enabled = (accountsListBox.SelectedIndex != -1);
-            editAccountMenu.Enabled = (accountsListBox.SelectedIndex != -1);
+            apiKeysListBox.Invalidate();
         }
-
-        /// <summary>
-        /// On double click, forces the edition
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountsListBox_DoubleClick(object sender, EventArgs e)
-        {
-            // Search for the double-clicked item
-            int index = 0;
-            Point point = Cursor.Position;
-            point = accountsListBox.PointToClient(point);
-            foreach (Account account in accountsListBox.Accounts)
-            {
-                Rectangle rect = accountsListBox.GetItemRectangle(index);
-                index++;
-
-                if (!rect.Contains(point))
-                    continue;
-
-                // Open the edition window
-                using (AccountUpdateOrAdditionWindow window = new AccountUpdateOrAdditionWindow(account))
-                {
-                    window.ShowDialog(this);
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Accounts toolbar > Edit
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void editAccountMenu_Click(object sender, EventArgs e)
-        {
-            if (accountsListBox.SelectedIndex == -1)
-                return;
-
-            Account account = accountsListBox.Accounts.ElementAt(accountsListBox.SelectedIndex);
-            using (AccountUpdateOrAdditionWindow window = new AccountUpdateOrAdditionWindow(account))
-            {
-                window.ShowDialog(this);
-            }
-        }
-
-        /// <summary>
-        /// Accounts toolbar > Add
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void addAccountMenu_Click(object sender, EventArgs e)
-        {
-            using (AccountUpdateOrAdditionWindow window = new AccountUpdateOrAdditionWindow())
-            {
-                window.ShowDialog(this);
-            }
-        }
-
-        /// <summary>
-        /// Accounts toolbar > Delete
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void deleteAccountMenu_Click(object sender, EventArgs e)
-        {
-            if (accountsListBox.SelectedIndex == -1)
-                return;
-            Account account = accountsListBox.Accounts.ElementAt(accountsListBox.SelectedIndex);
-            using (AccountDeletionWindow window = new AccountDeletionWindow(account))
-            {
-                window.ShowDialog(this);
-            }
-            deleteAccountMenu.Enabled = (accountsListBox.SelectedIndex != -1);
-            editAccountMenu.Enabled = (accountsListBox.SelectedIndex != -1);
-        }
-
-        /// <summary>
-        /// Handle "delete" for the accounts.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountsListBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Delete)
-                deleteAccountMenu_Click(sender, e);
-        }
-
-        #endregion
-
-
-        #region Characters management
 
         /// <summary>
         /// When the characters collection changed, we update the characters list.
@@ -211,9 +114,9 @@ namespace EVEMon.Accounting
             UpdateCharactersListContent();
 
             // Invalidates the accounts list
-            accountsListBox.Invalidate();
+            apiKeysListBox.Invalidate();
 
-            // Make a help message appears when no accounts exist
+            // Make a help message appears when no API keys exist
             charactersMultiPanel.SelectedPage = EveMonClient.Characters.Count == 0 ? noCharactersPage : charactersListPage;
 
             // End of the update
@@ -233,6 +136,155 @@ namespace EVEMon.Accounting
         }
 
         /// <summary>
+        /// When the account status updates, we update the content.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_AccountStatusUpdated(object sender, EventArgs e)
+        {
+            apiKeysListBox.Invalidate();
+        }
+
+        #endregion
+
+
+        #region API keys management
+
+        /// <summary>
+        /// Handles the MouseClick event of the apiKeysListBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void apiKeysListBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            bool itemClicked = false;
+
+            // Search for the clicked item
+            for (int index = 0; index < apiKeysListBox.APIKeys.Count(); index++)
+            {
+                Rectangle rect = apiKeysListBox.GetItemRectangle(index);
+
+                // Did click occured generally on the item ?
+                if (!rect.Contains(e.Location))
+                    continue;
+
+                itemClicked = true;
+
+                int yOffset = (rect.Height - ApiKeysListBox.CheckBoxSize.Height) / 2;
+                Rectangle cbRect = new Rectangle(rect.Left + apiKeysListBox.Margin.Left, rect.Top + yOffset,
+                                                 ApiKeysListBox.CheckBoxSize.Width, ApiKeysListBox.CheckBoxSize.Height);
+                cbRect.Inflate(2, 2);
+
+                // Did click occured on the checkbox ?
+                if (e.Button == MouseButtons.Middle || !cbRect.Contains(e.Location))
+                    continue;
+
+                APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(index);
+                apiKey.Monitored = !apiKey.Monitored;
+                apiKeysListBox.Invalidate();
+            }
+
+            if (!itemClicked)
+                apiKeysListBox.SelectedIndex = -1;
+        }
+
+        /// <summary>
+        /// When the selection changes, we update the controls.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void apiKeysListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            deleteAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
+            editAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
+        }
+
+        /// <summary>
+        /// On double click, forces the edition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void apiKeysListBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // Search for the double-clicked item
+            int index = 0;
+            foreach (APIKey apiKey in apiKeysListBox.APIKeys)
+            {
+                Rectangle rect = apiKeysListBox.GetItemRectangle(index);
+                index++;
+
+                if (!rect.Contains(e.Location))
+                    continue;
+
+                // Open the edition window
+                using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow(apiKey))
+                {
+                    window.ShowDialog(this);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// API key toolbar > Edit.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editAPIKeyMenu_Click(object sender, EventArgs e)
+        {
+            APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(apiKeysListBox.SelectedIndex);
+            using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow(apiKey))
+            {
+                window.ShowDialog(this);
+            }
+        }
+
+        /// <summary>
+        /// API key toolbar > Add.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addAPIKeyMenu_Click(object sender, EventArgs e)
+        {
+            using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow())
+            {
+                window.ShowDialog(this);
+            }
+        }
+
+        /// <summary>
+        /// Accounts toolbar > Delete
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteAPIKeyMenu_Click(object sender, EventArgs e)
+        {
+            APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(apiKeysListBox.SelectedIndex);
+            using (ApiKeyDeletionWindow window = new ApiKeyDeletionWindow(apiKey))
+            {
+                window.ShowDialog(this);
+            }
+            deleteAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
+            editAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the apiKeysListBox control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void apiKeysListBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                deleteAPIKeyMenu_Click(sender, e);
+        }
+
+        #endregion
+
+
+        #region Characters management
+
+        /// <summary>
         /// Recreate the items in the characters listview
         /// </summary>
         private void UpdateCharactersListContent()
@@ -248,14 +300,14 @@ namespace EVEMon.Accounting
 
                 // Grouping (no account, account #1, account #2, character files, character urls)
                 bool isGrouping = groupingMenu.Checked;
-                ListViewGroup noAccountsGroup = new ListViewGroup("No account");
+                ListViewGroup apiKeyGroup = new ListViewGroup("No API key");
                 ListViewGroup fileGroup = new ListViewGroup("Character files");
                 ListViewGroup urlGroup = new ListViewGroup("Character urls");
-                Dictionary<Account, ListViewGroup> accountGroups = new Dictionary<Account, ListViewGroup>();
+                Dictionary<APIKey, ListViewGroup> apiKeyGroups = new Dictionary<APIKey, ListViewGroup>();
 
                 if (isGrouping)
                 {
-                    bool hasNoAccount = false;
+                    bool hasNoAPIKey = false;
                     bool hasFileChars = false;
                     bool hasUrlChars = false;
 
@@ -275,19 +327,19 @@ namespace EVEMon.Accounting
                             // CCP character ?
                         else
                         {
-                            Account account = character.Identity.Account;
-                            if (account == null)
-                                hasNoAccount = true;
-                            else if (!accountGroups.ContainsKey(account))
-                                accountGroups.Add(account, new ListViewGroup(String.Format("Account #{0}", account.UserID)));
+                            APIKey apiKey = character.Identity.APIKey;
+                            if (apiKey == null)
+                                hasNoAPIKey = true;
+                            else if (!apiKeyGroups.ContainsKey(apiKey))
+                                apiKeyGroups.Add(apiKey, new ListViewGroup(String.Format("Key ID #{0}", apiKey.ID)));
                         }
                     }
 
                     // Add the groups
-                    if (hasNoAccount)
-                        charactersListView.Groups.Add(noAccountsGroup);
+                    if (hasNoAPIKey)
+                        charactersListView.Groups.Add(apiKeyGroup);
 
-                    foreach (ListViewGroup group in accountGroups.Values)
+                    foreach (ListViewGroup group in apiKeyGroups.Values)
                     {
                         charactersListView.Groups.Add(group);
                     }
@@ -305,8 +357,8 @@ namespace EVEMon.Accounting
                     ListViewItem item = new ListViewItem { Checked = character.Monitored, Tag = character };
 
                     // Retrieve the texts for the different columns.
-                    Account account = character.Identity.Account;
-                    string accountText = (account == null ? String.Empty : account.UserID.ToString());
+                    APIKey apiKey = character.Identity.APIKey;
+                    string apiKeyIDText = (apiKey == null ? String.Empty : apiKey.ID.ToString());
                     string typeText = "CCP";
                     string uriText = "-";
 
@@ -321,12 +373,12 @@ namespace EVEMon.Accounting
                     }
                         // Grouping CCP characters
                     else if (isGrouping)
-                        item.Group = (account == null ? noAccountsGroup : accountGroups[account]);
+                        item.Group = (apiKey == null ? apiKeyGroup : apiKeyGroups[apiKey]);
 
                     // Add the item and its subitems
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, typeText));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.Name));
-                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, accountText));
+                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, apiKeyIDText));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));
 
                     charactersListView.Items.Add(item);
@@ -395,21 +447,12 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         private void charactersListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // No selection ?
-            if (charactersListView.SelectedItems.Count == 0)
-            {
-                deleteCharacterMenu.Enabled = false;
-                editUriMenu.Enabled = false;
-                return;
-            }
-
             // "Edit uri" enabled when an uri char is selected
-            ListViewItem item = charactersListView.SelectedItems[0];
-            UriCharacter uriCharacter = item.Tag as UriCharacter;
-            editUriMenu.Enabled = (uriCharacter != null);
+            editUriMenu.Enabled = (charactersListView.SelectedItems.Count != 0) &&
+                                  ((charactersListView.SelectedItems[0].Tag as UriCharacter) != null);
 
-            // Delete char enabled if one character selected.
-            deleteCharacterMenu.Enabled = true;
+            // Delete char enabled if one character selected
+            deleteCharacterMenu.Enabled = (charactersListView.SelectedItems.Count != 0);
         }
 
         /// <summary>

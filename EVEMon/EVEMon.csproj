@@ -68,56 +68,56 @@
     <Compile Include="AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Accounting\AccountDeletionWindow.cs">
+    <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Accounting\AccountDeletionWindow.Designer.cs">
-      <DependentUpon>AccountDeletionWindow.cs</DependentUpon>
+    <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.Designer.cs">
+      <DependentUpon>ApiKeyDeletionWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Accounting\AccountsListBox.cs">
+    <Compile Include="ApiCredentialsManagement\ApiKeysListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Accounting\AccountsManagementWindow.cs">
+    <Compile Include="ApiCredentialsManagement\ApiKeysManagementWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Accounting\AccountsManagementWindow.Designer.cs">
-      <DependentUpon>AccountsManagementWindow.cs</DependentUpon>
+    <Compile Include="ApiCredentialsManagement\ApiKeysManagementWindow.Designer.cs">
+      <DependentUpon>ApiKeysManagementWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Accounting\AccountUpdateOrAdditionWindow.cs">
+    <Compile Include="ApiCredentialsManagement\CharacterDeletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Accounting\AccountUpdateOrAdditionWindow.Designer.cs">
-      <DependentUpon>AccountUpdateOrAdditionWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Accounting\CharacterDeletionWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Accounting\CharacterDeletionWindow.Designer.cs">
+    <Compile Include="ApiCredentialsManagement\CharacterDeletionWindow.Designer.cs">
       <DependentUpon>CharacterDeletionWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Accounting\CharacterImportationWindow.cs">
+    <Compile Include="ApiCredentialsManagement\CharacterImportationWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Accounting\CharacterImportationWindow.Designer.cs">
+    <Compile Include="ApiCredentialsManagement\CharacterImportationWindow.Designer.cs">
       <DependentUpon>CharacterImportationWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Accounting\FeaturesWindow.cs">
+    <Compile Include="ApiErrorHandling\ApiErrorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Accounting\FeaturesWindow.Designer.cs">
-      <DependentUpon>FeaturesWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ApiErrorHandling\APIErrorWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ApiErrorHandling\APIErrorWindow.Designer.cs">
-      <DependentUpon>APIErrorWindow.cs</DependentUpon>
+    <Compile Include="ApiErrorHandling\ApiErrorWindow.Designer.cs">
+      <DependentUpon>ApiErrorWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ApiErrorHandling\HttpTimeoutTroubleshooter.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ApiErrorHandling\HttpTimeoutTroubleshooter.Designer.cs">
       <DependentUpon>HttpTimeoutTroubleshooter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApiCredentialsManagement\ApiKeyUpdateOrAdditionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApiCredentialsManagement\ApiKeyUpdateOrAdditionWindow.Designer.cs">
+      <DependentUpon>ApiKeyUpdateOrAdditionWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApiCredentialsManagement\EveMonFeaturesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApiCredentialsManagement\EveMonFeaturesWindow.Designer.cs">
+      <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="BlankCharacter\BlankCharacterControl.cs">
       <SubType>UserControl</SubType>
@@ -227,6 +227,12 @@
     <Compile Include="SettingsUI\SettingsFileStorageControl.Designer.cs">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\UpdateSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\UpdateSettingsControl.Designer.cs">
+      <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillCompletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -301,6 +307,24 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ApiCredentialsManagement\ApiKeyDeletionWindow.resx">
+      <DependentUpon>ApiKeyDeletionWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApiCredentialsManagement\ApiKeysManagementWindow.resx">
+      <DependentUpon>ApiKeysManagementWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApiCredentialsManagement\ApiKeyUpdateOrAdditionWindow.resx">
+      <DependentUpon>ApiKeyUpdateOrAdditionWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApiCredentialsManagement\CharacterDeletionWindow.resx">
+      <DependentUpon>CharacterDeletionWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApiCredentialsManagement\CharacterImportationWindow.resx">
+      <DependentUpon>CharacterImportationWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApiCredentialsManagement\EveMonFeaturesWindow.resx">
+      <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BlankCharacter\BlankCharacterControl.resx">
       <DependentUpon>BlankCharacterControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -346,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\UpdateSettingsControl.resx">
+      <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateNotifyForm.resx">
       <SubType>Designer</SubType>
@@ -414,12 +441,6 @@
     </Compile>
     <Compile Include="SettingsUI\TrayTooltipConfigForm.Designer.cs">
       <DependentUpon>TrayTooltipConfigForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsUI\UpdateSettingsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SettingsUI\UpdateSettingsControl.Designer.cs">
-      <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\AttributeButtonControl.cs">
       <SubType>Component</SubType>
@@ -850,32 +871,8 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="SkillPlanner\BrowserClasses.cd" />
-    <EmbeddedResource Include="Accounting\AccountDeletionWindow.resx">
-      <DependentUpon>AccountDeletionWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Accounting\AccountsManagementWindow.resx">
-      <DependentUpon>AccountsManagementWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Accounting\AccountUpdateOrAdditionWindow.resx">
-      <DependentUpon>AccountUpdateOrAdditionWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Accounting\CharacterDeletionWindow.resx">
-      <DependentUpon>CharacterDeletionWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Accounting\CharacterImportationWindow.resx">
-      <DependentUpon>CharacterImportationWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Accounting\FeaturesWindow.resx">
-      <DependentUpon>FeaturesWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ApiErrorHandling\APIErrorWindow.resx">
-      <DependentUpon>APIErrorWindow.cs</DependentUpon>
+    <EmbeddedResource Include="ApiErrorHandling\ApiErrorWindow.resx">
+      <DependentUpon>ApiErrorWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ApiErrorHandling\HttpTimeoutTroubleshooter.resx">
       <DependentUpon>HttpTimeoutTroubleshooter.cs</DependentUpon>
@@ -935,10 +932,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\TrayTooltipConfigForm.resx">
       <DependentUpon>TrayTooltipConfigForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\UpdateSettingsControl.resx">
-      <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\BlueprintBrowserControl.resx">

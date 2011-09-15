@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Net;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Net;
 
 namespace EVEMon
 {

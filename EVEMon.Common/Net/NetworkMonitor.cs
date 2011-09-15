@@ -69,7 +69,7 @@ namespace EVEMon.Common.Net
         {
             get
             {
-                // edge case: Wine/Darwine user with broken .NET Networking Stack
+                // Edge case: Wine/Darwine user with broken .NET Networking Stack
                 if (Settings.Updates.IgnoreNetworkStatus)
                     return true;
 
@@ -106,12 +106,12 @@ namespace EVEMon.Common.Net
                 if (s_subscribers == null)
                     return;
 
-                // Scroll through the monitors and remove them when they're no longer available.
+                // Scroll through the monitors and remove them when they're no longer available
                 int index = 0;
                 while (index < s_subscribers.Count)
                 {
                     WeakReference<INetworkChangeSubscriber> reference = s_subscribers[index];
-                    if (reference.TryDo(x => x.SetNetworkStatus(e.IsAvailable)))
+                    if (reference.TryDo(x => x.SetNetworkStatus = e.IsAvailable))
                         index++;
                     else
                         s_subscribers.RemoveAt(index);

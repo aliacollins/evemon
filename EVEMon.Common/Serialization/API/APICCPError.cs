@@ -65,5 +65,32 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return (ErrorCode == 902); }
         }
+
+        /// <summary>
+        /// Gets true when the API credentials are wrong.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsAuthenticationFailure
+        {
+            get { return (ErrorCode == 203); }
+        }
+
+        /// <summary>
+        /// Gets true when the account subscription has expired.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsLoginDeniedByAccountStatus
+        {
+            get { return (ErrorCode == 211); }
+        }
+
+        /// <summary>
+        /// Gets true when the API Key has expired.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsAPIKeyExpired
+        {
+            get { return (ErrorCode == 222); }
+        }
     }
 }

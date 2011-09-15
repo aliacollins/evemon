@@ -157,8 +157,8 @@
   <data name="GoogleCalendarURL" xml:space="preserve">
     <value>http://www.google.com/calendar/feeds/default/private/full</value>
   </data>
-  <data name="APIAccountCredentials" xml:space="preserve">
-    <value>https://www.eveonline.com/api/default.asp</value>
+  <data name="APICredentials" xml:space="preserve">
+    <value>https://support.eveonline.com/api</value>
   </data>
   <data name="EVEMonBugReport" xml:space="preserve">
     <value>http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F</value>
@@ -182,9 +182,6 @@
   <data name="APIMarketOrders" xml:space="preserve">
     <value>/char/MarketOrders.xml.aspx</value>
   </data>
-  <data name="APICorporationMarketOrders" xml:space="preserve">
-    <value>/corp/MarketOrders.xml.aspx</value>
-  </data>
   <data name="APIConquerableStationList" xml:space="preserve">
     <value>/eve/ConquerableStationList.xml.aspx</value>
   </data>
@@ -197,9 +194,6 @@
   </data>
   <data name="APIIndustryJobs" xml:space="preserve">
     <value>/char/IndustryJobs.xml.aspx</value>
-  </data>
-  <data name="APICorporationIndustryJobs" xml:space="preserve">
-    <value>/corp/IndustryJobs.xml.aspx</value>
   </data>
   <data name="StackExchangeEveOnlineURL" xml:space="preserve">
     <value>http://area51.stackexchange.com/proposals/3371/eve-online?referrer=YrSyuyuqKBzSZ2Kzwn8oXQ2</value>
@@ -287,5 +281,40 @@
   </data>
   <data name="EVEGateCorporationProfile" xml:space="preserve">
     <value>/Corporation/{0}</value>
+  </data>
+  <data name="APICredentialsInstallLinks" xml:space="preserve">
+    <value>https://support.eveonline.com/api/key/activeinstalllinks</value>
+  </data>
+  <data name="APIAPIKeyInfo" xml:space="preserve">
+    <value>/account/APIKeyInfo.xml.aspx</value>
+  </data>
+  <data name="APICredentialsPredefined" xml:space="preserve">
+    <value>https://support.eveonline.com/api/key/createpredefined/{0}</value>
+    <comment>Used to create api key with predefined access mask</comment>
+  </data>
+  <data name="PostDataBase" xml:space="preserve">
+    <value>keyID={0}&amp;vCode={1}</value>
+  </data>
+  <data name="PostDataIDsOnly" xml:space="preserve">
+    <value>ids={0}</value>
+  </data>
+  <data name="PostDataWithCharID" xml:space="preserve">
+    <value>keyID={0}&amp;vCode={1}&amp;characterID={2}</value>
+  </data>
+  <data name="PostDataWithCharIDAndIDS" xml:space="preserve">
+    <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;ids={3}</value>
+  </data>
+  <data name="CCPAccountManage" xml:space="preserve">
+    <value>https://secure.eveonline.com/AccountManMenu.aspx</value>
+  </data>
+  <data name="APICredentialsUpdate" xml:space="preserve">
+    <value>https://support.eveonline.com/api/key/update/{0}</value>
+    <comment>Used to update the api credentials</comment>
+  </data>
+  <data name="APICorporationIndustryJobs" xml:space="preserve">
+    <value>/corp/IndustryJobs.xml.aspx</value>
+  </data>
+  <data name="APICorporationMarketOrders" xml:space="preserve">
+    <value>/corp/MarketOrders.xml.aspx</value>
   </data>
 </root>

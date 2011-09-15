@@ -39,9 +39,9 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the account which sent this notification, or null if the sender was not an account.
         /// </summary>
-        public Account SenderAccount
+        public APIKey SenderAPIKey
         {
-            get { return Sender as Account; }
+            get { return Sender as APIKey; }
         }
 
         /// <summary>

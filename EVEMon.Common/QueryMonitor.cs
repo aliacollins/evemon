@@ -21,6 +21,9 @@ namespace EVEMon.Common
         private bool m_retryOnForceUpdateError;
         private bool m_isCanceled;
 
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -28,7 +31,6 @@ namespace EVEMon.Common
         internal QueryMonitor(APIMethods method)
         {
             LastUpdate = DateTime.MinValue;
-            IsFullKeyNeeded = method.HasAttribute<FullKeyAttribute>();
             m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
             Method = method;
@@ -37,6 +39,12 @@ namespace EVEMon.Common
 
             NetworkMonitor.Register(this);
         }
+
+
+        #endregion
+
+
+        #region Properties
 
         /// <summary>
         /// Gets true if the query is enabled.
@@ -64,19 +72,17 @@ namespace EVEMon.Common
         public QueryStatus Status { get; private set; }
 
         /// <summary>
-        /// Gets true when the API provider is CCP and a force update is triggered before the next available update.
+        /// Gets true when the API provider is not CCP or the cache timer has expired.
         /// </summary>
-        public bool ForceUpdateWillCauseError
+        public bool CanForceUpdate
         {
             get
             {
                 if (EveMonClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider &&
                     EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider)
-                    return false;
+                    return true;
 
-                DateTime cachedTime = (LastResult == null ? NextUpdate : LastResult.CachedUntil);
-
-                return DateTime.UtcNow < cachedTime;
+                return DateTime.UtcNow > (LastResult == null ? NextUpdate : LastResult.CachedUntil);
             }
         }
 
@@ -91,25 +97,21 @@ namespace EVEMon.Common
                 // (we exclude the corporation roles error for characters corporation issued queries)
                 // The 'return' condition have been placed to prevent 'CCP screw up' with the cachedUntil timer
                 // as they have done in Incarna 1.0.1 expansion
-                if (LastResult != null
-                    && LastResult.HasError
-                    && LastResult.CCPError != null
-                    && !LastResult.CCPError.IsOrdersRelatedCorpRolesError
-                    && !LastResult.CCPError.IsJobsRelatedCorpRolesError)
+                if (LastResult != null && LastResult.HasError)
                 {
                     return (LastResult.CachedUntil > LastResult.CurrentTime
                                 ? LastResult.CachedUntil
                                 : LastResult.CachedUntil.AddMinutes(30));
                 }
 
-                // No error ? Then we compute the next update according to the settings.
+                // No error ? Then we compute the next update according to the settings
                 UpdatePeriod period = Settings.Updates.Periods[Method];
                 if (period == UpdatePeriod.Never)
                     return DateTime.MaxValue;
 
                 DateTime nextUpdate = LastUpdate.Add(period.ToDuration());
 
-                // If CCP "cached until" is greater than what we computed, return CCP cached time.
+                // If CCP "cached until" is greater than what we computed, return CCP cached time
                 if (LastResult != null && LastResult.CachedUntil > nextUpdate)
                     return LastResult.CachedUntil;
 
@@ -128,9 +130,27 @@ namespace EVEMon.Common
         public bool IsUpdating { get; private set; }
 
         /// <summary>
-        /// Gets true whether a full key is needed.
+        /// Gets a value indicating whether this monitor has access to data.
         /// </summary>
-        public bool IsFullKeyNeeded { get; private set; }
+        /// <value>
+        /// 	<c>true</c> if this monitor has access; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasAccess
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Gets the required API key information are known.
+        /// </summary>
+        /// <returns>False if an API key was required and not found.</returns>
+        protected virtual bool HasAPIKey
+        {
+            get { return true; }
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Manually updates this monitor with the provided data, like if it has just been updated from CCP.
@@ -180,17 +200,17 @@ namespace EVEMon.Common
                 return;
             }
 
-            // Check for an account
-            if (!CheckAccount())
+            // Check for an API key
+            if (!HasAPIKey)
             {
-                Status = QueryStatus.NoAccount;
+                Status = QueryStatus.NoAPIKey;
                 return;
             }
 
-            // Check for a full key
-            if (IsFullKeyNeeded && !HasFullKey())
+            // Check for API key access to the monitor
+            if (!HasAccess)
             {
-                Status = QueryStatus.NoFullKey;
+                Status = QueryStatus.NoAccess;
                 return;
             }
 
@@ -198,8 +218,7 @@ namespace EVEMon.Common
             if (!m_forceUpdate)
             {
                 // If not due time yet, quits
-                DateTime nextUpdate = NextUpdate;
-                if (nextUpdate > DateTime.UtcNow)
+                if (NextUpdate > DateTime.UtcNow)
                 {
                     Status = QueryStatus.Pending;
                     return;
@@ -210,24 +229,6 @@ namespace EVEMon.Common
             IsUpdating = true;
             Status = QueryStatus.Updating;
             QueryAsyncCore(EveMonClient.APIProviders.CurrentProvider, OnQueried);
-        }
-
-        /// <summary>
-        /// Check all the required account informations are known.
-        /// </summary>
-        /// <returns>False if an account was required and not found.</returns>
-        protected virtual bool CheckAccount()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Check whether there is a full key.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual bool HasFullKey()
-        {
-            return false;
         }
 
         /// <summary>
@@ -286,6 +287,9 @@ namespace EVEMon.Common
             m_forceUpdate = false;
         }
 
+
+        #region Overriden Methods
+
         /// <summary>
         /// Gets the bound method header.
         /// </summary>
@@ -295,20 +299,21 @@ namespace EVEMon.Common
             return m_methodHeader;
         }
 
+        #endregion
+
+
         /// <summary>
-        /// Notifies the network availability changed.
+        /// Set the network availability.
         /// </summary>
-        /// <param name="isAvailable"></param>
-        private void SetNetworkStatus(bool isAvailable)
+        private bool SetNetworkStatus { get;  set; }
+
+
+        #region Interfaces implementations
+
+        bool INetworkChangeSubscriber.SetNetworkStatus
         {
-        }
-
-
-        #region Interfaces implementations.
-
-        void INetworkChangeSubscriber.SetNetworkStatus(bool isAvailable)
-        {
-            SetNetworkStatus(isAvailable);
+            get { return SetNetworkStatus; }
+            set { SetNetworkStatus = value; }
         }
 
         void IQueryMonitorEx.Reset(DateTime lastUpdate)

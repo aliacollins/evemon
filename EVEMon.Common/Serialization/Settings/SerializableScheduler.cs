@@ -11,12 +11,8 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlArray("entries")]
-        [XmlArrayItem("simple", typeof(SerializableSimpleScheduleEntry))]
+        [XmlArrayItem("simple", typeof(SerializableScheduleEntry))]
         [XmlArrayItem("recurring", typeof(SerializableRecurringScheduleEntry))]
         public List<SerializableScheduleEntry> Entries { get; set; }
-    }
-
-    public class SerializableScheduleEntry
-    {
     }
 }

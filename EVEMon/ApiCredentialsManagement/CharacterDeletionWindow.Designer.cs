@@ -1,4 +1,4 @@
-﻿namespace EVEMon.Accounting
+﻿namespace EVEMon.ApiCredentialsManagement
 {
     partial class CharacterDeletionWindow
     {
@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterDeletionWindow));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.characterToRemoveLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
@@ -48,17 +48,17 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // label1
+            // characterToRemoveLabel
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.characterToRemoveLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(51, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(350, 32);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "You are about to delete a character.";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.characterToRemoveLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.characterToRemoveLabel.Location = new System.Drawing.Point(51, 13);
+            this.characterToRemoveLabel.Name = "characterToRemoveLabel";
+            this.characterToRemoveLabel.Size = new System.Drawing.Size(350, 32);
+            this.characterToRemoveLabel.TabIndex = 1;
+            this.characterToRemoveLabel.Text = "You are about to delete a character.";
+            this.characterToRemoveLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label2
             // 
@@ -125,7 +125,7 @@
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.characterToRemoveLabel);
             this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -142,7 +142,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label characterToRemoveLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button deleteButton;

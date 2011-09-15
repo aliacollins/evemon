@@ -4,7 +4,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 
-namespace EVEMon.Accounting
+namespace EVEMon.ApiCredentialsManagement
 {
     /// <summary>
     /// A windows to import characters from files or urls.
@@ -138,9 +138,9 @@ namespace EVEMon.Accounting
             errorPanel.Visible = false;
             urlThrobber.State = ThrobberState.Rotating;
 
-            // Starts querying the web or the hard drive, and invokes the given callback on result.
+            // Starts querying the web or the hard drive, and invokes the given callback on result
             int version = m_version;
-            EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(uri),
+            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(uri),
                                                                (sender, args) =>
                                                                    {
                                                                        if (version != m_version)

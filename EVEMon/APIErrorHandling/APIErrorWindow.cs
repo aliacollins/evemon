@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.APIErrorHandling;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Net;
@@ -17,7 +16,7 @@ namespace EVEMon.ApiErrorHandling
     /// <summary>
     /// Displays an error window if appropriate a troubleshooter is displayed to help the user resolve the issue.
     /// </summary>
-    public partial class APIErrorWindow : EVEMonForm
+    public partial class ApiErrorWindow : EVEMonForm
     {
         private APIErrorNotificationEventArgs m_notification;
         private ApiErrorTroubleshooter m_troubleshooter;
@@ -26,7 +25,7 @@ namespace EVEMon.ApiErrorHandling
         /// <summary>
         /// Constructor
         /// </summary>
-        public APIErrorWindow()
+        public ApiErrorWindow()
         {
             InitializeComponent();
         }

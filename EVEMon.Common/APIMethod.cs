@@ -14,7 +14,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="method"></param>
         /// <param name="path"></param>
-        public APIMethod(APIMethods method, string path)
+        private APIMethod(APIMethods method, string path)
         {
             Method = method;
             Path = path;

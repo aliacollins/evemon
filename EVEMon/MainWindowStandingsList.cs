@@ -257,13 +257,12 @@ namespace EVEMon
             }
 
             // Draw the entity image
-            if (!Settings.UI.SafeForWork)
-            {
+            if (Settings.UI.SafeForWork)
+                return;
                 g.DrawImage(standing.EntityImage,
                             new Rectangle(e.Bounds.Left + PadLeft / 2,
                                           (StandingDetailHeight / 2) - (standing.EntityImage.Height / 2) + e.Bounds.Top,
                                           standing.EntityImage.Width, standing.EntityImage.Height));
-            }
         }
 
         /// <summary>

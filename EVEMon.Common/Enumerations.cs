@@ -142,6 +142,192 @@ namespace EVEMon.Common
         UpgradeOnly = 8
     }
 
+    /// <summary>
+    /// Represents the image size of an EVE icon.
+    /// </summary>
+    [Flags]
+    public enum EveImageSize
+    {
+        x0 = 0,
+        x16 = 16,
+        x32 = 32,
+        x64 = 64,
+        x128 = 128,
+        x256 = 256
+    }
+
+    /// <summary>
+    /// Enumeration of the supported API methods. Each method should have an entry in APIMethods and
+    /// an equivalent string entry in APIConstants indicating the default path of the method.
+    /// </summary>
+    [Flags]
+    public enum APIMethods
+    {
+        None = 0,
+
+        /// <summary>
+        /// The info of the provided API key.
+        /// </summary>
+        /// <remarks>
+        /// It also provides the characters list available by the API key.
+        /// The update period is bound to the CharacterList's period in Settings.
+        /// </remarks>
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        APIKeyInfo = 6,
+
+        /// <summary>
+        /// The EVE server status.
+        /// </summary>
+        [Header("EVE Server Status")]
+        [Description("The status of the EVE server.")]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
+        ServerStatus = 3,
+
+        /// <summary>
+        /// The characters available on an API key.
+        /// </summary>
+        [Header("Characters on API key")]
+        [Description("The retrieval of the characters list available by the API key.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        CharacterList = 5,
+
+        /// <summary>
+        /// A character sheet (bio, skills, implants, etc).
+        /// </summary>
+        [Header("Character Sheet")]
+        [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        CharacterSheet = 1<<3,
+
+        /// <summary>
+        /// A character's skill queue.
+        /// </summary>
+        [Header("Skill Queue")]
+        [Description("A character's skill queue.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        SkillQueue = 1<<18,
+
+        /// <summary>
+        /// A character's standings towards NPC's.
+        /// </summary>
+        [Header("NPC Standings")]
+        [Description("A character's NPC standings.")]
+        [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
+        Standings = 1<<19,
+
+        /// <summary>
+        /// The account status. Used to retreive account create and expiration date.
+        /// </summary>
+        [Header("Account Status")]
+        [Description("The status of an account.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        AccountStatus = 1<<25,
+
+        /// <summary>
+        /// The personal issued market orders of a character.
+        /// </summary>
+        [Header("Market Orders")]
+        [Description("The market orders of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        MarketOrders = 1<<12,
+
+        /// <summary>
+        /// The personal issued industry jobs of a character.
+        /// </summary>
+        [Header("Industry Jobs")]
+        [Description("The industry jobs of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        IndustryJobs = 1<<7,
+
+        /// <summary>
+        /// The research points of a character.
+        /// </summary>
+        [Header("Research Points")]
+        [Description("Research Points for a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        ResearchPoints = 1<<16,
+
+        /// <summary>
+        /// Mail messages for a character.
+        /// </summary>
+        [Header("EVE Mail Messages")]
+        [Description("Mail messages for a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        MailMessages = 1<<11,
+
+        /// <summary>
+        /// Notifications for a character.
+        /// </summary>
+        [Header("EVE Notifications")]
+        [Description("Notifications messages for a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        Notifications = 1<<14,
+
+        /// <summary>
+        /// The skill in training of a character. Used to determine if an account type API key has a character in training.
+        /// </summary>
+        CharacterSkillInTraining = 1 << 17,
+
+        /// <summary>
+        /// A character's wallet balance.
+        /// </summary>
+        CharacterAccountBalance = 1<<0,
+
+        /// <summary>
+        /// The character mailing lists. Used to convert mailing list IDs to Names.
+        /// </summary>
+        MailingLists = 1 << 10,
+
+        /// <summary>
+        /// The body text of an EVE mail message.
+        /// </summary>
+        MailBodies = 1 << 9,
+
+        /// <summary>
+        /// The body text of an EVE notification.
+        /// </summary>
+        NotificationTexts = 1 << 15,
+
+        /// <summary>
+        /// The corporation issued market orders of a character.
+        /// </summary>
+        /// <remarks> Deprecated due to CAK system. Kepted for settings file backwards compatibility. Must be removed sometime. </remarks>
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        CorporationMarketOrders = 10,
+
+        /// <summary>
+        /// The corporation issued industry jobs of a character.
+        /// </summary>
+        /// <remarks> Deprecated due to CAK system. Kepted for settings file backwards compatibility. Must be removed sometime. </remarks>
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationIndustryJobs = 11,
+
+        /// <summary>
+        /// The conquerable station list.
+        /// </summary>
+        ConquerableStationList = 7,
+
+        /// <summary>
+        /// The character name. Used to convert IDs to Names.
+        /// </summary>
+        CharacterName = 9,
+
+        /// <summary>
+        /// The character info. Used to fetch active ship, security status and last known location. 
+        /// </summary>
+        CharacterInfo = 1 << 23 | 1 << 24,
+
+        SupportMethods = ServerStatus | CharacterList,
+        BasicFeatures = CharacterSheet | CharacterInfo | SkillQueue | CharacterSkillInTraining,
+        AdvancedFeatures = AccountStatus | EVEMailMessages | EVENotifications | IndustryJobs | MarketOrders | ResearchPoints | Standings,
+        AllFeatures = BasicFeatures | AdvancedFeatures,
+
+        EVEMailMessages = MailMessages | MailBodies | MailingLists,
+        EVENotifications = Notifications | NotificationTexts
+    }
+
     #endregion
 
 
@@ -187,58 +373,6 @@ namespace EVEMon.Common
         UpToDate
     }
 
-    public enum QueryStatus
-    {
-        /// <summary>
-        /// The query will be updated on due time.
-        /// </summary>
-        [Description("Pending...")]
-        Pending,
-
-        /// <summary>
-        /// The query is being updated.
-        /// </summary>
-        [Description("Updating...")]
-        Updating,
-
-        /// <summary>
-        /// The query is disabled by the settings.
-        /// </summary>
-        [Description("Disabled by settings.")]
-        Disabled,
-
-        /// <summary>
-        /// There is no network connection.
-        /// </summary>
-        [Description("No TCP/IP connection.")]
-        NoNetwork,
-
-        /// <summary>
-        /// A full key was needed.
-        /// </summary>
-        [Description("Full API Key required.")]
-        NoFullKey,
-
-        /// <summary>
-        /// The character is not on any account.
-        /// </summary>
-        [Description("No associated account.")]
-        NoAccount
-    }
-
-    public enum AccountSortCriteria
-    {
-        /// <summary>
-        /// Accounts are sorted by their ids
-        /// </summary>
-        ID = 0,
-
-        /// <summary>
-        /// Accounts are sorted by their training completion time or, when not in training, their ids.
-        /// </summary>
-        TrainingCompletion = 1,
-    };
-
     /// <summary>
     /// Enumerations of the implants slots. None is -1, other range from 0 to 4, matching the order of the implants ingame
     /// </summary>
@@ -268,19 +402,6 @@ namespace EVEMon.Common
         Drone = 3,
         Ship = 4,
         Bpo = 5
-    }
-
-    /// <summary>
-    /// Represents the image size of an EVE icon.
-    /// </summary>
-    public enum EveImageSize
-    {
-        x0 = 0,
-        x16 = 16,
-        x32 = 32,
-        x64 = 64,
-        x128 = 128,
-        x256 = 256
     }
 
     /// <summary>
@@ -454,25 +575,28 @@ namespace EVEMon.Common
         Unknown
     }
 
-    /// <summary>
-    /// Describes the kind of an API key
-    /// </summary>
-    public enum CredentialsLevel
+    public enum APIKeyType
     {
         /// <summary>
-        /// The account credentials wouldn't be checked because of an error.
+        /// The API key type wouldn't be checked because of an error.
         /// </summary>
         Unknown = 0,
 
         /// <summary>
-        /// This is a limited API key.
+        /// This is an account wide API key.
         /// </summary>
-        Limited = 1,
+        Account = 1,
 
         /// <summary>
-        /// This is a full API key.
+        /// This is a character wide API key.
         /// </summary>
-        Full = 2
+        Character = 2,
+
+        /// <summary>
+        /// This is a corporation wide API key.
+        /// </summary>
+        Corporation = 3
+
     }
 
     /// <summary>
@@ -665,10 +789,56 @@ namespace EVEMon.Common
         TrainingCompletion = 1,
     };
 
+    public enum EveImageSizeMode
+    {
+        Normal,
+        AutoSize,
+        StretchImage
+    };
+
     #endregion
 
 
     #region Enumerations with attributes
+
+    public enum QueryStatus
+    {
+        /// <summary>
+        /// The query will be updated on due time.
+        /// </summary>
+        [Description("Pending...")]
+        Pending,
+
+        /// <summary>
+        /// The query is being updated.
+        /// </summary>
+        [Description("Updating...")]
+        Updating,
+
+        /// <summary>
+        /// The query is disabled by the settings.
+        /// </summary>
+        [Description("Disabled by settings.")]
+        Disabled,
+
+        /// <summary>
+        /// There is no network connection.
+        /// </summary>
+        [Description("No TCP/IP connection.")]
+        NoNetwork,
+
+        /// <summary>
+        /// The character is not on any API key.
+        /// </summary>
+        [Description("No associated API key.")]
+        NoAPIKey,
+
+        /// <summary>
+        /// The API key has no access to query the call.
+        /// </summary>
+        [Description("No access via the  API key.")]
+        NoAccess
+    }
 
     /// <summary>
     /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4,
@@ -800,172 +970,6 @@ namespace EVEMon.Common
 
         [Header("Sent Items")]
         SentItem = 1,
-    }
-
-    /// <summary>
-    /// Enumeration of the supported API methods. Each method should have an entry in APIMethods and
-    /// an equivalent string entry in APIConstants indicating the default path of the method.
-    /// </summary>
-    public enum APIMethods
-    {
-        None,
-
-        /// <summary>
-        /// The Tranquility server status
-        /// </summary>
-        [Header("EVE Server Status")]
-        [Description("The status of the EVE server.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
-        ServerStatus,
-
-        /// <summary>
-        /// The characters available on an account.
-        /// </summary>
-        [Header("Characters on Account")]
-        [Description("The retrieval of the characters list available on every account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        CharacterList,
-
-        /// <summary>
-        /// A character sheet (bio, skills, implants, etc).
-        /// </summary>
-        [Header("Character Sheet")]
-        [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        CharacterSheet,
-
-        /// <summary>
-        /// A character's skill queue.
-        /// </summary>
-        [Header("Skill Queue")]
-        [Description("A character's skill queue.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        SkillQueue,
-
-        /// <summary>
-        /// A character's standings towards NPC's.
-        /// </summary>
-        [Header("NPC Standings")]
-        [Description("A character's NPC standings.")]
-        [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
-        Standings,
-
-        /// <summary>
-        /// The account status. Used to retreive account create and expiration date.
-        /// Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("Account Status")]
-        [Description("The status of an account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        AccountStatus,
-
-        /// <summary>
-        /// The personal issued market orders of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("Market Orders")]
-        [Description("The market orders of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        MarketOrders,
-
-        /// <summary>
-        /// The personal issued industry jobs of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("Industry Jobs")]
-        [Description("The industry jobs of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        IndustryJobs,
-
-        /// <summary>
-        /// The research points of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("Research Points")]
-        [Description("Research Points for a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        ResearchPoints,
-
-        /// <summary>
-        /// Mail messages for a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("EVE Mail Messages")]
-        [Description("Mail messages for a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
-        MailMessages,
-
-        /// <summary>
-        /// Notifications for a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("EVE Notifications")]
-        [Description("Notifications messages for a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
-        Notifications,
-
-        /// <summary>
-        /// The skill in training of a character. Used to determine if an account has a character in training.
-        /// </summary>
-        CharacterSkillInTraining,
-
-        /// <summary>
-        /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
-        /// </summary>
-        [FullKey]
-        CharacterAccountBalance,
-
-        /// <summary>
-        /// The character mailing lists. Used to convert mailing list IDs to Names. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        MailingLists,
-
-        /// <summary>
-        /// The body text of an EVE mail message. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        MailBodies,
-
-        /// <summary>
-        /// The body text of an EVE notification. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        NotificationTexts,
-
-        /// <summary>
-        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        CorporationMarketOrders,
-
-        /// <summary>
-        /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
-        CorporationIndustryJobs,
-
-        /// <summary>
-        /// The conquerable station list. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        ConquerableStationList,
-
-        /// <summary>
-        /// The character name. Used to convert IDs to Names. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        CharacterName,
-
-        /// <summary>
-        /// The character info. Used to fetch sctive ship, security status and last known location. 
-        /// </summary>
-        CharacterInfo,
     }
 
     #endregion

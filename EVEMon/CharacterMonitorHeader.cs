@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Accounting;
+using EVEMon.ApiCredentialsManagement;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
@@ -142,10 +142,11 @@ namespace EVEMon
                                                          "Security Status: {0:N2}", m_character.SecurityStatus);
                 ActiveShipLabel.Text = GetActiveShipText();
 
-                Account account = m_character.Identity.Account;
-                LocationInfoIndicationPictureBox.Visible = account != null &&
-                                                           account.KeyLevel == CredentialsLevel.Full &&
-                                                           !String.IsNullOrEmpty(m_character.LastKnownLocation);
+                APIKey apiKey = m_character.Identity.APIKey;
+                LocationInfoIndicationPictureBox.Visible =
+                    apiKey != null &&
+                    ((int)APIMethods.CharacterInfo == (apiKey.AccessMask & (int)APIMethods.CharacterInfo)) &&
+                    !String.IsNullOrWhiteSpace(m_character.LastKnownLocation);
             }
             finally
             {
@@ -271,7 +272,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError) || ccpCharacter.Identity.Account == null)
+            if (ccpCharacter.Identity.APIKey == null || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ToolTip.SetToolTip(UpdateThrobber, String.Empty);
                 return;
@@ -299,7 +300,7 @@ namespace EVEMon
         {
             UpdateThrobber.Visible = true;
             UpdateThrobber.State = ThrobberState.Rotating;
-            ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from EVE Online...");
+            ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
             UpdateLabel.Visible = false;
         }
 
@@ -338,9 +339,7 @@ namespace EVEMon
 
             StringBuilder output = new StringBuilder();
 
-            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
-                monitor => monitor.Method != APIMethods.CorporationMarketOrders
-                           && monitor.Method != APIMethods.CorporationIndustryJobs))
+            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -451,7 +450,7 @@ namespace EVEMon
             ToolStripMenuItem menu = new ToolStripMenuItem(menuText)
                                          {
                                              Tag = monitor.Method,
-                                             Enabled = !monitor.ForceUpdateWillCauseError
+                                             Enabled = monitor.CanForceUpdate && monitor.HasAccess
                                          };
 
             return menu;
@@ -463,7 +462,7 @@ namespace EVEMon
         /// <param name="label">The attribute label.</param>
         /// <param name="eveAttribute">The eve attribute.</param>
         /// <returns>Formatted string describing the attribute and its value.</returns>
-        private void SetAttributeLabel(Label label, EveAttribute eveAttribute)
+        private void SetAttributeLabel(Control label, EveAttribute eveAttribute)
         {
             label.Text = m_character[eveAttribute].EffectiveValue.ToString(CultureConstants.DefaultCulture);
 
@@ -642,14 +641,11 @@ namespace EVEMon
                 return;
 
             // There has been an error in the past (Authorization, Server Error, etc.)
-            if (UpdateThrobber.State == ThrobberState.Strobing)
-            {
-                ThrobberContextMenu.Show(MousePosition);
-                return;
-            }
-
-            // Updating now will return an API error because the cache has not expired.
-            if (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError))
+            // or updating now will return the same data because the cache has not expired
+            // or character has no associated API key
+            if (UpdateThrobber.State == ThrobberState.Strobing ||
+                ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate)||
+                ccpCharacter.Identity.APIKey == null)
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
@@ -683,24 +679,19 @@ namespace EVEMon
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // Exit for non-CCP characters or no associated account
-            if (ccpCharacter == null || ccpCharacter.Identity.Account == null)
+            if (ccpCharacter == null || ccpCharacter.Identity.APIKey == null)
             {
                 QueryEverythingMenuItem.Enabled = false;
                 return;
             }
 
-            // Enables/disables the "query everything" menu item
-            QueryEverythingMenuItem.Enabled = !ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError);
+            // Enables / Disables the "query everything" menu item
+            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.All(x => x.CanForceUpdate);
 
             CreateNewToolStripSeparator();
 
             // Add monitor items
-            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Where(
-                monitor => !monitor.IsFullKeyNeeded
-                           || ccpCharacter.Identity.Account.KeyLevel == CredentialsLevel.Full).Where(
-                               monitor => monitor.Method != APIMethods.CorporationMarketOrders
-                                          && monitor.Method != APIMethods.CorporationIndustryJobs).Select(
-                                              CreateNewMonitorToolStripMenuItem))
+            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Select(CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menu);
             }
@@ -729,13 +720,6 @@ namespace EVEMon
             SetThrobberUpdating();
 
             ccpCharacter.QueryMonitors.Query(method);
-
-            // Additionaly trigger the update of corporaiton equivalants
-            if (method == APIMethods.MarketOrders)
-                ccpCharacter.QueryMonitors.Query(APIMethods.CorporationMarketOrders);
-
-            if (method == APIMethods.IndustryJobs)
-                ccpCharacter.QueryMonitors.Query(APIMethods.CorporationIndustryJobs);
         }
 
         /// <summary>
@@ -803,9 +787,9 @@ namespace EVEMon
             if (String.IsNullOrEmpty(m_character.LastKnownLocation))
                 return;
 
-            // Show the tooltip on when the user provides a Full api key
-            Account account = m_character.Identity.Account;
-            if (account == null || account.KeyLevel != CredentialsLevel.Full)
+            // Show the tooltip on when the user provides api key
+            APIKey apiKey = m_character.Identity.APIKey;
+            if (apiKey == null || ((int)APIMethods.CharacterInfo != (apiKey.AccessMask & (int)APIMethods.CharacterInfo)))
                 return;
 
             string location = "Lost in space";
@@ -847,17 +831,14 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the Click event of the ChangeInfoMenuItem control.
+        /// Handles the Click event of the ChangeAPIKeyInfoMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void ChangeInfoMenuItem_Click(object sender, EventArgs e)
+        private void ChangeAPIKeyInfoMenuItem_Click(object sender, EventArgs e)
         {
-            // This menu should be enabled only for CCP characters with non-null accounts.
-            using (AccountUpdateOrAdditionWindow f = new AccountUpdateOrAdditionWindow(m_character.Identity.Account))
-            {
-                f.ShowDialog();
-            }
+            // This menu should be enabled only for CCP characters
+            WindowsFactory<ApiKeyUpdateOrAdditionWindow>.ShowByTag(m_character.Identity.APIKey);
         }
 
         #endregion

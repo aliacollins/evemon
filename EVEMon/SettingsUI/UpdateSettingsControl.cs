@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Attributes;
 using EVEMon.Common.SettingsObjects;
 using CommonProperties = EVEMon.Common.Properties;
 
@@ -24,22 +23,26 @@ namespace EVEMon.SettingsUI
         {
             InitializeComponent();
 
-            // Add the controls for every member of the enumeration
             int height = RowHeight;
-            IEnumerable<APIMethods> methods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>();
+            
+            // Gets the API methods
+            IEnumerable<APIMethods> apiMethods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>().Where(x => x.HasHeader());
+            
+            // Group the methods by usage
+            List<APIMethods> methods = apiMethods.Where(x => x == (x & APIMethods.SupportMethods)).ToList();
+            methods.AddRange(apiMethods.Where(x => x == (x & APIMethods.BasicFeatures)));
+            methods.AddRange(apiMethods.Where(x => x == (x & APIMethods.AdvancedFeatures)).OrderBy(x => x.GetHeader()));
+
+            // Add the controls for every member of the enumeration
             foreach (APIMethods method in methods)
             {
-                // Skip if there is no header
-                if (!method.HasHeader())
-                    continue;
-
                 // Add the icon
-                Bitmap icon = CommonProperties.Resources.APIKeyLimited16;
-                string iconToolTip = "This query requires a limited API key.";
-                if (method.HasAttribute<FullKeyAttribute>())
+                Bitmap icon = CommonProperties.Resources.KeyGrey16;
+                string iconToolTip = "This is a basic feature query.";
+                if (method == (method & APIMethods.AdvancedFeatures))
                 {
-                    icon = CommonProperties.Resources.APIKeyFull16;
-                    iconToolTip = "This query requires a full API key.";
+                    icon = CommonProperties.Resources.KeyGold16;
+                    iconToolTip = "This is an advanced feature query.";
                 }
 
                 PictureBox picture = new PictureBox
@@ -70,7 +73,7 @@ namespace EVEMon.SettingsUI
                 foreach (UpdatePeriod period in GetUpdatePeriods(method))
                 {
                     string header = period.GetHeader();
-                    if (period == UpdatePeriod.Never && method.HasAttribute<ForcedOnStartupAttribute>())
+                    if (period == UpdatePeriod.Never && method.HasForcedOnStartup())
                         header = "On Startup";
 
                     combo.Items.Add(header);
@@ -116,7 +119,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// When the selected indew changes, we update the settings.
+        /// When the selected index changes, we update the settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -129,11 +132,8 @@ namespace EVEMon.SettingsUI
             if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count)
                 return;
 
-            if (method == APIMethods.MarketOrders)
-                m_settings.Periods[APIMethods.CorporationMarketOrders] = periods[combo.SelectedIndex];
-
-            if (method == APIMethods.IndustryJobs)
-                m_settings.Periods[APIMethods.CorporationIndustryJobs] = periods[combo.SelectedIndex];
+            if (method == APIMethods.CharacterList)
+                m_settings.Periods[APIMethods.APIKeyInfo] = periods[combo.SelectedIndex];
 
             m_settings.Periods[method] = periods[combo.SelectedIndex];
         }
@@ -143,13 +143,12 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        private List<UpdatePeriod> GetUpdatePeriods(APIMethods method)
+        private static List<UpdatePeriod> GetUpdatePeriods(APIMethods method)
         {
             List<UpdatePeriod> periods = new List<UpdatePeriod> { UpdatePeriod.Never };
 
-            UpdateAttribute updateAttribute = method.GetAttribute<UpdateAttribute>();
-            int min = (int)updateAttribute.Minimum;
-            int max = (int)updateAttribute.Maximum;
+            int min = (int)method.GetUpdatePeriod().Minimum;
+            int max = (int)method.GetUpdatePeriod().Maximum;
 
             periods.AddRange(Enum.GetValues(typeof(UpdatePeriod)).Cast<UpdatePeriod>().Where(
                 period => period != UpdatePeriod.Never).Select(period => new { period, index = (int)period }).Where(

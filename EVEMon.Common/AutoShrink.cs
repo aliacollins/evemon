@@ -4,8 +4,8 @@
 
 using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace EVEMon.Common
 {

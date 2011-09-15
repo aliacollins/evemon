@@ -6,7 +6,7 @@ namespace EVEMon.Common.Serialization.API
     /// <summary>
     /// Represents a serializable version of a character's list. Used for querying CCP.
     /// </summary>
-    public sealed class SerializableAPICharacters
+    public class SerializableAPICharacters
     {
         [XmlArray("characters")]
         [XmlArrayItem("character")]

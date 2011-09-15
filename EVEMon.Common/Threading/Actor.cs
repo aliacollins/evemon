@@ -132,9 +132,9 @@ namespace EVEMon.Common.Threading
         /// </summary>
         /// <param name="action">The action to invoke</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        public bool Invoke(Action action)
+        public void Invoke(Action action)
         {
-            return Invoke(action, true);
+            Invoke(action, true);
         }
 
         /// <summary>
@@ -143,9 +143,9 @@ namespace EVEMon.Common.Threading
         /// </summary>
         /// <param name="action">The action to invoke</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        public bool BeginInvoke(Action action)
+        public void BeginInvoke(Action action)
         {
-            return Invoke(action);
+            Invoke(action);
         }
 
         /// <summary>
@@ -154,13 +154,13 @@ namespace EVEMon.Common.Threading
         /// <param name="action"></param>
         /// <param name="waitForCompletion">When true, will wait for the completion</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        private bool Invoke(Action action, bool waitForCompletion = false)
+        private void Invoke(Action action, bool waitForCompletion = false)
         {
             // Already on the bound thread, execute immediately
             if (Thread.CurrentThread == m_thread)
             {
                 if (IsShutdown)
-                    return false;
+                    return;
 
                 action();
             }
@@ -175,7 +175,7 @@ namespace EVEMon.Common.Threading
                     m_messageQueue.Enqueue(msg);
                     m_waitHandle.Set();
                     if (IsShutdown)
-                        return false;
+                        return;
                 }
 
                 // Wait for the action to be executed
@@ -183,10 +183,8 @@ namespace EVEMon.Common.Threading
                     msg.Wait();
 
                 if (IsShutdown)
-                    return false;
+                    return;
             }
-
-            return true;
         }
 
         /// <summary>

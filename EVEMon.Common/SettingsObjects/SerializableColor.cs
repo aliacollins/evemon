@@ -26,7 +26,7 @@ namespace EVEMon.Common.SettingsObjects
         public byte B { get; set; }
 
 
-        #region Implciit conversion operators with System.Drawing.Color
+        #region Explicit conversion operators with System.Drawing.Color
 
         /// <summary>
         /// Performs an explicit conversion from <see cref="EVEMon.Common.SettingsObjects.SerializableColor"/> to <see cref="System.Drawing.Color"/>.

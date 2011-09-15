@@ -10,7 +10,7 @@ namespace EVEMon.Common
     public sealed class CharacterIdentity
     {
         private readonly long m_id;
-        private Account m_account;
+        private APIKey m_apiKey;
 
         /// <summary>
         /// Constructor from an id and a name.
@@ -37,17 +37,17 @@ namespace EVEMon.Common
         public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets the account this identity is associated with.
+        /// Gets the API key this identity is associated with.
         /// </summary>
-        public Account Account
+        public APIKey APIKey
         {
-            get { return m_account; }
+            get { return m_apiKey; }
             internal set
             {
-                if (m_account == value)
+                if (m_apiKey == value)
                     return;
 
-                m_account = value;
+                m_apiKey = value;
 
                 // Notify subscribers
                 CCPCharacter ccpCharacter = CCPCharacter;
@@ -55,7 +55,6 @@ namespace EVEMon.Common
                     return;
 
                 EveMonClient.OnCharacterUpdated(ccpCharacter);
-                EveMonClient.OnCharacterInfoUpdated(ccpCharacter);
             }
         }
 
@@ -66,8 +65,8 @@ namespace EVEMon.Common
         {
             get
             {
-                return EveMonClient.Characters.Where(
-                    character => character is CCPCharacter && character.CharacterID == m_id).Cast<CCPCharacter>().FirstOrDefault();
+                return EveMonClient.Characters.OfType<CCPCharacter>().Where(
+                    character => character.CharacterID == m_id).FirstOrDefault();
             }
         }
 

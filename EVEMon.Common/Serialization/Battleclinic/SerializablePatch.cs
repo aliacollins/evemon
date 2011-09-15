@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using System.Collections.Generic;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {

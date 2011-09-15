@@ -11,6 +11,13 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Transform APIKeyInfo 'characterName' to 'name'-->
+  <xsl:template name="trans-characterName">
+    <xsl:attribute name="name">
+      <xsl:value-of select="." />
+    </xsl:attribute>
+  </xsl:template>
+
   <!-- Rowsets are transformed into something else-->
   <xsl:template match="rowset">
     <!-- Select the set and row names. -->
@@ -54,7 +61,14 @@
       <xsl:for-each select="row">
         <xsl:element name="{$rowName}">
           <xsl:for-each select="@* | node()">
-            <xsl:copy />
+            <xsl:choose>
+              <xsl:when test="name(.)='characterName'">
+                <xsl:call-template name="trans-characterName" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:copy/>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:for-each>
         </xsl:element>
       </xsl:for-each>

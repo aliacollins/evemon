@@ -17,11 +17,9 @@ namespace EVEMon
     /// <summary>
     /// Implements the content of each of the character tabs.
     /// </summary>
-    public partial class CharacterMonitor : UserControl
+    public sealed partial class CharacterMonitor : UserControl
     {
-        private readonly List<ToolStripButton> m_fullAPIKeyFeatures = new List<ToolStripButton>();
-        private CredentialsLevel m_keyLevel;
-        private bool m_pendingUpdate;
+        private readonly List<ToolStripButton> m_advancedFeatures = new List<ToolStripButton>();
 
 
         #region Constructor
@@ -33,6 +31,10 @@ namespace EVEMon
         {
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            UpdateStyles();
+
+            Font = FontFactory.GetFont("Tahoma");
+            lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
 
             multiPanel.SelectionChange += multiPanel_SelectionChange;
         }
@@ -56,25 +58,21 @@ namespace EVEMon
             eveNotificationsList.Character = character;
             notificationList.Notifications = null;
 
-            // Create a list of the full API Key features
-            m_fullAPIKeyFeatures.Add(ordersIcon);
-            m_fullAPIKeyFeatures.Add(jobsIcon);
-            m_fullAPIKeyFeatures.Add(researchIcon);
-            m_fullAPIKeyFeatures.Add(mailMessagesIcon);
-            m_fullAPIKeyFeatures.Add(eveNotificationsIcon);
+            // Create a list of the advanced features
+            m_advancedFeatures.AddRange(new[]
+                                            {
+                                                standingsIcon, ordersIcon, jobsIcon, researchIcon, mailMessagesIcon,
+                                                eveNotificationsIcon
+                                            });
 
-            // Hide all full api key related controls
-            m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
+            // Hide all advanced features related controls
+            m_advancedFeatures.ForEach(x => x.Visible = false);
             featuresMenu.Visible = false;
             toggleSkillsIcon.Visible = tsToggleSeparator.Visible = false;
             toolStripContextual.Visible = false;
             warningLabel.Visible = false;
 
-            // Update all other controls
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
-
             CCPCharacter ccpCharacter = character as CCPCharacter;
-
             if (ccpCharacter != null)
                 skillQueueControl.SkillQueue = ccpCharacter.SkillQueue;
             else
@@ -82,7 +80,6 @@ namespace EVEMon
                 pnlTraining.Visible = false;
                 skillQueuePanel.Visible = false;
                 skillQueueIcon.Visible = false;
-                standingsIcon.Visible = false;
             }
 
             // Subscribe events
@@ -90,6 +87,7 @@ namespace EVEMon
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CharacterIndustryJobsUpdated += EveMonClient_CharacterIndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
@@ -111,6 +109,7 @@ namespace EVEMon
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
@@ -140,27 +139,24 @@ namespace EVEMon
         {
             base.OnLoad(e);
 
-            Font = FontFactory.GetFont("Tahoma");
-            lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
+            // Updates the controls
+            UpdateInfrequentControls();
 
             // Picks the last selected page
             multiPanel.SelectedPage = null;
             string tag = Character.UISettings.SelectedPage;
-            ToolStripItem item =
-                toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == x.Tag as string);
+            ToolStripItem item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x =>
+                                                                                              tag == (string)x.Tag);
 
-            // If it's not a full key feature page make it visible
-            if (item != null && !m_fullAPIKeyFeatures.Contains(item))
+            // If it's not a advanced feature page make it visible
+            if (item != null && !m_advancedFeatures.Contains(item))
                 item.Visible = true;
 
-            // If it's a full key feature page reset to skills page
-            if (item != null && m_fullAPIKeyFeatures.Contains(item))
+            // If it's an advanced feature page reset to skills page
+            if (item != null && m_advancedFeatures.Contains(item))
                 item = skillsIcon;
 
             toolbarIcon_Click((item ?? skillsIcon), EventArgs.Empty);
-
-            // Updates the rest of the control
-            UpdateContent();
         }
 
         /// <summary>
@@ -169,12 +165,13 @@ namespace EVEMon
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (m_pendingUpdate)
-                UpdateContent();
-
-            UpdateFeaturesTextVisibility();
-
             base.OnVisibleChanged(e);
+
+            if (!Visible)
+                return;
+
+            UpdateFrequentControls();
+            UpdateInfrequentControls();
         }
 
         #endregion
@@ -183,23 +180,26 @@ namespace EVEMon
         #region Display update on character change
 
         /// <summary>
-        /// Updates all the content
+        /// Updates the controls whos content changes frequently.
         /// </summary>
-        private void UpdateContent()
+        private void UpdateFrequentControls()
         {
+            // No need to do anything when the control is not visible
             if (!Visible)
-            {
-                m_pendingUpdate = true;
                 return;
-            }
 
-            m_pendingUpdate = false;
-
-            // Display the "no skills" label if there's no skills
-            SuspendLayout();
             try
             {
-                EveMonClient_TimerTick(null, EventArgs.Empty);
+                SuspendLayout();
+
+                // Hides or shows the warning about a character with no API key
+                warningLabel.Visible = (Character.Identity.APIKey == null);
+
+                // Update the training controls
+                UpdateTrainingControls();
+
+                // Update the advanced features enabled pages
+                UpdateFeaturesMenu();
             }
             finally
             {
@@ -208,71 +208,26 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Updates the informations for skill training
+        /// Updates the informations for skill training.
         /// </summary>
-        private void UpdateTrainingInfo()
+        private void UpdateTrainingControls()
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-
             // Is the character in training ?
             if (Character.IsTraining)
             {
-                QueuedSkill training = Character.CurrentlyTrainingSkill;
-                DateTime completionTime = training.EndTime.ToLocalTime();
+                UpdateTrainingSkillInfo();
 
-                lblTrainingSkill.Text = training.ToString();
-                lblSPPerHour.Text = (training.Skill == null
-                                         ? "???"
-                                         : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
-                                                         training.Skill.SkillPointsPerHour));
-                lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                                                    completionTime.ToString("ddd"), completionTime.ToString("G"));
+                UpdateSkillQueueInfo();
 
-                string conflictMessage;
-                if (Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage))
-                {
-                    lblScheduleWarning.Text = conflictMessage;
-                    lblScheduleWarning.Visible = true;
-                }
-                else
-                    lblScheduleWarning.Visible = false;
-
-                if (ccpCharacter != null)
-                {
-                    DateTime queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-                    lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture,
-                                                                "{0:ddd} {0:G}", queueCompletionTime);
-                    if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
-                        skillQueueControl.Invalidate();
-                    skillQueuePanel.Visible = true;
-                    skillQueueTimePanel.Visible = ccpCharacter.SkillQueue.Count > 1 ||
-                                                  Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
-                }
-
+                skillQueuePanel.Visible = true;
                 pnlTraining.Visible = true;
                 lblPaused.Visible = false;
                 return;
             }
 
             // Not in training, check for paused skill queue
-            if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
-            {
-                QueuedSkill training = ccpCharacter.SkillQueue.CurrentlyTraining;
-                lblTrainingSkill.Text = training.ToString();
-                lblSPPerHour.Text = (training.Skill == null
-                                         ? "???"
-                                         : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
-                                                         training.Skill.SkillPointsPerHour));
-
-                lblTrainingRemain.Text = "Paused";
-                lblTrainingEst.Text = String.Empty;
-                lblScheduleWarning.Visible = false;
-                skillQueueTimePanel.Visible = false;
-                skillQueuePanel.Visible = true;
-                lblPaused.Visible = true;
-                pnlTraining.Visible = true;
+            if (SkillQueueIsPaused())
                 return;
-            }
 
             // Not training, no skill queue
             skillQueuePanel.Visible = false;
@@ -281,47 +236,186 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Hides or shows the warning about the insufficient key level.
+        /// Updates the training skill info.
         /// </summary>
-        private void UpdateWarningLabel()
+        private void UpdateTrainingSkillInfo()
         {
-            if (Character.Identity.Account == null)
-            {
-                warningLabel.Text = "This character has no associated account, data won't be updated.";
-                warningLabel.Visible = true;
-                return;
-            }
+            QueuedSkill training = Character.CurrentlyTrainingSkill;
+            DateTime completionTime = training.EndTime.ToLocalTime();
 
-            warningLabel.Visible = false;
+            lblTrainingSkill.Text = training.ToString();
+            lblSPPerHour.Text = (training.Skill == null
+                                     ? "???"
+                                     : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
+                                                     training.Skill.SkillPointsPerHour));
+            lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                                                completionTime.ToString("ddd"), completionTime.ToString("G"));
+
+            // Dipslay a warning if anything scheduled is blocking us
+            string conflictMessage;
+            lblScheduleWarning.Visible = Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage);
+            lblScheduleWarning.Text = conflictMessage;
         }
 
         /// <summary>
-        /// Hides or shows the feature menu that gets enabled by a full api key.
+        /// Updates the skill queue info.
+        /// </summary>
+        private void UpdateSkillQueueInfo()
+        {
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+            if (ccpCharacter == null)
+                return;
+
+            DateTime queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
+            lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture,
+                                                        "{0:ddd} {0:G}", queueCompletionTime);
+
+            // Skill queue time panel
+            skillQueueTimePanel.Visible = ccpCharacter.SkillQueue.Count > 1 || Settings.UI.MainWindow.AlwaysShowSkillQueueTime ||
+                                          (ccpCharacter.SkillQueue.Count == 1 && Settings.UI.MainWindow.AlwaysShowSkillQueueTime);
+
+            // Update the remaining training time label
+            QueuedSkill training = Character.CurrentlyTrainingSkill;
+            lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
+
+            // Update the remaining queue time label
+            DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
+            lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
+        }
+
+        /// <summary>
+        /// Updates the skill queue info if queue is paused.
+        /// </summary>
+        /// <returns></returns>
+        private bool SkillQueueIsPaused()
+        {
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+            if (ccpCharacter == null || !ccpCharacter.SkillQueue.IsPaused)
+                return false;
+
+            QueuedSkill training = ccpCharacter.SkillQueue.CurrentlyTraining;
+            lblTrainingSkill.Text = training.ToString();
+            lblSPPerHour.Text = (training.Skill == null
+                                     ? "???"
+                                     : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
+                                                     training.Skill.SkillPointsPerHour));
+
+            lblTrainingRemain.Text = "Paused";
+            lblTrainingEst.Text = String.Empty;
+            lblScheduleWarning.Visible = false;
+            skillQueueTimePanel.Visible = false;
+            skillQueuePanel.Visible = true;
+            pnlTraining.Visible = true;
+            lblPaused.Visible = true;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Updates the controls whos content changes infrequently.
+        /// </summary>
+        private void UpdateInfrequentControls()
+        {
+            // No need to do anything when the control is not visible
+            if (!Visible)
+                return;
+
+            try
+            {
+                SuspendLayout();
+
+                // "Update Calendar" button
+                btnAddToCalendar.Visible = Settings.Calendar.Enabled;
+
+                // Read the settings
+                if (Settings.UI.SafeForWork)
+                {
+                    // Takes care of the features icons
+                    foreach (ToolStripItem item in toolStripFeatures.Items.Cast<ToolStripItem>().Where(
+                        item => item is ToolStripButton || item is ToolStripDropDownButton))
+                    {
+                        item.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                    }
+
+                    // Takes care of the special second toolstrip icons 
+                    foreach (ToolStripItem item in toolStripContextual.Items)
+                    {
+                        item.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                    }
+
+                    toolStripFeatures.ContextMenuStrip = null;
+                    return;
+                }
+
+                // Display image and text of the features according to user preference
+                foreach (ToolStripButton item in toolStripFeatures.Items.OfType<ToolStripButton>())
+                {
+                    item.DisplayStyle = (Settings.UI.ShowTextInToolStrip
+                                             ? ToolStripItemDisplayStyle.ImageAndText
+                                             : ToolStripItemDisplayStyle.Image);
+                }
+
+                featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+
+                groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+
+                toolStripFeatures.ContextMenuStrip = toolstripContextMenu;
+            }
+            finally
+            {
+                ResumeLayout();
+            }
+        }
+
+        /// <summary>
+        /// Hides or shows the feature menu.
         /// </summary>
         private void UpdateFeaturesMenu()
         {
-            Account account = Character.Identity.Account;
-            if (account == null || m_keyLevel == account.KeyLevel)
+            if (Character.Identity.APIKey == null)
                 return;
-
-            m_keyLevel = account.KeyLevel;
 
             if (!(Character is CCPCharacter))
                 return;
-            if (m_keyLevel == CredentialsLevel.Full)
-            {
-                m_fullAPIKeyFeatures.ForEach(x => x.Visible = CheckEnabledFeatures(x.Text));
-                featuresMenu.Visible = true;
-                tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
 
-                ToggleFullAPIKeyFeaturesMonitoring();
+            featuresMenu.Visible = tsToggleSeparator.Visible = true;
+            m_advancedFeatures.ForEach(SetVisibility);
+            ToggleAdvancedFeaturesMonitoring();
+        }
 
+        /// <summary>
+        /// Sets the button visibility.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        private void SetVisibility(ToolStripButton button)
+        {
+            IQueryMonitor monitor = ButtonToMonitor(button);
+            button.Visible = IsEnabledFeature(button.Text) && monitor != null && monitor.HasAccess;
+
+            // Quit if the button should stay visible
+            // (Do not use the buttons' 'Visible' property as condition,
+            // because there is a .Net bug when returning from minimized state) 
+            if (IsEnabledFeature(button.Text) && monitor != null && monitor.HasAccess)
                 return;
-            }
 
-            m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
-            featuresMenu.Visible = tsToggleSeparator.Visible = false;
-            UpdateFullAPIKeyPagesSettings();
+            // Buttons' related monitor lost access to data while it was enabled, so...
+            // 1. Remove buttons' related page from settings
+            if (Character.UISettings.AdvancedFeaturesEnabledPages.Contains(button.Text))
+                Character.UISettings.AdvancedFeaturesEnabledPages.Remove(button.Text);
+
+            // 2. Uncheck in dropdown menu
+            if (featuresMenu.DropDownItems.Count == 0)
+                return;
+
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
+                item => item.Text == button.Text && item.Checked))
+            {
+                item.Checked = !item.Checked;
+
+                // Update the selected page
+                UpdateSelectedPage();
+            }
         }
 
         /// <summary>
@@ -329,7 +423,7 @@ namespace EVEMon
         /// </summary>
         private void UpdatePageControls()
         {
-            // Enables/Disables the skill page controls
+            // Enables / Disables the skill page controls
             toggleSkillsIcon.Enabled = !Character.Skills.IsEmpty();
 
             // Exit if it's a non-CCPCharacter
@@ -343,106 +437,133 @@ namespace EVEMon
                 item.Visible = true;
             }
 
-            // Enables/Disables the market orders page related controls
+            // Enables / Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)
                 toolStripContextual.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
 
-            // Enables/Disables the industry jobs page related controls
+            // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
                 toolStripContextual.Enabled = !ccpCharacter.IndustryJobs.IsEmpty();
 
-            // Enables/Disables the research points page related controls
+            // Enables / Disables the research points page related controls
             if (multiPanel.SelectedPage == researchPage)
             {
                 toolStripContextual.Enabled = !ccpCharacter.ResearchPoints.IsEmpty();
                 groupMenu.Visible = false;
             }
 
-            // Enables/Disables the EVE mail messages page related controls
+            // Enables / Disables the EVE mail messages page related controls
             if (multiPanel.SelectedPage == mailMessagesPage)
                 toolStripContextual.Enabled = !ccpCharacter.EVEMailMessages.IsEmpty();
 
-            // Enables/Disables the EVE notifications page related controls
+            // Enables / Disables the EVE notifications page related controls
             if (multiPanel.SelectedPage == eveNotificationsPage)
                 toolStripContextual.Enabled = !ccpCharacter.EVENotifications.IsEmpty();
         }
 
         /// <summary>
-        /// Toggles the full API key features monitoring.
+        /// Toggles the advanced features monitoring.
         /// </summary>
-        private void ToggleFullAPIKeyFeaturesMonitoring()
+        private void ToggleAdvancedFeaturesMonitoring()
         {
-            // Exit if it's a non-CCPCharacter
+            // Quit if it's a non-CCPCharacter
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
 
-            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.Where(x => x.IsFullKeyNeeded))
-            {
-                foreach (ToolStripButton fullAPIKeyFeature in m_fullAPIKeyFeatures
-                    .Where(x => monitor.Method.ToString().Contains(x.Text)).Where(
-                        fullAPIKeyFeature =>
-                        !monitor.Method.ToString().Contains("Corporation") || !ccpCharacter.IsInNPCCorporation))
-                {
-                    monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
-                }
-
-                if (monitor.QueryOnStartup && monitor.Enabled && monitor.LastResult == null)
-                    ccpCharacter.ForceUpdate(monitor);
-            }
+            m_advancedFeatures.ForEach(button =>
+                                           {
+                                               IQueryMonitor monitor = ButtonToMonitor(button);
+                                               monitor.Enabled = IsEnabledFeature(button.Text);
+                                               if (monitor.QueryOnStartup && monitor.Enabled && monitor.LastResult == null)
+                                                   ccpCharacter.ForceUpdate(monitor);
+                                           });
         }
 
         /// <summary>
-        /// Updates full api key pages selection and settings.
+        /// Updates advanced features pages selection and settings.
         /// </summary>
-        private void UpdateFullAPIKeyPagesSettings()
+        private void UpdateAdvancedFeaturesPagesSettings()
         {
-            if ((multiPanel.SelectedPage == ordersPage && !ordersIcon.Visible)
+            UpdateSelectedPage();
+
+            List<string> enabledAdvancedFeaturesPages =
+                (featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
+                    menuItem => menuItem.Checked).Select(menuItem => menuItem.Text)).ToList();
+
+            Character.UISettings.AdvancedFeaturesEnabledPages.Clear();
+            Character.UISettings.AdvancedFeaturesEnabledPages.AddRange(enabledAdvancedFeaturesPages);
+        }
+
+        /// <summary>
+        /// Updates the selected page.
+        /// </summary>
+        private void UpdateSelectedPage()
+        {
+            if ((multiPanel.SelectedPage == standingsPage && !standingsIcon.Visible)
+                || (multiPanel.SelectedPage == ordersPage && !ordersIcon.Visible)
                 || (multiPanel.SelectedPage == jobsPage && !jobsIcon.Visible)
                 || (multiPanel.SelectedPage == researchPage && !researchIcon.Visible)
                 || (multiPanel.SelectedPage == mailMessagesPage && !mailMessagesIcon.Visible)
                 || (multiPanel.SelectedPage == eveNotificationsPage && !eveNotificationsIcon.Visible))
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
-
-            List<string> enabledFullAPIKeyPages = (featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
-                menuItem => menuItem.Checked).Select(menuItem => menuItem.Text)).ToList();
-
-            Character.UISettings.FullAPIKeyEnabledPages.Clear();
-            Character.UISettings.FullAPIKeyEnabledPages.AddRange(enabledFullAPIKeyPages);
-        }
-
-        /// <summary>
-        /// Check the enabled features from settings.
-        /// </summary>
-        /// <param name="page"></param>
-        /// <returns></returns>
-        private bool CheckEnabledFeatures(string page)
-        {
-            return Character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
-        }
-
-        /// <summary>
-        /// Update the toolstrip text visibility.
-        /// </summary>
-        private void UpdateFeaturesTextVisibility()
-        {
-            if (Settings.UI.SafeForWork)
-                return;
-
-            foreach (ToolStripButton item in toolStripFeatures.Items.OfType<ToolStripButton>())
-            {
-                item.DisplayStyle = (Settings.UI.ShowTextInToolStrip
-                                         ? ToolStripItemDisplayStyle.ImageAndText
-                                         : ToolStripItemDisplayStyle.Image);
-            }
-
-            featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
         }
 
         #endregion
 
 
         #region Updates on global events
+
+        /// <summary>
+        /// Occur on every second. We update the total SP, remaining time and the matching item in skill list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateFrequentControls();
+        }
+
+        /// <summary>
+        /// Updates the controls on settings change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateInfrequentControls();
+        }
+
+        /// <summary>
+        /// When the scheduler changed, we need to check the conflicts
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
+        {
+            UpdateTrainingControls();
+        }
+
+        /// <summary>
+        /// Occur when the character changed. We update all the controls' content.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != Character)
+                return;
+
+            UpdateInfrequentControls();
+        }
+
+        private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != Character)
+                return;
+
+            skillQueueControl.Invalidate();
+        }
 
         /// <summary>
         /// Updates the page controls on market orders change.
@@ -510,112 +631,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occur when the character changed. We update all the controls' content.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != Character)
-                return;
-
-            UpdateContent();
-            ToggleFullAPIKeyFeaturesMonitoring();
-        }
-
-        /// <summary>
-        /// Updates the controls on settings change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
-        {
-            // Read the settings
-            if (!Settings.UI.SafeForWork)
-            {
-                UpdateFeaturesTextVisibility();
-
-                groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
-
-                toolStripFeatures.ContextMenuStrip = toolstripContextMenu;
-            }
-            else
-            {
-                foreach (ToolStripItem item in toolStripFeatures.Items.Cast<ToolStripItem>().Where(
-                    item => item is ToolStripButton || item is ToolStripDropDownButton))
-                {
-                    item.DisplayStyle = ToolStripItemDisplayStyle.Text;
-                }
-
-                foreach (ToolStripItem item in toolStripContextual.Items)
-                {
-                    item.DisplayStyle = ToolStripItemDisplayStyle.Text;
-                }
-
-                toolStripFeatures.ContextMenuStrip = null;
-            }
-
-            // "Update Calendar" button
-            btnAddToCalendar.Visible = Settings.Calendar.Enabled;
-
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null)
-                return;
-
-            // Skill queue time
-            if (ccpCharacter.SkillQueue.Count == 1)
-                skillQueueTimePanel.Visible = ccpCharacter.IsTraining && Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
-        }
-
-        /// <summary>
-        /// Occur on every second. We update the total SP, remaining time and the matching item in skill list
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            // No need to do anything when the control is not visible
-            if (!Visible)
-                return;
-
-            // Update the training info
-            UpdateTrainingInfo();
-
-            // Update the warning label
-            UpdateWarningLabel();
-
-            // Update the full api key enabled pages
-            UpdateFeaturesMenu();
-
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null)
-                return;
-
-            // Exit if the character is not in training
-            if (!ccpCharacter.IsTraining)
-                return;
-
-            // Remaining training time label
-            QueuedSkill training = Character.CurrentlyTrainingSkill;
-            lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
-
-            // Remaining queue time label
-            DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
-            lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
-        }
-
-        /// <summary>
-        /// When the scheduler changed, we need to check the conflicts
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
-        {
-            UpdateTrainingInfo();
-        }
-
-        /// <summary>
         /// Update the notifications list.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -633,14 +648,6 @@ namespace EVEMon
         private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
             UpdateNotifications();
-        }
-
-        /// <summary>
-        /// Update the notifications list.
-        /// </summary>
-        private void UpdateNotifications()
-        {
-            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == Character);
         }
 
         #endregion
@@ -745,6 +752,43 @@ namespace EVEMon
         #endregion
 
 
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets true if the page in question is enabled.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private bool IsEnabledFeature(string text)
+        {
+            return Character.UISettings.AdvancedFeaturesEnabledPages.Any(x => x == text);
+        }
+
+        /// <summary>
+        /// Gets a toolstrip buttons' related monitor.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <returns></returns>
+        private IQueryMonitor ButtonToMonitor(ToolStripItem button)
+        {
+            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)button.Tag);
+            APIMethods method = APIMethods.None;
+            if (Enum.IsDefined(typeof(APIMethods), page.Tag ?? String.Empty))
+                method = (APIMethods)Enum.Parse(typeof(APIMethods), (string)page.Tag ?? String.Empty);
+            return ((CCPCharacter)Character).QueryMonitors[method];
+        }
+
+        /// <summary>
+        /// Update the notifications list.
+        /// </summary>
+        private void UpdateNotifications()
+        {
+            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == Character);
+        }
+
+        #endregion
+
+
         # region Screenshot Method
 
         /// <summary>
@@ -786,8 +830,14 @@ namespace EVEMon
             featuresMenu.DropDownItems.Clear();
 
             // Create the menu items
-            foreach (ToolStripMenuItem item in EnumExtensions.GetValues<FullAPIKeyFeatures>().Select(
-                feature => new ToolStripMenuItem(feature.GetHeader()) { Checked = CheckEnabledFeatures(feature.GetHeader()) }))
+            foreach (ToolStripMenuItem item in m_advancedFeatures.Select(
+                button => new { button, monitor = ButtonToMonitor(button) }).Where(
+                    item => item.monitor != null).Select(item => new ToolStripMenuItem
+                                                                     {
+                                                                         Text = item.button.Text,
+                                                                         Checked = IsEnabledFeature(item.button.Text),
+                                                                         Enabled = item.monitor.HasAccess
+                                                                     }))
             {
                 featuresMenu.DropDownItems.Add(item);
             }
@@ -803,14 +853,15 @@ namespace EVEMon
             ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
             item.Checked = !item.Checked;
 
+            standingsIcon.Visible = (item.Text == standingsIcon.Text ? item.Checked : standingsIcon.Visible);
             ordersIcon.Visible = (item.Text == ordersIcon.Text ? item.Checked : ordersIcon.Visible);
             jobsIcon.Visible = (item.Text == jobsIcon.Text ? item.Checked : jobsIcon.Visible);
             researchIcon.Visible = (item.Text == researchIcon.Text ? item.Checked : researchIcon.Visible);
             mailMessagesIcon.Visible = (item.Text == mailMessagesIcon.Text ? item.Checked : mailMessagesIcon.Visible);
             eveNotificationsIcon.Visible = (item.Text == eveNotificationsIcon.Text ? item.Checked : eveNotificationsIcon.Visible);
 
-            UpdateFullAPIKeyPagesSettings();
-            ToggleFullAPIKeyFeaturesMonitoring();
+            UpdateAdvancedFeaturesPagesSettings();
+            ToggleAdvancedFeaturesMonitoring();
         }
 
         /// <summary>

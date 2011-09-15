@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
 #pragma warning disable 420
 
@@ -43,24 +43,24 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        public bool Invoke(Action action)
+        public void Invoke(Action action)
         {
             try
             {
                 m_applicationForm.Invoke(action);
-                return true;
+                return;
             }
             catch (ObjectDisposedException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return false;
+                return;
             }
             catch (AccessViolationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return false;
+                return;
             }
         }
 
@@ -71,24 +71,24 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         /// <exception cref="NullReferenceException">The main form has not been specified through <see cref="UIActor"/> yet.</exception>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        public bool BeginInvoke(Action action)
+        public void BeginInvoke(Action action)
         {
             try
             {
                 m_applicationForm.BeginInvoke(action);
-                return true;
+                return;
             }
             catch (ObjectDisposedException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return false;
+                return;
             }
             catch (AccessViolationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return false;
+                return;
             }
         }
 

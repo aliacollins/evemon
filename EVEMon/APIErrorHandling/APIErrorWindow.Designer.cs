@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.ApiErrorHandling
 {
-    partial class APIErrorWindow
+    partial class ApiErrorWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(APIErrorWindow));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiErrorWindow));
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.IconPictureBox = new System.Windows.Forms.PictureBox();
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();

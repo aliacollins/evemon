@@ -3,11 +3,11 @@ using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
-namespace EVEMon.Accounting
+namespace EVEMon.ApiCredentialsManagement
 {
     public partial class CharacterDeletionWindow : EVEMonForm
     {
-        private readonly Account m_account;
+        private readonly APIKey m_apiKey;
         private readonly Character m_character;
 
         /// <summary>
@@ -18,15 +18,15 @@ namespace EVEMon.Accounting
         {
             InitializeComponent();
             m_character = character;
-            m_account = character.Identity.Account;
+            m_apiKey = character.Identity.APIKey;
 
             // Replaces end of text with character's name
-            string newText = label1.Text.Replace("a character", m_character.Name);
-            label1.Text = newText;
+            string newText = characterToRemoveLabel.Text.Replace("a character", m_character.Name);
+            characterToRemoveLabel.Text = newText;
 
             // Checks whether there will be no characters left after this deletion and hide/display the relevant labels.
-            int charactersLeft = EveMonClient.Characters.Count(x => x.Identity.Account == m_account);
-            bool noCharactersLeft = (m_account != null && m_character is CCPCharacter && charactersLeft == 1);
+            int charactersLeft = EveMonClient.Characters.Count(x => x.Identity.APIKey == m_apiKey);
+            bool noCharactersLeft = (m_apiKey != null && m_character is CCPCharacter && charactersLeft == 1);
             noCharactersCheckBox.Visible = noCharactersLeft;
             noCharactersLabel.Visible = noCharactersLeft;
         }
@@ -42,7 +42,7 @@ namespace EVEMon.Accounting
             if (noCharactersCheckBox.Checked)
             {
                 EveMonClient.Characters.Remove(m_character);
-                EveMonClient.Accounts.Remove(m_account);
+                EveMonClient.APIKeys.Remove(m_apiKey);
             }
             else
                 EveMonClient.Characters.Remove(m_character);

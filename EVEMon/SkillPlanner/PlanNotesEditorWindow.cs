@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
                 if (String.IsNullOrEmpty(value))
                     value = String.Empty;
 
-                NoteTextBox.Lines = value.Split(new string[4] { "\r\n", "\n\r", "\r", "\n" }, StringSplitOptions.None);
+                NoteTextBox.Lines = value.Split(new[] { "\r\n", "\n\r", "\r", "\n" }, StringSplitOptions.None);
             }
         }
 

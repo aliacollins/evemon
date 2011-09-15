@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Accounting;
+using EVEMon.ApiCredentialsManagement;
 using EVEMon.BlankCharacter;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -152,8 +152,8 @@ namespace EVEMon
             if (Settings.Updates.CheckTimeOnStartup)
                 CheckTimeSynchronization();
 
-            // Apply the intial settings
-            EveMonClient_SettingsChanged(null, null);
+            // Updates the controls visibility according to settings
+            UpdateControlsVisibility();
         }
 
         /// <summary>
@@ -403,12 +403,16 @@ namespace EVEMon
         /// <param name="character">The character</param>
         private static TabPage CreateTab(Character character)
         {
+            // Create the tab
             TabPage page = new TabPage(character.Name)
                                {
                                    UseVisualStyleBackColor = true,
                                    Padding = new Padding(5),
                                    Tag = character
                                };
+
+            // Create the character monitor
+            new CharacterMonitor((Character)page.Tag) { Parent = page, Dock = DockStyle.Fill };
 
             return page;
         }
@@ -446,12 +450,6 @@ namespace EVEMon
         /// </summary>
         private void UpdateControlsOnTabSelectionChange()
         {
-            // If the page content has not been created yet, do it now
-            TabPage page = tcCharacterTabs.SelectedTab;
-            if (page != null && page.Controls.Count == 0)
-                new CharacterMonitor((Character)page.Tag) { Parent = page, Dock = DockStyle.Fill };
-
-
             // Collext the menu buttons that get enabled by a character
             ToolStripItem[] characterEnabledMenuItems = new ToolStripItem[]
                                                             {
@@ -552,27 +550,20 @@ namespace EVEMon
             // Add and reorder by account and character
             m_popupNotifications.Add(e);
 
-            // Group by account
-            IGrouping<long, NotificationEventArgs>[] groups = m_popupNotifications.GroupBy(x =>
-                                                                                               {
-                                                                                                   if (x.Sender == null)
-                                                                                                       return 0;
+            // Group by API key
+            IGrouping<long, NotificationEventArgs>[] groups = m_popupNotifications.GroupBy(
+                x =>
+                    {
+                        if (x.Sender == null)
+                            return 0;
 
-                                                                                                   if (x.SenderAccount != null)
-                                                                                                   {
-                                                                                                       return
-                                                                                                           x.SenderAccount.UserID;
-                                                                                                   }
+                        if (x.SenderAPIKey != null)
+                            return x.SenderAPIKey.ID;
 
-                                                                                                   return
-                                                                                                       x.SenderCharacter.Identity.
-                                                                                                           Account ==
-                                                                                                       null
-                                                                                                           ? 1
-                                                                                                           : x.SenderCharacter.
-                                                                                                                 Identity.
-                                                                                                                 Account.UserID;
-                                                                                               }).ToArray();
+                        return x.SenderCharacter.Identity.APIKey == null
+                                   ? 1
+                                   : x.SenderCharacter.Identity.APIKey.ID;
+                    }).ToArray();
 
             // Add every group, order by character's name, accounts being on top
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
@@ -609,7 +600,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateNotifications()
         {
-            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == null || x.SenderAccount != null);
+            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == null || x.SenderAPIKey != null);
         }
 
         /// <summary>
@@ -1098,24 +1089,24 @@ namespace EVEMon
         #region Menus and toolbar
 
         /// <summary>
-        /// File > Add Account...
+        /// File > Add API key...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void addAccountMenu_Click(object sender, EventArgs e)
+        private void addAPIKeyMenu_Click(object sender, EventArgs e)
         {
-            WindowsFactory<AccountUpdateOrAdditionWindow>.ShowUnique();
+            WindowsFactory<ApiKeyUpdateOrAdditionWindow>.ShowUnique();
         }
 
         /// <summary>
-        /// File > Manage Accounts...
-        /// Open the accounts management window.
+        /// File > Manage API keys...
+        /// Open the api keys management window.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void manageAccountsMenuItem_Click(object sender, EventArgs e)
+        private void manageAPIKeysMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<AccountsManagementWindow>.ShowUnique();
+            WindowsFactory<ApiKeysManagementWindow>.ShowUnique();
         }
 
         /// <summary>
@@ -1814,6 +1805,14 @@ namespace EVEMon
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateControlsVisibility();
+        }
+
+        /// <summary>
+        /// Updates the controls visibility according to settings
+        /// </summary>
+        private void UpdateControlsVisibility()
         {
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Serialization.Importation
 {
@@ -17,14 +16,9 @@ namespace EVEMon.Common.Serialization.Importation
     {
         public OldSettings()
         {
-            Accounts = new List<SerializableAccount>();
             Characters = new List<OldSettingsCharacter>();
             Plans = new List<OldSettingsPlan>();
         }
-
-        [XmlArray("accounts")]
-        [XmlArrayItem("account")]
-        public List<SerializableAccount> Accounts { get; set; }
 
         [XmlArray("characters")]
         [XmlArrayItem("character")]

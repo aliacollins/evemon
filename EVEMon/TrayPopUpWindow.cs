@@ -106,11 +106,8 @@ namespace EVEMon
         {
             base.OnShown(e);
 
-            // Equivalent to setting TopMost = true, except don't activate the window.
-            NativeMethods.SetWindowPos(Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
-                                       NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
-            // Show the window without activating it.
-            NativeMethods.ShowWindow(Handle, NativeMethods.SW_SHOWNOACTIVATE);
+            // Show the given form on topmost without activating it
+            this.ShowInactiveTopmost();
         }
 
         /// <summary>
@@ -232,7 +229,7 @@ namespace EVEMon
             IEnumerable<Character> characters = GetCharacters();
 
             // Remove controls and dispose them
-            Control[] oldControls = mainPanel.Controls.Cast<Control>().ToArray();
+            IEnumerable<Control> oldControls = mainPanel.Controls.Cast<Control>();
             mainPanel.Controls.Clear();
             foreach (Control ctl in oldControls)
             {
@@ -243,13 +240,13 @@ namespace EVEMon
             if (Settings.UI.SystemTrayPopup.GroupBy == TrayPopupGrouping.Account &&
                 Settings.UI.SystemTrayPopup.IndentGroupedAccounts)
             {
-                long prevUserID = 0;
+                long prevAPIKeyID = 0;
                 foreach (Character character in characters)
                 {
-                    if (character.Identity.Account.UserID != prevUserID)
+                    if (character.Identity.APIKey.ID != prevAPIKeyID)
                     {
                         mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
-                        prevUserID = character.Identity.Account.UserID;
+                        prevAPIKeyID = character.Identity.APIKey.ID;
                     }
                     else
                     {
@@ -261,30 +258,29 @@ namespace EVEMon
                                                                     Padding = new Padding(10, 0, 0, 0)
                                                                 };
 
-                        OverviewItem charpanel = new OverviewItem(character, Settings.UI.SystemTrayPopup)
-                                                     { Padding = new Padding(0, 0, 0, 0) };
-                        accountGroupPanel.Controls.Add(charpanel);
+                        OverviewItem charPanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
+                        accountGroupPanel.Controls.Add(charPanel);
                         mainPanel.Controls.Add(accountGroupPanel);
-                        prevUserID = character.Identity.Account.UserID;
+                        prevAPIKeyID = character.Identity.APIKey.ID;
                     }
                 }
             }
             else
                 mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
 
-            // Return if the user do not want to be warned about accounts not in training
+            // Skip if the user do not want to be warned about accounts not in training
             if (Settings.UI.SystemTrayPopup.ShowWarning)
             {
                 // Creates the warning for accounts not in training
                 string warningMessage;
-                if (EveMonClient.Accounts.HasAccountsNotTraining(out warningMessage))
+                if (GlobalAPIKeyCollection.HasAccountsNotTraining(out warningMessage))
                 {
                     FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
                     mainPanel.Controls.Add(warningPanel);
                 }
             }
 
-            // TQ Server Status
+            // Server Status
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
             {
                 m_serverStatusLabel = new Label { AutoSize = true };
@@ -329,8 +325,8 @@ namespace EVEMon
                     newCharacters.AddRange(charactersList);
                     return newCharacters;
                 case TrayPopupGrouping.Account:
-                    newCharacters.AddRange(charactersList.Where(x => x.Identity.Account != null));
-                    return newCharacters.GroupBy(x => x.Identity.Account).SelectMany(y => y);
+                    newCharacters.AddRange(charactersList.Where(x => x.Identity.APIKey != null));
+                    return newCharacters.GroupBy(x => x.Identity.APIKey).SelectMany(y => y);
                 case TrayPopupGrouping.TrainingAtTop:
                     newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
                     newCharacters.AddRange(charactersList.Where(x => !x.IsTraining));
@@ -384,9 +380,9 @@ namespace EVEMon
         /// </summary>
         private void CompleteLayout()
         {
-            // Fix the panel widths to the largest.
+            // Fix the panel widths to the largest
             // We let the framework determine the appropriate widths, then fix them so that
-            // updates to training time remaining don't cause the form to resize.
+            // updates to training time remaining don't cause the form to resize
             int pnlWidth = (mainPanel.Controls.Cast<Control>().Select(control => control.Width)).Concat(new[] { 0 }).Max();
 
             foreach (Control control in mainPanel.Controls)
@@ -394,7 +390,7 @@ namespace EVEMon
                 if (!(control is FlowLayoutPanel))
                     continue;
 
-                FlowLayoutPanel flowPanel = control as FlowLayoutPanel;
+                FlowLayoutPanel flowPanel = (FlowLayoutPanel)control;
                 int pnlHeight = flowPanel.Height;
                 flowPanel.AutoSize = false;
                 flowPanel.Width = pnlWidth;
@@ -405,7 +401,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Updates the eve time label
+        /// Updates the EVE time label.
         /// </summary>
         private void UpdateEveTimeLabel()
         {
@@ -414,7 +410,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Updates the server status label
+        /// Updates the server status label.
         /// </summary>
         private void UpdateServerStatusLabel()
         {

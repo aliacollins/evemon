@@ -527,12 +527,10 @@ namespace EVEMon.Common.Controls
         /// <param name="select">True to select node, false to unselect node.</param>
         /// <param name="tva">Specifies the action that caused the selection change.</param>
         /// <returns>True if node was selected, false if not.</returns>
-        internal bool SelectNode(TreeNode tn, bool select, TreeViewAction tva)
+        internal void SelectNode(TreeNode tn, bool select, TreeViewAction tva)
         {
-            bool blnSelected = false;
-
             if (tn == null)
-                return false;
+                return;
 
             if (select)
             {
@@ -545,7 +543,7 @@ namespace EVEMon.Common.Controls
 
                     // This node selection was cancelled!						
                     if (tvcea.Cancel)
-                        return false;
+                        return;
 
                     PreserveNodeColors(tn);
 
@@ -553,7 +551,6 @@ namespace EVEMon.Common.Controls
                     tn.ForeColor = BackColor; // GKM moved from above									
 
                     m_listSelectedNodes.Add(tn);
-                    blnSelected = true;
                     m_blnSelectionChanged = true;
 
                     base.OnAfterSelect(new TreeViewEventArgs(tn, tva));
@@ -583,8 +580,6 @@ namespace EVEMon.Common.Controls
                     OnAfterDeselect(tn);
                 }
             }
-
-            return blnSelected;
         }
 
         /// <summary>
@@ -1608,12 +1603,12 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="treeNode">Tree node to add.</param>
         /// <returns>The position into which the new element was inserted.</returns>
-        public int Add(TreeNode treeNode)
+        public void Add(TreeNode treeNode)
         {
             if (TreeNodeAdded != null)
                 TreeNodeAdded(treeNode);
 
-            return List.Add(treeNode);
+            List.Add(treeNode);
         }
 
         /// <summary>
@@ -1621,12 +1616,12 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="index">The position into which the new element has to be inserted.</param>
         /// <param name="treeNode">Tree node to insert.</param>
-        public void Insert(int index, TreeNode treeNode)
+        public void InsertAt(int index, TreeNode treeNode)
         {
             if (TreeNodeInserted != null)
                 TreeNodeInserted(treeNode);
 
-            List.Add(treeNode);
+            List.Insert(index, treeNode);
         }
 
         /// <summary>

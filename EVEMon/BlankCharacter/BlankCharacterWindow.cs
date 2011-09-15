@@ -152,7 +152,7 @@ namespace EVEMon.BlankCharacter
         private void AddBlankCharacter()
         {
             // Add blank character
-            EveMonClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(m_filename), (send, args) =>
+            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(m_filename), (send, args) =>
                                                                                         {
                                                                                             if (args == null || args.HasError)
                                                                                                 return;

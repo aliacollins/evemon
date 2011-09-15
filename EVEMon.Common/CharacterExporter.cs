@@ -132,11 +132,11 @@ namespace EVEMon.Common
                                      Environment.NewLine);
             }
 
-            if (character.Identity.Account != null)
+            if (character.Identity.APIKey != null)
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "UserID={0}{1}", character.Identity.Account.UserID,
+                builder.AppendFormat(CultureConstants.DefaultCulture, "ID={0}{1}", character.Identity.APIKey.ID,
                                      Environment.NewLine);
-                builder.AppendFormat(CultureConstants.DefaultCulture, "APIKey={0}{1}", character.Identity.Account.APIKey,
+                builder.AppendFormat(CultureConstants.DefaultCulture, "vCode={0}{1}", character.Identity.APIKey.VerificationCode,
                                      Environment.NewLine);
                 builder.AppendFormat(CultureConstants.DefaultCulture, "CharID={0}{1}", character.CharacterID,
                                      Environment.NewLine);

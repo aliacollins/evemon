@@ -5,20 +5,17 @@ using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
-    /// <summary>
-    /// Represents a collection of character identities an account should never import.
-    /// </summary>
-    public sealed class AccountIgnoreList : ReadonlyCollection<CharacterIdentity>
+    public sealed class CharacterIdentityIgnoreList : ReadonlyCollection<CharacterIdentity>
     {
-        private readonly Account m_owner;
+        private readonly APIKey m_owner;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="account"></param>
-        internal AccountIgnoreList(Account account)
+        /// <param name="apiKey"></param>
+        internal CharacterIdentityIgnoreList(APIKey apiKey)
         {
-            m_owner = account;
+            m_owner = apiKey;
         }
 
         /// <summary>
@@ -59,7 +56,7 @@ namespace EVEMon.Common
         /// (all associated data and plans won't be written on next serialization !).
         /// </summary>
         /// <param name="character"></param>
-        public void Add(CCPCharacter character)
+        public void Add(Character character)
         {
             CharacterIdentity id = character.Identity;
             if (Items.Contains(id))
@@ -68,8 +65,8 @@ namespace EVEMon.Common
             Items.Add(id);
 
             // If the identity was belonging to this account, remove the character (won't be serialized anymore !)
-            if (id.Account == m_owner)
-                EveMonClient.Characters.Remove(character, true);
+            if (id.APIKey == m_owner)
+                EveMonClient.Characters.Remove(character);
         }
 
         /// <summary>
@@ -79,9 +76,9 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<SerializableCharacterIdentity> serialIDList)
         {
             Items.Clear();
-            foreach (CharacterIdentity id in serialIDList.Select(serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
-                                                                             EveMonClient.CharacterIdentities.Add(serialID.ID,
-                                                                                                                  serialID.Name)))
+            foreach (CharacterIdentity id in serialIDList.Select(
+                serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
+                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
             {
                 Items.Add(id);
             }

@@ -149,11 +149,12 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Updates the enables.
+        /// Enables / Disable control accordingly to dependencies.
         /// </summary>
         private void UpdateEnables()
         {
             cbGroupBy.Enabled = !cbHideNotTraining.Checked;
+            cbIndentGroupedAccounts.Enabled = (TrayPopupGrouping)cbGroupBy.SelectedIndex == TrayPopupGrouping.Account;
             cbPortraitSize.Enabled = cbShowPortrait.Checked;
         }
 
@@ -258,6 +259,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cbGroupBy_SelectedIndexChanged(object sender, EventArgs e)
         {
+            UpdateEnables();
             UpdateDisplayOrders();
         }
 

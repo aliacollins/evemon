@@ -81,10 +81,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static bool PerformSilently(IPlanOperation operation)
+        private static void PerformSilently(IPlanOperation operation)
         {
             PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
-            return PerformSilently(window, operation);
+            PerformSilently(window, operation);
         }
 
         /// <summary>
@@ -93,18 +93,17 @@ namespace EVEMon.SkillPlanner
         /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static bool PerformSilently(Form parentForm, IPlanOperation operation)
+        private static void PerformSilently(Form parentForm, IPlanOperation operation)
         {
             if (operation == null)
-                return false;
+                return;
 
             // A window is required
             if (RequiresWindow(operation))
-                return Perform(parentForm, operation);
+                Perform(parentForm, operation);
 
             // Silent way
             operation.Perform();
-            return (operation.Type == PlanOperations.None);
         }
 
         /// <summary>
@@ -112,10 +111,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static bool Perform(IPlanOperation operation)
+        public static void Perform(IPlanOperation operation)
         {
             PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
-            return Perform(window, operation);
+            Perform(window, operation);
         }
 
         /// <summary>
@@ -124,12 +123,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static bool Perform(Form parentForm, IPlanOperation operation)
+        private static void Perform(Form parentForm, IPlanOperation operation)
         {
             using (PlanToOperationForm window = new PlanToOperationForm(operation))
             {
-                DialogResult result = window.ShowDialog(parentForm);
-                return result == DialogResult.OK;
+               window.ShowDialog(parentForm);
             }
         }
 
@@ -138,12 +136,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static bool SelectPerform(IPlanOperation operation)
+        public static void SelectPerform(IPlanOperation operation)
         {
             if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
-                return Perform(operation);
+                Perform(operation);
 
-            return PerformSilently(operation);
+            PerformSilently(operation);
         }
     }
 }

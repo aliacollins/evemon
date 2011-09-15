@@ -140,15 +140,6 @@ namespace EVEMon.Common.Controls.MultiPanel
             }
 
             /// <summary>
-            /// Removes a page.
-            /// </summary>
-            /// <param name="value"></param>
-            public override void Remove(Control value)
-            {
-                base.Remove(value);
-            }
-
-            /// <summary>
             /// Retrieves the index of the page with the given key.
             /// </summary>
             /// <param name="key"></param>

@@ -6,7 +6,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.APIErrorHandling
+namespace EVEMon.ApiErrorHandling
 {
     /// <summary>
     /// Http Timeout Troubleshooter displays when a HTTP Timeout has occurred.

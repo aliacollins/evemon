@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Serialization.Importation
 {

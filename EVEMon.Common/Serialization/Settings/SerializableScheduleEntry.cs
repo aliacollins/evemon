@@ -4,13 +4,13 @@ using EVEMon.Common.Scheduling;
 
 namespace EVEMon.Common.Serialization.Settings
 {
-    public sealed class SerializableSimpleScheduleEntry : SerializableScheduleEntry
+    public class SerializableScheduleEntry
     {
-        [XmlAttribute("startDateTime")]
-        public DateTime StartDateTime { get; set; }
+        [XmlAttribute("startDate")]
+        public DateTime StartDate { get; set; }
 
-        [XmlAttribute("endDateTime")]
-        public DateTime EndDateTime { get; set; }
+        [XmlAttribute("endDate")]
+        public DateTime EndDate { get; set; }
 
         [XmlElement("title")]
         public string Title { get; set; }

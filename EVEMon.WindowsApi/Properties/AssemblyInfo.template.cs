@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 //
 
 [assembly: AssemblyVersion("1.4.1.$WCREV$")]
-[assembly: NeutralResourcesLanguageAttribute("en-US")]
+[assembly: NeutralResourcesLanguage("en-US")]

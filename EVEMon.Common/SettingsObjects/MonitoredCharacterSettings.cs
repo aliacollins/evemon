@@ -19,11 +19,15 @@ namespace EVEMon.Common.SettingsObjects
         public MonitoredCharacterSettings(Character character)
         {
             CharacterGuid = character.Guid;
-            Settings = new CharacterUISettings();
+            Name = character.Name;
+            Settings = character.UISettings.Clone();
         }
 
         [XmlAttribute("characterGuid")]
         public Guid CharacterGuid { get; set; }
+
+        [XmlAttribute("name")]
+        public string Name { get; set; }
 
         [XmlElement("settings")]
         public CharacterUISettings Settings { get; set; }

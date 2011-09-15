@@ -7,10 +7,10 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializableCharacterIdentity
     {
-        [XmlElement("id")]
+        [XmlAttribute("id")]
         public long ID { get; set; }
 
-        [XmlElement("name")]
+        [XmlAttribute("name")]
         public string Name { get; set; }
 
         /// <summary>

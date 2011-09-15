@@ -155,8 +155,8 @@ namespace EVEMon.Common
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
                 APIMethods.NotificationTexts,
-                m_ccpCharacter.Identity.Account.UserID,
-                m_ccpCharacter.Identity.Account.APIKey,
+                m_ccpCharacter.Identity.APIKey.ID,
+                m_ccpCharacter.Identity.APIKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
                 NotificationID,
                 OnEVENotificationTextDownloaded);

@@ -324,7 +324,7 @@ namespace EVEMon.SkillPlanner
             this.eveImage.Name = "eveImage";
             this.eveImage.PopUpEnabled = true;
             this.eveImage.Size = new System.Drawing.Size(80, 80);
-            this.eveImage.SizeMode = EVEMon.Common.Controls.EveImage.EveImageSizeMode.StretchImage;
+            this.eveImage.SizeMode = EVEMon.Common.EveImageSizeMode.StretchImage;
             this.eveImage.TabIndex = 30;
             // 
             // ShipLoadoutSelectWindow
