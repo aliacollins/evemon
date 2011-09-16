@@ -636,7 +636,7 @@ namespace EVEMon
         {
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
-            // This is not a CCP account, it can't be updated
+            // This is not a CCP character, it can't be updated
             if (ccpCharacter == null)
                 return;
 
@@ -678,7 +678,7 @@ namespace EVEMon
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
-            // Exit for non-CCP characters or no associated account
+            // Exit for non-CCP characters or no associated APi key
             if (ccpCharacter == null || ccpCharacter.Identity.APIKey == null)
             {
                 QueryEverythingMenuItem.Enabled = false;

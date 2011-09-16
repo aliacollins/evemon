@@ -452,7 +452,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.LoginDeniedLinkLabel.Size = new System.Drawing.Size(473, 98);
             this.LoginDeniedLinkLabel.TabIndex = 0;
             this.LoginDeniedLinkLabel.TabStop = true;
-            this.LoginDeniedLinkLabel.Text = "The subscription of the account, the API key belong to, has expired.\r\n\r\nIf the AP" +
+            this.LoginDeniedLinkLabel.Text = "The subscription of the account, this API key belongs to, has expired.\r\n\r\nIf the AP" +
                 "I key belongs to one of your accounts, consider re-subscribing at :\r\nhttps://sec" +
                 "ure.eveonline.com/AccountManMenu.aspx\r\n";
             this.LoginDeniedLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

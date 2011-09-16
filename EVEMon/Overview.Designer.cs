@@ -39,7 +39,7 @@ namespace EVEMon
             this.labelNoCharacters.Name = "labelNoCharacters";
             this.labelNoCharacters.Size = new System.Drawing.Size(361, 507);
             this.labelNoCharacters.TabIndex = 0;
-            this.labelNoCharacters.Text = "No character loaded.\r\nTo add characters, click the File|Add Account... menu optio" +
+            this.labelNoCharacters.Text = "No character loaded.\r\nTo add characters, click the File|Add API key... menu optio" +
                 "n";
             this.labelNoCharacters.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 

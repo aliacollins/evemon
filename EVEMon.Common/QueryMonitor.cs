@@ -34,10 +34,22 @@ namespace EVEMon.Common
             m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
             Method = method;
-            Enabled = true;
+            Enabled = false;
             QueryOnStartup = false;
 
             NetworkMonitor.Register(this);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateOnOneSecondTick();
         }
 
 
@@ -170,15 +182,15 @@ namespace EVEMon.Common
         /// </summary>
         internal void ForceUpdate(bool retryOnError)
         {
+            Enabled = true;
             m_forceUpdate = true;
             m_retryOnForceUpdateError |= retryOnError;
-            UpdateOnOneSecondTick();
         }
 
         /// <summary>
         /// Updates on every second.
         /// </summary>
-        internal void UpdateOnOneSecondTick()
+        private void UpdateOnOneSecondTick()
         {
             // Are we already updating ?
             if (IsUpdating)
@@ -319,11 +331,6 @@ namespace EVEMon.Common
         void IQueryMonitorEx.Reset(DateTime lastUpdate)
         {
             Reset(lastUpdate);
-        }
-
-        void IQueryMonitorEx.UpdateOnOneSecondTick()
-        {
-            UpdateOnOneSecondTick();
         }
 
         void IQueryMonitorEx.ForceUpdate(bool retryOnError)

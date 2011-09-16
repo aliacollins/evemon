@@ -149,7 +149,7 @@
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "ApiKeyDeletionWindow";
-            this.Text = "Delete an account";
+            this.Text = "Delete an API key";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.charactersListGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);

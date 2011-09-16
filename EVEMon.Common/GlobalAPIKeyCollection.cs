@@ -12,47 +12,6 @@ namespace EVEMon.Common
 {
     public class GlobalAPIKeyCollection : ReadonlyKeyedCollection<long, APIKey>
     {
-        /// <summary>
-        /// Check whether some accounts are not in training.
-        /// </summary>
-        /// <param name="message">Message describing the accounts not in training.</param>
-        /// <returns>True if one or more accounts is not in training, otherwise false.</returns>
-        /// <remarks>This condition applied only to those API keys of type 'Account'</remarks>
-        public static bool HasAccountsNotTraining(out string message)
-        {
-            message = String.Empty;
-
-            IEnumerable<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == APIKeyType.Account &&
-                                                                                      !x.CharacterIdentities.IsEmpty() &&
-                                                                                      !x.HasMonitoredCharacters &&
-                                                                                      !x.HasCharacterInTraining);
-
-            // All accounts are training ?
-            if (accountsNotTraining.Count() == 0)
-                return false;
-
-            // Creates the string, scrolling through every not training account
-            StringBuilder builder = new StringBuilder();
-            if (accountsNotTraining.Count() == 1)
-            {
-                builder.AppendFormat("{0} is not in training", (EveMonClient.APIKeys.Count == 1
-                                                                    ? "The account"
-                                                                    : "One of the accounts"));
-            }
-            else
-                builder.Append("Some of the accounts are not in training.");
-
-            foreach (APIKey apiKey in accountsNotTraining)
-            {
-                builder.AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "API key : {0}", apiKey);
-            }
-
-            // return
-            message = builder.ToString();
-            return true;
-        }
-
 
         #region Indexer
 
@@ -64,28 +23,6 @@ namespace EVEMon.Common
         public APIKey this[long id]
         {
             get { return Items.Values.FirstOrDefault(apiKey => apiKey.ID == id); }
-        }
-
-        #endregion
-
-
-        #region Public Static Methods
-
-        public static void TryAddOrUpdateAsync(long id, string verificationCode,
-                                               EventHandler<APIKeyCreationEventArgs> callback)
-        {
-            // Invokes on the thread pool
-            Dispatcher.BackgroundInvoke(() =>
-                                            {
-                                                APIResult<SerializableAPIKeyInfo> apiKeyInfoResult =
-                                                    EveMonClient.APIProviders.CurrentProvider.QueryAPIKeyInfo(id, verificationCode);
-
-                                                // Invokes the callback on the UI thread
-                                                Dispatcher.Invoke(
-                                                    () =>
-                                                    callback(null,
-                                                             new APIKeyCreationEventArgs(id, verificationCode, apiKeyInfoResult)));
-                                            });
         }
 
         #endregion

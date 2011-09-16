@@ -140,18 +140,6 @@ namespace EVEMon.Common
         #region Queries
 
         /// <summary>
-        /// Query the info for an API key.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="verificationCode"></param>
-        /// <returns></returns>
-        public APIResult<SerializableAPIKeyInfo> QueryAPIKeyInfo(long id, string verificationCode)
-        {
-            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataBase, id, verificationCode));
-            return QueryMethod<SerializableAPIKeyInfo>(APIMethods.APIKeyInfo, postData, RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query the conquerable station list.
         /// </summary>
         public APIResult<SerializableAPIConquerableStationList> QueryConquerableStationList()
@@ -183,16 +171,16 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query a method with the provided arguments for an account.
+        /// Query a method with the provided arguments for an API key.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="userID"></param>
-        /// <param name="apiKey"></param>
+        /// <param name="method">The method.</param>
+        /// <param name="id">The API key's ID</param>
+        /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(APIMethods method, long id, string verificationCode, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataBase, userID, apiKey));
+            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataBase, id, verificationCode));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -200,16 +188,16 @@ namespace EVEMon.Common
         /// Query a method with the provided arguments for a character.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
-        /// <param name="method"></param>
-        /// <param name="userID"></param>
-        /// <param name="apiKey"></param>
-        /// <param name="charID"></param>
+        /// <param name="method">The method.</param>
+        /// <param name="id">The API key's ID</param>
+        /// <param name="verificationCode">The API key's verification code</param>
+        /// <param name="characterID">The character ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long charID,
+        public void QueryMethodAsync<T>(APIMethods method, long id, string verificationCode, long characterID,
                                         QueryCallback<T> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format(
-                NetworkConstants.PostDataWithCharID, userID, apiKey, charID));
+                NetworkConstants.PostDataWithCharID, id, verificationCode, characterID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -218,16 +206,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
+        /// <param name="id">The API key's ID</param>
+        /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="characterID">The character ID.</param>
         /// <param name="messageID">The message ID.</param>
         /// <param name="callback">The callback.</param>
-        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long characterID, long messageID,
+        public void QueryMethodAsync<T>(APIMethods method, long id, string verificationCode, long characterID, long messageID,
                                         QueryCallback<T> callback)
         {
             HttpPostData postData = new HttpPostData(
-                String.Format(NetworkConstants.PostDataWithCharIDAndIDS, userID, apiKey, characterID, messageID));
+                String.Format(NetworkConstants.PostDataWithCharIDAndIDS, id, verificationCode, characterID, messageID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 

@@ -181,7 +181,7 @@ namespace EVEMon
             // Welcome message
             TipWindow.ShowTip(this, "startup",
                               "Getting Started",
-                              "To begin using EVEMon, click the File|Add Account... menu option, " +
+                              "To begin using EVEMon, click the File|Add API key... menu option, " +
                               "enter your CCP API information " +
                               "and choose the characters to monitor.");
         }
@@ -547,7 +547,7 @@ namespace EVEMon
             if (behaviour == ToolTipNotificationBehaviour.Never)
                 return;
 
-            // Add and reorder by account and character
+            // Add and reorder by API key and character
             m_popupNotifications.Add(e);
 
             // Group by API key
@@ -1112,7 +1112,7 @@ namespace EVEMon
         /// <summary>
         /// File > Hide Character...
         /// Unmonitor this character.
-        /// It will still be in the settings unless the users removes the account
+        /// It will still be in the settings unless the users removes the API key
         /// and confirm the deletion of characters.
         /// </summary>
         /// <param name="sender"></param>

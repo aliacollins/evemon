@@ -273,7 +273,7 @@ namespace EVEMon
             {
                 // Creates the warning for accounts not in training
                 string warningMessage;
-                if (GlobalAPIKeyCollection.HasAccountsNotTraining(out warningMessage))
+                if (APIKey.HasCharactersNotTraining(out warningMessage))
                 {
                     FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
                     mainPanel.Controls.Add(warningPanel);

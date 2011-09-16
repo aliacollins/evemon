@@ -101,7 +101,7 @@
             this.noCharactersCheckBox.Name = "noCharactersCheckBox";
             this.noCharactersCheckBox.Size = new System.Drawing.Size(144, 17);
             this.noCharactersCheckBox.TabIndex = 5;
-            this.noCharactersCheckBox.Text = "Delete this account also.";
+            this.noCharactersCheckBox.Text = "Delete this API key also.";
             this.noCharactersCheckBox.UseVisualStyleBackColor = true;
             // 
             // noCharactersLabel
@@ -111,7 +111,7 @@
             this.noCharactersLabel.Name = "noCharactersLabel";
             this.noCharactersLabel.Size = new System.Drawing.Size(235, 13);
             this.noCharactersLabel.TabIndex = 6;
-            this.noCharactersLabel.Text = "There will be no characters left on this account.";
+            this.noCharactersLabel.Text = "There will be no characters left on this API key.";
             // 
             // CharacterDeletionWindow
             // 

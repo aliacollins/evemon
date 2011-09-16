@@ -52,7 +52,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Adds a character to the ignore list and, if it belonged to this account, removes it from the global collection 
+        /// Adds a character to the ignore list and, if it belonged to this API key, removes it from the global collection 
         /// (all associated data and plans won't be written on next serialization !).
         /// </summary>
         /// <param name="character"></param>
@@ -64,7 +64,7 @@ namespace EVEMon.Common
 
             Items.Add(id);
 
-            // If the identity was belonging to this account, remove the character (won't be serialized anymore !)
+            // If the identity was belonging to this API key, remove the character (won't be serialized anymore !)
             if (id.APIKey == m_owner)
                 EveMonClient.Characters.Remove(character);
         }

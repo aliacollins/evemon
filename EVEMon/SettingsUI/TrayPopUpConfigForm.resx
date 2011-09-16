@@ -125,6 +125,6 @@
 None - characters are not grouped
 Training / Not Training - characters in training are shown above characters not training
 Not Training / Training - characters in training are shown below characters not training
-Account - characters on the same account are shown together</value>
+Account - characters on the same API key are shown together</value>
   </data>
 </root>

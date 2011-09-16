@@ -23,6 +23,8 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
 
+        private readonly IEnumerable<IQueryMonitor> m_basicFeaturesMonitors; 
+
         private APIMethods m_errorNotifiedMethod;
 
         #endregion
@@ -84,11 +86,23 @@ namespace EVEMon.Common
             m_charEVENotificationsMonitor.Updated += OnCharacterEVENotificationsUpdated;
             QueryMonitors.Add(m_charEVENotificationsMonitor);
 
-            // We disable all advanced features monitors here
-            // Their enabling is determined in each 'CharacterMonitor'
-            foreach (IQueryMonitor monitor in QueryMonitors)
+            m_basicFeaturesMonitors = QueryMonitors.Where(
+                monitor => monitor.Method == (monitor.Method & APIMethods.BasicFeatures));
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            // If character is monitored enable the basic feature monitoring
+            foreach (IQueryMonitor monitor in m_basicFeaturesMonitors)
             {
-                monitor.Enabled = monitor.Method != (monitor.Method & APIMethods.AdvancedFeatures);
+                monitor.Enabled = Monitored;
             }
         }
 
@@ -304,22 +318,6 @@ namespace EVEMon.Common
         #region Querying
 
         /// <summary>
-        /// Updates the character on a timer tick.
-        /// </summary>
-        internal void UpdateOnOneSecondTick()
-        {
-            if (!Monitored)
-                return;
-
-            QueryMonitors.UpdateOnOneSecondTick();
-            SkillQueue.UpdateOnTimerTick();
-
-            // If industry jobs monitoring is enabled, update job timers
-            if (m_charIndustryJobsMonitor.Enabled && m_charIndustryJobsMonitor.HasAccess)
-                IndustryJobs.UpdateOnTimerTick();
-        }
-
-        /// <summary>
         /// Queries the character's mailing list.
         /// </summary>
         private void QueryCharacterMailingList()
@@ -431,7 +429,7 @@ namespace EVEMon.Common
             // Import the data
             SkillQueue.Import(result.Result.Queue);
 
-            // Check the account has a character in training
+            // Check the account has a character in training (if API key of type "Account")
             Identity.APIKey.CharacterInTraining();
 
             // Check the character has room in skill queue

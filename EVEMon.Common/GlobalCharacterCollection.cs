@@ -45,7 +45,8 @@ namespace EVEMon.Common
 
         /// <summary>
         /// Removes a character from this collection.
-        /// Also removes it from the monitored characters collection, and assign it to the ignore list of its account.
+        /// Also removes it from the monitored characters collection,
+        /// and assign it to the ignore list of its API key.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="notify"></param>
@@ -54,7 +55,7 @@ namespace EVEMon.Common
             Items.Remove(character);
             character.Monitored = false;
 
-            // For CCP characters, also put it on the account's ignore list
+            // For CCP characters, also put it on the API key's ignore list
             if (character is CCPCharacter)
             {
                 APIKey apiKey = character.Identity.APIKey;

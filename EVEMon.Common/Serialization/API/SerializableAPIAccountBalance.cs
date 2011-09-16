@@ -8,7 +8,7 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPIAccountBalance
     {
         /// <summary>
-        /// Gets the list of balance accounts for every account on this account (one for character balance, one per division for corporations).
+        /// Gets the list of balance accounts for every account on this API key (one for character balance, one per division for corporations).
         /// </summary>
         [XmlArray("accounts")]
         [XmlArrayItem("account")]

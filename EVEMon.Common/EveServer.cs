@@ -21,6 +21,7 @@ namespace EVEMon.Common
 
             m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(APIMethods.ServerStatus);
             m_serverStatusMonitor.Updated += OnServerStatusMonitorUpdated;
+            m_serverStatusMonitor.Enabled = true;
         }
 
         /// <summary>
@@ -56,14 +57,6 @@ namespace EVEMon.Common
                         return String.Format("{0} Server Status Unknown", Name);
                 }
             }
-        }
-
-        /// <summary>
-        /// Update on a time tick.
-        /// </summary>
-        public void UpdateOnOneSecondTick()
-        {
-            m_serverStatusMonitor.UpdateOnOneSecondTick();
         }
 
         /// <summary>

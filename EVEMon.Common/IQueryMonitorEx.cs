@@ -14,11 +14,6 @@ namespace EVEMon.Common
         void Reset(DateTime lastUpdate);
 
         /// <summary>
-        /// Updates on every second.
-        /// </summary>
-        void UpdateOnOneSecondTick();
-
-        /// <summary>
         /// Forces an update.
         /// </summary>
         /// <param name="retryOnError">When true, the update will be reattempted until succesful.</param>

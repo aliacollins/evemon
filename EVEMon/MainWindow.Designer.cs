@@ -97,8 +97,8 @@ namespace EVEMon
             this.testCharacterNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testTimeoutOneSecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.standardToolbar = new System.Windows.Forms.ToolStrip();
-            this.accountsManagementTbMenu = new System.Windows.Forms.ToolStripButton();
-            this.addAccountTbMenu = new System.Windows.Forms.ToolStripButton();
+            this.apiKeysManagementTbMenu = new System.Windows.Forms.ToolStripButton();
+            this.addAPIKeyTbMenu = new System.Windows.Forms.ToolStripButton();
             this.hideCharacterTbMenu = new System.Windows.Forms.ToolStripButton();
             this.accountsSettingsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsdbSettings = new System.Windows.Forms.ToolStripDropDownButton();
@@ -662,8 +662,8 @@ namespace EVEMon
             this.standardToolbar.ContextMenuStrip = this.toolbarContext;
             this.standardToolbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.standardToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.accountsManagementTbMenu,
-            this.addAccountTbMenu,
+            this.apiKeysManagementTbMenu,
+            this.addAPIKeyTbMenu,
             this.hideCharacterTbMenu,
             this.accountsSettingsToolStripSeparator,
             this.tsdbSettings,
@@ -683,24 +683,24 @@ namespace EVEMon
             this.standardToolbar.TabIndex = 5;
             this.standardToolbar.Text = "toolStrip1";
             // 
-            // accountsManagementTbMenu
+            // apiKeysManagementTbMenu
             // 
-            this.accountsManagementTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("accountsManagementTbMenu.Image")));
-            this.accountsManagementTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.accountsManagementTbMenu.Name = "accountsManagementTbMenu";
-            this.accountsManagementTbMenu.Size = new System.Drawing.Size(23, 22);
-            this.accountsManagementTbMenu.ToolTipText = "Manage accounts";
-            this.accountsManagementTbMenu.Click += new System.EventHandler(this.manageAPIKeysMenuItem_Click);
+            this.apiKeysManagementTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("apiKeysManagementTbMenu.Image")));
+            this.apiKeysManagementTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.apiKeysManagementTbMenu.Name = "accountsManagementTbMenu";
+            this.apiKeysManagementTbMenu.Size = new System.Drawing.Size(23, 22);
+            this.apiKeysManagementTbMenu.ToolTipText = "Manage accounts";
+            this.apiKeysManagementTbMenu.Click += new System.EventHandler(this.manageAPIKeysMenuItem_Click);
             // 
-            // addAccountTbMenu
+            // addAPIKeyTbMenu
             // 
-            this.addAccountTbMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.addAccountTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("addAccountTbMenu.Image")));
-            this.addAccountTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.addAccountTbMenu.Name = "addAccountTbMenu";
-            this.addAccountTbMenu.Size = new System.Drawing.Size(23, 22);
-            this.addAccountTbMenu.ToolTipText = "Add account";
-            this.addAccountTbMenu.Click += new System.EventHandler(this.addAPIKeyMenu_Click);
+            this.addAPIKeyTbMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.addAPIKeyTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("addAPIKeyTbMenu.Image")));
+            this.addAPIKeyTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.addAPIKeyTbMenu.Name = "addAPIKeyTbMenu";
+            this.addAPIKeyTbMenu.Size = new System.Drawing.Size(23, 22);
+            this.addAPIKeyTbMenu.ToolTipText = "Add API key";
+            this.addAPIKeyTbMenu.Click += new System.EventHandler(this.addAPIKeyMenu_Click);
             // 
             // hideCharacterTbMenu
             // 
@@ -977,7 +977,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem menubarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem standardToolStripMenuItem;
         private System.Windows.Forms.ToolStrip standardToolbar;
-        private System.Windows.Forms.ToolStripButton accountsManagementTbMenu;
+        private System.Windows.Forms.ToolStripButton apiKeysManagementTbMenu;
         private System.Windows.Forms.ToolStripButton hideCharacterTbMenu;
         private System.Windows.Forms.ToolStripSeparator accountsSettingsToolStripSeparator;
         private System.Windows.Forms.ToolStripDropDownButton tsdbSettings;
@@ -1008,7 +1008,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem deleteCharacterMenu;
         private System.Windows.Forms.ToolStripSeparator fileManagerHideToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem hideCharacterMenu;
-        private System.Windows.Forms.ToolStripButton addAccountTbMenu;
+        private System.Windows.Forms.ToolStripButton addAPIKeyTbMenu;
         private System.Windows.Forms.ToolStripMenuItem loadFromFileToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;

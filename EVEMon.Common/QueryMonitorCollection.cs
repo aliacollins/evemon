@@ -128,17 +128,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Checks for auto-updates for every monitor in this collection.
-        /// </summary>
-        internal void UpdateOnOneSecondTick()
-        {
-            foreach (IQueryMonitorEx monitor in Items)
-            {
-                monitor.UpdateOnOneSecondTick();
-            }
-        }
-
-        /// <summary>
         /// Adds this monitor to the collection.
         /// </summary>
         /// <param name="monitor"></param>

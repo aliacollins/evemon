@@ -21,7 +21,7 @@ namespace EVEMon.Common
         /// </summary>
         internal GlobalAPIProviderCollection()
         {
-            m_currentProvider = DefaultProvider;
+            CurrentProvider = DefaultProvider;
         }
 
 
@@ -80,7 +80,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="name"></param>
         /// <returns>The wanted API provider when found; null otherwise.</returns>
-        public APIProvider this[string name]
+        private APIProvider this[string name]
         {
             get
             {
@@ -103,7 +103,7 @@ namespace EVEMon.Common
         internal void Import(SerializableAPIProviders serial)
         {
             m_customProviders.Clear();
-            m_currentProvider = DefaultProvider;
+            CurrentProvider = DefaultProvider;
 
             // Providers
             foreach (SerializableAPIProvider sProvider in serial.CustomProviders)
@@ -126,10 +126,10 @@ namespace EVEMon.Common
             APIProvider newCurrentProvider = this[serial.CurrentProviderName];
 
             if (newCurrentProvider != null)
-                m_currentProvider = newCurrentProvider;
+                CurrentProvider = newCurrentProvider;
 
             if (serial.CurrentProviderName == TestProvider.Name)
-                m_currentProvider = TestProvider;
+                CurrentProvider = TestProvider;
         }
 
         /// <summary>

@@ -23,6 +23,21 @@ namespace EVEMon.Common
         public SkillQueue(CCPCharacter character)
         {
             m_character = character;
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            if (IsPaused || !m_character.Monitored)
+                return;
+
+            UpdateOnTimerTick();
         }
 
         /// <summary>
@@ -68,11 +83,8 @@ namespace EVEMon.Common
         /// <summary>
         /// When the timer ticks, on every second, we update the skill.
         /// </summary>
-        internal void UpdateOnTimerTick()
+        private void UpdateOnTimerTick()
         {
-            if (IsPaused)
-                return;
-
             List<QueuedSkill> skillsCompleted = new List<QueuedSkill>();
 
             // Pops all the completed skills
@@ -122,24 +134,24 @@ namespace EVEMon.Common
         {
             IsPaused = false;
 
-            // If the queue is paused, CCP sends empty start and end time.
-            // So we base the start time on when the skill queue was started.
+            // If the queue is paused, CCP sends empty start and end time
+            // So we base the start time on when the skill queue was started
             DateTime startTimeWhenPaused = m_startTime;
 
             // Imports the queued skills and checks whether they are paused
             Items.Clear();
             foreach (SerializableQueuedSkill serialSkill in serial)
             {
-                // When the skill queue is paused, startTime and endTime are empty in the XML document.
-                // As a result, the serialization leaves the DateTime with its default value.
-                if (serialSkill.EndTime == default(DateTime))
+                // When the skill queue is paused, startTime and endTime are empty in the XML document
+                // As a result, the serialization leaves the DateTime with its default value
+                if (serialSkill.EndTime == DateTime.MinValue)
                     IsPaused = true;
 
                 // Creates the skill queue
                 Items.Add(new QueuedSkill(m_character, serialSkill, IsPaused, ref startTimeWhenPaused));
             }
 
-            // Fires the event regarding the character skill queue update.
+            // Fires the event regarding the character skill queue update
             EveMonClient.OnCharacterSkillQueueUpdated(m_character);
         }
     }

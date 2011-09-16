@@ -45,7 +45,7 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient_CharacterCollectionChanged(null, null);
             AdjustColumns();
 
-            // Selects the second page if no account known so far.
+            // Selects the second page if no API key known so far
             if (EveMonClient.Characters.Count == 0)
                 tabControl.SelectedIndex = 1;
         }
@@ -298,7 +298,7 @@ namespace EVEMon.ApiCredentialsManagement
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();
 
-                // Grouping (no account, account #1, account #2, character files, character urls)
+                // Grouping (no API key, API key #1, API key #2, character files, character urls)
                 bool isGrouping = groupingMenu.Checked;
                 ListViewGroup apiKeyGroup = new ListViewGroup("No API key");
                 ListViewGroup fileGroup = new ListViewGroup("Character files");

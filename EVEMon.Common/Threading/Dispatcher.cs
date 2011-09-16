@@ -186,7 +186,7 @@ namespace EVEMon.Common.Threading
         /// </summary>
         private static void OnOneSecondTimerTick()
         {
-            // Updates the eve client
+            // Updates the EVEMon client every one second
             EveMonClient.UpdateOnOneSecondTick();
 
             // Check for scheduled operations before now

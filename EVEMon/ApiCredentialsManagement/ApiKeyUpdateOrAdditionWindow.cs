@@ -170,7 +170,7 @@ namespace EVEMon.ApiCredentialsManagement
                 MultiPanel.SelectedPage = ResultPage;
             }
             else
-                GlobalAPIKeyCollection.TryAddOrUpdateAsync(id, VerificationCodeTextBox.Text, OnUpdated);
+                APIKey.TryAddOrUpdateAsync(id, VerificationCodeTextBox.Text, OnUpdated);
 
             return;
         }

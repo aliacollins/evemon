@@ -19,11 +19,13 @@ namespace EVEMon.Common
     {
         private readonly APIKeyQueryMonitor<SerializableAPIKeyInfo> m_apiKeyInfoMonitor;
         private readonly APIKeyQueryMonitor<SerializableAPIAccountStatus> m_accountStatusMonitor;
-        private readonly Dictionary<String, SkillInTrainingResponse> m_skillInTrainingCache =
-	            new Dictionary<String, SkillInTrainingResponse>();
+
+        private readonly Dictionary<string, SkillInTrainingResponse> m_skillInTrainingCache =
+            new Dictionary<string, SkillInTrainingResponse>();
 
         private bool m_updatePending;
         private bool m_characterListUpdated;
+
 
         #region Constructors
 
@@ -39,6 +41,22 @@ namespace EVEMon.Common
             m_accountStatusMonitor.Updated += OnAccountStatusUpdated;
 
             IdentityIgnoreList = new CharacterIdentityIgnoreList(this);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Updates the API key info and account status on a timer tick.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            m_apiKeyInfoMonitor.Enabled = Monitored;
+
+            // We trigger the account status check when we have the character list of the API key
+            // in order to have better API key related info in the trace file
+            m_accountStatusMonitor.Enabled = (m_characterListUpdated && Monitored);
         }
 
         /// <summary>
@@ -120,7 +138,7 @@ namespace EVEMon.Common
         public CharacterIdentityIgnoreList IdentityIgnoreList { get; set; }
 
         /// <summary>
-        /// Gets the character identities for this account.
+        /// Gets the character identities for this API key.
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities
         {
@@ -168,7 +186,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if this account has a character in training.
+        /// Gets true if this API key has a character in training.
         /// </summary>
         public bool HasCharacterInTraining
         {
@@ -181,23 +199,7 @@ namespace EVEMon.Common
         #region Internal Methods
 
         /// <summary>
-        /// Updates the API key info and account status on a timer tick.
-        /// </summary>
-        internal void UpdateOnOneSecondTick()
-        {
-            if (!Monitored)
-                return;
-
-            m_apiKeyInfoMonitor.UpdateOnOneSecondTick();
-
-            // We trigger the account status check when we have the character list of the API key
-            // in order to have better API key related info in the trace file
-            if (m_characterListUpdated)
-                m_accountStatusMonitor.UpdateOnOneSecondTick();
-        }
-
-        /// <summary>
-        /// Query skills in training for characters on this account.
+        /// Query skills in training for characters on this API key.
         /// </summary>
         internal void CharacterInTraining()
         {
@@ -231,7 +233,7 @@ namespace EVEMon.Common
                     x => OnSkillInTrainingUpdated(x, identity));
             }
         }
-        
+
         #endregion
 
 
@@ -257,7 +259,7 @@ namespace EVEMon.Common
 
             // Invalidates the notification
             EveMonClient.Notifications.InvalidateAPIKeyInfoError(this);
-            
+
             // Update
             Import(result);
 
@@ -325,7 +327,7 @@ namespace EVEMon.Common
                                                               : ResponseState.NotTraining;
 
             // In the event this becomes a very long running process because of latency
-            // and characters have been removed from the account since they were queried
+            // and characters have been removed from the API key since they were queried
             // remove those characters from the cache
             IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
                 m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
@@ -335,18 +337,18 @@ namespace EVEMon.Common
                 m_skillInTrainingCache.Remove(charToRemove.Key);
             }
 
-            // If we did not get response from a character in account yet
+            // If we did not get response from a character in API key yet
             // or there was an error in any responce,
             // we are not sure so wait until next time
             if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Unknown
                                                 || x.Value.State == ResponseState.InError))
                 return;
 
-            // We have successful responces from all characters in account,
+            // We have successful responces from all characters in API key,
             // so we notify the user and fire the event
             NotifyAccountNotInTraining();
 
-            // Fires the event regarding the account characters skill in training update
+            // Fires the event regarding the API key characters skill in training update
             EveMonClient.OnCharactersSkillInTrainingUpdated(this);
 
             // Reset update pending flag
@@ -374,7 +376,7 @@ namespace EVEMon.Common
             // Is it to expire within the day? Send a warning notification
             if (daysToExpire <= TimeSpan.FromDays(1) && daysToExpire > TimeSpan.Zero)
             {
-                EveMonClient.Notifications.NotifyAccountExpiration(this, Expiration, NotificationPriority.Warning);
+                EveMonClient.Notifications.NotifyAPIKeyExpiration(this, Expiration, NotificationPriority.Warning);
                 return;
             }
 
@@ -426,6 +428,20 @@ namespace EVEMon.Common
         #region Static Methods
 
         /// <summary>
+        /// Tries the add or update async the API key.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <param name="verificationCode">The verification code.</param>
+        /// <param name="callback">The callback.</param>
+        public static void TryAddOrUpdateAsync(long id, string verificationCode,
+                                               EventHandler<APIKeyCreationEventArgs> callback)
+        {
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIKeyInfo>(
+                APIMethods.APIKeyInfo, id, verificationCode,
+                result => callback(null, new APIKeyCreationEventArgs(id, verificationCode, result)));
+        }
+
+        /// <summary>
         /// Gets the credential level from the given result.
         /// </summary>
         internal static APIKeyType GetCredentialsType(APIResult<SerializableAPIKeyInfo> apiKeyInfo)
@@ -439,6 +455,45 @@ namespace EVEMon.Common
 
             // Another error occurred
             return APIKeyType.Unknown;
+        }
+
+        /// <summary>
+        /// Check whether some accounts are not in training.
+        /// </summary>
+        /// <param name="message">Message describing the accounts not in training.</param>
+        /// <returns>True if one or more accounts is not in training, otherwise false.</returns>
+        /// <remarks>This condition applied only to those API keys of type 'Account'</remarks>
+        public static bool HasCharactersNotTraining(out string message)
+        {
+            message = String.Empty;
+
+            IEnumerable<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == APIKeyType.Account &&
+                                                                                      !x.CharacterIdentities.IsEmpty() &&
+                                                                                      !x.HasCharacterInTraining);
+
+            // All accounts are training ?
+            if (accountsNotTraining.Count() == 0)
+                return false;
+
+            // Creates the string, scrolling through every not training account
+            StringBuilder builder = new StringBuilder();
+            if (accountsNotTraining.Count() == 1)
+            {
+                builder.AppendFormat("{0} is not in training", (EveMonClient.APIKeys.Count == 1
+                                                                    ? "The account"
+                                                                    : "One of the accounts"));
+            }
+            else
+                builder.Append("Some of the accounts are not in training.");
+
+            foreach (APIKey apiKey in accountsNotTraining)
+            {
+                builder.AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "API key : {0}", apiKey);
+            }
+
+            message = builder.ToString();
+            return true;
         }
 
         #endregion
@@ -498,16 +553,16 @@ namespace EVEMon.Common
         internal SerializableAPIKey Export()
         {
             return new SerializableAPIKey
-            {
-                ID = ID,
-                VerificationCode = VerificationCode,
-                Type = Type,
-                AccessMask = AccessMask,
-                Expiration = Expiration,
-                Monitored = Monitored,
-                LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
-                IgnoreList = IdentityIgnoreList.Export()
-            };
+                       {
+                           ID = ID,
+                           VerificationCode = VerificationCode,
+                           Type = Type,
+                           AccessMask = AccessMask,
+                           Expiration = Expiration,
+                           Monitored = Monitored,
+                           LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
+                           IgnoreList = IdentityIgnoreList.Export()
+                       };
         }
 
         #endregion
@@ -516,14 +571,14 @@ namespace EVEMon.Common
         #region Update Methods
 
         /// <summary>
-        /// Asynchronously updates this account through a <see cref="APIKeyCreationEventArgs"/>.
+        /// Asynchronously updates this API key through a <see cref="APIKeyCreationEventArgs"/>.
         /// </summary>
         /// <param name="verificationCode"></param>
         /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
         /// <returns></returns>
         public void TryUpdateAsync(string verificationCode, EventHandler<APIKeyCreationEventArgs> callback)
         {
-            GlobalAPIKeyCollection.TryAddOrUpdateAsync(ID, verificationCode, callback);
+            TryAddOrUpdateAsync(ID, verificationCode, callback);
         }
 
         /// <summary>
@@ -539,7 +594,10 @@ namespace EVEMon.Common
             Expiration = e.Expiration;
             m_apiKeyInfoMonitor.UpdateWith(e.APIKeyInfo);
 
-            // Clear the account for the currently associated identities
+            // Notifies for the API key expiration
+            NotifyAPIKeyExpiration();
+
+            // Clear the API key for the currently associated identities
             foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKey == this))
             {
                 id.APIKey = null;
@@ -632,5 +690,5 @@ namespace EVEMon.Common
 
 
         #endregion
- }
+    }
 }

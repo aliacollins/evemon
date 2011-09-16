@@ -38,7 +38,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            // Either delete this character only or the whole account.
+            // Either delete this character only or the whole API key.
             if (noCharactersCheckBox.Checked)
             {
                 EveMonClient.Characters.Remove(m_character);

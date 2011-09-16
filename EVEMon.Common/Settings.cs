@@ -31,7 +31,7 @@ namespace EVEMon.Common
         private static DateTime s_lastSaveTime = DateTime.MinValue;
 
         /// <summary>
-        /// Static constructor
+        /// Static constructor.
         /// </summary>
         static Settings()
         {
@@ -43,7 +43,24 @@ namespace EVEMon.Common
             Calendar = new CalendarSettings();
             Exportation = new ExportationSettings();
             Notifications = new NotificationSettings();
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateOnOneSecondTick();
+        }
+
+        /// <summary>
+        /// Gets true if we're currently restoring the settings.
+        /// </summary>
+        public static bool IsRestoringSettings { get; private set; }
 
 
         #region The very settings
@@ -165,8 +182,7 @@ namespace EVEMon.Common
                 // Save
                 SaveImmediate();
 
-                // Updates the data right now
-                EveMonClient.UpdateOnOneSecondTick();
+                // Notify the subscribers
                 EveMonClient.OnSettingsChanged();
 
                 EveMonClient.Trace("Settings.Import - done");
@@ -568,9 +584,9 @@ namespace EVEMon.Common
         #region Save
 
         /// <summary>
-        /// Every 10s, the timer ticks and check whether we should save the settings.
+        /// Every timer tick, checks whether we should save the settings every 10s.
         /// </summary>
-        internal static void UpdateOnOneSecondTick()
+        private static void UpdateOnOneSecondTick()
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
@@ -621,11 +637,6 @@ namespace EVEMon.Common
             SaveImmediate();
             FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, copyFileName);
         }
-
-        /// <summary>
-        /// Gets true if we're currently restoring the settings.
-        /// </summary>
-        public static bool IsRestoringSettings { get; private set; }
 
         #endregion
     }

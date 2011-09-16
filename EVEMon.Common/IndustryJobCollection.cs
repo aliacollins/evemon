@@ -20,6 +20,21 @@ namespace EVEMon.Common
         internal IndustryJobCollection(CCPCharacter character)
         {
             m_character = character;
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            if (!m_character.QueryMonitors[APIMethods.IndustryJobs].Enabled)
+                return;
+
+            UpdateOnTimerTick();
         }
 
         /// <summary>
@@ -87,7 +102,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notify the user on a job completion.
         /// </summary>
-        internal void UpdateOnTimerTick()
+        private void UpdateOnTimerTick()
         {
             // We exit if there are no jobs
             if (Items.IsEmpty())

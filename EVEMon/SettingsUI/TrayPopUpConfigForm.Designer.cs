@@ -429,7 +429,7 @@ namespace EVEMon.SettingsUI
             this.cbShowWarning.TabIndex = 19;
             this.cbShowWarning.Text = "Show non-training account warning";
             this.ttHelp.SetToolTip(this.cbShowWarning, "When enabled, shows a warning message when\r\nno characters on an account are train" +
-                    "ing a skill.");
+                    "ing a skill,\r\nif the provided API key is of 'Account' type.");
             this.cbShowWarning.UseVisualStyleBackColor = true;
             // 
             // cbShowServerStatus
