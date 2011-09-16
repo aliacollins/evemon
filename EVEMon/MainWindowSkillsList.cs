@@ -15,29 +15,35 @@ namespace EVEMon
 {
     public partial class MainWindowSkillsList : UserControl
     {
+        private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+
         // Skills drawing - Region & text padding
-        private const int PadTop = 2;
-        private const int PadLeft = 6;
-        private const int PadRight = 7;
+        private const byte PadTop = 2;
+        private const byte PadLeft = 6;
+        private const byte PadRight = 7;
 
         // Skills drawing - Boxes
-        private const int BoxWidth = 57;
-        private const int BoxHeight = 14;
-        private const int LowerBoxHeight = 8;
-        private const int BoxHPad = 6;
-        private const int BoxVPad = 2;
-        private const int SkillDetailHeight = 31;
+        private const byte BoxWidth = 57;
+        private const byte BoxHeight = 14;
+        private const byte LowerBoxHeight = 8;
+        private const byte BoxHPad = 6;
+        private const byte BoxVPad = 2;
+        private const byte SkillDetailHeight = 31;
 
         // Skills drawing - Skills groups
-        private const int SkillHeaderHeight = 21;
-        private const int CollapserPadRight = 6;
+        private const byte SkillHeaderHeight = 21;
+        private const byte CollapserPadRight = 6;
 
         // Skills drawing - Font & brushes
         private readonly Font m_skillsFont;
         private readonly Font m_boldSkillsFont;
         private Object m_lastTooltipItem;
         private bool m_requireRefresh;
-        private int m_count;
+        private sbyte m_count;
+
+        private const byte SkillsSummaryTextWidth = 75;
+        private const byte SkillGroupTotalSPTextWidth = 100;
+        private int m_maxGroupNameWidth;
 
         /// <summary>
         /// Constructor
@@ -99,7 +105,7 @@ namespace EVEMon
         #region Content Management
 
         /// <summary>
-        /// Updates all the content
+        /// Updates all the content.
         /// </summary>
         /// <remarks>
         /// Another high-complexity method for us to look at.
@@ -126,6 +132,11 @@ namespace EVEMon
                 IEnumerable<Skill> skills = GetCharacterSkills();
                 IOrderedEnumerable<IGrouping<SkillGroup, Skill>> groups =
                     skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name);
+
+                Graphics g = CreateGraphics();
+                m_maxGroupNameWidth = (groups.Select(
+                    group => TextRenderer.MeasureText(g, group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
+                                                 groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
 
                 // Scroll through groups
                 lbSkills.Items.Clear();
@@ -249,13 +260,11 @@ namespace EVEMon
             }
 
             // Measure texts
-            const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
-
             int skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
 
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", skill.Rank);
             string spText = String.Format(CultureConstants.DefaultCulture,
-                                          "SP: {0:#,##0}/{1:#,##0}", skill.SkillPoints, skillPointsToNextLevel);
+                                          "SP: {0:N0}/{1:N0}", skill.SkillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(skill.PercentCompleted));
 
@@ -401,42 +410,51 @@ namespace EVEMon
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
             bool hasQueuedSkill = group.Any(x => x.IsQueued && !x.IsTraining);
             if (hasTrainingSkill)
-                skillInTrainingSuffix = "  ( 1 in training )";
+                skillInTrainingSuffix = "( 1 in training )";
             if (hasQueuedSkill)
             {
-                skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture,
-                                                    "  ( {0} in queue )", group.Count(x => x.IsQueued && !x.IsTraining));
+                skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture, "( {0} in queue )",
+                                                    group.Count(x => x.IsQueued && !x.IsTraining));
             }
 
-            string detailText = String.Format(CultureConstants.DefaultCulture,
-                                              ", {0} of {1} skills, {2:#,##0} Points{3}",
-                                              group.Count(x => x.IsKnown),
-                                              group.Count(x => x.IsPublic),
-                                              group.TotalSP,
-                                              skillInTrainingSuffix);
+            string skillsSummaryText = String.Format(CultureConstants.DefaultCulture, "{0} of {1} skills",
+                                                     group.Count(x => x.IsKnown), group.Count(x => x.IsPublic));
 
-            const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+            string skillsTotalSPText = String.Format(CultureConstants.DefaultCulture, "{0:N0} Points", group.TotalSP);
 
-            Size skillGroupNameTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, Format);
-            Rectangle skillGroupNameRect = new Rectangle(e.Bounds.Left + PadLeft,
-                                                         e.Bounds.Top +
-                                                         ((e.Bounds.Height / 2) - (skillGroupNameTextSize.Height / 2)),
-                                                         skillGroupNameTextSize.Width + (PadLeft / 2),
-                                                         skillGroupNameTextSize.Height);
+            Rectangle skillGroupNameTextRect = new Rectangle(e.Bounds.Left + PadLeft,
+                                                             e.Bounds.Top + (e.Bounds.Height / 2) - (lbSkills.ItemHeight / 2),
+                                                             m_maxGroupNameWidth + (PadLeft / 2),
+                                                             lbSkills.ItemHeight);
 
-            Size detailTextSize = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, Format);
-            Rectangle detailRect = new Rectangle(
-                skillGroupNameRect.X + skillGroupNameRect.Width, skillGroupNameRect.Y, detailTextSize.Width, detailTextSize.Height);
+            Rectangle skillsSummaryTextRect = new Rectangle(
+                skillGroupNameTextRect.X + m_maxGroupNameWidth + (PadLeft / 2), skillGroupNameTextRect.Y, SkillsSummaryTextWidth,
+                lbSkills.ItemHeight);
+
+            Rectangle skillsTotalSPTextRect = new Rectangle(
+                skillsSummaryTextRect.X + SkillsSummaryTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
+                SkillGroupTotalSPTextWidth, lbSkills.ItemHeight);
+
+            Size skillInTrainingSuffixSize = TextRenderer.MeasureText(g, skillInTrainingSuffix, m_skillsFont, Size.Empty, Format);
+            Rectangle skillInTrainingSuffixRect = new Rectangle(
+                skillsTotalSPTextRect.X + SkillGroupTotalSPTextWidth + (PadLeft), skillGroupNameTextRect.Y,
+                skillInTrainingSuffixSize.Width, lbSkills.ItemHeight);
 
             Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty, Format);
             Rectangle skillQueueRect = new Rectangle(
-                detailRect.X + detailRect.Width, detailRect.Y, skillQueueTextSize.Width, skillQueueTextSize.Height);
+                skillInTrainingSuffixRect.X + skillInTrainingSuffixRect.Width + (PadLeft), skillInTrainingSuffixRect.Y,
+                skillQueueTextSize.Width, lbSkills.ItemHeight);
 
             // Draw the header
-            TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, skillGroupNameRect, Color.White);
-            TextRenderer.DrawText(g, detailText, m_skillsFont, detailRect, Color.White);
-            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect,
-                                  (Settings.UI.SafeForWork ? Color.White : Color.Yellow));
+            TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, skillGroupNameTextRect, Color.White, Format);
+            TextRenderer.DrawText(g, skillsSummaryText, m_skillsFont, skillsSummaryTextRect, Color.White,
+                                  Format | TextFormatFlags.Right);
+            TextRenderer.DrawText(g, skillsTotalSPText, m_skillsFont, skillsTotalSPTextRect, Color.White,
+                                  Format | TextFormatFlags.Right);
+            TextRenderer.DrawText(g, skillInTrainingSuffix, m_skillsFont, skillInTrainingSuffixRect, Color.White);
+            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect, (Settings.UI.SafeForWork
+                                                                                             ? Color.White
+                                                                                             : Color.Yellow));
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);

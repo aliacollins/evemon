@@ -207,7 +207,7 @@ namespace EVEMon
             this.lblServerStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(504, 22);
+            this.statusStrip.Size = new System.Drawing.Size(544, 22);
             this.statusStrip.TabIndex = 1;
             // 
             // lblTraining
@@ -257,7 +257,7 @@ namespace EVEMon
             this.testToolStripMenuItem});
             this.mainMenuBar.Location = new System.Drawing.Point(0, 0);
             this.mainMenuBar.Name = "mainMenuBar";
-            this.mainMenuBar.Size = new System.Drawing.Size(504, 24);
+            this.mainMenuBar.Size = new System.Drawing.Size(544, 24);
             this.mainMenuBar.TabIndex = 3;
             this.mainMenuBar.Text = "menuStrip1";
             // 
@@ -679,7 +679,7 @@ namespace EVEMon
             this.tsbAbout});
             this.standardToolbar.Location = new System.Drawing.Point(0, 24);
             this.standardToolbar.Name = "standardToolbar";
-            this.standardToolbar.Size = new System.Drawing.Size(504, 25);
+            this.standardToolbar.Size = new System.Drawing.Size(544, 25);
             this.standardToolbar.TabIndex = 5;
             this.standardToolbar.Text = "toolStrip1";
             // 
@@ -687,7 +687,7 @@ namespace EVEMon
             // 
             this.apiKeysManagementTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("apiKeysManagementTbMenu.Image")));
             this.apiKeysManagementTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.apiKeysManagementTbMenu.Name = "accountsManagementTbMenu";
+            this.apiKeysManagementTbMenu.Name = "apiKeysManagementTbMenu";
             this.apiKeysManagementTbMenu.Size = new System.Drawing.Size(23, 22);
             this.apiKeysManagementTbMenu.ToolTipText = "Manage accounts";
             this.apiKeysManagementTbMenu.Click += new System.EventHandler(this.manageAPIKeysMenuItem_Click);
@@ -856,7 +856,7 @@ namespace EVEMon
             this.tcCharacterTabs.Padding = new System.Drawing.Point(0, 0);
             this.tcCharacterTabs.SelectedIndex = 0;
             this.tcCharacterTabs.ShowToolTips = true;
-            this.tcCharacterTabs.Size = new System.Drawing.Size(504, 503);
+            this.tcCharacterTabs.Size = new System.Drawing.Size(544, 503);
             this.tcCharacterTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tcCharacterTabs.TabIndex = 0;
             this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
@@ -866,7 +866,7 @@ namespace EVEMon
             this.tpOverview.Controls.Add(this.overview);
             this.tpOverview.Location = new System.Drawing.Point(4, 22);
             this.tpOverview.Name = "tpOverview";
-            this.tpOverview.Size = new System.Drawing.Size(496, 477);
+            this.tpOverview.Size = new System.Drawing.Size(536, 477);
             this.tpOverview.TabIndex = 0;
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
@@ -879,7 +879,7 @@ namespace EVEMon
             this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.overview.Location = new System.Drawing.Point(0, 0);
             this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(496, 477);
+            this.overview.Size = new System.Drawing.Size(536, 477);
             this.overview.TabIndex = 0;
             // 
             // notificationList
@@ -889,7 +889,7 @@ namespace EVEMon
             this.notificationList.Location = new System.Drawing.Point(0, 552);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(504, 72);
+            this.notificationList.Size = new System.Drawing.Size(544, 72);
             this.notificationList.TabIndex = 6;
             // 
             // trayIcon
@@ -906,7 +906,7 @@ namespace EVEMon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 646);
+            this.ClientSize = new System.Drawing.Size(544, 646);
             this.Controls.Add(this.tcCharacterTabs);
             this.Controls.Add(this.notificationList);
             this.Controls.Add(this.statusStrip);
@@ -914,7 +914,7 @@ namespace EVEMon
             this.Controls.Add(this.mainMenuBar);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MainMenuStrip = this.mainMenuBar;
-            this.MinimumSize = new System.Drawing.Size(480, 350);
+            this.MinimumSize = new System.Drawing.Size(570, 350);
             this.Name = "MainWindow";
             this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
