@@ -108,7 +108,7 @@ namespace EVEMon.ApiCredentialsManagement
             FeaturesLinkLabel.Location = new System.Drawing.Point(23, 28);
             FeaturesLinkLabel.Name = "FeaturesLinkLabel";
             FeaturesLinkLabel.Size = new System.Drawing.Size(476, 18);
-            FeaturesLinkLabel.TabIndex = 3;
+            FeaturesLinkLabel.TabIndex = 1;
             FeaturesLinkLabel.TabStop = true;
             FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
                 " features.";
@@ -123,7 +123,7 @@ namespace EVEMon.ApiCredentialsManagement
             ApiKeysLinkLabel.Location = new System.Drawing.Point(23, 10);
             ApiKeysLinkLabel.Name = "ApiKeysLinkLabel";
             ApiKeysLinkLabel.Size = new System.Drawing.Size(335, 18);
-            ApiKeysLinkLabel.TabIndex = 2;
+            ApiKeysLinkLabel.TabIndex = 0;
             ApiKeysLinkLabel.TabStop = true;
             ApiKeysLinkLabel.Text = "Your API keys are available at : https://support.eveonline.com/api";
             ApiKeysLinkLabel.UseCompatibleTextRendering = true;
@@ -156,7 +156,7 @@ namespace EVEMon.ApiCredentialsManagement
             ActiveLinksLabel.Location = new System.Drawing.Point(23, 46);
             ActiveLinksLabel.Name = "ActiveLinksLabel";
             ActiveLinksLabel.Size = new System.Drawing.Size(476, 30);
-            ActiveLinksLabel.TabIndex = 4;
+            ActiveLinksLabel.TabIndex = 2;
             ActiveLinksLabel.TabStop = true;
             ActiveLinksLabel.Text = "If you have already an API key, you can install it directly by clicking on the [I" +
                 "nstall] link at :\r\nhttps://support.eveonline.com/api/key/activeinstalllinks";
@@ -237,7 +237,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.VerificationCodeTextBox.Location = new System.Drawing.Point(41, 141);
             this.VerificationCodeTextBox.Name = "VerificationCodeTextBox";
             this.VerificationCodeTextBox.Size = new System.Drawing.Size(424, 21);
-            this.VerificationCodeTextBox.TabIndex = 1;
+            this.VerificationCodeTextBox.TabIndex = 4;
             this.VerificationCodeTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
             this.VerificationCodeTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
             this.VerificationCodeTextBox.Validated += new System.EventHandler(this.VerificationCodeTextBox_Validated);
@@ -247,7 +247,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.IDTextBox.Location = new System.Drawing.Point(41, 99);
             this.IDTextBox.Name = "IDTextBox";
             this.IDTextBox.Size = new System.Drawing.Size(109, 21);
-            this.IDTextBox.TabIndex = 0;
+            this.IDTextBox.TabIndex = 3;
             this.IDTextBox.TextChanged += new System.EventHandler(this.IDTextBox_TextChanged);
             this.IDTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.IDTextBox_Validating);
             this.IDTextBox.Validated += new System.EventHandler(this.IDTextBox_Validated);
@@ -452,9 +452,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.LoginDeniedLinkLabel.Size = new System.Drawing.Size(473, 98);
             this.LoginDeniedLinkLabel.TabIndex = 0;
             this.LoginDeniedLinkLabel.TabStop = true;
-            this.LoginDeniedLinkLabel.Text = "The subscription of the account, this API key belongs to, has expired.\r\n\r\nIf the AP" +
-                "I key belongs to one of your accounts, consider re-subscribing at :\r\nhttps://sec" +
-                "ure.eveonline.com/AccountManMenu.aspx\r\n";
+            this.LoginDeniedLinkLabel.Text = resources.GetString("LoginDeniedLinkLabel.Text");
             this.LoginDeniedLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoginDeniedLinkLabel.UseCompatibleTextRendering = true;
             this.LoginDeniedLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LoginDeniedLinkLabel_LinkClicked);

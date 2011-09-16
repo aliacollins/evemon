@@ -41,7 +41,7 @@ namespace EVEMon.SettingsUI
             this.applyButton = new System.Windows.Forms.Button();
             this.apiResponseLabel = new System.Windows.Forms.Label();
             this.bcAPILinkLabel = new System.Windows.Forms.LinkLabel();
-            this.throbber = new Throbber();
+            this.throbber = new EVEMon.Common.Controls.Throbber();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
@@ -90,6 +90,7 @@ namespace EVEMon.SettingsUI
             // 
             // resetButton
             // 
+            this.resetButton.CausesValidation = false;
             this.resetButton.Location = new System.Drawing.Point(326, 133);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 23);
@@ -139,7 +140,7 @@ namespace EVEMon.SettingsUI
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = ThrobberState.Stopped;
+            this.throbber.State = EVEMon.Common.ThrobberState.Stopped;
             this.throbber.TabIndex = 12;
             this.throbber.TabStop = false;
             // 

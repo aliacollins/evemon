@@ -80,7 +80,6 @@ namespace EVEMon.SettingsUI
             Settings.Save();
 
             // Close
-            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -98,7 +97,6 @@ namespace EVEMon.SettingsUI
             Settings.Save();
 
             // Close
-            DialogResult = DialogResult.OK;
             Close();
         }
 
