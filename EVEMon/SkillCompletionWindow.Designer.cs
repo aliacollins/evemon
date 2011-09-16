@@ -50,6 +50,9 @@ namespace EVEMon
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(266, 108);
             this.Controls.Add(this.detailsTextBox);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "SkillCompletionWindow";
             this.Text = "Skill Completion Details";
             this.ResumeLayout(false);
