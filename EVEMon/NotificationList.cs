@@ -14,7 +14,7 @@ using CommonProperties = EVEMon.Common.Properties;
 namespace EVEMon
 {
     /// <summary>
-    /// Displays a list of notifications
+    /// Displays a list of notifications.
     /// </summary>
     public partial class NotificationList : UserControl
     {
@@ -101,7 +101,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Calculates the maximum text length of the list with given font
+        /// Calculates the maximum text length of the list with given font.
         /// </summary>
         /// <param name="font"></param>
         /// <returns></returns>
@@ -119,7 +119,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Calculates the font according to the notifications to display
+        /// Calculates the font according to the notifications to display.
         /// </summary>
         private void CalculateFontSize()
         {
@@ -278,7 +278,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When the mouse moves, detect the hovered index
+        /// When the mouse moves, detect the hovered index.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -322,20 +322,20 @@ namespace EVEMon
 
                 NotificationEventArgs notification = listBox.Items[i] as NotificationEventArgs;
 
-                // Did he click on the "magnifier" icon ?
+                // Did the click on the "magnifier" icon ?
                 if (notification != null && notification.HasDetails)
                 {
-                    rect = GetMagnifierIconRect(rect);
-                    if (rect.Contains(e.Location))
+                    Rectangle magnifierRect = GetMagnifierIconRect(rect);
+                    if (magnifierRect.Contains(e.Location))
                     {
                         ShowDetails(notification);
                         return;
                     }
                 }
 
-                // Did he click on the "delete" icon or did a wheel-click?
-                rect = GetDeleteIconRect(rect);
-                if (e.Button != MouseButtons.Middle && !rect.Contains(e.Location))
+                // Did the click on the "delete" icon or did a wheel-click?
+                Rectangle deleteRect = GetDeleteIconRect(rect);
+                if (e.Button != MouseButtons.Middle && !deleteRect.Contains(e.Location))
                     continue;
 
                 EveMonClient.Notifications.Invalidate(new NotificationInvalidationEventArgs(notification));
@@ -401,7 +401,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Displays the tooltip for the hovered item
+        /// Displays the tooltip for the hovered item.
         /// </summary>
         private void DisplayTooltip(NotificationEventArgs notification)
         {
