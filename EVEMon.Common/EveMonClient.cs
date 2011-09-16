@@ -90,7 +90,6 @@ namespace EVEMon.Common
 
             s_running = true;
             Dispatcher.Run(new UIActor(mainForm));
-            UpdateOnOneSecondTick();
         }
 
         /// <summary>
@@ -415,34 +414,16 @@ namespace EVEMon.Common
         public static GlobalNotificationCollection Notifications { get; private set; }
 
         /// <summary>
-        /// Everytime the API timer is clicked, we fire this to check whether we need to update the queries.
+        /// Fires the timer tick event to notify the subscribers.
         /// </summary>
         internal static void UpdateOnOneSecondTick()
         {
             if (!s_running)
                 return;
 
-            // Updates EVE server status
-            EVEServer.UpdateOnOneSecondTick();
-
-            // Updates the API key
-            foreach (APIKey apiKey in APIKeys)
-            {
-                apiKey.UpdateOnOneSecondTick();
-            }
-
-            // Updates the characters
-            foreach (CCPCharacter ccpCharacter in Characters.OfType<CCPCharacter>())
-            {
-                ccpCharacter.UpdateOnOneSecondTick();
-            }
-
             // Fires the event for subscribers
             if (TimerTick != null)
                 TimerTick(null, EventArgs.Empty);
-
-            // Check for settings save
-            Settings.UpdateOnOneSecondTick();
         }
 
         #endregion
@@ -481,7 +462,7 @@ namespace EVEMon.Common
         public static event EventHandler APIKeyInfoUpdated;
 
         /// <summary>
-        /// Occurs when the list of characters in an account has been updated.
+        /// Occurs when the list of characters in an API key has been updated.
         /// </summary>
         public static event EventHandler CharacterListUpdated;
 
@@ -491,7 +472,7 @@ namespace EVEMon.Common
         public static event EventHandler MonitoredCharacterCollectionChanged;
 
         /// <summary>
-        /// Occurs when a character training check on an account has been updated.
+        /// Occurs when a character training check on an account type API key has been updated.
         /// </summary>
         public static event EventHandler CharactersSkillInTrainingUpdated;
 
