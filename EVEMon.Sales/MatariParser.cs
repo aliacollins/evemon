@@ -1,23 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
-using EVEMon.Common;
-using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
 {
     [DefaultMineralParser("matari")]
     public class MatariParser : IMineralParser
     {
-        private static readonly Regex s_mineralTokenizer =
-            new Regex(@"\<td.*?\>(?<name>\w*)\</td\>\<td.*?align.*?\>(?<price>(\d|\.|,)*)\</td\>\<td",
-                      RegexOptions.Compiled);
-
-
-        #region IMineralParser Members
-
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -31,9 +19,9 @@ namespace EVEMon.Sales
         /// Gets the courtesy URL.
         /// </summary>
         /// <value>The courtesy URL.</value>
-        public string CourtesyUrl
+        public Uri CourtesyUrl
         {
-            get { return "http://www.evegeek.com/"; }
+            get { return new Uri("http://www.evegeek.com/"); }
         }
 
         /// <summary>
@@ -46,43 +34,25 @@ namespace EVEMon.Sales
         }
 
         /// <summary>
-        /// Gets the prices.
+        /// Gets the tokenizer.
         /// </summary>
-        /// <returns>
-        /// An enumerable collection of Minerals and Prices.
-        /// </returns>
-        public IEnumerable<Pair<string, decimal>> GetPrices()
+        /// <value>The tokenizer.</value>
+        public Regex Tokenizer
         {
-            string phoenixContent;
-            try
+            get
             {
-                phoenixContent = EveMonClient.HttpWebService.DownloadString(
-                    "http://www.evegeek.com/mineralindex.php");
+                return new Regex(@"\<td.*?\>(?<name>\w*)\</td\>\<td.*?align.*?\>(?<price>(\d|\.|,)*)\</td\>\<td",
+                    RegexOptions.Compiled);
             }
-            catch (HttpWebServiceException ex)
-            {
-                ExceptionHandler.LogException(ex, true);
-                throw new MineralParserException(ex.Message);
-            }
-
-            // Scan for prices
-            MatchCollection mc = s_mineralTokenizer.Matches(phoenixContent);
-
-            return mc.Cast<Match>().Select(
-                mineral => new
-                               {
-                                   mineral,
-                                   name = mineral.Groups["name"].Value
-                               }).Select(
-                                   mineral => new
-                                                  {
-                                                      mineral,
-                                                      price = Decimal.Parse(mineral.mineral.Groups["price"].Value,
-                                                                            NumberStyles.Currency, CultureInfo.InvariantCulture)
-                                                  }).Select(
-                                                      mineral => new Pair<string, Decimal>(mineral.mineral.name, mineral.price));
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the URL.
+        /// </summary>
+        /// <value>The URL.</value>
+        public Uri URL
+        {
+            get { return new Uri("http://www.evegeek.com/mineralindex.php"); }
+        }
     }
 }

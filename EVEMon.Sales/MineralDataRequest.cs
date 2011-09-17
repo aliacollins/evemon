@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using EVEMon.Common;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
 {
@@ -14,24 +17,6 @@ namespace EVEMon.Sales
         private static readonly Dictionary<string, IMineralParser> s_parsers = new Dictionary<string, IMineralParser>();
 
         /// <summary>
-        /// Initializes the <see cref="MineralDataRequest"/> class.
-        /// </summary>
-        static MineralDataRequest()
-        {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            foreach (Type type in asm.GetTypes())
-            {
-                foreach (DefaultMineralParserAttribute dmpa in type.GetCustomAttributes(
-                    typeof(DefaultMineralParserAttribute), false))
-                {
-                    IMineralParser mp = Activator.CreateInstance(type) as IMineralParser;
-                    if (mp != null)
-                        RegisterDataSource(dmpa.Name, mp);
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets the parsers.
         /// </summary>
         /// <value>The parsers.</value>
@@ -41,13 +26,20 @@ namespace EVEMon.Sales
         }
 
         /// <summary>
-        /// Registers the data source.
+        /// Initializes the data source.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="parser">The parser.</param>
-        private static void RegisterDataSource(string name, IMineralParser parser)
+        internal static void Initialize()
         {
-            s_parsers.Add(name, parser);
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                foreach (DefaultMineralParserAttribute dmpa in type.GetCustomAttributes(
+                    typeof(DefaultMineralParserAttribute), false))
+                {
+                    IMineralParser mp = Activator.CreateInstance(type) as IMineralParser;
+                    if (mp != null)
+                        s_parsers.Add(dmpa.Name, mp);
+                }
+            }
         }
 
         /// <summary>
@@ -55,13 +47,13 @@ namespace EVEMon.Sales
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns>An enumerable collection of Minerals and Prices.</returns>
-        public static IEnumerable<Pair<string, Decimal>> GetPrices(string source)
+        public static IEnumerable<Pair<string, decimal>> GetPrices(string source)
         {
             if (!s_parsers.ContainsKey(source))
                 throw new ArgumentException("That is not a registered mineraldatasource.", "source");
 
-            IMineralParser p = s_parsers[source];
-            return p.GetPrices();
+            IMineralParser parser = s_parsers[source];
+            return GetPrices(parser);
         }
 
         /// <summary>
@@ -83,13 +75,50 @@ namespace EVEMon.Sales
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns>The courtesy URL.</returns>
-        public static string GetCourtesyUrl(string source)
+        public static Uri GetCourtesyUrl(string source)
         {
             if (!s_parsers.ContainsKey(source))
                 throw new ArgumentException("That is not a registered mineraldatasource.", "source");
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyUrl;
+        }
+
+        /// <summary>
+        /// Scans for prices.
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<Pair<string, decimal>> GetPrices(IMineralParser parser)
+        {
+            string content;
+            try
+            {
+                content = EveMonClient.HttpWebService.DownloadString(parser.URL.AbsoluteUri);
+            }
+            catch (HttpWebServiceException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                throw new MineralParserException(ex.Message);
+            }
+
+            // Scan for prices
+            MatchCollection mc = parser.Tokenizer.Matches(content);
+
+            return mc.Cast<Match>().Select(
+                mineral => new
+                {
+                    mineral,
+                    name = mineral.Groups["name"].Value
+                }).Select(
+                                   mineral => new
+                                   {
+                                       mineral,
+                                       price = Decimal.Parse(mineral.mineral.Groups["price"].Value,
+                                                             NumberStyles.Currency,
+                                                             CultureInfo.InvariantCulture)
+                                   }).Select(
+                                                      mineral =>
+                                                      new Pair<string, Decimal>(mineral.mineral.name, mineral.price));
         }
     }
 }

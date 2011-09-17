@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using EVEMon.Common;
+using System.Text.RegularExpressions;
 
 namespace EVEMon.Sales
 {
@@ -19,7 +18,7 @@ namespace EVEMon.Sales
         /// Gets the courtesy URL.
         /// </summary>
         /// <value>The courtesy URL.</value>
-        string CourtesyUrl { get; }
+        Uri CourtesyUrl { get; }
 
         /// <summary>
         /// Gets the courtesy text.
@@ -28,9 +27,15 @@ namespace EVEMon.Sales
         string CourtesyText { get; }
 
         /// <summary>
-        /// Gets the prices.
+        /// Gets the tokenizer.
         /// </summary>
-        /// <returns>An enumerable collection of Minerals and Prices.</returns>
-        IEnumerable<Pair<string, Decimal>> GetPrices();
+        /// <value>The tokenizer.</value>
+        Regex Tokenizer { get; }
+
+        /// <summary>
+        /// Gets the URL.
+        /// </summary>
+        /// <value>The URL.</value>
+        Uri URL { get; }
     }
 }

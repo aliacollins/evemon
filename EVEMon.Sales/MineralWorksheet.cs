@@ -100,6 +100,8 @@ namespace EVEMon.Sales
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void MineralWorksheet_Load(object sender, EventArgs e)
         {
+            MineralDataRequest.Initialize();
+
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDiposed;
 
@@ -111,7 +113,6 @@ namespace EVEMon.Sales
             }
 
             SortedList<string, Pair<string, string>> parsersSorted = new SortedList<string, Pair<string, string>>();
-
             foreach (Pair<string, IMineralParser> p in MineralDataRequest.Parsers)
             {
                 parsersSorted.Add(p.B.Title, new Pair<string, string>(p.A, p.B.Title));
@@ -235,7 +236,7 @@ namespace EVEMon.Sales
 
                     tslCourtesy.Text = String.Format("Mineral Prices Courtesy of {0}",
                                                      MineralDataRequest.GetCourtesyText(m_source));
-                    m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source);
+                    m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source).AbsoluteUri;
                     tslCourtesy.Visible = true;
                 }
             }

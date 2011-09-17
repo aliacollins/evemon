@@ -5,7 +5,7 @@ namespace EVEMon.Sales
     /// <summary>
     /// Defines a class as a mineral parser, with a name.
     /// </summary>
-    public class DefaultMineralParserAttribute : Attribute
+    public sealed class DefaultMineralParserAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultMineralParserAttribute"/> class.

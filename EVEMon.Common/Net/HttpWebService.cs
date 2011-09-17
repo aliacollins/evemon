@@ -34,7 +34,7 @@ namespace EVEMon.Common.Net
         /// <param name="errorMsg">Is url is invalid, contains a descriptive message of the reason</param>
         private static bool IsValidURL(string url, out string errorMsg)
         {
-            if (string.IsNullOrEmpty(url))
+            if (String.IsNullOrEmpty(url))
             {
                 errorMsg = "Url may not be null or an empty string.";
                 return false;
