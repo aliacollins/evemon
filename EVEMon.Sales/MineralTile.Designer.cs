@@ -178,8 +178,6 @@ namespace EVEMon.Sales
 
         #endregion
 
-
-        private System.Windows.Forms.PictureBox icon;
         private System.Windows.Forms.Label lblQuantity;
         private System.Windows.Forms.Label lblLastPrice;
         private System.Windows.Forms.TextBox txtLastSell;
@@ -188,5 +186,6 @@ namespace EVEMon.Sales
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbSubtotal;
         private System.Windows.Forms.GroupBox groupBox;
+        internal System.Windows.Forms.PictureBox icon;
     }
 }

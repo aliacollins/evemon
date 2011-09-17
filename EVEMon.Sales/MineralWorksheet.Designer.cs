@@ -66,7 +66,7 @@ namespace EVEMon.Sales
             this.copyTotalDropDownButton});
             this.MineralWorksheetToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MineralWorksheetToolStrip.Name = "MineralWorksheetToolStrip";
-            this.MineralWorksheetToolStrip.Size = new System.Drawing.Size(654, 25);
+            this.MineralWorksheetToolStrip.Size = new System.Drawing.Size(538, 25);
             this.MineralWorksheetToolStrip.TabIndex = 0;
             // 
             // btnLockPrices
@@ -134,7 +134,7 @@ namespace EVEMon.Sales
             this.tslCourtesy});
             this.MineralWorksheetStatusStrip.Location = new System.Drawing.Point(0, 510);
             this.MineralWorksheetStatusStrip.Name = "MineralWorksheetStatusStrip";
-            this.MineralWorksheetStatusStrip.Size = new System.Drawing.Size(654, 22);
+            this.MineralWorksheetStatusStrip.Size = new System.Drawing.Size(538, 22);
             this.MineralWorksheetStatusStrip.TabIndex = 10;
             this.MineralWorksheetStatusStrip.Text = "statusStrip1";
             // 
@@ -338,7 +338,7 @@ namespace EVEMon.Sales
             this.MineralTileTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MineralTileTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MineralTileTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.MineralTileTableLayout.Size = new System.Drawing.Size(654, 485);
+            this.MineralTileTableLayout.Size = new System.Drawing.Size(538, 485);
             this.MineralTileTableLayout.TabIndex = 9;
             // 
             // bckgrndWrkrGetPrices
@@ -352,10 +352,11 @@ namespace EVEMon.Sales
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(654, 532);
+            this.ClientSize = new System.Drawing.Size(538, 532);
             this.Controls.Add(this.MineralTileTableLayout);
             this.Controls.Add(this.MineralWorksheetStatusStrip);
             this.Controls.Add(this.MineralWorksheetToolStrip);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MineralWorksheet";

@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -44,15 +43,6 @@ namespace EVEMon.Sales
                 groupBox.Text = value;
                 SetIconByName(value);
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the icon.
-        /// </summary>
-        /// <value>The icon.</value>
-        public PictureBox Icon
-        {
-            get { return icon; }
         }
 
         /// <summary>

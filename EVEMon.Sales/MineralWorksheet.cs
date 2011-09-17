@@ -83,7 +83,7 @@ namespace EVEMon.Sales
 
             foreach (MineralTile tile in Tiles)
             {
-                tile.Icon.Visible = !Settings.UI.SafeForWork;
+                tile.icon.Visible = !Settings.UI.SafeForWork;
             }
         }
 
@@ -301,10 +301,10 @@ namespace EVEMon.Sales
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
         {
-            copyFormattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture, "Formatted ({0:N} ISK)",
-                                                                     m_total);
-            copyUnformattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture, "Unformatted ({0})",
-                                                                       m_total);
+            copyFormattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture,
+                                                                     "Formatted ({0:N} ISK)", m_total);
+            copyUnformattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture,
+                                                                       "Unformatted ({0})", m_total);
         }
 
         /// <summary>
@@ -321,9 +321,7 @@ namespace EVEMon.Sales
             }
             catch (ExternalException ex)
             {
-                // there is a bug that results in an exception being
-                // thrown when the clipboard is in use by another
-                // thread.
+                // An exception is thrown when the clipboard is in use by another procedure
                 ExceptionHandler.LogException(ex, true);
             }
         }
@@ -342,9 +340,7 @@ namespace EVEMon.Sales
             }
             catch (ExternalException ex)
             {
-                // there is a bug that results in an exception being
-                // thrown when the clipboard is in use by another
-                // thread.
+                // An exception is thrown when the clipboard is in use by another procedure
                 ExceptionHandler.LogException(ex, true);
             }
         }
