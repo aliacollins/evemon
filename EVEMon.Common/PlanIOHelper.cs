@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -10,7 +12,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-    public static class PlanExporter
+    public static class PlanIOHelper
     {
         public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
 
@@ -176,8 +178,11 @@ namespace EVEMon.Common
                 // Skills count
                 if (settings.FooterCount)
                 {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2}", boldStart, index, boldEnd);
-                    builder.Append((index == 1 ? " skill" : " skills"));
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} unique skill{3}, ",
+                                         boldStart, plan.GetUniqueSkillsCount(), boldEnd,
+                                         (plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s"));
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} skill level{3}", boldStart, index, boldEnd,
+                                         (index == 1 ? String.Empty : "s"));
                     needComma = true;
                 }
 
@@ -225,7 +230,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports the plan under a XML format.
+        /// Exports the plan under an XML format.
         /// </summary>
         /// <param name="plan">The plan.</param>
         /// <returns></returns>
@@ -238,6 +243,21 @@ namespace EVEMon.Common
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlan), output);
+            return Util.GetXMLStringRepresentation(doc);
+        }
+
+        /// <summary>
+        /// Exports the plan under an XML format.
+        /// </summary>
+        /// <param name="plans">The plans.</param>
+        /// <returns></returns>
+        public static string ExportAsXML(IEnumerable<Plan> plans)
+        {
+            OutputPlans output = new OutputPlans { Revision = Settings.Revision };
+            output.Plans.AddRange(plans.Select(plan => plan.Export()));
+
+            // Serializes to XML document and gets a string representation
+            XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlans), output);
             return Util.GetXMLStringRepresentation(doc);
         }
 
@@ -289,6 +309,56 @@ namespace EVEMon.Common
                 MessageBox.Show("There was a problem with the format of the document.");
 
             return result;
+        }
+
+        /// <summary>
+        /// Imports plans from the given filename.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        public static IEnumerable<SerializablePlan> ImportPlansFromXML(String filename)
+        {
+            OutputPlans result = null;
+            try
+            {
+                // Is the format compressed ? 
+                if (filename.EndsWith(".epb"))
+                {
+                    string tempFile = Util.UncompressToTempFile(filename);
+                    try
+                    {
+                        return ImportPlansFromXML(tempFile);
+                    }
+                    finally
+                    {
+                        File.Delete(tempFile);
+                    }
+                }
+
+                // Reads the revision number from the file
+                int revision = Util.GetRevisionNumber(filename);
+
+                if (revision != 0)
+                    result = Util.DeserializeXML<OutputPlans>(filename);
+            }
+            catch (UnauthorizedAccessException exc)
+            {
+                MessageBox.Show("Couldn't read the given file, access was denied. Maybe the directory was under synchronization.");
+                ExceptionHandler.LogException(exc, true);
+            }
+            catch (InvalidDataException exc)
+            {
+                MessageBox.Show("The file seems to be corrupted, wrong gzip format.");
+                ExceptionHandler.LogException(exc, true);
+            }
+
+            if (result == null)
+            {
+                MessageBox.Show("There was a problem with the format of the document.");
+                return null;
+            }
+
+            return result.Plans;
         }
     }
 }

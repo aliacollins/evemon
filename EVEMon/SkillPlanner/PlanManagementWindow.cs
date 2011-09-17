@@ -273,7 +273,7 @@ namespace EVEMon.SkillPlanner
         #region Menus and buttons handlers
 
         /// <summary>
-        /// File > New plan.
+        /// File > New plan...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -298,11 +298,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// File > Load plan from file.
+        /// File > Import Plan from File...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miLoadPlanFromFile_Click(object sender, EventArgs e)
+        private void miImportPlanFromFile_Click(object sender, EventArgs e)
         {
             // Prompt the user to select a file
             DialogResult dr = ofdOpenDialog.ShowDialog();
@@ -310,13 +310,12 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Load from file and returns if an error occurred (user has already been warned)
-            SerializablePlan serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
+            SerializablePlan serial = PlanIOHelper.ImportFromXML(ofdOpenDialog.FileName);
             if (serial == null)
                 return;
 
             // Imports the plan
-            Plan loadedPlan = new Plan(m_character);
-            loadedPlan.Import(serial);
+            Plan loadedPlan = new Plan(m_character, serial);
 
             // Prompt the user for the plan name
             using (NewPlanWindow npw = new NewPlanWindow())
@@ -333,11 +332,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// File > Load plan from character.
+        /// File > Import Plan from Character....
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miLoadPlanFromCharacter_Click(object sender, EventArgs e)
+        private void miImportPlanFromCharacter_Click(object sender, EventArgs e)
         {
             // Prompt the user to choose the source character and plan.
             using (PlanImportationFromCharacterForm cps = new PlanImportationFromCharacterForm(m_character))
@@ -368,6 +367,87 @@ namespace EVEMon.SkillPlanner
 
                 // Add the plan to the character's list
                 m_character.Plans.Add(plan);
+            }
+        }
+
+        /// <summary>
+        /// Edit > Export Plan...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miExportPlan_Click(object sender, EventArgs e)
+        {
+            if (lbPlanList.SelectedItems.Count != 1)
+                return;
+
+            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
+            UIHelper.ExportPlan(plan);
+        }
+
+        /// <summary>
+        /// File > Restore Plans...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miRestorePlans_Click(object sender, EventArgs e)
+        {
+            // Prompt the user to select a file
+            using (OpenFileDialog restorePlansDialog = new OpenFileDialog())
+            {
+                restorePlansDialog.Title = "Restore from File";
+                restorePlansDialog.Filter = "EVEMon Plans Backup Format (*.epb)|*.epb";
+                DialogResult dr = restorePlansDialog.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                    return;
+
+                // Load from file and returns if an error occurred (user has already been warned)
+                IEnumerable<SerializablePlan> serial = PlanIOHelper.ImportPlansFromXML(restorePlansDialog.FileName);
+                if (serial == null)
+                    return;
+
+                // Imports the plans
+                IEnumerable<Plan> loadedPlans = serial.Select(plan => new Plan(m_character, plan));
+                m_character.Plans.AddRange(loadedPlans);
+            }
+        }
+
+        /// <summary>
+        /// File > Save Plans...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miSavePlans_Click(object sender, EventArgs e)
+        {
+            IEnumerable<Plan> plans = (lbPlanList.Items.Cast<ListViewItem>().Select(item => item.Tag as Plan));
+            UIHelper.SavePlans(plans);
+        }
+
+        /// <summary>
+        /// Edit > Rename...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miRenameEdit_Click(object sender, EventArgs e)
+        {
+            // Quit if none selected
+            if (lbPlanList.SelectedItems.Count == 0)
+                return;
+
+            // Prompts the user for a new name
+            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
+            using (NewPlanWindow f = new NewPlanWindow())
+            {
+                f.Text = "Rename Plan or Edit Description";
+                f.PlanName = plan.Name;
+                f.PlanDescription = plan.Description;
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                    return;
+
+                // Change the name
+                plan.Name = f.PlanName;
+                plan.Description = f.PlanDescription;
+                UpdateContent(true);
             }
         }
 
@@ -407,35 +487,6 @@ namespace EVEMon.SkillPlanner
             foreach (ListViewItem lvi in lbPlanList.SelectedItems)
             {
                 m_character.Plans.Remove(lvi.Tag as Plan);
-            }
-        }
-
-        /// <summary>
-        /// Edit > Rename.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miRenameEdit_Click(object sender, EventArgs e)
-        {
-            // Quit if none selected
-            if (lbPlanList.SelectedItems.Count == 0)
-                return;
-
-            // Prompts the user for a new name
-            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-            using (NewPlanWindow f = new NewPlanWindow())
-            {
-                f.Text = "Rename Plan or Edit Description";
-                f.PlanName = plan.Name;
-                f.PlanDescription = plan.Description;
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                    return;
-
-                // Change the name
-                plan.Name = f.PlanName;
-                plan.Description = f.PlanDescription;
-                UpdateContent(true);
             }
         }
 
@@ -483,20 +534,6 @@ namespace EVEMon.SkillPlanner
             m_character.Plans.RebuildFrom(plans);
         }
 
-        /// <summary>
-        /// File > Export plan
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miExport_Click(object sender, EventArgs e)
-        {
-            if (lbPlanList.SelectedItems.Count != 1)
-                return;
-
-            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-            UIHelper.ExportPlan(plan);
-        }
-
         #endregion
 
 
@@ -536,7 +573,9 @@ namespace EVEMon.SkillPlanner
         private void mFile_DropDownOpening(object sender, EventArgs e)
         {
             // See if we have multiple characters to determine if load from character is enabled
-            miLoadPlanFromCharacter.Enabled = (EveMonClient.Characters.Count > 1);
+            miImportPlanFromCharacter.Enabled = (EveMonClient.Characters.Count > 1);
+            miExportPlan.Enabled = lbPlanList.SelectedItems.Count == 1;
+            miSavePlans.Enabled = lbPlanList.Items.Count > 0;
         }
 
         /// <summary>
@@ -547,22 +586,7 @@ namespace EVEMon.SkillPlanner
         private void mEdit_DropDownOpening(object sender, EventArgs e)
         {
             miRenameEdit.Enabled = lbPlanList.SelectedItems.Count == 1;
-            miExport.Enabled = lbPlanList.SelectedItems.Count == 1;
-            miDelete.Enabled = lbPlanList.SelectedItems.Count >= 1;
-        }
-
-        /// <summary>
-        /// Edit > Export plan
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmiExportPlan_Click(object sender, EventArgs e)
-        {
-            if (lbPlanList.SelectedItems.Count != 1)
-                return;
-
-            Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-            UIHelper.ExportPlan(plan);
+            miDelete.Enabled = lbPlanList.SelectedItems.Count > 0;
         }
 
         #endregion

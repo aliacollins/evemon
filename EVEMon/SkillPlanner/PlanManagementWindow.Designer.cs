@@ -43,30 +43,35 @@ namespace EVEMon.SkillPlanner
             this.PlanDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiRenameEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiRenameEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tsbMoveUp = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveDown = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.ButtonsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.btnOpen = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mFile = new System.Windows.Forms.ToolStripMenuItem();
             this.miNewPlan = new System.Windows.Forms.ToolStripMenuItem();
-            this.miLoadPlanFromFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.miLoadPlanFromCharacter = new System.Windows.Forms.ToolStripMenuItem();
+            this.NewPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.miImportPlanFromFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.miImportPlanFromCharacter = new System.Windows.Forms.ToolStripMenuItem();
+            this.miExportPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.ImportPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.miRestorePlans = new System.Windows.Forms.ToolStripMenuItem();
+            this.miSavePlans = new System.Windows.Forms.ToolStripMenuItem();
             this.mEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miRenameEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.miExport = new System.Windows.Forms.ToolStripMenuItem();
             this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.contextMenu.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.ButtonsFlowLayoutPanel.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -121,6 +126,7 @@ namespace EVEMon.SkillPlanner
             this.lbPlanList.ContextMenuStrip = this.contextMenu;
             this.lbPlanList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbPlanList.FullRowSelect = true;
+            this.lbPlanList.HideSelection = false;
             this.lbPlanList.Location = new System.Drawing.Point(0, 0);
             this.lbPlanList.Name = "lbPlanList";
             this.lbPlanList.Size = new System.Drawing.Size(606, 327);
@@ -155,42 +161,48 @@ namespace EVEMon.SkillPlanner
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiOpen,
-            this.cmiRenameEdit,
             this.cmiExport,
+            this.toolStripSeparator,
+            this.cmiRenameEdit,
             this.cmiDelete});
             this.contextMenu.Name = "contextMenuStrip1";
-            this.contextMenu.Size = new System.Drawing.Size(118, 92);
+            this.contextMenu.Size = new System.Drawing.Size(153, 120);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // cmiOpen
             // 
             this.cmiOpen.Image = ((System.Drawing.Image)(resources.GetObject("cmiOpen.Image")));
             this.cmiOpen.Name = "cmiOpen";
-            this.cmiOpen.Size = new System.Drawing.Size(117, 22);
-            this.cmiOpen.Text = "Open";
+            this.cmiOpen.Size = new System.Drawing.Size(152, 22);
+            this.cmiOpen.Text = "Open...";
             this.cmiOpen.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
-            // cmiRenameEdit
-            // 
-            this.cmiRenameEdit.Image = ((System.Drawing.Image)(resources.GetObject("cmiRenameEdit.Image")));
-            this.cmiRenameEdit.Name = "cmiRenameEdit";
-            this.cmiRenameEdit.Size = new System.Drawing.Size(117, 22);
-            this.cmiRenameEdit.Text = "Rename";
-            this.cmiRenameEdit.Click += new System.EventHandler(this.miRenameEdit_Click);
             // 
             // cmiExport
             // 
             this.cmiExport.Image = ((System.Drawing.Image)(resources.GetObject("cmiExport.Image")));
             this.cmiExport.Name = "cmiExport";
-            this.cmiExport.Size = new System.Drawing.Size(117, 22);
-            this.cmiExport.Text = "Export";
-            this.cmiExport.Click += new System.EventHandler(this.tsmiExportPlan_Click);
+            this.cmiExport.Size = new System.Drawing.Size(152, 22);
+            this.cmiExport.Text = "Export...";
+            this.cmiExport.Click += new System.EventHandler(this.miExportPlan_Click);
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            // 
+            // cmiRenameEdit
+            // 
+            this.cmiRenameEdit.Image = ((System.Drawing.Image)(resources.GetObject("cmiRenameEdit.Image")));
+            this.cmiRenameEdit.Name = "cmiRenameEdit";
+            this.cmiRenameEdit.Size = new System.Drawing.Size(152, 22);
+            this.cmiRenameEdit.Text = "Rename...";
+            this.cmiRenameEdit.Click += new System.EventHandler(this.miRenameEdit_Click);
             // 
             // cmiDelete
             // 
             this.cmiDelete.Image = ((System.Drawing.Image)(resources.GetObject("cmiDelete.Image")));
             this.cmiDelete.Name = "cmiDelete";
-            this.cmiDelete.Size = new System.Drawing.Size(117, 22);
+            this.cmiDelete.Size = new System.Drawing.Size(152, 22);
             this.cmiDelete.Text = "Delete";
             this.cmiDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
@@ -244,7 +256,7 @@ namespace EVEMon.SkillPlanner
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.ButtonsFlowLayoutPanel, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -257,27 +269,27 @@ namespace EVEMon.SkillPlanner
             this.tableLayoutPanel1.Size = new System.Drawing.Size(659, 401);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
-            // flowLayoutPanel1
+            // ButtonsFlowLayoutPanel
             // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.ButtonsFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.btnClose);
-            this.flowLayoutPanel1.Controls.Add(this.btnOpen);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(491, 360);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 8, 6, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(162, 29);
-            this.flowLayoutPanel1.TabIndex = 2;
+            this.ButtonsFlowLayoutPanel.AutoSize = true;
+            this.ButtonsFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ButtonsFlowLayoutPanel.Controls.Add(this.btnClose);
+            this.ButtonsFlowLayoutPanel.Controls.Add(this.btnOpen);
+            this.ButtonsFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.ButtonsFlowLayoutPanel.Location = new System.Drawing.Point(491, 360);
+            this.ButtonsFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0, 8, 6, 0);
+            this.ButtonsFlowLayoutPanel.Name = "ButtonsFlowLayoutPanel";
+            this.ButtonsFlowLayoutPanel.Size = new System.Drawing.Size(162, 29);
+            this.ButtonsFlowLayoutPanel.TabIndex = 2;
             // 
             // btnOpen
             // 
             this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpen.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOpen.Enabled = false;
-            this.flowLayoutPanel1.SetFlowBreak(this.btnOpen, true);
+            this.ButtonsFlowLayoutPanel.SetFlowBreak(this.btnOpen, true);
             this.btnOpen.Location = new System.Drawing.Point(3, 3);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(75, 23);
@@ -302,8 +314,13 @@ namespace EVEMon.SkillPlanner
             // 
             this.mFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miNewPlan,
-            this.miLoadPlanFromFile,
-            this.miLoadPlanFromCharacter});
+            this.NewPlanToolStripSeparator,
+            this.miImportPlanFromFile,
+            this.miImportPlanFromCharacter,
+            this.miExportPlan,
+            this.ImportPlanToolStripSeparator,
+            this.miRestorePlans,
+            this.miSavePlans});
             this.mFile.Name = "mFile";
             this.mFile.Size = new System.Drawing.Size(37, 20);
             this.mFile.Text = "&File";
@@ -313,31 +330,64 @@ namespace EVEMon.SkillPlanner
             // 
             this.miNewPlan.Image = ((System.Drawing.Image)(resources.GetObject("miNewPlan.Image")));
             this.miNewPlan.Name = "miNewPlan";
-            this.miNewPlan.Size = new System.Drawing.Size(218, 22);
+            this.miNewPlan.Size = new System.Drawing.Size(228, 22);
             this.miNewPlan.Text = "&New Plan…";
             this.miNewPlan.Click += new System.EventHandler(this.miNewPlan_Click);
             // 
-            // miLoadPlanFromFile
+            // NewPlanToolStripSeparator
             // 
-            this.miLoadPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miLoadPlanFromFile.Image")));
-            this.miLoadPlanFromFile.Name = "miLoadPlanFromFile";
-            this.miLoadPlanFromFile.Size = new System.Drawing.Size(218, 22);
-            this.miLoadPlanFromFile.Text = "&Load Plan from File…";
-            this.miLoadPlanFromFile.Click += new System.EventHandler(this.miLoadPlanFromFile_Click);
+            this.NewPlanToolStripSeparator.Name = "NewPlanToolStripSeparator";
+            this.NewPlanToolStripSeparator.Size = new System.Drawing.Size(225, 6);
             // 
-            // miLoadPlanFromCharacter
+            // miImportPlanFromFile
             // 
-            this.miLoadPlanFromCharacter.Image = ((System.Drawing.Image)(resources.GetObject("miLoadPlanFromCharacter.Image")));
-            this.miLoadPlanFromCharacter.Name = "miLoadPlanFromCharacter";
-            this.miLoadPlanFromCharacter.Size = new System.Drawing.Size(218, 22);
-            this.miLoadPlanFromCharacter.Text = "Load Plan from &Character…";
-            this.miLoadPlanFromCharacter.Click += new System.EventHandler(this.miLoadPlanFromCharacter_Click);
+            this.miImportPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miImportPlanFromFile.Image")));
+            this.miImportPlanFromFile.Name = "miImportPlanFromFile";
+            this.miImportPlanFromFile.Size = new System.Drawing.Size(228, 22);
+            this.miImportPlanFromFile.Text = "&Import Plan from File…";
+            this.miImportPlanFromFile.Click += new System.EventHandler(this.miImportPlanFromFile_Click);
+            // 
+            // miImportPlanFromCharacter
+            // 
+            this.miImportPlanFromCharacter.Image = ((System.Drawing.Image)(resources.GetObject("miImportPlanFromCharacter.Image")));
+            this.miImportPlanFromCharacter.Name = "miImportPlanFromCharacter";
+            this.miImportPlanFromCharacter.Size = new System.Drawing.Size(228, 22);
+            this.miImportPlanFromCharacter.Text = "Import Plan from &Character…";
+            this.miImportPlanFromCharacter.Click += new System.EventHandler(this.miImportPlanFromCharacter_Click);
+            // 
+            // miExportPlan
+            // 
+            this.miExportPlan.Image = ((System.Drawing.Image)(resources.GetObject("miExportPlan.Image")));
+            this.miExportPlan.Name = "miExportPlan";
+            this.miExportPlan.Size = new System.Drawing.Size(228, 22);
+            this.miExportPlan.Text = "&Export Plan...";
+            this.miExportPlan.Click += new System.EventHandler(this.miExportPlan_Click);
+            // 
+            // ImportPlanToolStripSeparator
+            // 
+            this.ImportPlanToolStripSeparator.Name = "ImportPlanToolStripSeparator";
+            this.ImportPlanToolStripSeparator.Size = new System.Drawing.Size(225, 6);
+            // 
+            // miRestorePlans
+            // 
+            this.miRestorePlans.Image = ((System.Drawing.Image)(resources.GetObject("miRestorePlans.Image")));
+            this.miRestorePlans.Name = "miRestorePlans";
+            this.miRestorePlans.Size = new System.Drawing.Size(228, 22);
+            this.miRestorePlans.Text = "&Restore Plans...";
+            this.miRestorePlans.Click += new System.EventHandler(this.miRestorePlans_Click);
+            // 
+            // miSavePlans
+            // 
+            this.miSavePlans.Image = ((System.Drawing.Image)(resources.GetObject("miSavePlans.Image")));
+            this.miSavePlans.Name = "miSavePlans";
+            this.miSavePlans.Size = new System.Drawing.Size(228, 22);
+            this.miSavePlans.Text = "&Save Plans...";
+            this.miSavePlans.Click += new System.EventHandler(this.miSavePlans_Click);
             // 
             // mEdit
             // 
             this.mEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miRenameEdit,
-            this.miExport,
             this.miDelete});
             this.mEdit.Name = "mEdit";
             this.mEdit.Size = new System.Drawing.Size(39, 20);
@@ -349,24 +399,16 @@ namespace EVEMon.SkillPlanner
             this.miRenameEdit.Image = ((System.Drawing.Image)(resources.GetObject("miRenameEdit.Image")));
             this.miRenameEdit.Name = "miRenameEdit";
             this.miRenameEdit.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.miRenameEdit.Size = new System.Drawing.Size(136, 22);
-            this.miRenameEdit.Text = "&Rename";
+            this.miRenameEdit.Size = new System.Drawing.Size(145, 22);
+            this.miRenameEdit.Text = "&Rename...";
             this.miRenameEdit.Click += new System.EventHandler(this.miRenameEdit_Click);
-            // 
-            // miExport
-            // 
-            this.miExport.Image = ((System.Drawing.Image)(resources.GetObject("miExport.Image")));
-            this.miExport.Name = "miExport";
-            this.miExport.Size = new System.Drawing.Size(136, 22);
-            this.miExport.Text = "&Export...";
-            this.miExport.Click += new System.EventHandler(this.miExport_Click);
             // 
             // miDelete
             // 
             this.miDelete.Image = ((System.Drawing.Image)(resources.GetObject("miDelete.Image")));
             this.miDelete.Name = "miDelete";
             this.miDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.miDelete.Size = new System.Drawing.Size(136, 22);
+            this.miDelete.Size = new System.Drawing.Size(145, 22);
             this.miDelete.Text = "&Delete";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
@@ -395,7 +437,7 @@ namespace EVEMon.SkillPlanner
             this.toolStrip2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
+            this.ButtonsFlowLayoutPanel.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -414,7 +456,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbMoveDown;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel ButtonsFlowLayoutPanel;
         private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem cmiDelete;
@@ -427,13 +469,18 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mFile;
         private System.Windows.Forms.ToolStripMenuItem mEdit;
-        private System.Windows.Forms.ToolStripMenuItem miLoadPlanFromFile;
-        private System.Windows.Forms.ToolStripMenuItem miLoadPlanFromCharacter;
+        private System.Windows.Forms.ToolStripMenuItem miImportPlanFromFile;
+        private System.Windows.Forms.ToolStripMenuItem miImportPlanFromCharacter;
         private System.Windows.Forms.ToolStripMenuItem miRenameEdit;
         private System.Windows.Forms.ToolStripMenuItem miDelete;
         private System.Windows.Forms.ToolStripMenuItem miNewPlan;
         private System.Windows.Forms.ToolStripMenuItem cmiExport;
-        private System.Windows.Forms.ToolStripMenuItem miExport;
         private System.Windows.Forms.ColumnHeader PlanDescription;
+        private System.Windows.Forms.ToolStripMenuItem miRestorePlans;
+        private System.Windows.Forms.ToolStripSeparator ImportPlanToolStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem miSavePlans;
+        private System.Windows.Forms.ToolStripMenuItem miExportPlan;
+        private System.Windows.Forms.ToolStripSeparator NewPlanToolStripSeparator;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
     }
 }

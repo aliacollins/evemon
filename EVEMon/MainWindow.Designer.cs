@@ -70,9 +70,9 @@ namespace EVEMon
             this.copySkillsToClipboardBBFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.miImportPlanFromFile = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.planSeparatorMenuItem = new System.Windows.Forms.ToolStripSeparator();
+            this.plansSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addBlankCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mineralWorksheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,7 +207,7 @@ namespace EVEMon
             this.lblServerStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(544, 22);
+            this.statusStrip.Size = new System.Drawing.Size(554, 22);
             this.statusStrip.TabIndex = 1;
             // 
             // lblTraining
@@ -257,7 +257,7 @@ namespace EVEMon
             this.testToolStripMenuItem});
             this.mainMenuBar.Location = new System.Drawing.Point(0, 0);
             this.mainMenuBar.Name = "mainMenuBar";
-            this.mainMenuBar.Size = new System.Drawing.Size(544, 24);
+            this.mainMenuBar.Size = new System.Drawing.Size(554, 24);
             this.mainMenuBar.TabIndex = 3;
             this.mainMenuBar.Text = "menuStrip1";
             // 
@@ -430,9 +430,9 @@ namespace EVEMon
             // 
             this.plansToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
-            this.loadFromFileToolStripMenuItem,
+            this.miImportPlanFromFile,
             this.manageToolStripMenuItem,
-            this.planSeparatorMenuItem});
+            this.plansSeparator});
             this.plansToolStripMenuItem.Name = "plansToolStripMenuItem";
             this.plansToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.plansToolStripMenuItem.Text = "&Plans";
@@ -442,30 +442,30 @@ namespace EVEMon
             // 
             this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.newToolStripMenuItem.Text = "&New…";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newPlanMenuItem_Click);
             // 
-            // loadFromFileToolStripMenuItem
+            // miImportPlanFromFile
             // 
-            this.loadFromFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromFileToolStripMenuItem.Image")));
-            this.loadFromFileToolStripMenuItem.Name = "loadFromFileToolStripMenuItem";
-            this.loadFromFileToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.loadFromFileToolStripMenuItem.Text = "Load Plan from File...";
-            this.loadFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadFromFileToolStripMenuItem_Click);
+            this.miImportPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miImportPlanFromFile.Image")));
+            this.miImportPlanFromFile.Name = "miImportPlanFromFile";
+            this.miImportPlanFromFile.Size = new System.Drawing.Size(195, 22);
+            this.miImportPlanFromFile.Text = "&Import Plan from File...";
+            this.miImportPlanFromFile.Click += new System.EventHandler(this.loadFromFileToolStripMenuItem_Click);
             // 
             // manageToolStripMenuItem
             // 
             this.manageToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("manageToolStripMenuItem.Image")));
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
-            this.manageToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.manageToolStripMenuItem.Text = "&Manage...";
+            this.manageToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.manageToolStripMenuItem.Text = "&Manage Plans...";
             this.manageToolStripMenuItem.Click += new System.EventHandler(this.manageToolStripMenuItem_Click);
             // 
-            // planSeparatorMenuItem
+            // plansSeparator
             // 
-            this.planSeparatorMenuItem.Name = "planSeparatorMenuItem";
-            this.planSeparatorMenuItem.Size = new System.Drawing.Size(182, 6);
+            this.plansSeparator.Name = "plansSeparator";
+            this.plansSeparator.Size = new System.Drawing.Size(192, 6);
             // 
             // toolsToolStripMenuItem
             // 
@@ -679,7 +679,7 @@ namespace EVEMon
             this.tsbAbout});
             this.standardToolbar.Location = new System.Drawing.Point(0, 24);
             this.standardToolbar.Name = "standardToolbar";
-            this.standardToolbar.Size = new System.Drawing.Size(544, 25);
+            this.standardToolbar.Size = new System.Drawing.Size(554, 25);
             this.standardToolbar.TabIndex = 5;
             this.standardToolbar.Text = "toolStrip1";
             // 
@@ -856,7 +856,7 @@ namespace EVEMon
             this.tcCharacterTabs.Padding = new System.Drawing.Point(0, 0);
             this.tcCharacterTabs.SelectedIndex = 0;
             this.tcCharacterTabs.ShowToolTips = true;
-            this.tcCharacterTabs.Size = new System.Drawing.Size(544, 503);
+            this.tcCharacterTabs.Size = new System.Drawing.Size(554, 503);
             this.tcCharacterTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tcCharacterTabs.TabIndex = 0;
             this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
@@ -866,7 +866,7 @@ namespace EVEMon
             this.tpOverview.Controls.Add(this.overview);
             this.tpOverview.Location = new System.Drawing.Point(4, 22);
             this.tpOverview.Name = "tpOverview";
-            this.tpOverview.Size = new System.Drawing.Size(536, 477);
+            this.tpOverview.Size = new System.Drawing.Size(546, 477);
             this.tpOverview.TabIndex = 0;
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
@@ -879,7 +879,7 @@ namespace EVEMon
             this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.overview.Location = new System.Drawing.Point(0, 0);
             this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(536, 477);
+            this.overview.Size = new System.Drawing.Size(546, 477);
             this.overview.TabIndex = 0;
             // 
             // notificationList
@@ -889,7 +889,7 @@ namespace EVEMon
             this.notificationList.Location = new System.Drawing.Point(0, 552);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(544, 72);
+            this.notificationList.Size = new System.Drawing.Size(554, 72);
             this.notificationList.TabIndex = 6;
             // 
             // trayIcon
@@ -906,7 +906,7 @@ namespace EVEMon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(544, 646);
+            this.ClientSize = new System.Drawing.Size(554, 646);
             this.Controls.Add(this.tcCharacterTabs);
             this.Controls.Add(this.notificationList);
             this.Controls.Add(this.statusStrip);
@@ -968,7 +968,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem implantsMenu;
         private System.Windows.Forms.ToolStripMenuItem plansToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator planSeparatorMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolsSchedulerImplantGroupsToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem showOwnedSkillbooksMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
@@ -1009,7 +1008,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator fileManagerHideToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem hideCharacterMenu;
         private System.Windows.Forms.ToolStripButton addAPIKeyTbMenu;
-        private System.Windows.Forms.ToolStripMenuItem loadFromFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem miImportPlanFromFile;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowToolStripMenuItem;
@@ -1026,5 +1025,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem stackExchangeMenu;
         private System.Windows.Forms.ToolStripMenuItem addBlankCharacterMenu;
         private System.Windows.Forms.ToolStripMenuItem clearCacheToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator plansSeparator;
     }
 }

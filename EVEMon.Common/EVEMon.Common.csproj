@@ -295,6 +295,7 @@
     <Compile Include="Serialization\Datafiles\SerializableStation.cs" />
     <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
     <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
+    <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
@@ -675,7 +676,7 @@
     <Compile Include="SettingsObjects\NotificationCategorySettings.cs" />
     <Compile Include="SettingsObjects\PlanColumn.cs" />
     <Compile Include="PlanEntry.cs" />
-    <Compile Include="PlanExporter.cs" />
+    <Compile Include="PlanIOHelper.cs" />
     <Compile Include="RemappingPoint.cs" />
     <Compile Include="Scheduling\Enumerations.cs" />
     <Compile Include="Scheduling\RecurringScheduleEntry.cs" />

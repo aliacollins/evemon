@@ -379,7 +379,8 @@ namespace EVEMon
             if (!(Character is CCPCharacter))
                 return;
 
-            featuresMenu.Visible = tsToggleSeparator.Visible = true;
+            featuresMenu.Visible = true;
+            tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
             m_advancedFeatures.ForEach(SetVisibility);
             ToggleAdvancedFeaturesMonitoring();
         }

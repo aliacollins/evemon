@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -18,6 +19,59 @@ namespace EVEMon.Controls
     public static class UIHelper
     {
         public static CharacterMonitor CurrentMonitor { get; set; }
+
+        /// <summary>
+        /// Saves the plans to a file.
+        /// </summary>
+        /// <param name="plans">The plans.</param>
+        public static void SavePlans(IEnumerable<Plan> plans)
+        {
+            Character character = (Character)plans.First().Character;
+
+            // Prompt the user to pick a file name
+            SaveFileDialog sfdSave = new SaveFileDialog
+            {
+                FileName = String.Format("{0} - Plans Backup", character.Name),
+                Title = "Save to File",
+                Filter = "EVEMon Plans Backup Format (*.epb)|*.epb",
+                FilterIndex = (int)PlanFormat.Emp
+            };
+
+            DialogResult dr = sfdSave.ShowDialog();
+            if (dr == DialogResult.Cancel)
+                return;
+
+            try
+            {
+                string content = PlanIOHelper.ExportAsXML(plans);
+
+                // Moves to the final file
+                FileHelper.OverwriteOrWarnTheUser(
+                    sfdSave.FileName,
+                    fs =>
+                    {
+                        // Emp is actually compressed xml
+                        using (Stream stream = new GZipStream(fs, CompressionMode.Compress))
+                        {
+                            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                            {
+                                writer.Write(content);
+                                writer.Flush();
+                                stream.Flush();
+                                fs.Flush();
+                            }
+                        }
+                        return true;
+                    });
+            }
+            catch (IOException err)
+            {
+                ExceptionHandler.LogException(err, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         /// <summary>
         /// Displays the plan exportation window and then exports it.
@@ -51,7 +105,6 @@ namespace EVEMon.Controls
             if (dr == DialogResult.Cancel)
                 return;
 
-
             // Serialize
             try
             {
@@ -62,15 +115,15 @@ namespace EVEMon.Controls
                 {
                     case PlanFormat.Emp:
                     case PlanFormat.Xml:
-                        content = PlanExporter.ExportAsXML(plan);
+                        content = PlanIOHelper.ExportAsXML(plan);
                         break;
                     case PlanFormat.Text:
-                        // Prompts the user and returns if he canceled
+                        // Prompts the user and returns if canceled
                         PlanExportSettings settings = PromptUserForPlanExportSettings(plan);
                         if (settings == null)
                             return;
 
-                        content = PlanExporter.ExportAsText(plan, settings);
+                        content = PlanIOHelper.ExportAsText(plan, settings);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -81,18 +134,18 @@ namespace EVEMon.Controls
                     sfdSave.FileName,
                     fs =>
                         {
-                            Stream s = fs;
+                            Stream stream = fs;
                             // Emp is actually compressed text
                             if (format == PlanFormat.Emp)
-                                s = new GZipStream(fs, CompressionMode.Compress);
+                                stream = new GZipStream(fs, CompressionMode.Compress);
 
-                            using (s)
+                            using (stream)
                             {
-                                using (StreamWriter writer = new StreamWriter(s, Encoding.UTF8))
+                                using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
                                 {
                                     writer.Write(content);
                                     writer.Flush();
-                                    s.Flush();
+                                    stream.Flush();
                                     fs.Flush();
                                 }
                             }

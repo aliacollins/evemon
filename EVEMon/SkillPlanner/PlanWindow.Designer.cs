@@ -172,16 +172,16 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsmiPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsmiPlan.Image")));
             this.tsmiPlan.Name = "tsmiPlan";
-            this.tsmiPlan.Size = new System.Drawing.Size(180, 22);
-            this.tsmiPlan.Text = "Plan";
+            this.tsmiPlan.Size = new System.Drawing.Size(189, 22);
+            this.tsmiPlan.Text = "&Plan...";
             this.tsmiPlan.Click += new System.EventHandler(this.tsmiPlan_Click);
             // 
             // tsmiAfterPlanCharacter
             // 
             this.tsmiAfterPlanCharacter.Image = ((System.Drawing.Image)(resources.GetObject("tsmiAfterPlanCharacter.Image")));
             this.tsmiAfterPlanCharacter.Name = "tsmiAfterPlanCharacter";
-            this.tsmiAfterPlanCharacter.Size = new System.Drawing.Size(180, 22);
-            this.tsmiAfterPlanCharacter.Text = "After Plan Character";
+            this.tsmiAfterPlanCharacter.Size = new System.Drawing.Size(189, 22);
+            this.tsmiAfterPlanCharacter.Text = "After Plan &Character...";
             this.tsmiAfterPlanCharacter.Click += new System.EventHandler(this.tsmiAfterPlanCharacter_Click);
             // 
             // tsbDeletePlan
@@ -307,7 +307,7 @@ namespace EVEMon.SkillPlanner
             this.tpSkillBrowser.Location = new System.Drawing.Point(4, 31);
             this.tpSkillBrowser.Margin = new System.Windows.Forms.Padding(0);
             this.tpSkillBrowser.Name = "tpSkillBrowser";
-            this.tpSkillBrowser.Size = new System.Drawing.Size(936, 536);
+            this.tpSkillBrowser.Size = new System.Drawing.Size(816, 480);
             this.tpSkillBrowser.TabIndex = 0;
             this.tpSkillBrowser.Text = "Skill browser";
             this.tpSkillBrowser.UseVisualStyleBackColor = true;
@@ -329,7 +329,7 @@ namespace EVEMon.SkillPlanner
             this.tpCertificateBrowser.Location = new System.Drawing.Point(4, 31);
             this.tpCertificateBrowser.Margin = new System.Windows.Forms.Padding(0);
             this.tpCertificateBrowser.Name = "tpCertificateBrowser";
-            this.tpCertificateBrowser.Size = new System.Drawing.Size(936, 536);
+            this.tpCertificateBrowser.Size = new System.Drawing.Size(816, 480);
             this.tpCertificateBrowser.TabIndex = 4;
             this.tpCertificateBrowser.Text = "Certificates";
             this.tpCertificateBrowser.UseVisualStyleBackColor = true;
@@ -351,7 +351,7 @@ namespace EVEMon.SkillPlanner
             this.tpShipBrowser.Location = new System.Drawing.Point(4, 31);
             this.tpShipBrowser.Margin = new System.Windows.Forms.Padding(0);
             this.tpShipBrowser.Name = "tpShipBrowser";
-            this.tpShipBrowser.Size = new System.Drawing.Size(936, 536);
+            this.tpShipBrowser.Size = new System.Drawing.Size(816, 480);
             this.tpShipBrowser.TabIndex = 2;
             this.tpShipBrowser.Text = "Ship browser";
             this.tpShipBrowser.UseVisualStyleBackColor = true;
@@ -373,7 +373,7 @@ namespace EVEMon.SkillPlanner
             this.tpItemBrowser.Location = new System.Drawing.Point(4, 31);
             this.tpItemBrowser.Margin = new System.Windows.Forms.Padding(0);
             this.tpItemBrowser.Name = "tpItemBrowser";
-            this.tpItemBrowser.Size = new System.Drawing.Size(936, 536);
+            this.tpItemBrowser.Size = new System.Drawing.Size(816, 480);
             this.tpItemBrowser.TabIndex = 3;
             this.tpItemBrowser.Text = "Item browser";
             this.tpItemBrowser.UseVisualStyleBackColor = true;
@@ -394,7 +394,7 @@ namespace EVEMon.SkillPlanner
             this.tpBlueprintBrowser.ImageIndex = 5;
             this.tpBlueprintBrowser.Location = new System.Drawing.Point(4, 31);
             this.tpBlueprintBrowser.Name = "tpBlueprintBrowser";
-            this.tpBlueprintBrowser.Size = new System.Drawing.Size(936, 536);
+            this.tpBlueprintBrowser.Size = new System.Drawing.Size(816, 480);
             this.tpBlueprintBrowser.TabIndex = 5;
             this.tpBlueprintBrowser.Text = "Blueprint browser";
             this.tpBlueprintBrowser.UseVisualStyleBackColor = true;

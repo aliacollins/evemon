@@ -688,7 +688,7 @@ namespace EVEMon.SkillPlanner
             if (settings == null)
                 return;
 
-            string output = PlanExporter.ExportAsText(m_plan, settings);
+            string output = PlanIOHelper.ExportAsText(m_plan, settings);
 
             // Copy the result to the clipboard.
             try

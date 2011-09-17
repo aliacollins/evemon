@@ -149,7 +149,22 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Removes the item from the list
+        /// Adds the elements of the specified collection to the end of the list.
+        /// </summary>
+        /// <param name="items"></param>
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                T copy = item;
+                OnAdding(ref copy);
+                Items.Add(copy);
+            }
+            OnChanged();
+        }
+
+        /// <summary>
+        /// Removes the item from the list.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -165,7 +180,7 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Clears the list
+        /// Clears the list.
         /// </summary>
         public void Clear()
         {
@@ -198,7 +213,7 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Gets the number of items in the list
+        /// Gets the number of items in the list.
         /// </summary>
         public int Count
         {

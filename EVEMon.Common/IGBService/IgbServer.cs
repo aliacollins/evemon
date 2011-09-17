@@ -588,7 +588,7 @@ namespace EVEMon.Common.IgbService
                                                    Markup = MarkupType.Html
                                                };
 
-                    sw.Write(PlanExporter.ExportAsText(p, x,
+                    sw.Write(PlanIOHelper.ExportAsText(p, x,
                                                        (builder, entry, settings) =>
                                                            {
                                                                if (settings.Markup != MarkupType.Html)

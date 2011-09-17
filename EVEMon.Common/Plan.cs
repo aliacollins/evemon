@@ -42,7 +42,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="serial"></param>
-        internal Plan(BaseCharacter character, SerializablePlan serial)
+        public Plan(BaseCharacter character, SerializablePlan serial)
             : this(character)
         {
             Import(serial);
@@ -57,7 +57,7 @@ namespace EVEMon.Common
             // Update name
             m_name = serial.Name;
             m_description = serial.Description ?? String.Empty;
-            SortingPreferences = serial.SortingPreferences.Clone();
+            SortingPreferences = serial.SortingPreferences;
 
             // Update entries
             List<PlanEntry> entries = new List<PlanEntry>();

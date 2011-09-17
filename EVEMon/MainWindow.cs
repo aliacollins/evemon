@@ -453,7 +453,7 @@ namespace EVEMon
             // Collext the menu buttons that get enabled by a character
             ToolStripItem[] characterEnabledMenuItems = new ToolStripItem[]
                                                             {
-                                                                hideCharacterMenu, loadFromFileToolStripMenuItem,
+                                                                hideCharacterMenu, miImportPlanFromFile,
                                                                 skillsPieChartMenu, deleteCharacterMenu, showOwnedSkillbooksMenu,
                                                                 exportCharacterMenu, implantsMenu, skillsPieChartTbMenu,
                                                                 hideCharacterTbMenu, plansTbMenu
@@ -1300,10 +1300,10 @@ namespace EVEMon
             bool enabled = (character != null);
             manageToolStripMenuItem.Enabled = enabled;
             newToolStripMenuItem.Enabled = enabled;
-            planSeparatorMenuItem.Visible = enabled;
+            plansSeparator.Visible = enabled;
 
             // Remove everything after the separator
-            int index = plansToolStripMenuItem.DropDownItems.IndexOf(planSeparatorMenuItem) + 1;
+            int index = plansToolStripMenuItem.DropDownItems.IndexOf(plansSeparator) + 1;
             while (plansToolStripMenuItem.DropDownItems.Count > index)
             {
                 plansToolStripMenuItem.DropDownItems.RemoveAt(index);
@@ -1366,7 +1366,7 @@ namespace EVEMon
                 return;
 
             // Load from file and returns if an error occurred (user has already been warned)
-            SerializablePlan serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
+            SerializablePlan serial = PlanIOHelper.ImportFromXML(ofdOpenDialog.FileName);
             if (serial == null)
                 return;
 
