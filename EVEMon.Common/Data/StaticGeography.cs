@@ -16,7 +16,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<long, Constellation> s_constellationsByID = new Dictionary<long, Constellation>();
         private static readonly Dictionary<long, SolarSystem> s_solarSystemsByID = new Dictionary<long, SolarSystem>();
         private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
-        private static readonly Dictionary<long, String> s_corporationsByID = new Dictionary<long, string>();
+        private static readonly Dictionary<long, NPCCorporation> s_corporationsByID = new Dictionary<long, NPCCorporation>();
         private static readonly Dictionary<long, Agent> s_agentsByID = new Dictionary<long, Agent>();
         private static bool s_initialized;
 
@@ -53,7 +53,12 @@ namespace EVEMon.Common.Data
                         foreach (Station station in solarSystem)
                         {
                             s_stationsByID[station.ID] = station;
-                            s_corporationsByID[station.CorporationID] = station.CorporationName;
+
+                            s_corporationsByID[station.CorporationID] = new NPCCorporation
+                                                                            {
+                                                                                ID = station.CorporationID,
+                                                                                Name = station.CorporationName
+                                                                            };
 
                             foreach (Agent agent in station)
                             {
@@ -138,12 +143,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets an enumeration of all the NPCCorporations in the universe.
         /// </summary>
-        public static IEnumerable<KeyValuePair<long, string>> AllNPCCorporations
+        public static IEnumerable<NPCCorporation> AllNPCCorporations
         {
             get
             {
                 EnsureInitialized();
-                return s_corporationsByID;
+                return s_corporationsByID.Values;
             }
         }
 

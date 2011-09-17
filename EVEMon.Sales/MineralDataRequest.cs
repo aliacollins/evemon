@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using EVEMon.Common;
-using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
 {
@@ -43,11 +42,11 @@ namespace EVEMon.Sales
         }
 
         /// <summary>
-        /// Gets the prices.
+        /// The prices of mineral from the given source.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns>An enumerable collection of Minerals and Prices.</returns>
-        public static IEnumerable<Pair<string, decimal>> GetPrices(string source)
+        public static IEnumerable<Pair<string, decimal>> Prices(string source)
         {
             if (!s_parsers.ContainsKey(source))
                 throw new ArgumentException("That is not a registered mineraldatasource.", "source");
@@ -90,16 +89,7 @@ namespace EVEMon.Sales
         /// <returns></returns>
         private static IEnumerable<Pair<string, decimal>> GetPrices(IMineralParser parser)
         {
-            string content;
-            try
-            {
-                content = EveMonClient.HttpWebService.DownloadString(parser.URL.AbsoluteUri);
-            }
-            catch (HttpWebServiceException ex)
-            {
-                ExceptionHandler.LogException(ex, true);
-                throw new MineralParserException(ex.Message);
-            }
+            string content = EveMonClient.HttpWebService.DownloadString(parser.URL.AbsoluteUri);
 
             // Scan for prices
             MatchCollection mc = parser.Tokenizer.Matches(content);

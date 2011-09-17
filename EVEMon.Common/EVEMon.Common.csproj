@@ -172,6 +172,7 @@
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
+    <Compile Include="Data\NPCCorporation.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
     <Compile Include="EmploymentHistoryCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />

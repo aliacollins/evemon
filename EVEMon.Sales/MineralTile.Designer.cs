@@ -32,13 +32,13 @@ namespace EVEMon.Sales
             this.txtLastSell = new System.Windows.Forms.TextBox();
             this.lblQuantity = new System.Windows.Forms.Label();
             this.lblLastPrice = new System.Windows.Forms.Label();
-            this.Icon = new System.Windows.Forms.PictureBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.icon = new System.Windows.Forms.PictureBox();
+            this.groupBox = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.tbSubtotal = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.Icon)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.icon)).BeginInit();
+            this.groupBox.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,29 +86,29 @@ namespace EVEMon.Sales
             // 
             // icon
             // 
-            this.Icon.InitialImage = null;
-            this.Icon.Location = new System.Drawing.Point(14, 9);
-            this.Icon.Margin = new System.Windows.Forms.Padding(4);
-            this.Icon.Name = "Icon";
-            this.tableLayoutPanel1.SetRowSpan(this.Icon, 3);
-            this.Icon.Size = new System.Drawing.Size(64, 64);
-            this.Icon.TabIndex = 2;
-            this.Icon.TabStop = false;
+            this.icon.InitialImage = null;
+            this.icon.Location = new System.Drawing.Point(14, 9);
+            this.icon.Margin = new System.Windows.Forms.Padding(4);
+            this.icon.Name = "icon";
+            this.tableLayoutPanel1.SetRowSpan(this.icon, 3);
+            this.icon.Size = new System.Drawing.Size(64, 64);
+            this.icon.TabIndex = 2;
+            this.icon.TabStop = false;
             // 
-            // groupBox1
+            // groupBox
             // 
-            this.groupBox1.AutoSize = true;
-            this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox1.Controls.Add(this.tableLayoutPanel1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(261, 105);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox.AutoSize = true;
+            this.groupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox.Controls.Add(this.tableLayoutPanel1);
+            this.groupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox.Location = new System.Drawing.Point(0, 0);
+            this.groupBox.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox.Name = "groupBox";
+            this.groupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox.Size = new System.Drawing.Size(261, 105);
+            this.groupBox.TabIndex = 2;
+            this.groupBox.TabStop = false;
+            this.groupBox.Text = "Mineral Name";
             // 
             // tableLayoutPanel1
             // 
@@ -119,7 +119,7 @@ namespace EVEMon.Sales
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.txtStock, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.Icon, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.icon, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblLastPrice, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblQuantity, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.txtLastSell, 2, 0);
@@ -163,12 +163,12 @@ namespace EVEMon.Sales
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox);
             this.Name = "MineralTile";
             this.Size = new System.Drawing.Size(261, 105);
-            ((System.ComponentModel.ISupportInitialize)(this.Icon)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.icon)).EndInit();
+            this.groupBox.ResumeLayout(false);
+            this.groupBox.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
@@ -179,6 +179,7 @@ namespace EVEMon.Sales
         #endregion
 
 
+        private System.Windows.Forms.PictureBox icon;
         private System.Windows.Forms.Label lblQuantity;
         private System.Windows.Forms.Label lblLastPrice;
         private System.Windows.Forms.TextBox txtLastSell;
@@ -186,6 +187,6 @@ namespace EVEMon.Sales
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbSubtotal;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox;
     }
 }

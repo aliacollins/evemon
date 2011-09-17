@@ -52,7 +52,6 @@
     <Compile Include="IMineralParser.cs" />
     <Compile Include="MatariParser.cs" />
     <Compile Include="MineralDataRequest.cs" />
-    <Compile Include="MineralParserException.cs" />
     <Compile Include="MineralTile.cs">
       <SubType>UserControl</SubType>
     </Compile>

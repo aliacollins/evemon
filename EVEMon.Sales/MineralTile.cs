@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -7,7 +8,6 @@ using EVEMon.Common;
 
 namespace EVEMon.Sales
 {
-    [Serializable]
     public partial class MineralTile : UserControl
     {
         public event EventHandler<EventArgs> SubtotalChanged;
@@ -23,7 +23,6 @@ namespace EVEMon.Sales
         /// </summary>
         public MineralTile()
         {
-            Subtotal = 0;
             InitializeComponent();
         }
 
@@ -32,34 +31,18 @@ namespace EVEMon.Sales
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets or sets the name of the mineral.
+        /// </summary>
+        /// <value>The name of the mineral.</value>
         public String MineralName
         {
             get { return m_mineralName; }
             set
             {
                 m_mineralName = value;
-                groupBox1.Text = value;
-                Stream s = null;
-                Image i = null;
-                try
-                {
-                    Assembly asm = Assembly.GetExecutingAssembly();
-                    s = asm.GetManifestResourceStream("EVEMon.Sales.icons." + value + ".png");
-                    if (s != null)
-                        i = Image.FromStream(s, true, true);
-                    Icon.Image = i;
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, true);
-                    if (i != null)
-                        i.Dispose();
-
-                    if (s != null)
-                        s.Dispose();
-
-                    Icon.Image = null;
-                }
+                groupBox.Text = value;
+                SetIconByName(value);
             }
         }
 
@@ -67,7 +50,10 @@ namespace EVEMon.Sales
         /// Gets or sets the icon.
         /// </summary>
         /// <value>The icon.</value>
-        public PictureBox Icon { get; private set; }
+        public PictureBox Icon
+        {
+            get { return icon; }
+        }
 
         /// <summary>
         /// Gets or sets the quantity.
@@ -75,8 +61,8 @@ namespace EVEMon.Sales
         /// <value>The quantity.</value>
         public int Quantity
         {
-            get { return Int32.Parse(txtStock.Text); }
-            set { txtStock.Text = value.ToString(); }
+            get { return Int32.Parse(txtStock.Text, CultureConstants.DefaultCulture); }
+            set { txtStock.Text = value.ToString(CultureConstants.DefaultCulture); }
         }
 
         /// <summary>
@@ -85,8 +71,8 @@ namespace EVEMon.Sales
         /// <value>The price per unit.</value>
         public Decimal PricePerUnit
         {
-            get { return Decimal.Parse(txtLastSell.Text); }
-            set { txtLastSell.Text = value.ToString("N"); }
+            get { return Decimal.Parse(txtLastSell.Text, CultureConstants.DefaultCulture); }
+            set { txtLastSell.Text = value.ToString("N", CultureConstants.DefaultCulture); }
         }
 
         /// <summary>
@@ -115,23 +101,51 @@ namespace EVEMon.Sales
         #region Helper Methods
 
         /// <summary>
+        /// Sets the icon by mineral name.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        private void SetIconByName(string value)
+        {
+            Stream stream = null;
+            Image image = null;
+
+            try
+            {
+                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.Sales.icons." + value + ".png");
+                if (stream != null)
+                    image = Image.FromStream(stream, true, true);
+
+                icon.Image = image;
+            }
+            catch (BadImageFormatException e)
+            {
+                ExceptionHandler.LogException(e, true);
+                if (image != null)
+                    image.Dispose();
+
+                if (stream != null)
+                    stream.Dispose();
+
+                icon.Image = null;
+            }
+        }
+
+        /// <summary>
         /// Updates the subtotal.
         /// </summary>
         private void UpdateSubtotal()
         {
-            try
-            {
-                Decimal pricePerUnit = Decimal.Parse(txtLastSell.Text);
-                int quantity = Int32.Parse(txtStock.Text);
+            decimal pricePerUnit;
+            int quantity;
+            if (!Decimal.TryParse(txtLastSell.Text, out pricePerUnit))
+                pricePerUnit = 0;
 
-                Subtotal = pricePerUnit * quantity;
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, true);
-                Subtotal = 0;
-            }
-            tbSubtotal.Text = Subtotal.ToString("N");
+            if (!Int32.TryParse(txtStock.Text, out quantity))
+                quantity = 0;
+
+            Subtotal = pricePerUnit * quantity;
+
+            tbSubtotal.Text = Subtotal.ToString("N", CultureConstants.DefaultCulture);
 
             if (SubtotalChanged != null)
                 SubtotalChanged(this, new EventArgs());

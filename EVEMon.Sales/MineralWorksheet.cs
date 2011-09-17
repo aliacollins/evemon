@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -109,13 +108,13 @@ namespace EVEMon.Sales
 
             foreach (MineralTile mt in Tiles)
             {
-                mt.SubtotalChanged += TileSubtotalChanged;
+                mt.SubtotalChanged += TileSubtotal_Changed;
             }
 
             SortedList<string, Pair<string, string>> parsersSorted = new SortedList<string, Pair<string, string>>();
-            foreach (Pair<string, IMineralParser> p in MineralDataRequest.Parsers)
+            foreach (Pair<string, IMineralParser> pair in MineralDataRequest.Parsers)
             {
-                parsersSorted.Add(p.B.Title, new Pair<string, string>(p.A, p.B.Title));
+                parsersSorted.Add(pair.B.Title, new Pair<string, string>(pair.A, pair.B.Title));
             }
 
             foreach (ToolStripMenuItem mi in parsersSorted.Values.Select(p => new ToolStripMenuItem { Text = p.B, Tag = p.A }))
@@ -126,7 +125,7 @@ namespace EVEMon.Sales
         }
 
         /// <summary>
-        /// Called when [diposed].
+        /// Called when diposed.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -137,11 +136,11 @@ namespace EVEMon.Sales
         }
 
         /// <summary>
-        /// Tiles the subtotal changed.
+        /// Handles the Changed event of the TileSubtotal control.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void TileSubtotalChanged(object sender, EventArgs e)
+        private void TileSubtotal_Changed(object sender, EventArgs e)
         {
             m_total = 0;
             foreach (MineralTile mt in Tiles)
@@ -201,7 +200,7 @@ namespace EVEMon.Sales
             string source = e.Argument as string;
             if (source != null)
             {
-                foreach (Pair<string, Decimal> p in MineralDataRequest.GetPrices(source))
+                foreach (Pair<string, Decimal> p in MineralDataRequest.Prices(source))
                 {
                     prices[p.A] = p.B;
                 }
@@ -220,9 +219,10 @@ namespace EVEMon.Sales
             if (e.Error != null)
             {
                 ExceptionHandler.LogException(e.Error, true);
-                MessageBox.Show(String.Format("Failed to retrieve mineral pricing data:\n{0}", e.Error.Message),
-                                "Failed to Retrieve Data",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                                              "Failed to retrieve mineral pricing data:\n{0}", e.Error.Message),
+                                "Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error,
+                                MessageBoxDefaultButton.Button1, 0);
             }
             else
             {
@@ -234,7 +234,7 @@ namespace EVEMon.Sales
                         mt.PricePerUnit = prices[mt.MineralName];
                     }
 
-                    tslCourtesy.Text = String.Format("Mineral Prices Courtesy of {0}",
+                    tslCourtesy.Text = String.Format(CultureConstants.DefaultCulture, "Mineral Prices Courtesy of {0}",
                                                      MineralDataRequest.GetCourtesyText(m_source));
                     m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source).AbsoluteUri;
                     tslCourtesy.Visible = true;
@@ -268,16 +268,7 @@ namespace EVEMon.Sales
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tslCourtesy_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (Process.Start(m_courtesyUrl))
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogException(ex, false);
-            }
+            Util.OpenURL(m_courtesyUrl);
         }
 
         /// <summary>
@@ -347,7 +338,7 @@ namespace EVEMon.Sales
             try
             {
                 Clipboard.Clear();
-                Clipboard.SetText(m_total.ToString());
+                Clipboard.SetText(m_total.ToString(CultureConstants.DefaultCulture));
             }
             catch (ExternalException ex)
             {
