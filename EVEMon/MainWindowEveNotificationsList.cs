@@ -427,7 +427,7 @@ namespace EVEMon
         /// <param name="eveNotification"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(EveNotification eveNotification, ListViewItem.ListViewSubItem item, EveNotificationsColumn column)
+        private static void SetColumn(EveNotification eveNotification, ListViewItem.ListViewSubItem item, EveNotificationsColumn column)
         {
             switch (column)
             {
@@ -482,7 +482,7 @@ namespace EVEMon
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsTextMatching(EveNotification x, string text)
+        private static bool IsTextMatching(EveNotification x, string text)
         {
             return String.IsNullOrEmpty(text)
                    || x.Sender.ToLowerInvariant().Contains(text)

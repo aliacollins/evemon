@@ -280,7 +280,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="text">Loadout text.</param>
         /// <returns>Is loadout valid.</returns>
-        private bool IsLoadout(string text)
+        private static bool IsLoadout(string text)
         {
             string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             if (lines.Length == 0)

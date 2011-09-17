@@ -235,7 +235,7 @@ namespace EVEMon.ImplantControls
         /// <param name="set"></param>
         /// <param name="slot"></param>
         /// <returns></returns>
-        private Implant GetImplant(SerializableSettingsImplantSet set, ImplantSlots slot)
+        private static Implant GetImplant(SerializableSettingsImplantSet set, ImplantSlots slot)
         {
             // Invoke the property getter with the matching name through reflection
             object implantName = typeof(SerializableSettingsImplantSet).GetProperty(slot.ToString()).GetValue(set, null);
@@ -250,7 +250,7 @@ namespace EVEMon.ImplantControls
         /// <param name="slot"></param>
         /// <param name="implant"></param>
         /// <returns></returns>
-        private void SetImplant(SerializableSettingsImplantSet set, ImplantSlots slot, Implant implant)
+        private static void SetImplant(SerializableSettingsImplantSet set, ImplantSlots slot, Implant implant)
         {
             // Set may be null when the user is editing the phantom line
             if (set == null)

@@ -742,7 +742,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        private static void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             // Play a sound
             TryPlaySkillCompletionSound();
@@ -1409,7 +1409,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="planItem"></param>
         /// <param name="plan"></param>
-        private void InitializePlanItem(ToolStripItem planItem, Plan plan)
+        private static void InitializePlanItem(ToolStripItem planItem, Plan plan)
         {
             planItem.Tag = plan;
             planItem.Click += planItem_Click;
@@ -1421,7 +1421,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void planItem_Click(object sender, EventArgs e)
+        private static void planItem_Click(object sender, EventArgs e)
         {
             // Retrieve the plan
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;

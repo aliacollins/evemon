@@ -135,7 +135,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="lb">Label control</param>
         /// <param name="pbRemappable">Attribute bar for remappable value</param>
         /// <param name="pbImplants">Attribute bar for implants</param>
-        private void UpdateAttributeControls(RemappingResult remapping,
+        private static void UpdateAttributeControls(RemappingResult remapping,
                                              EveAttribute attrib,
                                              Label lb,
                                              AttributeBarControl pbRemappable,

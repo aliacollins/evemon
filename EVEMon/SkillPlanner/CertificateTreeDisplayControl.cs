@@ -332,7 +332,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        private TreeNode CreateNode(Certificate cert)
+        private static TreeNode CreateNode(Certificate cert)
         {
             TreeNode node = new TreeNode
                                 {
@@ -358,7 +358,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="skillPrereq"></param>
         /// <returns></returns>
-        private TreeNode CreateNode(SkillLevel skillPrereq)
+        private static TreeNode CreateNode(SkillLevel skillPrereq)
         {
             TreeNode node = new TreeNode
                                 {

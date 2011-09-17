@@ -427,7 +427,7 @@ namespace EVEMon.Schedule
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void editMenuItem_Click(object sender, EventArgs e)
+        private static void editMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
             ScheduleEntry entry = (ScheduleEntry)menu.Tag;

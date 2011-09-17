@@ -344,7 +344,7 @@ namespace EVEMon
         /// <param name="researchPoint"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(ResearchPoint researchPoint, ListViewItem.ListViewSubItem item, ResearchColumn column)
+        private static void SetColumn(ResearchPoint researchPoint, ListViewItem.ListViewSubItem item, ResearchColumn column)
         {
             switch (column)
             {
@@ -399,7 +399,7 @@ namespace EVEMon
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsTextMatching(ResearchPoint x, string text)
+        private static bool IsTextMatching(ResearchPoint x, string text)
         {
             return String.IsNullOrEmpty(text)
                    || x.AgentName.ToLowerInvariant().Contains(text)

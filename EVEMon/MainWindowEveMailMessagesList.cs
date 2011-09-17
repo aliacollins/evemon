@@ -467,7 +467,7 @@ namespace EVEMon
         /// <param name="eveMailMessage"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(EveMailMessage eveMailMessage, ListViewItem.ListViewSubItem item, EveMailMessagesColumn column)
+        private static void SetColumn(EveMailMessage eveMailMessage, ListViewItem.ListViewSubItem item, EveMailMessagesColumn column)
         {
             switch (column)
             {
@@ -587,7 +587,7 @@ namespace EVEMon
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsTextMatching(EveMailMessage x, string text)
+        private static bool IsTextMatching(EveMailMessage x, string text)
         {
             return String.IsNullOrEmpty(text)
                    || x.Sender.ToLowerInvariant().Contains(text)

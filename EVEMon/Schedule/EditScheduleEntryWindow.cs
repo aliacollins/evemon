@@ -332,7 +332,7 @@ namespace EVEMon.Schedule
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns></returns>
-        private DateTime StripToDate(DateTime dateTime)
+        private static DateTime StripToDate(DateTime dateTime)
         {
             return dateTime -
                    TimeSpan.FromHours(dateTime.Hour) -
@@ -422,7 +422,7 @@ namespace EVEMon.Schedule
         /// <param name="text">The text.</param>
         /// <param name="seconds">The seconds.</param>
         /// <returns></returns>
-        private bool TryParseTime(string text, out int seconds)
+        private static bool TryParseTime(string text, out int seconds)
         {
             DateTime res;
             if (!DateTime.TryParse("2000/01/01 " + text, out res))
@@ -634,7 +634,7 @@ namespace EVEMon.Schedule
         /// </summary>
         /// <param name="res">The res.</param>
         /// <returns></returns>
-        private bool GetDate(ref DateTime res)
+        private static bool GetDate(ref DateTime res)
         {
             using (DateSelectWindow f = new DateSelectWindow())
             {

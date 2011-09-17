@@ -747,7 +747,7 @@ namespace EVEMon
         /// Gets the tooltip text for the given skill
         /// </summary>
         /// <param name="skill"></param>
-        private string GetTooltip(Skill skill)
+        private static string GetTooltip(Skill skill)
         {
             int sp = skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level + 1);
@@ -843,7 +843,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="group">The group.</param>
         /// <returns></returns>
-        private string GetTooltip(SkillGroup group)
+        private static string GetTooltip(SkillGroup group)
         {
             // Maximas are computed on public skills only
             int totalValidSP = group.Where(x => x.IsPublic).Sum(x => x.SkillPoints);
@@ -898,7 +898,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void menuPlanItem_Click(object sender, EventArgs e)
+        private static void menuPlanItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
             Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>)planItem.Tag;
@@ -912,7 +912,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tmSkillExplorer_Click(object sender, EventArgs e)
+        private static void tmSkillExplorer_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             Skill skill = (Skill)item.Tag;

@@ -520,7 +520,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
-        private Rectangle GetMagnifierIconRect(Rectangle rect)
+        private static Rectangle GetMagnifierIconRect(Rectangle rect)
         {
             Bitmap icon = CommonProperties.Resources.Magnifier;
             int yOffset = (rect.Height - icon.Height) / 2;
@@ -535,7 +535,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
-        private Rectangle GetDeleteIconRect(Rectangle rect)
+        private static Rectangle GetDeleteIconRect(Rectangle rect)
         {
             Bitmap icon = CommonProperties.Resources.CrossBlack;
             int yOffset = (rect.Height - icon.Height) / 2;

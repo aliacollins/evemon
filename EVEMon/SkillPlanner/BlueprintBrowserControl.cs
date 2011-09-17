@@ -514,7 +514,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="activityTime"></param>
         /// <returns></returns>
-        private string BaseActivityTime(double activityTime)
+        private static string BaseActivityTime(double activityTime)
         {
             TimeSpan time = TimeSpan.FromSeconds(activityTime);
             bool includeSeconds = (time.Hours < 1);
@@ -545,7 +545,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="time"></param>
         /// <param name="includeSeconds"></param>
         /// <returns></returns>
-        private string TimeSpanToText(TimeSpan time, bool includeSeconds)
+        private static string TimeSpanToText(TimeSpan time, bool includeSeconds)
         {
             return time.ToDescriptiveText(
                 DescriptiveTextOptions.FirstLetterUppercase

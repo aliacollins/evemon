@@ -550,7 +550,7 @@ namespace EVEMon.SkillPlanner
         /// Creates a prereq skills list for a blueprint with the given activity.
         /// </summary>
         /// <param name="prerequisites">The prerequisites of a blueprint activities</param>
-        private IEnumerable<SkillLevel> CreatePrereqList(IEnumerable<SkillLevel> prerequisites)
+        private static IEnumerable<SkillLevel> CreatePrereqList(IEnumerable<SkillLevel> prerequisites)
         {
             List<SkillLevel> prereqList = new List<SkillLevel>();
             foreach (SkillLevel prereq in prerequisites.Where(prereq => !prereqList.Contains(prereq)))
@@ -726,7 +726,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="sb">The StringBuilder object.</param>
         /// <param name="prereq">The prereq</param>
         /// <param name="index">The index.</param>
-        private void FormatPrerequisite(StringBuilder sb, SkillLevel prereq, ref int index)
+        private static void FormatPrerequisite(StringBuilder sb, SkillLevel prereq, ref int index)
         {
             if (prereq.Skill.IsKnown)
             {

@@ -507,7 +507,7 @@ namespace EVEMon
         /// <param name="job"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(IndustryJob job, ListViewItem.ListViewSubItem item, IndustryJobColumn column)
+        private static void SetColumn(IndustryJob job, ListViewItem.ListViewSubItem item, IndustryJobColumn column)
         {
             switch (column)
             {
@@ -600,7 +600,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="job">The job.</param>
         /// <returns></returns>
-        private int GetUnitCount(IndustryJob job)
+        private static int GetUnitCount(IndustryJob job)
         {
             if (job.Activity != BlueprintActivity.Manufacturing)
                 return 1;
@@ -614,7 +614,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="job">The job.</param>
         /// <returns></returns>
-        private Color GetStateColor(IndustryJob job)
+        private static Color GetStateColor(IndustryJob job)
         {
             switch (job.State)
             {
@@ -636,7 +636,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="activeJobState">State of the active job.</param>
         /// <returns></returns>
-        private Color GetActiveJobStateColor(ActiveJobState activeJobState)
+        private static Color GetActiveJobStateColor(ActiveJobState activeJobState)
         {
             switch (activeJobState)
             {
@@ -659,7 +659,7 @@ namespace EVEMon
         /// <returns>
         /// 	<c>true</c> if [is text matching] [the specified x]; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsTextMatching(IndustryJob x, string text)
+        private static bool IsTextMatching(IndustryJob x, string text)
         {
             return String.IsNullOrEmpty(text)
                    || x.InstalledItem.Name.ToLowerInvariant().Contains(text)

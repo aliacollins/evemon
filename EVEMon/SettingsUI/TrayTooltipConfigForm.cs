@@ -99,7 +99,7 @@ namespace EVEMon.SettingsUI
 
         // Formats the argument format string with hardcoded exampe values.  Works basically the
         // same as MainWindow.FormatTooltipText(...), with the exception of the exampe values.
-        private string FormatExampleTooltipText(string fmt)
+        private static string FormatExampleTooltipText(string fmt)
         {
             return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])",
                                  delegate(Match m)

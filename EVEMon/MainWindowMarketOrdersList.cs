@@ -672,7 +672,7 @@ namespace EVEMon
         /// <param name="x"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        private bool IsTextMatching(MarketOrder x, string text)
+        private static bool IsTextMatching(MarketOrder x, string text)
         {
             return String.IsNullOrEmpty(text)
                    || x.Item.Name.ToLowerInvariant().Contains(text)

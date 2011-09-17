@@ -252,7 +252,7 @@ namespace EVEMon
         /// <param name="timeLeft">The time left.</param>
         /// <returns>String formatted as a countdown timer.</returns>
         /// <remarks>Hours are formatted accumulatively when "Week" is selected</remarks>
-        private string GetCountdownFormat(TimeSpan timeLeft)
+        private static string GetCountdownFormat(TimeSpan timeLeft)
         {
             double hours = Math.Floor(timeLeft.TotalHours);
             int minutes = timeLeft.Minutes;
@@ -379,7 +379,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>String describing the time until the next update.</returns>
-        private string GenerateTimeToNextUpdateText(IQueryMonitor monitor)
+        private static string GenerateTimeToNextUpdateText(IQueryMonitor monitor)
         {
             TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
 
@@ -399,7 +399,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>Status text for the monitor.</returns>
-        private string GetStatusForMonitor(IQueryMonitor monitor)
+        private static string GetStatusForMonitor(IQueryMonitor monitor)
         {
             StringBuilder output = new StringBuilder();
 
@@ -420,7 +420,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>Detailed status text for the monitor.</returns>
-        private string GetDetailedStatusForMonitor(IQueryMonitor monitor)
+        private static string GetDetailedStatusForMonitor(IQueryMonitor monitor)
         {
             if (monitor.NextUpdate == DateTime.MaxValue)
                 return "Never";
@@ -442,7 +442,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>New menu item for a monitor.</returns>
-        private ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
+        private static ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
             string menuText = String.Format(CultureConstants.DefaultCulture,
                                             "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));

@@ -249,7 +249,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="pen"></param>
         /// <param name="ofsLeft"></param>
         /// <param name="ofsTop"></param>
-        private void DrawLines(Graphics g, Cell startCell, Cell endCell, Pen pen, int ofsLeft, int ofsTop)
+        private static void DrawLines(Graphics g, Cell startCell, Cell endCell, Pen pen, int ofsLeft, int ofsTop)
         {
             Rectangle startRect = startCell.Rectangle;
             Rectangle endRect = endCell.Rectangle;
@@ -404,7 +404,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="p"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        private Size MeasureAndDrawText(IDeviceContext g, string text, Font f, Point p, Color c)
+        private static Size MeasureAndDrawText(IDeviceContext g, string text, Font f, Point p, Color c)
         {
             Size res = TextRenderer.MeasureText(g, text, f);
 
@@ -712,7 +712,7 @@ namespace EVEMon.SkillPlanner
             /// </summary>
             /// <param name="rows"></param>
             /// <param name="level"></param>
-            private void SecondPassLayout(IList<Row> rows, int level)
+            private static void SecondPassLayout(IList<Row> rows, int level)
             {
                 // Gets the row for this level
                 if (level == rows.Count)

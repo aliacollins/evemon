@@ -305,7 +305,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="certClass">The selected certificate class</param>
         /// <param name="grade">The grade represent by this menu</param>
         /// <param name="lastEligibleCert">The highest eligible certificate after this plan</param>
-        private void UpdatePlanningMenuStatus(ToolStripMenuItem menu, CertificateClass certClass,
+        private static void UpdatePlanningMenuStatus(ToolStripMenuItem menu, CertificateClass certClass,
                                               CertificateGrade grade, Certificate lastEligibleCert)
         {
             Certificate cert = certClass[grade];

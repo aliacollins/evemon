@@ -192,7 +192,7 @@ namespace EVEMon
         /// <param name="toolTipFormat">The tool tip format.</param>
         /// <param name="character">The character.</param>
         /// <returns></returns>
-        private string FormatTooltipText(string toolTipFormat, Character character)
+        private static string FormatTooltipText(string toolTipFormat, Character character)
         {
             StringBuilder sb = new StringBuilder();
 

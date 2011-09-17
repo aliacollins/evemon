@@ -458,7 +458,7 @@ namespace EVEMon
         /// <param name="status">The standing status.</param>
         /// <exception cref="NotImplementedException"></exception>
         /// <returns></returns>
-        private Color GetStatusColor(StandingStatus status)
+        private static Color GetStatusColor(StandingStatus status)
         {
             if (Settings.UI.SafeForWork)
                 return Color.Black;

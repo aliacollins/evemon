@@ -590,7 +590,7 @@ namespace EVEMon.SettingsUI
         /// <param name="str"></param>
         /// <param name="portName"></param>
         /// <returns></returns>
-        private bool IsValidPort(string str, string portName)
+        private static bool IsValidPort(string str, string portName)
         {
             int port;
             Int32.TryParse(str, out port);

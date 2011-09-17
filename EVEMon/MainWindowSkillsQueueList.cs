@@ -541,7 +541,7 @@ namespace EVEMon
         /// Gets the tooltip text for the given skill
         /// </summary>
         /// <param name="skill"></param>
-        private string GetTooltip(QueuedSkill skill)
+        private static string GetTooltip(QueuedSkill skill)
         {
             if (skill.Skill == null)
                 return String.Empty;
@@ -669,7 +669,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void menuPlanItem_Click(object sender, EventArgs e)
+        private static void menuPlanItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
             Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>)planItem.Tag;
@@ -683,7 +683,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tmSkillExplorer_Click(object sender, EventArgs e)
+        private static void tmSkillExplorer_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             Skill skill = (Skill)item.Tag;

@@ -374,7 +374,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="color">Source color</param>
         /// <param name="shift">Color shift</param>
         /// <returns></returns>
-        private Color ShiftColor(Color color, int shift)
+        private static Color ShiftColor(Color color, int shift)
         {
             return Color.FromArgb(Math.Min(color.R + shift, 255),
                                   Math.Min(color.G + shift, 255),

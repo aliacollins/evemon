@@ -112,7 +112,7 @@ namespace EVEMon
         /// Gets the datafile report.
         /// </summary>
         /// <value>The datafile report.</value>
-        private string DatafileReport
+        private static string DatafileReport
         {
             get
             {

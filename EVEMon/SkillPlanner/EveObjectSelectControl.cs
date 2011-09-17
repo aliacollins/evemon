@@ -178,7 +178,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="tn"></param>
         /// <param name="searchText"></param>
         /// <param name="filteredItems"></param>
-        private void SearchNode(TreeNode tn, string searchText, List<Item> filteredItems)
+        private static void SearchNode(TreeNode tn, string searchText, List<Item> filteredItems)
         {
             Item item = tn.Tag as Item;
             if (item == null)
