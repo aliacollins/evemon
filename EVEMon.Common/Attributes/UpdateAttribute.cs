@@ -3,6 +3,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Attributes
 {
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public sealed class UpdateAttribute : Attribute
     {
         #region Constructors

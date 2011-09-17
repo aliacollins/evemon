@@ -2,6 +2,7 @@
 
 namespace EVEMon.Common.Attributes
 {
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public sealed class HeaderAttribute : Attribute
     {
         /// <summary>
