@@ -33,7 +33,7 @@ namespace EVEMon.Common.Net
         internal HttpWebServiceRequest(HttpWebServiceState webServiceState)
         {
             m_webServiceState = webServiceState;
-            m_redirectsRemaining = m_webServiceState.MaxRedirects;
+            m_redirectsRemaining = HttpWebServiceState.MaxRedirects;
 
             // Pull the timeout from the settings
             TimeSpan timeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
@@ -100,9 +100,9 @@ namespace EVEMon.Common.Net
                 long rawBufferSize = webResponse.ContentLength / 100;
                 int bufferSize =
                     (int)
-                    (rawBufferSize > m_webServiceState.MaxBufferSize
-                         ? m_webServiceState.MaxBufferSize
-                         : (rawBufferSize < m_webServiceState.MinBufferSize ? m_webServiceState.MinBufferSize : rawBufferSize));
+                    (rawBufferSize > HttpWebServiceState.MaxBufferSize
+                         ? HttpWebServiceState.MaxBufferSize
+                         : (rawBufferSize < HttpWebServiceState.MinBufferSize ? HttpWebServiceState.MinBufferSize : rawBufferSize));
                 do
                 {
                     byte[] buffer = new byte[bufferSize];

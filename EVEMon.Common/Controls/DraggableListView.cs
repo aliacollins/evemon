@@ -66,7 +66,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="e">The <see cref="System.Windows.Forms.DragEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
-        private Skill GetDraggingSkill(DragEventArgs e)
+        private static Skill GetDraggingSkill(DragEventArgs e)
         {
             if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode"))
                 return (Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;

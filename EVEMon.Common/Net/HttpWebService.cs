@@ -69,7 +69,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Cancels an asynchronous request in progress.
         /// </summary>
-        public void CancelRequest(object request)
+        public static void CancelRequest(object request)
         {
             if (request.GetType() == typeof(HttpWebServiceRequest))
                 ((HttpWebServiceRequest)request).Cancelled = true;

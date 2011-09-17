@@ -267,7 +267,7 @@ namespace EVEMon.Common.Data
         /// <param name="tail">The &quot;tail&quot; to try and remove</param>
         /// <returns>null if stripMe is null, stripMe if tail is null or stripMe doesn't
         /// end in tail, stripMe-with-tail-removed otherwise.</returns>
-        private String TryStripTail(String stripMe, String tail)
+        private static String TryStripTail(String stripMe, String tail)
         {
             if (stripMe == null)
                 return null;
@@ -275,10 +275,7 @@ namespace EVEMon.Common.Data
             if (tail == null)
                 return stripMe;
 
-            if (stripMe.EndsWith(tail))
-                return stripMe.Remove(stripMe.Length - tail.Length);
-
-            return stripMe;
+            return stripMe.EndsWith(tail) ? stripMe.Remove(stripMe.Length - tail.Length) : stripMe;
         }
 
         /// <summary>
@@ -287,7 +284,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="parseMe">The string to try and parse.</param>
         /// <returns>The string as double, or null if failed to parse.</returns>
-        private double? TryParseNullable(String parseMe)
+        private static double? TryParseNullable(String parseMe)
         {
             double? result = null;
             double tempValue;

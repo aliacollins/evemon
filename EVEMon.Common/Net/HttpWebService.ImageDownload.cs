@@ -58,7 +58,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests
         /// </summary>
-        private void DownloadImageAsyncCompleted(WebRequestAsyncState state)
+        private static void DownloadImageAsyncCompleted(WebRequestAsyncState state)
         {
             ImageRequestAsyncState requestState = (ImageRequestAsyncState)state;
             Image imageResult = null;
@@ -82,7 +82,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Helper method to return an Image from the completed request.
         /// </summary>
-        private Image GetImage(HttpWebServiceRequest request)
+        private static Image GetImage(HttpWebServiceRequest request)
         {
             if (request.ResponseStream == null)
                 return null;

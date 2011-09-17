@@ -22,7 +22,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The maximum size of a download section
         /// </summary>
-        public int MaxBufferSize
+        public static int MaxBufferSize
         {
             get { return MAX_BUFFER_SIZE; }
         }
@@ -30,7 +30,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The minimum size if a download section
         /// </summary>
-        public int MinBufferSize
+        public static int MinBufferSize
         {
             get { return MIN_BUFFER_SIZE; }
         }
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The maximum redirects allowed for a request
         /// </summary>
-        public int MaxRedirects
+        public static int MaxRedirects
         {
             get { return MAX_REDIRECTS; }
         }

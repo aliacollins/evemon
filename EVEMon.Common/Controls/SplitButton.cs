@@ -255,7 +255,7 @@ namespace EVEMon.Common.Controls
                 ControlPaint.DrawFocusRectangle(g, focusRect);
         }
 
-        private void PaintArrow(Graphics g, Rectangle dropDownRect)
+        private static void PaintArrow(Graphics g, Rectangle dropDownRect)
         {
             Point middle = new Point(Convert.ToInt32(dropDownRect.Left + dropDownRect.Width / 2),
                                      Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));

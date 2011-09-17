@@ -125,7 +125,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="cea"></param>
-        private void OnComponentRemoved(object sender, ComponentEventArgs cea)
+        private static void OnComponentRemoved(object sender, ComponentEventArgs cea)
         {
         }
 

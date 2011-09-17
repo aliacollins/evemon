@@ -83,7 +83,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        private string GetIDToName(long id)
+        private static string GetIDToName(long id)
         {
             string corporationName = StaticGeography.AllNPCCorporations.FirstOrDefault(x => x.Key == id).Value;
 

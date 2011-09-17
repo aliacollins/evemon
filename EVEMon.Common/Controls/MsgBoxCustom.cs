@@ -191,7 +191,7 @@ namespace EVEMon.Common.Controls
         /// Plays one of the system message beeps.
         /// </summary>
         /// <param name="icon">Sound type to play.</param>
-        private void MessageBeep(MessageBoxIcon icon)
+        private static void MessageBeep(MessageBoxIcon icon)
         {
             switch (icon.GetHashCode())
             {
@@ -222,7 +222,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="buttonText">Text on selected button.</param>
         /// <returns>Corresponding <see cref="DialogResult"/>.</returns>
-        private DialogResult GetDialogResult(string buttonText)
+        private static DialogResult GetDialogResult(string buttonText)
         {
             switch (buttonText)
             {

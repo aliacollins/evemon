@@ -181,7 +181,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        private ImageType GetImageType(Item item)
+        private static ImageType GetImageType(Item item)
         {
             switch (item.Family)
             {

@@ -69,7 +69,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests.
         /// </summary>
-        private void DownloadFileAsyncCompleted(WebRequestAsyncState state)
+        private static void DownloadFileAsyncCompleted(WebRequestAsyncState state)
         {
             FileRequestAsyncState requestState = (FileRequestAsyncState)state;
             FileInfo fileResult = null;

@@ -353,7 +353,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>State of the seriallzable job.</returns>
-        private JobState GetState(SerializableJobListItem src)
+        private static JobState GetState(SerializableJobListItem src)
         {
             if (src.Completed == (int)JobState.Delivered)
             {

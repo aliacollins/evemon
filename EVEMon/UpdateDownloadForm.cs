@@ -139,7 +139,7 @@ namespace EVEMon
         private void btCancel_Click(object sender, EventArgs e)
         {
             if (m_request != null)
-                EveMonClient.HttpWebService.CancelRequest(m_request);
+                HttpWebService.CancelRequest(m_request);
         }
     }
 }

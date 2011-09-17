@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests
         /// </summary>
-        private void DownloadStringAsyncCompleted(WebRequestAsyncState state)
+        private static void DownloadStringAsyncCompleted(WebRequestAsyncState state)
         {
             StringRequestAsyncState requestState = (StringRequestAsyncState)state;
             string result = String.Empty;

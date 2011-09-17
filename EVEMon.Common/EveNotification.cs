@@ -103,7 +103,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The ID.</param>
         /// <returns></returns>
-        private string GetIDToName(long id)
+        private static string GetIDToName(long id)
         {
             if (id == 0)
                 return "Unknown";

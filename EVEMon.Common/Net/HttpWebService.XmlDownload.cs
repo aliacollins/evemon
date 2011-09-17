@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests.
         /// </summary>
-        private void DownloadXmlAsyncCompleted(WebRequestAsyncState state)
+        private static void DownloadXmlAsyncCompleted(WebRequestAsyncState state)
         {
             XmlRequestAsyncState requestState = (XmlRequestAsyncState)state;
             XmlDocument xdocResult = new XmlDocument();

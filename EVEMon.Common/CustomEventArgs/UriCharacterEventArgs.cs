@@ -118,7 +118,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns></returns>
-        private CharacterIdentity GetIdentity(SerializableCharacterSheetBase character)
+        private static CharacterIdentity GetIdentity(SerializableCharacterSheetBase character)
         {
             // Retrieve the identity and create one if needed
             return EveMonClient.CharacterIdentities[character.ID] ??
