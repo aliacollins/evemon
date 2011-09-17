@@ -85,11 +85,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static string GetIDToName(long id)
         {
-            NPCCorporation corporation = StaticGeography.AllNPCCorporations.FirstOrDefault(x => x.ID == id);
+            NPCCorporation corporation = StaticGeography.GetCorporationByID(id);
             string corporationName = corporation != null ? corporation.Name : String.Empty;
 
             // If it's a player's corporation, query the API
-            return !String.IsNullOrEmpty(corporationName) ? corporationName : EveIDToName.GetIDToName(id);
+            return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;
         }
 
         #endregion

@@ -266,6 +266,30 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
+        /// Gets the NPC Coproration with the provided ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public static NPCCorporation GetCorporationByID(long id)
+        {
+            EnsureInitialized();
+            NPCCorporation result;
+            s_corporationsByID.TryGetValue(id, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the  NPC Coproration with the provided name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static NPCCorporation GetCorporationByName(string name)
+        {
+            EnsureInitialized();
+            return s_corporationsByID.Values.FirstOrDefault(corporation => corporation.Name == name);
+        }
+
+        /// <summary>
         /// Gets the agent with the provided ID.
         /// </summary>
         /// <param name="id">The id.</param>
