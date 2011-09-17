@@ -16,6 +16,8 @@ namespace EVEMon
     public partial class MainWindowSkillsList : UserControl
     {
         private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+        private const byte SkillsSummaryTextWidth = 75;
+        private const byte SkillGroupTotalSPTextWidth = 100;
 
         // Skills drawing - Region & text padding
         private const byte PadTop = 2;
@@ -41,8 +43,6 @@ namespace EVEMon
         private bool m_requireRefresh;
         private sbyte m_count;
 
-        private const byte SkillsSummaryTextWidth = 75;
-        private const byte SkillGroupTotalSPTextWidth = 100;
         private int m_maxGroupNameWidth;
 
         /// <summary>
@@ -393,10 +393,11 @@ namespace EVEMon
             Graphics g = e.Graphics;
 
             // Draws the background
-            using (LinearGradientBrush lgb = new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F),
-                                                                     Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
+            using (Brush brush = Settings.UI.SafeForWork ?
+                new SolidBrush(Color.FromArgb(75, 75, 75)) :
+                (Brush)new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F), Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
             {
-                g.FillRectangle(lgb, e.Bounds);
+                g.FillRectangle(brush, e.Bounds);
             }
 
             using (Pen p = new Pen(Color.FromArgb(100, 100, 100)))
