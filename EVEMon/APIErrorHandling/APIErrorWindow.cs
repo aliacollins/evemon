@@ -151,24 +151,24 @@ namespace EVEMon.ApiErrorHandling
         {
             switch (result.ErrorType)
             {
-                case APIEnumerations.APIErrors.None:
+                case APIErrors.None:
                     return "No error specified";
 
-                case APIEnumerations.APIErrors.CCP:
+                case APIErrors.CCP:
                     return String.Format(CultureConstants.DefaultCulture,
                                          "CCP Error {0} : {1}",
                                          result.CCPError.ErrorCode,
                                          result.CCPError.ErrorMessage);
 
-                case APIEnumerations.APIErrors.Http:
+                case APIErrors.Http:
                     return String.Format(CultureConstants.DefaultCulture,
                                          "HTTP error: {0}", result.ErrorMessage);
 
-                case APIEnumerations.APIErrors.Xml:
+                case APIErrors.Xml:
                     return String.Format(CultureConstants.DefaultCulture,
                                          "XML error: {0}", result.ErrorMessage);
 
-                case APIEnumerations.APIErrors.Xslt:
+                case APIErrors.Xslt:
                     return String.Format(CultureConstants.DefaultCulture,
                                          "XSLT error: {0}", result.ErrorMessage);
 

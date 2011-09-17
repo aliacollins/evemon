@@ -12,9 +12,10 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
+    public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
+
     public static class PlanIOHelper
     {
-        public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
 
         /// <summary>
         /// Exports the plan under a text format.

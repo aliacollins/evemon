@@ -329,18 +329,18 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static OrderState GetState(SerializableOrderListItem src)
         {
-            switch ((APIEnumerations.CCPOrderState)src.State)
+            switch ((CCPOrderState)src.State)
             {
-                case APIEnumerations.CCPOrderState.Closed:
-                case APIEnumerations.CCPOrderState.Canceled:
-                case APIEnumerations.CCPOrderState.CharacterDeleted:
+                case CCPOrderState.Closed:
+                case CCPOrderState.Canceled:
+                case CCPOrderState.CharacterDeleted:
                     return OrderState.Canceled;
 
-                case APIEnumerations.CCPOrderState.Pending:
-                case APIEnumerations.CCPOrderState.Opened:
+                case CCPOrderState.Pending:
+                case CCPOrderState.Opened:
                     return OrderState.Active;
 
-                case APIEnumerations.CCPOrderState.ExpiredOrFulfilled:
+                case CCPOrderState.ExpiredOrFulfilled:
                     return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
 
                 default:

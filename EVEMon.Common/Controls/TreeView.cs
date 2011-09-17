@@ -256,13 +256,9 @@ namespace EVEMon.Common.Controls
         {
             get
             {
-                if (!m_blnInternalCall)
-                {
-                    // Instead of not working, return the most recent selected node
-                    //throw new NotSupportedException("Use SelectedNodes instead of SelectedNode.");
-                    return m_tnMostRecentSelectedNode;
-                }
-                return base.SelectedNode;
+                // Instead of not working, return the most recent selected node
+                //throw new NotSupportedException("Use SelectedNodes instead of SelectedNode.");
+                return !m_blnInternalCall ? m_tnMostRecentSelectedNode : base.SelectedNode;
             }
             set
             {
@@ -698,7 +694,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="node">Node.</param>
         /// <returns>Level of node.</returns>
-        public int GetNodeLevel(TreeNode node)
+        private static int GetNodeLevel(TreeNode node)
         {
             int level = 0;
             while ((node = node.Parent) != null)
@@ -737,7 +733,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="child">Node.</param>
         /// <returns>Root parent of specified node.</returns>
-        public TreeNode GetRootParent(TreeNode child)
+        private static TreeNode GetRootParent(TreeNode child)
         {
             TreeNode tnParent = child;
 

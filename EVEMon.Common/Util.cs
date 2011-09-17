@@ -242,7 +242,7 @@ namespace EVEMon.Common
         internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData,
                                                           XslCompiledTransform transform)
         {
-            APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http,
+            APIResult<T> result = new APIResult<T>(APIErrors.Http,
                                                    String.Format("Time out on querying {0}", url));
 
             // Query async and wait
@@ -262,7 +262,7 @@ namespace EVEMon.Common
                             catch (Exception e)
                             {
                                 ExceptionHandler.LogException(e, true);
-                                result = new APIResult<T>(APIEnumerations.APIErrors.Http, e.Message);
+                                result = new APIResult<T>(APIErrors.Http, e.Message);
                             }
                             finally
                             {

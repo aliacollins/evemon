@@ -357,21 +357,21 @@ namespace EVEMon.Common
         {
             if (src.Completed == (int)JobState.Delivered)
             {
-                switch ((APIEnumerations.CCPJobCompletedStatus)src.CompletedStatus)
+                switch ((CCPJobCompletedStatus)src.CompletedStatus)
                 {
                         // Canceled States
-                    case APIEnumerations.CCPJobCompletedStatus.Aborted:
-                    case APIEnumerations.CCPJobCompletedStatus.GM_Aborted:
+                    case CCPJobCompletedStatus.Aborted:
+                    case CCPJobCompletedStatus.GM_Aborted:
                         return JobState.Canceled;
 
                         // Failed States
-                    case APIEnumerations.CCPJobCompletedStatus.Inflight_Unanchored:
-                    case APIEnumerations.CCPJobCompletedStatus.Destroyed:
-                    case APIEnumerations.CCPJobCompletedStatus.Failed:
+                    case CCPJobCompletedStatus.Inflight_Unanchored:
+                    case CCPJobCompletedStatus.Destroyed:
+                    case CCPJobCompletedStatus.Failed:
                         return JobState.Failed;
 
                         // Delivered States
-                    case APIEnumerations.CCPJobCompletedStatus.Delivered:
+                    case CCPJobCompletedStatus.Delivered:
                         return JobState.Delivered;
 
                     default:
