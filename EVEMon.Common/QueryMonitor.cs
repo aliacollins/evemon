@@ -299,6 +299,11 @@ namespace EVEMon.Common
             m_forceUpdate = false;
         }
 
+        /// <summary>
+        /// Set the network availability.
+        /// </summary>
+        private bool SetNetworkStatus { get;  set; }
+
 
         #region Overriden Methods
 
@@ -312,12 +317,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
-
-        /// <summary>
-        /// Set the network availability.
-        /// </summary>
-        private bool SetNetworkStatus { get;  set; }
 
 
         #region Interfaces implementations

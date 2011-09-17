@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents the category of error which can occur with the API.
     /// </summary>
-    public enum APIErrors
+    public enum APIError
     {
         /// <summary>
         /// There was no error.

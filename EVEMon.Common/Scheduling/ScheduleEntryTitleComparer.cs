@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace EVEMon.Common.Scheduling
 {
@@ -10,7 +9,7 @@ namespace EVEMon.Common.Scheduling
             if (e1 != null && e2 != null)
                 return e1.Title.CompareTo(e2.Title);
 
-            throw new NullReferenceException("Compared objects can't be null.");
+            return 0;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// Exception class for all exceptions thrown by HttpWebService requests
     /// </summary>
+    [Serializable]
     public sealed class HttpWebServiceException : ApplicationException
     {
         /// <summary>

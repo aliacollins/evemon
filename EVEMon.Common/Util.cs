@@ -172,7 +172,7 @@ namespace EVEMon.Common
                                                "An error occurred decompressing {0}, the error message was '{1}' from '{2}'. "
                                                + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
                                                ex.Message, ex.Source);
-                throw new ApplicationException(message, ex);
+                throw new InvalidOperationException(message, ex);
             }
             catch (XmlException ex)
             {
@@ -180,7 +180,7 @@ namespace EVEMon.Common
                                                "An error occurred reading the XML from {0}, the error message was '{1}' from '{2}'. "
                                                + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
                                                ex.Message, ex.Source);
-                throw new ApplicationException(message, ex);
+                throw new XmlException(message, ex);
             }
         }
 
@@ -242,7 +242,7 @@ namespace EVEMon.Common
         internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData,
                                                           XslCompiledTransform transform)
         {
-            APIResult<T> result = new APIResult<T>(APIErrors.Http,
+            APIResult<T> result = new APIResult<T>(APIError.Http,
                                                    String.Format("Time out on querying {0}", url));
 
             // Query async and wait
@@ -262,7 +262,7 @@ namespace EVEMon.Common
                             catch (Exception e)
                             {
                                 ExceptionHandler.LogException(e, true);
-                                result = new APIResult<T>(APIErrors.Http, e.Message);
+                                result = new APIResult<T>(APIError.Http, e.Message);
                             }
                             finally
                             {
@@ -489,8 +489,7 @@ namespace EVEMon.Common
 
             // Returns the revision number (first group is the whole match, the second one the capture)
             int revision;
-            Int32.TryParse(match.Groups[1].Value, out revision);
-            return revision;
+            return Int32.TryParse(match.Groups[1].Value, out revision) ? revision : default(int);
         }
 
         /// <summary>

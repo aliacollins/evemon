@@ -235,8 +235,7 @@ namespace EVEMon.Common.Data
 
             // Try to parse it as a float
             float result;
-            float.TryParse(number, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
-            return result;
+            return float.TryParse(number, NumberStyles.Number, CultureInfo.InvariantCulture, out result) ? result : default(float);
         }
 
         #endregion

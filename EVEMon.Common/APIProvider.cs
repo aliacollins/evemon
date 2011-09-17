@@ -306,7 +306,7 @@ namespace EVEMon.Common
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
             return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
-                    result.ErrorType != APIErrors.CCP);
+                    result.ErrorType != APIError.CCP);
         }
 
         /// <summary>

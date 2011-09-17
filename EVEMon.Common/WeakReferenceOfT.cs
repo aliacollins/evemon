@@ -2,6 +2,7 @@ using System;
 
 namespace EVEMon.Common
 {
+    [Serializable]
     public class WeakReference<T> : WeakReference
         where T : class
     {

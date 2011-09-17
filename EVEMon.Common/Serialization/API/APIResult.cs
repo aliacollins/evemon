@@ -9,7 +9,7 @@ namespace EVEMon.Common.Serialization.API
     [XmlRoot("eveapi")]
     public sealed class APIResult<T> : IAPIResult
     {
-        private APIErrors m_error = APIErrors.None;
+        private APIError m_error = APIError.None;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public APIResult()
         {
-            m_error = APIErrors.None;
+            m_error = APIError.None;
             m_errorMessage = String.Empty;
             m_exception = null;
         }
@@ -43,7 +43,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult(HttpWebServiceException exc)
             : this(exc as Exception)
         {
-            m_error = APIErrors.Http;
+            m_error = APIError.Http;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult(XmlException exc)
             : this((Exception)exc)
         {
-            m_error = APIErrors.Xml;
+            m_error = APIError.Xml;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult(XsltException exc)
             : this(exc as Exception)
         {
-            m_error = APIErrors.Xslt;
+            m_error = APIError.Xslt;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace EVEMon.Common.Serialization.API
         /// <param name="exc">The exception.</param>
         public APIResult(InvalidOperationException exc)
         {
-            m_error = APIErrors.Xml;
+            m_error = APIError.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
             m_exception = exc;
         }
@@ -82,7 +82,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         /// <param name="error">The error.</param>
         /// <param name="message">The message.</param>
-        public APIResult(APIErrors error, string message)
+        public APIResult(APIError error, string message)
         {
             m_error = error;
             m_errorMessage = message;
@@ -127,16 +127,16 @@ namespace EVEMon.Common.Serialization.API
                 if (CCPError != null)
                     return true;
 
-                return m_error != APIErrors.None;
+                return m_error != APIError.None;
             }
         }
 
         /// <summary>
-        /// Gets the type of the error or <see cref="APIErrors.None"/> when there was no error.
+        /// Gets the type of the error or <see cref="APIError.None"/> when there was no error.
         /// </summary>
-        public APIErrors ErrorType
+        public APIError ErrorType
         {
-            get { return CCPError != null ? APIErrors.CCP : m_error; }
+            get { return CCPError != null ? APIError.CCP : m_error; }
         }
 
         /// <summary>

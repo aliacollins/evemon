@@ -34,7 +34,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
             if (m_page == null)
             {
                 DisplayError(
-                    new Exception(
+                    new InvalidOperationException(
                         "You attempted to use a MultiPanelPageDesigner with a class that does not inherit from MultiPanelPage."));
             }
 

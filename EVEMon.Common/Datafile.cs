@@ -79,7 +79,7 @@ namespace EVEMon.Common
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
-                throw new ApplicationException(baseFile + " not found!");
+                throw new FileNotFoundException(baseFile + " not found!");
 
             // The file was in the installation directory, let's copy it to %APPDATA%
             FileHelper.OverwriteOrWarnTheUser(baseFile, filepath);

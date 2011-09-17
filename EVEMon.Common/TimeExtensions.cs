@@ -31,15 +31,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static DateTime TimeStringToDateTime(this String timeUTC)
         {
-            DateTime dt = DateTime.MinValue;
-
             // timeUTC = yyyy-MM-dd HH:mm:ss
-            if (String.IsNullOrEmpty(timeUTC))
-                return dt;
-
-            DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture, DateTimeStyles.AdjustToUniversal, out dt);
-
-            return dt;
+            DateTime dt;
+            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture, DateTimeStyles.AdjustToUniversal, out dt)
+                       ? dt
+                       : default(DateTime);
         }
 
         /// <summary>

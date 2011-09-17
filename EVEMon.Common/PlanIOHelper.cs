@@ -12,8 +12,6 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-    public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
-
     public static class PlanIOHelper
     {
 
@@ -26,7 +24,7 @@ namespace EVEMon.Common
         /// <exception cref="NotImplementedException"></exception>
         /// <returns></returns>
         public static string ExportAsText(Plan planToExport, PlanExportSettings settings,
-                                          ExportPlanEntryActions exportActions = null)
+                                          Action<StringBuilder, PlanEntry, PlanExportSettings> exportActions = null)
         {
             PlanScratchpad plan = new PlanScratchpad(planToExport.Character, planToExport);
             plan.Sort(planToExport.SortingPreferences);
