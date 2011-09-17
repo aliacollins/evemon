@@ -854,7 +854,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>Brush</c> object.
         /// </returns>
-        private Brush CreateBrushForSide(Color color, double angle)
+        private static Brush CreateBrushForSide(Color color, double angle)
         {
             return
                 new SolidBrush(ColorUtil.CreateColorWithCorrectedLightness(color,
@@ -989,7 +989,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>PointF</c> on the ellipse.
         /// </returns>
-        private PointF PeripheralPoint(float xCenter, float yCenter, float semiMajor, float semiMinor, float angleDegrees)
+        private static PointF PeripheralPoint(float xCenter, float yCenter, float semiMajor, float semiMinor, float angleDegrees)
         {
             double angleRadians = angleDegrees * Math.PI / 180;
             return new PointF(xCenter + (float)(semiMajor * Math.Cos(angleRadians)),

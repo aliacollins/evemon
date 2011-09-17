@@ -701,7 +701,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   Index of the foremost pie slice.
         /// </returns>
-        private int GetForemostPieSlice(IList<PieSlice> pieSlices)
+        private static int GetForemostPieSlice(IList<PieSlice> pieSlices)
         {
             if (pieSlices != null && pieSlices.Count > 0)
             {
@@ -936,7 +936,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>PieSlice</c> object with given values.
         /// </returns>
-        private PieSlice CreatePieSlice(float boundingRectLeft, float boundingRectTop, float boundingRectWidth,
+        private static PieSlice CreatePieSlice(float boundingRectLeft, float boundingRectTop, float boundingRectWidth,
                                         float boundingRectHeight, float sliceHeight, float startAngle, float sweepAngle,
                                         Color color, ShadowStyle shadowStyle, EdgeColorType edgeColorType,
                                         float edgeLineWidth)
@@ -988,7 +988,7 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>PieSlice</c> object with given values.
         /// </returns>
-        private PieSlice CreatePieSliceHighlighted(float boundingRectLeft, float boundingRectTop,
+        private static PieSlice CreatePieSliceHighlighted(float boundingRectLeft, float boundingRectTop,
                                                    float boundingRectWidth, float boundingRectHeight, float sliceHeight,
                                                    float startAngle, float sweepAngle, Color color,
                                                    ShadowStyle shadowStyle, EdgeColorType edgeColorType,
@@ -1128,7 +1128,7 @@ namespace EVEMon.PieChart
         ///   <c>true</c> if all displacements have a valid value; otherwise 
         ///   <c>false</c>.
         /// </returns>
-        private bool AreDisplacementsValid(IEnumerable<float> displacements)
+        private static bool AreDisplacementsValid(IEnumerable<float> displacements)
         {
             return displacements.All(IsDisplacementValid);
         }
@@ -1144,7 +1144,7 @@ namespace EVEMon.PieChart
         ///   <c>true</c> if displacement has a valid value; otherwise 
         ///   <c>false</c>.
         /// </returns>
-        private bool IsDisplacementValid(float value)
+        private static bool IsDisplacementValid(float value)
         {
             return (value >= 0F && value <= 1F);
         }

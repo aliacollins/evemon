@@ -12,7 +12,7 @@ namespace Tests.EVEMon.Common
         /// <summary>
         /// Valid time as returned by CCP.
         /// </summary>
-        private string ValidCcpDateTime
+        private static string ValidCcpDateTime
         {
             get { return "2010-05-07 18:23:32"; }
         }
@@ -20,7 +20,7 @@ namespace Tests.EVEMon.Common
         /// <summary>
         /// Invalid time, wrong format.
         /// </summary>
-        private string InvalidCcpDateTime
+        private static string InvalidCcpDateTime
         {
             get { return "18:23:32 2010-05-07"; }
         }
@@ -28,7 +28,7 @@ namespace Tests.EVEMon.Common
         /// <summary>
         /// A point in time.
         /// </summary>
-        private DateTime PointInTime
+        private static DateTime PointInTime
         {
             get { return new DateTime(2010, 05, 07, 18, 23, 32); }
         }

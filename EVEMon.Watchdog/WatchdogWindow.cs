@@ -38,7 +38,7 @@ namespace EVEMon.Watchdog
         /// <summary>
         /// Returns true EVEMon process currently executing.
         /// </summary>
-        private bool IsEvemonRunning
+        private static bool IsEvemonRunning
         {
             get
             {
@@ -93,7 +93,7 @@ namespace EVEMon.Watchdog
         /// </summary>
         /// <param name="executable">Executable to start (i.e. EVEMon.exe).</param>
         /// <param name="arguments">Arguments to pass to the executable.</param>
-        private void StartProcess(string executable, string[] arguments)
+        private static void StartProcess(string executable, string[] arguments)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
                                              {
