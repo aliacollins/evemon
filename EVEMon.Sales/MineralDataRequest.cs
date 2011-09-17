@@ -19,9 +19,9 @@ namespace EVEMon.Sales
         /// Gets the parsers.
         /// </summary>
         /// <value>The parsers.</value>
-        public static IEnumerable<Pair<string, IMineralParser>> Parsers
+        public static IEnumerable<IMineralParser> Parsers
         {
-            get { return s_parsers.Select(kvp => new Pair<string, IMineralParser>(kvp.Key, kvp.Value)); }
+            get { return s_parsers.Values; }
         }
 
         /// <summary>
@@ -35,8 +35,11 @@ namespace EVEMon.Sales
                     typeof(DefaultMineralParserAttribute), false))
                 {
                     IMineralParser mp = Activator.CreateInstance(type) as IMineralParser;
-                    if (mp != null)
-                        s_parsers.Add(dmpa.Name, mp);
+                    if (mp == null)
+                        continue;
+
+                    mp.Name = dmpa.Name;
+                    s_parsers[dmpa.Name] = mp;
                 }
             }
         }
@@ -46,7 +49,7 @@ namespace EVEMon.Sales
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns>An enumerable collection of Minerals and Prices.</returns>
-        public static IEnumerable<Pair<string, decimal>> Prices(string source)
+        public static IEnumerable<MineralPrice> Prices(string source)
         {
             if (!s_parsers.ContainsKey(source))
                 throw new ArgumentException("That is not a registered mineraldatasource.", "source");
@@ -87,28 +90,26 @@ namespace EVEMon.Sales
         /// Scans for prices.
         /// </summary>
         /// <returns></returns>
-        private static IEnumerable<Pair<string, decimal>> GetPrices(IMineralParser parser)
+        private static IEnumerable<MineralPrice> GetPrices(IMineralParser parser)
         {
             string content = EveMonClient.HttpWebService.DownloadString(parser.URL.AbsoluteUri);
 
             // Scan for prices
             MatchCollection mc = parser.Tokenizer.Matches(content);
 
-            return mc.Cast<Match>().Select(
-                mineral => new
-                {
-                    mineral,
-                    name = mineral.Groups["name"].Value
-                }).Select(
-                                   mineral => new
-                                   {
-                                       mineral,
-                                       price = Decimal.Parse(mineral.mineral.Groups["price"].Value,
-                                                             NumberStyles.Currency,
-                                                             CultureInfo.InvariantCulture)
-                                   }).Select(
-                                                      mineral =>
-                                                      new Pair<string, Decimal>(mineral.mineral.name, mineral.price));
+            return mc.Cast<Match>().Select(match => new MineralPrice
+                                                        {
+                                                            Name = match.Groups["name"].Value,
+                                                            Price = Decimal.Parse(match.Groups["price"].Value,
+                                                                                  NumberStyles.Currency,
+                                                                                  CultureInfo.InvariantCulture)
+                                                        });
         }
+    }
+
+    public sealed class MineralPrice
+    {
+        public string Name { get; set; }
+        public decimal Price { get; set; }
     }
 }

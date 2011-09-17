@@ -106,21 +106,22 @@ namespace EVEMon.Sales
 
             UpdateVisuals();
 
-            foreach (MineralTile mt in Tiles)
+            foreach (MineralTile mineralTile in Tiles)
             {
-                mt.SubtotalChanged += TileSubtotal_Changed;
+                mineralTile.SubtotalChanged += TileSubtotal_Changed;
             }
 
-            SortedList<string, Pair<string, string>> parsersSorted = new SortedList<string, Pair<string, string>>();
-            foreach (Pair<string, IMineralParser> pair in MineralDataRequest.Parsers)
+            SortedList<string, IMineralParser> parsersSorted = new SortedList<string, IMineralParser>();
+            foreach (IMineralParser parser in MineralDataRequest.Parsers)
             {
-                parsersSorted.Add(pair.B.Title, new Pair<string, string>(pair.A, pair.B.Title));
+                parsersSorted.Add(parser.Title, parser);
             }
 
-            foreach (ToolStripMenuItem mi in parsersSorted.Values.Select(p => new ToolStripMenuItem { Text = p.B, Tag = p.A }))
+            foreach (ToolStripMenuItem menuItem in parsersSorted.Values.Select(
+                parser => new ToolStripMenuItem { Text = parser.Title, Tag = parser.Name }))
             {
-                mi.Click += mi_Click;
-                tsddFetch.DropDownItems.Add(mi);
+                menuItem.Click += menuItem_Click;
+                tsddFetch.DropDownItems.Add(menuItem);
             }
         }
 
@@ -176,7 +177,7 @@ namespace EVEMon.Sales
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void mi_Click(object sender, EventArgs e)
+        private void menuItem_Click(object sender, EventArgs e)
         {
             if (bckgrndWrkrGetPrices.IsBusy)
                 return;
@@ -200,9 +201,9 @@ namespace EVEMon.Sales
             string source = e.Argument as string;
             if (source != null)
             {
-                foreach (Pair<string, Decimal> p in MineralDataRequest.Prices(source))
+                foreach (MineralPrice mineralPrice in MineralDataRequest.Prices(source))
                 {
-                    prices[p.A] = p.B;
+                    prices[mineralPrice.Name] = mineralPrice.Price;
                 }
             }
 
