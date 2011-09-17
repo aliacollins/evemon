@@ -106,10 +106,4 @@ namespace EVEMon.Sales
                                                         });
         }
     }
-
-    public sealed class MineralPrice
-    {
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-    }
 }
