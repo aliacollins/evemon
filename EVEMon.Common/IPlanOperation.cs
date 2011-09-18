@@ -29,22 +29,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill levels the user originally wanted to add.
         /// </summary>
-        ReadOnlyCollection<ISkillLevel> SkillsToAdd { get; }
+        IEnumerable<ISkillLevel> SkillsToAdd { get; }
 
         /// <summary>
         /// Gets all the entries to remove when a suppression is performed, including the dependencies.
         /// </summary>
-        ReadOnlyCollection<PlanEntry> AllEntriesToRemove { get; }
+        IEnumerable<PlanEntry> AllEntriesToRemove { get; }
 
         /// <summary>
         /// Gets the entries that can be optionally removed when a suppression is performed.
         /// </summary>
-        ReadOnlyCollection<PlanEntry> RemovablePrerequisites { get; }
+        IEnumerable<PlanEntry> RemovablePrerequisites { get; }
 
         /// <summary>
         /// Gets the skill levels the user originally wanted to remove.
         /// </summary>
-        ReadOnlyCollection<ISkillLevel> SkillsToRemove { get; }
+        IEnumerable<ISkillLevel> SkillsToRemove { get; }
 
         /// <summary>
         /// Performs the operation in the simplest possible way, using default priority for insertions and not removing useless prerequisites for 

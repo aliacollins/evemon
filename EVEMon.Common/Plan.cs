@@ -657,7 +657,7 @@ namespace EVEMon.Common
             /// <summary>
             /// Gets the skill levels the user originally wanted to add.
             /// </summary>
-            public ReadOnlyCollection<ISkillLevel> SkillsToAdd
+            public IEnumerable<ISkillLevel> SkillsToAdd
             {
                 get { return m_skillsToAdd.AsReadOnly(); }
             }
@@ -673,7 +673,7 @@ namespace EVEMon.Common
             /// <summary>
             /// Gets the skill levels the user originally wanted to remove.
             /// </summary>
-            public ReadOnlyCollection<ISkillLevel> SkillsToRemove
+            public IEnumerable<ISkillLevel> SkillsToRemove
             {
                 get { return m_skillsToRemove.AsReadOnly(); }
             }
@@ -681,7 +681,7 @@ namespace EVEMon.Common
             /// <summary>
             /// Gets all the entries to remove when a suppression is performed, including the dependencies.
             /// </summary>
-            public ReadOnlyCollection<PlanEntry> AllEntriesToRemove
+            public IEnumerable<PlanEntry> AllEntriesToRemove
             {
                 get { return m_allEntriesToRemove.AsReadOnly(); }
             }
@@ -689,7 +689,7 @@ namespace EVEMon.Common
             /// <summary>
             /// Gets the entries that can be optionally removed when a suppression is performed.
             /// </summary>
-            public ReadOnlyCollection<PlanEntry> RemovablePrerequisites
+            public IEnumerable<PlanEntry> RemovablePrerequisites
             {
                 get { return m_removablePrerequisites.AsReadOnly(); }
             }

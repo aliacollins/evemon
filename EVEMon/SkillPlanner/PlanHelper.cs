@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Linq;
+using System.Windows.Forms;
 using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
@@ -73,7 +74,7 @@ namespace EVEMon.SkillPlanner
             if (operation.Type != PlanOperations.Suppression)
                 return false;
 
-            return (operation.SkillsToRemove.Count != operation.AllEntriesToRemove.Count);
+            return (operation.SkillsToRemove.Count() != operation.AllEntriesToRemove.Count());
         }
 
         /// <summary>
