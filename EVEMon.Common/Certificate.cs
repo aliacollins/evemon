@@ -227,9 +227,9 @@ namespace EVEMon.Common
         /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime()
+        public TimeSpan GetTrainingTime
         {
-            return m_character.GetTrainingTimeToMultipleSkills(AllTopPrerequisiteSkills);
+            get { return m_character.GetTrainingTimeToMultipleSkills(AllTopPrerequisiteSkills); }
         }
 
         /// <summary>

@@ -185,6 +185,28 @@ namespace EVEMon.Common.Data
             }
         }
 
+        /// <summary>
+        /// Gets the category path of this item.
+        /// </summary>
+        /// <returns></returns>
+        public string CategoryPath
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                MarketGroup cat = MarketGroup;
+
+                while (cat != null)
+                {
+                    sb.Insert(0, cat.Name);
+                    cat = cat.ParentGroup;
+                    if (cat != null)
+                        sb.Insert(0, " > ");
+                }
+                return sb.ToString();
+            }
+        }
+
         #endregion
 
 
@@ -234,25 +256,6 @@ namespace EVEMon.Common.Data
             // We lack information about this item, or this item isn't fittable
             // Return false as specced in the method docs
             return false;
-        }
-
-        /// <summary>
-        /// Gets the category path of this item.
-        /// </summary>
-        /// <returns></returns>
-        public string GetCategoryPath()
-        {
-            StringBuilder sb = new StringBuilder();
-            MarketGroup cat = MarketGroup;
-
-            while (cat != null)
-            {
-                sb.Insert(0, cat.Name);
-                cat = cat.ParentGroup;
-                if (cat != null)
-                    sb.Insert(0, " > ");
-            }
-            return sb.ToString();
         }
 
         #endregion

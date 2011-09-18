@@ -470,6 +470,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Calculate the time to train this skill to the next level including prerequisites.
+        /// </summary>
+        /// <returns>Time it will take</returns>
+        public TimeSpan GetLeftTrainingTimeToNextLevel
+        {
+            get { return Level == 5 ? TimeSpan.Zero : GetLeftTrainingTimeToLevel(Level + 1); }
+        }
+
+        /// <summary>
         /// Returns the string representation of this skill (the name).
         /// </summary>
         /// <returns>The name of the skill.</returns>
@@ -553,15 +562,6 @@ namespace EVEMon.Common
         public TimeSpan GetLeftTrainingTimeForLevelOnly(int level)
         {
             return GetTimeSpanForPoints(GetLeftPointsRequiredForLevelOnly(level));
-        }
-
-        /// <summary>
-        /// Calculate the time to train this skill to the next level including prerequisites.
-        /// </summary>
-        /// <returns>Time it will take</returns>
-        public TimeSpan GetLeftTrainingTimeToNextLevel()
-        {
-            return Level == 5 ? TimeSpan.Zero : GetLeftTrainingTimeToLevel(Level + 1);
         }
 
         #endregion

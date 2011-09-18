@@ -351,22 +351,22 @@ namespace EVEMon
                         break;
                     case IndustryJobGrouping.InstalledItemType:
                         IOrderedEnumerable<IGrouping<string, IndustryJob>> groups4 =
-                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath()).OrderBy(x => x.Key);
+                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
                         UpdateContent(groups4);
                         break;
                     case IndustryJobGrouping.InstalledItemTypeDesc:
                         IOrderedEnumerable<IGrouping<string, IndustryJob>> groups5 =
-                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath()).OrderByDescending(x => x.Key);
+                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
                         UpdateContent(groups5);
                         break;
                     case IndustryJobGrouping.OutputItemType:
                         IOrderedEnumerable<IGrouping<string, IndustryJob>> groups6 =
-                            jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath()).OrderBy(x => x.Key);
+                            jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
                         UpdateContent(groups6);
                         break;
                     case IndustryJobGrouping.OutputItemTypeDesc:
                         IOrderedEnumerable<IGrouping<string, IndustryJob>> groups7 =
-                            jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath()).OrderByDescending(x => x.Key);
+                            jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
                         UpdateContent(groups7);
                         break;
                     case IndustryJobGrouping.Activity:

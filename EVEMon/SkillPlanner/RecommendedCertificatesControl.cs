@@ -325,7 +325,7 @@ namespace EVEMon.SkillPlanner
 
                 // When not granted or claimable, let's calculate the training time
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
-                    m_trainTime += cert.GetTrainingTime();
+                    m_trainTime += cert.GetTrainingTime;
             }
                 // Or a skill prerequisite ?
             else

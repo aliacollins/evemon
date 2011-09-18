@@ -197,7 +197,7 @@ namespace EVEMon.SkillPlanner
                 blueprintBrowser.Plan = m_plan;
 
                 // If the ShipLoadoutSelectWindow is open, assign the new plan
-                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
+                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique;
                 if (loadoutSelect != null)
                     loadoutSelect.Plan = m_plan;
 

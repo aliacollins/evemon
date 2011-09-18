@@ -261,19 +261,22 @@ namespace EVEMon.Common
         /// Gets the total skill points for this character.
         /// </summary>
         /// <returns></returns>
-        protected override int GetTotalSkillPoints()
+        protected override int TotalSkillPoints
         {
-            // We only do the calculation once every second to avoid
-            // excessive CPU utilization.
-            if (m_skillPointTotalUpdated > DateTime.UtcNow.AddSeconds(-1))
-                return m_lastSkillPointTotal;
+            get
+            {
+                // We only do the calculation once every second to avoid
+                // excessive CPU utilization.
+                if (m_skillPointTotalUpdated > DateTime.UtcNow.AddSeconds(-1))
+                    return m_lastSkillPointTotal;
 
-            int sp = Skills.Sum(skill => skill.SkillPoints);
+                int sp = Skills.Sum(skill => skill.SkillPoints);
 
-            m_lastSkillPointTotal = sp;
-            m_skillPointTotalUpdated = DateTime.UtcNow;
+                m_lastSkillPointTotal = sp;
+                m_skillPointTotalUpdated = DateTime.UtcNow;
 
-            return sp;
+                return sp;
+            }
         }
 
         /// <summary>

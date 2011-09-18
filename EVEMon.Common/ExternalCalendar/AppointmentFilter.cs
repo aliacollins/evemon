@@ -106,7 +106,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
         /// </returns>
-        public abstract bool GetAppointment();
+        public abstract bool Appointment { get; }
 
         /// <summary>
         /// Add a new appointment or Update the appropriate appointment in the calendar.

@@ -164,7 +164,7 @@ namespace EVEMon.SkillPlanner
             foreach (Certificate cert in certClass)
             {
                 Label label = labels[lbIndex];
-                TimeSpan time = cert.GetTrainingTime();
+                TimeSpan time = cert.GetTrainingTime;
                 label.Text = String.Format(CultureConstants.DefaultCulture, "{0} : {1}",
                                            cert.Grade,
                                            time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));

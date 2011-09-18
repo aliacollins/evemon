@@ -70,7 +70,7 @@ namespace EVEMon.Common.ExternalCalendar
                 // If there is an appointment, get the first one
                 bool foundAppointment = false;
                 if (outlookAppointmentFilter.ItemCount > 0)
-                    foundAppointment = outlookAppointmentFilter.GetAppointment();
+                    foundAppointment = outlookAppointmentFilter.Appointment;
 
                 // Update the appointment we may have pulled or the new one
                 // Set the appointment length to 5 minutes, starting at the estimated completion date and time
@@ -138,7 +138,7 @@ namespace EVEMon.Common.ExternalCalendar
                 // If there is are appointments, see if any match the subject
                 bool foundAppointment = false;
                 if (googleAppointmentFilter.ItemCount > 0)
-                    foundAppointment = googleAppointmentFilter.GetAppointment();
+                    foundAppointment = googleAppointmentFilter.Appointment;
 
                 // Update the appointment we may have pulled or the new one
                 // Set the appointment length to 5 minutes, starting at the estimated completion date and time

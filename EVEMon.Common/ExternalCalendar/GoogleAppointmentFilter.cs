@@ -161,32 +161,35 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
         /// </returns>
-        public override bool GetAppointment()
+        public override bool Appointment
         {
-            if (AppointmentArray.Count < 1)
-                return false;
-
-            EventEntry appointmentItem = (EventEntry)AppointmentArray[0];
-            StartDate = appointmentItem.Times[0].StartTime;
-            EndDate = appointmentItem.Times[0].EndTime;
-            Subject = appointmentItem.Title.Text;
-            EntryId = appointmentItem.Id.Uri.Content;
-
-            if (appointmentItem.Reminder != null)
+            get
             {
-                Reminder.ReminderMethod reminderMethod = appointmentItem.Reminder.Method;
-                ItemReminder = reminderMethod != Reminder.ReminderMethod.none;
+                if (AppointmentArray.Count < 1)
+                    return false;
 
-                ReminderMethod = m_googleReminders.IndexOf(reminderMethod);
-                Minutes = appointmentItem.Reminder.Minutes;
-            }
-            else
-            {
-                ItemReminder = false;
-                Minutes = 5;
-            }
+                EventEntry appointmentItem = (EventEntry)AppointmentArray[0];
+                StartDate = appointmentItem.Times[0].StartTime;
+                EndDate = appointmentItem.Times[0].EndTime;
+                Subject = appointmentItem.Title.Text;
+                EntryId = appointmentItem.Id.Uri.Content;
 
-            return true;
+                if (appointmentItem.Reminder != null)
+                {
+                    Reminder.ReminderMethod reminderMethod = appointmentItem.Reminder.Method;
+                    ItemReminder = reminderMethod != Reminder.ReminderMethod.none;
+
+                    ReminderMethod = m_googleReminders.IndexOf(reminderMethod);
+                    Minutes = appointmentItem.Reminder.Minutes;
+                }
+                else
+                {
+                    ItemReminder = false;
+                    Minutes = 5;
+                }
+
+                return true;
+            }
         }
 
         /// <summary>

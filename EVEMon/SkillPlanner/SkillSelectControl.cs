@@ -587,7 +587,7 @@ namespace EVEMon.SkillPlanner
                     // Time to next level
                 case SkillSort.TimeToNextLevel:
                     IEnumerable<TimeSpan> times = skills.Select(
-                        x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToNextLevel()));
+                        x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToNextLevel));
 
                     TimeSpan[] timesArray = times.ToArray();
                     Skill[] skillsArray = skills.ToArray();

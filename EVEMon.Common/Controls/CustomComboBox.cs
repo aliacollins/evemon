@@ -188,7 +188,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public CustomComboBox()
+        protected CustomComboBox()
             : base()
         {
             this.content = this.CreateContent();

@@ -461,7 +461,7 @@ namespace EVEMon.SkillPlanner
                 // When not granted or claimable, let's display the training time
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
                 {
-                    TimeSpan time = cert.GetTrainingTime();
+                    TimeSpan time = cert.GetTrainingTime;
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }

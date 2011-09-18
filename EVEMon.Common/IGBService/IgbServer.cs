@@ -469,7 +469,7 @@ namespace EVEMon.Common.IgbService
             sw.WriteLine("<h2>Your skills by training time:</h2>");
 
             IEnumerable<Skill> allskills = character.Skills.Where(x => x.IsPublic && x.Level < 5 && x.Level > 0);
-            allskills = allskills.OrderBy(x => x.GetLeftTrainingTimeToNextLevel());
+            allskills = allskills.OrderBy(x => x.GetLeftTrainingTimeToNextLevel);
 
             sw.WriteLine("<table>");
             sw.Write("<tr><td colspan=\"2\" width=\"265\"><b>Skill</b></td>" +
@@ -494,7 +494,7 @@ namespace EVEMon.Common.IgbService
                 sw.Write("</td>");
 
                 sw.Write("<td>");
-                sw.Write(s.GetLeftTrainingTimeToNextLevel().ToDescriptiveText(
+                sw.Write(s.GetLeftTrainingTimeToNextLevel.ToDescriptiveText(
                     DescriptiveTextOptions.FullText |
                     DescriptiveTextOptions.IncludeCommas |
                     DescriptiveTextOptions.SpaceText));

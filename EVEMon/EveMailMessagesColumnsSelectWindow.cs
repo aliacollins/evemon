@@ -31,20 +31,26 @@ namespace EVEMon
         /// Gets all keys.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<int> GetAllKeys()
+        protected override IEnumerable<int> AllKeys
         {
-            return
-                EnumExtensions.GetValues<EveMailMessagesColumn>().Where(x => x != EveMailMessagesColumn.None).Select(x => (int)x);
+            get
+            {
+                return EnumExtensions.GetValues<EveMailMessagesColumn>().Where(
+                    x => x != EveMailMessagesColumn.None).Select(x => (int)x);
+            }
         }
 
         /// <summary>
         /// Gets the default columns.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<IColumnSettings> GetDefaultColumns()
+        protected override IEnumerable<IColumnSettings> DefaultColumns
         {
-            EveMailMessagesSettings settings = new EveMailMessagesSettings();
-            return settings.Columns;
+            get
+            {
+                EveMailMessagesSettings settings = new EveMailMessagesSettings();
+                return settings.Columns;
+            }
         }
     }
 }

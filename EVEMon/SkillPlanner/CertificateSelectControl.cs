@@ -609,7 +609,7 @@ namespace EVEMon.SkillPlanner
                                                                          Certificate nextUntrained = x.LowestUntrainedGrade;
                                                                          return (nextUntrained == null
                                                                                      ? TimeSpan.Zero
-                                                                                     : nextUntrained.GetTrainingTime());
+                                                                                     : nextUntrained.GetTrainingTime);
                                                                      });
 
                     CertificateClass[] classesArray = classes.ToArray();
@@ -629,7 +629,7 @@ namespace EVEMon.SkillPlanner
                                                        status == CertificateStatus.Claimable)
                                                        return TimeSpan.Zero;
 
-                                                   return lastGrade.GetTrainingTime();
+                                                   return lastGrade.GetTrainingTime;
                                                });
                     classesArray = classes.ToArray();
                     timesArray = times.ToArray();

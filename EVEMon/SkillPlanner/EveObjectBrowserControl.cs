@@ -200,7 +200,7 @@ namespace EVEMon.SkillPlanner
             // Display details
             eoImage.EveItem = firstSelected;
             lblEveObjName.Text = firstSelected.Name;
-            lblEveObjCategory.Text = firstSelected.GetCategoryPath();
+            lblEveObjCategory.Text = firstSelected.CategoryPath;
 
             // Stop here if it's the blueprint tab
             if (SelectControl is BlueprintSelectControl)

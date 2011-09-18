@@ -41,33 +41,36 @@ namespace EVEMon.Common
         /// Gets the window displayed as unique if it exists, null otherwise.
         /// </summary>
         /// <returns></returns>
-        public static TForm GetUnique()
+        public static TForm GetUnique
         {
-            lock (s_syncLock)
+            get
             {
-                try
+                lock (s_syncLock)
                 {
-                    // Does it already exist ?
-                    if (s_uniqueWindow != null && !s_uniqueWindow.IsDisposed)
+                    try
                     {
-                        // Bring to front or show
-                        if (s_uniqueWindow.Visible)
-                            s_uniqueWindow.BringToFront();
-                        else
-                            s_uniqueWindow.Show();
+                        // Does it already exist ?
+                        if (s_uniqueWindow != null && !s_uniqueWindow.IsDisposed)
+                        {
+                            // Bring to front or show
+                            if (s_uniqueWindow.Visible)
+                                s_uniqueWindow.BringToFront();
+                            else
+                                s_uniqueWindow.Show();
 
-                        // Give focus and return
-                        s_uniqueWindow.Activate();
-                        return s_uniqueWindow;
+                            // Give focus and return
+                            s_uniqueWindow.Activate();
+                            return s_uniqueWindow;
+                        }
                     }
-                }
-                    // Catch exception when the window is being disposed
-                catch (ObjectDisposedException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                }
+                        // Catch exception when the window is being disposed
+                    catch (ObjectDisposedException ex)
+                    {
+                        ExceptionHandler.LogException(ex, true);
+                    }
 
-                return null;
+                    return null;
+                }
             }
         }
 

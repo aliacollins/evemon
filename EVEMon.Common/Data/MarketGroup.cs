@@ -105,28 +105,26 @@ namespace EVEMon.Common.Data
             }
         }
 
-        #endregion
-
-
-        #region Public Methods
-
         /// <summary>
         /// Gets this category full category name.
         /// </summary>
-        public string GetCategoryPath()
+        public string CategoryPath
         {
-            StringBuilder fullCategoryPath = new StringBuilder();
-            MarketGroup group = this;
-
-            while (group != null)
+            get
             {
-                fullCategoryPath.Insert(0, group.Name);
-                group = group.ParentGroup;
-                if (group != null)
-                    fullCategoryPath.Insert(0, " > ");
-            }
+                StringBuilder fullCategoryPath = new StringBuilder();
+                MarketGroup group = this;
 
-            return fullCategoryPath.ToString();
+                while (group != null)
+                {
+                    fullCategoryPath.Insert(0, group.Name);
+                    group = group.ParentGroup;
+                    if (group != null)
+                        fullCategoryPath.Insert(0, " > ");
+                }
+
+                return fullCategoryPath.ToString();
+            }
         }
 
         #endregion

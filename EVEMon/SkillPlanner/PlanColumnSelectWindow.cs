@@ -31,19 +31,26 @@ namespace EVEMon.SkillPlanner
         /// Gets all keys.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<int> GetAllKeys()
+        protected override IEnumerable<int> AllKeys
         {
-            return EnumExtensions.GetValues<PlanColumn>().Where(x => x != PlanColumn.None).Select(x => (int)x);
+            get
+            {
+                return EnumExtensions.GetValues<PlanColumn>().Where(
+                    x => x != PlanColumn.None).Select(x => (int)x);
+            }
         }
 
         /// <summary>
         /// Gets the default columns.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<IColumnSettings> GetDefaultColumns()
+        protected override IEnumerable<IColumnSettings> DefaultColumns
         {
-            PlanWindowSettings settings = new PlanWindowSettings();
-            return settings.Columns;
+            get
+            {
+                PlanWindowSettings settings = new PlanWindowSettings();
+                return settings.Columns;
+            }
         }
     }
 }

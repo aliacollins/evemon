@@ -135,9 +135,9 @@ namespace EVEMon.Common
         /// Gets the total skill points.
         /// </summary>
         /// <returns></returns>
-        protected override int GetTotalSkillPoints()
+        protected override int TotalSkillPoints
         {
-            return SkillPoints;
+            get { return SkillPoints; }
         }
 
         /// <summary>

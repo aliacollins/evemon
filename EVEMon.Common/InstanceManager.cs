@@ -34,9 +34,9 @@ namespace EVEMon.Common
         /// Gets the instance.
         /// </summary>
         /// <returns></returns>
-        public static InstanceManager GetInstance()
+        public static InstanceManager Instance
         {
-            return s_instanceManager ?? (s_instanceManager = new InstanceManager());
+            get { return s_instanceManager ?? (s_instanceManager = new InstanceManager()); }
         }
 
         /// <summary>

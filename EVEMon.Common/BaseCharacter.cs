@@ -8,7 +8,7 @@ namespace EVEMon.Common
     {
         #region Abstract methods and properties
 
-        protected abstract int GetTotalSkillPoints();
+        protected abstract int TotalSkillPoints { get; }
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
 
         public abstract int GetSkillLevel(StaticSkill skill);
@@ -24,7 +24,7 @@ namespace EVEMon.Common
         /// </summary>
         public int SkillPoints
         {
-            get { return GetTotalSkillPoints(); }
+            get { return TotalSkillPoints; }
         }
 
         /// <summary>

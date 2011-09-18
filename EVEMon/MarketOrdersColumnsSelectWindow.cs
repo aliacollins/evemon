@@ -31,19 +31,26 @@ namespace EVEMon
         /// Gets all keys.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<int> GetAllKeys()
+        protected override IEnumerable<int> AllKeys
         {
-            return EnumExtensions.GetValues<MarketOrderColumn>().Where(x => x != MarketOrderColumn.None).Select(x => (int)x);
+            get
+            {
+                return EnumExtensions.GetValues<MarketOrderColumn>().Where(
+                    x => x != MarketOrderColumn.None).Select(x => (int)x);
+            }
         }
 
         /// <summary>
         /// Gets the default columns.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<IColumnSettings> GetDefaultColumns()
+        protected override IEnumerable<IColumnSettings> DefaultColumns
         {
-            MarketOrderSettings settings = new MarketOrderSettings();
-            return settings.Columns;
+            get
+            {
+                MarketOrderSettings settings = new MarketOrderSettings();
+                return settings.Columns;
+            }
         }
     }
 }

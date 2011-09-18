@@ -103,19 +103,22 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
         /// </returns>
-        public override bool GetAppointment()
+        public override bool Appointment
         {
-            if (AppointmentArray.Count < 1)
-                return false;
+            get
+            {
+                if (AppointmentArray.Count < 1)
+                    return false;
 
-            AppointmentItem appointmentItem = (AppointmentItem)AppointmentArray[0];
-            StartDate = appointmentItem.Start;
-            EndDate = appointmentItem.End;
-            Subject = appointmentItem.Subject;
-            ItemReminder = appointmentItem.ReminderSet;
-            Minutes = appointmentItem.ReminderMinutesBeforeStart;
-            EntryId = appointmentItem.EntryID;
-            return true;
+                AppointmentItem appointmentItem = (AppointmentItem)AppointmentArray[0];
+                StartDate = appointmentItem.Start;
+                EndDate = appointmentItem.End;
+                Subject = appointmentItem.Subject;
+                ItemReminder = appointmentItem.ReminderSet;
+                Minutes = appointmentItem.ReminderMinutesBeforeStart;
+                EntryId = appointmentItem.EntryID;
+                return true;
+            }
         }
 
         /// <summary>

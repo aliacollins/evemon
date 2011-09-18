@@ -88,7 +88,7 @@ namespace EVEMon
         {
             get
             {
-                InstanceManager im = InstanceManager.GetInstance();
+                InstanceManager im = InstanceManager.Instance;
                 if (!im.CreatedNew)
                 {
                     im.Signal();

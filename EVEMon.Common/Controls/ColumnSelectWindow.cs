@@ -49,7 +49,7 @@ namespace EVEMon.Common.Controls
         private void UpdateContent()
         {
             clbColumns.Items.Clear();
-            foreach (int key in GetAllKeys())
+            foreach (int key in AllKeys)
             {
                 IColumnSettings column = m_columns.First(x => x.Key == key);
                 clbColumns.Items.Add(GetHeader(key), column.Visible);
@@ -67,7 +67,7 @@ namespace EVEMon.Common.Controls
 
             // Gets the key of the modified column
             string header = (string)clbColumns.Items[e.Index];
-            int key = GetAllKeys().First(x => GetHeader(x) == header);
+            int key = AllKeys.First(x => GetHeader(x) == header);
 
             // Gets the column for this key
             IColumnSettings column = m_columns.First(x => x.Key == key);
@@ -114,12 +114,12 @@ namespace EVEMon.Common.Controls
         private void btnReset_Click(object sender, EventArgs e)
         {
             m_columns.Clear();
-            m_columns.AddRange(GetDefaultColumns());
+            m_columns.AddRange(DefaultColumns);
             UpdateContent();
         }
 
         protected abstract string GetHeader(int key);
-        protected abstract IEnumerable<int> GetAllKeys();
-        protected abstract IEnumerable<IColumnSettings> GetDefaultColumns();
+        protected abstract IEnumerable<int> AllKeys { get; }
+        protected abstract IEnumerable<IColumnSettings> DefaultColumns { get; }
     }
 }
