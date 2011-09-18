@@ -43,16 +43,16 @@ namespace EVEMon.PieChart
                 return;
 
             // Layout
-            skillPieChartControl.LeftMargin = 20F;
-            skillPieChartControl.TopMargin = 15F;
-            skillPieChartControl.RightMargin = 20F;
-            skillPieChartControl.BottomMargin = 15F;
-            skillPieChartControl.FitChart = true;
-            skillPieChartControl.SliceRelativeHeight = Settings.UI.SkillPieChart.SliceHeight;
-            skillPieChartControl.InitialAngle = Settings.UI.SkillPieChart.InitialAngle;
-            skillPieChartControl.ShadowStyle = ShadowStyle.GradualShadow;
-            skillPieChartControl.EdgeColorType = EdgeColorType.DarkerThanSurface;
-            skillPieChartControl.EdgeLineWidth = 1F;
+            skillPieChartControl.LeftMargin(20F);
+            skillPieChartControl.TopMargin(15F);
+            skillPieChartControl.RightMargin(20F);
+            skillPieChartControl.BottomMargin(15F);
+            skillPieChartControl.FitChart(true);
+            skillPieChartControl.SliceRelativeHeight(Settings.UI.SkillPieChart.SliceHeight);
+            skillPieChartControl.InitialAngle(Settings.UI.SkillPieChart.InitialAngle);
+            skillPieChartControl.StyleOfShadow(ShadowStyle.GradualShadow);
+            skillPieChartControl.ColorTypeOfEdge(EdgeColorType.DarkerThanSurface);
+            skillPieChartControl.EdgeLineWidth(1F);
 
             Text = "Skillgroup chart for " + m_character.Name;
 
@@ -211,10 +211,10 @@ namespace EVEMon.PieChart
             }
 
             // Assign and sort
-            skillPieChartControl.Values = targetSkillPoints;
-            skillPieChartControl.Texts = names;
-            skillPieChartControl.ToolTips = descriptions;
-            skillPieChartControl.SliceRelativeDisplacements = slicesDiscplacements;
+            skillPieChartControl.Values(targetSkillPoints);
+            skillPieChartControl.Texts(names);
+            skillPieChartControl.ToolTips(descriptions);
+            skillPieChartControl.SliceRelativeDisplacements(slicesDiscplacements);
             skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);
         }
 
@@ -303,7 +303,7 @@ namespace EVEMon.PieChart
         /// <param name="e"></param>
         private void pieHeight_ValueChanged(object sender, EventArgs e)
         {
-            skillPieChartControl.SliceRelativeHeight = (float)pieHeight.Value;
+            skillPieChartControl.SliceRelativeHeight((float)pieHeight.Value);
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace EVEMon.PieChart
         /// <param name="e"></param>
         private void pieAngle_ValueChanged(object sender, EventArgs e)
         {
-            skillPieChartControl.InitialAngle = (float)pieAngle.Value;
+            skillPieChartControl.InitialAngle((float)pieAngle.Value);
         }
 
         /// <summary>

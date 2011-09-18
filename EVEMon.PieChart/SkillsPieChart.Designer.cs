@@ -59,7 +59,6 @@ namespace EVEMon.PieChart
             this.skillPieChartControl.Name = "skillPieChartControl";
             this.skillPieChartControl.Size = new System.Drawing.Size(642, 377);
             this.skillPieChartControl.TabIndex = 0;
-            this.skillPieChartControl.ToolTips = null;
             this.skillPieChartControl.DoubleClick += new System.EventHandler(this.skillPieChartControl_DoubleClick);
             // 
             // pieControlPanel

@@ -462,19 +462,22 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>PointF</c> in the middle of the pie top.
         /// </returns>
-        public PointF GetTextPosition()
+        public PointF GetTextPosition
         {
-            if (SweepAngle >= 180)
+            get
             {
-                return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
-                                       GetActualAngle(StartAngle) + SweepAngle / 2);
-            }
+                if (SweepAngle >= 180)
+                {
+                    return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
+                                           GetActualAngle(StartAngle) + SweepAngle / 2);
+                }
 
-            float x = (m_pointStart.X + m_pointEnd.X) / 2;
-            float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
-            float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
-            return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
-                                   GetActualAngle(angle));
+                float x = (m_pointStart.X + m_pointEnd.X) / 2;
+                float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
+                float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
+                return PeripheralPoint(m_center.X, m_center.Y, BoundingRectangle.Width / 3, BoundingRectangle.Height / 3,
+                                       GetActualAngle(angle));
+            }
         }
 
         /// <summary>

@@ -8,8 +8,6 @@ namespace EVEMon.PieChart
     /// </summary>
     public struct EdgeColor
     {
-        private const float BrightnessThreshold = 0.4F;
-
         /// <summary>
         ///   Gets the actual color used for rendering.
         /// </summary>
@@ -75,5 +73,7 @@ namespace EVEMon.PieChart
         {
             return color.GetBrightness() > BrightnessThreshold ? Color.Black : Color.White;
         }
+
+        private const float BrightnessThreshold = 0.4F;
     }
 }

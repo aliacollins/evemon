@@ -22,6 +22,8 @@ namespace EVEMon.PieChart
         private Color[] m_colors;
         private float m_sliceRelativeHeight;
         private float[] m_relativeSliceDisplacements = new[] { 0F };
+        private string[] m_texts;
+        private string[] m_tootips;
         private ShadowStyle m_shadowStyle = ShadowStyle.GradualShadow;
         private EdgeColorType m_edgeColorType = EdgeColorType.SystemColor;
         private float m_edgeLineWidth = 1F;
@@ -58,8 +60,8 @@ namespace EVEMon.PieChart
         /// </summary>
         public PieChartControl()
         {
-            Texts = null;
-            ToolTips = null;
+            m_texts = null;
+            m_tootips = null;
             PieChart = null;
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.DoubleBuffer |
@@ -70,188 +72,164 @@ namespace EVEMon.PieChart
             m_toolTip = new ToolTip();
         }
 
+        /// <summary>
+        /// Gets or sets the pie chart.
+        /// </summary>
+        /// <value>The pie chart.</value>
         public PieChart3D PieChart { get; private set; }
+
+        /// <summary>
+        /// Gets or sets colors to be used for rendering pie slices.
+        /// </summary>
+        /// <value>The colors.</value>
+        public Color[] Colors
+        {
+            get { return m_colors; }
+            set
+            {
+                m_colors = value;
+                Invalidate();
+            }
+        }
 
         /// <summary>
         ///   Sets the left margin for the chart.
         /// </summary>
-        public float LeftMargin
+        public void LeftMargin(float leftMargin)
         {
-            set
-            {
-                Debug.Assert(value >= 0);
-                m_leftMargin = value;
-                Invalidate();
-            }
+            Debug.Assert(leftMargin >= 0);
+            m_leftMargin = leftMargin;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the right margin for the chart.
         /// </summary>
-        public float RightMargin
+        public void RightMargin(float rightMargin)
         {
-            set
-            {
-                Debug.Assert(value >= 0);
-                m_rightMargin = value;
-                Invalidate();
-            }
+            Debug.Assert(rightMargin >= 0);
+            m_rightMargin = rightMargin;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the top margin for the chart.
         /// </summary>
-        public float TopMargin
+        public void TopMargin(float topMargin)
         {
-            set
-            {
-                Debug.Assert(value >= 0);
-                m_topMargin = value;
-                Invalidate();
-            }
+            Debug.Assert(topMargin >= 0);
+            m_topMargin = topMargin;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the bottom margin for the chart.
         /// </summary>
-        public float BottomMargin
+        public void BottomMargin(float bottomMargin)
         {
-            set
-            {
-                Debug.Assert(value >= 0);
-                m_bottomMargin = value;
-                Invalidate();
-            }
+            Debug.Assert(bottomMargin >= 0);
+            m_bottomMargin = bottomMargin;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the indicator if chart should fit the bounding rectangle
         ///   exactly.
         /// </summary>
-        public bool FitChart
+        public void FitChart(bool fitChart)
         {
-            set
-            {
-                m_fitChart = value;
-                Invalidate();
-            }
+            m_fitChart = fitChart;
+            Invalidate();
         }
+
 
         /// <summary>
         ///   Sets values to be represented by the chart.
         /// </summary>
-        public decimal[] Values
+        public void Values(decimal[] values)
         {
-            set
-            {
-                m_values = value;
-                Invalidate();
-            }
-        }
-
-        /// <summary>
-        ///   Sets colors to be used for rendering pie slices.
-        /// </summary>
-        public Color[] Colors
-        {
-            set
-            {
-                m_colors = value;
-                Invalidate();
-            }
-            get { return m_colors; }
+            m_values = values;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets values for slice displacements.
         /// </summary>
-        public float[] SliceRelativeDisplacements
+        public void SliceRelativeDisplacements(float[] sliceRelativeDisplacements)
         {
-            set
-            {
-                m_relativeSliceDisplacements = value;
-                Invalidate();
-            }
+            m_relativeSliceDisplacements = sliceRelativeDisplacements;
+            Invalidate();
         }
 
         /// <summary>
         ///   Gets or sets tooltip texts.
         /// </summary>
-        public string[] ToolTips { private get; set; }
+        public void ToolTips(string[] tooltips)
+        {
+            m_tootips = tooltips;
+        }
 
         /// <summary>
         ///   Sets texts appearing by each pie slice.
         /// </summary>
-        public string[] Texts { private get; set; }
+        public void Texts(string[] texts)
+        {
+            m_texts = texts;
+        }
 
         /// <summary>
         ///   Sets pie slice reative height.
         /// </summary>
-        public float SliceRelativeHeight
+        public void SliceRelativeHeight(float sliceRelativeHeight)
         {
-            set
-            {
-                m_sliceRelativeHeight = value;
-                Invalidate();
-            }
+            m_sliceRelativeHeight = sliceRelativeHeight;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the shadow style.
         /// </summary>
-        public ShadowStyle ShadowStyle
+        public void StyleOfShadow(ShadowStyle styleOfShadow)
         {
-            set
-            {
-                m_shadowStyle = value;
-                Invalidate();
-            }
+            m_shadowStyle = styleOfShadow;
+            Invalidate();
         }
 
         /// <summary>
         ///  Sets the edge color type.
         /// </summary>
-        public EdgeColorType EdgeColorType
+        public void ColorTypeOfEdge(EdgeColorType colorTypeOfEdge)
         {
-            set
-            {
-                m_edgeColorType = value;
-                Invalidate();
-            }
+            m_edgeColorType = colorTypeOfEdge;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the edge lines width.
         /// </summary>
-        public float EdgeLineWidth
+        public void EdgeLineWidth(float edgeLineWidth)
         {
-            set
-            {
-                m_edgeLineWidth = value;
-                Invalidate();
-            }
+            m_edgeLineWidth = edgeLineWidth;
+            Invalidate();
         }
 
         /// <summary>
         ///   Sets the initial angle from which pies are drawn.
         /// </summary>
-        public float InitialAngle
+        public void InitialAngle(float initialAngle)
         {
-            set
-            {
-                float newAngle = value;
+            float newAngle = initialAngle;
 
-                if (newAngle > 360.0f)
-                    newAngle -= 360.0f;
+            if (newAngle > 360.0f)
+                newAngle -= 360.0f;
 
-                if (newAngle < 0.0f)
-                    newAngle += 360.0f;
+            if (newAngle < 0.0f)
+                newAngle += 360.0f;
 
-                OnAngleChange(new AngleChangeEventArgs(m_initialAngle, newAngle));
+            OnAngleChange(new AngleChangeEventArgs(m_initialAngle, newAngle));
 
-                m_initialAngle = newAngle;
-                Invalidate();
-            }
+            m_initialAngle = newAngle;
+            Invalidate();
         }
 
         /// <summary>
@@ -299,16 +277,16 @@ namespace EVEMon.PieChart
                 PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight,
                                           m_drawTexts);
             }
-            PieChart.FitToBoundingRectangle = m_fitChart;
-            PieChart.InitialAngle = m_initialAngle;
-            PieChart.SliceRelativeDisplacements = m_drawRelativeSliceDisplacements;
-            PieChart.EdgeColorType = m_edgeColorType;
-            PieChart.EdgeLineWidth = m_edgeLineWidth;
-            PieChart.ShadowStyle = m_shadowStyle;
-            PieChart.HighlightedIndex = m_highlightedIndex;
+            PieChart.FitToBoundingRectangle(m_fitChart);
+            PieChart.InitialAngle(m_initialAngle);
+            PieChart.SliceRelativeDisplacements(m_drawRelativeSliceDisplacements);
+            PieChart.ColorTypeOfEdge(m_edgeColorType);
+            PieChart.EdgeLineWidth(m_edgeLineWidth);
+            PieChart.StyleOfShadow(m_shadowStyle);
+            PieChart.HighlightedIndex(m_highlightedIndex);
             PieChart.Draw(graphics);
-            PieChart.Font = Font;
-            PieChart.ForeColor = ForeColor;
+            PieChart.Font(Font);
+            PieChart.ForeColor(ForeColor);
             PieChart.PlaceTexts(graphics);
         }
 
@@ -373,7 +351,10 @@ namespace EVEMon.PieChart
                 return;
 
             if (m_mouseDown)
-                InitialAngle = m_initialAngle - (e.X - m_lastX);
+            {
+                float newAngle = m_initialAngle - (e.X - m_lastX);
+                InitialAngle(newAngle);
+            }
             else
             {
                 int index = PieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
@@ -465,8 +446,8 @@ namespace EVEMon.PieChart
             m_drawValues = (decimal[])m_values.Clone();
             m_drawColors = (Color[])m_colors.Clone();
             m_drawRelativeSliceDisplacements = (float[])m_relativeSliceDisplacements.Clone();
-            m_drawToolTipTexts = (string[])ToolTips.Clone();
-            m_drawTexts = (string[])Texts.Clone();
+            m_drawToolTipTexts = (string[])m_tootips.Clone();
+            m_drawTexts = (string[])m_texts.Clone();
 
 
             // fill the sort order to default:
@@ -493,8 +474,8 @@ namespace EVEMon.PieChart
                 decimal[] values = (decimal[])m_values.Clone();
                 Color[] colours = (Color[])m_colors.Clone();
                 float[] displacements = (float[])m_relativeSliceDisplacements.Clone();
-                string[] tooltips = (string[])ToolTips.Clone();
-                string[] texts = (string[])Texts.Clone();
+                string[] tooltips = (string[])m_tootips.Clone();
+                string[] texts = (string[])m_texts.Clone();
 
                 // reordering the slices
                 for (int num = 0; num < values.Length; num++)
