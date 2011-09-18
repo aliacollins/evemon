@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -37,12 +36,12 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Array of values to be presented by the chart.
         /// </summary>
-        private Collection<Decimal> m_values = new Collection<Decimal>();
+        private decimal[] m_values = new decimal[] { };
 
         /// <summary>
         ///   Array of relative displacements from the common center.
         /// </summary>
-        private Collection<Single> m_sliceRelativeDisplacements = new Collection<Single>();
+        private float[] m_sliceRelativeDisplacements = new[] { 0F };
 
         /// <summary>
         ///   Index of the currently highlighted pie slice.
@@ -61,7 +60,7 @@ namespace EVEMon.PieChart
         {
             FitToBoundingRectangle = true;
             ShadowStyle = ShadowStyle.NoShadow;
-            Colors = new Collection<Color>
+            Colors = new[]
                          {
                              Color.Red,
                              Color.Green,
@@ -104,7 +103,7 @@ namespace EVEMon.PieChart
         ///   An array of <c>decimal</c> values to chart.
         /// </param>
         public PieChart3D(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
-                          Collection<Decimal> values)
+                          decimal[] values)
             : this()
         {
             Left = xBoundingRect;
@@ -140,7 +139,7 @@ namespace EVEMon.PieChart
         ///   bounding rectangle.
         /// </param>
         public PieChart3D(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
-                          Collection<Decimal> values, float sliceRelativeHeight)
+                          decimal[] values, float sliceRelativeHeight)
             : this(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, values)
         {
             m_sliceRelativeHeight = sliceRelativeHeight;
@@ -157,9 +156,10 @@ namespace EVEMon.PieChart
         ///   Array of values to initialize with.
         /// </param>
         /// <param name="sliceRelativeHeight"></param>
-        public PieChart3D(RectangleF boundingRectangle, Collection<Decimal> values, float sliceRelativeHeight)
-            : this(boundingRectangle.X, boundingRectangle.Y, boundingRectangle.Width, boundingRectangle.Height,
-            values, sliceRelativeHeight)
+        public PieChart3D(RectangleF boundingRectangle, decimal[] values, float sliceRelativeHeight)
+            : this(
+                boundingRectangle.X, boundingRectangle.Y, boundingRectangle.Width, boundingRectangle.Height, values,
+                sliceRelativeHeight)
         {
         }
 
@@ -192,7 +192,7 @@ namespace EVEMon.PieChart
         ///   bounding rectangle.
         /// </param>
         public PieChart3D(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
-                          Collection<Decimal> values, Collection<Color> sliceColors, float sliceRelativeHeight)
+                          decimal[] values, Color[] sliceColors, float sliceRelativeHeight)
             : this(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, values, sliceRelativeHeight)
         {
             Colors = sliceColors;
@@ -214,7 +214,7 @@ namespace EVEMon.PieChart
         /// <param name="sliceRelativeHeight">
         ///   Pie slice relative height.
         /// </param>
-        public PieChart3D(RectangleF boundingRectangle, Collection<Decimal> values, Collection<Color> sliceColors, float sliceRelativeHeight)
+        public PieChart3D(RectangleF boundingRectangle, decimal[] values, Color[] sliceColors, float sliceRelativeHeight)
             : this(boundingRectangle, values, sliceRelativeHeight)
         {
             Colors = sliceColors;
@@ -252,7 +252,7 @@ namespace EVEMon.PieChart
         ///   An array of strings that are displayed on corresponding slice.
         /// </param>
         public PieChart3D(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
-                          Collection<Decimal> values, Collection<Color> sliceColors, float sliceRelativeHeight, Collection<String> texts)
+                          decimal[] values, Color[] sliceColors, float sliceRelativeHeight, string[] texts)
             : this(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, values, sliceColors, sliceRelativeHeight)
         {
             Texts = texts;
@@ -287,7 +287,7 @@ namespace EVEMon.PieChart
         ///   An array of strings that are displayed on corresponding slice.
         /// </param>
         public PieChart3D(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
-                          Collection<Decimal> values, float sliceRelativeHeight, Collection<String> texts)
+                          decimal[] values, float sliceRelativeHeight, string[] texts)
             : this(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, values, sliceRelativeHeight)
         {
             Texts = texts;
@@ -331,11 +331,11 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets values to be displayed on the chart.
         /// </summary>
-        public Collection<Decimal> Values
+        public decimal[] Values
         {
             set
             {
-                Debug.Assert(value != null && value.Count > 0);
+                Debug.Assert(value != null && value.Length > 0);
                 m_values = value;
             }
         }
@@ -343,12 +343,12 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets colors used for individual pie slices.
         /// </summary>
-        public Collection<Color> Colors { private get; set; }
+        public Color[] Colors { private get; set; }
 
         /// <summary>
         ///   Sets text displayed by slices.
         /// </summary>
-        public Collection<String> Texts { private get; set; }
+        public string[] Texts { private get; set; }
 
         /// <summary>
         ///   Gets or sets the font of the text displayed by the control.
@@ -393,7 +393,7 @@ namespace EVEMon.PieChart
             set
             {
                 Debug.Assert(IsDisplacementValid(value));
-                m_sliceRelativeDisplacements = new Collection<Single> { value };
+                m_sliceRelativeDisplacements = new[] { value };
             }
         }
 
@@ -401,7 +401,7 @@ namespace EVEMon.PieChart
         ///   Sets the slice displacement relative to the ellipse semi-axis.
         ///   Must be less than 1.
         /// </summary>
-        public Collection<Single> SliceRelativeDisplacements
+        public float[] SliceRelativeDisplacements
         {
             set
             {
@@ -518,7 +518,7 @@ namespace EVEMon.PieChart
         /// </param>
         public void Draw(Graphics graphics)
         {
-            Debug.Assert(m_values != null && m_values.Count > 0);
+            Debug.Assert(m_values != null && m_values.Length > 0);
             InitializePieSlices();
             if (FitToBoundingRectangle)
             {
@@ -764,7 +764,7 @@ namespace EVEMon.PieChart
             get
             {
                 float value = 0F;
-                for (int i = 0; i < m_sliceRelativeDisplacements.Count && i < m_values.Count; ++i)
+                for (int i = 0; i < m_sliceRelativeDisplacements.Length && i < m_values.Length; ++i)
                 {
                     if (m_sliceRelativeDisplacements[i] > value)
                         value = m_sliceRelativeDisplacements[i];
@@ -824,7 +824,7 @@ namespace EVEMon.PieChart
             // some values and indices that will be used in the loop
             SizeF topEllipeSize = TopEllipseSize;
             SizeF largestDisplacementEllipseSize = LargestDisplacementEllipseSize;
-            int maxDisplacementIndex = m_sliceRelativeDisplacements.Count - 1;
+            int maxDisplacementIndex = m_sliceRelativeDisplacements.Length - 1;
             float largestDisplacement = LargestDisplacement;
             ArrayList listPieSlices = new ArrayList();
             m_pieSlicesMapping.Clear();
@@ -832,7 +832,7 @@ namespace EVEMon.PieChart
             int backPieIndex = -1;
             int displacementIndex = 0;
             double startAngle = m_initialAngle;
-            for (int i = 0; i < m_values.Count; ++i)
+            for (int i = 0; i < m_values.Length; ++i)
             {
                 decimal itemValue = m_values[i];
                 double sweepAngle = (double)itemValue / sum * 360;
@@ -883,7 +883,7 @@ namespace EVEMon.PieChart
                     ++displacementIndex;
                 ++colorIndex;
                 // if all colors have been exhausted, reset color index
-                if (colorIndex >= Colors.Count)
+                if (colorIndex >= Colors.Length)
                     colorIndex = 0;
                 // prepare for the next pie slice
                 startAngle += sweepAngle;
