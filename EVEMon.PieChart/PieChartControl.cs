@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -19,7 +20,7 @@ namespace EVEMon.PieChart
         private bool m_fitChart;
 
         private decimal[] m_values;
-        private Color[] m_colors;
+        private Collection<Color> m_colors;
         private float m_sliceRelativeHeight;
         private float[] m_relativeSliceDisplacements = new[] { 0F };
         private string[] m_texts;
@@ -82,7 +83,7 @@ namespace EVEMon.PieChart
         /// Gets or sets colors to be used for rendering pie slices.
         /// </summary>
         /// <value>The colors.</value>
-        public Color[] Colors
+        public Collection<Color> Colors
         {
             get { return m_colors; }
             set
@@ -431,7 +432,7 @@ namespace EVEMon.PieChart
         /// Event for when the graph angle changes
         /// </summary>
         /// <param name="e"></param>
-        private void OnAngleChange(AngleChangeEventArgs e)
+        private void OnAngleChange(EventArgs e)
         {
             if (AngleChange != null)
                 AngleChange(this, e);
@@ -444,7 +445,7 @@ namespace EVEMon.PieChart
         private void CopyDataToDrawVars()
         {
             m_drawValues = (decimal[])m_values.Clone();
-            m_drawColors = (Color[])m_colors.Clone();
+            m_drawColors = m_colors.ToArray();
             m_drawRelativeSliceDisplacements = (float[])m_relativeSliceDisplacements.Clone();
             m_drawToolTipTexts = (string[])m_tootips.Clone();
             m_drawTexts = (string[])m_texts.Clone();
@@ -472,7 +473,7 @@ namespace EVEMon.PieChart
                 // take a copy of the original values
                 // then use it to do the calculations
                 decimal[] values = (decimal[])m_values.Clone();
-                Color[] colours = (Color[])m_colors.Clone();
+                Color[] colours = m_colors.ToArray();
                 float[] displacements = (float[])m_relativeSliceDisplacements.Clone();
                 string[] tooltips = (string[])m_tootips.Clone();
                 string[] texts = (string[])m_texts.Clone();

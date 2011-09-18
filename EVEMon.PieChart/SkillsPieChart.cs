@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -69,17 +70,18 @@ namespace EVEMon.PieChart
             if (Settings.UI.SkillPieChart.Colors.Count < m_character.SkillGroups.Count)
             {
                 const int Alpha = 125;
-                List<Color> newColors = new List<Color>();
+                Collection<Color> newColors = new Collection<Color>();
                 while (newColors.Count < m_character.SkillGroups.Count)
                 {
                     newColors.Add(Color.FromArgb(Alpha, Color.Red));
                     newColors.Add(Color.FromArgb(Alpha, Color.Green));
                     newColors.Add(Color.FromArgb(Alpha, Color.Blue));
                 }
-                skillPieChartControl.Colors = newColors.ToArray();
+                skillPieChartControl.Colors = newColors;
             }
             else
-                skillPieChartControl.Colors = Settings.UI.SkillPieChart.Colors.Select(c => (Color)c).ToArray();
+                skillPieChartControl.Colors =
+                    new Collection<Color>(Settings.UI.SkillPieChart.Colors.Select(color => (Color)color).ToList());
 
             // Initialize plans combox Box                        
             planSelector.SelectedIndex = 0;
