@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace EVEMon.PieChart
             skillPieChartControl.EdgeColorType = EdgeColorType.DarkerThanSurface;
             skillPieChartControl.EdgeLineWidth = 1F;
 
-            Text = "Skillgroup chart for " + m_character.Name;
+            Text = String.Format("Skillgroup chart for {0}", m_character.Name);
 
             // Events
             skillPieChartControl.AngleChange += skillPieChartControl_AngleChange;
@@ -69,17 +70,17 @@ namespace EVEMon.PieChart
             if (Settings.UI.SkillPieChart.Colors.Count < m_character.SkillGroups.Count)
             {
                 const int Alpha = 125;
-                List<Color> newColors = new List<Color>();
+                Collection<Color> newColors = new Collection<Color>();
                 while (newColors.Count < m_character.SkillGroups.Count)
                 {
                     newColors.Add(Color.FromArgb(Alpha, Color.Red));
                     newColors.Add(Color.FromArgb(Alpha, Color.Green));
                     newColors.Add(Color.FromArgb(Alpha, Color.Blue));
                 }
-                skillPieChartControl.Colors = newColors.ToArray();
+                skillPieChartControl.Colors = newColors;
             }
             else
-                skillPieChartControl.Colors = Settings.UI.SkillPieChart.Colors.Select(c => (Color)c).ToArray();
+                skillPieChartControl.Colors = (Collection<Color>)Settings.UI.SkillPieChart.Colors.Select(c => (Color)c);
 
             // Initialize plans combox Box                        
             planSelector.SelectedIndex = 0;
@@ -189,10 +190,10 @@ namespace EVEMon.PieChart
                 decimal destSP = targetSkillPoints[i];
 
                 StringBuilder description = new StringBuilder();
-                description.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1} skills, {2:#,###} skillpoints", names[i],
+                description.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1} skills, {2:N0} skillpoints", names[i],
                                          skillCounts[i], srcSP);
                 if (srcSP != destSP)
-                    description.AppendFormat(CultureConstants.DefaultCulture, " / {0:#,###} after plan completion", destSP);
+                    description.AppendFormat(CultureConstants.DefaultCulture, " / {0:N0} after plan completion", destSP);
 
                 description.Append(")");
                 descriptions[i] = description.ToString();
@@ -211,10 +212,10 @@ namespace EVEMon.PieChart
             }
 
             // Assign and sort
-            skillPieChartControl.Values = targetSkillPoints;
-            skillPieChartControl.Texts = names;
-            skillPieChartControl.ToolTips = descriptions;
-            skillPieChartControl.SliceRelativeDisplacements = slicesDiscplacements;
+            skillPieChartControl.Values = new Collection<Decimal>(targetSkillPoints);
+            skillPieChartControl.Texts = new Collection<String>(names);
+            skillPieChartControl.ToolTips = new Collection<String>(descriptions);
+            skillPieChartControl.SliceRelativeDisplacements = new Collection<Single>(slicesDiscplacements);
             skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);
         }
 
