@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -16,6 +15,7 @@ namespace EVEMon.PieChart
     public partial class SkillsPieChart : EVEMonForm
     {
         private readonly Character m_character;
+        private const int Alpha = 125;
 
 
         #region Construction, loading, closing
@@ -55,7 +55,7 @@ namespace EVEMon.PieChart
             skillPieChartControl.ColorTypeOfEdge(EdgeColorType.DarkerThanSurface);
             skillPieChartControl.EdgeLineWidth(1F);
 
-            Text = "Skillgroup chart for " + m_character.Name;
+            Text = String.Format("Skillgroup chart for {0}", m_character.Name);
 
             // Events
             skillPieChartControl.AngleChange += skillPieChartControl_AngleChange;
@@ -69,8 +69,7 @@ namespace EVEMon.PieChart
             // Check there are enough colors or create them
             if (Settings.UI.SkillPieChart.Colors.Count < m_character.SkillGroups.Count)
             {
-                const int Alpha = 125;
-                Collection<Color> newColors = new Collection<Color>();
+                List<Color> newColors = new List<Color>();
                 while (newColors.Count < m_character.SkillGroups.Count)
                 {
                     newColors.Add(Color.FromArgb(Alpha, Color.Red));
@@ -80,8 +79,7 @@ namespace EVEMon.PieChart
                 skillPieChartControl.Colors = newColors;
             }
             else
-                skillPieChartControl.Colors =
-                    new Collection<Color>(Settings.UI.SkillPieChart.Colors.Select(color => (Color)color).ToList());
+                skillPieChartControl.Colors = Settings.UI.SkillPieChart.Colors.Select(color => (Color)color);
 
             // Initialize plans combox Box                        
             planSelector.SelectedIndex = 0;
@@ -351,10 +349,16 @@ namespace EVEMon.PieChart
             if (sortBySizeCheck.Checked)
             {
                 int realIndex = skillPieChartControl.GetIndex(index);
-                skillPieChartControl.Colors[realIndex] = Color.FromArgb(125, m_colorDialog.Color);
+                Color[] colors = skillPieChartControl.Colors.ToArray();
+                colors[realIndex] = Color.FromArgb(Alpha, m_colorDialog.Color);
+                skillPieChartControl.Colors = colors;
             }
             else
-                skillPieChartControl.Colors[index] = Color.FromArgb(125, m_colorDialog.Color);
+            {
+                Color[] colors = skillPieChartControl.Colors.ToArray();
+                colors[index] = Color.FromArgb(Alpha, m_colorDialog.Color);
+                skillPieChartControl.Colors = colors;
+            }
 
             // Forces an update of the control
             skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);

@@ -1,5 +1,6 @@
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -20,7 +21,7 @@ namespace EVEMon.PieChart
         private bool m_fitChart;
 
         private decimal[] m_values;
-        private Collection<Color> m_colors;
+        private Color[] m_colors;
         private float m_sliceRelativeHeight;
         private float[] m_relativeSliceDisplacements = new[] { 0F };
         private string[] m_texts;
@@ -83,12 +84,16 @@ namespace EVEMon.PieChart
         /// Gets or sets colors to be used for rendering pie slices.
         /// </summary>
         /// <value>The colors.</value>
-        public Collection<Color> Colors
+        [Browsable(false)]
+        public IEnumerable<Color> Colors
         {
             get { return m_colors; }
             set
             {
-                m_colors = value;
+                if (value == null)
+                    return;
+
+                m_colors = value.ToArray();
                 Invalidate();
             }
         }
@@ -445,7 +450,7 @@ namespace EVEMon.PieChart
         private void CopyDataToDrawVars()
         {
             m_drawValues = (decimal[])m_values.Clone();
-            m_drawColors = m_colors.ToArray();
+            m_drawColors = (Color[])m_colors.Clone();
             m_drawRelativeSliceDisplacements = (float[])m_relativeSliceDisplacements.Clone();
             m_drawToolTipTexts = (string[])m_tootips.Clone();
             m_drawTexts = (string[])m_texts.Clone();
@@ -473,7 +478,7 @@ namespace EVEMon.PieChart
                 // take a copy of the original values
                 // then use it to do the calculations
                 decimal[] values = (decimal[])m_values.Clone();
-                Color[] colours = m_colors.ToArray();
+                Color[] colours = (Color[])m_colors.Clone();
                 float[] displacements = (float[])m_relativeSliceDisplacements.Clone();
                 string[] tooltips = (string[])m_tootips.Clone();
                 string[] texts = (string[])m_texts.Clone();

@@ -227,6 +227,7 @@ namespace EVEMon.PieChart
             this.Controls.Add(this.planSelector);
             this.Controls.Add(this.pieControlPanel);
             this.Controls.Add(this.skillPieChartControl);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(674, 490);
             this.Name = "SkillsPieChart";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
