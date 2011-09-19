@@ -137,11 +137,10 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         private MultiPanelPage GetMultiPanelPage(Control ctrl)
         {
             // If the control is a page, return it if the parent is the represented panel, null otherwise.
-            if (ctrl is MultiPanelPage)
-            {
-                MultiPanelPage page = (MultiPanelPage)ctrl;
+            MultiPanelPage page = ctrl as MultiPanelPage;
+
+            if (page != null)
                 return ReferenceEquals(m_panel, page.Parent) ? page : null;
-            }
 
             // If the control has a parent, browser its ancestry
             return ctrl.Parent != null ? GetMultiPanelPage(ctrl.Parent) : null;

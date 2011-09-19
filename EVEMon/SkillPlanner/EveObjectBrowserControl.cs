@@ -344,7 +344,8 @@ namespace EVEMon.SkillPlanner
                 min = values.Min();
                 max = values.Max();
                 allEqual = values.All(x => Math.Abs(x - min) < float.Epsilon);
-                if (obj is EveProperty && !((EveProperty)obj).HigherIsBetter)
+                EveProperty prop = obj as EveProperty;
+                if (prop != null && !prop.HigherIsBetter)
                 {
                     float temp = min;
                     min = max;

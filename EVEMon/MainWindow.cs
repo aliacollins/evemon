@@ -1680,7 +1680,8 @@ namespace EVEMon
         private void trayIcon_Click(object sender, EventArgs e)
         {
             // Returns for right-button click
-            if (e is MouseEventArgs && ((MouseEventArgs)e).Button == MouseButtons.Right)
+            MouseEventArgs mouseClick = e as MouseEventArgs;
+            if (mouseClick != null && mouseClick.Button == MouseButtons.Right)
                 return;
 
             // Update the tray icon's visibility

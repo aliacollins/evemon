@@ -60,6 +60,9 @@ namespace EVEMon.Common
         /// </returns>
         private int CompareCore(MarketOrder x, MarketOrder y)
         {
+            BuyOrder buyOrderX = x as BuyOrder;
+            BuyOrder buyOrderY = y as BuyOrder;
+
             switch (m_column)
             {
                 case MarketOrderColumn.Duration:
@@ -113,11 +116,10 @@ namespace EVEMon.Common
 
                 case MarketOrderColumn.OrderRange:
                     // Compare applies only to BuyOrder 
-                    return (x is BuyOrder && y is BuyOrder ? ((BuyOrder)x).Range.CompareTo(((BuyOrder)y).Range) : 0);
-
+                    return (buyOrderX != null && buyOrderY != null ? buyOrderX.Range.CompareTo(buyOrderY.Range) : 0);
                 case MarketOrderColumn.Escrow:
                     // Compare applies only to BuyOrder 
-                    return (x is BuyOrder && y is BuyOrder ? ((BuyOrder)x).Escrow.CompareTo(((BuyOrder)y).Escrow) : 0);
+                    return (buyOrderX != null && buyOrderY != null ? buyOrderX.Escrow.CompareTo(buyOrderY.Escrow) : 0);
 
                 default:
                     return 0;

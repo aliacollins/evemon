@@ -508,6 +508,9 @@ namespace EVEMon
         /// <param name="column"></param>
         private void SetColumn(MarketOrder order, ListViewItem.ListViewSubItem item, MarketOrderColumn column)
         {
+            BuyOrder buyOrder = order as BuyOrder;
+            ConquerableStation outpost = order.Station as ConquerableStation;
+
             switch (column)
             {
                 case MarketOrderColumn.Duration:
@@ -534,8 +537,8 @@ namespace EVEMon
                     item.Text = order.Item.MarketGroup.Name;
                     break;
                 case MarketOrderColumn.Location:
-                    item.Text = (order.Station is ConquerableStation
-                                     ? (order.Station as ConquerableStation).FullLocation
+                    item.Text = (outpost != null
+                                     ? outpost.FullLocation
                                      : order.Station.FullLocation);
                     break;
                 case MarketOrderColumn.MinimumVolume:
@@ -555,21 +558,21 @@ namespace EVEMon
                     item.Text = order.Station.SolarSystem.Name;
                     break;
                 case MarketOrderColumn.Station:
-                    item.Text = (order.Station is ConquerableStation
-                                     ? (order.Station as ConquerableStation).FullName
+                    item.Text = (outpost != null
+                                     ? outpost.FullName
                                      : order.Station.Name);
                     break;
                 case MarketOrderColumn.TotalPrice:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : String.Format(CultureConstants.DefaultCulture, order.TotalPrice.ToString("#,##0.#0")));
-                    item.ForeColor = (order is BuyOrder ? Color.DarkRed : Color.DarkGreen);
+                    item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : String.Format(CultureConstants.DefaultCulture, order.UnitaryPrice.ToString("#,##0.#0")));
-                    item.ForeColor = (order is BuyOrder ? Color.DarkRed : Color.DarkGreen);
+                    item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.Volume:
                     item.Text = String.Format(CultureConstants.DefaultCulture, "{0} / {1}",
@@ -588,16 +591,16 @@ namespace EVEMon
                     item.Text = order.LastStateChange.ToLocalTime().ToShortDateString();
                     break;
                 case MarketOrderColumn.OrderRange:
-                    if (order is BuyOrder)
-                        item.Text = (order as BuyOrder).RangeDescription;
+                    if (buyOrder != null)
+                        item.Text = buyOrder.RangeDescription;
                     break;
                 case MarketOrderColumn.Escrow:
-                    if (order is BuyOrder)
+                    if (buyOrder != null)
                     {
                         item.Text = (m_numberFormat
-                                         ? MarketOrder.Format((order as BuyOrder).Escrow, AbbreviationFormat.AbbreviationSymbols)
+                                         ? MarketOrder.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
                                          : String.Format(CultureConstants.DefaultCulture,
-                                                         (order as BuyOrder).Escrow.ToString("#,##0.#0")));
+                                                         buyOrder.Escrow.ToString("#,##0.#0")));
                         item.ForeColor = Color.DarkBlue;
                     }
                     break;

@@ -93,13 +93,11 @@ namespace EVEMon.Common.Scheduling
             s_schedule.Clear();
             foreach (SerializableScheduleEntry serialEntry in serial.Entries)
             {
-
-                if (serialEntry is SerializableRecurringScheduleEntry)
-                {
-                    s_schedule.Add(new RecurringScheduleEntry(serialEntry as SerializableRecurringScheduleEntry));
-                    continue;
-                }
-                s_schedule.Add(new SimpleScheduleEntry(serialEntry));
+                SerializableRecurringScheduleEntry serialReccuringEntry= serialEntry as SerializableRecurringScheduleEntry;
+                if (serialReccuringEntry != null)
+                    s_schedule.Add(new RecurringScheduleEntry(serialReccuringEntry));
+                else
+                    s_schedule.Add(new SimpleScheduleEntry(serialEntry));
             }
 
             // Notify to subscribers

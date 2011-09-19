@@ -362,9 +362,9 @@ namespace EVEMon.ApiCredentialsManagement
                     string typeText = "CCP";
                     string uriText = "-";
 
-                    if (character is UriCharacter)
+                    UriCharacter uriCharacter = character as UriCharacter;
+                    if (uriCharacter != null)
                     {
-                        UriCharacter uriCharacter = (UriCharacter)character;
                         typeText = (uriCharacter.Uri.IsFile ? "File" : "Url");
                         uriText = uriCharacter.Uri.ToString();
 

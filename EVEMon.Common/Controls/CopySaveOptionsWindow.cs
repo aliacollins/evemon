@@ -74,11 +74,10 @@ namespace EVEMon.Common.Controls
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is CheckBox && control != cbRememberOptions)
-                {
-                    CheckBox checkBox = (CheckBox)control;
+                CheckBox checkBox = control as CheckBox;
+                if (checkBox != null && checkBox != cbRememberOptions)
                     checkBox.CheckedChanged += checkBox_CheckedChanged;
-                }
+
                 RecurseUnder(control);
             }
         }

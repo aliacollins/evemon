@@ -810,9 +810,10 @@ namespace EVEMon
             }
             else
             {
+                ConquerableStation outpost = station as ConquerableStation;
                 location = String.Format("{0} ({1:N1})\nDocked in {2}", station.SolarSystem.FullLocation,
                                          station.SolarSystem.SecurityLevel,
-                                         (station is ConquerableStation ? ((ConquerableStation)station).FullName : station.Name));
+                                         (outpost != null ? outpost.FullName : station.Name));
             }
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);

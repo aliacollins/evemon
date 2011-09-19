@@ -31,8 +31,9 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (SerializableOrderBase srcOrder in src)
             {
-                if (srcOrder is SerializableBuyOrder)
-                    Items.Add(new BuyOrder((SerializableBuyOrder)srcOrder));
+                SerializableBuyOrder buyOrder = srcOrder as SerializableBuyOrder;
+                if (buyOrder != null)
+                    Items.Add(new BuyOrder(buyOrder));
                 else
                     Items.Add(new SellOrder((SerializableSellOrder)srcOrder));
             }

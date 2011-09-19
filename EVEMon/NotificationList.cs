@@ -352,33 +352,37 @@ namespace EVEMon
         private static void ShowDetails(NotificationEventArgs notification)
         {
             // API error ?
-            if (notification is APIErrorNotificationEventArgs)
+            APIErrorNotificationEventArgs errorNotification = notification as APIErrorNotificationEventArgs;
+            if (errorNotification != null)
             {
                 ApiErrorWindow window = WindowsFactory<ApiErrorWindow>.ShowUnique();
-                window.Notification = (APIErrorNotificationEventArgs)notification;
+                window.Notification = errorNotification;
                 return;
             }
 
             // Skills Completion ?
-            if (notification is SkillCompletionNotificationEventArgs)
+            SkillCompletionNotificationEventArgs skillNotifications = notification as SkillCompletionNotificationEventArgs;
+            if (skillNotifications != null)
             {
                 SkillCompletionWindow window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
-                window.Notification = (SkillCompletionNotificationEventArgs)notification;
+                window.Notification = skillNotifications;
                 return;
             }
 
             // Claimable certificate ?
-            if (notification is ClaimableCertificateNotificationEventArgs)
+            ClaimableCertificateNotificationEventArgs certNotifications =
+                notification as ClaimableCertificateNotificationEventArgs;
+            if (certNotifications != null)
             {
                 ClaimableCertificateWindow window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
-                window.Notification = (ClaimableCertificateNotificationEventArgs)notification;
+                window.Notification = certNotifications;
                 return;
             }
 
             // Market orders ?
-            if (notification is MarketOrdersNotificationEventArgs)
+            MarketOrdersNotificationEventArgs ordersNotification = notification as MarketOrdersNotificationEventArgs;
+            if (ordersNotification != null)
             {
-                MarketOrdersNotificationEventArgs ordersNotification = (MarketOrdersNotificationEventArgs)notification;
                 MarketOrdersWindow window = WindowsFactory<MarketOrdersWindow>.ShowUnique();
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
@@ -387,9 +391,9 @@ namespace EVEMon
             }
 
             // Industry jobs ?
-            if (notification is IndustryJobsNotificationEventArgs)
+            IndustryJobsNotificationEventArgs jobsNotification = (IndustryJobsNotificationEventArgs)notification;
+            if (jobsNotification != null)
             {
-                IndustryJobsNotificationEventArgs jobsNotification = (IndustryJobsNotificationEventArgs)notification;
                 IndustryJobsWindow window = WindowsFactory<IndustryJobsWindow>.ShowUnique();
                 window.Jobs = jobsNotification.Jobs;
                 window.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
@@ -411,23 +415,24 @@ namespace EVEMon
             }
 
             // API error ?
-            if (notification is APIErrorNotificationEventArgs)
+            APIErrorNotificationEventArgs errorNotification = notification as APIErrorNotificationEventArgs;
+            if (errorNotification != null)
             {
-                APIErrorNotificationEventArgs errorNotification = (APIErrorNotificationEventArgs)notification;
                 toolTip.SetToolTip(listBox, errorNotification.Result.ErrorMessage);
                 toolTip.Active = true;
                 return;
             }
 
             // Skills Completion ?
-            if (notification is SkillCompletionNotificationEventArgs)
+            SkillCompletionNotificationEventArgs skillNotifications = notification as SkillCompletionNotificationEventArgs;
+            if (skillNotifications != null)
             {
-                SkillCompletionNotificationEventArgs skillNotifications = (SkillCompletionNotificationEventArgs)notification;
                 StringBuilder builder = new StringBuilder();
                 foreach (QueuedSkill skill in skillNotifications.Skills)
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture,
-                                         "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine();
+                                         "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine
+                        ();
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());
                 toolTip.Active = true;
@@ -435,10 +440,10 @@ namespace EVEMon
             }
 
             // Claimable certificate ?
-            if (notification is ClaimableCertificateNotificationEventArgs)
+            ClaimableCertificateNotificationEventArgs certNotifications =
+                notification as ClaimableCertificateNotificationEventArgs;
+            if (certNotifications != null)
             {
-                ClaimableCertificateNotificationEventArgs certNotifications =
-                    (ClaimableCertificateNotificationEventArgs)notification;
                 StringBuilder builder = new StringBuilder();
                 foreach (Certificate cert in certNotifications.Certificates)
                 {
@@ -451,10 +456,9 @@ namespace EVEMon
             }
 
             // Market orders ?
-            if (notification is MarketOrdersNotificationEventArgs)
+            MarketOrdersNotificationEventArgs ordersNotification = notification as MarketOrdersNotificationEventArgs;
+            if (ordersNotification != null)
             {
-                MarketOrdersNotificationEventArgs ordersNotification = (MarketOrdersNotificationEventArgs)notification;
-
                 StringBuilder builder = new StringBuilder();
                 foreach (IGrouping<OrderState, MarketOrder> orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
                 {
@@ -482,9 +486,9 @@ namespace EVEMon
             }
 
             // Industry jobs ?
-            if (notification is IndustryJobsNotificationEventArgs)
+            IndustryJobsNotificationEventArgs jobsNotification = notification as IndustryJobsNotificationEventArgs;
+            if (jobsNotification != null)
             {
-                IndustryJobsNotificationEventArgs jobsNotification = (IndustryJobsNotificationEventArgs)notification;
 
                 StringBuilder builder = new StringBuilder();
                 foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))

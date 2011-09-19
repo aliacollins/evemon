@@ -151,10 +151,9 @@ namespace EVEMon.Schedule
             sb.AppendFormat("Title: {0}", temp.Title).AppendLine();
 
             // Simple entry ?
-            if (temp is SimpleScheduleEntry)
+            SimpleScheduleEntry simpleEntry = temp as SimpleScheduleEntry;
+            if (simpleEntry != null)
             {
-                SimpleScheduleEntry simpleEntry = (SimpleScheduleEntry)temp;
-
                 sb.AppendLine("One Off Entry");
                 sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}", simpleEntry.StartDate).AppendLine();
                 sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}", simpleEntry.EndDate).AppendLine();
@@ -359,12 +358,11 @@ namespace EVEMon.Schedule
                 DateTime to = datetime;
 
                 // Simple entry ?
-                if (entry is SimpleScheduleEntry)
+                SimpleScheduleEntry simpleEntry = entry as SimpleScheduleEntry;
+                if (simpleEntry != null)
                 {
-                    SimpleScheduleEntry simple = (SimpleScheduleEntry)entry;
-
-                    from = simple.StartDate;
-                    to = simple.EndDate;
+                    from = simpleEntry.StartDate;
+                    to = simpleEntry.EndDate;
                 }
                     // Or recurring entry ?
                 else

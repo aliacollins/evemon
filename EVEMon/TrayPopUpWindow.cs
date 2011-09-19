@@ -387,15 +387,16 @@ namespace EVEMon
 
             foreach (Control control in mainPanel.Controls)
             {
-                if (!(control is FlowLayoutPanel))
+                FlowLayoutPanel flowPanel = control as FlowLayoutPanel;
+                if (flowPanel == null)
                     continue;
 
-                FlowLayoutPanel flowPanel = (FlowLayoutPanel)control;
                 int pnlHeight = flowPanel.Height;
                 flowPanel.AutoSize = false;
                 flowPanel.Width = pnlWidth;
                 flowPanel.Height = pnlHeight;
             }
+
             // Position Popup
             TrayIcon.SetToolTipLocation(this);
         }

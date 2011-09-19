@@ -692,14 +692,17 @@ namespace EVEMon
         /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
-            if (!(e is APIErrorNotificationEventArgs))
+            APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
+            if (notification == null)
                 return;
 
-            if (!(((APIErrorNotificationEventArgs)e).Result is APIResult<SerializableAPINotificationTexts>))
+            APIResult<SerializableAPINotificationTexts> notificationResult =
+                notification.Result as APIResult<SerializableAPINotificationTexts>;
+            if (notificationResult == null)
                 return;
 
             // In case there was an error, hide the pane
-            if (((APIErrorNotificationEventArgs)e).Result.HasError)
+            if (notification.Result.HasError)
                 eveNotificationReadingPane.HidePane();
         }
 

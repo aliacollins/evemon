@@ -117,15 +117,17 @@ namespace EVEMon
         /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
-            if (!(e is APIErrorNotificationEventArgs))
+            APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
+            if (notification == null)
                 return;
 
-            if (!(((APIErrorNotificationEventArgs)e).Result is APIResult<SerializableAPIMailBodies>)
-                && !(((APIErrorNotificationEventArgs)e).Result is APIResult<SerializableAPINotificationTexts>))
+            APIResult<SerializableAPIMailBodies> eveMailBodiesResult = notification.Result as APIResult<SerializableAPIMailBodies>;
+            APIResult<SerializableAPINotificationTexts> notificationTextResult = notification.Result as APIResult<SerializableAPINotificationTexts>;
+            if (eveMailBodiesResult == null && notificationTextResult == null)
                 return;
 
             // In case there was an error, close the window
-            if (((APIErrorNotificationEventArgs)e).Result.HasError)
+            if (notification.Result.HasError)
                 Close();
         }
     }

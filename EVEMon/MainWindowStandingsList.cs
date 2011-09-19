@@ -165,10 +165,11 @@ namespace EVEMon
                 return;
 
             object item = lbStandings.Items[e.Index];
-            if (item is Standing)
-                DrawItem(item as Standing, e);
-            else if (item is String)
-                DrawItem(item as String, e);
+            Standing standing = item as Standing;
+            if (standing != null)
+                DrawItem(standing, e);
+            else 
+                DrawItem((String)item, e);
         }
 
         /// <summary>
@@ -429,22 +430,22 @@ namespace EVEMon
 
             // For a standings group, we have to handle the collapse/expand mechanism
             Object item = lbStandings.Items[index];
-            if (!(item is String))
+            String standingsGroup = item as String;
+            if (standingsGroup == null)
                 return;
 
             // Left button : expand/collapse
-            String sg = (String)item;
             if (e.Button != MouseButtons.Right)
             {
-                ToggleGroupExpandCollapse(sg);
+                ToggleGroupExpandCollapse(standingsGroup);
                 return;
             }
 
             // If right click on the button, still expand/collapse
             itemRect = lbStandings.GetItemRectangle(lbStandings.Items.IndexOf(item));
-            Rectangle buttonRect = GetButtonRectangle(sg, itemRect);
+            Rectangle buttonRect = GetButtonRectangle(standingsGroup, itemRect);
             if (buttonRect.Contains(e.Location))
-                ToggleGroupExpandCollapse(sg);
+                ToggleGroupExpandCollapse(standingsGroup);
         }
 
         #endregion

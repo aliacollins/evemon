@@ -498,8 +498,9 @@ namespace EVEMon.Common.Controls
 
                 if (sender != this)
                 {
-                    x += ((Control)sender).Bounds.X;
-                    y += ((Control)sender).Bounds.Y;
+                    Control ctl = (Control)sender;
+                    x += ctl.Bounds.X;
+                    y += ctl.Bounds.Y;
                 }
 
                 m_contextMenuStrip.Enabled = EnableContextMenu;

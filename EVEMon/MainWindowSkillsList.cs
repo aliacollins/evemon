@@ -202,10 +202,11 @@ namespace EVEMon
                 return;
 
             object item = lbSkills.Items[e.Index];
-            if (item is SkillGroup)
-                DrawItem(item as SkillGroup, e);
-            else if (item is Skill)
-                DrawItem(item as Skill, e);
+            SkillGroup skillGroup = item as SkillGroup;
+            if (skillGroup != null)
+                DrawItem(skillGroup, e);
+            else
+                DrawItem((Skill)item, e);
         }
 
         /// <summary>
@@ -625,27 +626,27 @@ namespace EVEMon
 
             // For a skill group, we have to handle the collapse/expand mechanism and the tooltip
             Object item = lbSkills.Items[index];
-            if (item is SkillGroup)
+            SkillGroup skillGroup = item as SkillGroup;
+            if (skillGroup != null)
             {
                 // Left button : expand/collapse
-                SkillGroup sg = (SkillGroup)item;
                 if (e.Button != MouseButtons.Right)
                 {
-                    ToggleGroupExpandCollapse(sg);
+                    ToggleGroupExpandCollapse(skillGroup);
                     return;
                 }
 
                 // If right click on the button, still expand/collapse
                 Rectangle itemRect = lbSkills.GetItemRectangle(lbSkills.Items.IndexOf(item));
-                Rectangle buttonRect = GetButtonRectangle(sg, itemRect);
+                Rectangle buttonRect = GetButtonRectangle(skillGroup, itemRect);
                 if (buttonRect.Contains(e.Location))
                 {
-                    ToggleGroupExpandCollapse(sg);
+                    ToggleGroupExpandCollapse(skillGroup);
                     return;
                 }
 
                 // Regular right click, display the tooltip
-                DisplayTooltip(sg);
+                DisplayTooltip(skillGroup);
                 return;
             }
 
@@ -736,10 +737,8 @@ namespace EVEMon
             m_lastTooltipItem = item;
 
             ttToolTip.Active = false;
-            if (item is SkillGroup)
-                ttToolTip.SetToolTip(lbSkills, GetTooltip(item as SkillGroup));
-            else
-                ttToolTip.SetToolTip(lbSkills, GetTooltip(item as Skill));
+            SkillGroup skillGroup = item as SkillGroup;
+            ttToolTip.SetToolTip(lbSkills, skillGroup != null ? GetTooltip(skillGroup) : GetTooltip(item as Skill));
             ttToolTip.Active = true;
         }
 
