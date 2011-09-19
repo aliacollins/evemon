@@ -28,7 +28,7 @@ namespace EVEMon.Common
         /// <summary>
         /// The last time the settings were saved.
         /// </summary>
-        private static DateTime s_lastSaveTime = DateTime.MinValue;
+        private static DateTime s_lastSaveTime;
 
         /// <summary>
         /// Static constructor.

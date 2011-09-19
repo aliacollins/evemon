@@ -1852,7 +1852,7 @@ namespace EVEMon
             m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             EveMonClient.EVEServer.ForceUpdate();
 
-            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.OfType<CCPCharacter>())
             {
                 character.QueryMonitors.QueryEverything();
             }

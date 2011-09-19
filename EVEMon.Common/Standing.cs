@@ -89,10 +89,8 @@ namespace EVEMon.Common
             get
             {
                 if (m_image == null)
-                {
-                    m_image = GetDefaultImage();
                     GetImage();
-                }
+
                 return m_image;
             }
         }
@@ -139,6 +137,31 @@ namespace EVEMon.Common
 
         #region Helper Methods
 
+        /// <summary>
+        /// Gets the entity image.
+        /// </summary>
+        private void GetImage()
+        {
+            m_image = GetDefaultImage();
+            ImageService.GetImageAsync(GetImageUrl(), true, img =>
+                                                                {
+                                                                    if (img == null)
+                                                                        return;
+
+                                                                    m_image = img;
+
+                                                                    // Notify the subscriber that we got the image
+                                                                    // Note that if the image is in cache the event doesn't get fired
+                                                                    // as the event object is null
+                                                                    if (StandingImageUpdated != null)
+                                                                        StandingImageUpdated(this, EventArgs.Empty);
+                                                                });
+        }
+
+        /// <summary>
+        /// Gets the default image.
+        /// </summary>
+        /// <returns></returns>
         private Image GetDefaultImage()
         {
             switch (Group)
@@ -165,26 +188,6 @@ namespace EVEMon.Common
             return String.Format(NetworkConstants.CCPIconsFromImageServer,
                                  (Group == "Factions" ? "alliance" : "corporation"),
                                  EntityID, (int)EveImageSize.x32);
-        }
-
-        /// <summary>
-        /// Gets the entity image.
-        /// </summary>
-        private void GetImage()
-        {
-            ImageService.GetImageAsync(GetImageUrl(), true, img =>
-                                                                {
-                                                                    if (img == null)
-                                                                        return;
-
-                                                                    m_image = img;
-
-                                                                    // Notify the subscriber that we got the image
-                                                                    // Note that if the image is in cache the event doesn't get fired
-                                                                    // as the event object is null
-                                                                    if (StandingImageUpdated != null)
-                                                                        StandingImageUpdated(this, EventArgs.Empty);
-                                                                });
         }
 
         #endregion

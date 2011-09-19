@@ -420,14 +420,15 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (Visible)
-            {
-                if (m_pendingUpdate)
-                    UpdateContent();
-
-                UpdateTrainingTime();
-            }
             base.OnVisibleChanged(e);
+
+            if (!Visible)
+                return;
+
+            if (m_pendingUpdate)
+                UpdateContent();
+
+            UpdateTrainingTime();
         }
 
         /// <summary>

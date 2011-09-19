@@ -27,6 +27,7 @@ namespace EVEMon.LogitechG15
         {
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
 
             // Subscribe to events which occur of G15 buttons pressed
             LcdDisplay.APIUpdateRequested += LcdDisplay_APIUpdateRequested;
@@ -84,6 +85,10 @@ namespace EVEMon.LogitechG15
                 s_lcd = LcdDisplay.Instance();
                 s_lcd.SwitchState(LcdState.SplashScreen);
                 s_running = true;
+                UpdateFromSettings();
+
+                // Initialize the current character
+                s_lcd.CurrentCharacter = EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -114,22 +119,23 @@ namespace EVEMon.LogitechG15
         }
 
         /// <summary>
-        /// Update the display once every second
+        /// Updates preferences from settings.
         /// </summary>
-        private static void UpdateG15Data()
+        private static void UpdateFromSettings()
         {
-            // Settings
             s_lcd.Cycle = Settings.G15.UseCharactersCycle;
             s_lcd.CycleInterval = Settings.G15.CharactersCycleInterval;
             s_lcd.CycleSkillQueueTime = Settings.G15.UseTimeFormatsCycle;
             s_lcd.CycleCompletionInterval = Settings.G15.TimeFormatsCycleInterval;
             s_lcd.ShowSystemTime = Settings.G15.ShowSystemTime;
             s_lcd.ShowEVETime = Settings.G15.ShowEVETime;
+        }
 
-            // Current character
-            s_lcd.CurrentCharacter = s_lcd.CurrentCharacter ??
-                                     EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().FirstOrDefault();
-
+        /// <summary>
+        /// Update the display once every second.
+        /// </summary>
+        private static void UpdateG15Data()
+        {
             // First character to complete a skill
             CCPCharacter nextChar = EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().Where(
                 x => x.IsTraining).OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
@@ -154,7 +160,7 @@ namespace EVEMon.LogitechG15
         }
 
         /// <summary>
-        /// When skills are completed, we display a special message
+        /// When skills are completed, we display a special message.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -167,6 +173,16 @@ namespace EVEMon.LogitechG15
                 s_lcd.SkillCompleted(e.Character);
             else
                 s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
+        }
+
+        /// <summary>
+        /// Update the preferences when the settings change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateFromSettings();
         }
 
         #endregion
