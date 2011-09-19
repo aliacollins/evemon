@@ -242,12 +242,12 @@ namespace EVEMon.Common.Controls
             Point mp = Control.MousePosition;
             NativeMethods.AppBarData appBarData = NativeMethods.AppBarData.Create();
             NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
-            NativeMethods.RECT taskBarLocation = appBarData.rc;
+            NativeMethods.RECT taskBarLocation = appBarData.Rect;
 
             Screen curScreen = Screen.FromPoint(mp);
             Point winPoint;
             bool slideLeftRight;
-            switch (appBarData.uEdge)
+            switch (appBarData.UEdge)
             {
                 default:
                     winPoint = mp;

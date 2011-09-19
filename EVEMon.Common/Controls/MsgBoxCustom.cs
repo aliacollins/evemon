@@ -10,7 +10,6 @@ namespace EVEMon.Common.Controls
     public partial class MessageBoxCustom : Form
     {
         private DialogResult m_dialogResult;
-        public bool CbUnchecked = true;
 
         /// <summary>
         /// Creates a new instance of <see cref="MessageBoxCustom"/>.
@@ -25,7 +24,7 @@ namespace EVEMon.Common.Controls
             button2.Font = FontFactory.GetFont("Segoe UI", 9f);
             button3.Font = FontFactory.GetFont("Segoe UI", 9f);
         }
-
+        
         /// <summary>
         /// Displays a message box.
         /// </summary>
@@ -89,6 +88,12 @@ namespace EVEMon.Common.Controls
             return Show(owner, text, String.Empty, String.Empty);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the checkbox is checked.
+        /// </summary>
+        /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
+        public bool CheckBoxChecked { get; private set; }
+
 
         # region EventHandlers
 
@@ -111,7 +116,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cbOption_CheckedChanged(object sender, EventArgs e)
         {
-            CbUnchecked = !cbOption.Checked;
+            CheckBoxChecked = !cbOption.Checked;
         }
 
         # endregion

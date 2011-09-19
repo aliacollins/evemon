@@ -10,7 +10,7 @@ namespace EVEMon.Common.Collections
     public abstract class BaseList<T> : IList<T>
         where T : class
     {
-        protected readonly List<T> Items = new List<T>();
+        private readonly List<T> m_items = new List<T>();
 
         /// <summary>
         /// Executed any time an item is going to be added to the list.
@@ -42,12 +42,12 @@ namespace EVEMon.Common.Collections
         /// <param name="targetIndex"></param>
         public void MoveTo(T item, int targetIndex)
         {
-            int oldIndex = Items.IndexOf(item);
+            int oldIndex = m_items.IndexOf(item);
             if (oldIndex == -1)
                 throw new InvalidOperationException("The item was not found in the collection.");
 
-            Items.RemoveAt(oldIndex);
-            Items.Insert(targetIndex, item);
+            m_items.RemoveAt(oldIndex);
+            m_items.Insert(targetIndex, item);
 
             OnChanged();
         }
@@ -59,18 +59,18 @@ namespace EVEMon.Common.Collections
         public void RebuildFrom(IEnumerable<T> items)
         {
             // Removing old items
-            foreach (T item in Items)
+            foreach (T item in m_items)
             {
                 OnRemoving(item);
             }
-            Items.Clear();
+            m_items.Clear();
 
             // Adding new items
             foreach (T item in items)
             {
                 T copy = item;
                 OnAdding(ref copy);
-                Items.Add(copy);
+                m_items.Add(copy);
             }
             OnChanged();
         }
@@ -85,7 +85,7 @@ namespace EVEMon.Common.Collections
         /// <returns></returns>
         public int IndexOf(T item)
         {
-            return Items.IndexOf(item);
+            return m_items.IndexOf(item);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace EVEMon.Common.Collections
         public void Insert(int index, T item)
         {
             OnAdding(ref item);
-            Items.Insert(index, item);
+            m_items.Insert(index, item);
             OnChanged();
         }
 
@@ -106,10 +106,10 @@ namespace EVEMon.Common.Collections
         /// <param name="index"></param>
         public void RemoveAt(int index)
         {
-            T item = Items[index];
+            T item = m_items[index];
 
             OnRemoving(item);
-            Items.RemoveAt(index);
+            m_items.RemoveAt(index);
             OnChanged();
         }
 
@@ -120,14 +120,14 @@ namespace EVEMon.Common.Collections
         /// <returns></returns>
         public T this[int index]
         {
-            get { return Items[index]; }
+            get { return m_items[index]; }
             set
             {
-                T item = Items[index];
+                T item = m_items[index];
 
                 OnRemoving(item);
                 OnAdding(ref value);
-                Items[index] = value;
+                m_items[index] = value;
                 OnChanged();
             }
         }
@@ -144,7 +144,7 @@ namespace EVEMon.Common.Collections
         public void Add(T item)
         {
             OnAdding(ref item);
-            Items.Add(item);
+            m_items.Add(item);
             OnChanged();
         }
 
@@ -158,7 +158,7 @@ namespace EVEMon.Common.Collections
             {
                 T copy = item;
                 OnAdding(ref copy);
-                Items.Add(copy);
+                m_items.Add(copy);
             }
             OnChanged();
         }
@@ -171,7 +171,7 @@ namespace EVEMon.Common.Collections
         public bool Remove(T item)
         {
             OnRemoving(item);
-            if (Items.Remove(item))
+            if (m_items.Remove(item))
             {
                 OnChanged();
                 return true;
@@ -184,11 +184,11 @@ namespace EVEMon.Common.Collections
         /// </summary>
         public void Clear()
         {
-            foreach (T item in Items)
+            foreach (T item in m_items)
             {
                 OnRemoving(item);
             }
-            Items.Clear();
+            m_items.Clear();
             OnChanged();
         }
 
@@ -199,7 +199,7 @@ namespace EVEMon.Common.Collections
         /// <returns></returns>
         public bool Contains(T item)
         {
-            return Items.Contains(item);
+            return m_items.Contains(item);
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace EVEMon.Common.Collections
         /// <param name="arrayIndex"></param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            Items.CopyTo(array, arrayIndex);
+            m_items.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace EVEMon.Common.Collections
         /// </summary>
         public int Count
         {
-            get { return Items.Count; }
+            get { return m_items.Count; }
         }
 
         /// <summary>
@@ -239,12 +239,12 @@ namespace EVEMon.Common.Collections
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return Items.GetEnumerator();
+            return m_items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Items.GetEnumerator();
+            return m_items.GetEnumerator();
         }
 
         #endregion

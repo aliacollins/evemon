@@ -6,14 +6,14 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents the character's list of plans
+    /// Represents the character's list of plans.
     /// </summary>
     public sealed class PlanCollection : BaseList<Plan>
     {
         private readonly Character m_owner;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         internal PlanCollection(Character owner)
         {
@@ -21,17 +21,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the plan with the given name, null when not found
+        /// Gets the plan with the given name, null when not found.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public Plan this[string name]
         {
-            get { return Items.FirstOrDefault(plan => plan.Name == name); }
+            get { return this.FirstOrDefault(plan => plan.Name == name); }
         }
 
         /// <summary>
-        /// When we add a plan, we may have to clone it (and maybe changed the character it is bound to) and connects it
+        /// When we add a plan, we may have to clone it (and maybe changed the character it is bound to) and connects it.
         /// </summary>
         /// <param name="item"></param>
         protected override void OnAdding(ref Plan item)
@@ -45,7 +45,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// When removing a plan, we need to disconnect it
+        /// When removing a plan, we need to disconnect it.
         /// </summary>
         /// <param name="oldItem"></param>
         protected override void OnRemoving(Plan oldItem)
@@ -54,7 +54,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// When the collection changed, the global event is fired
+        /// When the collection changed, the global event is fired.
         /// </summary>
         protected override void OnChanged()
         {
@@ -62,7 +62,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from the given deserialization object
+        /// Imports data from the given deserialization object.
         /// </summary>
         /// <param name="plans"></param>
         internal void Import(IEnumerable<SerializablePlan> plans)
@@ -88,10 +88,10 @@ namespace EVEMon.Common
             }
 
             // We now add the new plans
-            Items.Clear();
+            Clear();
             foreach (Plan plan in newPlanList)
             {
-                Items.Add(plan);
+                Add(plan);
                 plan.IsConnected = true;
             }
 

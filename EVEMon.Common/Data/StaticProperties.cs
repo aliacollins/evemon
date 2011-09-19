@@ -6,7 +6,7 @@ namespace EVEMon.Common.Data
 {
     public static class StaticProperties
     {
-        #region Fileds
+        #region Fields
 
         private static readonly Dictionary<long, EveProperty> s_propertiesByID = new Dictionary<long, EveProperty>();
 

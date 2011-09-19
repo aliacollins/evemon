@@ -26,7 +26,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public BCAPIError Error { get; set; }
 
         [XmlIgnore]
-        public DateTime CacheExpires;
+        public DateTime CacheExpires { get; set; }
 
         [XmlIgnore]
         public bool HasError

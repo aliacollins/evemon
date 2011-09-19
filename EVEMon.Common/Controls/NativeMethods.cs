@@ -73,18 +73,28 @@ namespace EVEMon.Common.Controls
         [StructLayout(LayoutKind.Sequential)]
         public struct AppBarData
         {
+            private int cbSize;
+            private readonly IntPtr hWnd;
+            private readonly uint uCallbackMessage;
+            private readonly uint uEdge;
+            private readonly RECT m_rect;
+            private readonly int lParam;
+
+            public uint UEdge
+            {
+                get { return uEdge; }
+            }
+
+            public RECT Rect
+            {
+                get { return m_rect; }
+            }
+
             public static AppBarData Create()
             {
                 AppBarData appBarData = new AppBarData { cbSize = Marshal.SizeOf(typeof(AppBarData)) };
                 return appBarData;
             }
-
-            public int cbSize;
-            public IntPtr hWnd;
-            public uint uCallbackMessage;
-            public uint uEdge;
-            public RECT rc;
-            public int lParam;
         }
 
         public const int ABM_QUERYPOS = 0x00000002,
@@ -98,18 +108,23 @@ namespace EVEMon.Common.Controls
         [Serializable, StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-
-            public RECT(int left_, int top_, int right_, int bottom_)
+            private RECT(int left, int top, int right, int bottom)
+                : this()
             {
-                Left = left_;
-                Top = top_;
-                Right = right_;
-                Bottom = bottom_;
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
             }
+
+            public int Left { get; private set; }
+
+            public int Top { get; private set; }
+
+            public int Right { get; private set; }
+
+            public int Bottom { get; private set; }
+
 
             public int Height
             {
