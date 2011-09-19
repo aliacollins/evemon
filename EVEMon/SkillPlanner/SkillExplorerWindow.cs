@@ -780,7 +780,7 @@ namespace EVEMon.SkillPlanner
             List<string> list =
                 tvEntity.SelectedNode.Text.Replace(entity.Name, String.Empty).Trim().Trim("()".ToCharArray()).Split(',').ToList();
 
-            if (list[0] == String.Empty)
+            if (list[0].Length == 0)
                 list[0] = (BlueprintActivity.None.GetDescription());
 
             return list;

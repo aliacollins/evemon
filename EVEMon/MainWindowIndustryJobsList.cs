@@ -814,7 +814,7 @@ namespace EVEMon
                 }
 
                 // Job is ready
-                if (job.TTC == String.Empty)
+                if (job.TTC.Length == 0)
                     job.ActiveJobState = ActiveJobState.Ready;
             }
 

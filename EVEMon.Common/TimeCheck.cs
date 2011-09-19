@@ -36,7 +36,7 @@ namespace EVEMon.Common
             if (e.Error == null)
             {
                 string timeString = e.Result;
-                if (timeString != String.Empty)
+                if (timeString.Length != 0)
                 {
                     try
                     {

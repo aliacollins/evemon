@@ -99,7 +99,7 @@ namespace EVEMon.Common.Controls
         private void SpecifyFolderRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             BrowseButton.Enabled = SpecifyFolderRadioButton.Checked;
-            OKButton.Enabled = (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text != String.Empty);
+            OKButton.Enabled = (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text.Length != 0);
         }
     }
 }

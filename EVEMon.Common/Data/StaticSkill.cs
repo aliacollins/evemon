@@ -280,7 +280,7 @@ namespace EVEMon.Common.Data
                 }
             }
 
-            if (currentLine != String.Empty)
+            if (currentLine.Length != 0)
                 lines.Add(currentLine);
 
             string[] textLinesStr = new string[lines.Count];
