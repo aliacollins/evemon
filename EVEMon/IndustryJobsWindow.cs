@@ -38,24 +38,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets or sets the showIssuedFor mode.
-        /// </summary>
-        public IssuedFor ShowIssuedFor
-        {
-            get { return jobsList.ShowIssuedFor; }
-            set
-            {
-                jobsList.ShowIssuedFor = value;
-
-                if (!m_init)
-                    return;
-
-                jobsList.UpdateColumns();
-                jobsList.Visibility = !jobsList.Jobs.IsEmpty();
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the enumeration of jobs to display.
         /// </summary>
         [Browsable(false)]

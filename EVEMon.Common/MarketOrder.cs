@@ -41,7 +41,6 @@ namespace EVEMon.Common
             MinVolume = src.MinVolume;
             Duration = src.Duration;
             Issued = src.Issued;
-            IssuedFor = src.IssuedFor;
         }
 
         /// <summary>
@@ -63,7 +62,6 @@ namespace EVEMon.Common
             MinVolume = src.MinVolume;
             Duration = src.Duration;
             Issued = src.Issued;
-            IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
         }
 
         #endregion
@@ -96,7 +94,6 @@ namespace EVEMon.Common
             src.MinVolume = MinVolume;
             src.Duration = Duration;
             src.Issued = Issued;
-            src.IssuedFor = IssuedFor;
         }
 
         /// <summary>
@@ -228,11 +225,6 @@ namespace EVEMon.Common
         /// Gets the time (UTC) this order was expired.
         /// </summary>
         public DateTime Issued { get; private set; }
-
-        /// <summary>
-        /// Gets for which the order was issued.
-        /// </summary>
-        public IssuedFor IssuedFor { get; private set; }
 
         /// <summary>
         /// Gets the estimated expiration time.

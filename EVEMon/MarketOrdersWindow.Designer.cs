@@ -38,7 +38,6 @@
             this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.ordersList.Size = new System.Drawing.Size(292, 266);
             this.ordersList.TabIndex = 0;
             this.ordersList.TextFilter = "";

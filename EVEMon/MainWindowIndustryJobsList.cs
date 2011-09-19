@@ -19,7 +19,6 @@ namespace EVEMon
 
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
-        private IssuedFor m_showIssuedFor;
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
@@ -38,11 +37,9 @@ namespace EVEMon
         private int m_remoteManufacturingRange,
                     m_remoteResearchingRange;
 
-        private int m_activeManufJobsIssuedForCharacterCount,
-                    m_activeManufJobsIssuedForCorporationCount;
+        private int m_activeManufacturingJobsCount;
 
-        private int m_activeResearchJobsIssuedForCharacterCount,
-                    m_activeResearchJobsIssuedForCorporationCount;
+        private int m_activeResearchJobsCount;
 
 
         # region Constructor
@@ -115,32 +112,6 @@ namespace EVEMon
                 m_grouping = (IndustryJobGrouping)value;
                 if (m_init)
                     UpdateColumns();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets which "Issued for" jobs to display.
-        /// </summary>
-        public IssuedFor ShowIssuedFor
-        {
-            get { return m_showIssuedFor; }
-            set
-            {
-                m_showIssuedFor = value;
-                if (m_init)
-                    UpdateColumns();
-            }
-        }
-
-        /// <summary>
-        /// Gets true when character has active jobs issued for corporation.
-        /// </summary>
-        public bool HasActiveCorporationIssuedJobs
-        {
-            get
-            {
-                return m_list.Any(x =>
-                                  x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation);
             }
         }
 
@@ -321,9 +292,6 @@ namespace EVEMon
 
                 if (Character != null && m_hideInactive)
                     jobs = jobs.Where(x => x.IsActive);
-
-                if (m_showIssuedFor != IssuedFor.All)
-                    jobs = jobs.Where(x => x.IssuedFor == m_showIssuedFor);
 
                 UpdateSort();
 
@@ -578,9 +546,6 @@ namespace EVEMon
                     break;
                 case IndustryJobColumn.Installation:
                     item.Text = job.Installation;
-                    break;
-                case IndustryJobColumn.IssuedFor:
-                    item.Text = job.IssuedFor.ToString();
                     break;
                 case IndustryJobColumn.LastStateChange:
                     item.Text = job.LastStateChange.ToLocalTime().ToString();
@@ -897,11 +862,8 @@ namespace EVEMon
             const int BaseJobs = 1;
             int maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
             int maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
-            int activeManufacturingJobs = m_activeManufJobsIssuedForCharacterCount + m_activeManufJobsIssuedForCorporationCount;
-            int activeResearchingJobs = m_activeResearchJobsIssuedForCharacterCount +
-                                        m_activeResearchJobsIssuedForCorporationCount;
-            int remainingManufacturingJobs = maxManufacturingJobs - activeManufacturingJobs;
-            int remainingResearchingJobs = maxResearchingJobs - activeResearchingJobs;
+            int remainingManufacturingJobs = maxManufacturingJobs - m_activeManufacturingJobsCount;
+            int remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsCount;
 
             string manufJobsRemainingText = String.Format(CultureConstants.DefaultCulture,
                                                           "Manufacturing Jobs Remaining: {0} out of {1} max",
@@ -922,33 +884,18 @@ namespace EVEMon
             CalculatePanelInfo();
 
             // Update text
-            int activeManufacturingJobsCount = m_activeManufJobsIssuedForCharacterCount +
-                                               m_activeManufJobsIssuedForCorporationCount;
-            int activeResearchingJobsCount = m_activeResearchJobsIssuedForCharacterCount +
-                                             m_activeResearchJobsIssuedForCorporationCount;
-
             string remoteManufacturingRange = StaticGeography.GetRange(m_remoteManufacturingRange);
             string remoteResearchingRange = StaticGeography.GetRange(m_remoteResearchingRange);
 
             // Basic label text
             m_lblActiveManufacturingJobs.Text = String.Format(
-                CultureConstants.DefaultCulture, "Active Manufacturing Jobs: {0}", activeManufacturingJobsCount);
+                CultureConstants.DefaultCulture, "Active Manufacturing Jobs: {0}", m_activeManufacturingJobsCount);
             m_lblActiveResearchingJobs.Text = String.Format(
-                CultureConstants.DefaultCulture, "Active Researching Jobs: {0}", activeResearchingJobsCount);
+                CultureConstants.DefaultCulture, "Active Researching Jobs: {0}", m_activeResearchJobsCount);
             m_lblRemoteManufacturingRange.Text = String.Format(
                 CultureConstants.DefaultCulture, "Remote Manufacturing Range: limited to {0}", remoteManufacturingRange);
             m_lblRemoteResearchingRange.Text = String.Format(
                 CultureConstants.DefaultCulture, "Remote Researching Range: limited to {0}", remoteResearchingRange);
-
-            // Supplemental label text
-            m_lblActiveCharManufacturingJobs.Text = String.Format(
-                CultureConstants.DefaultCulture, "Character Issued: {0}", m_activeManufJobsIssuedForCharacterCount);
-            m_lblActiveCorpManufacturingJobs.Text = String.Format(
-                CultureConstants.DefaultCulture, "Corporation Issued: {0}", m_activeManufJobsIssuedForCorporationCount);
-            m_lblActiveCharResearchingJobs.Text = String.Format(
-                CultureConstants.DefaultCulture, "Character Issued: {0}", m_activeResearchJobsIssuedForCharacterCount);
-            m_lblActiveCorpResearchingJobs.Text = String.Format(
-                CultureConstants.DefaultCulture, "Corporation Issued: {0}", m_activeResearchJobsIssuedForCorporationCount);
 
             // Update label position
             UpdatePanelControlPosition();
@@ -968,41 +915,9 @@ namespace EVEMon
             m_lblRemoteManufacturingRange.Location = new Point(m_lblRemoteManufacturingRange.Location.X, height);
             height += m_lblActiveManufacturingJobs.Height;
             m_lblRemoteResearchingRange.Location = new Point(m_lblRemoteResearchingRange.Location.X, height);
-            if (HasActiveCorporationIssuedJobs)
-            {
-                m_lblActiveCharManufacturingJobs.Location = new Point(15, height);
-                m_lblActiveCharManufacturingJobs.Visible = true;
-                height += m_lblActiveCharManufacturingJobs.Height;
-
-                m_lblActiveCorpManufacturingJobs.Location = new Point(15, height);
-                m_lblActiveCorpManufacturingJobs.Visible = true;
-                height += m_lblActiveCorpManufacturingJobs.Height;
-                height += Pad;
-            }
-            else
-            {
-                m_lblActiveCharManufacturingJobs.Visible = false;
-                m_lblActiveCorpManufacturingJobs.Visible = false;
-            }
 
             m_lblActiveResearchingJobs.Location = new Point(5, height);
             height += m_lblActiveResearchingJobs.Height;
-
-            if (HasActiveCorporationIssuedJobs)
-            {
-                m_lblActiveCharResearchingJobs.Location = new Point(15, height);
-                m_lblActiveCharResearchingJobs.Visible = true;
-                height += m_lblActiveCharResearchingJobs.Height;
-
-                m_lblActiveCorpResearchingJobs.Location = new Point(15, height);
-                m_lblActiveCorpResearchingJobs.Visible = true;
-                height += m_lblActiveCorpResearchingJobs.Height;
-            }
-            else
-            {
-                m_lblActiveCharResearchingJobs.Visible = false;
-                m_lblActiveCorpResearchingJobs.Visible = false;
-            }
 
             height += Pad;
 
@@ -1015,32 +930,17 @@ namespace EVEMon
             industryExpPanelControl.ResumeLayout();
         }
 
+
         /// <summary>
         /// Calculates the industry jobs related info for the panel.
         /// </summary>
         private void CalculatePanelInfo()
         {
-            IEnumerable<IndustryJob> activeManufJobsIssuedForCharacter = m_list.Where(x => (x.State == JobState.Active)
-                                                                                           &&
-                                                                                           x.Activity ==
-                                                                                           BlueprintActivity.Manufacturing &&
-                                                                                           x.IssuedFor == IssuedFor.Character);
-            IEnumerable<IndustryJob> activeManufJobsIssuedForCorporation = m_list.Where(x => (x.State == JobState.Active)
-                                                                                             &&
-                                                                                             x.Activity ==
-                                                                                             BlueprintActivity.Manufacturing &&
-                                                                                             x.IssuedFor == IssuedFor.Corporation);
-            IEnumerable<IndustryJob> activeResearchJobsIssuedForCharacter = m_list.Where(x => (x.State == JobState.Active)
-                                                                                              &&
-                                                                                              x.Activity !=
-                                                                                              BlueprintActivity.Manufacturing &&
-                                                                                              x.IssuedFor == IssuedFor.Character);
-            IEnumerable<IndustryJob> activeResearchJobsIssuedForCorporation = m_list.Where(x => (x.State == JobState.Active)
-                                                                                                &&
-                                                                                                x.Activity !=
-                                                                                                BlueprintActivity.Manufacturing &&
-                                                                                                x.IssuedFor ==
-                                                                                                IssuedFor.Corporation);
+            m_activeManufacturingJobsCount =
+                m_list.Where(x => (x.State == JobState.Active) && x.Activity == BlueprintActivity.Manufacturing).Count();
+
+            m_activeResearchJobsCount =
+                m_list.Where(x => (x.State == JobState.Active) && x.Activity != BlueprintActivity.Manufacturing).Count();
 
             // Calculate character's max manufacturing jobs
             m_skillBasedManufacturingJobs = Character.Skills[DBConstants.MassProductionSkillID].LastConfirmedLvl
@@ -1055,12 +955,6 @@ namespace EVEMon
 
             // Calculate character's remote researching range
             m_remoteResearchingRange = Character.Skills[DBConstants.ScientificNetworkingSkillID].LastConfirmedLvl;
-
-            // Calculate active manufacturing & researching jobs count (character & corporation issued separately)
-            m_activeManufJobsIssuedForCharacterCount = activeManufJobsIssuedForCharacter.Count();
-            m_activeManufJobsIssuedForCorporationCount = activeManufJobsIssuedForCorporation.Count();
-            m_activeResearchJobsIssuedForCharacterCount = activeResearchJobsIssuedForCharacter.Count();
-            m_activeResearchJobsIssuedForCorporationCount = activeResearchJobsIssuedForCorporation.Count();
         }
 
         # endregion
@@ -1074,12 +968,6 @@ namespace EVEMon
         private readonly Label m_lblRemoteManufacturingRange = new Label();
         private readonly Label m_lblRemoteResearchingRange = new Label();
 
-        // Supplemental labels constructor
-        private readonly Label m_lblActiveCharManufacturingJobs = new Label();
-        private readonly Label m_lblActiveCorpManufacturingJobs = new Label();
-        private readonly Label m_lblActiveCharResearchingJobs = new Label();
-        private readonly Label m_lblActiveCorpResearchingJobs = new Label();
-
         private void InitializeExpandablePanelControls()
         {
             industryExpPanelControl.SuspendLayout();
@@ -1091,15 +979,6 @@ namespace EVEMon
                                                               m_lblActiveResearchingJobs,
                                                               m_lblRemoteManufacturingRange,
                                                               m_lblRemoteResearchingRange
-                                                          });
-
-            // Add supplemental labels to panel
-            industryExpPanelControl.Controls.AddRange(new[]
-                                                          {
-                                                              m_lblActiveCharManufacturingJobs,
-                                                              m_lblActiveCorpManufacturingJobs,
-                                                              m_lblActiveCharResearchingJobs,
-                                                              m_lblActiveCorpResearchingJobs
                                                           });
 
             // Apply properties

@@ -23,7 +23,6 @@ namespace EVEMon
 
         private MarketOrderGrouping m_grouping;
         private MarketOrderColumn m_sortCriteria;
-        private IssuedFor m_showIssuedFor;
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
@@ -45,26 +44,13 @@ namespace EVEMon
                     m_modificationRange,
                     m_remoteBidRange;
 
-        private int m_activeOrdersIssuedForCharacter,
-                    m_activeOrdersIssuedForCorporation;
-
-        private int m_activeSellOrdersIssuedForCharacterCount,
-                    m_activeSellOrdersIssuedForCorporationCount;
-
-        private int m_activeBuyOrdersIssuedForCharacterCount,
-                    m_activeBuyOrdersIssuedForCorporationCount;
-
-        private decimal m_sellOrdersIssuedForCharacterTotal,
-                        m_sellOrdersIssuedForCorporationTotal;
-
-        private decimal m_buyOrdersIssuedForCharacterTotal,
-                        m_buyOrdersIssuedForCorporationTotal;
-
-        private decimal m_issuedForCharacterTotalEscrow,
-                        m_issuedForCorporationTotalEscrow;
-
-        private decimal m_issuedForCharacterEscrowAdditionalToCover,
-                        m_issuedForCorporationEscrowAdditionalToCover;
+        private int m_activeOrdersIssued;
+        private int m_activeSellOrdersCount;
+        private int m_activeBuyOrdersCount;
+        private decimal m_sellOrdersTotal;
+        private decimal m_buyOrdersTotal;
+        private decimal m_totalEscrow;
+        private decimal m_escrowAdditionalToCover;
 
 
         # region Constructor
@@ -140,33 +126,6 @@ namespace EVEMon
                 m_grouping = (MarketOrderGrouping)value;
                 if (m_init)
                     UpdateColumns();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets which "Issued for" orders to display.
-        /// </summary>
-        public IssuedFor ShowIssuedFor
-        {
-            get { return m_showIssuedFor; }
-            set
-            {
-                m_showIssuedFor = value;
-                if (m_init)
-                    UpdateColumns();
-            }
-        }
-
-        /// <summary>
-        /// Gets true when character has active issued order for corporation.
-        /// </summary>
-        public bool HasActiveCorporationIssuedOrders
-        {
-            get
-            {
-                return m_list.Any(x =>
-                                  (x.State == OrderState.Active || x.State == OrderState.Modified)
-                                  && x.IssuedFor == IssuedFor.Corporation);
             }
         }
 
@@ -361,16 +320,6 @@ namespace EVEMon
                 if (Character != null && m_hideInactive)
                     orders = orders.Where(x => x.IsAvailable);
 
-                switch (m_showIssuedFor)
-                {
-                    case IssuedFor.Character:
-                        orders = orders.Where(x => x.IssuedFor == IssuedFor.Character);
-                        break;
-                    case IssuedFor.Corporation:
-                        orders = orders.Where(x => x.IssuedFor == IssuedFor.Corporation);
-                        break;
-                }
-
                 UpdateSort();
 
                 switch (m_grouping)
@@ -512,7 +461,6 @@ namespace EVEMon
 
                     // Tooltip
                     StringBuilder builder = new StringBuilder();
-                    builder.Append("Issued For: ").AppendLine(order.IssuedFor.ToString());
                     builder.Append("Issued: ").AppendLine(order.Issued.ToLocalTime().ToString());
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
                                          (order.Duration > 1 ? "s" : String.Empty));
@@ -578,9 +526,6 @@ namespace EVEMon
                     break;
                 case MarketOrderColumn.Issued:
                     item.Text = order.Issued.ToLocalTime().ToShortDateString();
-                    break;
-                case MarketOrderColumn.IssuedFor:
-                    item.Text = order.IssuedFor.ToString();
                     break;
                 case MarketOrderColumn.Item:
                     item.Text = order.Item.ToString();
@@ -885,17 +830,14 @@ namespace EVEMon
         {
             const int BaseOrders = 5;
             int maxOrders = BaseOrders + m_skillBasedOrders;
-            int activeOrders = m_activeOrdersIssuedForCharacter + m_activeOrdersIssuedForCorporation;
-            int remainingOrders = maxOrders - activeOrders;
-            decimal activeSellOrdersTotal = m_sellOrdersIssuedForCharacterTotal + m_sellOrdersIssuedForCorporationTotal;
-            decimal activeBuyOrdersTotal = m_buyOrdersIssuedForCharacterTotal + m_buyOrdersIssuedForCorporationTotal;
+            int remainingOrders = maxOrders - m_activeOrdersIssued;
 
             string ordersRemainingText = String.Format(CultureConstants.DefaultCulture, "Orders Remaining: {0} out of {1} max",
                                                        remainingOrders, maxOrders);
             string activeSellOrdersTotalText = String.Format(CultureConstants.DefaultCulture, "Sell Orders Total: {0:N} ISK",
-                                                             activeSellOrdersTotal);
+                                                             m_sellOrdersTotal);
             string activeBuyOrdersTotalText = String.Format(CultureConstants.DefaultCulture, "Buy Orders Total: {0:N} ISK",
-                                                            activeBuyOrdersTotal);
+                                                            m_buyOrdersTotal);
             marketExpPanelControl.HeaderText = String.Format(CultureConstants.DefaultCulture, "{0}{3,5}{1}{3,5}{2}",
                                                              ordersRemainingText, activeSellOrdersTotalText,
                                                              activeBuyOrdersTotalText, String.Empty);
@@ -910,11 +852,8 @@ namespace EVEMon
             CalculatePanelInfo();
 
             // Update each label text
-            decimal totalEscrow = m_issuedForCharacterTotalEscrow + m_issuedForCorporationTotalEscrow;
-            decimal escrowAdditionalToCover = m_issuedForCharacterEscrowAdditionalToCover +
-                                              m_issuedForCorporationEscrowAdditionalToCover;
-            int activeSellOrdersCount = m_activeSellOrdersIssuedForCharacterCount + m_activeSellOrdersIssuedForCorporationCount;
-            int activeBuyOrdersCount = m_activeBuyOrdersIssuedForCharacterCount + m_activeBuyOrdersIssuedForCorporationCount;
+            int activeSellOrdersCount = m_activeSellOrdersCount;
+            int activeBuyOrdersCount = m_activeBuyOrdersCount;
             bool marketingFirstLevelIsTrained = (Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl > 0);
             string askRange = StaticGeography.GetRange(m_askRange);
             string bidRange = StaticGeography.GetRange(m_bidRange);
@@ -923,8 +862,8 @@ namespace EVEMon
 
             // Update the basic label text
             m_lblTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture,
-                                                  "Total in Escrow: {0:N} ISK (additional {1:N} ISK to cover)", totalEscrow,
-                                                  escrowAdditionalToCover);
+                                                  "Total in Escrow: {0:N} ISK (additional {1:N} ISK to cover)", m_totalEscrow,
+                                                  m_escrowAdditionalToCover);
             m_lblBaseBrokerFee.Text = String.Format(CultureConstants.DefaultCulture, "Base Broker Fee: {0:0.0#}% of order value",
                                                     m_baseBrokerFee);
             m_lblTransactionTax.Text = String.Format(CultureConstants.DefaultCulture, "Transaction Tax: {0:0.0#}% of sales value",
@@ -942,31 +881,6 @@ namespace EVEMon
                                                             remoteBidRange)
                                             : String.Empty);
 
-            // Update the supplemental label text
-            m_lblCharTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture,
-                                                      "Character Issued: {0:N} ISK (additional {1:N} ISK to cover)",
-                                                      m_issuedForCharacterTotalEscrow, m_issuedForCharacterEscrowAdditionalToCover);
-            m_lblCorpTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture,
-                                                      "Corporation Issued: {0:N} ISK (additional {1:N} ISK to cover)",
-                                                      m_issuedForCorporationTotalEscrow,
-                                                      m_issuedForCorporationEscrowAdditionalToCover);
-            m_lblActiveCharSellOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}",
-                                                                m_activeSellOrdersIssuedForCharacterCount);
-            m_lblActiveCorpSellOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0}",
-                                                                m_activeSellOrdersIssuedForCorporationCount);
-            m_lblActiveCharBuyOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}",
-                                                               m_activeBuyOrdersIssuedForCharacterCount);
-            m_lblActiveCorpBuyOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0}",
-                                                               m_activeBuyOrdersIssuedForCorporationCount);
-            m_lblActiveCharSellOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK",
-                                                                m_sellOrdersIssuedForCharacterTotal);
-            m_lblActiveCorpSellOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK",
-                                                                m_sellOrdersIssuedForCorporationTotal);
-            m_lblActiveCharBuyOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK",
-                                                               m_buyOrdersIssuedForCharacterTotal);
-            m_lblActiveCorpBuyOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK",
-                                                               m_buyOrdersIssuedForCorporationTotal);
-
             // Update label position
             UpdatePanelControlPosition();
         }
@@ -983,21 +897,6 @@ namespace EVEMon
 
             m_lblTotalEscrow.Location = new Point(5, height);
             height += m_lblTotalEscrow.Height;
-            if (HasActiveCorporationIssuedOrders)
-            {
-                m_lblCharTotalEscrow.Location = new Point(15, height);
-                m_lblCharTotalEscrow.Visible = true;
-                height += m_lblCharTotalEscrow.Height;
-
-                m_lblCorpTotalEscrow.Location = new Point(15, height);
-                m_lblCorpTotalEscrow.Visible = true;
-                height += m_lblCorpTotalEscrow.Height;
-            }
-            else
-            {
-                m_lblCharTotalEscrow.Visible = false;
-                m_lblCorpTotalEscrow.Visible = false;
-            }
 
             height += Pad;
 
@@ -1016,52 +915,9 @@ namespace EVEMon
             m_lblRemoteBidRange.Location = new Point(m_lblRemoteBidRange.Location.X, height);
             height += m_lblActiveSellOrdersCount.Height;
 
-            if (HasActiveCorporationIssuedOrders)
-            {
-                m_lblActiveCharSellOrdersCount.Location = new Point(15, height);
-                m_lblActiveCharSellOrdersTotal.Location = new Point(150, height);
-                m_lblActiveCharSellOrdersCount.Visible = true;
-                m_lblActiveCharSellOrdersTotal.Visible = true;
-                height += m_lblCharTotalEscrow.Height;
-
-                m_lblActiveCorpSellOrdersCount.Location = new Point(15, height);
-                m_lblActiveCorpSellOrdersTotal.Location = new Point(150, height);
-                m_lblActiveCorpSellOrdersCount.Visible = true;
-                m_lblActiveCorpSellOrdersTotal.Visible = true;
-                height += m_lblCorpTotalEscrow.Height + Pad;
-            }
-            else
-            {
-                m_lblActiveCharSellOrdersCount.Visible = false;
-                m_lblActiveCharSellOrdersTotal.Visible = false;
-                m_lblActiveCorpSellOrdersCount.Visible = false;
-                m_lblActiveCorpSellOrdersTotal.Visible = false;
-            }
-
             m_lblActiveBuyOrdersCount.Location = new Point(5, height);
             height += m_lblActiveBuyOrdersCount.Height;
 
-            if (HasActiveCorporationIssuedOrders)
-            {
-                m_lblActiveCharBuyOrdersCount.Location = new Point(15, height);
-                m_lblActiveCharBuyOrdersTotal.Location = new Point(150, height);
-                m_lblActiveCharBuyOrdersCount.Visible = true;
-                m_lblActiveCharBuyOrdersTotal.Visible = true;
-                height += m_lblCharTotalEscrow.Height;
-
-                m_lblActiveCorpBuyOrdersCount.Location = new Point(15, height);
-                m_lblActiveCorpBuyOrdersTotal.Location = new Point(150, height);
-                m_lblActiveCorpBuyOrdersCount.Visible = true;
-                m_lblActiveCorpBuyOrdersTotal.Visible = true;
-                height += m_lblCorpTotalEscrow.Height;
-            }
-            else
-            {
-                m_lblActiveCharBuyOrdersCount.Visible = false;
-                m_lblActiveCharBuyOrdersTotal.Visible = false;
-                m_lblActiveCorpBuyOrdersCount.Visible = false;
-                m_lblActiveCorpBuyOrdersTotal.Visible = false;
-            }
             height += Pad;
 
             // Update panel's expanded height
@@ -1078,18 +934,10 @@ namespace EVEMon
         /// </summary>
         private void CalculatePanelInfo()
         {
-            IEnumerable<MarketOrder> activeSellOrdersIssuedForCharacter = m_list
-                .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                            && x is SellOrder && x.IssuedFor == IssuedFor.Character);
-            IEnumerable<MarketOrder> activeSellOrdersIssuedForCorporation = m_list
-                .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                            && x is SellOrder && x.IssuedFor == IssuedFor.Corporation);
-            IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = m_list
-                .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                            && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
-            IEnumerable<MarketOrder> activeBuyOrdersIssuedForCorporation = m_list
-                .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                            && x is BuyOrder && x.IssuedFor == IssuedFor.Corporation);
+            IEnumerable<MarketOrder> activeSellOrdersIssuedForCharacter =
+                m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x is SellOrder);
+            IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter =
+                m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x is BuyOrder);
 
             // Calculate character's max orders
             m_skillBasedOrders = Character.Skills[DBConstants.TradeSkillID].LastConfirmedLvl * 4
@@ -1116,31 +964,22 @@ namespace EVEMon
             m_remoteBidRange = Character.Skills[DBConstants.VisibilitySkillID].LastConfirmedLvl;
 
             // Calculate active sell & buy orders total price (character & corporation issued separately)
-            m_sellOrdersIssuedForCharacterTotal = activeSellOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
-            m_sellOrdersIssuedForCorporationTotal = activeSellOrdersIssuedForCorporation.Sum(x => x.TotalPrice);
-            m_buyOrdersIssuedForCharacterTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
-            m_buyOrdersIssuedForCorporationTotal = activeBuyOrdersIssuedForCorporation.Sum(x => x.TotalPrice);
+            m_sellOrdersTotal = activeSellOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
+            m_buyOrdersTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
 
             // Calculate active sell & buy orders count (character & corporation issued separately)
-            m_activeSellOrdersIssuedForCharacterCount = activeSellOrdersIssuedForCharacter.Count();
-            m_activeSellOrdersIssuedForCorporationCount = activeSellOrdersIssuedForCorporation.Count();
-            m_activeBuyOrdersIssuedForCharacterCount = activeBuyOrdersIssuedForCharacter.Count();
-            m_activeBuyOrdersIssuedForCorporationCount = activeBuyOrdersIssuedForCorporation.Count();
+            m_activeSellOrdersCount = activeSellOrdersIssuedForCharacter.Count();
+            m_activeBuyOrdersCount = activeBuyOrdersIssuedForCharacter.Count();
 
             // Calculate active orders (character & corporation issued separately)
-            m_activeOrdersIssuedForCharacter = m_activeSellOrdersIssuedForCharacterCount +
-                                               m_activeBuyOrdersIssuedForCharacterCount;
-            m_activeOrdersIssuedForCorporation = m_activeSellOrdersIssuedForCorporationCount +
-                                                 m_activeBuyOrdersIssuedForCorporationCount;
+            m_activeOrdersIssued = m_activeSellOrdersCount +
+                                               m_activeBuyOrdersCount;
 
             // Calculate total escrow (character & corporation issued separately)
-            m_issuedForCharacterTotalEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
-            m_issuedForCorporationTotalEscrow = activeBuyOrdersIssuedForCorporation.Sum(x => ((BuyOrder)x).Escrow);
+            m_totalEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
 
             // Calculate escrow additional to cover (character & corporation issued separately)
-            m_issuedForCharacterEscrowAdditionalToCover = m_buyOrdersIssuedForCharacterTotal - m_issuedForCharacterTotalEscrow;
-            m_issuedForCorporationEscrowAdditionalToCover = m_buyOrdersIssuedForCorporationTotal -
-                                                            m_issuedForCorporationTotalEscrow;
+            m_escrowAdditionalToCover = m_buyOrdersTotal - m_totalEscrow;
         }
 
         # endregion
@@ -1159,18 +998,6 @@ namespace EVEMon
         private readonly Label m_lblModificationRange = new Label();
         private readonly Label m_lblRemoteBidRange = new Label();
 
-        // Supplemental labels constructor
-        private readonly Label m_lblCharTotalEscrow = new Label();
-        private readonly Label m_lblCorpTotalEscrow = new Label();
-        private readonly Label m_lblActiveCharSellOrdersTotal = new Label();
-        private readonly Label m_lblActiveCorpSellOrdersTotal = new Label();
-        private readonly Label m_lblActiveCharBuyOrdersTotal = new Label();
-        private readonly Label m_lblActiveCorpBuyOrdersTotal = new Label();
-        private readonly Label m_lblActiveCharSellOrdersCount = new Label();
-        private readonly Label m_lblActiveCorpSellOrdersCount = new Label();
-        private readonly Label m_lblActiveCharBuyOrdersCount = new Label();
-        private readonly Label m_lblActiveCorpBuyOrdersCount = new Label();
-
         private void InitializeExpandablePanelControls()
         {
             marketExpPanelControl.SuspendLayout();
@@ -1187,21 +1014,6 @@ namespace EVEMon
                                                             m_lblBidRange,
                                                             m_lblModificationRange,
                                                             m_lblRemoteBidRange
-                                                        });
-
-            // Add supplemental labels to panel
-            marketExpPanelControl.Controls.AddRange(new[]
-                                                        {
-                                                            m_lblCharTotalEscrow,
-                                                            m_lblCorpTotalEscrow,
-                                                            m_lblActiveCharSellOrdersTotal,
-                                                            m_lblActiveCorpSellOrdersTotal,
-                                                            m_lblActiveCharBuyOrdersTotal,
-                                                            m_lblActiveCorpBuyOrdersTotal,
-                                                            m_lblActiveCharSellOrdersCount,
-                                                            m_lblActiveCorpSellOrdersCount,
-                                                            m_lblActiveCharBuyOrdersCount,
-                                                            m_lblActiveCorpBuyOrdersCount
                                                         });
 
             // Apply properties

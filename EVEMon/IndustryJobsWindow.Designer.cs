@@ -38,7 +38,6 @@ namespace EVEMon
             this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.jobsList.Size = new System.Drawing.Size(292, 266);
             this.jobsList.TabIndex = 0;
             this.jobsList.TextFilter = "";

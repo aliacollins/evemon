@@ -70,12 +70,6 @@ namespace EVEMon.Common.Serialization.Settings
         public DateTime PauseProductionTime { get; set; }
 
         /// <summary>
-        /// Which this job was issued for.
-        /// </summary>
-        [XmlAttribute("issuedFor")]
-        public IssuedFor IssuedFor { get; set; }
-
-        /// <summary>
         /// The time this job state was changed.
         /// </summary>
         [XmlAttribute("lastStateChange")]

@@ -1031,16 +1031,12 @@ namespace EVEMon
                 preferencesMenu.DropDownItems.Remove(tsReadingPaneSeparator);
                 preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
                 numberAbsFormatMenuItem.Text = (numberFormat ? "Number Full Format" : "Number Abbreviating Format");
-                showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
-                showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
                 preferencesMenu.DropDownItems.Remove(numberAbsFormatMenuItem);
-                showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
-                showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
                 preferencesMenu.DropDownItems.Remove(tsReadingPaneSeparator);
                 preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
             }
@@ -1099,46 +1095,6 @@ namespace EVEMon
             numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
             Settings.UI.MainWindow.MarketOrders.NumberAbsFormat = !numberFormat;
             ordersList.UpdateColumns();
-        }
-
-        /// <summary>
-        /// Displays only the entries issued for character.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void showOnlyCharMenuItem_Click(object sender, EventArgs e)
-        {
-            if (multiPanel.SelectedPage == ordersPage)
-            {
-                ordersList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Corporation);
-            }
-
-            if (multiPanel.SelectedPage == jobsPage)
-            {
-                jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Corporation);
-            }
-        }
-
-        /// <summary>
-        /// Displays only the entries issued for corporation.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void showOnlyCorpMenuItem_Click(object sender, EventArgs e)
-        {
-            if (multiPanel.SelectedPage == ordersPage)
-            {
-                ordersList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Character);
-            }
-
-            if (multiPanel.SelectedPage == jobsPage)
-            {
-                jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Character);
-            }
         }
 
         /// <summary>

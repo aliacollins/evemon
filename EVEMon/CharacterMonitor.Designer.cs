@@ -83,9 +83,6 @@ namespace EVEMon
             this.tsColumnSettingsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.hideInactiveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsOptionsSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.showOnlyCharMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showOnlyCorpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsReadingPaneSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.readingPaneMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paneRightMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -484,7 +481,6 @@ namespace EVEMon
             this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.OrderTypeDesc;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.ordersList.Size = new System.Drawing.Size(568, 74);
             this.ordersList.TabIndex = 13;
             this.ordersList.TextFilter = "";
@@ -528,7 +524,6 @@ namespace EVEMon
             this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.jobsList.Size = new System.Drawing.Size(568, 74);
             this.jobsList.TabIndex = 0;
             this.jobsList.TextFilter = "";
@@ -661,9 +656,6 @@ namespace EVEMon
             this.tsColumnSettingsSeparator,
             this.hideInactiveMenuItem,
             this.numberAbsFormatMenuItem,
-            this.tsOptionsSeparator,
-            this.showOnlyCharMenuItem,
-            this.showOnlyCorpMenuItem,
             this.tsReadingPaneSeparator,
             this.readingPaneMenuItem});
             this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
@@ -701,27 +693,6 @@ namespace EVEMon
             this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
             this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
             this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
-            // 
-            // tsOptionsSeparator
-            // 
-            this.tsOptionsSeparator.Name = "tsOptionsSeparator";
-            this.tsOptionsSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // showOnlyCharMenuItem
-            // 
-            this.showOnlyCharMenuItem.CheckOnClick = true;
-            this.showOnlyCharMenuItem.Name = "showOnlyCharMenuItem";
-            this.showOnlyCharMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showOnlyCharMenuItem.Text = "Show Only Issued for Character";
-            this.showOnlyCharMenuItem.Click += new System.EventHandler(this.showOnlyCharMenuItem_Click);
-            // 
-            // showOnlyCorpMenuItem
-            // 
-            this.showOnlyCorpMenuItem.CheckOnClick = true;
-            this.showOnlyCorpMenuItem.Name = "showOnlyCorpMenuItem";
-            this.showOnlyCorpMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showOnlyCorpMenuItem.Text = "Show Only Issued for Corporation";
-            this.showOnlyCorpMenuItem.Click += new System.EventHandler(this.showOnlyCorpMenuItem_Click);
             // 
             // tsReadingPaneSeparator
             // 
@@ -1035,11 +1006,8 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripDropDownButton featuresMenu; 
         private System.Windows.Forms.ToolStripSeparator tsToggleSeparator; 
         private System.Windows.Forms.ContextMenuStrip toolstripContextMenu; 
-        private System.Windows.Forms.ToolStripMenuItem showTextMenuItem; 
+        private System.Windows.Forms.ToolStripMenuItem showTextMenuItem;
         private System.Windows.Forms.ToolStrip toolStripContextual; 
-        private System.Windows.Forms.ToolStripSeparator tsOptionsSeparator; 
-        private System.Windows.Forms.ToolStripMenuItem showOnlyCharMenuItem; 
-        private System.Windows.Forms.ToolStripMenuItem showOnlyCorpMenuItem; 
         private System.Windows.Forms.ToolStripTextBox searchTextBox; 
         private System.Windows.Forms.ToolStripDropDownButton groupMenu; 
         private System.Windows.Forms.ToolStripDropDownButton preferencesMenu;

@@ -116,9 +116,6 @@ namespace EVEMon.Common
                 case IndustryJobColumn.Installation:
                     return x.Installation.CompareTo(y.Installation);
 
-                case IndustryJobColumn.IssuedFor:
-                    return x.IssuedFor.CompareTo(y.IssuedFor);
-
                 case IndustryJobColumn.LastStateChange:
                     return x.LastStateChange.CompareTo(y.LastStateChange);
 

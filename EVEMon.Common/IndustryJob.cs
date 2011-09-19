@@ -39,7 +39,6 @@ namespace EVEMon.Common
             EndProductionTime = src.EndProductionTime;
             PauseProductionTime = src.PauseProductionTime;
             LastStateChange = DateTime.UtcNow;
-            IssuedFor = src.IssuedFor;
             ActiveJobState = GetActiveJobState();
         }
 
@@ -68,7 +67,6 @@ namespace EVEMon.Common
             EndProductionTime = src.EndProductionTime;
             PauseProductionTime = src.PauseProductionTime;
             LastStateChange = src.LastStateChange;
-            IssuedFor = src.IssuedFor;
             ActiveJobState = GetActiveJobState();
         }
 
@@ -98,7 +96,6 @@ namespace EVEMon.Common
                            EndProductionTime = EndProductionTime,
                            PauseProductionTime = PauseProductionTime,
                            LastStateChange = LastStateChange,
-                           IssuedFor = IssuedFor
                        };
         }
 
@@ -245,11 +242,6 @@ namespace EVEMon.Common
         {
             get { return String.Format("{0} > {1}", SolarSystem.FullLocation, Installation); }
         }
-
-        /// <summary>
-        /// Gets for which the job was issued.
-        /// </summary>
-        public IssuedFor IssuedFor { get; private set; }
 
         /// <summary>
         /// Gets true if the job is active.

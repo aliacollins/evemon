@@ -602,17 +602,6 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// For which the object was issued.
-    /// </summary>
-    public enum IssuedFor
-    {
-        None,
-        Character,
-        Corporation,
-        All
-    }
-
-    /// <summary>
     /// A blueprint's type.
     /// </summary>
     /// <remarks>The integer value determines the value assigned in <see cref="IndustryJob"/>.</remarks>

@@ -211,9 +211,8 @@ namespace EVEMon.Common
         {
             get
             {
-                IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = MarketOrders
-                    .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                                && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
+                IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = MarketOrders.Where(
+                    x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x is BuyOrder);
 
                 decimal activeTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
                 decimal activeEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
@@ -477,7 +476,6 @@ namespace EVEMon.Common
 
             // Import the data
             List<MarketOrder> endedOrders = new List<MarketOrder>();
-            result.Result.Orders.ForEach(x => x.IssuedFor = IssuedFor.Character);
             MarketOrders.Import(result.Result.Orders, endedOrders);
 
             // Sends a notification
@@ -511,7 +509,6 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            result.Result.Jobs.ForEach(x => x.IssuedFor = IssuedFor.Character);
             IndustryJobs.Import(result.Result.Jobs);
         }
 
