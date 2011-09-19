@@ -26,6 +26,7 @@ namespace EVEMon.Common.Controls
         [DefaultValue(true)]
         public bool ShowSplit
         {
+            get { return m_showSplit; }
             set
             {
                 if (value == m_showSplit)

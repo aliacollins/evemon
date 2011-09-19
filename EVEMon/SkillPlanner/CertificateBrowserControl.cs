@@ -107,21 +107,6 @@ namespace EVEMon.SkillPlanner
             set { certSelectCtl.SelectedCertificateClass = value; }
         }
 
-        /// <summary>
-        /// This is the way to set the selected certificate.
-        /// </summary>
-        public Certificate SelectedCertificate
-        {
-            set
-            {
-                if (SelectedCertificateClass == value.Class && certDisplayCtl.SelectedCertificate == value)
-                    return;
-
-                SelectedCertificateClass = value.Class;
-                certDisplayCtl.ExpandCert(value);
-            }
-        }
-
         #endregion
 
 
@@ -452,7 +437,19 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Heleper Methods
+        #region Helper Methods
+
+        /// <summary>
+        /// This is the way to set the selected certificate.
+        /// </summary>
+        public void SelectedCertificate(Certificate certificate)
+        {
+            if (SelectedCertificateClass == certificate.Class && certDisplayCtl.SelectedCertificate == certificate)
+                return;
+
+            SelectedCertificateClass = certificate.Class;
+            certDisplayCtl.ExpandCert(certificate);
+        }
 
         /// <summary>
         /// Updates the control visibility.

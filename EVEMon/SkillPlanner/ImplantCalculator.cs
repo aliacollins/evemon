@@ -13,6 +13,7 @@ namespace EVEMon.SkillPlanner
     {
         private readonly Plan m_plan;
 
+        private PlanEditorControl m_planEditor;
         private Character m_character;
         private BaseCharacter m_characterScratchpad;
         private ImplantSet m_set;
@@ -36,11 +37,6 @@ namespace EVEMon.SkillPlanner
         {
             m_plan = plan;
         }
-
-        /// <summary>
-        /// Sets the owner control.
-        /// </summary>
-        public PlanEditorControl PlanEditor { private get; set; }
 
         /// <summary>
         /// On load, update the controls states.
@@ -70,6 +66,14 @@ namespace EVEMon.SkillPlanner
 
             UpdateContent();
             base.OnLoad(e);
+        }
+
+        /// <summary>
+        /// Sets the owner control.
+        /// </summary>
+        public void SetPlanEditor(PlanEditorControl control)
+        {
+            m_planEditor = control;
         }
 
         /// <summary>
@@ -130,10 +134,10 @@ namespace EVEMon.SkillPlanner
                 return;
 
 
-            if (PlanEditor != null)
+            if (m_planEditor != null)
             {
                 m_characterScratchpad = m_character.After(m_set);
-                PlanEditor.ShowWithPluggable(this);
+                m_planEditor.ShowWithPluggable(this);
             }
 
             // Current (with implants)
@@ -246,8 +250,8 @@ namespace EVEMon.SkillPlanner
             UpdateAttributeLabels(EveAttribute.Perception, (int)(nudPerception.Value),
                                   lblAdjustPerception, lblEffectivePerception);
             UpdateTimes();
-            if (PlanEditor != null)
-                PlanEditor.ShowWithPluggable(this);
+            if (m_planEditor != null)
+                m_planEditor.ShowWithPluggable(this);
         }
 
         /// <summary>

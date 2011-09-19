@@ -269,7 +269,7 @@ namespace EVEMon.SkillPlanner
         public void ShowCertInBrowser(Certificate certificate)
         {
             tabControl.SelectedTab = tpCertificateBrowser;
-            certBrowser.SelectedCertificate = certificate;
+            certBrowser.SelectedCertificate(certificate);
         }
 
         /// <summary>
@@ -717,18 +717,20 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
+            PlanEditorControl control = (tabControl.SelectedIndex == 0) ? planEditor : null;
+
             if (m_implantCalcWindow == null)
             {
                 m_implantCalcWindow = new ImplantCalculator(m_plan);
                 m_implantCalcWindow.FormClosed += (form, args) => m_implantCalcWindow = null;
-                m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+                m_implantCalcWindow.SetPlanEditor(control);
                 m_implantCalcWindow.Show(this);
             }
             else
             {
                 m_implantCalcWindow.Visible = true;
                 m_implantCalcWindow.BringToFront();
-                m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+                m_implantCalcWindow.SetPlanEditor(control);
             }
         }
 
