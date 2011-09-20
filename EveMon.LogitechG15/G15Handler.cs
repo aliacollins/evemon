@@ -123,6 +123,9 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private static void UpdateFromSettings()
         {
+            if (s_lcd == null)
+                return;
+
             s_lcd.Cycle = Settings.G15.UseCharactersCycle;
             s_lcd.CycleInterval = Settings.G15.CharactersCycleInterval;
             s_lcd.CycleSkillQueueTime = Settings.G15.UseTimeFormatsCycle;
