@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
@@ -203,7 +204,7 @@ namespace EVEMon.Common.Net
             if (request.Method == "POST")
             {
                 Stream requestStream = request.GetRequestStream();
-                requestStream.Write(m_postData.Content, 0, m_postData.Length);
+                requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
                 requestStream.Close();
             }
 

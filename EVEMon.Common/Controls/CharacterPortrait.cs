@@ -303,7 +303,7 @@ namespace EVEMon.Common.Controls
 
                 // If we don't have the game's portraits cache already, prompt the user
                 // Return if the user canceled
-                if (EveMonClient.EvePortraitCacheFolders.Length == 0 && !ChangeEVEPortraitCache())
+                if (EveMonClient.EvePortraitCacheFolders.Count == 0 && !ChangeEVEPortraitCache())
                     return;
 
                 // Now, search in the game folder all matching files 

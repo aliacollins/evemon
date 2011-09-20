@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -121,7 +122,7 @@ namespace EVEMon.Common.IgbService
                     Close();
                 else
                 {
-                    OnDataRead(m_buffer, 0, bytesRead);
+                    OnDataRead(m_buffer, bytesRead);
                     if (!ar.CompletedSynchronously)
                         BeginRead(true);
                 }
@@ -137,12 +138,11 @@ namespace EVEMon.Common.IgbService
         /// Event triggered on data read
         /// </summary>
         /// <param name="buffer">buffer</param>
-        /// <param name="offset">offset</param>
         /// <param name="count">bytes read</param>
-        private void OnDataRead(byte[] buffer, int offset, int count)
+        private void OnDataRead(IEnumerable<byte> buffer, int count)
         {
             if (DataRead != null)
-                DataRead(this, new IgbClientDataReadEventArgs(buffer, offset, count));
+                DataRead(this, new IgbClientDataReadEventArgs(buffer, count));
         }
 
         #endregion

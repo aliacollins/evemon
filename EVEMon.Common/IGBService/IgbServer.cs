@@ -136,7 +136,7 @@ namespace EVEMon.Common.IgbService
                 newBuf = new byte[existingBuf.Length + e.Count];
 
                 Array.Copy(existingBuf, newBuf, existingBuf.Length);
-                Array.Copy(e.Buffer, 0, newBuf, existingBuf.Length, e.Count);
+                Array.Copy(e.Buffer.ToArray(), 0, newBuf, existingBuf.Length, e.Count);
 
                 m_clients[igbSender] = newBuf;
             }

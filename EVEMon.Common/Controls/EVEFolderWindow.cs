@@ -1,11 +1,13 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
     public partial class EveFolderWindow : EVEMonForm
     {
-        private readonly string[] m_defaultFolderLocation = EveMonClient.DefaultEvePortraitCacheFolders;
+        private readonly string[] m_defaultFolderLocation = EveMonClient.DefaultEvePortraitCacheFolders.ToArray();
         private string[] m_specifiedPortraitFolder = new[] { String.Empty };
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace EVEMon.Common.Controls
         /// Gets the EVE portrait cache folder.
         /// </summary>
         /// <value>The EVE portrait cache folder.</value>
-        public string[] EVEPortraitCacheFolder
+        public IEnumerable<string> EVEPortraitCacheFolder
         {
             get { return m_specifiedPortraitFolder; }
         }
