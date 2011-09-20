@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -123,12 +124,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the EVE Online installation's default portrait cache folder.
         /// </summary>
-        public static string[] DefaultEvePortraitCacheFolders { get; private set; }
+        public static ReadOnlyCollection<string> DefaultEvePortraitCacheFolders { get; private set; }
 
         /// <summary>
         /// Gets or sets the portrait cache folder defined by the user.
         /// </summary>
-        public static string[] EvePortraitCacheFolders { get; private set; }
+        public static ReadOnlyCollection<string> EvePortraitCacheFolders { get; private set; }
 
         /// <summary>
         /// Gets or sets the EVE Online application data folder.
@@ -278,7 +279,7 @@ namespace EVEMon.Common
         /// </summary>
         private static void InitializeDefaultEvePortraitCachePath()
         {
-            DefaultEvePortraitCacheFolders = new string[] { };
+            DefaultEvePortraitCacheFolders = new ReadOnlyCollection<string>(new string[] { });
             string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE",
                                                   Path.DirectorySeparatorChar, localApplicationData);
@@ -297,8 +298,9 @@ namespace EVEMon.Common
 
             EvePortraitCacheFolders = filesInEveCache.Select(
                 eveDataPath => eveDataPath.Name).Select(
-                    portraitCache => String.Format(CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
-                                                   Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).ToArray();
+                    portraitCache => String.Format(
+                        CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
+                        Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).ToList().AsReadOnly();
 
             DefaultEvePortraitCacheFolders = EvePortraitCacheFolders;
         }
@@ -307,9 +309,9 @@ namespace EVEMon.Common
         /// Set the EVE Online installation's portrait cache folder.
         /// </summary>
         /// <param name="path">location of the folder</param>
-        internal static void SetEvePortraitCacheFolder(string[] path)
+        internal static void SetEvePortraitCacheFolder(IEnumerable<string> path)
         {
-            EvePortraitCacheFolders = path;
+            EvePortraitCacheFolders = path.ToList().AsReadOnly();
         }
 
         /// <summary>
