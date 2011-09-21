@@ -462,7 +462,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
-            datafile.Add(categories.OrderBy(x => Array.IndexOf(orderedGroupNames, String.Intern(x.Name))).ToList());
+            datafile.Add(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))).ToList());
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
@@ -773,7 +773,7 @@ namespace EVEMon.XmlGenerator
                 int propIntValue = srcProp.GetIntValue();
 
                 // Is it a prereq skill ?
-                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs.ToArray(), srcProp.AttributeID);
+                int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (prereqIndex >= 0)
                 {
                     prereqSkills[prereqIndex] = propIntValue;
@@ -781,7 +781,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Is it a prereq level ?
-                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs.ToArray(), srcProp.AttributeID);
+                prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (prereqIndex >= 0)
                 {
                     prereqLevels[prereqIndex] = propIntValue;
@@ -789,7 +789,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Launcher group ?
-                int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int launcherIndex = DBConstants.LauncherGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (launcherIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -801,7 +801,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Charge group ?
-                int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int chargeIndex = DBConstants.ChargeGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (chargeIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -813,7 +813,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // CanFitShip group ?
-                int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int canFitShipIndex = DBConstants.CanFitShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (canFitShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -825,7 +825,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // ModuleShip group ?
-                int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int moduleShipIndex = DBConstants.ModuleShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (moduleShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -837,8 +837,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // SpecialisationAsteroid group ?
-                int specialisationAsteroidIndex =
-                    Array.IndexOf(DBConstants.SpecialisationAsteroidGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int specialisationAsteroidIndex = DBConstants.SpecialisationAsteroidGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (specialisationAsteroidIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -850,7 +849,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Reaction group ?
-                int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int reactionIndex = DBConstants.ReactionGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (reactionIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -862,7 +861,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // PosCargobayAccept group ?
-                int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupPropertyIDs.ToArray(), srcProp.AttributeID);
+                int posCargobayAcceptIndex = DBConstants.PosCargobayAcceptGroupPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (posCargobayAcceptIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -1911,7 +1910,7 @@ namespace EVEMon.XmlGenerator
                 int attributeIntValue = attribute.GetIntValue();
 
                 // Is it a prereq skill ?
-                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs.ToArray(), attribute.AttributeID);
+                int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(attribute.AttributeID);
                 if (prereqIndex >= 0)
                 {
                     prereqSkills[prereqIndex] = attributeIntValue;
@@ -1919,7 +1918,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Is it a prereq level ?
-                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs.ToArray(), attribute.AttributeID);
+                prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(attribute.AttributeID);
                 if (prereqIndex < 0)
                     continue;
 
