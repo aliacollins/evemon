@@ -36,7 +36,6 @@ namespace EVEMon.SkillPlanner
             this.ItemAttributeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemSelectControl = new EVEMon.SkillPlanner.ItemSelectControl();
-            this.ttItem = new System.Windows.Forms.ToolTip(this.components);
             this.gbRequiredSkills = new System.Windows.Forms.GroupBox();
             this.requiredSkillsControl = new EVEMon.SkillPlanner.RequiredSkillsControl();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
@@ -130,7 +129,7 @@ namespace EVEMon.SkillPlanner
             this.ItemAttributeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.ItemAttributeContextMenu.Name = "ItemAttributeContextMenu";
-            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(158, 26);
+            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(158, 48);
             // 
             // exportToCSVToolStripMenuItem
             // 
@@ -212,7 +211,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader chAttribute;
         private System.Windows.Forms.ColumnHeader chValue;
         private ItemSelectControl itemSelectControl;
-        private System.Windows.Forms.ToolTip ttItem;
         private System.Windows.Forms.GroupBox gbAttributes;
         private System.Windows.Forms.ContextMenuStrip ItemAttributeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;

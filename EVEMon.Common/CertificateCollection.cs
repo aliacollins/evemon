@@ -12,15 +12,11 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class CertificateCollection : ReadonlyKeyedCollection<long, Certificate>
     {
-        private readonly Character m_character;
-
         /// <summary>
         /// Constructor
         /// </summary>
         internal CertificateCollection(Character character)
         {
-            m_character = character;
-
             // Builds the list
             foreach (Certificate cert in character.CertificateCategories.SelectMany(
                 category => category, (category, certClass) => new { category, certClass }).SelectMany(

@@ -73,7 +73,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the enumeration of the uri characters representing this identity.
         /// </summary>
-        public IEnumerable<UriCharacter> UriCharacters
+        public static IEnumerable<UriCharacter> UriCharacters
         {
             get { return EveMonClient.Characters.OfType<UriCharacter>(); }
         }

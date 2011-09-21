@@ -47,7 +47,6 @@ namespace EVEMon
             this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.upperPanel = new System.Windows.Forms.Panel();
             this.Header = new EVEMon.CharacterMonitorHeader();
-            this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.skillQueuePanel = new System.Windows.Forms.Panel();
             this.lblPaused = new System.Windows.Forms.Label();
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
@@ -671,33 +670,33 @@ namespace EVEMon
             // columnSettingsMenuItem
             // 
             this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
-            this.columnSettingsMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.columnSettingsMenuItem.Size = new System.Drawing.Size(230, 22);
             this.columnSettingsMenuItem.Text = "Column Settings";
             this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
             // 
             // tsColumnSettingsSeparator
             // 
             this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
-            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(249, 6);
+            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(227, 6);
             // 
             // hideInactiveMenuItem
             // 
             this.hideInactiveMenuItem.Name = "hideInactiveMenuItem";
-            this.hideInactiveMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.hideInactiveMenuItem.Size = new System.Drawing.Size(230, 22);
             this.hideInactiveMenuItem.Text = "Hide Inactive Orders";
             this.hideInactiveMenuItem.Click += new System.EventHandler(this.hideInactiveMenuItem_Click);
             // 
             // numberAbsFormatMenuItem
             // 
             this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
-            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(230, 22);
             this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
             this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
             // 
             // tsReadingPaneSeparator
             // 
             this.tsReadingPaneSeparator.Name = "tsReadingPaneSeparator";
-            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(249, 6);
+            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(227, 6);
             // 
             // readingPaneMenuItem
             // 
@@ -706,7 +705,7 @@ namespace EVEMon
             this.paneBottomMenuItem,
             this.paneOffMenuItem});
             this.readingPaneMenuItem.Name = "readingPaneMenuItem";
-            this.readingPaneMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.readingPaneMenuItem.Size = new System.Drawing.Size(230, 22);
             this.readingPaneMenuItem.Text = "Reading Pane";
             this.readingPaneMenuItem.DropDownOpening += new System.EventHandler(this.readingPaneMenuItem_DropDownOpening);
             // 
@@ -977,7 +976,6 @@ namespace EVEMon
         private System.Windows.Forms.Label lblTrainingSkill;
         private System.Windows.Forms.Label lblCurrentlyTraining;
         private System.Windows.Forms.Panel upperPanel;
-        private System.Windows.Forms.SaveFileDialog sfdSaveDialog;
         private System.Windows.Forms.TableLayoutPanel tlpStatus;
         private System.Windows.Forms.FlowLayoutPanel flpStatusValues;
         private System.Windows.Forms.FlowLayoutPanel flpStatusLabels;

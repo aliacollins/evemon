@@ -14,7 +14,7 @@ namespace EVEMon.Common
     {
         public string ErrorMessage { get; set; }
 
-        public IEnumerable<MarketOrder> Orders
+        public static  IEnumerable<MarketOrder> Orders
         {
             get
             {

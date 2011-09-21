@@ -36,7 +36,7 @@ namespace EVEMon.Common.Serialization.Importation
         /// Returns a serializable implant set.
         /// </summary>
         /// <returns></returns>
-        internal SerializableSettingsImplantSet ToSerializableImplantSet()
+        internal static SerializableSettingsImplantSet ToSerializableImplantSet()
         {
             return new SerializableSettingsImplantSet();
         }

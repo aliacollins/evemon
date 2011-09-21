@@ -8,15 +8,11 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CertificateClassCollection : ReadonlyKeyedCollection<long, CertificateClass>
     {
-        private readonly Character m_character;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         internal CertificateClassCollection(Character character)
         {
-            m_character = character;
-
             foreach (CertificateClass certClass in character.CertificateCategories.SelectMany(category => category))
             {
                 Items[certClass.ID] = certClass;

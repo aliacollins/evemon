@@ -77,7 +77,7 @@ namespace EVEMon.Common.Serialization.Importation
                            CloneSkillPoints = CloneSkillPoints,
                            Balance = Balance,
                            Attributes = Attributes.ToSerializableAttributes(),
-                           ImplantSets = { API = AttributeEnhancers.ToSerializableImplantSet() },
+                           ImplantSets = { API = OldExportedAttributeEnhancers.ToSerializableImplantSet() },
                            Skills = CreateSerializableCharacterSkillList(),
                            Certificates = CreateSerializableCharacterCertificateList()
                        };

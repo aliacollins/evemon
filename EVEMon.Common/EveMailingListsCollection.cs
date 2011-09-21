@@ -6,15 +6,12 @@ namespace EVEMon.Common
 {
     public sealed class EveMailingListsCollection : ReadonlyCollection<EveMailingList>
     {
-        private readonly Character m_character;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="character">The character.</param>
         public EveMailingListsCollection(Character character)
         {
-            m_character = character;
         }
 
         /// <summary>

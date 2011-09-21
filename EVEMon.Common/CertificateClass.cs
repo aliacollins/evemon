@@ -12,7 +12,6 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class CertificateClass : ReadonlyVirtualCollection<Certificate>
     {
-        private readonly Character m_character;
         private readonly Certificate[] m_items = new Certificate[4];
 
         /// <summary>
@@ -23,7 +22,6 @@ namespace EVEMon.Common
         /// <param name="category"></param>
         internal CertificateClass(Character character, StaticCertificateClass src, CertificateCategory category)
         {
-            m_character = character;
             Category = category;
             StaticData = src;
 

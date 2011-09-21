@@ -69,6 +69,8 @@ namespace EVEMon.ApiErrorHandling
         /// </summary>
         private class TimeoutOption
         {
+            private readonly string m_text;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutOption"/> class.
             /// </summary>
@@ -77,7 +79,7 @@ namespace EVEMon.ApiErrorHandling
             public TimeoutOption(int seconds, string text)
             {
                 Seconds = seconds;
-                Text = text;
+                m_text = text;
             }
 
             /// <summary>
@@ -85,12 +87,6 @@ namespace EVEMon.ApiErrorHandling
             /// </summary>
             /// <value>The seconds.</value>
             public int Seconds { get; private set; }
-
-            /// <summary>
-            /// Gets or sets the text.
-            /// </summary>
-            /// <value>The text.</value>
-            private string Text { get; set; }
 
             /// <summary>
             /// Gets the label.
@@ -110,8 +106,8 @@ namespace EVEMon.ApiErrorHandling
                     else
                         builder.AppendFormat("{0} Seconds", Seconds);
 
-                    if (!String.IsNullOrEmpty(Text))
-                        builder.AppendFormat(" ({0})", Text);
+                    if (!String.IsNullOrEmpty(m_text))
+                        builder.AppendFormat(" ({0})", m_text);
 
                     return builder.ToString();
                 }

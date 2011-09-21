@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -7,7 +6,6 @@ namespace EVEMon.Common
 {
     public sealed class EmploymentRecord
     {
-        private readonly Character m_character;
 
 
         #region Constructor
@@ -19,8 +17,6 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         public EmploymentRecord(Character character, SerializableEmploymentHistoryListItem src)
         {
-            m_character = character;
-
             CorporationName = GetIDToName(src.CorporationID);
             StartDate = src.StartDate;
         }
@@ -32,8 +28,6 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         public EmploymentRecord(Character character, SerializableEmploymentHistory src)
         {
-            m_character = character;
-
             CorporationName = src.CorporationName;
             StartDate = src.StartDate.TimeStringToDateTime();
         }

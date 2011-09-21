@@ -11,8 +11,6 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class CertificateCategory : ReadonlyKeyedCollection<string, CertificateClass>
     {
-        private readonly Character m_character;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -20,7 +18,6 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal CertificateCategory(Character character, StaticCertificateCategory src)
         {
-            m_character = character;
             StaticData = src;
 
             foreach (CertificateClass certClass in src.Select(srcClass => new CertificateClass(character, srcClass, this)))
