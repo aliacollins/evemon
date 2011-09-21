@@ -435,7 +435,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill"></param>
         /// <returns>The minimum required level, between 0 and 5.</returns>
-        public int GetMinimumLevel(StaticSkill skill)
+        public int GetMinimumLevel(IStaticSkill skill)
         {
             // Search the minimum level this skill is required by other entries
             int minNeeded = 0;

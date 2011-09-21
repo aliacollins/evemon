@@ -33,7 +33,7 @@ namespace EVEMon.Common.Controls
         /// Show the given form on topmost without activating it.
         /// </summary>
         /// <param name="frm"></param>
-        public static void ShowInactiveTopmost(this Form frm)
+        public static void ShowInactiveTopmost(this Control frm)
         {
             // We store the 'left' and 'top' position because for some reason
             // on first execution of 'ShowWindow' the form position gets reset

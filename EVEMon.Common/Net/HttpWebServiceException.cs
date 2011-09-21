@@ -185,7 +185,7 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The XmlException that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException XmlException(string url, XmlException ex)
+        public static HttpWebServiceException XmlException(string url, Exception ex)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.XmlException, ex, url,
                                                String.Format(ExceptionMessages.XmlException, GetHostName(url)));
@@ -197,7 +197,7 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown loading the image</param>
         /// <returns></returns>
-        public static HttpWebServiceException ImageException(string url, ArgumentException ex)
+        public static HttpWebServiceException ImageException(string url, Exception ex)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.ImageException, ex, url,
                                                String.Format(ExceptionMessages.ImageException, GetHostName(url)));
