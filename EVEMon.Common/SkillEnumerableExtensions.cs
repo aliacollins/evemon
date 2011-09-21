@@ -27,7 +27,7 @@ namespace EVEMon.Common
         {
             Skill first = src.FirstOrDefault();
             return first == null
-                       ? EmptyEnumerable<SkillLevel>.Instance
+                       ? new EmptyEnumerable<SkillLevel>()
                        : src.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
         }
     }

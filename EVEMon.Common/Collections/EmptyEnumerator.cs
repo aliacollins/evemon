@@ -14,18 +14,6 @@ namespace EVEMon.Common.Collections
     /// <typeparam name="T"></typeparam>
     public sealed class EmptyEnumerator<T> : IEnumerator<T>
     {
-        private EmptyEnumerator()
-        {
-        }
-
-        /// <summary>
-        /// Singleton implementation.
-        /// </summary>
-        public static EmptyEnumerator<T> Instance
-        {
-            get { return new EmptyEnumerator<T>(); }
-        }
-
         /// <summary>
         /// Throws an exception.
         /// </summary>
@@ -77,16 +65,9 @@ namespace EVEMon.Common.Collections
     public class EmptyEnumerable<T> : IEnumerable<T>
     {
         /// <summary>
-        /// Default constructor
-        /// </summary>
-        private EmptyEnumerable()
-        {
-        }
-
-        /// <summary>
         /// Singleton implementation.
         /// </summary>
-        public static EmptyEnumerable<T> Instance
+        public EmptyEnumerable<T> Instance
         {
             get { return new EmptyEnumerable<T>(); }
         }
@@ -97,7 +78,7 @@ namespace EVEMon.Common.Collections
         /// <returns>An empty enumerator</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return EmptyEnumerator<T>.Instance;
+            return new EmptyEnumerator<T>();
         }
 
         /// <summary>
@@ -106,7 +87,7 @@ namespace EVEMon.Common.Collections
         /// <returns>An empty enumerator</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return EmptyEnumerator<T>.Instance;
+            return new EmptyEnumerator<T>();
         }
     }
 

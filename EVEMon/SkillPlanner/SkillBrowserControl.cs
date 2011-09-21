@@ -98,9 +98,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInExplorer(Skill skill)
         {
-            PlanWindow planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            SkillExplorerWindow skillExplorer = WindowsFactory<SkillExplorerWindow>
-                .ShowByTag(planWindow, window => new SkillExplorerWindow(skill, window));
+            PlanWindow planWindow = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
+            SkillExplorerWindow skillExplorer = new WindowsFactory<SkillExplorerWindow>().ShowByTag(
+                planWindow, window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
         }
 

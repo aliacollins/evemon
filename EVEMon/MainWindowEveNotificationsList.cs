@@ -587,7 +587,7 @@ namespace EVEMon
                 return;
 
             // Show or bring to front if a window with the same EVE notification already exists
-            WindowsFactory<EveMessageWindow>.ShowByTag(notification);
+            new WindowsFactory<EveMessageWindow>().ShowByTag(notification);
         }
 
         /// <summary>

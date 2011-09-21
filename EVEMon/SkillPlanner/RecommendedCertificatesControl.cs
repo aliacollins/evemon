@@ -454,14 +454,14 @@ namespace EVEMon.SkillPlanner
 
             if (selectedNode.Tag is Certificate)
             {
-                PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+                PlanWindow pw = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
                 Certificate cert = ((Certificate)selectedNode.Tag);
                 pw.ShowCertInBrowser(cert);
             }
             else
             {
                 // Open skill browser tab for this skill
-                PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+                PlanWindow pw = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
                 Skill skill = ((SkillLevel)selectedNode.Tag).Skill;
                 pw.ShowSkillInBrowser(skill);
             }
@@ -537,7 +537,7 @@ namespace EVEMon.SkillPlanner
         private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow npw = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
             if (npw == null || npw.IsDisposed)
                 return;
 
@@ -561,7 +561,7 @@ namespace EVEMon.SkillPlanner
         private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow npw = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
             if (npw == null || npw.IsDisposed)
                 return;
 

@@ -355,7 +355,7 @@ namespace EVEMon
             APIErrorNotificationEventArgs errorNotification = notification as APIErrorNotificationEventArgs;
             if (errorNotification != null)
             {
-                ApiErrorWindow window = WindowsFactory<ApiErrorWindow>.ShowUnique();
+                ApiErrorWindow window = new WindowsFactory<ApiErrorWindow>().ShowUnique();
                 window.Notification = errorNotification;
                 return;
             }
@@ -364,7 +364,7 @@ namespace EVEMon
             SkillCompletionNotificationEventArgs skillNotifications = notification as SkillCompletionNotificationEventArgs;
             if (skillNotifications != null)
             {
-                SkillCompletionWindow window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
+                SkillCompletionWindow window = new WindowsFactory<SkillCompletionWindow>().ShowUnique();
                 window.Notification = skillNotifications;
                 return;
             }
@@ -374,7 +374,7 @@ namespace EVEMon
                 notification as ClaimableCertificateNotificationEventArgs;
             if (certNotifications != null)
             {
-                ClaimableCertificateWindow window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
+                ClaimableCertificateWindow window = new WindowsFactory<ClaimableCertificateWindow>().ShowUnique();
                 window.Notification = certNotifications;
                 return;
             }
@@ -383,7 +383,7 @@ namespace EVEMon
             MarketOrdersNotificationEventArgs ordersNotification = notification as MarketOrdersNotificationEventArgs;
             if (ordersNotification != null)
             {
-                MarketOrdersWindow window = WindowsFactory<MarketOrdersWindow>.ShowUnique();
+                MarketOrdersWindow window = new WindowsFactory<MarketOrdersWindow>().ShowUnique();
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 window.Grouping = MarketOrderGrouping.State;
@@ -394,7 +394,7 @@ namespace EVEMon
             IndustryJobsNotificationEventArgs jobsNotification = (IndustryJobsNotificationEventArgs)notification;
             if (jobsNotification != null)
             {
-                IndustryJobsWindow window = WindowsFactory<IndustryJobsWindow>.ShowUnique();
+                IndustryJobsWindow window = new WindowsFactory<IndustryJobsWindow>().ShowUnique();
                 window.Jobs = jobsNotification.Jobs;
                 window.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
                 window.Grouping = IndustryJobGrouping.State;

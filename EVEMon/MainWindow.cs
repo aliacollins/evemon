@@ -1095,7 +1095,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void addAPIKeyMenu_Click(object sender, EventArgs e)
         {
-            WindowsFactory<ApiKeyUpdateOrAdditionWindow>.ShowUnique();
+           new WindowsFactory<ApiKeyUpdateOrAdditionWindow>().ShowUnique();
         }
 
         /// <summary>
@@ -1106,7 +1106,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void manageAPIKeysMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<ApiKeysManagementWindow>.ShowUnique();
+            new WindowsFactory<ApiKeysManagementWindow>().ShowUnique();
         }
 
         /// <summary>
@@ -1137,7 +1137,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<CharacterDeletionWindow>.ShowByTag(character);
+            new WindowsFactory<CharacterDeletionWindow>().ShowByTag(character);
         }
 
         /// <summary>
@@ -1348,7 +1348,7 @@ namespace EVEMon
             character.Plans.Add(newPlan);
 
             // Show the editor for this plan
-            WindowsFactory<PlanWindow>.ShowByTag(newPlan);
+            new WindowsFactory<PlanWindow>().ShowByTag(newPlan);
         }
 
         /// <summary>
@@ -1401,7 +1401,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<PlanManagementWindow>.ShowByTag(character);
+            new WindowsFactory<PlanManagementWindow>().ShowByTag(character);
         }
 
         /// <summary>
@@ -1428,7 +1428,7 @@ namespace EVEMon
             Plan plan = (Plan)menuItem.Tag;
 
             // Show or bring to front if a window with the same plan as tag already exists
-            WindowsFactory<PlanWindow>.ShowByTag(plan);
+            new WindowsFactory<PlanWindow>().ShowByTag(plan);
         }
 
         /// <summary>
@@ -1439,7 +1439,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<MineralWorksheet>.ShowUnique();
+            new WindowsFactory<MineralWorksheet>().ShowUnique();
         }
 
         /// <summary>
@@ -1456,7 +1456,7 @@ namespace EVEMon
                 return;
 
             // Create the window
-            WindowsFactory<SkillsPieChart>.ShowByTag(character);
+            new WindowsFactory<SkillsPieChart>().ShowByTag(character);
         }
 
         /// <summary>
@@ -1467,7 +1467,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<ScheduleEditorWindow>.ShowUnique();
+            new WindowsFactory<ScheduleEditorWindow>().ShowUnique();
         }
 
         /// <summary>
@@ -1478,7 +1478,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void blankCharacterMenu_Click(object sender, EventArgs e)
         {
-            WindowsFactory<BlankCharacterWindow>.ShowUnique();
+            new WindowsFactory<BlankCharacterWindow>().ShowUnique();
         }
 
         /// <summary>
@@ -1492,7 +1492,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<ImplantSetsWindow>.ShowByTag(character);
+            new WindowsFactory<ImplantSetsWindow>().ShowByTag(character);
         }
 
         /// <summary>
@@ -1598,7 +1598,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<AboutWindow>.ShowUnique();
+            new WindowsFactory<AboutWindow>().ShowUnique();
         }
 
         /// <summary>

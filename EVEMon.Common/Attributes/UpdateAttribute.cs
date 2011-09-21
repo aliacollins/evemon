@@ -12,37 +12,37 @@ namespace EVEMon.Common.Attributes
         /// Constructor.
         /// </summary>
         /// <param name="defaultPeriod">Default length of time between updates.</param>
-        /// <param name="min">Minimum length of time between updates.</param>
+        /// <param name="minimum">Minimum length of time between updates.</param>
         /// <param name="cacheStyle">Cache style.</param>
-        public UpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod min, CacheStyle cacheStyle)
+        public UpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod minimum, CacheStyle cacheStyle)
         {
-            CreateUpdateAttribute(defaultPeriod, min, UpdatePeriod.Week, cacheStyle);
+            CreateUpdateAttribute(defaultPeriod, minimum, UpdatePeriod.Week, cacheStyle);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="defaultPeriod">Default length of time between updates.</param>
-        /// <param name="min">Minimum length of time between updates.</param>
-        /// <param name="max">Maximum length of time between updates.</param>
+        /// <param name="minimum">Minimum length of time between updates.</param>
+        /// <param name="maximum">Maximum length of time between updates.</param>
         /// <param name="cacheStyle">Cache style.</param>
-        public UpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod min, UpdatePeriod max, CacheStyle cacheStyle)
+        public UpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod minimum, UpdatePeriod maximum, CacheStyle cacheStyle)
         {
-            CreateUpdateAttribute(defaultPeriod, min, max, cacheStyle);
+            CreateUpdateAttribute(defaultPeriod, minimum, maximum, cacheStyle);
         }
 
         /// <summary>
         /// Constructor helper method.
         /// </summary>
         /// <param name="defaultPeriod">Default length of time between updates.</param>
-        /// <param name="min">Minimum length of time between updates.</param>
-        /// <param name="max">Maximum length of time between updates.</param>
+        /// <param name="minimum">Minimum length of time between updates.</param>
+        /// <param name="maximum">Maximum length of time between updates.</param>
         /// <param name="cacheStyle">Cache style.</param>
-        private void CreateUpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod min, UpdatePeriod max, CacheStyle cacheStyle)
+        private void CreateUpdateAttribute(UpdatePeriod defaultPeriod, UpdatePeriod minimum, UpdatePeriod maximum, CacheStyle cacheStyle)
         {
             DefaultPeriod = defaultPeriod;
-            Minimum = min;
-            Maximum = max;
+            Minimum = minimum;
+            Maximum = maximum;
             CacheStyle = cacheStyle;
         }
 

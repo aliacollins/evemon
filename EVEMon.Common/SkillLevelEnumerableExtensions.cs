@@ -27,8 +27,8 @@ namespace EVEMon.Common
         public static IEnumerable<SkillLevel> GetAllDependencies(this IEnumerable<SkillLevel> src, bool includeRoots)
         {
             SkillLevel first = src.FirstOrDefault();
-            return first.Skill == null
-                       ? EmptyEnumerable<SkillLevel>.Instance
+            return first == null || first.Skill == null
+                       ? new EmptyEnumerable<SkillLevel>()
                        : src.ToStatic().GetAllDependencies(includeRoots).ToCharacter(first.Skill.Character);
         }
 

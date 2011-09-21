@@ -107,7 +107,7 @@ namespace EVEMon
             // Update characters list and selects display order
             m_characters.Clear();
             m_characters.AddRange(Settings.UI.SystemTrayTooltip.DisplayOrder
-                                      ? TrayPopUpWindow.GetCharacters()
+                                      ? TrayPopUpWindow.GetCharacters
                                       : EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
 
             // Assembles the tooltip format

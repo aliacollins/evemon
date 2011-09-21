@@ -9,7 +9,7 @@ namespace EVEMon.Common
     /// This factory allows us keep unique instances of 
     /// </summary>
     /// <typeparam name="TForm">The type of windows ro create</typeparam>
-    public static class WindowsFactory<TForm>
+    public class WindowsFactory<TForm>
         where TForm : Form
     {
         private static readonly Object s_syncLock = new object();
@@ -19,7 +19,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Close the unique window.
         /// </summary>
-        public static void CloseUnique()
+        public void CloseUnique()
         {
             lock (s_syncLock)
             {
@@ -41,7 +41,7 @@ namespace EVEMon.Common
         /// Gets the window displayed as unique if it exists, null otherwise.
         /// </summary>
         /// <returns></returns>
-        public static TForm GetUnique
+        public TForm GetUnique
         {
             get
             {
@@ -80,7 +80,7 @@ namespace EVEMon.Common
         /// When it already exists, it is bringed to front, or show when hidden.
         /// </summary>
         /// <returns></returns>
-        public static TForm ShowUnique()
+        public TForm ShowUnique()
         {
             return ShowUnique(Create);
         }
@@ -92,7 +92,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public static TForm ShowUnique(Func<TForm> creation)
+        public TForm ShowUnique(Func<TForm> creation)
         {
             lock (s_syncLock)
             {
@@ -140,7 +140,7 @@ namespace EVEMon.Common
         /// <typeparam name="TTag"></typeparam>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public static TForm GetByTag<TTag>(TTag tag)
+        public TForm GetByTag<TTag>(TTag tag)
             where TTag : class
         {
             Object otag = tag;
@@ -175,7 +175,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public static TForm ShowByTag<TTag>(TTag tag)
+        public TForm ShowByTag<TTag>(TTag tag)
             where TTag : class
         {
             return ShowByTag(tag, Create);
@@ -189,7 +189,7 @@ namespace EVEMon.Common
         /// <param name="tag"></param>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public static TForm ShowByTag<TTag>(TTag tag, Func<TTag, TForm> creation)
+        public TForm ShowByTag<TTag>(TTag tag, Func<TTag, TForm> creation)
             where TTag : class
         {
             Object otag = tag;
@@ -245,7 +245,7 @@ namespace EVEMon.Common
         /// Call the default constructor.
         /// </summary>
         /// <returns></returns>
-        private static TForm Create()
+        private TForm Create()
         {
             ConstructorInfo constructorInfo = typeof(TForm).GetConstructor(Type.EmptyTypes);
             if (constructorInfo != null)
@@ -257,7 +257,7 @@ namespace EVEMon.Common
         /// Call the public constructor with the provided argument type.
         /// </summary>
         /// <returns></returns>
-        private static TForm Create<TArg>(TArg data)
+        private TForm Create<TArg>(TArg data)
         {
             // Search a public instance constructor with a single argument of type TArg
             ConstructorInfo ctor = typeof(TForm).GetConstructor(new[] { typeof(TArg) });
@@ -273,7 +273,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="TTag"></typeparam>
         /// <param name="tag"></param>
-        public static void CloseByTag<TTag>(TTag tag)
+        public void CloseByTag<TTag>(TTag tag)
         {
             Object otag = tag;
 

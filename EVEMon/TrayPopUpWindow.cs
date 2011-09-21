@@ -215,6 +215,49 @@ namespace EVEMon
         #region Content management : add the controls to the panel, update them, etc
 
         /// <summary>
+        /// Gets the characters list, sorted, grouped and filter according to the user settings.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Character> GetCharacters
+        {
+            get
+            {
+                IEnumerable<Character> characters = EveMonClient.MonitoredCharacters;
+
+                // Filter characters not in training ?
+                if (!Settings.UI.SystemTrayPopup.ShowCharNotTraining)
+                    characters = characters.Where(x => x.IsTraining);
+
+                // Sort
+                List<Character> charactersList = characters.ToList();
+                charactersList.StableSort(new CharacterComparer(Settings.UI.SystemTrayPopup.SecondarySortOrder));
+                charactersList.StableSort(new CharacterComparer(Settings.UI.SystemTrayPopup.PrimarySortOrder));
+
+                // Grouping
+                List<Character> newCharacters = new List<Character>();
+                switch (Settings.UI.SystemTrayPopup.GroupBy)
+                {
+                    case TrayPopupGrouping.None:
+                        newCharacters.AddRange(charactersList);
+                        return newCharacters;
+                    case TrayPopupGrouping.Account:
+                        newCharacters.AddRange(charactersList.Where(x => x.Identity.APIKey != null));
+                        return newCharacters.GroupBy(x => x.Identity.APIKey).SelectMany(y => y);
+                    case TrayPopupGrouping.TrainingAtTop:
+                        newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
+                        newCharacters.AddRange(charactersList.Where(x => !x.IsTraining));
+                        return newCharacters;
+                    case TrayPopupGrouping.TrainingAtBottom:
+                        newCharacters.AddRange(charactersList.Where(x => !x.IsTraining));
+                        newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
+                        return newCharacters;
+                    default:
+                        return characters;
+                }
+            }
+        }
+
+        /// <summary>
         /// Recreates the controls for character and warning.
         /// </summary>
         private void UpdateContent()
@@ -226,7 +269,7 @@ namespace EVEMon
             }
             m_updatePending = false;
 
-            IEnumerable<Character> characters = GetCharacters();
+            IEnumerable<Character> characters = GetCharacters;
 
             // Remove controls and dispose them
             IEnumerable<Control> oldControls = mainPanel.Controls.Cast<Control>();
@@ -298,46 +341,6 @@ namespace EVEMon
 
             // Updates the tooltip width
             CompleteLayout();
-        }
-
-        /// <summary>
-        /// Gets the characters list, sorted, grouped and filter according to the user settings.
-        /// </summary>
-        /// <returns></returns>
-        public static IEnumerable<Character> GetCharacters()
-        {
-            IEnumerable<Character> characters = EveMonClient.MonitoredCharacters;
-
-            // Filter characters not in training ?
-            if (!Settings.UI.SystemTrayPopup.ShowCharNotTraining)
-                characters = characters.Where(x => x.IsTraining);
-
-            // Sort
-            List<Character> charactersList = characters.ToList();
-            charactersList.StableSort(new CharacterComparer(Settings.UI.SystemTrayPopup.SecondarySortOrder));
-            charactersList.StableSort(new CharacterComparer(Settings.UI.SystemTrayPopup.PrimarySortOrder));
-
-            // Grouping
-            List<Character> newCharacters = new List<Character>();
-            switch (Settings.UI.SystemTrayPopup.GroupBy)
-            {
-                case TrayPopupGrouping.None:
-                    newCharacters.AddRange(charactersList);
-                    return newCharacters;
-                case TrayPopupGrouping.Account:
-                    newCharacters.AddRange(charactersList.Where(x => x.Identity.APIKey != null));
-                    return newCharacters.GroupBy(x => x.Identity.APIKey).SelectMany(y => y);
-                case TrayPopupGrouping.TrainingAtTop:
-                    newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
-                    newCharacters.AddRange(charactersList.Where(x => !x.IsTraining));
-                    return newCharacters;
-                case TrayPopupGrouping.TrainingAtBottom:
-                    newCharacters.AddRange(charactersList.Where(x => !x.IsTraining));
-                    newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
-                    return newCharacters;
-                default:
-                    return characters;
-            }
         }
 
         /// <summary>
