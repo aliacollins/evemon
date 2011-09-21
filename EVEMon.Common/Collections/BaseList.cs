@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EVEMon.Common.Collections
 {
@@ -11,7 +10,7 @@ namespace EVEMon.Common.Collections
     public abstract class BaseList<T> : IList<T>
         where T : class
     {
-        private List<T> m_items;
+        private List<T> m_items = new List<T>();
 
         /// <summary>
         /// Gets the items.
@@ -19,7 +18,7 @@ namespace EVEMon.Common.Collections
         /// <value>The items.</value>
         protected IEnumerable<T> Items
         {
-            get { return m_items ?? new List<T>(); }
+            get { return m_items; }
         }
 
         /// <summary>
