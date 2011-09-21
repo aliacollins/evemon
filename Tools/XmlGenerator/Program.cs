@@ -766,14 +766,14 @@ namespace EVEMon.XmlGenerator
             const int BaseWarpSpeed = 3;
             double warpSpeedMultiplier = 1;
             List<SerializablePropertyValue> props = new List<SerializablePropertyValue>();
-            int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Length];
-            int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
+            int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Count];
+            int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
             foreach (DgmTypeAttribute srcProp in s_typeAttributes.Where(x => x.ItemID == srcItem.ID))
             {
                 int propIntValue = srcProp.GetIntValue();
 
                 // Is it a prereq skill ?
-                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, srcProp.AttributeID);
+                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (prereqIndex >= 0)
                 {
                     prereqSkills[prereqIndex] = propIntValue;
@@ -781,7 +781,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Is it a prereq level ?
-                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, srcProp.AttributeID);
+                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (prereqIndex >= 0)
                 {
                     prereqLevels[prereqIndex] = propIntValue;
@@ -789,7 +789,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Launcher group ?
-                int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupPropertyIDs, srcProp.AttributeID);
+                int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (launcherIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -801,7 +801,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Charge group ?
-                int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupPropertyIDs, srcProp.AttributeID);
+                int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (chargeIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -813,7 +813,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // CanFitShip group ?
-                int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupPropertyIDs, srcProp.AttributeID);
+                int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (canFitShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -825,7 +825,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // ModuleShip group ?
-                int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupPropertyIDs, srcProp.AttributeID);
+                int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (moduleShipIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -837,8 +837,8 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // SpecialisationAsteroid group ?
-                int specialisationAsteroidIndex = Array.IndexOf(DBConstants.SpecialisationAsteroidGroupPropertyIDs,
-                                                                srcProp.AttributeID);
+                int specialisationAsteroidIndex =
+                    Array.IndexOf(DBConstants.SpecialisationAsteroidGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (specialisationAsteroidIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -850,7 +850,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Reaction group ?
-                int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupPropertyIDs, srcProp.AttributeID);
+                int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (reactionIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -862,7 +862,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // PosCargobayAccept group ?
-                int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupPropertyIDs, srcProp.AttributeID);
+                int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupPropertyIDs.ToArray(), srcProp.AttributeID);
                 if (posCargobayAcceptIndex >= 0)
                 {
                     props.Add(new SerializablePropertyValue
@@ -1195,7 +1195,7 @@ namespace EVEMon.XmlGenerator
                     // Export prerequesities
                     List<SerializableSkillPrerequisite> listOfPrerequisites = new List<SerializableSkillPrerequisite>();
 
-                    for (int i = 0; i < DBConstants.RequiredSkillPropertyIDs.Length; i++)
+                    for (int i = 0; i < DBConstants.RequiredSkillPropertyIDs.Count; i++)
                     {
                         if (!skillAttributes.ContainsKey(DBConstants.RequiredSkillPropertyIDs[i]) ||
                             !skillAttributes.ContainsKey(DBConstants.RequiredSkillLevelPropertyIDs[i]))
@@ -1902,8 +1902,8 @@ namespace EVEMon.XmlGenerator
         private static void MaterialPrereqSkill(RamTypeRequirements requirement,
                                                 List<SerializablePrereqSkill> prerequisiteSkills)
         {
-            int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Length];
-            int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
+            int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Count];
+            int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
 
             foreach (DgmTypeAttribute attribute in s_typeAttributes
                 .Where(x => x.ItemID == requirement.RequiredTypeID))
@@ -1911,7 +1911,7 @@ namespace EVEMon.XmlGenerator
                 int attributeIntValue = attribute.GetIntValue();
 
                 // Is it a prereq skill ?
-                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, attribute.AttributeID);
+                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs.ToArray(), attribute.AttributeID);
                 if (prereqIndex >= 0)
                 {
                     prereqSkills[prereqIndex] = attributeIntValue;
@@ -1919,7 +1919,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Is it a prereq level ?
-                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, attribute.AttributeID);
+                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs.ToArray(), attribute.AttributeID);
                 if (prereqIndex < 0)
                     continue;
 
