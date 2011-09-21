@@ -158,7 +158,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value.Select(x => x.Clone()));
+                    m_columns.AddRange(value);
 
                 if (m_init)
                     UpdateColumns();
@@ -806,7 +806,7 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.EVEMailMessages.Columns = Columns.Select(x => x.Clone()).ToArray();
+                Settings.UI.MainWindow.EVEMailMessages.Add(Columns.ToList());
 
                 // Recreate the columns
                 Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;

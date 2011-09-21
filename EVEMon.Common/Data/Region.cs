@@ -16,7 +16,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         internal Region(SerializableRegion src)
-            : base(src.Constellations.Length)
+            : base(src.Constellations.Count)
         {
             ID = src.ID;
             Name = src.Name;

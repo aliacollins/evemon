@@ -9,7 +9,6 @@ namespace EVEMon.Common
     {
         #region Fields
 
-        private readonly int m_skillID;
         private readonly float m_remainderPoints;
 
         #endregion
@@ -26,7 +25,6 @@ namespace EVEMon.Common
             GetAgentInfoByID(src.AgentID);
 
             AgentID = src.AgentID;
-            m_skillID = src.SkillID;
             Field = StaticSkills.GetSkillName(src.SkillID);
             StartDate = src.ResearchStartDate;
             PointsPerDay = src.PointsPerDay;
@@ -52,11 +50,6 @@ namespace EVEMon.Common
         /// Gets the agents level.
         /// </summary>
         public int AgentLevel { get; private set; }
-
-        /// <summary>
-        /// Gets the agents quality.
-        /// </summary>
-        public int AgentQuality { get; private set; }
 
         /// <summary>
         /// Gets the agents field of research.
@@ -103,7 +96,6 @@ namespace EVEMon.Common
 
             AgentName = agent.Name;
             AgentLevel = agent.Level;
-            AgentQuality = agent.Quality;
             Station = StaticGeography.GetStationByID(agent.Station.ID);
         }
 

@@ -4,23 +4,19 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class ExportationSettings
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportationSettings"/> class.
+        /// </summary>
         public ExportationSettings()
         {
             PlanToText = new PlanExportSettings();
         }
 
+        /// <summary>
+        /// Gets or sets the plan to text.
+        /// </summary>
+        /// <value>The plan to text.</value>
         [XmlElement("planToText")]
         public PlanExportSettings PlanToText { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal ExportationSettings Clone()
-        {
-            ExportationSettings clone = (ExportationSettings)MemberwiseClone();
-            clone.PlanToText = PlanToText.Clone();
-            return clone;
-        }
     }
 }

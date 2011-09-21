@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -27,7 +28,7 @@ namespace EVEMon.Common.Data
 
             // Fetch deserialized data
             s_arrayIndicesCount = 0;
-            List<SerializableSkillPrerequisite[]> prereqs = new List<SerializableSkillPrerequisite[]>();
+            List<Collection<SerializableSkillPrerequisite>> prereqs = new List<Collection<SerializableSkillPrerequisite>>();
             foreach (SerializableSkillGroup srcGroup in datafile.Groups)
             {
                 StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref s_arrayIndicesCount);
@@ -41,7 +42,7 @@ namespace EVEMon.Common.Data
                 }
 
                 // Store prereqs
-                prereqs.AddRange(srcGroup.Skills.Select(serialSkill => serialSkill.Prereqs));
+                prereqs.AddRange(srcGroup.Skills.Select(serialSkill => serialSkill.SkillPrerequisites));
             }
 
             // Complete initialization

@@ -100,7 +100,7 @@ namespace EVEMon
             this.apiKeysManagementTbMenu = new System.Windows.Forms.ToolStripButton();
             this.addAPIKeyTbMenu = new System.Windows.Forms.ToolStripButton();
             this.hideCharacterTbMenu = new System.Windows.Forms.ToolStripButton();
-            this.accountsSettingsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.apiKeysSettingsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsdbSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsSaveSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsLoadSettings = new System.Windows.Forms.ToolStripMenuItem();
@@ -488,7 +488,7 @@ namespace EVEMon
             this.addBlankCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("addBlankCharacterMenu.Image")));
             this.addBlankCharacterMenu.Name = "addBlankCharacterMenu";
             this.addBlankCharacterMenu.Size = new System.Drawing.Size(209, 22);
-            this.addBlankCharacterMenu.Text = "Blank Character Creator...";
+            this.addBlankCharacterMenu.Text = "&Blank Character Creator...";
             this.addBlankCharacterMenu.Click += new System.EventHandler(this.blankCharacterMenu_Click);
             // 
             // mineralWorksheetToolStripMenuItem
@@ -536,7 +536,7 @@ namespace EVEMon
             this.showOwnedSkillbooksMenu.Image = ((System.Drawing.Image)(resources.GetObject("showOwnedSkillbooksMenu.Image")));
             this.showOwnedSkillbooksMenu.Name = "showOwnedSkillbooksMenu";
             this.showOwnedSkillbooksMenu.Size = new System.Drawing.Size(209, 22);
-            this.showOwnedSkillbooksMenu.Text = "Show Owned Skillbooks...";
+            this.showOwnedSkillbooksMenu.Text = "S&how Owned Skillbooks...";
             this.showOwnedSkillbooksMenu.Click += new System.EventHandler(this.tsShowOwnedSkillbooks_Click);
             // 
             // toolsOwnedOptionsToolStripSeparator
@@ -665,7 +665,7 @@ namespace EVEMon
             this.apiKeysManagementTbMenu,
             this.addAPIKeyTbMenu,
             this.hideCharacterTbMenu,
-            this.accountsSettingsToolStripSeparator,
+            this.apiKeysSettingsToolStripSeparator,
             this.tsdbSettings,
             this.settingsToolsToolStripSeparator,
             this.tsbMineralSheet,
@@ -713,10 +713,10 @@ namespace EVEMon
             this.hideCharacterTbMenu.Text = "Hide Character";
             this.hideCharacterTbMenu.Click += new System.EventHandler(this.hideCharacterMenu_Click);
             // 
-            // accountsSettingsToolStripSeparator
+            // apiKeysSettingsToolStripSeparator
             // 
-            this.accountsSettingsToolStripSeparator.Name = "accountsSettingsToolStripSeparator";
-            this.accountsSettingsToolStripSeparator.Size = new System.Drawing.Size(6, 25);
+            this.apiKeysSettingsToolStripSeparator.Name = "apiKeysSettingsToolStripSeparator";
+            this.apiKeysSettingsToolStripSeparator.Size = new System.Drawing.Size(6, 25);
             // 
             // tsdbSettings
             // 
@@ -978,7 +978,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStrip standardToolbar;
         private System.Windows.Forms.ToolStripButton apiKeysManagementTbMenu;
         private System.Windows.Forms.ToolStripButton hideCharacterTbMenu;
-        private System.Windows.Forms.ToolStripSeparator accountsSettingsToolStripSeparator;
+        private System.Windows.Forms.ToolStripSeparator apiKeysSettingsToolStripSeparator;
         private System.Windows.Forms.ToolStripDropDownButton tsdbSettings;
         private System.Windows.Forms.ToolStripMenuItem tsSaveSettings;
         private System.Windows.Forms.ToolStripMenuItem tsLoadSettings;

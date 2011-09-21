@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -12,6 +13,6 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         [XmlArray("accounts")]
         [XmlArrayItem("account")]
-        public SerializableAccountBalanceListItem[] Accounts { get; set; }
+        public List<SerializableAccountBalanceListItem> Accounts { get; set; }
     }
 }

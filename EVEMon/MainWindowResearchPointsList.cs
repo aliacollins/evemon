@@ -128,7 +128,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value.Select(x => x.Clone()));
+                    m_columns.AddRange(value);
 
                 if (m_init)
                     UpdateColumns();
@@ -209,7 +209,6 @@ namespace EVEMon
                             header.TextAlign = HorizontalAlignment.Right;
                             break;
                         case ResearchColumn.Level:
-                        case ResearchColumn.Quality:
                             header.TextAlign = HorizontalAlignment.Center;
                             break;
                     }
@@ -354,9 +353,6 @@ namespace EVEMon
                 case ResearchColumn.Level:
                     item.Text = researchPoint.AgentLevel.ToString();
                     break;
-                case ResearchColumn.Quality:
-                    item.Text = researchPoint.AgentQuality.ToString();
-                    break;
                 case ResearchColumn.Field:
                     item.Text = researchPoint.Field;
                     break;
@@ -380,6 +376,8 @@ namespace EVEMon
                     break;
                 case ResearchColumn.Station:
                     item.Text = researchPoint.Station.Name;
+                    break;
+                case ResearchColumn.Quality:
                     break;
                 default:
                     throw new NotImplementedException();
@@ -495,7 +493,7 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.Research.Columns = Columns.Select(x => x.Clone()).ToArray();
+                Settings.UI.MainWindow.Research.Add(Columns.ToList());
 
                 // Recreate the columns
                 Columns = Settings.UI.MainWindow.Research.Columns;

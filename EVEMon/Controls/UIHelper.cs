@@ -166,7 +166,7 @@ namespace EVEMon.Controls
         /// <returns></returns>
         public static PlanExportSettings PromptUserForPlanExportSettings(Plan plan)
         {
-            PlanExportSettings settings = Settings.Exportation.PlanToText.Clone();
+            PlanExportSettings settings = Settings.Exportation.PlanToText;
             using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(settings, plan, false))
             {
                 if (settings.Markup == MarkupType.Undefined)

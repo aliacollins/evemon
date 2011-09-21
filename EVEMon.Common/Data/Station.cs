@@ -32,7 +32,7 @@ namespace EVEMon.Common.Data
         /// <param name="owner">The owner.</param>
         /// <param name="src">The source.</param>
         public Station(SolarSystem owner, SerializableStation src)
-            : base(src.Agents == null ? 0 : src.Agents.Length)
+            : base(src.Agents == null ? 0 : src.Agents.Count)
         {
             ID = src.ID;
             Name = src.Name;

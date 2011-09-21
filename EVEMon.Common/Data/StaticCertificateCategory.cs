@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         internal StaticCertificateCategory(SerializableCertificateCategory src)
-            : base(src.Classes.Length)
+            : base(src.Classes.Count)
         {
             ID = src.ID;
             Name = src.Name;

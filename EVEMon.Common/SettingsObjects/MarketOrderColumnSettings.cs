@@ -4,17 +4,24 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class MarketOrderColumnSettings : IColumnSettings
     {
-        public MarketOrderColumnSettings()
-        {
-            Width = -1;
-        }
-
+        /// <summary>
+        /// Gets or sets the column.
+        /// </summary>
+        /// <value>The column.</value>
         [XmlAttribute("column")]
         public MarketOrderColumn Column { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="MarketOrderColumnSettings"/> is visible.
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
         [XmlAttribute("visible")]
         public bool Visible { get; set; }
 
+        /// <summary>
+        /// Gets or sets the width.
+        /// </summary>
+        /// <value>The width.</value>
         [XmlAttribute("width")]
         public int Width { get; set; }
 
@@ -25,15 +32,6 @@ namespace EVEMon.Common.SettingsObjects
         int IColumnSettings.Key
         {
             get { return (int)Column; }
-        }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        public MarketOrderColumnSettings Clone()
-        {
-            return new MarketOrderColumnSettings { Column = Column, Visible = Visible, Width = Width };
         }
 
         /// <summary>

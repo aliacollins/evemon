@@ -4,28 +4,41 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class SkillBrowserSettings
     {
+        /// <summary>
+        /// Gets or sets the filter.
+        /// </summary>
+        /// <value>The filter.</value>
         [XmlElement("filter")]
         public SkillFilter Filter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the sort.
+        /// </summary>
+        /// <value>The sort.</value>
         [XmlElement("sort")]
         public SkillSort Sort { get; set; }
 
+        /// <summary>
+        /// Gets or sets the text search.
+        /// </summary>
+        /// <value>The text search.</value>
         [XmlElement("textSearch")]
         public string TextSearch { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of the icons group.
+        /// </summary>
+        /// <value>The index of the icons group.</value>
         [XmlElement("iconsGroupIndex")]
         public int IconsGroupIndex { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show non public skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show non public skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showNonPublicSkills")]
         public bool ShowNonPublicSkills { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal SkillBrowserSettings Clone()
-        {
-            return (SkillBrowserSettings)MemberwiseClone();
-        }
     }
 }

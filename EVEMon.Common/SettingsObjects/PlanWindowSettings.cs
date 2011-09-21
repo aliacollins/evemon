@@ -1,10 +1,24 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
+    /// <summary>
+    /// Settings for Plan Window.
+    /// </summary>
+    /// <remarks>
+    /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
+    /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
+    /// </remarks>
     public sealed class PlanWindowSettings
     {
+        private Collection<PlanColumnSettings> m_columns;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlanWindowSettings"/> class.
+        /// </summary>
         public PlanWindowSettings()
         {
             DimUntrainable = true;
@@ -13,68 +27,143 @@ namespace EVEMon.Common.SettingsObjects
             PrioritiesMsgBox = new CustomMsgBoxSettings();
             ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
 
-            PlanColumn[] displayedColumns = new[]
-                                                {
-                                                    PlanColumn.Priority,
-                                                    PlanColumn.SkillName,
-                                                    PlanColumn.TrainingTime,
-                                                    PlanColumn.SkillRank,
-                                                    PlanColumn.PrimaryAttribute,
-                                                    PlanColumn.SecondaryAttribute,
-                                                    PlanColumn.SkillGroup,
-                                                    PlanColumn.SPPerHour
-                                                };
-
-            Columns = EnumExtensions.GetValues<PlanColumn>().Where(
-                x => x != PlanColumn.None).Select(x =>
-                                                  new PlanColumnSettings
-                                                      { Column = x, Visible = displayedColumns.Contains(x), Width = -1 }).ToArray();
+            m_columns = new Collection<PlanColumnSettings>();
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight planned skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [highlight planned skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("highlightPlannedSkills")]
         public bool HighlightPlannedSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight prerequisites].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [highlight prerequisites]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("highlightPrerequisites")]
         public bool HighlightPrerequisites { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight conflicts].
+        /// </summary>
+        /// <value><c>true</c> if [highlight conflicts]; otherwise, <c>false</c>.</value>
         [XmlElement("highlightConflicts")]
         public bool HighlightConflicts { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight partial skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [highlight partial skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("highlightPartialSkills")]
         public bool HighlightPartialSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight queued skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [highlight queued skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("highlightQueuedSkills")]
         public bool HighlightQueuedSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [only show selection summary on multi select].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [only show selection summary on multi select]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("onlyShowSelectionSummaryOnMultiSelect")]
         public bool OnlyShowSelectionSummaryOnMultiSelect { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [use advance entry addition].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [use advance entry addition]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("useAdvanceEntryAddition")]
         public bool UseAdvanceEntryAddition { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [dim untrainable].
+        /// </summary>
+        /// <value><c>true</c> if [dim untrainable]; otherwise, <c>false</c>.</value>
         [XmlElement("dimUntrainable")]
         public bool DimUntrainable { get; set; }
 
+        /// <summary>
+        /// Gets or sets the priorities MSG box.
+        /// </summary>
+        /// <value>The priorities MSG box.</value>
         [XmlElement("prioritiesMsgBox")]
         public CustomMsgBoxSettings PrioritiesMsgBox { get; set; }
 
+        /// <summary>
+        /// Gets or sets the obsolete entry removal behaviour.
+        /// </summary>
+        /// <value>The obsolete entry removal behaviour.</value>
         [XmlElement("obsoleteEntryRemovalBehaviour")]
         public ObsoleteEntryRemovalBehaviour ObsoleteEntryRemovalBehaviour { get; set; }
 
+        /// <summary>
+        /// Gets the columns.
+        /// </summary>
+        /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public PlanColumnSettings[] Columns { get; set; }
+        public Collection<PlanColumnSettings> Columns
+        {
+            get { return m_columns; }
+        }
 
         /// <summary>
-        /// Clones this instance.
+        /// Gets the default columns.
         /// </summary>
-        /// <returns></returns>
-        public PlanWindowSettings Clone()
+        /// <value>The default columns.</value>
+        public IEnumerable<PlanColumnSettings> DefaultColumns
         {
-            PlanWindowSettings clone = (PlanWindowSettings)MemberwiseClone();
-            clone.Columns = Columns.Select(x => x.Clone()).ToArray();
-            clone.PrioritiesMsgBox = PrioritiesMsgBox.Clone();
-            return clone;
+            get
+            {
+                PlanColumn[] defaultColumns = new[]
+                                                  {
+                                                      PlanColumn.Priority,
+                                                      PlanColumn.SkillName,
+                                                      PlanColumn.TrainingTime,
+                                                      PlanColumn.SkillRank,
+                                                      PlanColumn.PrimaryAttribute,
+                                                      PlanColumn.SecondaryAttribute,
+                                                      PlanColumn.SkillGroup,
+                                                      PlanColumn.SPPerHour
+                                                  };
+
+                List<PlanColumnSettings> planColumns = Columns.ToList();
+                planColumns.AddRange(EnumExtensions.GetValues<PlanColumn>().Where(
+                    x => x != PlanColumn.None).Where(x => planColumns.All(y => y.Column != x)).Select(
+                        x => new PlanColumnSettings
+                                 {
+                                     Column = x,
+                                     Visible = defaultColumns.Contains(x),
+                                     Width = -1
+                                 }));
+
+                return planColumns;
+            }
+        }
+
+        /// <summary>
+        /// Adds the specified columns.
+        /// </summary>
+        /// <param name="columns">The columns.</param>
+        public void Add(List<PlanColumnSettings> columns)
+        {
+            m_columns = new Collection<PlanColumnSettings>(columns);
         }
     }
 }

@@ -941,14 +941,13 @@ namespace EVEMon
             if (multiPanel.SelectedPage == ordersPage)
             {
                 using (MarketOrdersColumnsSelectWindow f =
-                    new MarketOrdersColumnsSelectWindow(ordersList.Columns.Select(x => x.Clone())))
+                    new MarketOrdersColumnsSelectWindow(ordersList.Columns))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
                         ordersList.Columns = f.Columns.Cast<MarketOrderColumnSettings>();
-                        Settings.UI.MainWindow.MarketOrders.Columns =
-                            ordersList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.MarketOrders.Add(ordersList.Columns.ToList());
                     }
                 }
             }
@@ -956,14 +955,13 @@ namespace EVEMon
             if (multiPanel.SelectedPage == jobsPage)
             {
                 using (IndustryJobsColumnsSelectWindow f =
-                    new IndustryJobsColumnsSelectWindow(jobsList.Columns.Select(x => x.Clone())))
+                    new IndustryJobsColumnsSelectWindow(jobsList.Columns))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
                         jobsList.Columns = f.Columns.Cast<IndustryJobColumnSettings>();
-                        Settings.UI.MainWindow.IndustryJobs.Columns =
-                            jobsList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.IndustryJobs.Add(jobsList.Columns.ToList());
                     }
                 }
             }
@@ -971,14 +969,13 @@ namespace EVEMon
             if (multiPanel.SelectedPage == researchPage)
             {
                 using (ResearchColumnsSelectWindow f =
-                    new ResearchColumnsSelectWindow(researchList.Columns.Select(x => x.Clone())))
+                    new ResearchColumnsSelectWindow(researchList.Columns))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
                         researchList.Columns = f.Columns.Cast<ResearchColumnSettings>();
-                        Settings.UI.MainWindow.Research.Columns =
-                            researchList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.Research.Add(researchList.Columns.ToList());
                     }
                 }
             }
@@ -986,14 +983,13 @@ namespace EVEMon
             if (multiPanel.SelectedPage == mailMessagesPage)
             {
                 using (EveMailMessagesColumnsSelectWindow f =
-                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Select(x => x.Clone())))
+                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
                         mailMessagesList.Columns = f.Columns.Cast<EveMailMessagesColumnSettings>();
-                        Settings.UI.MainWindow.EVEMailMessages.Columns =
-                            mailMessagesList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.EVEMailMessages.Add(mailMessagesList.Columns.ToList());
                     }
                 }
             }
@@ -1001,14 +997,13 @@ namespace EVEMon
             if (multiPanel.SelectedPage == eveNotificationsPage)
             {
                 using (EveNotificationsColumnsSelectWindow f =
-                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Select(x => x.Clone())))
+                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
                         eveNotificationsList.Columns = f.Columns.Cast<EveNotificationsColumnSettings>();
-                        Settings.UI.MainWindow.EVENotifications.Columns =
-                            eveNotificationsList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.EVENotifications.Add(eveNotificationsList.Columns.ToList());
                     }
                 }
             }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -12,13 +13,13 @@ namespace EVEMon.Common.Data
         /// Deserialization consructor.
         /// </summary>
         /// <param name="src"></param>
-        internal EvePropertyCollection(SerializablePropertyValue[] src)
-            : base(src == null ? 0 : src.Length)
+        internal EvePropertyCollection(ICollection<SerializablePropertyValue> src)
+            : base(src == null ? 0 : src.Count)
         {
             if (src == null)
                 return;
 
-            Items.Capacity = src.Length;
+            Items.Capacity = src.Count;
             foreach (EvePropertyValue prop in src.Select(
                 srcProp => new EvePropertyValue(srcProp)).Where(prop => prop.Property != null))
             {

@@ -13,7 +13,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="settings">The settings.</param>
         public MarketOrdersColumnsSelectWindow(IEnumerable<MarketOrderColumnSettings> settings)
-            : base(settings.Select(x => x.Clone()))
+            : base(settings)
         {
         }
 
@@ -49,7 +49,7 @@ namespace EVEMon
             get
             {
                 MarketOrderSettings settings = new MarketOrderSettings();
-                return settings.Columns;
+                return settings.DefaultColumns;
             }
         }
     }

@@ -77,7 +77,7 @@ namespace EVEMon.XmlGenerator
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             // Data dumps are available from CCP
-            Console.Write(@"Loading Data from SQL Server... ");
+            Console.Write("Loading Data from SQL Server... ");
 
 
             #region Read Tables From Database
@@ -149,7 +149,7 @@ namespace EVEMon.XmlGenerator
 
 
             // Generate datafiles
-            Console.WriteLine(@"Datafile Generating In Progress");
+            Console.WriteLine("Datafile Generating In Progress");
             Console.WriteLine();
 
             GenerateProperties();
@@ -162,7 +162,7 @@ namespace EVEMon.XmlGenerator
 
             GenerateMD5Sums();
 
-            Console.WriteLine(@"Done");
+            Console.WriteLine("Done");
             Console.ReadLine();
         }
 
@@ -177,7 +177,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateProperties()
         {
             Console.WriteLine();
-            Console.Write(@"Generated properties datafile... ");
+            Console.Write("Generated properties datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -266,8 +266,9 @@ namespace EVEMon.XmlGenerator
             s_attributeTypes[DBConstants.ModuleReactivationDelayPropertyID].HigherIsBetter = false;
 
 
-            // Export attribute categories
             List<SerializablePropertyCategory> categories = new List<SerializablePropertyCategory>();
+            List<SerializableProperty> gProperties = new List<SerializableProperty>();
+            List<SerializableProperty> pProperties = new List<SerializableProperty>();
 
             // We insert custom categories
             SerializablePropertyCategory general = new SerializablePropertyCategory
@@ -275,27 +276,26 @@ namespace EVEMon.XmlGenerator
                                                            Name = "General",
                                                            Description = "General informations"
                                                        };
+            categories.Insert(0, general);
             SerializablePropertyCategory propulsion = new SerializablePropertyCategory
                                                           {
                                                               Name = "Propulsion",
                                                               Description = "Navigation attributes for ships"
                                                           };
-            List<SerializableProperty> gProperties = new List<SerializableProperty>();
-            List<SerializableProperty> pProperties = new List<SerializableProperty>();
-            categories.Insert(0, general);
             categories.Insert(0, propulsion);
 
+            // Export attribute categories
             foreach (DgmAttributeCategory srcCategory in s_attributeCategories)
             {
-                SerializablePropertyCategory category = new SerializablePropertyCategory();
+                List<SerializableProperty> properties = new List<SerializableProperty>();
+                SerializablePropertyCategory category = new SerializablePropertyCategory
+                                                            {
+                                                                Description = srcCategory.Description,
+                                                                Name = srcCategory.Name
+                                                            };
                 categories.Add(category);
 
-                category.Description = srcCategory.Description;
-                category.Name = srcCategory.Name;
-
                 // Export attributes
-                List<SerializableProperty> properties = new List<SerializableProperty>();
-
                 foreach (DgmAttributeTypes srcProp in s_attributeTypes.Where(x => x.CategoryID == srcCategory.ID))
                 {
                     UpdatePercentDone(PropGenTotal);
@@ -414,17 +414,19 @@ namespace EVEMon.XmlGenerator
                 // Add EVEMon custom properties (Packaged Volume)
                 if (srcCategory.ID == DBConstants.StructureAtributeCategoryID)
                 {
-                    SerializableProperty pvProp = new SerializableProperty();
+                    SerializableProperty pvProp = new SerializableProperty
+                                                      {
+                                                          Name = "Packaged Volume",
+                                                          Unit = "m3",
+                                                          Icon = "02_09",
+                                                          DefaultValue = "0",
+                                                          Description = "The packaged volume of a ship.",
+                                                          UnitID = 9
+                                                      };
                     properties.Insert(4, pvProp);
-                    pvProp.Name = "Packaged Volume";
-                    pvProp.Unit = "m3";
-                    pvProp.Icon = "02_09";
-                    pvProp.DefaultValue = "0";
-                    pvProp.Description = "The packaged volume of a ship.";
-                    pvProp.UnitID = 9;
                 }
 
-                category.Properties = properties.ToArray();
+                category.Add(properties);
             }
 
             // Set packaged volume property ID
@@ -432,36 +434,36 @@ namespace EVEMon.XmlGenerator
             categories[5].Properties[4].ID = s_propPackagedVolumeID;
 
             // Add EVEMon custom properties (Base Price)
-            SerializableProperty bpProp = new SerializableProperty();
             s_propBasePriceID = ++newID;
+            SerializableProperty bpProp = new SerializableProperty
+                                              {
+                                                  ID = s_propBasePriceID,
+                                                  Name = "Base Price",
+                                                  Unit = "ISK",
+                                                  DefaultValue = "0",
+                                                  Description = "The price from NPC vendors (does not mean there is any).",
+                                                  UnitID = 133
+                                              };
             gProperties.Insert(0, bpProp);
-            bpProp.ID = s_propBasePriceID;
-            bpProp.Name = "Base Price";
-            bpProp.Unit = "ISK";
-            bpProp.DefaultValue = "0";
-            bpProp.Description = "The price from NPC vendors (does not mean there is any).";
-            bpProp.UnitID = 133;
 
             // Add properties to custom categories
-            general.Properties = gProperties.ToArray();
-            propulsion.Properties = pProperties.ToArray();
+            general.Add(gProperties);
+            propulsion.Add(pProperties);
 
             // Sort groups
-            string[] orderedGroupNames = {
-                                             "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
-                                             "Targeting", "Propulsion", "Miscellaneous", "NULL"
-                                         };
+            string[] orderedGroupNames = new[]
+                                             {
+                                                 "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
+                                                 "Targeting", "Propulsion", "Miscellaneous", "NULL"
+                                             };
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            PropertiesDatafile datafile = new PropertiesDatafile
-                                              {
-                                                  Categories =
-                                                      categories.OrderBy(
-                                                          x => Array.IndexOf(orderedGroupNames, String.Intern(x.Name))).ToArray()
-                                              };
+            PropertiesDatafile datafile = new PropertiesDatafile();
+            datafile.Add(categories.OrderBy(x => Array.IndexOf(orderedGroupNames, String.Intern(x.Name))).ToList());
+
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
 
@@ -476,13 +478,12 @@ namespace EVEMon.XmlGenerator
         private static void GenerateItems()
         {
             Console.WriteLine();
-            Console.Write(@"Generated items datafile... ");
+            Console.Write("Generated items datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
             s_text = String.Empty;
             s_startTime = DateTime.Now;
-
 
             // Create custom market groups that don't exist in EVE
             s_injectedMarketGroups = new List<InvMarketGroup>
@@ -702,16 +703,17 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Store the items
-                group.Items = items.OrderBy(x => x.Name).ToArray();
+                group.Add(items.OrderBy(x => x.Name).ToList());
             }
 
             // Create the parent-children groups relations
             foreach (SerializableMarketGroup group in groups.Values)
             {
-                IEnumerable<SerializableMarketGroup> children =
+                IOrderedEnumerable<SerializableMarketGroup> children =
                     s_marketGroups.Concat(s_injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID)
-                        .Select(x => groups[x.ID]);
-                group.SubGroups = children.OrderBy(x => x.Name).ToArray();
+                        .Select(x => groups[x.ID]).OrderBy(x => x.Name);
+
+                group.Add(children.ToList());
             }
 
             // Pick the family
@@ -722,15 +724,17 @@ namespace EVEMon.XmlGenerator
             SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresMarketGroupID], ItemFamily.StarbaseStructure);
 
             // Sort groups
-            IOrderedEnumerable<SerializableMarketGroup> rootGroups =
+            List<SerializableMarketGroup> rootGroups =
                 s_marketGroups.Concat(s_injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID])
-                    .OrderBy(x => x.Name);
+                    .OrderBy(x => x.Name).ToList();
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            ItemsDatafile datafile = new ItemsDatafile { MarketGroups = rootGroups.ToArray() };
+            ItemsDatafile datafile = new ItemsDatafile();
+            datafile.Add(rootGroups);
+
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
 
@@ -951,7 +955,7 @@ namespace EVEMon.XmlGenerator
             props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
 
             // Add properties info to item
-            item.Properties = props.ToArray();
+            item.Add(props);
 
             // Prerequisites completion
             List<SerializablePrerequisiteSkill> prereqs = new List<SerializablePrerequisiteSkill>();
@@ -962,7 +966,7 @@ namespace EVEMon.XmlGenerator
             }
 
             // Add prerequisite skills info to item
-            item.Prereqs = prereqs.ToArray();
+            item.Add(prereqs);
 
             // Metagroup
             foreach (InvMetaType relation in s_metaTypes
@@ -1133,7 +1137,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateSkills()
         {
             Console.WriteLine();
-            Console.Write(@"Generated skills datafile... ");
+            Console.Write("Generated skills datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1217,14 +1221,14 @@ namespace EVEMon.XmlGenerator
                     }
 
                     // Add prerequesites to skill
-                    singleSkill.Prereqs = listOfPrerequisites.ToArray();
+                    singleSkill.Add(listOfPrerequisites);
 
                     // Add skill
                     listOfSkillsInGroup.Add(singleSkill);
                 }
 
                 // Add skills in skill group
-                skillGroup.Skills = listOfSkillsInGroup.OrderBy(x => x.Name).ToArray();
+                skillGroup.Add(listOfSkillsInGroup.OrderBy(x => x.Name).ToList());
 
                 // Add skill group
                 listOfSkillGroups.Add(skillGroup);
@@ -1234,7 +1238,9 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            SkillsDatafile datafile = new SkillsDatafile { Groups = listOfSkillGroups.ToArray() };
+            SkillsDatafile datafile = new SkillsDatafile();
+            datafile.Add(listOfSkillGroups);
+
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
 
@@ -1271,7 +1277,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateCertificates()
         {
             Console.WriteLine();
-            Console.Write(@"Generated certificates datafile... ");
+            Console.Write("Generated certificates datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1357,18 +1363,26 @@ namespace EVEMon.XmlGenerator
                         }
 
                         //Add prerequisites to certificate
-                        crtCertificates.Prerequisites = listOfPrereq.ToArray();
+                        crtCertificates.Add(listOfPrereq);
 
                         // Add recommendations to certificate
-                        crtCertificates.Recommendations = (s_crtRecommendations.Where(x => x.CertificateID == certificate.ID)
-                            .Select(recommendation =>
-                                    new { recommendation, shipName = s_types.First(x => x.ID == recommendation.ShipTypeID) })
-                            .Select(certRecom => new SerializableCertificateRecommendation
-                                                     {
-                                                         ID = certRecom.recommendation.ID,
-                                                         Ship = certRecom.shipName.Name,
-                                                         Level = certRecom.recommendation.Level
-                                                     })).ToArray();
+                        List<SerializableCertificateRecommendation> listOfRecommendations =
+                            (s_crtRecommendations.Where(x => x.CertificateID == certificate.ID)
+                                .Select(recommendation =>
+                                        new
+                                            {
+                                                recommendation,
+                                                shipName = s_types.First(x => x.ID == recommendation.ShipTypeID)
+                                            }).Select(
+                                                certRecom => new SerializableCertificateRecommendation
+                                                                 {
+                                                                     ID = certRecom.recommendation.ID,
+                                                                     Ship = certRecom.shipName.Name,
+                                                                     Level = certRecom.recommendation.Level
+                                                                 })
+                            ).ToList();
+
+                        crtCertificates.Add(listOfRecommendations);
 
                         // Add certificate
                         listOfCertificates.Add(crtCertificates);
@@ -1382,14 +1396,14 @@ namespace EVEMon.XmlGenerator
                         continue;
 
                     // Add certificates to classes
-                    crtClasses.Certificates = listOfCertificates.OrderBy(x => x.Grade).ToArray();
+                    crtClasses.Add(listOfCertificates.OrderBy(x => x.Grade).ToList());
 
                     // Add certificate class
                     listOfCertClasses.Add(crtClasses);
                 }
 
                 // Add classes to categories
-                crtCategory.Classes = listOfCertClasses.ToArray();
+                crtCategory.Add(listOfCertClasses);
 
                 // Add category
                 listOfCertCategories.Add(crtCategory);
@@ -1399,7 +1413,9 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            CertificatesDatafile datafile = new CertificatesDatafile { Categories = listOfCertCategories.ToArray() };
+            CertificatesDatafile datafile = new CertificatesDatafile();
+            datafile.Add(listOfCertCategories);
+
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
 
@@ -1434,7 +1450,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateBlueprints()
         {
             Console.WriteLine();
-            Console.Write(@"Generated blueprints datafile... ");
+            Console.Write("Generated blueprints datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1467,28 +1483,31 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Store the items
-                group.Blueprints = blueprints.OrderBy(x => x.Name).ToArray();
+                group.Add(blueprints.OrderBy(x => x.Name).ToList());
             }
 
             // Create the parent-children groups relations
             foreach (SerializableBlueprintMarketGroup group in groups.Values)
             {
-                IEnumerable<SerializableBlueprintMarketGroup> children = s_marketGroups.Concat(
-                    s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(x => groups[x.ID]);
+                List<SerializableBlueprintMarketGroup> children = s_marketGroups.Concat(
+                    s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(x => groups[x.ID]).OrderBy(x => x.Name).
+                    ToList();
 
-                group.SubGroups = children.OrderBy(x => x.Name).ToArray();
+                group.Add(children);
             }
 
             // Sort groups
-            IOrderedEnumerable<SerializableBlueprintMarketGroup> blueprintGroups = s_marketGroups.Concat(
+            List<SerializableBlueprintMarketGroup> blueprintGroups = s_marketGroups.Concat(
                 s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsMarketGroupID)
-                .Select(x => groups[x.ID]).OrderBy(x => x.Name);
+                .Select(x => groups[x.ID]).OrderBy(x => x.Name).ToList();
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            BlueprintsDatafile datafile = new BlueprintsDatafile { MarketGroups = blueprintGroups.ToArray() };
+            BlueprintsDatafile datafile = new BlueprintsDatafile();
+            datafile.Add(blueprintGroups);
+
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
 
@@ -1751,12 +1770,17 @@ namespace EVEMon.XmlGenerator
             // Look for the tech 2 variations that this blueprint invents
 
             // Add invention blueprints to item
-            blueprint.InventionTypeID = (s_metaTypes.Where(x => x.ParentItemID == blueprint.ProduceItemID
-                                                                && x.MetaGroupID == DBConstants.TechIIMetaGroupID)
-                .Select(x => x.ItemID).SelectMany(
-                    relationItemID => s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID)
-                                          .Select(x => x.ID), (relationItemID, variationItemID) => s_types[variationItemID].ID))
-                .ToArray();
+            List<int> listOfInventionTypeID =
+                (s_metaTypes.Where(x => x.ParentItemID == blueprint.ProduceItemID &&
+                                        x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
+                                            x => x.ItemID).SelectMany(
+                                                relationItemID =>
+                                                s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID).Select(
+                                                    x => x.ID),
+                                                (relationItemID, variationItemID) => s_types[variationItemID].ID))
+                    .ToList();
+
+            blueprint.Add(listOfInventionTypeID);
 
             // Add this item
             blueprintsGroup.Add(blueprint);
@@ -1779,10 +1803,10 @@ namespace EVEMon.XmlGenerator
             AddRequiredExtraMaterials(srcBlueprint.ID, prerequisiteSkills, requiredMaterials);
 
             // Add prerequisite skills to item
-            blueprint.PrereqSkill = prerequisiteSkills.OrderBy(x => x.Activity).ToArray();
+            blueprint.Add(prerequisiteSkills.OrderBy(x => x.Activity).ToList());
 
             // Add required materials to item
-            blueprint.ReqMaterial = requiredMaterials.OrderBy(x => x.Activity).ToArray();
+            blueprint.Add(requiredMaterials.OrderBy(x => x.Activity).ToList());
         }
 
         /// <summary>
@@ -1928,7 +1952,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateGeography()
         {
             Console.WriteLine();
-            Console.Write(@"Generated geography datafile... ");
+            Console.Write("Generated geography datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1990,53 +2014,55 @@ namespace EVEMon.XmlGenerator
                                         CorporationName =
                                             s_names.First(x => x.ID == srcStation.CorporationID).Name,
                                         ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
-                                        ReprocessingStationsTake = srcStation.ReprocessingStationsTake,
-                                        Agents = (s_agents.Where(x => x.LocationID == srcStation.ID)
-                                            .Select(srcAgent => new
-                                                                    {
-                                                                        srcAgent,
-                                                                        researchAgent =
-                                                                    s_researchAgents.FirstOrDefault(x => x.ID == srcAgent.ID)
-                                                                    })
-                                            .Select(config => new
-                                                                  {
-                                                                      config,
-                                                                      agentConfig =
-                                                                  s_agentConfig.FirstOrDefault(x => x.ID == config.srcAgent.ID)
-                                                                  })
-                                            .Select(agent => new SerializableAgent
-                                                                 {
-                                                                     ID = agent.config.srcAgent.ID,
-                                                                     Level = agent.config.srcAgent.Level,
-                                                                     Quality = agent.config.srcAgent.Quality,
-                                                                     Name =
-                                                                         s_names.First(x => x.ID == agent.config.srcAgent.ID).Name,
-                                                                     DivisionName =
-                                                                         s_npcDivisions.First(
-                                                                             x => x.ID == agent.config.srcAgent.DivisionID).
-                                                                         DivisionName,
-                                                                     AgentType =
-                                                                         s_agentTypes.First(
-                                                                             x => x.ID == agent.config.srcAgent.AgentTypeID).
-                                                                         AgentType,
-                                                                     ResearchSkillID =
-                                                                         (agent.config.researchAgent != null
-                                                                              ? agent.config.researchAgent.ResearchSkillID
-                                                                              : 0),
-                                                                     LocatorService =
-                                                                         (agent.agentConfig != null &&
-                                                                          agent.agentConfig.Key.Contains(
-                                                                              "agent.LocateCharacterService.enabled"))
-                                                                 })).ToArray(),
+                                        ReprocessingStationsTake = srcStation.ReprocessingStationsTake
                                     };
+
+                            List<SerializableAgent> agents = (s_agents.Where(x => x.LocationID == srcStation.ID)
+                                .Select(srcAgent => new
+                                                        {
+                                                            srcAgent,
+                                                            researchAgent =
+                                                        s_researchAgents.FirstOrDefault(x => x.ID == srcAgent.ID)
+                                                        })
+                                .Select(config => new
+                                                      {
+                                                          config,
+                                                          agentConfig =
+                                                      s_agentConfig.FirstOrDefault(x => x.ID == config.srcAgent.ID)
+                                                      })
+                                .Select(agent => new SerializableAgent
+                                                     {
+                                                         ID = agent.config.srcAgent.ID,
+                                                         Level = agent.config.srcAgent.Level,
+                                                         Quality = agent.config.srcAgent.Quality,
+                                                         Name =
+                                                             s_names.First(x => x.ID == agent.config.srcAgent.ID).Name,
+                                                         DivisionName =
+                                                             s_npcDivisions.First(
+                                                                 x => x.ID == agent.config.srcAgent.DivisionID).
+                                                             DivisionName,
+                                                         AgentType =
+                                                             s_agentTypes.First(
+                                                                 x => x.ID == agent.config.srcAgent.AgentTypeID).
+                                                             AgentType,
+                                                         ResearchSkillID =
+                                                             (agent.config.researchAgent != null
+                                                                  ? agent.config.researchAgent.ResearchSkillID
+                                                                  : 0),
+                                                         LocatorService =
+                                                             (agent.agentConfig != null &&
+                                                              agent.agentConfig.Key.Contains(
+                                                                  "agent.LocateCharacterService.enabled"))
+                                                     })).ToList();
+                            station.Add(agents);
 
                             stations.Add(station);
                         }
-                        system.Stations = stations.OrderBy(x => x.Name).ToArray();
+                        system.Add(stations.OrderBy(x => x.Name).ToList());
                     }
-                    constellation.Systems = systems.OrderBy(x => x.Name).ToArray();
+                    constellation.Add(systems.OrderBy(x => x.Name).ToList());
                 }
-                region.Constellations = constellations.OrderBy(x => x.Name).ToArray();
+                region.Add(constellations.OrderBy(x => x.Name).ToList());
             }
 
             // Jumps
@@ -2054,7 +2080,10 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            GeoDatafile datafile = new GeoDatafile { Regions = regions.OrderBy(x => x.Name).ToArray(), Jumps = jumps.ToArray() };
+            GeoDatafile datafile = new GeoDatafile();
+            datafile.Add(regions.OrderBy(x => x.Name).ToList());
+            datafile.Add(jumps);
+
             Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
         }
 
@@ -2069,7 +2098,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateReprocessing()
         {
             Console.WriteLine();
-            Console.Write(@"Generated reprocessing datafile... ");
+            Console.Write("Generated reprocessing datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -2092,18 +2121,18 @@ namespace EVEMon.XmlGenerator
                 if (materials.Count == 0)
                     continue;
 
-                types.Add(new SerializableItemMaterials
-                              {
-                                  ID = typeID,
-                                  Materials = materials.OrderBy(x => x.ID).ToArray()
-                              });
+                SerializableItemMaterials itemMaterials = new SerializableItemMaterials { ID = typeID };
+                itemMaterials.Add(materials.OrderBy(x => x.ID).ToList());
+
+                types.Add(itemMaterials);
             }
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
-            ReprocessingDatafile datafile = new ReprocessingDatafile { Items = types.ToArray() };
+            ReprocessingDatafile datafile = new ReprocessingDatafile();
+            datafile.Add(types);
             Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }
 

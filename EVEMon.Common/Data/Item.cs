@@ -43,7 +43,7 @@ namespace EVEMon.Common.Data
             MarketGroup = group;
             Family = ItemFamily.Bpo;
 
-            m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Length : 0);
+            m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Count : 0);
             if (src.PrereqSkill == null)
                 return;
 
@@ -75,11 +75,11 @@ namespace EVEMon.Common.Data
             Properties = new EvePropertyCollection(src.Properties);
 
             // Skills prerequisites
-            m_prerequisites = new FastList<StaticSkillLevel>(src.Prereqs != null ? src.Prereqs.Length : 0);
-            if (src.Prereqs == null)
+            m_prerequisites = new FastList<StaticSkillLevel>(src.PrerequisiteSkills != null ? src.PrerequisiteSkills.Count : 0);
+            if (src.PrerequisiteSkills == null)
                 return;
 
-            foreach (SerializablePrerequisiteSkill prereq in src.Prereqs)
+            foreach (SerializablePrerequisiteSkill prereq in src.PrerequisiteSkills)
             {
                 m_prerequisites.Add(new StaticSkillLevel(prereq.ID, prereq.Level));
             }

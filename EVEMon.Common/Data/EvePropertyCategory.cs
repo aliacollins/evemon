@@ -12,7 +12,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="serial"></param>
         public EvePropertyCategory(SerializablePropertyCategory serial)
-            : base(serial.Properties.Length)
+            : base(serial.Properties.Count)
         {
             Name = serial.Name;
             Description = serial.Description;

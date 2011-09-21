@@ -5,6 +5,9 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class SchedulerUISettings
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SchedulerUISettings"/> class.
+        /// </summary>
         public SchedulerUISettings()
         {
             TextColor = (SerializableColor)Color.White;
@@ -15,39 +18,46 @@ namespace EVEMon.Common.SettingsObjects
             RecurringEventGradientEnd = (SerializableColor)Color.LightGreen;
         }
 
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>The color of the text.</value>
         [XmlElement("textColor")]
         public SerializableColor TextColor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the color of the blocking.
+        /// </summary>
+        /// <value>The color of the blocking.</value>
         [XmlElement("blockColor")]
         public SerializableColor BlockingColor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the recurring event gradient start.
+        /// </summary>
+        /// <value>The recurring event gradient start.</value>
         [XmlElement("recurringEventGradientStart")]
         public SerializableColor RecurringEventGradientStart { get; set; }
 
+        /// <summary>
+        /// Gets or sets the recurring event gradient end.
+        /// </summary>
+        /// <value>The recurring event gradient end.</value>
         [XmlElement("recurringEventGradientEnd")]
         public SerializableColor RecurringEventGradientEnd { get; set; }
 
+        /// <summary>
+        /// Gets or sets the simple event gradient start.
+        /// </summary>
+        /// <value>The simple event gradient start.</value>
         [XmlElement("simpleEventGradientStart")]
         public SerializableColor SimpleEventGradientStart { get; set; }
 
+        /// <summary>
+        /// Gets or sets the simple event gradient end.
+        /// </summary>
+        /// <value>The simple event gradient end.</value>
         [XmlElement("simpleEventGradientEnd")]
         public SerializableColor SimpleEventGradientEnd { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal SchedulerUISettings Clone()
-        {
-            return new SchedulerUISettings
-                       {
-                           TextColor = TextColor.Clone(),
-                           BlockingColor = BlockingColor.Clone(),
-                           SimpleEventGradientStart = SimpleEventGradientStart.Clone(),
-                           SimpleEventGradientEnd = SimpleEventGradientEnd.Clone(),
-                           RecurringEventGradientStart = RecurringEventGradientStart.Clone(),
-                           RecurringEventGradientEnd = RecurringEventGradientEnd.Clone()
-                       };
-        }
     }
 }

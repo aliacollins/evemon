@@ -24,7 +24,7 @@ namespace EVEMon.Common.Data
         /// Constructor.
         /// </summary>
         public SolarSystem(Constellation owner, SerializableSolarSystem src)
-            : base(src.Stations == null ? 0 : src.Stations.Length)
+            : base(src.Stations == null ? 0 : src.Stations.Count)
         {
             ID = src.ID;
             Constellation = owner;

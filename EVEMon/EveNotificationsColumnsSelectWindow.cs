@@ -13,7 +13,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="settings">The settings.</param>
         public EveNotificationsColumnsSelectWindow(IEnumerable<EveNotificationsColumnSettings> settings)
-            : base(settings.Select(x => x.Clone()))
+            : base(settings)
         {
         }
 
@@ -49,7 +49,7 @@ namespace EVEMon
             get
             {
                 EveNotificationsSettings settings = new EveNotificationsSettings();
-                return settings.Columns;
+                return settings.DefaultColumns;
             }
         }
     }

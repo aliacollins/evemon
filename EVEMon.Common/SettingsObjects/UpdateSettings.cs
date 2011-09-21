@@ -13,6 +13,9 @@ namespace EVEMon.Common.SettingsObjects
         private string m_updatesUrl;
         private int m_updateFrequency;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateSettings"/> class.
+        /// </summary>
         public UpdateSettings()
         {
             CheckTimeOnStartup = true;
@@ -83,28 +86,28 @@ namespace EVEMon.Common.SettingsObjects
             set { m_updatesUrl = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the periods.
+        /// </summary>
+        /// <value>The periods.</value>
         [XmlElement("periods")]
         public SerializableDictionary<APIMethods, UpdatePeriod> Periods { get; set; }
 
+        /// <summary>
+        /// Gets or sets the HTTP timeout.
+        /// </summary>
+        /// <value>The HTTP timeout.</value>
         [XmlElement("httpTimeout")]
         public int HttpTimeout { get; set; }
 
         /// <summary>
         /// Short circuit the check for network connectivity and try and connect anyway.
         /// </summary>
+        /// <value><c>true</c> if [ignore network status]; otherwise, <c>false</c>.</value>
         /// <remarks>
         /// Hidden setting, no UI. Used for the hand full of people using Wine/Darwine with a broken .NET Network Stack.
         /// </remarks>
         [XmlElement("ignoreNetworkStatus")]
         public bool IgnoreNetworkStatus { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal UpdateSettings Clone()
-        {
-            return (UpdateSettings)MemberwiseClone();
-        }
     }
 }

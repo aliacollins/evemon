@@ -162,7 +162,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value.Select(x => x.Clone()));
+                    m_columns.AddRange(value);
 
                 // Whenever the columns changes, we need to
                 // reset the dipslay index of the TTC column
@@ -550,6 +550,8 @@ namespace EVEMon
                 case IndustryJobColumn.LastStateChange:
                     item.Text = job.LastStateChange.ToLocalTime().ToString();
                     break;
+                case IndustryJobColumn.IssuedFor:
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -821,7 +823,7 @@ namespace EVEMon
             if (!m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.IndustryJobs.Columns = Columns.Select(x => x.Clone()).ToArray();
+            Settings.UI.MainWindow.IndustryJobs.Add(Columns.ToList());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;

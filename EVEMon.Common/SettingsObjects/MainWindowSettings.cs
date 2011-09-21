@@ -4,6 +4,9 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class MainWindowSettings
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindowSettings"/> class.
+        /// </summary>
         public MainWindowSettings()
         {
             ShowOverview = true;
@@ -21,92 +24,190 @@ namespace EVEMon.Common.SettingsObjects
             PutTrainingSkillsFirstOnOverview = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show character info in title bar].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show character info in title bar]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showCharacterInfoInTitleBar")]
         public bool ShowCharacterInfoInTitleBar { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show overview].
+        /// </summary>
+        /// <value><c>true</c> if [show overview]; otherwise, <c>false</c>.</value>
         [XmlElement("showOverview")]
         public bool ShowOverview { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show menu bar].
+        /// </summary>
+        /// <value><c>true</c> if [show menu bar]; otherwise, <c>false</c>.</value>
         [XmlElement("showMenuBar")]
         public bool ShowMenuBar { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show tool bar].
+        /// </summary>
+        /// <value><c>true</c> if [show tool bar]; otherwise, <c>false</c>.</value>
         [XmlElement("showToolBar")]
         public bool ShowToolBar { get; set; }
 
+        /// <summary>
+        /// Gets or sets the title format.
+        /// </summary>
+        /// <value>The title format.</value>
         [XmlElement("titleFormat")]
         public MainWindowTitleFormat TitleFormat { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show skill name in window title].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show skill name in window title]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showSkillNameInWindowTitle")]
         public bool ShowSkillNameInWindowTitle { get; set; }
 
         [XmlElement("showAllPublicSkills")]
         public bool ShowAllPublicSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show non public skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show non public skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showNonPublicSkills")]
         public bool ShowNonPublicSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show prereq met skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show prereq met skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showPrereqMetSkills")]
         public bool ShowPrereqMetSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight partial skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [highlight partial skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("highlightPartialSkills")]
         public bool HighlightPartialSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [highlight queued skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [highlight queued skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("highlightQueuedSkills")]
         public bool HighlightQueuedSkills { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [always show skill queue time].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [always show skill queue time]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("alwaysShowSkillQueueTime")]
         public bool AlwaysShowSkillQueueTime { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of the overview.
+        /// </summary>
+        /// <value>The index of the overview.</value>
         [XmlElement("overviewIndex")]
         public int OverviewIndex { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size of the overview item.
+        /// </summary>
+        /// <value>The size of the overview item.</value>
         [XmlElement("overviewItemSize")]
         public PortraitSizes OverviewItemSize { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show overview wallet].
+        /// </summary>
+        /// <value><c>true</c> if [show overview wallet]; otherwise, <c>false</c>.</value>
         [XmlElement("showWalletOnOverview")]
         public bool ShowOverviewWallet { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show overview portrait].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show overview portrait]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showPortraitOnOverview")]
         public bool ShowOverviewPortrait { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show overview skill queue training time].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show overview skill queue training time]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showOverviewSkillQueueTrainingTime")]
         public bool ShowOverviewSkillQueueTrainingTime { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [put training skills first on overview].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [put training skills first on overview]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("putTrainingSkillsFirstOnOverview")]
         public bool PutTrainingSkillsFirstOnOverview { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [use increased contrast on overview].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [use increased contrast on overview]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("useIncreasedContrastOnOverview")]
         public bool UseIncreasedContrastOnOverview { get; set; }
 
+        /// <summary>
+        /// Gets or sets the market orders.
+        /// </summary>
+        /// <value>The market orders.</value>
         [XmlElement("marketOrders")]
         public MarketOrderSettings MarketOrders { get; set; }
 
+        /// <summary>
+        /// Gets or sets the industry jobs.
+        /// </summary>
+        /// <value>The industry jobs.</value>
         [XmlElement("industryJobs")]
         public IndustryJobSettings IndustryJobs { get; set; }
 
+        /// <summary>
+        /// Gets or sets the research.
+        /// </summary>
+        /// <value>The research.</value>
         [XmlElement("research")]
         public ResearchSettings Research { get; set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail messages.
+        /// </summary>
+        /// <value>The EVE mail messages.</value>
         [XmlElement("eveMailMessages")]
         public EveMailMessagesSettings EVEMailMessages { get; set; }
 
+        /// <summary>
+        /// Gets or sets the EVE notifications.
+        /// </summary>
+        /// <value>The EVE notifications.</value>
         [XmlElement("eveNotifications")]
         public EveNotificationsSettings EVENotifications { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal MainWindowSettings Clone()
-        {
-            MainWindowSettings clone = (MainWindowSettings)MemberwiseClone();
-            clone.MarketOrders = MarketOrders.Clone();
-            clone.IndustryJobs = IndustryJobs.Clone();
-            clone.Research = Research.Clone();
-            clone.EVEMailMessages = EVEMailMessages.Clone();
-            clone.EVENotifications = EVENotifications.Clone();
-
-            return clone;
-        }
     }
 }

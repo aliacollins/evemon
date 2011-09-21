@@ -17,7 +17,7 @@ namespace EVEMon.Common.Data
         /// <param name="region">The region.</param>
         /// <param name="src">The source.</param>
         public Constellation(Region region, SerializableConstellation src)
-            : base(src.Systems.Length)
+            : base(src.Systems.Count)
         {
             ID = src.ID;
             Name = src.Name;

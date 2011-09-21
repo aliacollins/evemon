@@ -181,7 +181,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Are there no feeds ?
-            if (feed.Race == null || feed.Race.Loadouts.Length == 0)
+            if (feed.Race == null || feed.Race.Loadouts.Count == 0)
             {
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
                                                  "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
@@ -226,7 +226,7 @@ namespace EVEMon.SkillPlanner
 
             // Download the loadout details
             string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
-                                       m_selectedLoadout.LoadoutId);
+                                       m_selectedLoadout.LoadoutID);
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutDownloaded);
         }
 
@@ -248,7 +248,7 @@ namespace EVEMon.SkillPlanner
             Cursor.Current = Cursors.Default;
 
             // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race.Loadouts.Length == 0)
+            if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race.Loadouts.Count == 0)
             {
                 lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.\r\n{0}",
                                                   errorMessage);

@@ -266,6 +266,7 @@
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableLoadout.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableLoadoutRace.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableLoadoutSlot.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />

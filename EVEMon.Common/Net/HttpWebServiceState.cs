@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
             {
                 lock (m_syncLock)
                 {
-                    m_proxy = value.Clone();
+                    m_proxy = value;
                 }
             }
         }

@@ -7,8 +7,6 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class BlueprintBrowserSettings
     {
-        #region Constructors
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -19,46 +17,53 @@ namespace EVEMon.Common.SettingsObjects
             ActivityFilter = ObjectActivityFilter.Any;
         }
 
-        #endregion
-
-
-        #region Public Properties
-
+        /// <summary>
+        /// Gets or sets the text search.
+        /// </summary>
+        /// <value>The text search.</value>
         [XmlElement("textSearch")]
         public string TextSearch { get; set; }
 
+        /// <summary>
+        /// Gets or sets the usability filter.
+        /// </summary>
+        /// <value>The usability filter.</value>
         [XmlElement("usabilityFilter")]
         public ObjectUsabilityFilter UsabilityFilter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the activity filter.
+        /// </summary>
+        /// <value>The activity filter.</value>
         [XmlElement("activityFilter")]
         public ObjectActivityFilter ActivityFilter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the metagroup filter.
+        /// </summary>
+        /// <value>The metagroup filter.</value>
         [XmlElement("metaGroupFilter")]
         public ItemMetaGroup MetagroupFilter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of the production facility.
+        /// </summary>
+        /// <value>The index of the production facility.</value>
         [XmlElement("productionFacilityIndex")]
         public int ProductionFacilityIndex { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of the research facility.
+        /// </summary>
+        /// <value>The index of the research facility.</value>
         [XmlElement("researchFacilityIndex")]
         public int ResearchFacilityIndex { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of the implant set.
+        /// </summary>
+        /// <value>The index of the implant set.</value>
         [XmlElement("implantSetIndex")]
         public int ImplantSetIndex { get; set; }
-
-        #endregion
-
-
-        #region Helper Methods
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal BlueprintBrowserSettings Clone()
-        {
-            return (BlueprintBrowserSettings)MemberwiseClone();
-        }
-
-        #endregion
     }
 }

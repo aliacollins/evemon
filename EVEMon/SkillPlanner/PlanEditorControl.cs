@@ -104,7 +104,7 @@ namespace EVEMon.SkillPlanner
             Font = FontFactory.GetFont("Tahoma", 8.25F);
 
             m_columns.Clear();
-            m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
+            m_columns.AddRange(Settings.UI.PlanWindow.Columns);
 
             m_plannedSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Bold);
             m_prerequisiteSkillFont = FontFactory.GetFont(lvSkills.Font);
@@ -263,7 +263,7 @@ namespace EVEMon.SkillPlanner
 
             if (m_columnsOrderChanged)
             {
-                Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
+                Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
                 ImportColumnSettings(Settings.UI.PlanWindow.Columns);
             }
 
@@ -956,7 +956,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             m_columns[e.ColumnIndex].Width = lvSkills.Columns[e.ColumnIndex].Width;
-            Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
+            Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
         }
 
         /// <summary>
@@ -1096,7 +1096,7 @@ namespace EVEMon.SkillPlanner
         {
             // Recreate the columns
             m_columns.Clear();
-            m_columns.AddRange(columns.Select(x => x.Clone()));
+            m_columns.AddRange(columns);
 
             // Update the UI
             UpdateListColumns();
@@ -1111,7 +1111,7 @@ namespace EVEMon.SkillPlanner
             List<PlanColumnSettings> newList = new List<PlanColumnSettings>();
 
             // Add the visible columns at the beggining
-            foreach (ColumnHeader columnHeader in lvSkills.Columns.Cast<ColumnHeader>().ToArray().OrderBy(x => x.DisplayIndex))
+            foreach (ColumnHeader columnHeader in lvSkills.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
             {
                 // Retrieve the column and skip if null
                 PlanColumnSettings column = columnHeader.Tag as PlanColumnSettings;
@@ -2143,7 +2143,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
-                Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
+                Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
             }
         }
 

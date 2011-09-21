@@ -26,7 +26,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Gets the columns settings
+        /// Gets the columns settings.
         /// </summary>
         public IEnumerable<IColumnSettings> Columns
         {

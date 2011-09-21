@@ -71,9 +71,6 @@ namespace EVEMon.Common
                 case ResearchColumn.Level:
                     return x.AgentLevel.CompareTo(y.AgentLevel);
 
-                case ResearchColumn.Quality:
-                    return x.AgentQuality.CompareTo(y.AgentQuality);
-
                 case ResearchColumn.CurrentRP:
                     return x.CurrentRP.CompareTo(y.CurrentRP);
 

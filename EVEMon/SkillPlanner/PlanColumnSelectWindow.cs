@@ -13,7 +13,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="settings">The settings.</param>
         public PlanColumnSelectWindow(IEnumerable<PlanColumnSettings> settings)
-            : base(settings.Select(x => x.Clone()))
+            : base(settings)
         {
         }
 
@@ -49,7 +49,7 @@ namespace EVEMon.SkillPlanner
             get
             {
                 PlanWindowSettings settings = new PlanWindowSettings();
-                return settings.Columns;
+                return settings.DefaultColumns;
             }
         }
     }

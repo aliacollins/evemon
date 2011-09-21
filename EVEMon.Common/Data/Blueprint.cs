@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="group">Market Group the Blueprint will be a member of.</param>
         /// <param name="src">Source serializable blueprint.</param>
-        internal Blueprint(BlueprintMarketGroup group, SerializableBlueprint src)
+        internal Blueprint(MarketGroup group, SerializableBlueprint src)
             : base(group, src)
         {
             RunsPerCopy = src.MaxProductionLimit;
@@ -33,7 +33,7 @@ namespace EVEMon.Common.Data
             WasteFactor = src.WasteFactor;
 
             // Invented blueprint
-            m_inventBlueprint = new FastList<int>(src.InventionTypeID != null ? src.InventionTypeID.Length : 0);
+            m_inventBlueprint = new FastList<int>(src.InventionTypeID != null ? src.InventionTypeID.Count : 0);
             if (src.InventionTypeID != null)
             {
                 foreach (int blueprintID in src.InventionTypeID)
@@ -44,7 +44,7 @@ namespace EVEMon.Common.Data
 
             // Materials prerequisites
             m_materialRequirements =
-                new FastList<StaticRequiredMaterial>(src.ReqMaterial != null ? src.ReqMaterial.Length : 0);
+                new FastList<StaticRequiredMaterial>(src.ReqMaterial != null ? src.ReqMaterial.Count : 0);
             if (src.ReqMaterial == null)
                 return;
 

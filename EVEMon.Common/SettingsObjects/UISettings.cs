@@ -9,10 +9,8 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class UISettings
     {
-        #region Constructors
-
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="UISettings"/> class.
         /// </summary>
         public UISettings()
         {
@@ -38,105 +36,141 @@ namespace EVEMon.Common.SettingsObjects
             ShowTextInToolStrip = true;
         }
 
-        #endregion
-
-
-        #region Public Properties
-
         /// <summary>
         /// When true, removes images and colours to make EVEMon looks like some boring business application.
         /// </summary>
         [XmlElement("safeForWork")]
         public bool SafeForWork { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show text in tool strip].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show text in tool strip]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showTextInToolStrip")]
         public bool ShowTextInToolStrip { get; set; }
 
+        /// <summary>
+        /// Gets or sets the main window close behaviour.
+        /// </summary>
+        /// <value>The main window close behaviour.</value>
         [XmlElement("closeBehaviour")]
         public CloseBehaviour MainWindowCloseBehaviour { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [use stored search filters].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [use stored search filters]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("useStoredSearchFilters")]
         public bool UseStoredSearchFilters { get; set; }
 
+        /// <summary>
+        /// Gets or sets the main window.
+        /// </summary>
+        /// <value>The main window.</value>
         [XmlElement("mainWindow")]
         public MainWindowSettings MainWindow { get; set; }
 
+        /// <summary>
+        /// Gets or sets the plan window.
+        /// </summary>
+        /// <value>The plan window.</value>
         [XmlElement("planWindow")]
         public PlanWindowSettings PlanWindow { get; set; }
 
+        /// <summary>
+        /// Gets or sets the certificate browser.
+        /// </summary>
+        /// <value>The certificate browser.</value>
         [XmlElement("certificateBrowser")]
         public CertificateBrowserSettings CertificateBrowser { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ship browser.
+        /// </summary>
+        /// <value>The ship browser.</value>
         [XmlElement("shipBrowser")]
         public ShipBrowserSettings ShipBrowser { get; set; }
 
+        /// <summary>
+        /// Gets or sets the skill browser.
+        /// </summary>
+        /// <value>The skill browser.</value>
         [XmlElement("skillBrowser")]
         public SkillBrowserSettings SkillBrowser { get; set; }
 
+        /// <summary>
+        /// Gets or sets the item browser.
+        /// </summary>
+        /// <value>The item browser.</value>
         [XmlElement("itemBrowser")]
         public ItemBrowserSettings ItemBrowser { get; set; }
 
+        /// <summary>
+        /// Gets or sets the blueprint browser.
+        /// </summary>
+        /// <value>The blueprint browser.</value>
         [XmlElement("blueprintBrowser")]
         public BlueprintBrowserSettings BlueprintBrowser { get; set; }
 
+        /// <summary>
+        /// Gets or sets the system tray icon.
+        /// </summary>
+        /// <value>The system tray icon.</value>
         [XmlElement("systemTrayIcon")]
         public SystemTrayBehaviour SystemTrayIcon { get; set; }
 
+        /// <summary>
+        /// Gets or sets the system tray popup.
+        /// </summary>
+        /// <value>The system tray popup.</value>
         [XmlElement("systemTrayPopup")]
         public TrayPopupSettings SystemTrayPopup { get; set; }
 
+        /// <summary>
+        /// Gets or sets the scheduler.
+        /// </summary>
+        /// <value>The scheduler.</value>
         [XmlElement("calendar")]
         public SchedulerUISettings Scheduler { get; set; }
 
+        /// <summary>
+        /// Gets or sets the system tray tooltip.
+        /// </summary>
+        /// <value>The system tray tooltip.</value>
         [XmlElement("systemTrayTooltip")]
         public TrayTooltipSettings SystemTrayTooltip { get; set; }
 
+        /// <summary>
+        /// Gets or sets the skill pie chart.
+        /// </summary>
+        /// <value>The skill pie chart.</value>
         [XmlElement("skillPieChart")]
         public SkillPieChartSettings SkillPieChart { get; set; }
 
+        /// <summary>
+        /// Gets or sets the window locations.
+        /// </summary>
+        /// <value>The window locations.</value>
         [XmlElement("locations")]
         public SerializableDictionary<String, SerializableRectangle> WindowLocations { get; set; }
 
+        /// <summary>
+        /// Gets or sets the splitters.
+        /// </summary>
+        /// <value>The splitters.</value>
         [XmlElement("splitters")]
         public SerializableDictionary<String, int> Splitters { get; set; }
 
+        /// <summary>
+        /// Gets or sets the confirmed tips.
+        /// </summary>
+        /// <value>The confirmed tips.</value>
         [XmlArray("confirmedTips")]
         [XmlArrayItem("tip")]
         public List<String> ConfirmedTips { get; set; }
-
-        #endregion
-
-
-        #region Helper Methods
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal UISettings Clone()
-        {
-            UISettings clone = (UISettings)MemberwiseClone();
-            clone.CertificateBrowser = CertificateBrowser.Clone();
-            clone.SystemTrayTooltip = SystemTrayTooltip.Clone();
-            clone.BlueprintBrowser = BlueprintBrowser.Clone();
-            clone.SystemTrayPopup = SystemTrayPopup.Clone();
-            clone.SkillPieChart = SkillPieChart.Clone();
-            clone.SkillBrowser = SkillBrowser.Clone();
-            clone.ShipBrowser = ShipBrowser.Clone();
-            clone.ItemBrowser = ItemBrowser.Clone();
-            clone.MainWindow = MainWindow.Clone();
-            clone.PlanWindow = PlanWindow.Clone();
-            clone.Scheduler = Scheduler.Clone();
-
-            clone.WindowLocations = new SerializableDictionary<string, SerializableRectangle>();
-            foreach (KeyValuePair<string, SerializableRectangle> pair in WindowLocations)
-            {
-                clone.WindowLocations[pair.Key] = pair.Value.Clone();
-            }
-
-            return clone;
-        }
-
-        #endregion
     }
 }

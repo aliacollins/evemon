@@ -723,7 +723,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void proxyAuthenticationButton_Click(object sender, EventArgs e)
         {
-            ProxySettings proxySettings = m_settings.Proxy.Clone();
+            ProxySettings proxySettings = m_settings.Proxy;
             using (ProxyAuthenticationWindow window = new ProxyAuthenticationWindow(proxySettings))
             {
                 DialogResult result = window.ShowDialog();
@@ -739,7 +739,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void trayTooltipButton_Click(object sender, EventArgs e)
         {
-            TrayTooltipSettings tooltipSettings = m_settings.UI.SystemTrayTooltip.Clone();
+            TrayTooltipSettings tooltipSettings = m_settings.UI.SystemTrayTooltip;
             using (TrayTooltipConfigForm f = new TrayTooltipConfigForm(tooltipSettings))
             {
                 // Set current tooltip string
@@ -760,7 +760,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void trayPopupButton_Click(object sender, EventArgs e)
         {
-            TrayPopupSettings popupSettings = m_settings.UI.SystemTrayPopup.Clone();
+            TrayPopupSettings popupSettings = m_settings.UI.SystemTrayPopup;
             using (TrayPopupConfigForm f = new TrayPopupConfigForm(popupSettings))
             {
                 // Edit a copy of the current settings

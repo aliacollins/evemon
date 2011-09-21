@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -167,14 +166,14 @@ namespace EVEMon.Common
                 Scheduler.Import(serial.Scheduler);
 
                 // User settings
-                UI = serial.UI.Clone();
-                G15 = serial.G15.Clone();
-                IGB = serial.IGB.Clone();
-                Proxy = serial.Proxy.Clone();
-                Updates = serial.Updates.Clone();
-                Notifications = serial.Notifications.Clone();
-                Exportation = serial.Exportation.Clone();
-                Calendar = serial.Calendar.Clone();
+                UI = serial.UI;
+                G15 = serial.G15;
+                IGB = serial.IGB;
+                Proxy = serial.Proxy;
+                Updates = serial.Updates;
+                Notifications = serial.Notifications;
+                Exportation = serial.Exportation;
+                Calendar = serial.Calendar;
 
                 // Trim the data
                 OnImportCompleted();
@@ -199,15 +198,14 @@ namespace EVEMon.Common
         private static void OnImportCompleted()
         {
             // Add missing notification behaviours
-            foreach (NotificationCategory category in Enum.GetValues(
-                typeof(NotificationCategory)).Cast<NotificationCategory>().Where(
+            foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>().Where(
                     category => !Notifications.Categories.ContainsKey(category)))
             {
                 Notifications.Categories[category] = new NotificationCategorySettings();
             }
 
             // Add missing API methods update periods
-            foreach (APIMethods method in Enum.GetValues(typeof(APIMethods)))
+            foreach (APIMethods method in EnumExtensions.GetValues<APIMethods>())
             {
                 // Special condition to exclude corp related methods
                 // (We had them implemented on pre CAK system,
@@ -230,79 +228,23 @@ namespace EVEMon.Common
                     Updates.Periods[method] = Updates.Periods[APIMethods.CharacterList];
             }
 
-            // Add missing plan order columns
-            List<PlanColumnSettings> planColumns = UI.PlanWindow.Columns.ToList();
-            planColumns.AddRange(EnumExtensions.GetValues<PlanColumn>().
-                                     Where(x => x != PlanColumn.None && planColumns.All(y => y.Column != x)).
-                                     Select(x => new PlanColumnSettings
-                                                     {
-                                                         Column = x,
-                                                         Visible = false,
-                                                         Width = -1
-                                                     }).ToArray());
-            UI.PlanWindow.Columns = planColumns.ToArray();
+            // Initializes the plan columns or adds missing ones
+            UI.PlanWindow.Add(UI.PlanWindow.DefaultColumns.ToList());
 
-            // Add missing market order columns
-            List<MarketOrderColumnSettings> ordersColumns = UI.MainWindow.MarketOrders.Columns.ToList();
-            ordersColumns.AddRange(EnumExtensions.GetValues<MarketOrderColumn>().
-                                       Where(x => x != MarketOrderColumn.None && ordersColumns.All(y => y.Column != x)).
-                                       Select(x => new MarketOrderColumnSettings
-                                                       {
-                                                           Column = x,
-                                                           Visible = false,
-                                                           Width = -1
-                                                       }).ToArray());
-            UI.MainWindow.MarketOrders.Columns = ordersColumns.ToArray();
+            // Initializes the market order columns or adds missing ones
+            UI.MainWindow.MarketOrders.Add(UI.MainWindow.MarketOrders.DefaultColumns.ToList());
 
-            // Add missing industry jobs columns
-            List<IndustryJobColumnSettings> jobsColumns = UI.MainWindow.IndustryJobs.Columns.ToList();
-            jobsColumns.AddRange(EnumExtensions.GetValues<IndustryJobColumn>().
-                                     Where(x => x != IndustryJobColumn.None && jobsColumns.All(y => y.Column != x)).
-                                     Select(x => new IndustryJobColumnSettings
-                                                     {
-                                                         Column = x,
-                                                         Visible = false,
-                                                         Width = -1
-                                                     }).ToArray());
-            UI.MainWindow.IndustryJobs.Columns = jobsColumns.ToArray();
+            // Initializes the industry jobs columns or adds missing ones
+            UI.MainWindow.IndustryJobs.Add(UI.MainWindow.IndustryJobs.DefaultColumns.ToList());
 
-            // Add missing research points columns
-            List<ResearchColumnSettings> researchColumns = UI.MainWindow.Research.Columns.ToList();
-            researchColumns.AddRange(EnumExtensions.GetValues<ResearchColumn>().
-                                         Where(x => x != ResearchColumn.None && researchColumns.All(y => y.Column != x)).
-                                         Select(x => new ResearchColumnSettings
-                                                         {
-                                                             Column = x,
-                                                             Visible = false,
-                                                             Width = -1
-                                                         }).ToArray());
-            UI.MainWindow.Research.Columns = researchColumns.ToArray();
+            // Initializes the research points columns or adds missing ones
+            UI.MainWindow.Research.Add(UI.MainWindow.Research.DefaultColumns.ToList());
 
-            // Add missing EVE mail messages columns
-            List<EveMailMessagesColumnSettings> eveMailMessagesColumns = UI.MainWindow.EVEMailMessages.Columns.ToList();
-            eveMailMessagesColumns.AddRange(EnumExtensions.GetValues<EveMailMessagesColumn>().
-                                                Where(x => x != EveMailMessagesColumn.None &&
-                                                           eveMailMessagesColumns.All(y => y.Column != x)).
-                                                Select(x => new EveMailMessagesColumnSettings
-                                                                {
-                                                                    Column = x,
-                                                                    Visible = false,
-                                                                    Width = -1
-                                                                }).ToArray());
-            UI.MainWindow.EVEMailMessages.Columns = eveMailMessagesColumns.ToArray();
+            // Initializes the EVE mail messages columns or adds missing ones
+            UI.MainWindow.EVEMailMessages.Add(UI.MainWindow.EVEMailMessages.DefaultColumns.ToList());
 
-            // Add missing EVE notifications columns
-            List<EveNotificationsColumnSettings> eveNotificationsColumns = UI.MainWindow.EVENotifications.Columns.ToList();
-            eveNotificationsColumns.AddRange(EnumExtensions.GetValues<EveNotificationsColumn>().
-                                                 Where(x => x != EveNotificationsColumn.None &&
-                                                            eveNotificationsColumns.All(y => y.Column != x)).
-                                                 Select(x => new EveNotificationsColumnSettings
-                                                                 {
-                                                                     Column = x,
-                                                                     Visible = false,
-                                                                     Width = -1
-                                                                 }).ToArray());
-            UI.MainWindow.EVENotifications.Columns = eveNotificationsColumns.ToArray();
+            // Initializes the EVE notifications columns or adds missing ones
+            UI.MainWindow.EVENotifications.Add(UI.MainWindow.EVENotifications.DefaultColumns.ToList());
         }
 
         /// <summary>
@@ -321,14 +263,14 @@ namespace EVEMon.Common
                            MonitoredCharacters = EveMonClient.MonitoredCharacters.Export(),
                            APIProviders = EveMonClient.APIProviders.Export(),
                            Scheduler = Scheduler.Export(),
-                           Calendar = Calendar.Clone(),
-                           Notifications = Notifications.Clone(),
-                           Exportation = Exportation.Clone(),
-                           Updates = Updates.Clone(),
-                           Proxy = Proxy.Clone(),
-                           IGB = IGB.Clone(),
-                           G15 = G15.Clone(),
-                           UI = UI.Clone()
+                           Calendar = Calendar,
+                           Notifications = Notifications,
+                           Exportation = Exportation,
+                           Updates = Updates,
+                           Proxy = Proxy,
+                           IGB = IGB,
+                           G15 = G15,
+                           UI = UI
                        };
         }
 
@@ -406,7 +348,7 @@ namespace EVEMon.Common
                     // Gets the revision number of the assembly which generated this file
                     int revision = Util.GetRevisionNumber(settingsFile);
 
-                    // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
+                    // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(settingsFile)
                                                         : Util.DeserializeXML<SerializableSettings>(settingsFile);

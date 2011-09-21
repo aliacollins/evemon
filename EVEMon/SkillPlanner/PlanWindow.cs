@@ -116,7 +116,7 @@ namespace EVEMon.SkillPlanner
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {
-                Settings.UI.PlanWindow.Columns = planEditor.ExportColumnSettings().ToArray();
+                Settings.UI.PlanWindow.Add(planEditor.ExportColumnSettings().ToList());
                 s_lastActivated = null;
             }
 
