@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EVEMon.Common.Collections
 {
@@ -10,7 +11,25 @@ namespace EVEMon.Common.Collections
     public abstract class BaseList<T> : IList<T>
         where T : class
     {
-        private readonly List<T> m_items = new List<T>();
+        private List<T> m_items;
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
+        /// <value>The items.</value>
+        protected IEnumerable<T> Items
+        {
+            get { return m_items ?? new List<T>(); }
+        }
+
+        /// <summary>
+        /// Sets the items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        protected void SetItems(IEnumerable<T> items)
+        {
+            m_items = new List<T>(items);
+        }
 
         /// <summary>
         /// Executed any time an item is going to be added to the list.

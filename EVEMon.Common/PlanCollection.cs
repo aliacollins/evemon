@@ -27,7 +27,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Plan this[string name]
         {
-            get { return this.FirstOrDefault(plan => plan.Name == name); }
+            get { return Items.FirstOrDefault(plan => plan.Name == name); }
         }
 
         /// <summary>
@@ -67,33 +67,12 @@ namespace EVEMon.Common
         /// <param name="plans"></param>
         internal void Import(IEnumerable<SerializablePlan> plans)
         {
-            List<Plan> newPlanList = new List<Plan>();
+            // Filter plans which belong to this owner
+            List<Plan> newPlanList = plans.Where(plan => plan.Owner == m_owner.Guid).Select(
+                serialPlan => new Plan(m_owner, serialPlan) { IsConnected = true }).ToList();
 
-            // We first update existing plans
-            foreach (SerializablePlan serialPlan in plans)
-            {
-                // Filter plans which belong to this owner
-                if (serialPlan.Owner != m_owner.Guid)
-                    continue;
-
-                // If a plan with the same name already exists, we update it
-                Plan plan = this[serialPlan.Name];
-
-                if (plan != null)
-                    plan.Import(serialPlan);
-                else
-                    plan = new Plan(m_owner, serialPlan);
-
-                newPlanList.Add(plan);
-            }
-
-            // We now add the new plans
-            Clear();
-            foreach (Plan plan in newPlanList)
-            {
-                Add(plan);
-                plan.IsConnected = true;
-            }
+            // We now add the plans
+            SetItems(newPlanList);
 
             // Fire the global event
             EveMonClient.OnCharacterPlanCollectionChanged(m_owner);
