@@ -443,7 +443,7 @@ namespace EVEMon
             this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.newToolStripMenuItem.Text = "&New…";
+            this.newToolStripMenuItem.Text = "&New Plan…";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newPlanMenuItem_Click);
             // 
             // miImportPlanFromFile

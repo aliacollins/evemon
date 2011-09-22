@@ -603,7 +603,7 @@ namespace EVEMon.SkillPlanner
                         {
                             labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
                                                            Skill.GetRomanFromInt(skillsArray[i].Level + 1),
-                                                           time.ToDescriptiveText(DescriptiveTextOptions.Default));
+                                                           time.ToDescriptiveText(DescriptiveTextOptions.None));
                         }
                     }
 
@@ -628,7 +628,7 @@ namespace EVEMon.SkillPlanner
                         if (time == TimeSpan.Zero)
                             labelsArray[i] = "-";
                         else
-                            labelsArray[i] = time.ToDescriptiveText(DescriptiveTextOptions.Default);
+                            labelsArray[i] = time.ToDescriptiveText(DescriptiveTextOptions.None);
                     }
 
                     skills = skillsArray;

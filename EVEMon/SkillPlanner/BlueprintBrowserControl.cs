@@ -329,7 +329,7 @@ namespace EVEMon.SkillPlanner
                         {
                             perfectMELevel =
                                 (int)
-                                Math.Round((0.02 * m_blueprint.WasteFactor * baseMaterialQuantity), 0,
+                                Math.Round(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity, 0,
                                            MidpointRounding.AwayFromZero);
                         }
 

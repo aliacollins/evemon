@@ -85,12 +85,12 @@ namespace EVEMon.Common
     [Flags]
     public enum ItemSlot
     {
+        Empty = 0,
         None = 1,
         Low = 2,
         Medium = 4,
         High = 8,
 
-        Empty = 0,
         All = Low | Medium | High | None
     }
 
@@ -100,7 +100,7 @@ namespace EVEMon.Common
     [Flags]
     public enum DescriptiveTextOptions
     {
-        Default = 0,
+        None = 0,
         FullText = 1,
         UppercaseText = 2,
         SpaceText = 4,

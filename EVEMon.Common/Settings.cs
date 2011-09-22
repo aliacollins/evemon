@@ -145,7 +145,7 @@ namespace EVEMon.Common
             {
                 EveMonClient.Trace("Settings.Import - begin");
 
-                // Import the characters, accounts and plans
+                // Import the characters, API keys and plans
                 if (!preferencesOnly)
                 {
                     // The above check prevents the settings form to trigger a 

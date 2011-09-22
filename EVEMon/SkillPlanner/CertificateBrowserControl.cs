@@ -118,7 +118,6 @@ namespace EVEMon.SkillPlanner
         private void UpdateContent()
         {
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
-            certDisplayCtl.CertificateClass = certClass;
 
             // When no certificate class is selected, we just hide the right panel.
             if (certClass == null)
@@ -157,9 +156,9 @@ namespace EVEMon.SkillPlanner
                 lbIndex++;
 
                 SortedList<string, Item> ships = new SortedList<string, Item>();
-                foreach (Item s in cert.Recommendations)
+                foreach (Item ship in cert.Recommendations)
                 {
-                    ships.Add(s.Name, s);
+                    ships.Add(ship.Name, ship);
                 }
 
                 if (ships.Count == 0)
@@ -169,11 +168,11 @@ namespace EVEMon.SkillPlanner
                                 {
                                     AutoSize = true,
                                     Dock = DockStyle.Top,
-                                    Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade)
+                                    Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade),
+                                    Padding = new Padding(5)
                                 };
 
                 tsl.Font = new Font(tsl.Font, FontStyle.Bold);
-                tsl.Padding = new Padding(5);
                 newItems.Add(tsl);
 
                 Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
@@ -183,16 +182,17 @@ namespace EVEMon.SkillPlanner
                                               : tslTextSize.Width + HPad);
                 rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
 
-                foreach (Item ship in ships.Values)
+                foreach (LinkLabel linkLabel in ships.Values.Select(ship => new LinkLabel
+                                                                                {
+                                                                                    LinkBehavior = LinkBehavior.HoverUnderline,
+                                                                                    Padding = new Padding(16, 0, 0, 0),
+                                                                                    Dock = DockStyle.Top,
+                                                                                    Text = ship.Name,
+                                                                                    Tag = ship,
+                                                                                }))
                 {
-                    LinkLabel ll = new LinkLabel();
-                    ll.MouseClick += recommendations_MenuItem;
-                    ll.LinkBehavior = LinkBehavior.HoverUnderline;
-                    ll.Padding = new Padding(16, 0, 0, 0);
-                    ll.Dock = DockStyle.Top;
-                    ll.Text = ship.Name;
-                    ll.Tag = ship;
-                    newItems.Add(ll);
+                    linkLabel.MouseClick += recommendations_MenuItem;
+                    newItems.Add(linkLabel);
                 }
             }
 
@@ -208,6 +208,9 @@ namespace EVEMon.SkillPlanner
 
             // Update the menus and such
             UpdateEligibility();
+
+            // Update the certificates tree display
+            certDisplayCtl.CertificateClass = certClass;
         }
 
         /// <summary>
@@ -355,7 +358,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 textboxDescription.Text = cert.Description;
-                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade.ToString());
+                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade);
             }
         }
 

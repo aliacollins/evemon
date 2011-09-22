@@ -80,8 +80,6 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_character = (Character)m_plan.Character;
-
-                treeView.Nodes.Clear();
                 UpdateTree();
             }
         }
@@ -125,14 +123,14 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                TreeNode curr = treeView.SelectedNode;
-                while (curr != null)
+                TreeNode node = treeView.SelectedNode;
+                while (node != null)
                 {
-                    Certificate c = curr.Tag as Certificate;
-                    if (c != null && c.Class == CertificateClass)
-                        return c;
+                    Certificate certificate = node.Tag as Certificate;
+                    if (certificate != null && certificate.Class == CertificateClass)
+                        return certificate;
 
-                    curr = curr.Parent;
+                    node = node.Parent;
                 }
                 return null;
             }

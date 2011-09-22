@@ -951,7 +951,7 @@ namespace EVEMon
         {
             StringBuilder builder = new StringBuilder();
 
-            string skillDescriptionText = time.ToDescriptiveText(DescriptiveTextOptions.Default);
+            string skillDescriptionText = time.ToDescriptiveText(DescriptiveTextOptions.None);
             builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillDescriptionText, character.Name);
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)
