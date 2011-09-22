@@ -142,7 +142,7 @@ namespace EVEMon
             UpdateTabs();
 
             // Initialize G15
-            if (OsFeatureCheck.IsWindowsNT)
+            if (OSFeatureCheck.IsWindowsNT)
                 G15Handler.Initialize();
 
             // Ensures the installation files downloaded through the autoupdate are correctly deleted

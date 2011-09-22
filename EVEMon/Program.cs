@@ -118,7 +118,7 @@ namespace EVEMon
                 if (EveMonClient.IsDebugBuild)
                     appId = String.Format(CultureConstants.DefaultCulture, "{0}-DEBUG", appId);
 
-                Windows7.SetProcessAppID(appId);
+                Windows7.SetProcessAppId(appId);
             }
             catch (Exception ex)
             {
