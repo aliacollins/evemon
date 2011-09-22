@@ -572,40 +572,44 @@ namespace EVEMon.PieChart
             Debug.Assert(graphics != null);
             Debug.Assert(m_font != null);
             Debug.Assert(m_foreColor != Color.Empty);
-            StringFormat drawFormat = new StringFormat
-                                          { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            using (Brush fontBrush = new SolidBrush(m_foreColor))
+            using (StringFormat drawFormat = new StringFormat())
             {
-                int num = 0;
-                PointF[] points = new PointF[m_pieSlices.Length];
-                foreach (PieSlice slice in m_pieSlices)
+                drawFormat.Alignment = StringAlignment.Center;
+                drawFormat.LineAlignment = StringAlignment.Center;
+
+                using (Brush fontBrush = new SolidBrush(m_foreColor))
                 {
-                    if (!String.IsNullOrEmpty(slice.Text))
+                    int num = 0;
+                    PointF[] points = new PointF[m_pieSlices.Length];
+                    foreach (PieSlice slice in m_pieSlices)
                     {
-                        PointF point = slice.GetTextPosition;
-
-                        foreach (PointF oldpoint in points)
+                        if (!String.IsNullOrEmpty(slice.Text))
                         {
-                            for (int x = 0; x <= 1; x++)
+                            PointF point = slice.GetTextPosition;
+
+                            foreach (PointF oldpoint in points)
                             {
-                                float diffy = oldpoint.Y - point.Y;
-                                float diffx = oldpoint.X - point.X;
+                                for (int x = 0; x <= 1; x++)
+                                {
+                                    float diffy = oldpoint.Y - point.Y;
+                                    float diffx = oldpoint.X - point.X;
 
-                                if (diffy < 0)
-                                    diffy *= -1;
-                                if (diffx < 0)
-                                    diffx *= -1;
+                                    if (diffy < 0)
+                                        diffy *= -1;
+                                    if (diffx < 0)
+                                        diffx *= -1;
 
-                                if (diffx < 70 && diffy < 16)
-                                    point = slice.GetTextPositionOut(x == 0 ? 4.5f : 2.2f);
+                                    if (diffx < 70 && diffy < 16)
+                                        point = slice.GetTextPositionOut(x == 0 ? 4.5f : 2.2f);
+                                }
                             }
+
+                            points[num] = point;
+                            graphics.DrawString(slice.Text, m_font, fontBrush, point, drawFormat);
                         }
 
-                        points[num] = point;
-                        graphics.DrawString(slice.Text, m_font, fontBrush, point, drawFormat);
+                        num++;
                     }
-
-                    num++;
                 }
             }
         }
@@ -875,37 +879,47 @@ namespace EVEMon.PieChart
                     xDisplacement = pieDisplacement.Width;
                     yDisplacement = pieDisplacement.Height;
                 }
-                PieSlice slice;
-                if (i == m_highlightedIndex)
+
+                PieSlice slice = null;
+                try
                 {
-                    slice = CreatePieSliceHighlighted(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
-                                                      m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
-                                                      topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                                      (float)(startAngle % 360), (float)(sweepAngle), m_colors[colorIndex],
-                                                      m_shadowStyle, m_edgeColorType, m_edgeLineWidth);
+                    if (i == m_highlightedIndex)
+                    {
+                        slice = CreatePieSliceHighlighted(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
+                                                          m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
+                                                          topEllipeSize.Width, topEllipeSize.Height, PieHeight,
+                                                          (float)(startAngle % 360), (float)(sweepAngle), m_colors[colorIndex],
+                                                          m_shadowStyle, m_edgeColorType, m_edgeLineWidth);
+                    }
+                    else
+                    {
+                        slice = CreatePieSlice(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
+                                               m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
+                                               topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
+                                               (float)(sweepAngle), m_colors[colorIndex], m_shadowStyle, m_edgeColorType,
+                                               m_edgeLineWidth);
+                    }
+                    slice.Text = m_texts[i];
+                    // the backmost pie is inserted to the front of the list for correct drawing
+                    if (backPieIndex > -1 || ((startAngle <= 270) && (startAngle + sweepAngle > 270)) ||
+                        ((startAngle >= 270) && (startAngle + sweepAngle > 630)))
+                    {
+                        ++backPieIndex;
+                        listPieSlices.Insert(backPieIndex, slice);
+                        m_pieSlicesMapping.Insert(backPieIndex, i);
+                    }
+                    else
+                    {
+                        listPieSlices.Add(slice);
+                        m_pieSlicesMapping.Add(i);
+                    }
                 }
-                else
+                finally
                 {
-                    slice = CreatePieSlice(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
-                                           m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
-                                           topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
-                                           (float)(sweepAngle), m_colors[colorIndex], m_shadowStyle, m_edgeColorType,
-                                           m_edgeLineWidth);
+                    if (slice != null)
+                        slice.Dispose();
                 }
-                slice.Text = m_texts[i];
-                // the backmost pie is inserted to the front of the list for correct drawing
-                if (backPieIndex > -1 || ((startAngle <= 270) && (startAngle + sweepAngle > 270)) ||
-                    ((startAngle >= 270) && (startAngle + sweepAngle > 630)))
-                {
-                    ++backPieIndex;
-                    listPieSlices.Insert(backPieIndex, slice);
-                    m_pieSlicesMapping.Insert(backPieIndex, i);
-                }
-                else
-                {
-                    listPieSlices.Add(slice);
-                    m_pieSlicesMapping.Add(i);
-                }
+
                 // increment displacementIndex only if there are more displacements available
                 if (displacementIndex < maxDisplacementIndex)
                     ++displacementIndex;

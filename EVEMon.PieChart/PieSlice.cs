@@ -39,6 +39,16 @@ namespace EVEMon.PieChart
         private readonly EdgeColorType m_edgeColorType = EdgeColorType.NoEdge;
 
         /// <summary>
+        ///   <c>Color</c> object used to draw pie slice edges.
+        /// </summary>
+        private readonly Color m_edgeLineColor;
+
+        /// <summary>
+        /// Width of the pie slice edges.
+        /// </summary>
+        private readonly float m_edgeLineWidth;
+
+        /// <summary>
         ///   <c>Brush</c> used to render slice top surface.
         /// </summary>
         private Brush m_brushSurface;
@@ -62,11 +72,6 @@ namespace EVEMon.PieChart
         ///   <c>Brush</c> used to render pie slice periphery (cylinder outer surface).
         /// </summary>
         private Brush m_brushPeripherySurface;
-
-        /// <summary>
-        ///   <c>Pen</c> object used to draw pie slice edges.
-        /// </summary>
-        private readonly Pen m_pen;
 
         /// <summary>
         ///   <c>PointF</c> corresponding to pie slice center.
@@ -215,9 +220,7 @@ namespace EVEMon.PieChart
             m_surfaceColor = surfaceColor;
             m_shadowStyle = shadowStyle;
             m_edgeColorType = edgeColorType;
-            // create pens for rendering
-            Color edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
-            m_pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
+            m_edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
             InitializePieSlice(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight);
         }
 
@@ -302,7 +305,7 @@ namespace EVEMon.PieChart
                 xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight, startAngle, sweepAngle,
                 surfaceColor, shadowStyle, edgeColorType)
         {
-            m_pen.Width = edgeLineWidth;
+            m_edgeLineWidth = edgeLineWidth;
         }
 
         /// <summary>
@@ -369,8 +372,8 @@ namespace EVEMon.PieChart
 
             if (disposing)
             {
-                Debug.Assert(m_pen != null);
-                m_pen.Dispose();
+                //Debug.Assert(m_pen != null);
+                //m_pen.Dispose();
                 DisposeBrushes();
                 Debug.Assert(m_startSide != null);
                 m_startSide.Dispose();
@@ -541,15 +544,18 @@ namespace EVEMon.PieChart
 
             float actualStartAngle = GetActualAngle(StartAngle);
             float newSweepAngle = (splitAngle - actualStartAngle + 360) % 360;
-            PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle, newSweepAngle, m_surfaceColor,
-                                              m_shadowStyle, m_edgeColorType);
-            pieSlice1.InitializeSides(true, false);
-
-            newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
-            PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle, m_surfaceColor,
-                                              m_shadowStyle, m_edgeColorType);
-            pieSlice2.InitializeSides(false);
-            return new[] { pieSlice1, pieSlice2 };
+            using (PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle, newSweepAngle, m_surfaceColor,
+                                              m_shadowStyle, m_edgeColorType))
+            {
+                pieSlice1.InitializeSides(true, false);
+                newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
+                using (PieSlice pieSlice2 =
+                    new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle, m_surfaceColor, m_shadowStyle, m_edgeColorType))
+                {
+                    pieSlice2.InitializeSides(false);
+                    return new[] { pieSlice1, pieSlice2 };
+                }
+            }
         }
 
         /// <summary>
@@ -590,12 +596,17 @@ namespace EVEMon.PieChart
         {
             if (m_startSide == null)
                 return;
+            using (Pen pen = new Pen(m_edgeLineColor))
+            {
+                pen.LineJoin = LineJoin.Round;
+                pen.Width = m_edgeLineWidth;
 
-            // checks if the side is visible 
-            if (StartAngle > 90 && StartAngle < 270)
-                m_startSide.Draw(graphics, m_pen, m_brushStartSide);
-            else
-                m_startSide.Draw(graphics, m_pen, m_brushSurface);
+                // Checks if the side is visible 
+                if (StartAngle > 90 && StartAngle < 270)
+                    m_startSide.Draw(graphics, pen, m_brushStartSide);
+                else
+                    m_startSide.Draw(graphics, pen, m_brushSurface);
+            }
         }
 
         /// <summary>
@@ -609,11 +620,18 @@ namespace EVEMon.PieChart
             if (m_endSide == null)
                 return;
 
-            // checks if the side is visible 
-            if (EndAngle > 90 && EndAngle < 270)
-                m_endSide.Draw(graphics, m_pen, m_brushSurface);
-            else
-                m_endSide.Draw(graphics, m_pen, m_brushEndSide);
+            // Create pens for rendering
+            using (Pen pen = new Pen(m_edgeLineColor))
+            {
+                pen.LineJoin = LineJoin.Round;
+                pen.Width = m_edgeLineWidth;
+                
+                // Checks if the side is visible 
+                if (EndAngle > 90 && EndAngle < 270)
+                    m_endSide.Draw(graphics, pen, m_brushSurface);
+                else
+                    m_endSide.Draw(graphics, pen, m_brushEndSide);
+            }
         }
 
         /// <summary>
@@ -627,8 +645,15 @@ namespace EVEMon.PieChart
             IEnumerable<PeripherySurfaceBounds> peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
             foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
             {
-                DrawCylinderSurfaceSection(graphics, m_pen, m_brushPeripherySurface, surfaceBounds.StartAngle,
-                                           surfaceBounds.EndAngle, surfaceBounds.StartPoint, surfaceBounds.EndPoint);
+                // Create pens for rendering
+                using (Pen pen = new Pen(m_edgeLineColor))
+                {
+                    pen.LineJoin = LineJoin.Round;
+                    pen.Width = m_edgeLineWidth;
+
+                    DrawCylinderSurfaceSection(graphics, pen, m_brushPeripherySurface, surfaceBounds.StartAngle,
+                                               surfaceBounds.EndAngle, surfaceBounds.StartPoint, surfaceBounds.EndPoint);
+                }
             }
         }
 
@@ -643,8 +668,15 @@ namespace EVEMon.PieChart
             IEnumerable<PeripherySurfaceBounds> peripherySurfaceBounds = GetHiddenPeripherySurfaceBounds();
             foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
             {
-                DrawCylinderSurfaceSection(graphics, m_pen, m_brushSurface, surfaceBounds.StartAngle, surfaceBounds.EndAngle,
-                                           surfaceBounds.StartPoint, surfaceBounds.EndPoint);
+                // Create pens for rendering
+                using (Pen pen = new Pen(m_edgeLineColor))
+                {
+                    pen.LineJoin = LineJoin.Round;
+                    pen.Width = m_edgeLineWidth;
+
+                    DrawCylinderSurfaceSection(graphics, pen, m_brushSurface, surfaceBounds.StartAngle, surfaceBounds.EndAngle,
+                                               surfaceBounds.StartPoint, surfaceBounds.EndPoint);
+                }
             }
         }
 
@@ -658,8 +690,16 @@ namespace EVEMon.PieChart
         {
             graphics.FillPie(m_brushSurface, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
                              BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle);
-            graphics.DrawPie(m_pen, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
-                             BoundingRectangle.Height, StartAngle, SweepAngle);
+
+            // Create pens for rendering
+            using (Pen pen = new Pen(m_edgeLineColor))
+            {
+                pen.LineJoin = LineJoin.Round;
+                pen.Width = m_edgeLineWidth;
+
+                graphics.DrawPie(pen, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
+                                 BoundingRectangle.Height, StartAngle, SweepAngle);
+            }
         }
 
         /// <summary>
@@ -672,7 +712,14 @@ namespace EVEMon.PieChart
         {
             graphics.FillPie(m_brushSurface, BoundingRectangle.X, BoundingRectangle.Y, BoundingRectangle.Width,
                              BoundingRectangle.Height, StartAngle, SweepAngle);
-            graphics.DrawPie(m_pen, BoundingRectangle, StartAngle, SweepAngle);
+            // Create pens for rendering
+            using (Pen pen = new Pen(m_edgeLineColor))
+            {
+                pen.LineJoin = LineJoin.Round;
+                pen.Width = m_edgeLineWidth;
+
+                graphics.DrawPie(pen, BoundingRectangle, StartAngle, SweepAngle);
+            }
         }
 
         /// <summary>
@@ -893,10 +940,12 @@ namespace EVEMon.PieChart
                                                          },
                                             Positions = new[] { 0F, 0.1F, 1.0F }
                                         };
-            LinearGradientBrush brush = new LinearGradientBrush(BoundingRectangle, Color.Blue, Color.White,
-                                                                LinearGradientMode.Horizontal)
-                                            { InterpolationColors = colorBlend };
-            return brush;
+            using (LinearGradientBrush brush =
+                new LinearGradientBrush(BoundingRectangle, Color.Blue, Color.White, LinearGradientMode.Horizontal))
+            {
+                brush.InterpolationColors = colorBlend;
+                return brush;
+            }
         }
 
         /// <summary>
@@ -1189,13 +1238,15 @@ namespace EVEMon.PieChart
         private GraphicsPath CreatePathForCylinderSurfaceSection(float startAngle, float endAngle, PointF pointStart,
                                                                  PointF pointEnd)
         {
-            GraphicsPath path = new GraphicsPath();
-            path.AddArc(BoundingRectangle, startAngle, endAngle - startAngle);
-            path.AddLine(pointEnd.X, pointEnd.Y, pointEnd.X, pointEnd.Y + SliceHeight);
-            path.AddArc(BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
-                        BoundingRectangle.Height, endAngle, startAngle - endAngle);
-            path.AddLine(pointStart.X, pointStart.Y + SliceHeight, pointStart.X, pointStart.Y);
-            return path;
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddArc(BoundingRectangle, startAngle, endAngle - startAngle);
+                path.AddLine(pointEnd.X, pointEnd.Y, pointEnd.X, pointEnd.Y + SliceHeight);
+                path.AddArc(BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
+                            BoundingRectangle.Height, endAngle, startAngle - endAngle);
+                path.AddLine(pointStart.X, pointStart.Y + SliceHeight, pointStart.X, pointStart.Y);
+                return path;
+            }
         }
 
         /// <summary>

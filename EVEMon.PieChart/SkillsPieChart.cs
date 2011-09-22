@@ -371,16 +371,18 @@ namespace EVEMon.PieChart
         /// <param name="e"></param>
         private void saveButton_Click(object sender, EventArgs e)
         {
-            Bitmap pie = new Bitmap(skillPieChartControl.Width, skillPieChartControl.Height);
-            Rectangle bounds = new Rectangle(0, 0, skillPieChartControl.Width, skillPieChartControl.Height);
-            skillPieChartControl.DrawToBitmap(pie, bounds);
+            using (Bitmap pie = new Bitmap(skillPieChartControl.Width, skillPieChartControl.Height))
+            {
+                Rectangle bounds = new Rectangle(0, 0, skillPieChartControl.Width, skillPieChartControl.Height);
+                skillPieChartControl.DrawToBitmap(pie, bounds);
 
-            DialogResult savePieResult = savePieDialog.ShowDialog();
-            if (savePieResult == DialogResult.OK)
-                pie.Save(savePieDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                DialogResult savePieResult = savePieDialog.ShowDialog();
+                if (savePieResult == DialogResult.OK)
+                    pie.Save(savePieDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            }
         }
 
-        /// <summary>
+    /// <summary>
         /// Forces an update when the sort by size combo box state changes.
         /// </summary>
         /// <param name="sender"></param>

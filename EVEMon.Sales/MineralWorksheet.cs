@@ -117,11 +117,15 @@ namespace EVEMon.Sales
                 parsersSorted.Add(parser.Title, parser);
             }
 
-            foreach (ToolStripMenuItem menuItem in parsersSorted.Values.Select(
-                parser => new ToolStripMenuItem { Text = parser.Title, Tag = parser.Name }))
+            foreach (IMineralParser parser in parsersSorted.Values)
             {
-                menuItem.Click += menuItem_Click;
-                tsddFetch.DropDownItems.Add(menuItem);
+                using (ToolStripMenuItem menuItem = new ToolStripMenuItem())
+                {
+                    menuItem.Text = parser.Title;
+                    menuItem.Tag = parser.Name;
+                    menuItem.Click += menuItem_Click;
+                    tsddFetch.DropDownItems.Add(menuItem);
+                }
             }
         }
 

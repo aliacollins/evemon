@@ -102,12 +102,11 @@ namespace EVEMon.Watchdog
                                                  UseShellExecute = false
                                              };
 
-            Process evemonProc = new Process
-                                     {
-                                         StartInfo = startInfo
-                                     };
-
-            evemonProc.Start();
+            using (Process evemonProc = new Process())
+            {
+                evemonProc.StartInfo = startInfo;
+                evemonProc.Start();
+            }
         }
     }
 }
