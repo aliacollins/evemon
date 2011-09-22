@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -55,7 +56,7 @@ namespace EVEMon.PieChart
             skillPieChartControl.ColorTypeOfEdge(EdgeColorType.DarkerThanSurface);
             skillPieChartControl.EdgeLineWidth(1F);
 
-            Text = String.Format("Skillgroup chart for {0}", m_character.Name);
+            Text = String.Format(CultureInfo.CurrentCulture, "Skillgroup chart for {0}", m_character.Name);
 
             // Events
             skillPieChartControl.AngleChange += skillPieChartControl_AngleChange;

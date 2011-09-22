@@ -17,10 +17,11 @@ namespace EVEMon.PieChart
         /// <param name="pointToInclude">
         ///   <c>PontF</c> object to include.
         /// </param>
-        public static void IncludePoint(ref RectangleF rect, PointF pointToInclude)
+        public static RectangleF IncludePoint(RectangleF rect, PointF pointToInclude)
         {
-            IncludePointX(ref rect, pointToInclude.X);
-            IncludePointY(ref rect, pointToInclude.Y);
+            rect = IncludePointX(rect, pointToInclude.X);
+            rect = IncludePointY(rect, pointToInclude.Y);
+            return rect;
         }
 
         /// <summary>
@@ -31,18 +32,20 @@ namespace EVEMon.PieChart
         /// <param name="rect">
         ///   <c>RectangleF</c> to check.
         /// </param>
-        /// <param name="xToInclude">
+        /// <param name="pointXToInclude">
         ///   x-coordinate to include.
         /// </param>
-        public static void IncludePointX(ref RectangleF rect, float xToInclude)
+        public static RectangleF IncludePointX(RectangleF rect, float pointXToInclude)
         {
-            if (xToInclude < rect.X)
+            if (pointXToInclude < rect.X)
             {
-                rect.Width = rect.Right - xToInclude;
-                rect.X = xToInclude;
+                rect.Width = rect.Right - pointXToInclude;
+                rect.X = pointXToInclude;
             }
-            else if (xToInclude > rect.Right)
-                rect.Width = xToInclude - rect.X;
+            else if (pointXToInclude > rect.Right)
+                rect.Width = pointXToInclude - rect.X;
+
+            return rect;
         }
 
         /// <summary>
@@ -53,18 +56,20 @@ namespace EVEMon.PieChart
         /// <param name="rect">
         ///   <c>RectangleF</c> to check.
         /// </param>
-        /// <param name="yToInclude">
+        /// <param name="pointYToInclude">
         ///   y-coordinate to include.
         /// </param>
-        public static void IncludePointY(ref RectangleF rect, float yToInclude)
+        public static RectangleF IncludePointY(RectangleF rect, float pointYToInclude)
         {
-            if (yToInclude < rect.Y)
+            if (pointYToInclude < rect.Y)
             {
-                rect.Height = rect.Bottom - yToInclude;
-                rect.Y = yToInclude;
+                rect.Height = rect.Bottom - pointYToInclude;
+                rect.Y = pointYToInclude;
             }
-            else if (yToInclude > rect.Bottom)
-                rect.Height = yToInclude - rect.Y;
+            else if (pointYToInclude > rect.Bottom)
+                rect.Height = pointYToInclude - rect.Y;
+
+            return rect;
         }
     }
 }

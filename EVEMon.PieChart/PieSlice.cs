@@ -133,19 +133,19 @@ namespace EVEMon.PieChart
         ///   Initializes a new instance of flat <c>PieSlice</c> class with given 
         ///   bounds and visual style.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="widthBoundingRect">
+        /// <param name="boundingRectWidth">
         ///   Width of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
-        /// <param name="heightBoundingRect">
+        /// <param name="boundingRectHeight">
         ///   Height of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
@@ -158,10 +158,10 @@ namespace EVEMon.PieChart
         /// <param name="surfaceColor">
         ///   Color used to paint the pie slice.
         /// </param>
-        public PieSlice(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
+        public PieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
                         float startAngle, float sweepAngle, Color surfaceColor)
             : this(
-                xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, 0F, startAngle, sweepAngle, surfaceColor,
+                boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, 0F, startAngle, sweepAngle, surfaceColor,
                 ShadowStyle.NoShadow, EdgeColorType.NoEdge)
         {
         }
@@ -170,19 +170,19 @@ namespace EVEMon.PieChart
         ///   Initializes a new instance of <c>PieSlice</c> class with given 
         ///   bounds and visual style.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="widthBoundingRect">
+        /// <param name="boundingRectWidth">
         ///   Width of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
-        /// <param name="heightBoundingRect">
+        /// <param name="boundingRectHeight">
         ///   Height of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
@@ -204,7 +204,7 @@ namespace EVEMon.PieChart
         /// <param name="edgeColorType">
         ///   Edge color style used for slice rendering.
         /// </param>
-        public PieSlice(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
+        public PieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
                         float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor, ShadowStyle shadowStyle,
                         EdgeColorType edgeColorType)
             : this()
@@ -218,7 +218,7 @@ namespace EVEMon.PieChart
             // create pens for rendering
             Color edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
             m_pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
-            InitializePieSlice(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight);
+            InitializePieSlice(boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, sliceHeight);
         }
 
         /// <summary>
@@ -258,19 +258,19 @@ namespace EVEMon.PieChart
         ///   Initializes a new instance of <c>PieSlice</c> class with given 
         ///   bounds and visual style.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="widthBoundingRect">
+        /// <param name="boundingRectWidth">
         ///   Width of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
-        /// <param name="heightBoundingRect">
+        /// <param name="boundingRectHeight">
         ///   Height of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
@@ -295,11 +295,11 @@ namespace EVEMon.PieChart
         /// <param name="edgeLineWidth">
         ///   Edge line width.
         /// </param>
-        public PieSlice(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
+        public PieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
                         float sliceHeight, float startAngle, float sweepAngle, Color surfaceColor, ShadowStyle shadowStyle,
                         EdgeColorType edgeColorType, float edgeLineWidth)
             : this(
-                xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight, startAngle, sweepAngle,
+                boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, sliceHeight, startAngle, sweepAngle,
                 surfaceColor, shadowStyle, edgeColorType)
         {
             m_pen.Width = edgeLineWidth;
@@ -555,29 +555,29 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Reajusts the pie slice to fit new bounding rectangle provided.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="widthBoundingRect">
+        /// <param name="boundingRectWidth">
         ///   Width of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
-        /// <param name="heightBoundingRect">
+        /// <param name="boundingRectHeight">
         ///   Height of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
         /// <param name="sliceHeight">
         ///   Height of the pie slice.
         /// </param>
-        internal void Readjust(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
+        internal void Readjust(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
                                float sliceHeight)
         {
-            InitializePieSlice(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight);
+            InitializePieSlice(boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, sliceHeight);
         }
 
         /// <summary>
@@ -685,23 +685,23 @@ namespace EVEMon.PieChart
         {
             RectangleF boundingRectangle = new RectangleF(m_pointStart.X, m_pointStart.Y, 0, 0);
             if ((Math.Abs(StartAngle) < float.Epsilon) || (StartAngle + SweepAngle >= 360))
-                GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Right);
+                boundingRectangle = GraphicsUtil.IncludePointX(boundingRectangle, BoundingRectangle.Right);
 
             if ((StartAngle <= 90) && (StartAngle + SweepAngle >= 90) || (StartAngle + SweepAngle >= 450))
-                GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Bottom + SliceHeight);
+                boundingRectangle = GraphicsUtil.IncludePointY(boundingRectangle, BoundingRectangle.Bottom + SliceHeight);
 
             if ((StartAngle <= 180) && (StartAngle + SweepAngle >= 180) || (StartAngle + SweepAngle >= 540))
-                GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Left);
+                boundingRectangle = GraphicsUtil.IncludePointX(boundingRectangle, BoundingRectangle.Left);
 
             if ((StartAngle <= 270) && (StartAngle + SweepAngle >= 270) || (StartAngle + SweepAngle >= 630))
-                GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Top);
+                boundingRectangle = GraphicsUtil.IncludePointY(boundingRectangle, BoundingRectangle.Top);
 
-            GraphicsUtil.IncludePoint(ref boundingRectangle, m_center);
-            GraphicsUtil.IncludePoint(ref boundingRectangle, m_centerBelow);
-            GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointStart);
-            GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointStartBelow);
-            GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointEnd);
-            GraphicsUtil.IncludePoint(ref boundingRectangle, m_pointEndBelow);
+            boundingRectangle = GraphicsUtil.IncludePoint(boundingRectangle, m_center);
+            boundingRectangle = GraphicsUtil.IncludePoint(boundingRectangle, m_centerBelow);
+            boundingRectangle = GraphicsUtil.IncludePoint(boundingRectangle, m_pointStart);
+            boundingRectangle = GraphicsUtil.IncludePoint(boundingRectangle, m_pointStartBelow);
+            boundingRectangle = GraphicsUtil.IncludePoint(boundingRectangle, m_pointEnd);
+            boundingRectangle = GraphicsUtil.IncludePoint(boundingRectangle, m_pointEndBelow);
 
             return boundingRectangle;
         }
@@ -1003,30 +1003,30 @@ namespace EVEMon.PieChart
         ///   Initializes pie bounding rectangle, pie height, corners 
         ///   coordinates and brushes used for rendering.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle that is 
         ///   used to draw the top surface of the pie slice.
         /// </param>
-        /// <param name="widthBoundingRect">
+        /// <param name="boundingRectWidth">
         ///   Width of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
-        /// <param name="heightBoundingRect">
+        /// <param name="boundingRectHeight">
         ///   Height of the rectangle that is used to draw the top surface of 
         ///   the pie slice.
         /// </param>
         /// <param name="sliceHeight">
         ///   Height of the pie slice.
         /// </param>
-        private void InitializePieSlice(float xBoundingRect, float yBoundingRect, float widthBoundingRect,
-                                        float heightBoundingRect, float sliceHeight)
+        private void InitializePieSlice(float boundingRectX, float boundingRectY, float boundingRectWidth,
+                                        float boundingRectHeight, float sliceHeight)
         {
             // stores bounding rectangle and pie slice height
-            BoundingRectangle = new RectangleF(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect);
+            BoundingRectangle = new RectangleF(boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight);
             SliceHeight = sliceHeight;
             // recalculates start and sweep angle used for rendering
             StartAngle = TransformAngle(m_actualStartAngle);
@@ -1038,13 +1038,13 @@ namespace EVEMon.PieChart
             // creates brushes
             CreateSurfaceBrushes(m_surfaceColor, m_shadowStyle);
             // calculates center and end points on periphery
-            float xCenter = xBoundingRect + widthBoundingRect / 2;
-            float yCenter = yBoundingRect + heightBoundingRect / 2;
+            float xCenter = boundingRectX + boundingRectWidth / 2;
+            float yCenter = boundingRectY + boundingRectHeight / 2;
             m_center = new PointF(xCenter, yCenter);
             m_centerBelow = new PointF(xCenter, yCenter + sliceHeight);
-            m_pointStart = PeripheralPoint(xCenter, yCenter, widthBoundingRect / 2, heightBoundingRect / 2, m_actualStartAngle);
+            m_pointStart = PeripheralPoint(xCenter, yCenter, boundingRectWidth / 2, boundingRectHeight / 2, m_actualStartAngle);
             m_pointStartBelow = new PointF(m_pointStart.X, m_pointStart.Y + sliceHeight);
-            m_pointEnd = PeripheralPoint(xCenter, yCenter, widthBoundingRect / 2, heightBoundingRect / 2,
+            m_pointEnd = PeripheralPoint(xCenter, yCenter, boundingRectWidth / 2, boundingRectHeight / 2,
                                          m_actualStartAngle + m_actualSweepAngle);
             m_pointEndBelow = new PointF(m_pointEnd.X, m_pointEnd.Y + sliceHeight);
             InitializeSides();
@@ -1234,19 +1234,19 @@ namespace EVEMon.PieChart
         /// <param name="point">
         ///   <c>PointF</c> to check for.
         /// </param>
-        /// <param name="xBoundingRectangle">
+        /// <param name="boundingRectXangle">
         ///   x-coordinate of the rectangle that bounds the ellipse from which
         ///   slice is cut.
         /// </param>
-        /// <param name="yBoundingRectangle">
+        /// <param name="boundingRectYangle">
         ///   y-coordinate of the rectangle that bounds the ellipse from which
         ///   slice is cut.
         /// </param>
-        /// <param name="widthBoundingRectangle"> 
+        /// <param name="boundingRectWidthangle"> 
         ///   Width of the rectangle that bounds the ellipse from which
         ///   slice is cut.
         /// </param>
-        /// <param name="heightBoundingRectangle">
+        /// <param name="boundingRectHeightangle">
         ///   Height of the rectangle that bounds the ellipse from which
         ///   slice is cut.
         /// </param>
@@ -1259,12 +1259,12 @@ namespace EVEMon.PieChart
         /// <returns>
         ///   <c>true</c> if point is contained within the slice.
         /// </returns>
-        private bool PieSliceContainsPoint(PointF point, float xBoundingRectangle, float yBoundingRectangle,
-                                           float widthBoundingRectangle, float heightBoundingRectangle, float startAngle,
+        private bool PieSliceContainsPoint(PointF point, float boundingRectXangle, float boundingRectYangle,
+                                           float boundingRectWidthangle, float boundingRectHeightangle, float startAngle,
                                            float sweepAngle)
         {
-            double x = point.X - xBoundingRectangle - widthBoundingRectangle / 2;
-            double y = point.Y - yBoundingRectangle - heightBoundingRectangle / 2;
+            double x = point.X - boundingRectXangle - boundingRectWidthangle / 2;
+            double y = point.Y - boundingRectYangle - boundingRectHeightangle / 2;
             double angle = Math.Atan2(y, x);
             if (angle < 0)
                 angle += (2 * Math.PI);

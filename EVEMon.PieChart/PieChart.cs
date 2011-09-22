@@ -145,31 +145,31 @@ namespace EVEMon.PieChart
         ///   Initializes an instance of a flat <c>PieChart3D</c> with 
         ///   specified bounds, values to chart and relative thickness.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle that 
         ///   bounds the chart.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle that 
         ///   bounds the chart.
         /// </param>
-        /// <param name="widthBoundingRect">
+        /// <param name="boundingRectWidth">
         ///   Width of the rectangle that bounds the chart.
         /// </param>
-        /// <param name="heightBoundingRect">
+        /// <param name="boundingRectHeight">
         ///   Height of the rectangle that bounds the chart.
         /// </param>
         /// <param name="values">
         ///   An array of <c>decimal</c> values to chart.
         /// </param>
-        public PieChart3D(float xBoundingRect, float yBoundingRect, float widthBoundingRect, float heightBoundingRect,
+        public PieChart3D(float boundingRectX, float boundingRectY, float boundingRectWidth, float boundingRectHeight,
                           decimal[] values)
             : this()
         {
-            m_left = xBoundingRect;
-            m_top = yBoundingRect;
-            m_width = widthBoundingRect;
-            m_height = heightBoundingRect;
+            m_left = boundingRectX;
+            m_top = boundingRectY;
+            m_width = boundingRectWidth;
+            m_height = boundingRectHeight;
             Values(values);
         }
 
@@ -177,11 +177,11 @@ namespace EVEMon.PieChart
         ///   Initializes an instance of <c>PieChart3D</c> with specified 
         ///   bounds, values to chart and relative thickness.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle bounding 
         ///   the chart.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
@@ -198,9 +198,9 @@ namespace EVEMon.PieChart
         ///   Thickness of the pie slice to chart relative to the height of the
         ///   bounding rectangle.
         /// </param>
-        public PieChart3D(float xBoundingRect, float yBoundingRect, float width, float height,
+        public PieChart3D(float boundingRectX, float boundingRectY, float width, float height,
                           decimal[] values, float sliceRelativeHeight)
-            : this(xBoundingRect, yBoundingRect, width, height, values)
+            : this(boundingRectX, boundingRectY, width, height, values)
         {
             m_sliceRelativeHeight = sliceRelativeHeight;
         }
@@ -227,11 +227,11 @@ namespace EVEMon.PieChart
         ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
         ///   array of values and relative pie slice height.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle bounding 
         ///   the chart.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
@@ -251,9 +251,9 @@ namespace EVEMon.PieChart
         ///   Thickness of the slice to chart relative to the height of the
         ///   bounding rectangle.
         /// </param>
-        public PieChart3D(float xBoundingRect, float yBoundingRect, float width, float height,
+        public PieChart3D(float boundingRectX, float boundingRectY, float width, float height,
                           decimal[] values, Color[] sliceColors, float sliceRelativeHeight)
-            : this(xBoundingRect, yBoundingRect, width, height, values, sliceRelativeHeight)
+            : this(boundingRectX, boundingRectY, width, height, values, sliceRelativeHeight)
         {
             m_colors = sliceColors;
         }
@@ -284,11 +284,11 @@ namespace EVEMon.PieChart
         ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
         ///   array of values and relative pie slice height.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle bounding 
         ///   the chart.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
@@ -311,9 +311,9 @@ namespace EVEMon.PieChart
         /// <param name="texts">
         ///   An array of strings that are displayed on corresponding slice.
         /// </param>
-        public PieChart3D(float xBoundingRect, float yBoundingRect, float width, float height,
+        public PieChart3D(float boundingRectX, float boundingRectY, float width, float height,
                           decimal[] values, Color[] sliceColors, float sliceRelativeHeight, string[] texts)
-            : this(xBoundingRect, yBoundingRect, width, height, values, sliceColors, sliceRelativeHeight)
+            : this(boundingRectX, boundingRectY, width, height, values, sliceColors, sliceRelativeHeight)
         {
             m_texts = texts;
         }
@@ -322,11 +322,11 @@ namespace EVEMon.PieChart
         ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
         ///   array of values and relative pie slice height.
         /// </summary>
-        /// <param name="xBoundingRect">
+        /// <param name="boundingRectX">
         ///   x-coordinate of the upper-left corner of the rectangle bounding 
         ///   the chart.
         /// </param>
-        /// <param name="yBoundingRect">
+        /// <param name="boundingRectY">
         ///   y-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
@@ -346,9 +346,9 @@ namespace EVEMon.PieChart
         /// <param name="texts">
         ///   An array of strings that are displayed on corresponding slice.
         /// </param>
-        public PieChart3D(float xBoundingRect, float yBoundingRect, float width, float height,
+        public PieChart3D(float boundingRectX, float boundingRectY, float width, float height,
                           decimal[] values, float sliceRelativeHeight, string[] texts)
-            : this(xBoundingRect, yBoundingRect, width, height, values, sliceRelativeHeight)
+            : this(boundingRectX, boundingRectY, width, height, values, sliceRelativeHeight)
         {
             m_texts = texts;
         }
@@ -391,26 +391,26 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets values to be displayed on the chart.
         /// </summary>
-        private void Values(decimal[] values)
+        private void Values(decimal[] chartValues)
         {
-            Debug.Assert(values != null && values.Length > 0);
-            m_values = values;
+            Debug.Assert(chartValues != null && chartValues.Length > 0);
+            m_values = chartValues;
         }
 
         /// <summary>
         ///   Sets the font of the text displayed by the control.
         /// </summary>
-        public void Font(Font font)
+        public void Font(Font textFont)
         {
-            m_font = font;
+            m_font = textFont;
         }
 
         /// <summary>
         ///   Sets the foreground color of the control used to draw text.
         /// </summary>
-        public void ForeColor(Color foreColor)
+        public void ForeColor(Color color)
         {
-            m_foreColor = foreColor;
+            m_foreColor = color;
         }
 
         /// <summary>
@@ -425,48 +425,48 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets slice edge line width. If not set, default value is 1.
         /// </summary>
-        public void EdgeLineWidth(float edgeLineWidth)
+        public void EdgeLineWidth(float lineWidth)
         {
-            m_edgeLineWidth = edgeLineWidth;
+            m_edgeLineWidth = lineWidth;
         }
 
         /// <summary>
         ///   Sets slice height, relative to the top ellipse semi-axis. Must be
         ///   less than or equal to 0.5.
         /// </summary>
-        public void SliceRelativeHeight(float sliceRelativeHeight)
+        public void SliceRelativeHeight(float relativeHeight)
         {
-            Debug.Assert(sliceRelativeHeight <= 0.5F);
-            m_sliceRelativeHeight = sliceRelativeHeight;
+            Debug.Assert(relativeHeight <= 0.5F);
+            m_sliceRelativeHeight = relativeHeight;
         }
 
         /// <summary>
         ///   Sets the slice displacement relative to the ellipse semi-axis.
         ///   Must be less than 1.
         /// </summary>
-        public void SliceRelativeDisplacement(float sliceRelativeDisplacement)
+        public void SliceRelativeDisplacement(float relativeDisplacement)
         {
-            Debug.Assert(IsDisplacementValid(sliceRelativeDisplacement));
-            m_sliceRelativeDisplacements = new[] { sliceRelativeDisplacement };
+            Debug.Assert(IsDisplacementValid(relativeDisplacement));
+            m_sliceRelativeDisplacements = new[] { relativeDisplacement };
         }
 
         /// <summary>
         ///   Sets the slice displacement relative to the ellipse semi-axis.
         ///   Must be less than 1.
         /// </summary>
-        public void SliceRelativeDisplacements(float[] sliceRelativeDisplacements)
+        public void SliceRelativeDisplacements(float[] relativeDisplacements)
         {
-            m_sliceRelativeDisplacements = sliceRelativeDisplacements;
-            Debug.Assert(AreDisplacementsValid(sliceRelativeDisplacements));
+            m_sliceRelativeDisplacements = relativeDisplacements;
+            Debug.Assert(AreDisplacementsValid(relativeDisplacements));
         }
 
         /// <summary>
         ///   Gets or sets the size of the entire pie chart.
         /// </summary>
-        public void ChartSize(SizeF chartSize)
+        public void ChartSize(SizeF size)
         {
-            m_width = chartSize.Width;
-            m_height = chartSize.Height;
+            m_width = size.Width;
+            m_height = size.Height;
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace EVEMon.PieChart
         ///   Gets or sets the x-coordinate of the upper-left corner of the 
         ///   bounding rectangle.
         /// </summary>
-        public float X
+        public float PointX
         {
             get { return m_left; }
             set { m_left = value; }
@@ -498,7 +498,7 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Gets or sets the y-coordinate of the upper-left corner of the bounding rectangle.
         /// </summary>
-        public float Y
+        public float PointY
         {
             get { return m_top; }
             set { m_top = value; }
@@ -515,17 +515,17 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets the flag that controls if chart is fit to bounding rectangle exactly.
         /// </summary>
-        public void FitToBoundingRectangle(bool fitToBoundingRectangle)
+        public void FitToBoundingRectangle(bool fitToBoundingRect)
         {
-            m_fitToBoundingRectangle = fitToBoundingRectangle;
+            m_fitToBoundingRectangle = fitToBoundingRect;
         }
 
         /// <summary>
         ///   Sets the initial angle from which pies are placed.
         /// </summary>
-        public void InitialAngle(float initialAngle)
+        public void InitialAngle(float angle)
         {
-            m_initialAngle = initialAngle % 360;
+            m_initialAngle = angle % 360;
             if (m_initialAngle < 0)
                 m_initialAngle += 360;
         }
@@ -533,9 +533,9 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets the index of the highlighted pie.
         /// </summary>
-        public void HighlightedIndex(int highlightedIndex)
+        public void HighlightedIndex(int index)
         {
-            m_highlightedIndex = highlightedIndex;
+            m_highlightedIndex = index;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -101,40 +102,40 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets the left margin for the chart.
         /// </summary>
-        public void LeftMargin(float leftMargin)
+        public void LeftMargin(float left)
         {
-            Debug.Assert(leftMargin >= 0);
-            m_leftMargin = leftMargin;
+            Debug.Assert(left >= 0);
+            m_leftMargin = left;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets the right margin for the chart.
         /// </summary>
-        public void RightMargin(float rightMargin)
+        public void RightMargin(float right)
         {
-            Debug.Assert(rightMargin >= 0);
-            m_rightMargin = rightMargin;
+            Debug.Assert(right >= 0);
+            m_rightMargin = right;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets the top margin for the chart.
         /// </summary>
-        public void TopMargin(float topMargin)
+        public void TopMargin(float top)
         {
-            Debug.Assert(topMargin >= 0);
-            m_topMargin = topMargin;
+            Debug.Assert(top >= 0);
+            m_topMargin = top;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets the bottom margin for the chart.
         /// </summary>
-        public void BottomMargin(float bottomMargin)
+        public void BottomMargin(float bottom)
         {
-            Debug.Assert(bottomMargin >= 0);
-            m_bottomMargin = bottomMargin;
+            Debug.Assert(bottom >= 0);
+            m_bottomMargin = bottom;
             Invalidate();
         }
 
@@ -142,9 +143,9 @@ namespace EVEMon.PieChart
         ///   Sets the indicator if chart should fit the bounding rectangle
         ///   exactly.
         /// </summary>
-        public void FitChart(bool fitChart)
+        public void FitChart(bool fit)
         {
-            m_fitChart = fitChart;
+            m_fitChart = fit;
             Invalidate();
         }
 
@@ -152,79 +153,79 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Sets values to be represented by the chart.
         /// </summary>
-        public void Values(decimal[] values)
+        public void Values(decimal[] chartValues)
         {
-            m_values = values;
+            m_values = chartValues;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets values for slice displacements.
         /// </summary>
-        public void SliceRelativeDisplacements(float[] sliceRelativeDisplacements)
+        public void SliceRelativeDisplacements(float[] relativeDisplacements)
         {
-            m_relativeSliceDisplacements = sliceRelativeDisplacements;
+            m_relativeSliceDisplacements = relativeDisplacements;
             Invalidate();
         }
 
         /// <summary>
         ///   Gets or sets tooltip texts.
         /// </summary>
-        public void ToolTips(string[] tooltips)
+        public void ToolTips(string[] sliceTooltips)
         {
-            m_tootips = tooltips;
+            m_tootips = sliceTooltips;
         }
 
         /// <summary>
         ///   Sets texts appearing by each pie slice.
         /// </summary>
-        public void Texts(string[] texts)
+        public void Texts(string[] sliceTexts)
         {
-            m_texts = texts;
+            m_texts = sliceTexts;
         }
 
         /// <summary>
         ///   Sets pie slice reative height.
         /// </summary>
-        public void SliceRelativeHeight(float sliceRelativeHeight)
+        public void SliceRelativeHeight(float relativeHeight)
         {
-            m_sliceRelativeHeight = sliceRelativeHeight;
+            m_sliceRelativeHeight = relativeHeight;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets the shadow style.
         /// </summary>
-        public void StyleOfShadow(ShadowStyle styleOfShadow)
+        public void StyleOfShadow(ShadowStyle shadowStyle)
         {
-            m_shadowStyle = styleOfShadow;
+            m_shadowStyle = shadowStyle;
             Invalidate();
         }
 
         /// <summary>
         ///  Sets the edge color type.
         /// </summary>
-        public void ColorTypeOfEdge(EdgeColorType colorTypeOfEdge)
+        public void ColorTypeOfEdge(EdgeColorType edgeColorType)
         {
-            m_edgeColorType = colorTypeOfEdge;
+            m_edgeColorType = edgeColorType;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets the edge lines width.
         /// </summary>
-        public void EdgeLineWidth(float edgeLineWidth)
+        public void EdgeLineWidth(float lineWidth)
         {
-            m_edgeLineWidth = edgeLineWidth;
+            m_edgeLineWidth = lineWidth;
             Invalidate();
         }
 
         /// <summary>
         ///   Sets the initial angle from which pies are drawn.
         /// </summary>
-        public void InitialAngle(float initialAngle)
+        public void InitialAngle(float angle)
         {
-            float newAngle = initialAngle;
+            float newAngle = angle;
 
             if (newAngle > 360.0f)
                 newAngle -= 360.0f;
@@ -241,14 +242,14 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Handles <c>OnPaint</c> event.
         /// </summary>
-        /// <param name="args">
+        /// <param name="e">
         ///   <c>PaintEventArgs</c> object.
         /// </param>
-        protected override void OnPaint(PaintEventArgs args)
+        protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(args);
+            base.OnPaint(e);
             if (HasAnyValue)
-                DoDraw(args.Graphics);
+                DoDraw(e.Graphics);
         }
 
         /// <summary>
@@ -375,7 +376,7 @@ namespace EVEMon.PieChart
                 {
                     if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex ||
                         m_drawToolTipTexts[m_highlightedIndex].Length == 0)
-                        m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
+                        m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString(CultureInfo.CurrentCulture));
                     else
                         m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
                 }

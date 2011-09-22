@@ -72,6 +72,7 @@
     <Compile Include="AngleChangeEventArgs.cs" />
     <Compile Include="ColorUtil.cs" />
     <Compile Include="EdgeColor.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GraphicsUtil.cs">
       <SubType>Code</SubType>
     </Compile>
