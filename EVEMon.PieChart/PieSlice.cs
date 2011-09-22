@@ -545,15 +545,19 @@ namespace EVEMon.PieChart
 
             float actualStartAngle = GetActualAngle(StartAngle);
             float newSweepAngle = (splitAngle - actualStartAngle + 360) % 360;
-            PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle,
-                                              newSweepAngle, m_surfaceColor, m_shadowStyle, m_edgeColorType);
-            pieSlice1.InitializeSides(true, false);
+            using (PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle,
+                                                     newSweepAngle, m_surfaceColor, m_shadowStyle, m_edgeColorType))
+            {
+                pieSlice1.InitializeSides(true, false);
 
-            newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
-            PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle,
-                                              m_surfaceColor, m_shadowStyle, m_edgeColorType);
-            pieSlice2.InitializeSides(false);
-            return new[] { pieSlice1, pieSlice2 };
+                newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
+                using (PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle,
+                                                         m_surfaceColor, m_shadowStyle, m_edgeColorType))
+                {
+                    pieSlice2.InitializeSides(false);
+                    return new[] { (PieSlice)pieSlice1.Clone(), (PieSlice)pieSlice2.Clone() };
+                }
+            }
         }
 
         /// <summary>
