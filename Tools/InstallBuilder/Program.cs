@@ -199,8 +199,8 @@ namespace InstallBuilder
             {
                 string nsisScript = Path.Combine(s_projectDir,
                                                  s_isDebug
-                                                     ? "bin\\x86\\Debug\\EVEMon Installer Script.nsi"
-                                                     : "bin\\x86\\Release\\EVEMon Installer Script.nsi");
+                                                     ? "bin\\x86\\Debug\\EVEMonInstallerScript.nsi"
+                                                     : "bin\\x86\\Release\\EVEMonInstallerScript.nsi");
 
                 string param =
                     String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_installerDir, nsisScript);
