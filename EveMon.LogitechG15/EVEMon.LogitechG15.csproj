@@ -46,6 +46,8 @@
     <ErrorReport>prompt</ErrorReport>
     <RegisterForComInterop>false</RegisterForComInterop>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -63,6 +65,7 @@
   <ItemGroup>
     <Compile Include="CycleEventArgs.cs" />
     <Compile Include="G15Handler.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LCDInterface.cs">
       <SubType>Code</SubType>
     </Compile>

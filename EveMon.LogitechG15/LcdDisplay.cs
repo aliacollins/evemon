@@ -423,7 +423,10 @@ namespace EVEMon.LogitechG15
 
             RectangleF line = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             line.Offset(0f, 0f);
-            m_lcdCanvas.DrawString(walletBalance, m_defaultFont, new SolidBrush(Color.Black), line);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                m_lcdCanvas.DrawString(walletBalance, m_defaultFont, brush, line);
+            }
         }
 
         /// <summary>
@@ -452,7 +455,10 @@ namespace EVEMon.LogitechG15
             SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             timeLine.Offset(0f, 22f);
-            m_lcdCanvas.DrawString(completionDateTimeText, m_defaultFont, new SolidBrush(Color.Black), timeLine);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                m_lcdCanvas.DrawString(completionDateTimeText, m_defaultFont, brush, timeLine);
+            }
         }
 
         /// <summary>
@@ -467,7 +473,10 @@ namespace EVEMon.LogitechG15
             SizeF size = m_lcdCanvas.MeasureString(curEVETime, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(0f, 0f), size);
             timeLine.Offset(0f, 32f);
-            m_lcdCanvas.DrawString(curEVETime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                m_lcdCanvas.DrawString(curEVETime, m_defaultFont, brush, timeLine);
+            }
         }
 
         /// <summary>
@@ -482,7 +491,10 @@ namespace EVEMon.LogitechG15
             SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             timeLine.Offset(0f, 32f);
-            m_lcdCanvas.DrawString(curTime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                m_lcdCanvas.DrawString(curTime, m_defaultFont, brush, timeLine);
+            }
         }
 
         /// <summary>
@@ -570,7 +582,10 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void RenderSelector()
         {
-            m_lcdOverlay.FillRectangle(new SolidBrush(Color.Black), 0, 0, G15Width, 11);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                m_lcdOverlay.FillRectangle(brush, 0, 0, G15Width, 11);
+            }
         }
 
         /// <summary>
@@ -613,17 +628,18 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintSplash()
         {
-            // Load the icon
-            Bitmap splashLogo = new Bitmap(Properties.Resources.LCDSplash);
-
             // Clear the graphics
             ClearGraphics();
 
-            // Display the splash logo
-            int left = (G15Width / 2) - (splashLogo.Width / 2);
-            int top = (G15Height / 2) - (splashLogo.Height / 2);
-            m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
-            UpdateLcdDisplay(NativeMethods.LGLCD_PRIORITY_ALERT);
+            // Load the icon
+            using (Bitmap splashLogo = new Bitmap(Properties.Resources.LCDSplash))
+            {
+                // Display the splash logo
+                int left = (G15Width / 2) - (splashLogo.Width / 2);
+                int top = (G15Height / 2) - (splashLogo.Height / 2);
+                m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
+                UpdateLcdDisplay(NativeMethods.LGLCD_PRIORITY_ALERT);
+            }
         }
 
         /// <summary>
@@ -656,8 +672,11 @@ namespace EVEMon.LogitechG15
             SizeF size = m_lcdCanvas.MeasureString(skillQueueFreemRoom, m_defaultFont);
             RectangleF line = new RectangleF(new PointF(0f, 0f), size);
             line.Offset(0f, 11f);
-            m_lcdCanvas.FillRectangle(new SolidBrush(Color.Black), 0, 13, 160, 10);
-            m_lcdOverlay.DrawString(skillQueueFreemRoom, m_defaultFont, new SolidBrush(Color.Black), line);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                m_lcdCanvas.FillRectangle(brush, 0, 13, 160, 10);
+                m_lcdOverlay.DrawString(skillQueueFreemRoom, m_defaultFont, brush, line);
+            }
         }
 
         /// <summary>

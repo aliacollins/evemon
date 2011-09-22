@@ -77,7 +77,11 @@ namespace EVEMon.LogitechG15
         private void RenderTextLine(Graphics canvas, float offset)
         {
             RectangleF lineRect = new RectangleF(new PointF(0f, offset), canvas.MeasureString(m_text, m_font));
-            canvas.DrawString(m_text, m_font, new SolidBrush(Color.Black), lineRect);
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                canvas.DrawString(m_text, m_font, brush, lineRect);
+            }
+
             Height = lineRect.Height;
         }
 
@@ -118,9 +122,17 @@ namespace EVEMon.LogitechG15
 
             int barFill = Convert.ToInt16(m_percentage * size - 2);
 
-            canvas.DrawRectangle(new Pen(Color.Black), barRect.Left, barRect.Top, barRect.Width, barRect.Height);
-            canvas.FillRectangle(new SolidBrush(Color.Black), barRect.Left + 1, barRect.Top + 1, barFill, barRect.Height - 2);
-            overlay.DrawString(text, m_font, new SolidBrush(Color.Black), textRect);
+            using (Pen pen = new Pen(Color.Black))
+            {
+                canvas.DrawRectangle(pen, barRect.Left, barRect.Top, barRect.Width, barRect.Height);
+            }
+
+            using (Brush brush = new SolidBrush(Color.Black))
+            {
+                canvas.FillRectangle(brush, barRect.Left + 1, barRect.Top + 1, barFill, barRect.Height - 2);
+                overlay.DrawString(text, m_font, brush, textRect);
+            }
+
             Height = barRect.Height + 1;
         }
 
