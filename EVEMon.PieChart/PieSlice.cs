@@ -105,12 +105,12 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   <c>Quadrilateral</c> representing the start side.
         /// </summary>
-        private Quadrilateral m_startSide = Quadrilateral.Empty;
+        private Quadrilateral m_startSide = new Quadrilateral();
 
         /// <summary>
         ///   <c>Quadrilateral</c> representing the end side.
         /// </summary>
-        private Quadrilateral m_endSide = Quadrilateral.Empty;
+        private Quadrilateral m_endSide = new Quadrilateral();
 
         /// <summary>
         ///   Flag indicating if object has been disposed.
@@ -217,7 +217,11 @@ namespace EVEMon.PieChart
             m_edgeColorType = edgeColorType;
             // create pens for rendering
             Color edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
-            m_pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
+            using (Pen pen = new Pen(edgeLineColor))
+            {
+                pen.LineJoin = LineJoin.Round;
+                m_pen = (Pen)pen.Clone();
+            }
             InitializePieSlice(boundingRectX, boundingRectY, boundingRectWidth, boundingRectHeight, sliceHeight);
         }
 
@@ -541,15 +545,19 @@ namespace EVEMon.PieChart
 
             float actualStartAngle = GetActualAngle(StartAngle);
             float newSweepAngle = (splitAngle - actualStartAngle + 360) % 360;
-            PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle, newSweepAngle, m_surfaceColor,
-                                              m_shadowStyle, m_edgeColorType);
-            pieSlice1.InitializeSides(true, false);
+            using (PieSlice pieSlice1 = new PieSlice(BoundingRectangle, SliceHeight, actualStartAngle,
+                                                     newSweepAngle, m_surfaceColor, m_shadowStyle, m_edgeColorType))
+            {
+                pieSlice1.InitializeSides(true, false);
 
-            newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
-            PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle, m_surfaceColor,
-                                              m_shadowStyle, m_edgeColorType);
-            pieSlice2.InitializeSides(false);
-            return new[] { pieSlice1, pieSlice2 };
+                newSweepAngle = GetActualAngle(EndAngle) - splitAngle;
+                using (PieSlice pieSlice2 = new PieSlice(BoundingRectangle, SliceHeight, splitAngle, newSweepAngle,
+                                                         m_surfaceColor, m_shadowStyle, m_edgeColorType))
+                {
+                    pieSlice2.InitializeSides(false);
+                    return new[] { pieSlice1, pieSlice2 };
+                }
+            }
         }
 
         /// <summary>
@@ -893,10 +901,13 @@ namespace EVEMon.PieChart
                                                          },
                                             Positions = new[] { 0F, 0.1F, 1.0F }
                                         };
-            LinearGradientBrush brush = new LinearGradientBrush(BoundingRectangle, Color.Blue, Color.White,
-                                                                LinearGradientMode.Horizontal)
-                                            { InterpolationColors = colorBlend };
-            return brush;
+
+            using (LinearGradientBrush brush = new LinearGradientBrush(BoundingRectangle, Color.Blue, Color.White,
+                                                                       LinearGradientMode.Horizontal))
+            {
+                brush.InterpolationColors = colorBlend;
+                return (LinearGradientBrush)brush.Clone();
+            }
         }
 
         /// <summary>
@@ -1064,11 +1075,11 @@ namespace EVEMon.PieChart
             m_startSide = startSideExists
                               ? new Quadrilateral(m_center, m_pointStart, m_pointStartBelow, m_centerBelow,
                                                   Math.Abs(SweepAngle - 180) > float.Epsilon)
-                              : Quadrilateral.Empty;
+                              : new Quadrilateral();
             m_endSide = endSideExists
                             ? new Quadrilateral(m_center, m_pointEnd, m_pointEndBelow, m_centerBelow,
                                                 Math.Abs(SweepAngle - 180) > float.Epsilon)
-                            : Quadrilateral.Empty;
+                            : new Quadrilateral();
         }
 
         /// <summary>
@@ -1189,13 +1200,15 @@ namespace EVEMon.PieChart
         private GraphicsPath CreatePathForCylinderSurfaceSection(float startAngle, float endAngle, PointF pointStart,
                                                                  PointF pointEnd)
         {
-            GraphicsPath path = new GraphicsPath();
-            path.AddArc(BoundingRectangle, startAngle, endAngle - startAngle);
-            path.AddLine(pointEnd.X, pointEnd.Y, pointEnd.X, pointEnd.Y + SliceHeight);
-            path.AddArc(BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
-                        BoundingRectangle.Height, endAngle, startAngle - endAngle);
-            path.AddLine(pointStart.X, pointStart.Y + SliceHeight, pointStart.X, pointStart.Y);
-            return path;
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddArc(BoundingRectangle, startAngle, endAngle - startAngle);
+                path.AddLine(pointEnd.X, pointEnd.Y, pointEnd.X, pointEnd.Y + SliceHeight);
+                path.AddArc(BoundingRectangle.X, BoundingRectangle.Y + SliceHeight, BoundingRectangle.Width,
+                            BoundingRectangle.Height, endAngle, startAngle - endAngle);
+                path.AddLine(pointStart.X, pointStart.Y + SliceHeight, pointStart.X, pointStart.Y);
+                return (GraphicsPath)path.Clone();
+            }
         }
 
         /// <summary>

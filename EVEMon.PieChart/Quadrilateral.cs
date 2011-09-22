@@ -16,8 +16,6 @@ namespace EVEMon.PieChart
 
         private bool m_disposed;
 
-        public static readonly Quadrilateral Empty = new Quadrilateral();
-
         /// <summary>
         ///   <c>PathPointType</c>s decribing the <c>GraphicsPath</c> points.
         /// </summary>
@@ -33,7 +31,7 @@ namespace EVEMon.PieChart
         /// <summary>
         ///   Creates empty <c>Quadrilateral</c> object
         /// </summary>
-        private Quadrilateral()
+        internal Quadrilateral()
         {
         }
 
