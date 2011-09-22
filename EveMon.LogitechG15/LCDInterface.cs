@@ -2,9 +2,9 @@ using System;
 
 namespace lgLcdClassLibrary
 {
-    public delegate int ButtonDelegate(int device, int dwButtons, IntPtr pContext);
+    public delegate int ButtonDelegate(int device, int pressedButtons, IntPtr context);
 
-    public delegate int ConfigureDelegate(int connection, IntPtr pContext);
+    public delegate int ConfigureDelegate(int connection, IntPtr context);
 
     /// <summary>
     /// Logitech LCD class.  This class simply exposes the constants
@@ -25,11 +25,11 @@ namespace lgLcdClassLibrary
         private static bool s_lcdInterfaceInitialized;
         private static int s_result;
 
-        private static NativeMethods.lgLcdConnectContext s_connectContext;
-        private static NativeMethods.lgLcdOpenContext s_openContext;
-        private static NativeMethods.lgLcdBitmap160x43x1 s_lcdBitmap;
-        private static NativeMethods.lgLcdOnConfigureCB s_configCallback;
-        private static NativeMethods.lgLcdOnSoftButtonsCB s_buttonCallback;
+        private static NativeMethods.LgLcdConnectContext s_connectContext;
+        private static NativeMethods.LgLcdOpenContext s_openContext;
+        private static NativeMethods.LgLcdBitmap160X43X1 s_lcdBitmap;
+        private static NativeMethods.LgLcdOnConfigureCB s_configCallback;
+        private static NativeMethods.LgLcdOnSoftButtonsCB s_buttonCallback;
 
 
         #region Public Methods
@@ -37,28 +37,28 @@ namespace lgLcdClassLibrary
         /// <summary>
         /// Assigns the button delegate.
         /// </summary>
-        /// <param name="bDelegate">The buttons delegate.</param>
+        /// <param name="button">The buttons delegate.</param>
         /// <returns></returns>
-        public static bool AssignButtonDelegate(ButtonDelegate bDelegate)
+        public static bool AssignButtonDelegate(ButtonDelegate button)
         {
-            if (bDelegate == null)
+            if (button == null)
                 return false;
 
-            s_buttonCallback = bDelegate.Invoke;
+            s_buttonCallback = button.Invoke;
             return true;
         }
 
         /// <summary>
         /// Assigns the config delegate.
         /// </summary>
-        /// <param name="cDelegate">The config delegate.</param>
+        /// <param name="configure">The config delegate.</param>
         /// <returns></returns>
-        public static bool AssignConfigDelegate(ConfigureDelegate cDelegate)
+        public static bool AssignConfigDelegate(ConfigureDelegate configure)
         {
-            if (cDelegate == null)
+            if (configure == null)
                 return false;
 
-            s_configCallback = cDelegate.Invoke;
+            s_configCallback = configure.Invoke;
             return true;
         }
 
@@ -66,9 +66,9 @@ namespace lgLcdClassLibrary
         /// Opens the LCD.
         /// </summary>
         /// <param name="appName">Name of the app.</param>
-        /// <param name="isAutostartable">if set to <c>true</c> [is autostartable].</param>
+        /// <param name="isAutoStartAble">if set to <c>true</c> [is autostartable].</param>
         /// <returns></returns>
-        public static bool Open(string appName, bool isAutostartable)
+        public static bool Open(string appName, bool isAutoStartAble)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace lgLcdClassLibrary
                         s_result = NativeMethods.lgLcdInit();
 
                         s_connectContext.appFriendlyName = appName;
-                        s_connectContext.isAutostartable = isAutostartable;
+                        s_connectContext.isAutostartable = isAutoStartAble;
                         s_connectContext.isPersistent = true;
 
                         // We might have a configuration screen
@@ -89,7 +89,7 @@ namespace lgLcdClassLibrary
                         s_connectContext.onConfigure.configContext = IntPtr.Zero;
 
                         // The "connection" member will be returned upon return
-                        s_connectContext.connection = NativeMethods.LGLCD_INVALID_CONNECTION;
+                        s_connectContext.connection = NativeMethods.LGLcdInvalidConnection;
 
                         // Connect
                         s_result = NativeMethods.lgLcdConnect(ref s_connectContext);
@@ -98,7 +98,7 @@ namespace lgLcdClassLibrary
                     }
 
                     // Is an LCD available?
-                    NativeMethods.lgLcdDeviceDesc deviceDescription;
+                    NativeMethods.LgLcdDeviceDesc deviceDescription;
                     s_result = NativeMethods.lgLcdEnumerate(s_connectContext.connection, 0, out deviceDescription);
                     if (s_result == 0)
                     {
@@ -111,7 +111,7 @@ namespace lgLcdClassLibrary
                         s_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
 
                         // The "device" member will be returned upon return
-                        s_openContext.device = NativeMethods.LGLCD_INVALID_DEVICE;
+                        s_openContext.device = NativeMethods.LGLcdInvalidDevice;
                         s_result = NativeMethods.lgLcdOpen(ref s_openContext);
 
                         if (s_result == 0)
@@ -164,10 +164,10 @@ namespace lgLcdClassLibrary
         /// <summary>
         /// Displays the bitmap on the LCD screen.
         /// </summary>
-        /// <param name="samplebitmap">The samplebitmap.</param>
+        /// <param name="sampleBitmap">The sampleBitmap.</param>
         /// <param name="priority">The priority.</param>
         /// <returns></returns>
-        public static bool DisplayBitmap(ref byte[] samplebitmap, uint priority)
+        public static bool DisplayBitmap(ref byte[] sampleBitmap, uint priority)
         {
             try
             {
@@ -177,8 +177,8 @@ namespace lgLcdClassLibrary
                 // Display bitmap if LCD is found
                 if (s_lcdAvailable)
                 {
-                    s_lcdBitmap.hdr.Format = NativeMethods.LGLCD_BMP_FORMAT_160x43x1;
-                    s_lcdBitmap.pixels = samplebitmap;
+                    s_lcdBitmap.hdr.Format = NativeMethods.LGLcdBmpFormat160X43X1;
+                    s_lcdBitmap.pixels = sampleBitmap;
                     s_result = NativeMethods.lgLcdUpdateBitmap(s_openContext.device, ref s_lcdBitmap, priority);
 
                     // Has the LCD been disconnected?

@@ -30,7 +30,7 @@ namespace EVEMon.LogitechG15
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
 
             // Subscribe to events which occur of G15 buttons pressed
-            LcdDisplay.APIUpdateRequested += LcdDisplay_APIUpdateRequested;
+            LcdDisplay.ApiUpdateRequested += LcdDisplay_APIUpdateRequested;
             LcdDisplay.AutoCycleChanged += LcdDisplay_AutoCycleChanged;
             LcdDisplay.CurrentCharacterChanged += LcdDisplay_CurrentCharacterChanged;
         }
@@ -123,7 +123,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private static void UpdateFromSettings()
         {
-            if (s_lcd == null)
+            if (s_lcd == null || !s_running)
                 return;
 
             s_lcd.Cycle = Settings.G15.UseCharactersCycle;

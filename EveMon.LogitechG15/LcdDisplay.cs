@@ -12,8 +12,8 @@ namespace EVEMon.LogitechG15
 {
     public class LcdDisplay : IDisposable
     {
-        internal const int G15Width = (int)NativeMethods.LGLCD_BMP_WIDTH;
-        private const int G15Height = (int)NativeMethods.LGLCD_BMP_HEIGHT;
+        internal const int G15Width = (int)NativeMethods.LGLcdBmpWidth;
+        private const int G15Height = (int)NativeMethods.LGLcdBmpHeight;
         private const float G15DpiX = 46;
         private const float G15DpiY = 46;
 
@@ -45,7 +45,7 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Fired whenever a button has been pressed which require EVEMon to requery the API for the specified character.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> APIUpdateRequested;
+        public static event EventHandler<CharacterChangedEventArgs> ApiUpdateRequested;
 
         /// <summary>
         /// Fired whenever the current character changed (because of a button press).
@@ -532,7 +532,7 @@ namespace EVEMon.LogitechG15
                                                                skillCount == 1 ? String.Empty : "s"), m_defaultFont));
 
             RenderLines();
-            UpdateLcdDisplay(NativeMethods.LGLCD_PRIORITY_ALERT);
+            UpdateLcdDisplay(NativeMethods.LGLcdPriorityAlert);
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace EVEMon.LogitechG15
                 int left = (G15Width / 2) - (splashLogo.Width / 2);
                 int top = (G15Height / 2) - (splashLogo.Height / 2);
                 m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
-                UpdateLcdDisplay(NativeMethods.LGLCD_PRIORITY_ALERT);
+                UpdateLcdDisplay(NativeMethods.LGLcdPriorityAlert);
             }
         }
 
@@ -683,8 +683,8 @@ namespace EVEMon.LogitechG15
         /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen.
         /// </summary>
         /// <param name="priority"></param>
-        /// <remarks>The default priority is <see cref="NativeMethods.LGLCD_PRIORITY_NORMAL"/></remarks>
-        private unsafe void UpdateLcdDisplay(uint priority = NativeMethods.LGLCD_PRIORITY_NORMAL)
+        /// <remarks>The default priority is <see cref="NativeMethods.LGLcdPriorityNormal"/></remarks>
+        private unsafe void UpdateLcdDisplay(uint priority = NativeMethods.LGLcdPriorityNormal)
         {
             // Locking should not be necessary but i'll keep it here
             lock (new Object())
@@ -794,23 +794,23 @@ namespace EVEMon.LogitechG15
         /// Occurs when some of the G15 screen buttons are pressed.
         /// </summary>
         /// <param name="device"></param>
-        /// <param name="dwButtons"></param>
-        /// <param name="pContext"></param>
+        /// <param name="pressedButtons"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        private int OnButtonsPressed(int device, int dwButtons, IntPtr pContext)
+        private int OnButtonsPressed(int device, int pressedButtons, IntPtr context)
         {
-            if (m_oldButtonState == dwButtons)
+            if (m_oldButtonState == pressedButtons)
                 return 0;
 
             // Gets all buttons who haven't been pressed last time
-            int press = (m_oldButtonState ^ dwButtons) & dwButtons;
+            int press = (m_oldButtonState ^ pressedButtons) & pressedButtons;
 
             // Displays the characters' list or move to the next char if the list is already displayed.
-            if ((press & NativeMethods.LGLCDBUTTON_BUTTON0) != 0)
+            if ((press & NativeMethods.LGLcdButton0) != 0)
                 DisplayCharactersList();
 
             // Move to the first character to complete his training
-            if ((press & NativeMethods.LGLCDBUTTON_BUTTON1) != 0)
+            if ((press & NativeMethods.LGLcdButton1) != 0)
             {
                 // Select next skill ready char
                 if (MonitoredCharacters.Count() == 0)
@@ -825,20 +825,20 @@ namespace EVEMon.LogitechG15
             }
 
             // Forces a refresh from CCP
-            if ((press & NativeMethods.LGLCDBUTTON_BUTTON2) != 0)
+            if ((press & NativeMethods.LGLcdButton2) != 0)
             {
                 if (m_state == LcdState.Character || m_state == LcdState.CharacterList)
                 {
                     m_refreshCharacter = CurrentCharacter;
-                    if (APIUpdateRequested != null)
-                        APIUpdateRequested(this, new CharacterChangedEventArgs(m_refreshCharacter));
+                    if (ApiUpdateRequested != null)
+                        ApiUpdateRequested(this, new CharacterChangedEventArgs(m_refreshCharacter));
 
                     SwitchState(LcdState.Refreshing);
                 }
             }
 
             // Switch autocycle ON/OFF
-            if ((press & NativeMethods.LGLCDBUTTON_BUTTON3) != 0)
+            if ((press & NativeMethods.LGLcdButton3) != 0)
             {
                 // Switch autocycle on/off
                 SwitchCycle();
@@ -850,7 +850,7 @@ namespace EVEMon.LogitechG15
                 m_cycleTime = DateTime.Now;
             }
 
-            m_oldButtonState = dwButtons;
+            m_oldButtonState = pressedButtons;
             return 0;
         }
 
