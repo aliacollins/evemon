@@ -687,7 +687,7 @@ namespace EVEMon.LogitechG15
         private unsafe void UpdateLcdDisplay(uint priority = NativeMethods.LGLCD_PRIORITY_NORMAL)
         {
             // Locking should not be necessary but i'll keep it here
-            lock (m_bmpLCD)
+            lock (new Object())
             {
                 int width = m_bmpLCD.Width;
                 int height = m_bmpLCD.Height;
