@@ -182,7 +182,6 @@ namespace EVEMon.Common
         /// </summary>
         internal void ForceUpdate(bool retryOnError)
         {
-            Enabled = true;
             m_forceUpdate = true;
             m_retryOnForceUpdateError |= retryOnError;
         }
