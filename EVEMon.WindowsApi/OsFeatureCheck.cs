@@ -5,7 +5,7 @@ namespace EVEMon.WindowsApi
     /// <summary>
     /// Allows for quick checks for support of various opperating system features
     /// </summary>
-    public static class OsFeatureCheck
+    public static class OSFeatureCheck
     {
         /// <summary>
         /// Checks to see if the current opperating system is Windows

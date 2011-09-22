@@ -13,12 +13,12 @@ namespace EVEMon.WindowsApi
         /// Calls SetCurrentProcessExplicitAppUserModelID() to set the current process AppID.
         /// </summary>
         /// <param name="appId">128 character or smaller Application ID.</param>
-        public static void SetProcessAppID(string appId)
+        public static void SetProcessAppId(string appId)
         {
-            if (!OsFeatureCheck.TaskbarSupported)
+            if (!OSFeatureCheck.TaskbarSupported)
                 return;
 
-            if (appId.Length > 128)
+            if (String.IsNullOrWhiteSpace(appId) || appId.Length > 128)
                 throw new ArgumentException("AppID must be 128 characters or less", "appId");
 
             SafeNativeMethods.SetCurrentProcessExplicitAppUserModelID(appId);
