@@ -766,7 +766,7 @@ namespace EVEMon
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                               "Not yet trained to Level I ({0}%)\n", Math.Floor(skill.PercentCompleted));
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Next level I: {0:#,##0} skill points remaining\n", pointsLeft);
+                                              "Next level I: {0:N0} skill points remaining\n", pointsLeft);
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                               "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(untrainedToolTip, skill);
@@ -781,7 +781,7 @@ namespace EVEMon
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                                      "Partially Completed ({0}%)\n", Math.Floor(skill.PercentCompleted));
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Training to level {0}: {1:#,##0} skill points remaining\n",
+                                                     "Training to level {0}: {1:N0} skill points remaining\n",
                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                                      "Training time remaining: {0}", remainingTimeText);
@@ -796,10 +796,10 @@ namespace EVEMon
                 {
                     StringBuilder levelCompleteToolTip = new StringBuilder();
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                      "Completed Level {0}: {1:#,##0}/{2:#,##0}\n",
+                                                      "Completed Level {0}: {1:N0}/{2:N0}\n",
                                                       Skill.GetRomanFromInt(skill.Level), sp, nextLevelSP);
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                      "Next level {0}: {1:#,##0} skill points required\n",
+                                                      "Next level {0}: {1:N0} skill points required\n",
                                                       Skill.GetRomanFromInt(nextLevel), pointsLeft);
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                                       "Training Time: {0}", remainingTimeText);
@@ -809,7 +809,7 @@ namespace EVEMon
 
                 // Lv 5 completed
                 StringBuilder lv5ToolTip = new StringBuilder();
-                lv5ToolTip.AppendFormat(CultureConstants.DefaultCulture, "Level V Complete: {0:#,##0}/{1:#,##0}\n", sp,
+                lv5ToolTip.AppendFormat(CultureConstants.DefaultCulture, "Level V Complete: {0:N0}/{1:N0}\n", sp,
                                         nextLevelSP);
                 lv5ToolTip.Append("No further training required\n");
                 AddSkillBoilerPlate(lv5ToolTip, skill);
@@ -820,7 +820,7 @@ namespace EVEMon
             StringBuilder calculationErrorToolTip = new StringBuilder();
             calculationErrorToolTip.AppendLine("Partially Trained (Could not cacluate all skill details)");
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                 "Next level {0}: {1:#,##0} skill points remaining\n", nextLevel, pointsLeft);
+                                                 "Next level {0}: {1:N0} skill points remaining\n", nextLevel, pointsLeft);
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                                  "Training time remaining: {0}", remainingTimeText);
             AddSkillBoilerPlate(calculationErrorToolTip, skill);
@@ -838,7 +838,7 @@ namespace EVEMon
             toolTip.AppendLine(skill.DescriptionNL);
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "\nPrimary: {0}, ", skill.PrimaryAttribute);
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.SecondaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:#,##0} SP/hour)", skill.SkillPointsPerHour);
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:N0} SP/hour)", skill.SkillPointsPerHour);
         }
 
         /// <summary>
@@ -864,13 +864,13 @@ namespace EVEMon
                 double percentDoneSkills = (1.0 * Math.Min(known, maxKnown)) / maxKnown;
 
                 return String.Format(CultureConstants.DefaultCulture,
-                                     "Points Completed: {0:#,##0} of {1:#,##0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
+                                     "Points Completed: {0:N0} of {1:N0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
                                      totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
             }
 
             // The group has been completed !
             return String.Format(CultureConstants.DefaultCulture,
-                                 "Skill Group completed: {0:#,##0}/{1:#,##0} (100%)\nSkills: {2:#}/{3:#} (100%)",
+                                 "Skill Group completed: {0:N0}/{1:N0} (100%)\nSkills: {2}/{3} (100%)",
                                  totalSP, maxSP, known, maxKnown);
         }
 

@@ -398,7 +398,7 @@ namespace EVEMon.SkillPlanner
 
                 // Display the Perfect ME
                 if (tabControl.SelectedTab == tpManufacturing)
-                    lblPerfectMEValue.Text = perfectME.ToString("#,##0");
+                    lblPerfectMEValue.Text = perfectME.ToString("N0");
 
                 // Show/Hide the "no item required" label and autoresize the columns 
                 PropertiesList.Visible = PropertiesList.Items.Count > 0;

@@ -410,7 +410,7 @@ namespace EVEMon.LogitechG15
         private void RenderWalletBalance()
         {
             decimal balance = CurrentCharacter.Balance;
-            string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0} ISK", balance.ToString("#,##0.#0"));
+            string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0} ISK", balance.ToString("N2"));
             SizeF size = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             SizeF charNameSize = m_lcdCanvas.MeasureString(CurrentCharacter.AdornedName, m_defaultFont);
             float availableWidth = (G15Width - charNameSize.Width);

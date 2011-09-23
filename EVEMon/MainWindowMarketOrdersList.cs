@@ -524,7 +524,7 @@ namespace EVEMon
                 case MarketOrderColumn.InitialVolume:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.InitialVolume.ToString("#,##0")));
+                                     : String.Format(CultureConstants.DefaultCulture, order.InitialVolume.ToString("N0")));
                     break;
                 case MarketOrderColumn.Issued:
                     item.Text = order.Issued.ToLocalTime().ToShortDateString();
@@ -543,7 +543,7 @@ namespace EVEMon
                 case MarketOrderColumn.MinimumVolume:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.MinVolume.ToString("#,##0")));
+                                     : String.Format(CultureConstants.DefaultCulture, order.MinVolume.ToString("N0")));
                     break;
                 case MarketOrderColumn.Region:
                     item.Text = order.Station.SolarSystem.Constellation.Region.Name;
@@ -551,7 +551,7 @@ namespace EVEMon
                 case MarketOrderColumn.RemainingVolume:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.RemainingVolume.ToString("#,##0")));
+                                     : String.Format(CultureConstants.DefaultCulture, order.RemainingVolume.ToString("N0")));
                     break;
                 case MarketOrderColumn.SolarSystem:
                     item.Text = order.Station.SolarSystem.Name;
@@ -564,13 +564,13 @@ namespace EVEMon
                 case MarketOrderColumn.TotalPrice:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.TotalPrice.ToString("#,##0.#0")));
+                                     : String.Format(CultureConstants.DefaultCulture, order.TotalPrice.ToString("N2")));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.UnitaryPrice.ToString("#,##0.#0")));
+                                     : String.Format(CultureConstants.DefaultCulture, order.UnitaryPrice.ToString("N2")));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.Volume:
@@ -579,12 +579,12 @@ namespace EVEMon
                                                    ? MarketOrder.Format(order.RemainingVolume,
                                                                         AbbreviationFormat.AbbreviationSymbols)
                                                    : String.Format(CultureConstants.DefaultCulture,
-                                                                   order.RemainingVolume.ToString("#,##0"))),
+                                                                   order.RemainingVolume.ToString("N0"))),
                                               (m_numberFormat
                                                    ? MarketOrder.Format(order.InitialVolume,
                                                                         AbbreviationFormat.AbbreviationSymbols)
                                                    : String.Format(CultureConstants.DefaultCulture,
-                                                                   order.InitialVolume.ToString("#,##0"))));
+                                                                   order.InitialVolume.ToString("N0"))));
                     break;
                 case MarketOrderColumn.LastStateChange:
                     item.Text = order.LastStateChange.ToLocalTime().ToShortDateString();
@@ -599,7 +599,7 @@ namespace EVEMon
                         item.Text = (m_numberFormat
                                          ? MarketOrder.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
                                          : String.Format(CultureConstants.DefaultCulture,
-                                                         buyOrder.Escrow.ToString("#,##0.#0")));
+                                                         buyOrder.Escrow.ToString("N2")));
                         item.ForeColor = Color.DarkBlue;
                     }
                     break;

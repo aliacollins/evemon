@@ -38,18 +38,18 @@ namespace EVEMon.Common
             builder.AppendFormat(CultureConstants.DefaultCulture, "Bloodline: {0}{1}", character.Bloodline,
                                  Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "  Balance: {0} ISK{1}",
-                                 character.Balance.ToString("#,##0.00"), Environment.NewLine);
+                                 character.Balance.ToString("N2"), Environment.NewLine);
             builder.AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Intelligence: {0}{1}",
-                                 character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+                                 character.Intelligence.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "    Charisma: {0}{1}",
-                                 character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+                                 character.Charisma.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "  Perception: {0}{1}",
-                                 character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+                                 character.Perception.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "      Memory: {0}{1}",
-                                 character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+                                 character.Memory.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "   Willpower: {0}{1}",
-                                 character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+                                 character.Willpower.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
             builder.AppendLine();
 
             // Implants
