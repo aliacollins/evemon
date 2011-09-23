@@ -34,7 +34,7 @@ namespace EVEMon
 
         // Skills drawing - Skills groups
         private const byte SkillHeaderHeight = 21;
-        private const byte CollapserPadRight = 6;
+        private const byte CollapserPadRight = 4;
 
         // Skills drawing - Font & brushes
         private readonly Font m_skillsFont;
@@ -394,16 +394,18 @@ namespace EVEMon
             Graphics g = e.Graphics;
 
             // Draws the background
-            using (Brush brush = Settings.UI.SafeForWork ?
-                new SolidBrush(Color.FromArgb(75, 75, 75)) :
-                (Brush)new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F), Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
+            using (Brush brush = Settings.UI.SafeForWork
+                                     ? new SolidBrush(Color.FromArgb(75, 75, 75))
+                                     : (Brush)
+                                       new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F),
+                                                               Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
             {
                 g.FillRectangle(brush, e.Bounds);
             }
 
-            using (Pen p = new Pen(Color.FromArgb(100, 100, 100)))
+            using (Pen pen = new Pen(Color.FromArgb(100, 100, 100)))
             {
-                g.DrawLine(p, e.Bounds.Left, e.Bounds.Top, e.Bounds.Right + 1, e.Bounds.Top);
+                g.DrawLine(pen, e.Bounds.Left, e.Bounds.Top, e.Bounds.Right + 1, e.Bounds.Top);
             }
 
             // Measure Texts
@@ -430,21 +432,21 @@ namespace EVEMon
                                                              lbSkills.ItemHeight);
 
             Rectangle skillsSummaryTextRect = new Rectangle(
-                skillGroupNameTextRect.X + m_maxGroupNameWidth + (PadLeft / 2), skillGroupNameTextRect.Y, SkillsSummaryTextWidth,
-                lbSkills.ItemHeight);
+                skillGroupNameTextRect.X + m_maxGroupNameWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
+                SkillsSummaryTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
 
             Rectangle skillsTotalSPTextRect = new Rectangle(
                 skillsSummaryTextRect.X + SkillsSummaryTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                SkillGroupTotalSPTextWidth, lbSkills.ItemHeight);
+                SkillGroupTotalSPTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
 
-            Size skillInTrainingSuffixSize = TextRenderer.MeasureText(g, skillInTrainingSuffix, m_skillsFont, Size.Empty, Format);
+            Size skillInTrainingSuffixSize = TextRenderer.MeasureText(g, skillInTrainingSuffix, m_skillsFont, Size.Empty);
             Rectangle skillInTrainingSuffixRect = new Rectangle(
-                skillsTotalSPTextRect.X + SkillGroupTotalSPTextWidth + (PadLeft), skillGroupNameTextRect.Y,
+                skillsTotalSPTextRect.X + SkillGroupTotalSPTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
                 skillInTrainingSuffixSize.Width, lbSkills.ItemHeight);
 
-            Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty, Format);
+            Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty);
             Rectangle skillQueueRect = new Rectangle(
-                skillInTrainingSuffixRect.X + skillInTrainingSuffixRect.Width + (PadLeft), skillInTrainingSuffixRect.Y,
+                skillInTrainingSuffixRect.X + skillInTrainingSuffixSize.Width, skillInTrainingSuffixRect.Y,
                 skillQueueTextSize.Width, lbSkills.ItemHeight);
 
             // Draw the header
@@ -453,17 +455,19 @@ namespace EVEMon
                                   Format | TextFormatFlags.Right);
             TextRenderer.DrawText(g, skillsTotalSPText, m_skillsFont, skillsTotalSPTextRect, Color.White,
                                   Format | TextFormatFlags.Right);
-            TextRenderer.DrawText(g, skillInTrainingSuffix, m_skillsFont, skillInTrainingSuffixRect, Color.White);
+            TextRenderer.DrawText(g, skillInTrainingSuffix, m_skillsFont, skillInTrainingSuffixRect, Color.White,
+                                  Format | TextFormatFlags.Right);
             TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect, (Settings.UI.SafeForWork
                                                                                              ? Color.White
-                                                                                             : Color.Yellow));
+                                                                                             : Color.Yellow),
+                                  Format | TextFormatFlags.Right);
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
-            Image i = (isCollapsed ? CommonProperties.Resources.Expand : CommonProperties.Resources.Collapse);
+            Image image = (isCollapsed ? CommonProperties.Resources.Expand : CommonProperties.Resources.Collapse);
 
-            g.DrawImageUnscaled(i, new Point(e.Bounds.Right - i.Width - CollapserPadRight,
-                                             (SkillHeaderHeight / 2) - (i.Height / 2) + e.Bounds.Top));
+            g.DrawImageUnscaled(image, new Point(e.Bounds.Right - image.Width - CollapserPadRight,
+                                                 (SkillHeaderHeight / 2) - (image.Height / 2) + e.Bounds.Top));
         }
 
         /// <summary>

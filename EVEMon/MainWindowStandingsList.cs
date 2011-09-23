@@ -26,7 +26,7 @@ namespace EVEMon
 
         // Standings drawing - Standings groups
         private const int StandingGroupHeaderHeight = 21;
-        private const int CollapserPadRight = 6;
+        private const int CollapserPadRight = 4;
 
         private readonly Font m_standingsFont;
         private readonly Font m_standingsBoldFont;
