@@ -28,18 +28,18 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label lblImplants;
-            System.Windows.Forms.PictureBox pictureBox5;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizationControl));
-            System.Windows.Forms.PictureBox pictureBox4;
-            System.Windows.Forms.PictureBox pictureBox3;
-            System.Windows.Forms.PictureBox pictureBox2;
-            System.Windows.Forms.PictureBox pictureBox1;
-            System.Windows.Forms.PictureBox pictureBox6;
-            System.Windows.Forms.PictureBox pictureBox7;
-            System.Windows.Forms.PictureBox pictureBox8;
-            System.Windows.Forms.PictureBox pictureBox9;
-            System.Windows.Forms.PictureBox pictureBox10;
+            this.lblImplants = new System.Windows.Forms.Label();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.lblMemory = new System.Windows.Forms.Label();
             this.lblWillpower = new System.Windows.Forms.Label();
             this.lblCharisma = new System.Windows.Forms.Label();
@@ -84,143 +84,132 @@ namespace EVEMon.SkillPlanner
             this.pbWILImplants = new EVEMon.SkillPlanner.AttributeBarControl();
             this.pbMEMImplants = new EVEMon.SkillPlanner.AttributeBarControl();
             this.pbUnassigned = new EVEMon.SkillPlanner.AttributeBarControl();
-            lblImplants = new System.Windows.Forms.Label();
-            pictureBox5 = new System.Windows.Forms.PictureBox();
-            pictureBox4 = new System.Windows.Forms.PictureBox();
-            pictureBox3 = new System.Windows.Forms.PictureBox();
-            pictureBox2 = new System.Windows.Forms.PictureBox();
-            pictureBox1 = new System.Windows.Forms.PictureBox();
-            pictureBox6 = new System.Windows.Forms.PictureBox();
-            pictureBox7 = new System.Windows.Forms.PictureBox();
-            pictureBox8 = new System.Windows.Forms.PictureBox();
-            pictureBox9 = new System.Windows.Forms.PictureBox();
-            pictureBox10 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             this.tblayoutComparePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblImplants
             // 
-            lblImplants.Location = new System.Drawing.Point(332, 41);
-            lblImplants.Name = "lblImplants";
-            lblImplants.Size = new System.Drawing.Size(65, 16);
-            lblImplants.TabIndex = 60;
-            lblImplants.Text = "Implants";
-            lblImplants.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblImplants.Location = new System.Drawing.Point(332, 41);
+            this.lblImplants.Name = "lblImplants";
+            this.lblImplants.Size = new System.Drawing.Size(65, 16);
+            this.lblImplants.TabIndex = 60;
+            this.lblImplants.Text = "Implants";
+            this.lblImplants.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox5
             // 
-            pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            pictureBox5.Location = new System.Drawing.Point(9, 211);
-            pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new System.Drawing.Size(32, 28);
-            pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox5.TabIndex = 58;
-            pictureBox5.TabStop = false;
+            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
+            this.pictureBox5.Location = new System.Drawing.Point(9, 211);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox5.TabIndex = 58;
+            this.pictureBox5.TabStop = false;
             // 
             // pictureBox4
             // 
-            pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            pictureBox4.Location = new System.Drawing.Point(9, 173);
-            pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new System.Drawing.Size(32, 28);
-            pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox4.TabIndex = 57;
-            pictureBox4.TabStop = false;
+            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
+            this.pictureBox4.Location = new System.Drawing.Point(9, 173);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox4.TabIndex = 57;
+            this.pictureBox4.TabStop = false;
             // 
             // pictureBox3
             // 
-            pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            pictureBox3.Location = new System.Drawing.Point(9, 135);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new System.Drawing.Size(32, 28);
-            pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox3.TabIndex = 56;
-            pictureBox3.TabStop = false;
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(9, 135);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox3.TabIndex = 56;
+            this.pictureBox3.TabStop = false;
             // 
             // pictureBox2
             // 
-            pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            pictureBox2.Location = new System.Drawing.Point(9, 59);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new System.Drawing.Size(32, 28);
-            pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox2.TabIndex = 55;
-            pictureBox2.TabStop = false;
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(9, 59);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox2.TabIndex = 55;
+            this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            pictureBox1.Location = new System.Drawing.Point(9, 97);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new System.Drawing.Size(32, 28);
-            pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox1.TabIndex = 54;
-            pictureBox1.TabStop = false;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(9, 97);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 54;
+            this.pictureBox1.TabStop = false;
             // 
             // pictureBox6
             // 
-            pictureBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            pictureBox6.Location = new System.Drawing.Point(394, 59);
-            pictureBox6.Name = "pictureBox6";
-            pictureBox6.Size = new System.Drawing.Size(32, 28);
-            pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox6.TabIndex = 114;
-            pictureBox6.TabStop = false;
+            this.pictureBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(394, 59);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox6.TabIndex = 114;
+            this.pictureBox6.TabStop = false;
             // 
             // pictureBox7
             // 
-            pictureBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
-            pictureBox7.Location = new System.Drawing.Point(394, 97);
-            pictureBox7.Name = "pictureBox7";
-            pictureBox7.Size = new System.Drawing.Size(32, 28);
-            pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox7.TabIndex = 115;
-            pictureBox7.TabStop = false;
+            this.pictureBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
+            this.pictureBox7.Location = new System.Drawing.Point(394, 97);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox7.TabIndex = 115;
+            this.pictureBox7.TabStop = false;
             // 
             // pictureBox8
             // 
-            pictureBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-            pictureBox8.Location = new System.Drawing.Point(394, 135);
-            pictureBox8.Name = "pictureBox8";
-            pictureBox8.Size = new System.Drawing.Size(32, 28);
-            pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox8.TabIndex = 116;
-            pictureBox8.TabStop = false;
+            this.pictureBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
+            this.pictureBox8.Location = new System.Drawing.Point(394, 135);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox8.TabIndex = 116;
+            this.pictureBox8.TabStop = false;
             // 
             // pictureBox9
             // 
-            pictureBox9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
-            pictureBox9.Location = new System.Drawing.Point(394, 173);
-            pictureBox9.Name = "pictureBox9";
-            pictureBox9.Size = new System.Drawing.Size(32, 28);
-            pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox9.TabIndex = 117;
-            pictureBox9.TabStop = false;
+            this.pictureBox9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
+            this.pictureBox9.Location = new System.Drawing.Point(394, 173);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox9.TabIndex = 117;
+            this.pictureBox9.TabStop = false;
             // 
             // pictureBox10
             // 
-            pictureBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
-            pictureBox10.Location = new System.Drawing.Point(394, 211);
-            pictureBox10.Name = "pictureBox10";
-            pictureBox10.Size = new System.Drawing.Size(32, 28);
-            pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            pictureBox10.TabIndex = 118;
-            pictureBox10.TabStop = false;
+            this.pictureBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
+            this.pictureBox10.Location = new System.Drawing.Point(394, 211);
+            this.pictureBox10.Name = "pictureBox10";
+            this.pictureBox10.Size = new System.Drawing.Size(32, 28);
+            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox10.TabIndex = 118;
+            this.pictureBox10.TabStop = false;
             // 
             // lblMemory
             // 
@@ -710,11 +699,11 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(pictureBox10);
-            this.Controls.Add(pictureBox9);
-            this.Controls.Add(pictureBox8);
-            this.Controls.Add(pictureBox7);
-            this.Controls.Add(pictureBox6);
+            this.Controls.Add(this.pictureBox10);
+            this.Controls.Add(this.pictureBox9);
+            this.Controls.Add(this.pictureBox8);
+            this.Controls.Add(this.pictureBox7);
+            this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.lblNotice);
             this.Controls.Add(this.labelDescription);
             this.Controls.Add(this.abMEMInc);
@@ -743,13 +732,13 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.buttonCurrent);
             this.Controls.Add(this.tblayoutComparePanel);
             this.Controls.Add(this.lbWarning);
-            this.Controls.Add(lblImplants);
+            this.Controls.Add(this.lblImplants);
             this.Controls.Add(this.lblBase);
-            this.Controls.Add(pictureBox5);
-            this.Controls.Add(pictureBox4);
-            this.Controls.Add(pictureBox3);
-            this.Controls.Add(pictureBox2);
-            this.Controls.Add(pictureBox1);
+            this.Controls.Add(this.pictureBox5);
+            this.Controls.Add(this.pictureBox4);
+            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbMEM);
             this.Controls.Add(this.lblMemory);
             this.Controls.Add(this.lbWIL);
@@ -763,16 +752,16 @@ namespace EVEMon.SkillPlanner
             this.Name = "AttributesOptimizationControl";
             this.Size = new System.Drawing.Size(435, 417);
             this.Click += new System.EventHandler(this.attributeButton_Click);
-            ((System.ComponentModel.ISupportInitialize)(pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             this.tblayoutComparePanel.ResumeLayout(false);
             this.tblayoutComparePanel.PerformLayout();
             this.ResumeLayout(false);
@@ -826,5 +815,16 @@ namespace EVEMon.SkillPlanner
         private AttributeButtonControl abINTInc;
         private System.Windows.Forms.Label lblNotice;
         private System.Windows.Forms.Label labelDescription;
+        private System.Windows.Forms.Label lblImplants;
+        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.PictureBox pictureBox7;
+        private System.Windows.Forms.PictureBox pictureBox8;
+        private System.Windows.Forms.PictureBox pictureBox9;
+        private System.Windows.Forms.PictureBox pictureBox10;
     }
 }

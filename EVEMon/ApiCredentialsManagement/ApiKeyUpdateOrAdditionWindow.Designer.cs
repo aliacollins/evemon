@@ -32,15 +32,15 @@ namespace EVEMon.ApiCredentialsManagement
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.LinkLabel FeaturesLinkLabel;
-            System.Windows.Forms.LinkLabel ApiKeysLinkLabel;
-            System.Windows.Forms.Label FetchingDataLabel;
-            System.Windows.Forms.Label GuideLabel;
-            System.Windows.Forms.LinkLabel ActiveLinksLabel;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiKeyUpdateOrAdditionWindow));
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Mary Jane");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Ali Baba");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
+            this.FeaturesLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ApiKeysLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.FetchingDataLabel = new System.Windows.Forms.Label();
+            this.GuideLabel = new System.Windows.Forms.Label();
+            this.ActiveLinksLabel = new System.Windows.Forms.LinkLabel();
             this.ButtonNext = new System.Windows.Forms.Button();
             this.ButtonPrevious = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
@@ -76,11 +76,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.NoCorpFeaturesYetPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.NoCorpFeaturesYetLabel = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            FeaturesLinkLabel = new System.Windows.Forms.LinkLabel();
-            ApiKeysLinkLabel = new System.Windows.Forms.LinkLabel();
-            FetchingDataLabel = new System.Windows.Forms.Label();
-            GuideLabel = new System.Windows.Forms.Label();
-            ActiveLinksLabel = new System.Windows.Forms.LinkLabel();
             this.MultiPanel.SuspendLayout();
             this.CredentialsPage.SuspendLayout();
             this.WaitingPage.SuspendLayout();
@@ -103,66 +98,66 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // FeaturesLinkLabel
             // 
-            FeaturesLinkLabel.CausesValidation = false;
-            FeaturesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(75, 15);
-            FeaturesLinkLabel.Location = new System.Drawing.Point(23, 28);
-            FeaturesLinkLabel.Name = "FeaturesLinkLabel";
-            FeaturesLinkLabel.Size = new System.Drawing.Size(476, 18);
-            FeaturesLinkLabel.TabIndex = 1;
-            FeaturesLinkLabel.TabStop = true;
-            FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
+            this.FeaturesLinkLabel.CausesValidation = false;
+            this.FeaturesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(75, 15);
+            this.FeaturesLinkLabel.Location = new System.Drawing.Point(23, 28);
+            this.FeaturesLinkLabel.Name = "FeaturesLinkLabel";
+            this.FeaturesLinkLabel.Size = new System.Drawing.Size(476, 18);
+            this.FeaturesLinkLabel.TabIndex = 1;
+            this.FeaturesLinkLabel.TabStop = true;
+            this.FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
                 " features.";
-            FeaturesLinkLabel.UseCompatibleTextRendering = true;
-            FeaturesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FeaturesLinkLabel_LinkClicked);
+            this.FeaturesLinkLabel.UseCompatibleTextRendering = true;
+            this.FeaturesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FeaturesLinkLabel_LinkClicked);
             // 
             // ApiKeysLinkLabel
             // 
-            ApiKeysLinkLabel.AutoSize = true;
-            ApiKeysLinkLabel.CausesValidation = false;
-            ApiKeysLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(33, 33);
-            ApiKeysLinkLabel.Location = new System.Drawing.Point(23, 10);
-            ApiKeysLinkLabel.Name = "ApiKeysLinkLabel";
-            ApiKeysLinkLabel.Size = new System.Drawing.Size(335, 18);
-            ApiKeysLinkLabel.TabIndex = 0;
-            ApiKeysLinkLabel.TabStop = true;
-            ApiKeysLinkLabel.Text = "Your API keys are available at : https://support.eveonline.com/api";
-            ApiKeysLinkLabel.UseCompatibleTextRendering = true;
-            ApiKeysLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ApiCredentialsLinkLabel_LinkClicked);
+            this.ApiKeysLinkLabel.AutoSize = true;
+            this.ApiKeysLinkLabel.CausesValidation = false;
+            this.ApiKeysLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(33, 33);
+            this.ApiKeysLinkLabel.Location = new System.Drawing.Point(23, 10);
+            this.ApiKeysLinkLabel.Name = "ApiKeysLinkLabel";
+            this.ApiKeysLinkLabel.Size = new System.Drawing.Size(335, 18);
+            this.ApiKeysLinkLabel.TabIndex = 0;
+            this.ApiKeysLinkLabel.TabStop = true;
+            this.ApiKeysLinkLabel.Text = "Your API keys are available at : https://support.eveonline.com/api";
+            this.ApiKeysLinkLabel.UseCompatibleTextRendering = true;
+            this.ApiKeysLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ApiCredentialsLinkLabel_LinkClicked);
             // 
             // FetchingDataLabel
             // 
-            FetchingDataLabel.Location = new System.Drawing.Point(209, 71);
-            FetchingDataLabel.Name = "FetchingDataLabel";
-            FetchingDataLabel.Size = new System.Drawing.Size(153, 24);
-            FetchingDataLabel.TabIndex = 1;
-            FetchingDataLabel.Text = "Fetching data from CCP...";
-            FetchingDataLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.FetchingDataLabel.Location = new System.Drawing.Point(209, 71);
+            this.FetchingDataLabel.Name = "FetchingDataLabel";
+            this.FetchingDataLabel.Size = new System.Drawing.Size(153, 24);
+            this.FetchingDataLabel.TabIndex = 1;
+            this.FetchingDataLabel.Text = "Fetching data from CCP...";
+            this.FetchingDataLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // GuideLabel
             // 
-            GuideLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.GuideLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            GuideLabel.Location = new System.Drawing.Point(3, 3);
-            GuideLabel.Name = "GuideLabel";
-            GuideLabel.Size = new System.Drawing.Size(267, 79);
-            GuideLabel.TabIndex = 3;
-            GuideLabel.Text = "Uncheck the characters you do not want to import.\r\n\r\nYou can also import a charac" +
+            this.GuideLabel.Location = new System.Drawing.Point(3, 3);
+            this.GuideLabel.Name = "GuideLabel";
+            this.GuideLabel.Size = new System.Drawing.Size(267, 79);
+            this.GuideLabel.TabIndex = 3;
+            this.GuideLabel.Text = "Uncheck the characters you do not want to import.\r\n\r\nYou can also import a charac" +
                 "ter and hide it through the API keys management window.";
             // 
             // ActiveLinksLabel
             // 
-            ActiveLinksLabel.CausesValidation = false;
-            ActiveLinksLabel.LinkArea = new System.Windows.Forms.LinkArea(100, 56);
-            ActiveLinksLabel.Location = new System.Drawing.Point(23, 46);
-            ActiveLinksLabel.Name = "ActiveLinksLabel";
-            ActiveLinksLabel.Size = new System.Drawing.Size(476, 30);
-            ActiveLinksLabel.TabIndex = 2;
-            ActiveLinksLabel.TabStop = true;
-            ActiveLinksLabel.Text = "If you have already an API key, you can install it directly by clicking on the [I" +
+            this.ActiveLinksLabel.CausesValidation = false;
+            this.ActiveLinksLabel.LinkArea = new System.Windows.Forms.LinkArea(100, 56);
+            this.ActiveLinksLabel.Location = new System.Drawing.Point(23, 46);
+            this.ActiveLinksLabel.Name = "ActiveLinksLabel";
+            this.ActiveLinksLabel.Size = new System.Drawing.Size(476, 30);
+            this.ActiveLinksLabel.TabIndex = 2;
+            this.ActiveLinksLabel.TabStop = true;
+            this.ActiveLinksLabel.Text = "If you have already an API key, you can install it directly by clicking on the [I" +
                 "nstall] link at :\r\nhttps://support.eveonline.com/api/key/activeinstalllinks";
-            ActiveLinksLabel.UseCompatibleTextRendering = true;
-            ActiveLinksLabel.Visible = false;
-            ActiveLinksLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ActiveLinksLabel_LinkClicked);
+            this.ActiveLinksLabel.UseCompatibleTextRendering = true;
+            this.ActiveLinksLabel.Visible = false;
+            this.ActiveLinksLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ActiveLinksLabel_LinkClicked);
             // 
             // ButtonNext
             // 
@@ -216,9 +211,9 @@ namespace EVEMon.ApiCredentialsManagement
             // CredentialsPage
             // 
             this.CredentialsPage.CausesValidation = false;
-            this.CredentialsPage.Controls.Add(ActiveLinksLabel);
-            this.CredentialsPage.Controls.Add(FeaturesLinkLabel);
-            this.CredentialsPage.Controls.Add(ApiKeysLinkLabel);
+            this.CredentialsPage.Controls.Add(this.ActiveLinksLabel);
+            this.CredentialsPage.Controls.Add(this.FeaturesLinkLabel);
+            this.CredentialsPage.Controls.Add(this.ApiKeysLinkLabel);
             this.CredentialsPage.Controls.Add(this.VerificationCodeTextBox);
             this.CredentialsPage.Controls.Add(this.IDTextBox);
             this.CredentialsPage.Controls.Add(this.VerificationCodeLabel);
@@ -272,7 +267,7 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // WaitingPage
             // 
-            this.WaitingPage.Controls.Add(FetchingDataLabel);
+            this.WaitingPage.Controls.Add(this.FetchingDataLabel);
             this.WaitingPage.Controls.Add(this.Throbber);
             this.WaitingPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.WaitingPage.Location = new System.Drawing.Point(0, 0);
@@ -371,7 +366,7 @@ namespace EVEMon.ApiCredentialsManagement
             // CharactersListPage
             // 
             this.CharactersListPage.Controls.Add(this.CharactersListView);
-            this.CharactersListPage.Controls.Add(GuideLabel);
+            this.CharactersListPage.Controls.Add(this.GuideLabel);
             this.CharactersListPage.Controls.Add(this.WarningLabel);
             this.CharactersListPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CharactersListPage.Location = new System.Drawing.Point(0, 0);
@@ -658,5 +653,10 @@ namespace EVEMon.ApiCredentialsManagement
         private System.Windows.Forms.Label CachedWarningLabel;
         private MultiPanelPage NoCorpFeaturesYetPage;
         private System.Windows.Forms.Label NoCorpFeaturesYetLabel;
+        private System.Windows.Forms.LinkLabel ApiKeysLinkLabel;
+        private System.Windows.Forms.LinkLabel FeaturesLinkLabel;
+        private System.Windows.Forms.LinkLabel ActiveLinksLabel;
+        private System.Windows.Forms.Label FetchingDataLabel;
+        private System.Windows.Forms.Label GuideLabel;
     }
 }

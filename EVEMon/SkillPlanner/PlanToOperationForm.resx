@@ -112,23 +112,17 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="label1.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="warningPicture.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="warningPicture.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAA5wAA
-        AOcB8BtYtQAAB5hJREFUWEe9l3tQVPcVx388RUTeKFpjmhrfD9Kad2bMmESxYya2aUendaYzNPUPp52E
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAA5gAA
+        AOYBIly6UQAAB5hJREFUWEe9l3tQVPcVx388RUTeKFpjmhrfD9Kad2bMmESxYya2aUendaYzNPUPp52E
         ZGLbpDEt1kgQIWDiAw01CRiRh7A8FY0UdkmBJAgxIAvugizPfe+9u8s+2P32/C64wTYPoGnuzJm77My9
         38/3e865d2EA2GxKqGYPWqpZm6aI7ReqmN9s7sGvma34XKHGf9hz7SnYrsRCns2e+74BXnLIlwFD72L8
         +k6MljBlfDQLnQ3EjBOg6EPJ/Yjnxm8BSyO8mmzYLi9AfSbb+30BvOyQ3wsMnwFMVwFDJcbbdmC0mPXM
@@ -163,10 +157,4 @@
         zm9OViqdD02pN+jzQaq/T9YBOqd8WZ/9lR17eRvbQhMQ/m+Xc4Q7dCv0TAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="label5.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="label3.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
 </root>

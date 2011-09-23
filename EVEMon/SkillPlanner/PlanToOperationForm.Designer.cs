@@ -30,32 +30,28 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label label1;
-            System.Windows.Forms.PictureBox warningPicture;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanToOperationForm));
-            System.Windows.Forms.Label label5;
-            System.Windows.Forms.Label label3;
+            this.label1 = new System.Windows.Forms.Label();
+            this.warningPicture = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.previousButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
-            this.rootMultiPanel = new MultiPanel();
-            this.additionPage = new MultiPanelPage();
+            this.rootMultiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
+            this.additionPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.priorityGroup = new System.Windows.Forms.GroupBox();
             this.priorityLabel = new System.Windows.Forms.Label();
             this.lbExisting = new System.Windows.Forms.Label();
             this.priorityNumericBox = new System.Windows.Forms.NumericUpDown();
             this.additionsListBox = new System.Windows.Forms.ListBox();
-            this.dependenciesSuppressionPage = new MultiPanelPage();
+            this.dependenciesSuppressionPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.suppressionListBox = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.uselessPrereqsSuppressionPage = new MultiPanelPage();
+            this.uselessPrereqsSuppressionPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.uselessPrereqsListBox = new System.Windows.Forms.ListBox();
             this.uselessPrereqsCheckbox = new System.Windows.Forms.CheckBox();
-            label1 = new System.Windows.Forms.Label();
-            warningPicture = new System.Windows.Forms.PictureBox();
-            label5 = new System.Windows.Forms.Label();
-            label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(warningPicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.warningPicture)).BeginInit();
             this.rootMultiPanel.SuspendLayout();
             this.additionPage.SuspendLayout();
             this.priorityGroup.SuspendLayout();
@@ -66,41 +62,41 @@ namespace EVEMon.SkillPlanner
             // 
             // label1
             // 
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(4, 4);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(175, 13);
-            label1.TabIndex = 1;
-            label1.Text = "The following entries will be added.";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 4);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(175, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "The following entries will be added.";
             // 
             // warningPicture
             // 
-            warningPicture.Image = ((System.Drawing.Image)(resources.GetObject("warningPicture.Image")));
-            warningPicture.Location = new System.Drawing.Point(3, 3);
-            warningPicture.Name = "warningPicture";
-            warningPicture.Size = new System.Drawing.Size(32, 32);
-            warningPicture.TabIndex = 0;
-            warningPicture.TabStop = false;
+            this.warningPicture.Image = ((System.Drawing.Image)(resources.GetObject("warningPicture.Image")));
+            this.warningPicture.Location = new System.Drawing.Point(3, 3);
+            this.warningPicture.Name = "warningPicture";
+            this.warningPicture.Size = new System.Drawing.Size(32, 32);
+            this.warningPicture.TabIndex = 0;
+            this.warningPicture.TabStop = false;
             // 
             // label5
             // 
-            label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(7, 229);
-            label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(90, 13);
-            label5.TabIndex = 14;
-            label5.Text = "Add with priority:";
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 229);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Add with priority:";
             // 
             // label3
             // 
-            label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(6, 17);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(285, 26);
-            label3.TabIndex = 6;
-            label3.Text = "You have exisiting pre-requisites in your plan, so you must\r\n\r\n";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(287, 26);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "You have exisiting pre-requisites in your plan, so you must\r\n\r\n";
             // 
             // previousButton
             // 
@@ -146,16 +142,16 @@ namespace EVEMon.SkillPlanner
             this.rootMultiPanel.Controls.Add(this.uselessPrereqsSuppressionPage);
             this.rootMultiPanel.Location = new System.Drawing.Point(12, 12);
             this.rootMultiPanel.Name = "rootMultiPanel";
-            this.rootMultiPanel.SelectedPage = this.additionPage;
+            this.rootMultiPanel.SelectedPage = this.dependenciesSuppressionPage;
             this.rootMultiPanel.Size = new System.Drawing.Size(304, 350);
             this.rootMultiPanel.TabIndex = 0;
             // 
             // additionPage
             // 
-            this.additionPage.Controls.Add(label5);
+            this.additionPage.Controls.Add(this.label5);
             this.additionPage.Controls.Add(this.priorityGroup);
             this.additionPage.Controls.Add(this.priorityNumericBox);
-            this.additionPage.Controls.Add(label1);
+            this.additionPage.Controls.Add(this.label1);
             this.additionPage.Controls.Add(this.additionsListBox);
             this.additionPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.additionPage.Location = new System.Drawing.Point(0, 0);
@@ -168,7 +164,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.priorityGroup.Controls.Add(this.priorityLabel);
             this.priorityGroup.Controls.Add(this.lbExisting);
-            this.priorityGroup.Controls.Add(label3);
+            this.priorityGroup.Controls.Add(this.label3);
             this.priorityGroup.Location = new System.Drawing.Point(7, 263);
             this.priorityGroup.Name = "priorityGroup";
             this.priorityGroup.Size = new System.Drawing.Size(294, 84);
@@ -234,11 +230,11 @@ namespace EVEMon.SkillPlanner
             // 
             this.dependenciesSuppressionPage.Controls.Add(this.suppressionListBox);
             this.dependenciesSuppressionPage.Controls.Add(this.label2);
-            this.dependenciesSuppressionPage.Controls.Add(warningPicture);
+            this.dependenciesSuppressionPage.Controls.Add(this.warningPicture);
             this.dependenciesSuppressionPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dependenciesSuppressionPage.Location = new System.Drawing.Point(0, 0);
             this.dependenciesSuppressionPage.Name = "dependenciesSuppressionPage";
-            this.dependenciesSuppressionPage.Size = new System.Drawing.Size(357, 273);
+            this.dependenciesSuppressionPage.Size = new System.Drawing.Size(304, 350);
             this.dependenciesSuppressionPage.TabIndex = 0;
             this.dependenciesSuppressionPage.Text = "dependenciesSuppressionPage";
             // 
@@ -251,7 +247,7 @@ namespace EVEMon.SkillPlanner
             this.suppressionListBox.Location = new System.Drawing.Point(4, 41);
             this.suppressionListBox.Name = "suppressionListBox";
             this.suppressionListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.suppressionListBox.Size = new System.Drawing.Size(350, 225);
+            this.suppressionListBox.Size = new System.Drawing.Size(297, 290);
             this.suppressionListBox.TabIndex = 2;
             // 
             // label2
@@ -308,12 +304,13 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.rootMultiPanel);
             this.Controls.Add(this.previousButton);
             this.Controls.Add(this.cancelButton);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PlanToOperationForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "PlanToOperationForm";
-            ((System.ComponentModel.ISupportInitialize)(warningPicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.warningPicture)).EndInit();
             this.rootMultiPanel.ResumeLayout(false);
             this.additionPage.ResumeLayout(false);
             this.additionPage.PerformLayout();
@@ -346,5 +343,9 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label priorityLabel;
         private System.Windows.Forms.Label lbExisting;
         private System.Windows.Forms.NumericUpDown priorityNumericBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox warningPicture;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label3;
     }
 }

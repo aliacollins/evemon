@@ -32,8 +32,8 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ToolStripSeparator tsPagesSeparator;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterMonitor));
+            this.tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining = new System.Windows.Forms.Panel();
             this.tlpStatus = new System.Windows.Forms.TableLayoutPanel();
             this.flpStatusLabels = new System.Windows.Forms.FlowLayoutPanel();
@@ -103,7 +103,6 @@ namespace EVEMon
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.flpStatusLabels.SuspendLayout();
@@ -131,9 +130,9 @@ namespace EVEMon
             // 
             // tsPagesSeparator
             // 
-            tsPagesSeparator.Name = "tsPagesSeparator";
-            tsPagesSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            tsPagesSeparator.Size = new System.Drawing.Size(6, 25);
+            this.tsPagesSeparator.Name = "tsPagesSeparator";
+            this.tsPagesSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.tsPagesSeparator.Size = new System.Drawing.Size(6, 25);
             // 
             // pnlTraining
             // 
@@ -774,7 +773,7 @@ namespace EVEMon
             this.researchIcon,
             this.mailMessagesIcon,
             this.eveNotificationsIcon,
-            tsPagesSeparator,
+            this.tsPagesSeparator,
             this.toggleSkillsIcon,
             this.tsToggleSeparator,
             this.featuresMenu});
@@ -1038,5 +1037,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton standingsIcon;
         private MultiPanelPage standingsPage;
         private MainWindowStandingsList standingsList;
+        private System.Windows.Forms.ToolStripSeparator tsPagesSeparator;
     }
 }

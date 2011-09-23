@@ -32,14 +32,14 @@ namespace EVEMon.ApiCredentialsManagement
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Label labelName;
-            System.Windows.Forms.Label labelErrorHeader;
+            this.labelName = new System.Windows.Forms.Label();
+            this.labelErrorHeader = new System.Windows.Forms.Label();
             this.urlRadio = new System.Windows.Forms.RadioButton();
             this.urlTextBox = new System.Windows.Forms.TextBox();
             this.fileRadio = new System.Windows.Forms.RadioButton();
             this.fileTextBox = new System.Windows.Forms.TextBox();
             this.fileButton = new System.Windows.Forms.Button();
-            this.urlThrobber = new Throbber();
+            this.urlThrobber = new EVEMon.Common.Controls.Throbber();
             this.namePanel = new System.Windows.Forms.Panel();
             this.nameTextBox = new System.Windows.Forms.TextBox();
             this.errorPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -47,8 +47,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.delayQueryTimer = new System.Windows.Forms.Timer(this.components);
-            labelName = new System.Windows.Forms.Label();
-            labelErrorHeader = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.urlThrobber)).BeginInit();
             this.namePanel.SuspendLayout();
             this.errorPanel.SuspendLayout();
@@ -56,22 +54,22 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // labelName
             // 
-            labelName.AutoSize = true;
-            labelName.Location = new System.Drawing.Point(5, 7);
-            labelName.Name = "labelName";
-            labelName.Size = new System.Drawing.Size(34, 13);
-            labelName.TabIndex = 0;
-            labelName.Text = "Name";
+            this.labelName.AutoSize = true;
+            this.labelName.Location = new System.Drawing.Point(5, 7);
+            this.labelName.Name = "labelName";
+            this.labelName.Size = new System.Drawing.Size(34, 13);
+            this.labelName.TabIndex = 0;
+            this.labelName.Text = "Name";
             // 
             // labelErrorHeader
             // 
-            labelErrorHeader.AutoSize = true;
-            labelErrorHeader.ForeColor = System.Drawing.Color.DarkRed;
-            labelErrorHeader.Location = new System.Drawing.Point(3, 0);
-            labelErrorHeader.Name = "labelErrorHeader";
-            labelErrorHeader.Size = new System.Drawing.Size(272, 13);
-            labelErrorHeader.TabIndex = 8;
-            labelErrorHeader.Text = "An error occurred while trying to import this character :";
+            this.labelErrorHeader.AutoSize = true;
+            this.labelErrorHeader.ForeColor = System.Drawing.Color.DarkRed;
+            this.labelErrorHeader.Location = new System.Drawing.Point(3, 0);
+            this.labelErrorHeader.Name = "labelErrorHeader";
+            this.labelErrorHeader.Size = new System.Drawing.Size(272, 13);
+            this.labelErrorHeader.TabIndex = 8;
+            this.labelErrorHeader.Text = "An error occurred while trying to import this character :";
             // 
             // urlRadio
             // 
@@ -136,7 +134,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.urlThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.urlThrobber.Name = "urlThrobber";
             this.urlThrobber.Size = new System.Drawing.Size(24, 24);
-            this.urlThrobber.State = ThrobberState.Stopped;
+            this.urlThrobber.State = EVEMon.Common.ThrobberState.Stopped;
             this.urlThrobber.TabIndex = 5;
             this.urlThrobber.TabStop = false;
             // 
@@ -145,7 +143,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.namePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.namePanel.Controls.Add(this.nameTextBox);
-            this.namePanel.Controls.Add(labelName);
+            this.namePanel.Controls.Add(this.labelName);
             this.namePanel.Location = new System.Drawing.Point(85, 87);
             this.namePanel.Name = "namePanel";
             this.namePanel.Size = new System.Drawing.Size(280, 31);
@@ -165,7 +163,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.errorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.errorPanel.Controls.Add(labelErrorHeader);
+            this.errorPanel.Controls.Add(this.labelErrorHeader);
             this.errorPanel.Controls.Add(this.labelError);
             this.errorPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.errorPanel.Location = new System.Drawing.Point(80, 87);
@@ -229,6 +227,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.Controls.Add(this.fileRadio);
             this.Controls.Add(this.urlTextBox);
             this.Controls.Add(this.urlRadio);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(597, 193);
@@ -258,5 +257,7 @@ namespace EVEMon.ApiCredentialsManagement
         private System.Windows.Forms.Timer delayQueryTimer;
         private System.Windows.Forms.FlowLayoutPanel errorPanel;
         private System.Windows.Forms.Label labelError;
+        private System.Windows.Forms.Label labelErrorHeader;
+        private System.Windows.Forms.Label labelName;
     }
 }

@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label deletionLabel;
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("John Doe");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Mary Jane");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiKeyDeletionWindow));
+            this.deletionLabel = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
             this.charactersListView = new System.Windows.Forms.ListView();
@@ -39,20 +39,19 @@
             this.infoLabel = new System.Windows.Forms.Label();
             this.deleteWarningLabel = new System.Windows.Forms.Label();
             this.charactersListGroupBox = new System.Windows.Forms.GroupBox();
-            deletionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.charactersListGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // deletionLabel
             // 
-            deletionLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            deletionLabel.Location = new System.Drawing.Point(51, 13);
-            deletionLabel.Name = "deletionLabel";
-            deletionLabel.Size = new System.Drawing.Size(376, 32);
-            deletionLabel.TabIndex = 4;
-            deletionLabel.Text = "You are about to delete an API key.";
-            deletionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.deletionLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.deletionLabel.Location = new System.Drawing.Point(51, 13);
+            this.deletionLabel.Name = "deletionLabel";
+            this.deletionLabel.Size = new System.Drawing.Size(376, 32);
+            this.deletionLabel.TabIndex = 4;
+            this.deletionLabel.Text = "You are about to delete an API key.";
+            this.deletionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cancelButton
             // 
@@ -142,7 +141,7 @@
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(522, 215);
             this.Controls.Add(this.charactersListGroupBox);
-            this.Controls.Add(deletionLabel);
+            this.Controls.Add(this.deletionLabel);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.cancelButton);
@@ -165,5 +164,6 @@
         private System.Windows.Forms.Label infoLabel;
         private System.Windows.Forms.Label deleteWarningLabel;
         private System.Windows.Forms.GroupBox charactersListGroupBox;
+        private System.Windows.Forms.Label deletionLabel;
     }
 }
