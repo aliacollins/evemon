@@ -93,10 +93,9 @@ namespace EVEMon
             if (m_character == null)
                 return;
 
+            SuspendLayout();
             try
             {
-                SuspendLayout();
-
                 // Safe for work implementation
                 MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ? SizeType.Absolute : SizeType.AutoSize;
                 MainTableLayoutPanel.ColumnStyles[0].Width = 0;
@@ -134,10 +133,9 @@ namespace EVEMon
             if (m_character == null)
                 return;
 
+            SuspendLayout();
             try
             {
-                SuspendLayout();
-
                 SecurityStatusLabel.Text = String.Format(CultureConstants.DefaultCulture,
                                                          "Security Status: {0:N2}", m_character.SecurityStatus);
                 ActiveShipLabel.Text = GetActiveShipText();
@@ -480,12 +478,16 @@ namespace EVEMon
             // Using the .AppendLine() method of creating a multi line
             // string in this case as it is an interface requirement,
             // rather than a cultural preference.
-            output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5)).
-                AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:#,##0}", m_character.SkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}", m_character.CloneSkillPoints).
-                AppendLine();
+            //output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
+            //output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5)).
+            //    AppendLine();
+            //output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:#,##0}", m_character.SkillPoints).AppendLine();
+            //output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}", m_character.CloneSkillPoints).
+            //    AppendLine();
+            output.AppendLine("Known Skills: " + m_character.KnownSkillCount);
+            output.AppendLine("Skills at Level V: "+ m_character.GetSkillCountAtLevel(5));
+            output.AppendLine("Total SP: "+ m_character.SkillPoints);
+            output.AppendLine("Clone Limit: "+ m_character.CloneSkillPoints);
             output.Append(m_character.CloneName);
 
             return output.ToString();

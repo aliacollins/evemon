@@ -1,7 +1,4 @@
-﻿using EVEMon.Common;
-using EVEMon.Common.Controls;
-
-namespace EVEMon
+﻿namespace EVEMon
 {
     partial class CharacterMonitorHeader
     {
@@ -36,7 +33,7 @@ namespace EVEMon
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.CharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
             this.ThrobberFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.UpdateThrobber = new Throbber();
+            this.UpdateThrobber = new EVEMon.Common.Controls.Throbber();
             this.ThrobberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ChangeAPIKeyInfoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.QueryEverythingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,8 +41,8 @@ namespace EVEMon
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.BioFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.CharacterNameLabel = new System.Windows.Forms.Label();
-            this.BalanceLabel = new System.Windows.Forms.Label();
             this.BioInfoLabel = new System.Windows.Forms.Label();
+            this.BalanceLabel = new System.Windows.Forms.Label();
             this.BirthdayLabel = new System.Windows.Forms.Label();
             this.CorporationInfoFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.CorporationNameLabel = new System.Windows.Forms.Label();
@@ -92,7 +89,7 @@ namespace EVEMon
             this.MainTableLayoutPanel.Controls.Add(this.ThrobberFlowLayoutPanel, 2, 0);
             this.MainTableLayoutPanel.Controls.Add(this.BioFlowLayoutPanel, 1, 0);
             this.MainTableLayoutPanel.Controls.Add(this.SkillSummaryPanel, 1, 1);
-            this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
@@ -100,12 +97,11 @@ namespace EVEMon
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 166);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 176);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
             // 
-            this.CharacterPortrait.AutoSize = true;
             this.CharacterPortrait.Character = null;
             this.CharacterPortrait.CharacterID = ((long)(-1));
             this.CharacterPortrait.Location = new System.Drawing.Point(0, 7);
@@ -119,15 +115,13 @@ namespace EVEMon
             // 
             // ThrobberFlowLayoutPanel
             // 
-            this.ThrobberFlowLayoutPanel.AutoSize = true;
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateThrobber);
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateLabel);
-            this.ThrobberFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.ThrobberFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(369, 0);
             this.ThrobberFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ThrobberFlowLayoutPanel.Name = "ThrobberFlowLayoutPanel";
-            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(60, 43);
+            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(60, 52);
             this.ThrobberFlowLayoutPanel.TabIndex = 10;
             // 
             // UpdateThrobber
@@ -139,7 +133,7 @@ namespace EVEMon
             this.UpdateThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.Name = "UpdateThrobber";
             this.UpdateThrobber.Size = new System.Drawing.Size(24, 24);
-            this.UpdateThrobber.State = ThrobberState.Stopped;
+            this.UpdateThrobber.State = EVEMon.Common.ThrobberState.Stopped;
             this.UpdateThrobber.TabIndex = 4;
             this.UpdateThrobber.TabStop = false;
             this.UpdateThrobber.Click += new System.EventHandler(this.UpdateThrobber_Click);
@@ -157,7 +151,7 @@ namespace EVEMon
             // 
             // ChangeAPIKeyInfoMenuItem
             // 
-            this.ChangeAPIKeyInfoMenuItem.Name = "ChangeInfoMenuItem";
+            this.ChangeAPIKeyInfoMenuItem.Name = "ChangeAPIKeyInfoMenuItem";
             this.ChangeAPIKeyInfoMenuItem.Size = new System.Drawing.Size(233, 22);
             this.ChangeAPIKeyInfoMenuItem.Text = "Change API Key Information...";
             this.ChangeAPIKeyInfoMenuItem.Click += new System.EventHandler(this.ChangeAPIKeyInfoMenuItem_Click);
@@ -204,7 +198,7 @@ namespace EVEMon
             this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 91);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 97);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel
@@ -217,16 +211,6 @@ namespace EVEMon
             this.CharacterNameLabel.TabIndex = 4;
             this.CharacterNameLabel.Text = "Character Name";
             // 
-            // BalanceLabel
-            // 
-            this.BalanceLabel.AutoSize = true;
-            this.BalanceLabel.Location = new System.Drawing.Point(0, 26);
-            this.BalanceLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.BalanceLabel.Name = "BalanceLabel";
-            this.BalanceLabel.Size = new System.Drawing.Size(93, 13);
-            this.BalanceLabel.TabIndex = 7;
-            this.BalanceLabel.Text = "Balance: 0.00 ISK";
-            // 
             // BioInfoLabel
             // 
             this.BioInfoLabel.AutoSize = true;
@@ -237,15 +221,25 @@ namespace EVEMon
             this.BioInfoLabel.TabIndex = 5;
             this.BioInfoLabel.Text = "Bio Info";
             // 
+            // BalanceLabel
+            // 
+            this.BalanceLabel.AutoSize = true;
+            this.BalanceLabel.Location = new System.Drawing.Point(0, 26);
+            this.BalanceLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.BalanceLabel.Name = "BalanceLabel";
+            this.BalanceLabel.Size = new System.Drawing.Size(93, 13);
+            this.BalanceLabel.TabIndex = 7;
+            this.BalanceLabel.Text = "Balance: 0.00 ISK";
+            // 
             // BirthdayLabel
             // 
             this.BirthdayLabel.AutoSize = true;
             this.BirthdayLabel.Location = new System.Drawing.Point(0, 39);
             this.BirthdayLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.BirthdayLabel.Name = "BirthdayLabel";
-            this.BirthdayLabel.Size = new System.Drawing.Size(66, 13);
+            this.BirthdayLabel.Size = new System.Drawing.Size(45, 13);
             this.BirthdayLabel.TabIndex = 8;
-            this.BirthdayLabel.Text = "Birthday Info";
+            this.BirthdayLabel.Text = "Birthday";
             // 
             // CorporationInfoFlowLayoutPanel
             // 
@@ -253,17 +247,16 @@ namespace EVEMon
             this.CorporationInfoFlowLayoutPanel.Controls.Add(this.CorporationNameLabel);
             this.CorporationInfoFlowLayoutPanel.Controls.Add(this.AllianceInfoIndicationPictureBox);
             this.CorporationInfoFlowLayoutPanel.Location = new System.Drawing.Point(0, 52);
-            this.CorporationInfoFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.CorporationInfoFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.CorporationInfoFlowLayoutPanel.Name = "CorporationInfoFlowLayoutPanel";
-            this.CorporationInfoFlowLayoutPanel.Size = new System.Drawing.Size(98, 13);
-            this.CorporationInfoFlowLayoutPanel.TabIndex = 14;
+            this.CorporationInfoFlowLayoutPanel.Size = new System.Drawing.Size(101, 16);
+            this.CorporationInfoFlowLayoutPanel.TabIndex = 13;
             // 
             // CorporationNameLabel
             // 
             this.CorporationNameLabel.AutoSize = true;
-            this.CorporationNameLabel.Dock = System.Windows.Forms.DockStyle.Left;
             this.CorporationNameLabel.Location = new System.Drawing.Point(0, 0);
-            this.CorporationNameLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.CorporationNameLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.CorporationNameLabel.Name = "CorporationNameLabel";
             this.CorporationNameLabel.Size = new System.Drawing.Size(82, 13);
             this.CorporationNameLabel.TabIndex = 6;
@@ -272,19 +265,18 @@ namespace EVEMon
             // 
             // AllianceInfoIndicationPictureBox
             // 
-            this.AllianceInfoIndicationPictureBox.Dock = System.Windows.Forms.DockStyle.Right;
             this.AllianceInfoIndicationPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("AllianceInfoIndicationPictureBox.Image")));
-            this.AllianceInfoIndicationPictureBox.Location = new System.Drawing.Point(82, 0);
+            this.AllianceInfoIndicationPictureBox.Location = new System.Drawing.Point(85, 0);
             this.AllianceInfoIndicationPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.AllianceInfoIndicationPictureBox.Name = "AllianceInfoIndicationPictureBox";
-            this.AllianceInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 13);
-            this.AllianceInfoIndicationPictureBox.TabIndex = 11;
+            this.AllianceInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.AllianceInfoIndicationPictureBox.TabIndex = 6;
             this.AllianceInfoIndicationPictureBox.TabStop = false;
             // 
             // SecurityStatusLabel
             // 
             this.SecurityStatusLabel.AutoSize = true;
-            this.SecurityStatusLabel.Location = new System.Drawing.Point(0, 65);
+            this.SecurityStatusLabel.Location = new System.Drawing.Point(0, 68);
             this.SecurityStatusLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.SecurityStatusLabel.Name = "SecurityStatusLabel";
             this.SecurityStatusLabel.Size = new System.Drawing.Size(99, 13);
@@ -296,18 +288,17 @@ namespace EVEMon
             this.ActiveShipFlowLayoutPanel.AutoSize = true;
             this.ActiveShipFlowLayoutPanel.Controls.Add(this.ActiveShipLabel);
             this.ActiveShipFlowLayoutPanel.Controls.Add(this.LocationInfoIndicationPictureBox);
-            this.ActiveShipFlowLayoutPanel.Location = new System.Drawing.Point(0, 78);
-            this.ActiveShipFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ActiveShipFlowLayoutPanel.Location = new System.Drawing.Point(0, 81);
+            this.ActiveShipFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.ActiveShipFlowLayoutPanel.Name = "ActiveShipFlowLayoutPanel";
-            this.ActiveShipFlowLayoutPanel.Size = new System.Drawing.Size(98, 13);
-            this.ActiveShipFlowLayoutPanel.TabIndex = 15;
+            this.ActiveShipFlowLayoutPanel.Size = new System.Drawing.Size(101, 16);
+            this.ActiveShipFlowLayoutPanel.TabIndex = 12;
             // 
             // ActiveShipLabel
             // 
             this.ActiveShipLabel.AutoSize = true;
-            this.ActiveShipLabel.Dock = System.Windows.Forms.DockStyle.Left;
             this.ActiveShipLabel.Location = new System.Drawing.Point(0, 0);
-            this.ActiveShipLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.ActiveShipLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.ActiveShipLabel.Name = "ActiveShipLabel";
             this.ActiveShipLabel.Size = new System.Drawing.Size(82, 13);
             this.ActiveShipLabel.TabIndex = 10;
@@ -316,26 +307,24 @@ namespace EVEMon
             // 
             // LocationInfoIndicationPictureBox
             // 
-            this.LocationInfoIndicationPictureBox.Dock = System.Windows.Forms.DockStyle.Right;
             this.LocationInfoIndicationPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("LocationInfoIndicationPictureBox.Image")));
-            this.LocationInfoIndicationPictureBox.Location = new System.Drawing.Point(82, 0);
+            this.LocationInfoIndicationPictureBox.Location = new System.Drawing.Point(85, 0);
             this.LocationInfoIndicationPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.LocationInfoIndicationPictureBox.Name = "LocationInfoIndicationPictureBox";
-            this.LocationInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 13);
+            this.LocationInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 16);
             this.LocationInfoIndicationPictureBox.TabIndex = 11;
             this.LocationInfoIndicationPictureBox.TabStop = false;
             // 
             // SkillSummaryPanel
             // 
-            this.SkillSummaryPanel.AutoSize = true;
             this.MainTableLayoutPanel.SetColumnSpan(this.SkillSummaryPanel, 2);
             this.SkillSummaryPanel.Controls.Add(this.tlpAttributes);
             this.SkillSummaryPanel.Controls.Add(this.SkillSummaryLabel);
             this.SkillSummaryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 91);
+            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 97);
             this.SkillSummaryPanel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
-            this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 75);
+            this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 79);
             this.SkillSummaryPanel.TabIndex = 4;
             // 
             // tlpAttributes
@@ -364,7 +353,7 @@ namespace EVEMon
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpAttributes.Size = new System.Drawing.Size(89, 75);
+            this.tlpAttributes.Size = new System.Drawing.Size(89, 79);
             this.tlpAttributes.TabIndex = 5;
             // 
             // lblMEMAttribute
@@ -496,7 +485,7 @@ namespace EVEMon
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "CharacterMonitorHeader";
-            this.Size = new System.Drawing.Size(429, 166);
+            this.Size = new System.Drawing.Size(429, 177);
             this.Resize += new System.EventHandler(this.CharacterMonitorHeader_Resize);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
@@ -540,10 +529,17 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel BioFlowLayoutPanel;
         private System.Windows.Forms.Label CharacterNameLabel;
         private System.Windows.Forms.Label BioInfoLabel;
-        private System.Windows.Forms.Label CorporationNameLabel;
         private System.Windows.Forms.Label BalanceLabel;
+        private System.Windows.Forms.Label BirthdayLabel;
+        private System.Windows.Forms.FlowLayoutPanel CorporationInfoFlowLayoutPanel;
+        private System.Windows.Forms.Label CorporationNameLabel;
+        private System.Windows.Forms.PictureBox AllianceInfoIndicationPictureBox;
+        private System.Windows.Forms.Label SecurityStatusLabel;
+        private System.Windows.Forms.FlowLayoutPanel ActiveShipFlowLayoutPanel;
+        private System.Windows.Forms.Label ActiveShipLabel;
+        private System.Windows.Forms.PictureBox LocationInfoIndicationPictureBox;
         private System.Windows.Forms.FlowLayoutPanel ThrobberFlowLayoutPanel;
-        private Throbber UpdateThrobber;
+        private EVEMon.Common.Controls.Throbber UpdateThrobber;
         private System.Windows.Forms.Label UpdateLabel;
         private System.Windows.Forms.TableLayoutPanel tlpAttributes;
         private System.Windows.Forms.Label lblMEMAttribute;
@@ -551,12 +547,5 @@ namespace EVEMon
         private System.Windows.Forms.Label lblCHAAttribute;
         private System.Windows.Forms.Label lblPERAttribute;
         private System.Windows.Forms.Label lblINTAttribute;
-        private System.Windows.Forms.Label BirthdayLabel;
-        private System.Windows.Forms.Label SecurityStatusLabel;
-        private System.Windows.Forms.Label ActiveShipLabel;
-        private System.Windows.Forms.PictureBox AllianceInfoIndicationPictureBox;
-        private System.Windows.Forms.PictureBox LocationInfoIndicationPictureBox;
-        private System.Windows.Forms.FlowLayoutPanel CorporationInfoFlowLayoutPanel;
-        private System.Windows.Forms.FlowLayoutPanel ActiveShipFlowLayoutPanel;
     }
 }
