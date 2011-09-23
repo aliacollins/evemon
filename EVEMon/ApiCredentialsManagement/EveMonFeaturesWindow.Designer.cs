@@ -249,7 +249,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EVEMonFeaturesWindow";
-            this.RememberPositionKey = "EVEMonFeaturesWindow";
             this.Text = "Which Access Mask do you need ?";
             this.TopMost = true;
             this.MainFlowLayoutPanel.ResumeLayout(false);

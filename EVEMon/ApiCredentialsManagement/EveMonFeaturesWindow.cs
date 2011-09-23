@@ -12,6 +12,7 @@ namespace EVEMon.ApiCredentialsManagement
         public EVEMonFeaturesWindow()
         {
             InitializeComponent();
+            RememberPositionKey = "EVEMonFeaturesWindow";
         }
 
         /// <summary>

@@ -526,9 +526,6 @@ namespace EVEMon.ApiCredentialsManagement
             m_refreshingCharactersCounter--;
         }
 
-        #endregion
-
-
         /// <summary>
         /// Close on "close" button click.
         /// </summary>
@@ -538,5 +535,8 @@ namespace EVEMon.ApiCredentialsManagement
         {
             Close();
         }
+
+        #endregion
+
     }
 }
