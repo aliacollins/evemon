@@ -31,10 +31,11 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (m_character.QueryMonitors[APIMethods.IndustryJobs] == null)
+            IQueryMonitor monitor = m_character.QueryMonitors[APIMethods.IndustryJobs];
+            if (monitor == null)
                 return;
 
-            if (!m_character.QueryMonitors[APIMethods.IndustryJobs].Enabled)
+            if (!monitor.Enabled)
                 return;
 
             UpdateOnTimerTick();
