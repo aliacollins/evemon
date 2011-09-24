@@ -286,12 +286,12 @@ namespace EVEMon.Common.Collections
         }
 
         /// <summary>
-        /// Clears the list
+        /// Clears the list.
         /// </summary>
         public void Clear()
         {
-            Count = 0;
             Array.Clear(m_items, 0, Count);
+            Count = 0;
         }
 
         /// <summary>

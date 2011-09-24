@@ -47,7 +47,7 @@ namespace EVEMon.Common
             if (String.IsNullOrEmpty(eveMailMessagesIDs))
                 return;
 
-
+            Items.Clear();
             List<string> ids = eveMailMessagesIDs.Split(',').ToList();
             foreach (long id in ids.Select(long.Parse))
             {
@@ -106,8 +106,8 @@ namespace EVEMon.Common
         internal String Export()
         {
             // Store only the mail messages IDs from the inbox in a descending order
-            List<String> serial = Items.Where(x => x.Sender != m_ccpCharacter.Name).OrderByDescending(
-                x => x.MessageID).Select(message => message.MessageID.ToString()).ToList();
+            IEnumerable<String> serial = Items.Where(x => x.Sender != m_ccpCharacter.Name).OrderByDescending(
+                x => x.MessageID).Select(message => message.MessageID.ToString());
 
             return String.Join(",", serial);
         }

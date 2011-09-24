@@ -134,6 +134,7 @@ namespace EVEMon
             this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.btnLater);
             this.Controls.Add(this.btnUpdate);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

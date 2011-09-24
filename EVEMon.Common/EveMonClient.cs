@@ -27,7 +27,6 @@ namespace EVEMon.Common
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
         private static readonly DateTime s_startTime = DateTime.UtcNow;
-        private static GlobalDatafileCollection s_datafiles;
 
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
@@ -330,15 +329,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets an enumeration over the datafiles checksums.
         /// </summary>
-        public static GlobalDatafileCollection Datafiles
-        {
-            get
-            {
-                s_datafiles.Refresh();
-                return s_datafiles;
-            }
-            private set { s_datafiles = value; }
-        }
+        public static GlobalDatafileCollection Datafiles { get; private set; }
 
         /// <summary>
         /// Gets the http web service we use to query web services.
@@ -977,13 +968,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when data update is available.
         /// </summary>
-        /// <param name="updateUrl">The update URL.</param>
         /// <param name="changedFiles">The changed files.</param>
-        internal static void OnDataUpdateAvailable(string updateUrl, List<SerializableDatafile> changedFiles)
+        internal static void OnDataUpdateAvailable(Collection<SerializableDatafile> changedFiles)
         {
             Trace("EveMonClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
             if (DataUpdateAvailable != null)
-                DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(updateUrl, changedFiles));
+                DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(changedFiles));
         }
 
         /// <summary>

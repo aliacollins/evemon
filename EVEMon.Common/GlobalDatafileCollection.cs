@@ -14,12 +14,13 @@ namespace EVEMon.Common
         /// </summary>
         internal GlobalDatafileCollection()
         {
+            Update();
         }
 
         /// <summary>
         /// Update the datafiles list.
         /// </summary>
-        public void Refresh()
+        private void Update()
         {
             try
             {
@@ -28,9 +29,9 @@ namespace EVEMon.Common
                 Items.Add(new Datafile(DatafileConstants.ItemsDatafile));
                 Items.Add(new Datafile(DatafileConstants.SkillsDatafile));
                 Items.Add(new Datafile(DatafileConstants.CertificatesDatafile));
+                Items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
                 Items.Add(new Datafile(DatafileConstants.GeographyDatafile));
                 Items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
-                Items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
             }
                 // Don't worry if we can't create MD5 maybe they have FIPS enforced
             catch (Exception)

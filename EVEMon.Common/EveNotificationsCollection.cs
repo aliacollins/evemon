@@ -46,6 +46,7 @@ namespace EVEMon.Common
             if (String.IsNullOrEmpty(eveNotificationsIDs))
                 return;
 
+            Items.Clear();
             List<string> ids = eveNotificationsIDs.Split(',').ToList();
             foreach (long id in ids.Select(long.Parse))
             {
@@ -91,7 +92,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal String Export()
         {
-            List<String> serial = Items.Select(notification => notification.NotificationID.ToString()).ToList();
+            IEnumerable<String> serial = Items.Select(notification => notification.NotificationID.ToString());
             return String.Join(",", serial);
         }
 

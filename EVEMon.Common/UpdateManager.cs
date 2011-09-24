@@ -140,23 +140,24 @@ namespace EVEMon.Common
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             Version newestVersion = new Version(result.Release.Version);
-            string forumUrl = result.Release.TopicUrl;
-            string updateMessage = result.Release.Message;
-            string installArgs = result.Release.InstallerArgs;
-            string installerUrl = result.Release.Url;
-            string additionalArgs = result.Release.AdditionalArgs;
-            bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl) && !String.IsNullOrEmpty(installArgs));
-
-            if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
-            {
-                string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-                installArgs = String.Format(CultureConstants.DefaultCulture, "{0} {1}", installArgs, additionalArgs);
-                installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
-            }
 
             // Is the program out of date ?
             if (newestVersion > currentVersion)
             {
+                string forumUrl = result.Release.TopicUrl;
+                string updateMessage = result.Release.Message;
+                string installArgs = result.Release.InstallerArgs;
+                string installerUrl = result.Release.Url;
+                string additionalArgs = result.Release.AdditionalArgs;
+                bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl) && !String.IsNullOrEmpty(installArgs));
+
+                if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
+                {
+                    string appPath = Path.GetDirectoryName(Application.ExecutablePath);
+                    installArgs = String.Format(CultureConstants.DefaultCulture, "{0} {1}", installArgs, additionalArgs);
+                    installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
+                }
+
                 // Requests a notification to subscribers and quit
                 EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
                                                newestVersion, canAutoInstall, installArgs);
@@ -166,7 +167,7 @@ namespace EVEMon.Common
             if (result.FilesHaveChanged)
             {
                 // Requests a notification to subscribers and quit
-                EveMonClient.OnDataUpdateAvailable(forumUrl, result.ChangedDataFiles);
+                EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
                 return;
             }
         }

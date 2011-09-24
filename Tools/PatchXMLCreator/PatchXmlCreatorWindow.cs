@@ -463,7 +463,7 @@ namespace PatchXmlCreator
         /// </summary>
         /// <param name="datafiles"></param>
         /// <returns></returns>
-        private void ExportDatafiles(List<SerializableDatafile> datafiles)
+        private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
             string url = String.Format("{1}{2}{0}{3}",
                                        Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);

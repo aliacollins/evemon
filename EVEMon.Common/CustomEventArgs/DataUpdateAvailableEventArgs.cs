@@ -1,32 +1,26 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class DataUpdateAvailableEventArgs : EventArgs
     {
+        private readonly Collection<SerializableDatafile> m_changedFiles;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataUpdateAvailableEventArgs"/> class.
         /// </summary>
-        /// <param name="updateUrl">The update URL.</param>
         /// <param name="changedFiles">The changed files.</param>
-        public DataUpdateAvailableEventArgs(string updateUrl, List<SerializableDatafile> changedFiles)
+        public DataUpdateAvailableEventArgs(Collection<SerializableDatafile> changedFiles)
         {
-            UpdateUrl = updateUrl;
-            ChangedFiles = changedFiles;
+            m_changedFiles = changedFiles;
         }
-
-        /// <summary>
-        /// Gets or sets the update URL.
-        /// </summary>
-        /// <value>The update URL.</value>
-        public string UpdateUrl { get; private set; }
 
         /// <summary>
         /// Gets or sets the changed files.
         /// </summary>
         /// <value>The changed files.</value>
-        public List<SerializableDatafile> ChangedFiles { get; private set; }
+        public Collection<SerializableDatafile> ChangedFiles { get { return m_changedFiles; } }
     }
 }

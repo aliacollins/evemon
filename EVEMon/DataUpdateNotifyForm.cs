@@ -91,7 +91,7 @@ namespace EVEMon
             List<SerializableDatafile> datafiles = new List<SerializableDatafile>();
 
             // Copy the list of datafiles
-            m_args.ChangedFiles.ForEach(datafiles.Add);
+            datafiles.AddRange(m_args.ChangedFiles);
 
             foreach (SerializableDatafile dfv in datafiles)
             {

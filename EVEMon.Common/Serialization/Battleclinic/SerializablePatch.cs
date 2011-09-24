@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -7,11 +7,14 @@ namespace EVEMon.Common.Serialization.BattleClinic
     [XmlRoot("evemon")]
     public sealed class SerializablePatch
     {
+        private Collection<SerializableDatafile> m_datafiles;
+        private Collection<SerializableDatafile> m_changedDatafiles;
+
         public SerializablePatch()
         {
             Release = new SerializableRelease();
-            Datafiles = new List<SerializableDatafile>();
-            ChangedDataFiles = new List<SerializableDatafile>();
+            m_datafiles = new Collection<SerializableDatafile>();
+            m_changedDatafiles = new Collection<SerializableDatafile>();
         }
 
         [XmlElement("newest")]
@@ -19,30 +22,36 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
         [XmlArray("datafiles")]
         [XmlArrayItem("datafile")]
-        public List<SerializableDatafile> Datafiles { get; set; }
+        public Collection<SerializableDatafile> Datafiles
+        {
+            get { return m_datafiles; }
+        }
 
         [XmlIgnore]
-        internal List<SerializableDatafile> ChangedDataFiles { get; private set; }
+        internal Collection<SerializableDatafile> ChangedDatafiles
+        {
+            get { return m_changedDatafiles; }
+        }
 
         [XmlIgnore]
         internal bool FilesHaveChanged
         {
             get
             {
-                ChangedDataFiles.Clear();
+                m_changedDatafiles.Clear();
 
-                foreach (SerializableDatafile dfv in Datafiles)
+                foreach (Datafile datafile in EveMonClient.Datafiles)
                 {
-                    foreach (Datafile datafile in EveMonClient.Datafiles.Where(datafile => datafile.Filename == dfv.Name))
+                    foreach (SerializableDatafile dfv in Datafiles.Where(dfv => dfv.Name == datafile.Filename))
                     {
                         if (datafile.MD5Sum != dfv.MD5Sum)
-                            ChangedDataFiles.Add(dfv);
+                            m_changedDatafiles.Add(dfv);
 
                         break;
                     }
                 }
 
-                return ChangedDataFiles.Count > 0;
+                return ChangedDatafiles.Count > 0;
             }
         }
     }

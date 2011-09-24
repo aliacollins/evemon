@@ -303,7 +303,7 @@ namespace EVEMon.Common
         /// <param name="characterName">The character's name.</param>
         private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string characterName)
         {
-            CCPCharacter ccpCharacter = EveMonClient.Characters.FirstOrDefault(x => x.Name == characterName) as CCPCharacter;
+            CCPCharacter ccpCharacter = EveMonClient.Characters.OfType<CCPCharacter>().FirstOrDefault(x => x.Name == characterName);
 
             // Return on error
             if (result.HasError)
