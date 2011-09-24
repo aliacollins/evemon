@@ -30,7 +30,7 @@ namespace EVEMon.Common
         {
             Items.Clear();
 
-            // Import the standings from the API
+            // Import the employment history from the API
             foreach (SerializableEmploymentHistoryListItem srcEmploymentRecord in src)
             {
                 Items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));

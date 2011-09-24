@@ -9,7 +9,7 @@ namespace EVEMon.Common
     /// Represents a collection of a character's skills groups
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class SkillGroupCollection : ReadonlyKeyedCollection<string, SkillGroup>
+    public sealed class SkillGroupCollection : ReadonlyKeyedCollection<long, SkillGroup>
     {
         /// <summary>
         /// Constructor
@@ -19,18 +19,18 @@ namespace EVEMon.Common
         {
             foreach (SkillGroup group in StaticSkills.AllGroups.Select(srcGroup => new SkillGroup(character, srcGroup)))
             {
-                Items[group.Name] = group;
+                Items[group.ID] = group;
             }
         }
 
         /// <summary>
         /// Gets the skill group with the provided name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public SkillGroup this[string name]
+        public SkillGroup this[long id]
         {
-            get { return GetByKey(name); }
+            get { return GetByKey(id); }
         }
     }
 }

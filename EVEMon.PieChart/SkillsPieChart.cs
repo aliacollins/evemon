@@ -155,7 +155,7 @@ namespace EVEMon.PieChart
             foreach (StaticSkillGroup group in StaticSkills.AllGroups)
             {
                 indices[group] = groups.Count;
-                groups.Add(m_character.SkillGroups[group.Name]);
+                groups.Add(m_character.SkillGroups[group.ID]);
             }
 
             // Get start SP, before plan

@@ -466,12 +466,15 @@ namespace EVEMon.Common.Controls
         /// <param name="height"></param>
         private void PaintDesignerQueue(Graphics g, int width, int height)
         {
-            Brush lightBrush = new SolidBrush(GetFirstColor());
-            Brush darkBrush = new SolidBrush(GetSecondColor());
-
-            g.FillRectangle(lightBrush, new Rectangle(0, 0, (width / 5) * 2, height));
-            g.FillRectangle(darkBrush, new Rectangle((width / 5) * 2, 0, (width / 5) * 2, height));
-            g.FillRectangle(lightBrush, new Rectangle((width / 5) * 4, 0, width / 5, height));
+            using (Brush lightBrush = new SolidBrush(GetFirstColor()))
+            {
+                using (Brush darkBrush = new SolidBrush(GetSecondColor()))
+                {
+                    g.FillRectangle(lightBrush, new Rectangle(0, 0, (width / 5) * 2, height));
+                    g.FillRectangle(darkBrush, new Rectangle((width / 5) * 2, 0, (width / 5) * 2, height));
+                    g.FillRectangle(lightBrush, new Rectangle((width / 5) * 4, 0, width / 5, height));
+                }
+            }
 
             PaintPoint(g, width, height);
         }
