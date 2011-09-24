@@ -140,7 +140,7 @@ namespace EVEMon
             this.pnlTraining.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlTraining.Controls.Add(this.tlpStatus);
             this.pnlTraining.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlTraining.Location = new System.Drawing.Point(0, 274);
+            this.pnlTraining.Location = new System.Drawing.Point(0, 281);
             this.pnlTraining.Name = "pnlTraining";
             this.pnlTraining.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.pnlTraining.Size = new System.Drawing.Size(574, 42);
@@ -282,7 +282,7 @@ namespace EVEMon
             this.upperPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.upperPanel.Location = new System.Drawing.Point(0, 0);
             this.upperPanel.Name = "upperPanel";
-            this.upperPanel.Size = new System.Drawing.Size(574, 183);
+            this.upperPanel.Size = new System.Drawing.Size(574, 176);
             this.upperPanel.TabIndex = 14;
             // 
             // Header
@@ -292,7 +292,7 @@ namespace EVEMon
             this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Header.Location = new System.Drawing.Point(0, 0);
             this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 183);
+            this.Header.Size = new System.Drawing.Size(574, 176);
             this.Header.TabIndex = 15;
             // 
             // skillQueuePanel
@@ -303,7 +303,7 @@ namespace EVEMon
             this.skillQueuePanel.Controls.Add(this.skillQueueTimePanel);
             this.skillQueuePanel.Controls.Add(this.skillQueueControl);
             this.skillQueuePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueuePanel.Location = new System.Drawing.Point(0, 218);
+            this.skillQueuePanel.Location = new System.Drawing.Point(0, 225);
             this.skillQueuePanel.Name = "skillQueuePanel";
             this.skillQueuePanel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
             this.skillQueuePanel.Size = new System.Drawing.Size(574, 56);
@@ -372,9 +372,9 @@ namespace EVEMon
             this.lowerPanel.Controls.Add(this.pnlTraining);
             this.lowerPanel.Controls.Add(this.toolstripPanel);
             this.lowerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lowerPanel.Location = new System.Drawing.Point(0, 183);
+            this.lowerPanel.Location = new System.Drawing.Point(0, 176);
             this.lowerPanel.Name = "lowerPanel";
-            this.lowerPanel.Size = new System.Drawing.Size(574, 316);
+            this.lowerPanel.Size = new System.Drawing.Size(574, 323);
             this.lowerPanel.TabIndex = 3;
             // 
             // skillsPanel
@@ -388,7 +388,7 @@ namespace EVEMon
             this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.skillsPanel.Name = "skillsPanel";
             this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.skillsPanel.Size = new System.Drawing.Size(574, 168);
+            this.skillsPanel.Size = new System.Drawing.Size(574, 175);
             this.skillsPanel.TabIndex = 3;
             // 
             // corePanel
@@ -400,7 +400,7 @@ namespace EVEMon
             this.corePanel.Margin = new System.Windows.Forms.Padding(0);
             this.corePanel.Name = "corePanel";
             this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(571, 92);
+            this.corePanel.Size = new System.Drawing.Size(571, 99);
             this.corePanel.TabIndex = 14;
             // 
             // multiPanel
@@ -417,7 +417,7 @@ namespace EVEMon
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(568, 74);
+            this.multiPanel.Size = new System.Drawing.Size(568, 81);
             this.multiPanel.TabIndex = 14;
             // 
             // standingsPage
@@ -446,7 +446,7 @@ namespace EVEMon
             this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPage.Location = new System.Drawing.Point(0, 0);
             this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(568, 74);
+            this.skillsPage.Size = new System.Drawing.Size(568, 81);
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
@@ -458,7 +458,7 @@ namespace EVEMon
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
             this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 74);
+            this.skillsList.Size = new System.Drawing.Size(568, 81);
             this.skillsList.TabIndex = 12;
             // 
             // ordersPage

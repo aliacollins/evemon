@@ -212,7 +212,12 @@ namespace EVEMon
             pbCharacterPortrait.Character = Character;
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter != null)
-                lblBalance.ForeColor = (!ccpCharacter.HasSufficientBalance ? Color.Orange : lblBalance.ForeColor);
+            {
+                lblBalance.ForeColor = (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance &&
+                                        ccpCharacter.QueryMonitors[APIMethods.MarketOrders].Enabled
+                                            ? Color.Orange
+                                            : lblBalance.ForeColor);
+            }
 
             lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", Character.Balance);
 

@@ -475,6 +475,8 @@ namespace EVEMon
             m_advancedFeatures.ForEach(button =>
                                            {
                                                IQueryMonitor monitor = ButtonToMonitor(button);
+                                               if (monitor == null)
+                                                   return;
                                                monitor.Enabled = IsEnabledFeature(button.Text);
                                                if (monitor.QueryOnStartup && monitor.Enabled && monitor.LastResult == null)
                                                    ccpCharacter.ForceUpdate(monitor);

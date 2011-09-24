@@ -97,7 +97,7 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 176);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 170);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
@@ -198,7 +198,7 @@
             this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 97);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 91);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel
@@ -249,7 +249,7 @@
             this.CorporationInfoFlowLayoutPanel.Location = new System.Drawing.Point(0, 52);
             this.CorporationInfoFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.CorporationInfoFlowLayoutPanel.Name = "CorporationInfoFlowLayoutPanel";
-            this.CorporationInfoFlowLayoutPanel.Size = new System.Drawing.Size(101, 16);
+            this.CorporationInfoFlowLayoutPanel.Size = new System.Drawing.Size(101, 13);
             this.CorporationInfoFlowLayoutPanel.TabIndex = 13;
             // 
             // CorporationNameLabel
@@ -269,14 +269,14 @@
             this.AllianceInfoIndicationPictureBox.Location = new System.Drawing.Point(85, 0);
             this.AllianceInfoIndicationPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.AllianceInfoIndicationPictureBox.Name = "AllianceInfoIndicationPictureBox";
-            this.AllianceInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.AllianceInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 13);
             this.AllianceInfoIndicationPictureBox.TabIndex = 6;
             this.AllianceInfoIndicationPictureBox.TabStop = false;
             // 
             // SecurityStatusLabel
             // 
             this.SecurityStatusLabel.AutoSize = true;
-            this.SecurityStatusLabel.Location = new System.Drawing.Point(0, 68);
+            this.SecurityStatusLabel.Location = new System.Drawing.Point(0, 65);
             this.SecurityStatusLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.SecurityStatusLabel.Name = "SecurityStatusLabel";
             this.SecurityStatusLabel.Size = new System.Drawing.Size(99, 13);
@@ -288,10 +288,10 @@
             this.ActiveShipFlowLayoutPanel.AutoSize = true;
             this.ActiveShipFlowLayoutPanel.Controls.Add(this.ActiveShipLabel);
             this.ActiveShipFlowLayoutPanel.Controls.Add(this.LocationInfoIndicationPictureBox);
-            this.ActiveShipFlowLayoutPanel.Location = new System.Drawing.Point(0, 81);
+            this.ActiveShipFlowLayoutPanel.Location = new System.Drawing.Point(0, 78);
             this.ActiveShipFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.ActiveShipFlowLayoutPanel.Name = "ActiveShipFlowLayoutPanel";
-            this.ActiveShipFlowLayoutPanel.Size = new System.Drawing.Size(101, 16);
+            this.ActiveShipFlowLayoutPanel.Size = new System.Drawing.Size(101, 13);
             this.ActiveShipFlowLayoutPanel.TabIndex = 12;
             // 
             // ActiveShipLabel
@@ -311,7 +311,7 @@
             this.LocationInfoIndicationPictureBox.Location = new System.Drawing.Point(85, 0);
             this.LocationInfoIndicationPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.LocationInfoIndicationPictureBox.Name = "LocationInfoIndicationPictureBox";
-            this.LocationInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.LocationInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 13);
             this.LocationInfoIndicationPictureBox.TabIndex = 11;
             this.LocationInfoIndicationPictureBox.TabStop = false;
             // 
@@ -321,7 +321,7 @@
             this.SkillSummaryPanel.Controls.Add(this.tlpAttributes);
             this.SkillSummaryPanel.Controls.Add(this.SkillSummaryLabel);
             this.SkillSummaryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 97);
+            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 91);
             this.SkillSummaryPanel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
             this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 79);
