@@ -70,9 +70,9 @@ namespace EVEMon
             lblSkillQueueTrainingTime.Text = String.Empty;
 
             // Global events
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
@@ -145,12 +145,13 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On dispose, unsubscrive events.
+        /// On dispose, unsubscribe events.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
@@ -213,8 +214,9 @@ namespace EVEMon
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter != null)
             {
+                IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APIMethods.MarketOrders];
                 lblBalance.ForeColor = (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance &&
-                                        ccpCharacter.QueryMonitors[APIMethods.MarketOrders].Enabled
+                                        marketMonitor != null && marketMonitor.Enabled
                                             ? Color.Orange
                                             : lblBalance.ForeColor);
             }
