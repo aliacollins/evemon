@@ -32,10 +32,7 @@ namespace EVEMon.Common
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             IQueryMonitor monitor = m_character.QueryMonitors[APIMethods.IndustryJobs];
-            if (monitor == null)
-                return;
-
-            if (!monitor.Enabled)
+            if (monitor == null || !monitor.Enabled)
                 return;
 
             UpdateOnTimerTick();

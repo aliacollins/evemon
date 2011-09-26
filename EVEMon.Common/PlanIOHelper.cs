@@ -214,7 +214,7 @@ namespace EVEMon.Common
                     if (needComma)
                         builder.Append("; ");
 
-                    string formattedIsk = String.Format(CultureConstants.TidyInteger, "{0:n}", plan.NotKnownSkillBooksCost);
+                    string formattedIsk = String.Format(CultureConstants.DefaultCulture, "{0:N0}", plan.NotKnownSkillBooksCost);
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
                 }
 

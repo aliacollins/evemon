@@ -426,8 +426,8 @@ namespace EVEMon
         {
             Settings.UI.MainWindow.OverviewIndex = tcCharacterTabs.TabPages.IndexOf(tpOverview);
 
-            List<Character> order = tcCharacterTabs.TabPages.Cast<TabPage>()
-                .Where(page => page.Tag is Character).Select(page => page.Tag as Character).ToList();
+            IEnumerable<Character> order = tcCharacterTabs.TabPages.Cast<TabPage>()
+                .Where(page => page.Tag is Character).Select(page => page.Tag as Character);
 
             m_isUpdatingTabOrder = true;
             EveMonClient.MonitoredCharacters.Update(order);

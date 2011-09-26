@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.BlankCharacter
@@ -105,7 +106,7 @@ namespace EVEMon.BlankCharacter
         /// Saves the blank character.
         /// </summary>
         /// <param name="serial">The serial.</param>
-        private void Save(SerializableCCPCharacter serial)
+        private void Save(ISerializableCharacterIdentity serial)
         {
             using (SaveFileDialog fileDialog = new SaveFileDialog())
             {
@@ -122,21 +123,17 @@ namespace EVEMon.BlankCharacter
 
                     XmlDocument xmlDoc = Util.SerializeToXmlDocument(serial.GetType(), serial);
                     string content = Util.GetXMLStringRepresentation(xmlDoc);
-                    FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName, fs =>
-                                                                               {
-                                                                                   using (
-                                                                                       StreamWriter writer = new StreamWriter(fs,
-                                                                                                                              Encoding
-                                                                                                                                  .
-                                                                                                                                  UTF8)
-                                                                                       )
-                                                                                   {
-                                                                                       writer.Write(content);
-                                                                                       writer.Flush();
-                                                                                       writer.Close();
-                                                                                   }
-                                                                                   return true;
-                                                                               });
+                    FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
+                                                      fs =>
+                                                          {
+                                                              using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                                                              {
+                                                                  writer.Write(content);
+                                                                  writer.Flush();
+                                                                  writer.Close();
+                                                              }
+                                                              return true;
+                                                          });
 
                     m_filename = fileDialog.FileName;
                     m_fileSaved = true;
@@ -152,15 +149,15 @@ namespace EVEMon.BlankCharacter
         private void AddBlankCharacter()
         {
             // Add blank character
-            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(m_filename), (send, args) =>
-                                                                                        {
-                                                                                            if (args == null || args.HasError)
-                                                                                                return;
+            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(m_filename),
+                                                                 (send, args) =>
+                                                                     {
+                                                                         if (args == null || args.HasError)
+                                                                             return;
 
-                                                                                            UriCharacter character =
-                                                                                                args.CreateCharacter();
-                                                                                            character.Monitored = true;
-                                                                                        });
+                                                                         UriCharacter character = args.CreateCharacter();
+                                                                         character.Monitored = true;
+                                                                     });
         }
 
         #endregion

@@ -129,7 +129,7 @@ namespace EVEMon.Common
             }
 
             // Imports selection
-            m_current = Enumerate().ElementAt(serial.SelectedIndex);
+            m_current = this[serial.SelectedIndex];
 
             EveMonClient.OnSettingsChanged();
         }

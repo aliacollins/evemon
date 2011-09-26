@@ -39,6 +39,7 @@ namespace EVEMon.Common.Data
 
             if (src.Stations == null)
                 return;
+
             foreach (SerializableStation srcStation in src.Stations)
             {
                 Items.Add(new Station(this, srcStation));
@@ -138,11 +139,12 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Trims the neighbors list
+        /// Trims the neighbors list.
         /// </summary>
         internal void TrimNeighbors()
         {
-            m_jumps.Trim();
+            if (m_jumps.Capacity > m_jumps.Count)
+                m_jumps.Trim();
         }
 
         #endregion

@@ -23,7 +23,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
 
-        private readonly IEnumerable<IQueryMonitor> m_basicFeaturesMonitors; 
+        private readonly List<IQueryMonitor> m_basicFeaturesMonitors; 
 
         private APIMethods m_errorNotifiedMethod;
 
@@ -87,7 +87,7 @@ namespace EVEMon.Common
             QueryMonitors.Add(m_charEVENotificationsMonitor);
 
             m_basicFeaturesMonitors = QueryMonitors.Where(
-                monitor => monitor.Method == (monitor.Method & APIMethods.BasicFeatures));
+                monitor => monitor.Method == (monitor.Method & APIMethods.BasicFeatures)).ToList();
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -100,10 +100,7 @@ namespace EVEMon.Common
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // If character is monitored enable the basic feature monitoring
-            foreach (IQueryMonitor monitor in m_basicFeaturesMonitors)
-            {
-                monitor.Enabled = Monitored;
-            }
+            m_basicFeaturesMonitors.ForEach(monitor => monitor.Enabled = Monitored);
         }
 
         /// <summary>
@@ -140,11 +137,10 @@ namespace EVEMon.Common
         {
             get
             {
-                if ((Identity.APIKey == null)
-                    || (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError))
-                    return String.Format("{0} (cached)", Name);
-
-                return Name;
+                return ((Identity.APIKey == null) ||
+                        (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError))
+                           ? String.Format("{0} (cached)", Name)
+                           : Name;
             }
         }
 
@@ -211,11 +207,11 @@ namespace EVEMon.Common
         {
             get
             {
-                IEnumerable<MarketOrder> activeBuyOrdersIssuedForCharacter = MarketOrders.Where(
+                IEnumerable<MarketOrder> activeBuyOrders = MarketOrders.Where(
                     x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x is BuyOrder);
 
-                decimal activeTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
-                decimal activeEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
+                decimal activeTotal = activeBuyOrders.Sum(x => x.TotalPrice);
+                decimal activeEscrow = activeBuyOrders.Sum(x => ((BuyOrder)x).Escrow);
                 decimal additionalToCover = activeTotal - activeEscrow;
 
                 return Balance >= additionalToCover;
@@ -385,10 +381,9 @@ namespace EVEMon.Common
                 EveMonClient.Notifications.InvalidateInsufficientClone(this);
 
             // Check for claimable certificates
-            List<Certificate> claimableCertifitates = new List<Certificate>();
-            claimableCertifitates.AddRange(Certificates.Where(x => x.CanBeClaimed));
-            if (Monitored && claimableCertifitates.Count > 0)
-                EveMonClient.Notifications.NotifyClaimableCertificate(this, claimableCertifitates);
+            IEnumerable<Certificate> claimableCertificates = Certificates.Where(x => x.CanBeClaimed);
+            if (Monitored && claimableCertificates.Count() > 0)
+                EveMonClient.Notifications.NotifyClaimableCertificate(this, claimableCertificates);
             else
                 EveMonClient.Notifications.InvalidateClaimableCertificate(this);
         }

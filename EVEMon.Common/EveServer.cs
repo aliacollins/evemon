@@ -47,8 +47,8 @@ namespace EVEMon.Common
                 switch (m_status)
                 {
                     case ServerStatus.Online:
-                        return String.Format(CultureConstants.TidyInteger,
-                                             "{0} Server Online ({1:n} Pilots)", Name, m_users);
+                        return String.Format(CultureConstants.DefaultCulture,
+                                             "{0} Server Online ({1:N0} Pilots)", Name, m_users);
                     case ServerStatus.Offline:
                         return String.Format("{0} Server Offline", Name);
                     case ServerStatus.CheckDisabled:

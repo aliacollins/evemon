@@ -378,8 +378,7 @@ namespace EVEMon.Common
                             try
                             {
                                 // Deserialize
-                                using (
-                                    XmlNodeReader reader = new XmlNodeReader(asyncResult.Result))
+                                using (XmlNodeReader reader = new XmlNodeReader(asyncResult.Result))
                                 {
                                     XmlSerializer xs = new XmlSerializer(typeof(T));
                                     result = (T)xs.Deserialize(reader);

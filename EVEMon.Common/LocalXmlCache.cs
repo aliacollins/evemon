@@ -58,17 +58,17 @@ namespace EVEMon.Common
                 EveMonClient.EnsureCacheDirInit();
                 string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
-                FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
-                                                                {
-                                                                    using (
-                                                                        StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                                                                    {
-                                                                        writer.Write(content);
-                                                                        writer.Flush();
-                                                                        writer.Close();
-                                                                    }
-                                                                    return true;
-                                                                });
+                FileHelper.OverwriteOrWarnTheUser(fileName,
+                                                  fs =>
+                                                      {
+                                                          using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                                                          {
+                                                              writer.Write(content);
+                                                              writer.Flush();
+                                                              writer.Close();
+                                                          }
+                                                          return true;
+                                                      });
             }
         }
 

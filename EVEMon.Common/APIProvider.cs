@@ -277,25 +277,25 @@ namespace EVEMon.Common
             Util.DownloadAPIResultAsync<T>(
                 url, postData, transform,
                 result =>
+                {
+                    // On failure with a custom method, fallback to CCP
+                    if (ShouldRetryWithCCP(result))
+                        result = s_ccpProvider.QueryMethod<T>(method, postData, transform);
+
+                    // If the result is a character sheet, we store the result
+                    if (method == APIMethods.CharacterSheet && !result.HasError)
                     {
-                        // On failure with a custom method, fallback to CCP
-                        if (ShouldRetryWithCCP(result))
-                            result = s_ccpProvider.QueryMethod<T>(method, postData, transform);
+                        SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
+                        LocalXmlCache.Save(sheet.Name, result.XmlDocument);
+                    }
 
-                        // If the result is a character sheet, we store the result
-                        if (method == APIMethods.CharacterSheet && !result.HasError)
-                        {
-                            SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
-                            LocalXmlCache.Save(sheet.Name, result.XmlDocument);
-                        }
+                    // If the result is a conquerable station list, we store the result
+                    if (method == APIMethods.ConquerableStationList && !result.HasError)
+                        LocalXmlCache.Save(method.ToString(), result.XmlDocument);
 
-                        // If the result is a conquerable station list, we store the result
-                        if (method == APIMethods.ConquerableStationList && !result.HasError)
-                            LocalXmlCache.Save(method.ToString(), result.XmlDocument);
-
-                        // Invokes the callback
-                        callback(result);
-                    });
+                    // Invokes the callback
+                    callback(result);
+                });
         }
 
         /// <summary>

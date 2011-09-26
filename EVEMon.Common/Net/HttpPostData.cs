@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace EVEMon.Common.Net
@@ -10,18 +10,22 @@ namespace EVEMon.Common.Net
     public sealed class HttpPostData
     {
         private readonly string m_data;
+        private readonly List<byte> m_content;
 
         public HttpPostData(string data)
         {
             ASCIIEncoding encoding = new ASCIIEncoding();
-            Content = encoding.GetBytes(data).ToList().AsReadOnly();
+            m_content = new List<byte>(encoding.GetBytes(data));
             m_data = data;
         }
 
         /// <summary>
         /// Gets the content's bytes.
         /// </summary>
-        public ReadOnlyCollection<byte> Content { get; private set; }
+        public ReadOnlyCollection<byte> Content
+        {
+            get { return m_content.AsReadOnly(); }
+        }
 
         /// <summary>
         /// Gets the number of bytes of the content.

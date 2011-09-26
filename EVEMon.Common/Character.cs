@@ -270,12 +270,10 @@ namespace EVEMon.Common
                 if (m_skillPointTotalUpdated > DateTime.UtcNow.AddSeconds(-1))
                     return m_lastSkillPointTotal;
 
-                int sp = Skills.Sum(skill => skill.SkillPoints);
-
-                m_lastSkillPointTotal = sp;
+                m_lastSkillPointTotal = Skills.Sum(skill => skill.SkillPoints);
                 m_skillPointTotalUpdated = DateTime.UtcNow;
 
-                return sp;
+                return m_lastSkillPointTotal;
             }
         }
 

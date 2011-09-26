@@ -19,13 +19,11 @@ namespace EVEMon.Common.Data
             if (src == null)
                 return;
 
-            Items.Capacity = src.Count;
             foreach (EvePropertyValue prop in src.Select(
                 srcProp => new EvePropertyValue(srcProp)).Where(prop => prop.Property != null))
             {
                 Items.Add(prop);
             }
-            Items.Trim();
         }
 
         #endregion

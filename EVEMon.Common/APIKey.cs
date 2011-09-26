@@ -46,20 +46,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates the API key info and account status on a timer tick.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            m_apiKeyInfoMonitor.Enabled = Monitored;
-
-            // We trigger the account status check when we have the character list of the API key
-            // in order to have better API key related info in the trace file
-            m_accountStatusMonitor.Enabled = (m_characterListUpdated && Monitored);
-        }
-
-        /// <summary>
         /// Deserialization constructor.
         /// </summary>
         /// <param name="serial"></param>
@@ -235,6 +221,21 @@ namespace EVEMon.Common
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Updates the API key info and account status on a timer tick.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            m_apiKeyInfoMonitor.Enabled = Monitored;
+
+            // We trigger the account status check when we have the character list of the API key
+            // in order to have better API key related info in the trace file
+            m_accountStatusMonitor.Enabled = (m_characterListUpdated && Monitored);
+        }
 
 
         #region Queries response

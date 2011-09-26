@@ -173,6 +173,7 @@ namespace EVEMon.Common
         /// The update period is bound to the CharacterList's period in Settings.
         /// </remarks>
         [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
         APIKeyInfo = 6,
 
         /// <summary>
