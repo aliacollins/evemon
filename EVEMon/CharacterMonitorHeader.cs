@@ -173,7 +173,8 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && ccpCharacter.QueryMonitors[APIMethods.MarketOrders].Enabled)
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APIMethods.MarketOrders];
+            if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 BalanceLabel.ForeColor = Color.Orange;
                 BalanceLabel.Font = FontFactory.GetFont(Font, FontStyle.Bold);
