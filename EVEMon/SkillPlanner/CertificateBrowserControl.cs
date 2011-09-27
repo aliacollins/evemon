@@ -331,7 +331,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             Item ship = tsi.Tag as Item;
-            PlanWindow window = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
+            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
             if (ship != null && window != null && !window.IsDisposed)
                 window.ShowShipInBrowser(ship);
         }

@@ -975,7 +975,7 @@ namespace EVEMon.SkillPlanner
         private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
+            PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
             if (npw == null || npw.IsDisposed)
                 return;
 
@@ -991,7 +991,7 @@ namespace EVEMon.SkillPlanner
         private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = new WindowsFactory<PlanWindow>().GetByTag(m_plan);
+            PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
             if (npw == null || npw.IsDisposed)
                 return;
 

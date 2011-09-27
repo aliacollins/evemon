@@ -532,7 +532,7 @@ namespace EVEMon
             EveMailMessage message = (EveMailMessage)item.Tag;
 
             // Show or bring to front if a window with the same EVE mail message already exists
-            new WindowsFactory<EveMessageWindow>().ShowByTag(message);
+            WindowsFactory<EveMessageWindow>.ShowByTag(message);
         }
 
         /// <summary>

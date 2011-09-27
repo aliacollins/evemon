@@ -84,7 +84,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static void PerformSilently(IPlanOperation operation)
         {
-            PlanWindow window = new WindowsFactory<PlanWindow>().GetByTag(operation.Plan);
+            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
             PerformSilently(window, operation);
         }
 
@@ -114,7 +114,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public static void Perform(IPlanOperation operation)
         {
-            PlanWindow window = new WindowsFactory<PlanWindow>().GetByTag(operation.Plan);
+            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
             Perform(window, operation);
         }
 

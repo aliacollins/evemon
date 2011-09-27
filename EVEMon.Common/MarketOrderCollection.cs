@@ -87,7 +87,7 @@ namespace EVEMon.Common
 
             // Add the items that are no longer present in the API
             // (a.k.a. Canceled, Expired, Fulfilled)
-            endedOrders.AddRange(Items.Except(newOrders)); // This code line is to remain till CCP fixes the market orders API
+            //endedOrders.AddRange(Items.Except(newOrders)); // This code line is to remain till CCP fixes the market orders API
 
             // Replace the old list with the new one
             Items.Clear();

@@ -9,25 +9,25 @@ namespace EVEMon.Common
     /// This factory allows us keep unique instances of 
     /// </summary>
     /// <typeparam name="TForm">The type of windows ro create</typeparam>
-    public class WindowsFactory<TForm>
+    public static class WindowsFactory<TForm>
         where TForm : Form
     {
-        private readonly Object m_syncLock = new object();
-        private readonly List<TForm> m_taggedWindows = new List<TForm>();
-        private TForm m_uniqueWindow;
+        private static readonly Object s_syncLock = new object();
+        private static readonly List<TForm> s_taggedWindows = new List<TForm>();
+        private static TForm  s_uniqueWindow;
 
         /// <summary>
         /// Close the unique window.
         /// </summary>
-        public void CloseUnique()
+        public static void CloseUnique()
         {
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 try
                 {
                     // Does it already exist ?
-                    if (m_uniqueWindow != null && !m_uniqueWindow.IsDisposed)
-                        m_uniqueWindow.Close();
+                    if (s_uniqueWindow != null && !s_uniqueWindow.IsDisposed)
+                        s_uniqueWindow.Close();
                 }
                     // Catch exception when the window is being disposed
                 catch (ObjectDisposedException ex)
@@ -41,26 +41,26 @@ namespace EVEMon.Common
         /// Gets the window displayed as unique if it exists, null otherwise.
         /// </summary>
         /// <returns></returns>
-        public TForm GetUnique
+        public static TForm GetUnique
         {
             get
             {
-                lock (m_syncLock)
+                lock (s_syncLock)
                 {
                     try
                     {
                         // Does it already exist ?
-                        if (m_uniqueWindow != null && !m_uniqueWindow.IsDisposed)
+                        if (s_uniqueWindow != null && !s_uniqueWindow.IsDisposed)
                         {
                             // Bring to front or show
-                            if (m_uniqueWindow.Visible)
-                                m_uniqueWindow.BringToFront();
+                            if (s_uniqueWindow.Visible)
+                                s_uniqueWindow.BringToFront();
                             else
-                                m_uniqueWindow.Show();
+                                s_uniqueWindow.Show();
 
                             // Give focus and return
-                            m_uniqueWindow.Activate();
-                            return m_uniqueWindow;
+                            s_uniqueWindow.Activate();
+                            return s_uniqueWindow;
                         }
                     }
                         // Catch exception when the window is being disposed
@@ -80,7 +80,7 @@ namespace EVEMon.Common
         /// When it already exists, it is bringed to front, or show when hidden.
         /// </summary>
         /// <returns></returns>
-        public TForm ShowUnique()
+        public static TForm ShowUnique()
         {
             return ShowUnique(Create);
         }
@@ -92,24 +92,24 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public TForm ShowUnique(Func<TForm> creation)
+        public static TForm ShowUnique(Func<TForm> creation)
         {
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 try
                 {
                     // Does it already exist ?
-                    if (m_uniqueWindow != null && !m_uniqueWindow.IsDisposed)
+                    if (s_uniqueWindow != null && !s_uniqueWindow.IsDisposed)
                     {
                         // Bring to front or show
-                        if (m_uniqueWindow.Visible)
-                            m_uniqueWindow.BringToFront();
+                        if (s_uniqueWindow.Visible)
+                            s_uniqueWindow.BringToFront();
                         else
-                            m_uniqueWindow.Show();
+                            s_uniqueWindow.Show();
 
                         // Give focus and return
-                        m_uniqueWindow.Activate();
-                        return m_uniqueWindow;
+                        s_uniqueWindow.Activate();
+                        return s_uniqueWindow;
                     }
                 }
                     // Catch exception when the window is being disposed
@@ -119,18 +119,18 @@ namespace EVEMon.Common
                 }
 
                 // Create the window and subscribe to its closing for cleanup
-                m_uniqueWindow = creation();
-                m_uniqueWindow.FormClosing += (FormClosingEventHandler)((sender, args) =>
+                s_uniqueWindow = creation();
+                s_uniqueWindow.FormClosing += (FormClosingEventHandler)((sender, args) =>
                                                                             {
-                                                                                lock (m_syncLock)
+                                                                                lock (s_syncLock)
                                                                                 {
-                                                                                    m_uniqueWindow = null;
+                                                                                    s_uniqueWindow = null;
                                                                                 }
                                                                             });
 
                 // Show and return
-                m_uniqueWindow.Show();
-                return m_uniqueWindow;
+                s_uniqueWindow.Show();
+                return s_uniqueWindow;
             }
         }
 
@@ -140,15 +140,15 @@ namespace EVEMon.Common
         /// <typeparam name="TTag"></typeparam>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public TForm GetByTag<TTag>(TTag tag)
+        public static TForm GetByTag<TTag>(TTag tag)
             where TTag : class
         {
             Object otag = tag;
 
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 // Does it already exist ?
-                foreach (TForm existingWindow in m_taggedWindows)
+                foreach (TForm existingWindow in s_taggedWindows)
                 {
                     try
                     {
@@ -175,7 +175,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public TForm ShowByTag<TTag>(TTag tag)
+        public static TForm ShowByTag<TTag>(TTag tag)
             where TTag : class
         {
             return ShowByTag(tag, Create);
@@ -189,15 +189,15 @@ namespace EVEMon.Common
         /// <param name="tag"></param>
         /// <param name="creation"></param>
         /// <returns></returns>
-        public TForm ShowByTag<TTag>(TTag tag, Func<TTag, TForm> creation)
+        public static TForm ShowByTag<TTag>(TTag tag, Func<TTag, TForm> creation)
             where TTag : class
         {
             Object otag = tag;
 
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 // Does it already exist ?
-                foreach (TForm existingWindow in m_taggedWindows)
+                foreach (TForm existingWindow in s_taggedWindows)
                 {
                     try
                     {
@@ -226,12 +226,12 @@ namespace EVEMon.Common
                 window.Tag = otag;
 
                 // Store it and subscribe to closing for clean up
-                m_taggedWindows.Add(window);
+                s_taggedWindows.Add(window);
                 window.FormClosing += (FormClosingEventHandler)((sender, args) =>
                                                                     {
-                                                                        lock (m_syncLock)
+                                                                        lock (s_syncLock)
                                                                         {
-                                                                            m_taggedWindows.Remove((TForm)sender);
+                                                                            s_taggedWindows.Remove((TForm)sender);
                                                                         }
                                                                     });
 
@@ -273,11 +273,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="TTag"></typeparam>
         /// <param name="tag"></param>
-        public void CloseByTag<TTag>(TTag tag)
+        public static void CloseByTag<TTag>(TTag tag)
         {
             Object otag = tag;
 
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 // While we find windows to close...
                 while (true)
@@ -285,7 +285,7 @@ namespace EVEMon.Common
                     // Search all the disposed windows or windows with the same tag
                     bool isDisposed = false;
                     TForm formToRemove = null;
-                    foreach (TForm existingWindow in m_taggedWindows)
+                    foreach (TForm existingWindow in s_taggedWindows)
                     {
                         try
                         {
@@ -309,7 +309,7 @@ namespace EVEMon.Common
                         return;
 
                     if (isDisposed)
-                        m_taggedWindows.Remove(formToRemove);
+                        s_taggedWindows.Remove(formToRemove);
                     else
                         formToRemove.Close();
                 }
