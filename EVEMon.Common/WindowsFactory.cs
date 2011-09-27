@@ -14,7 +14,7 @@ namespace EVEMon.Common
     {
         private static readonly Object s_syncLock = new object();
         private static readonly List<TForm> s_taggedWindows = new List<TForm>();
-        private static TForm  s_uniqueWindow;
+        private static TForm s_uniqueWindow;
 
         /// <summary>
         /// Close the unique window.
