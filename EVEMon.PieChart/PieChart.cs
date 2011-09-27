@@ -882,11 +882,12 @@ namespace EVEMon.PieChart
                 PieSlice slice;
                 if (i == m_highlightedIndex)
                 {
-                    using(PieSlice pieSlice = CreatePieSliceHighlighted(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
-                                                      m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
-                                                      topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                                      (float)(startAngle % 360), (float)(sweepAngle), m_colors[colorIndex],
-                                                      m_shadowStyle, m_edgeColorType, m_edgeLineWidth))
+                    using (PieSlice pieSlice =
+                        CreatePieSliceHighlighted(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
+                                                  m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
+                                                  topEllipeSize.Width, topEllipeSize.Height, PieHeight,
+                                                  (float)(startAngle), (float)(sweepAngle), m_colors[colorIndex],
+                                                  m_shadowStyle, m_edgeColorType, m_edgeLineWidth))
                     {
                         slice = (PieSlice)pieSlice.Clone();
                     }
@@ -896,15 +897,12 @@ namespace EVEMon.PieChart
                     using (PieSlice pieSlice = CreatePieSlice(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
                                                               m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
                                                               topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                                              (float)(startAngle % 360),
-                                                              (float)(sweepAngle), m_colors[colorIndex], m_shadowStyle,
-                                                              m_edgeColorType,
-                                                              m_edgeLineWidth))
+                                                              (float)(startAngle), (float)(sweepAngle), m_colors[colorIndex],
+                                                              m_shadowStyle, m_edgeColorType, m_edgeLineWidth))
                     {
                         slice = (PieSlice)pieSlice.Clone();
                     }
-
-            }
+                }
                 slice.Text = m_texts[i];
                 // the backmost pie is inserted to the front of the list for correct drawing
                 if (backPieIndex > -1 || ((startAngle <= 270) && (startAngle + sweepAngle > 270)) ||
@@ -983,7 +981,7 @@ namespace EVEMon.PieChart
                                         float edgeLineWidth)
         {
             return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
-                                startAngle % 360, sweepAngle, color, shadowStyle, edgeColorType, edgeLineWidth);
+                                startAngle, sweepAngle, color, shadowStyle, edgeColorType, edgeLineWidth);
         }
 
         /// <summary>
@@ -1038,7 +1036,7 @@ namespace EVEMon.PieChart
             Color highLightedColor = ColorUtil.CreateColorWithCorrectedLightness(color, ColorUtil.BrightnessEnhancementFactor1);
 
             return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
-                                startAngle % 360, sweepAngle, highLightedColor, shadowStyle, edgeColorType,
+                                startAngle, sweepAngle, highLightedColor, shadowStyle, edgeColorType,
                                 edgeLineWidth);
         }
 

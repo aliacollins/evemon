@@ -392,7 +392,7 @@ namespace EVEMon.PieChart
         /// </returns>
         public object Clone()
         {
-            return new PieSlice(BoundingRectangle, SliceHeight, StartAngle, SweepAngle, m_surfaceColor, m_shadowStyle,
+            return new PieSlice(BoundingRectangle, SliceHeight, m_actualStartAngle, m_actualSweepAngle, m_surfaceColor, m_shadowStyle,
                                 m_edgeColorType);
         }
 
