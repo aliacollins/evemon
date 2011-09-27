@@ -53,8 +53,8 @@ namespace EVEMon
                                    { "Vehlin", "02" },
                                    // Developers
                                    { "MrCue", "03" },
-                                   { "Tonto Auri", "03" },
                                    { "Nericus Demeeny", "03" },
+                                   { "Tonto Auri", "03" },
                                    // Developers (Retired)
                                    { "Collin Grady", "04" },
                                    { "DCShadow", "04" },

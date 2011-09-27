@@ -120,13 +120,13 @@ namespace EVEMon
         /// <param name="replacements">The replacements.</param>
         private void FormatLinks(IDictionary<string, string> replacements)
         {
-            // Regural expression for all HTML links
+            // Regular expression for all HTML links
             Regex regexLinks = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.IgnoreCase);
 
-            // Regural expression for all showinfo URLs
+            // Regular expression for all showinfo URLs
             Regex regexShowInfo = new Regex(@"^showinfo:(\d+)//(\d+)$");
 
-            // Regural expression for clickable/valid URLs
+            // Regular expression for clickable/valid URLs
             Regex regexWebProtocol = new Regex(@"(?:f|ht)tps?://", RegexOptions.IgnoreCase);
 
             foreach (Match match in regexLinks.Matches(m_selectedObject.Text))
