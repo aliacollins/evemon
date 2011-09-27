@@ -196,7 +196,7 @@ namespace EVEMon
         {
             Color backColor = flPanelHeader.BackColor;
 
-            // Regural expression for fixing text color
+            // Regular expression for fixing text color
             Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.IgnoreCase);
             foreach (Match match in regexColor.Matches(m_selectedObject.Text))
             {
