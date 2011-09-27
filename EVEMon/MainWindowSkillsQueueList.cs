@@ -352,16 +352,6 @@ namespace EVEMon
         #region Local events
 
         /// <summary>
-        /// Handles the MouseHover event of the noSkillsQueueLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void noSkillsQueueLabel_MouseHover(object sender, EventArgs e)
-        {
-            Focus();
-        }
-
-        /// <summary>
         /// Handles the MouseWheel event of the lbSkillsQueue control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

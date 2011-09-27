@@ -88,7 +88,6 @@
             this.lvNotifications.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.lvNotifications_ColumnWidthChanged);
             this.lvNotifications.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvNotifications_ItemSelectionChanged);
             this.lvNotifications.DoubleClick += new System.EventHandler(this.lvNotifications_DoubleClick);
-            this.lvNotifications.MouseHover += new System.EventHandler(this.lvNotifications_MouseHover);
             // 
             // chSenderName
             // 

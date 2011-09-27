@@ -49,7 +49,6 @@ namespace EVEMon
             this.noSkillsQueueLabel.TabIndex = 0;
             this.noSkillsQueueLabel.Text = "Skills Queue information not available.";
             this.noSkillsQueueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.noSkillsQueueLabel.MouseHover += new System.EventHandler(this.noSkillsQueueLabel_MouseHover);
             // 
             // ttToolTip
             // 

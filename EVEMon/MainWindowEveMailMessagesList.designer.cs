@@ -186,7 +186,6 @@ namespace EVEMon
             this.lvMailMessages.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.lvMailMessages_ColumnWidthChanged);
             this.lvMailMessages.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvMailMessages_ItemSelectionChanged);
             this.lvMailMessages.DoubleClick += new System.EventHandler(this.lvMailMessages_DoubleClick);
-            this.lvMailMessages.MouseHover += new System.EventHandler(this.lvMailMessages_MouseHover);
             // 
             // chSenderName
             // 

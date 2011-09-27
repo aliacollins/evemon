@@ -343,16 +343,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the MouseHover event of the lbStandings control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void lbStandings_MouseHover(object sender, EventArgs e)
-        {
-            Focus();
-        }
-
-        /// <summary>
         /// Handles the MouseWheel event of the lbStandings control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

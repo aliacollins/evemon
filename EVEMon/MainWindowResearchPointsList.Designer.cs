@@ -99,7 +99,6 @@ namespace EVEMon
             this.lvResearchPoints.UseCompatibleStateImageBehavior = false;
             this.lvResearchPoints.View = System.Windows.Forms.View.Details;
             this.lvResearchPoints.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvResearchPoints_ColumnReordered);
-            this.lvResearchPoints.MouseHover += new System.EventHandler(this.lvResearchPoints_MouseHover);
             // 
             // MainWindowResearchPointsList
             // 

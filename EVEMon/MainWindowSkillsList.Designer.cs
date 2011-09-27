@@ -79,7 +79,6 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
-            this.lbSkills.MouseHover += new System.EventHandler(this.lbSkills_MouseHover);
             // 
             // MainWindowSkillsList
             // 
