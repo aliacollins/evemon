@@ -162,7 +162,7 @@ namespace EVEMon.ApiCredentialsManagement
             // ButtonNext
             // 
             this.ButtonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonNext.Location = new System.Drawing.Point(318, 177);
+            this.ButtonNext.Location = new System.Drawing.Point(337, 177);
             this.ButtonNext.Name = "ButtonNext";
             this.ButtonNext.Size = new System.Drawing.Size(75, 23);
             this.ButtonNext.TabIndex = 1;
@@ -174,7 +174,7 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.ButtonPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonPrevious.Enabled = false;
-            this.ButtonPrevious.Location = new System.Drawing.Point(237, 177);
+            this.ButtonPrevious.Location = new System.Drawing.Point(256, 177);
             this.ButtonPrevious.Name = "ButtonPrevious";
             this.ButtonPrevious.Size = new System.Drawing.Size(75, 23);
             this.ButtonPrevious.TabIndex = 0;
@@ -186,7 +186,7 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonCancel.CausesValidation = false;
-            this.ButtonCancel.Location = new System.Drawing.Point(416, 177);
+            this.ButtonCancel.Location = new System.Drawing.Point(435, 177);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
             this.ButtonCancel.TabIndex = 2;
@@ -205,7 +205,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.MultiPanel.Location = new System.Drawing.Point(0, 0);
             this.MultiPanel.Name = "MultiPanel";
             this.MultiPanel.SelectedPage = this.CredentialsPage;
-            this.MultiPanel.Size = new System.Drawing.Size(503, 171);
+            this.MultiPanel.Size = new System.Drawing.Size(522, 171);
             this.MultiPanel.TabIndex = 0;
             // 
             // CredentialsPage
@@ -221,7 +221,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.CredentialsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CredentialsPage.Location = new System.Drawing.Point(0, 0);
             this.CredentialsPage.Name = "CredentialsPage";
-            this.CredentialsPage.Size = new System.Drawing.Size(503, 171);
+            this.CredentialsPage.Size = new System.Drawing.Size(522, 171);
             this.CredentialsPage.TabIndex = 0;
             this.CredentialsPage.Text = "credentialsPage";
             // 
@@ -231,7 +231,7 @@ namespace EVEMon.ApiCredentialsManagement
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.VerificationCodeTextBox.Location = new System.Drawing.Point(41, 141);
             this.VerificationCodeTextBox.Name = "VerificationCodeTextBox";
-            this.VerificationCodeTextBox.Size = new System.Drawing.Size(424, 21);
+            this.VerificationCodeTextBox.Size = new System.Drawing.Size(443, 21);
             this.VerificationCodeTextBox.TabIndex = 4;
             this.VerificationCodeTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
             this.VerificationCodeTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
@@ -577,7 +577,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(503, 212);
+            this.ClientSize = new System.Drawing.Size(522, 212);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonPrevious);
             this.Controls.Add(this.ButtonNext);

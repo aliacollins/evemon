@@ -74,7 +74,7 @@
             this.MainFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.MainFlowLayoutPanel.Location = new System.Drawing.Point(12, 12);
             this.MainFlowLayoutPanel.Name = "MainFlowLayoutPanel";
-            this.MainFlowLayoutPanel.Size = new System.Drawing.Size(342, 343);
+            this.MainFlowLayoutPanel.Size = new System.Drawing.Size(360, 343);
             this.MainFlowLayoutPanel.TabIndex = 1;
             // 
             // basicFeaturesflowLayoutPanel
@@ -84,7 +84,7 @@
             this.basicFeaturesflowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.basicFeaturesflowLayoutPanel.Location = new System.Drawing.Point(3, 19);
             this.basicFeaturesflowLayoutPanel.Name = "basicFeaturesflowLayoutPanel";
-            this.basicFeaturesflowLayoutPanel.Size = new System.Drawing.Size(339, 60);
+            this.basicFeaturesflowLayoutPanel.Size = new System.Drawing.Size(354, 60);
             this.basicFeaturesflowLayoutPanel.TabIndex = 1;
             // 
             // CharacterMonitoringLabel
@@ -147,7 +147,7 @@
             this.advanceFeaturesFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.advanceFeaturesFlowLayoutPanel.Location = new System.Drawing.Point(3, 142);
             this.advanceFeaturesFlowLayoutPanel.Name = "advanceFeaturesFlowLayoutPanel";
-            this.advanceFeaturesFlowLayoutPanel.Size = new System.Drawing.Size(339, 166);
+            this.advanceFeaturesFlowLayoutPanel.Size = new System.Drawing.Size(354, 166);
             this.advanceFeaturesFlowLayoutPanel.TabIndex = 10;
             // 
             // AccountStatusLabel
@@ -196,24 +196,24 @@
             this.MarketOrdersLabel.Location = new System.Drawing.Point(186, 0);
             this.MarketOrdersLabel.Name = "MarketOrdersLabel";
             this.MarketOrdersLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.MarketOrdersLabel.Size = new System.Drawing.Size(101, 44);
+            this.MarketOrdersLabel.Size = new System.Drawing.Size(155, 31);
             this.MarketOrdersLabel.TabIndex = 3;
             this.MarketOrdersLabel.Text = "For Market orders monitoring:\r\n- MarketOrders";
             // 
             // ResearchPointsLabel
             // 
             this.ResearchPointsLabel.AutoSize = true;
-            this.ResearchPointsLabel.Location = new System.Drawing.Point(186, 44);
+            this.ResearchPointsLabel.Location = new System.Drawing.Point(186, 31);
             this.ResearchPointsLabel.Name = "ResearchPointsLabel";
             this.ResearchPointsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.ResearchPointsLabel.Size = new System.Drawing.Size(111, 44);
+            this.ResearchPointsLabel.Size = new System.Drawing.Size(165, 31);
             this.ResearchPointsLabel.TabIndex = 6;
             this.ResearchPointsLabel.Text = "For Research points monitoring:\r\n- Research";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(186, 88);
+            this.label1.Location = new System.Drawing.Point(186, 62);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.label1.Size = new System.Drawing.Size(135, 31);
@@ -242,7 +242,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(366, 367);
+            this.ClientSize = new System.Drawing.Size(384, 367);
             this.Controls.Add(this.MainFlowLayoutPanel);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
