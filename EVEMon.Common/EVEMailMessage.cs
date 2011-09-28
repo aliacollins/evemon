@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -29,7 +30,7 @@ namespace EVEMon.Common
                          ? GetMailingListIDToName(src.SenderID.ToString())
                          : EveIDToName.GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
-            Title = src.Title;
+            Title = HttpUtility.HtmlDecode(src.Title);
             ToCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
             ToCharacters = GetIDsToNames(src.ToCharacterIDs);
             ToMailingLists = GetMailingListIDsToNames(src.ToListID);
