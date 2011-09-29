@@ -49,7 +49,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor for designer.
         /// </summary>
-        private SkillExplorerWindow()
+        public SkillExplorerWindow()
         {
             InitializeComponent();
             splitContainer1.RememberDistanceKey = "SkillExplorer";
@@ -58,7 +58,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Constructor for use in code
+        /// Constructor for use in code.
         /// </summary>
         /// <param name="skill">The skill we want to analyze</param>
         /// <param name="planWindow">The plan window</param>
