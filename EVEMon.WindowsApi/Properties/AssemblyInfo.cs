@@ -7,10 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("EVEMon.WindowsApi")]
-[assembly:
-    AssemblyDescription(
-        "EVEMon. Revision Number: 2800 Local Changes: Yes Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.WindowsApi"
-        )]
+[assembly: AssemblyDescription("EVEMon. Revision Number: 3097 Local Changes: Yes Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.WindowsApi")] 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -36,5 +33,5 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("1.4.1.2798")]
+[assembly: AssemblyVersion("1.5.0.3097")]
 [assembly: NeutralResourcesLanguage("en-US")]

@@ -3,10 +3,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("EVEMon.Watchdog")]
-[assembly:
-    AssemblyDescription(
-        "EVEMon Offline Character Utility. Revision Number: 2800 Local Changes: Yes Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.Watchdog"
-        )]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 3097 Local Changes: Yes Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.Watchdog")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -14,5 +11,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.4.1.2798")]
+[assembly: AssemblyVersion("1.5.0.3097")]
 [assembly: NeutralResourcesLanguage("en-US")]
