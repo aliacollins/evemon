@@ -1,46 +1,79 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>10 July 2011</date>
-    <version>1.4.1.2798</version>
-    <url>http://forum.battleclinic.com/index.php/topic,147155.0.html</url>
-    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.4.1.2798.exe</autopatchurl>
+    <date>30 September 2011</date>
+    <version>1.5.0.3097</version>
+    <url>http://forum.battleclinic.com/index.php/topic,152110.0.html</url>
+    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.5.0.3097.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Breaking Changes ==
 
-* Due to merging of the BattleClininc API settings files, user will have to re-enter BattleClinic API credentials and setting for this feature.
+ * New API keys (CAK) has to be entered for EVEMon to update characters info.
+ * Plan exportation settings will have to be re-applied.
 
 == Contributors for this version ==
 
-* Jimi
-* evilek
+ * Aethlyn
+ * Jimi
+ * Nascent Nimbus
+
+== New Features ==
+
+ * EVEMon now shows a notification about claimable certificates.
+ * EVEMon now shows info about character's security status, active ship and location.
+ * EVEMon now has a character standings monitor.
+ * EVEMon now gives the ability to clear its cache.
+ * EVEMon now has the ability for a plan wide description.
+ * EVEMon now supports only CAK (Customizable API Key).
+ * EVEMon can now save and restore a character's plans.
 
 == Bug Fixes ==
 
-* Fixed a visual bug in Industry monitor where scroll bar position isn't persistent.
-* Fixed an issue where the whole skill queue remaining time is shown in G15 (third line) instead of the skill's.
-* Fixed an issue when clicking the Cancel button of Blank Character Creator window, it doesn't close the window.
-* EVEMon will now handle better similar opened window, remembering the position of the last closed one.
-* EVEMon will again display all market orders.
-* Fixed a visual bug where a long Bio info gets wrapped to a second line.
-* Fixed an issue where an order gets not removed from the list (if it's the only one) due to change made by CCP to the Market Orders API call.
-* Fixed an issue in Skill Explorer where the prerequisites of a blueprint wasn't corresponding to its activity.
-* Fixed a crash bug in Skill Browser when skill tree is reset and user right clicks on a blank spot.
-
+ * Fixed a visual bug where the completion date time in the Overview was calculated in UTC for the conflict coloring.
+ * Fixed a visual bug where the ampersand ('&') symbol was not shown in the Item browser for the items header.
+ * Fixed an issue with ampersand symbol in toolstrips.
+ * Fixed an issue where the amount of the output units of a blueprint in manufacturing for some Tech 2 items where wrong.
+ * Fixed a visual bug where traces where drawn when an expandable panel collapse.
+ * Fixed a bug in Skill browser where the info for a selected skill that is in training wasn't updated every 30 sec. 
+ * Fixed a bug where a drag and dropped skill level, from the hosted skill selector in the plan, was always placed at the bottom of the plan.
+ * Fixed a calculation and visual bug in Attribute Optimizer when setting remapping points and choose to optimize them (first selection).
+ * Fixed a bug in CSV exportation of an item where number values where wrongly formatted for cultures other than similar to English.
+ * Fixed a visual bug where the tooltip for an implant in Implant Groups window was getting misplaced on first show. 
+ * Fixed an issue where the application title wasn't shown in the tray icon after a mouse hovering.
+ * Fixed coloring issues in EVE mail messages text.
+ * Fixed a visual bug where skill queue info were not updated for an overview item if that item had previously no skill queue.
+ * Fixed a crash bug when importing pre-EVEMon 1.3.0 settings with no implant sets.
+ * Fixed a crash bug when mail body text is empty.
+ * Fixed a visual bug where a character's balance stayed colored after disabling market orders monitoring (color will change after a character sheet update).
+ 
 == Enhancements ==
 
-* In case only one skill level is in training and info cycling is enabled, G15 LCD will display the skill in training instead of the queue finish time.
-* Blank Character Creator window will now have the same behavior as other EVEMon windows.
-* An opened plan will now notify if it contains obsolete entries upon entries completing training.
-
+ * When adding a custom API provider, calls URL's will be preset to default.
+ * "Queries Updater" button will be enabled when really necessary.
+ * You can import a character's skill queue into MSOutlook or Google calendar.
+ * Reprocessing info are now available for each ship and item.
+ * A planned skill will now be shown with the proper icon in the Certificate browser.
+ * Selected items in Skill and Certificate browsers will now be remembered after updating. Improved image handling for 'Safe for work' setting.
+ * Mineral Worksheet is now 'Safe for Work'.
+ * EVEMon will now start faster and possible resolved an issue with various AV and IS programs that prevented EVEMon from writing to local disk.
+ * You can now export to CSV (by right-click) the list of each blueprint browser item activity.
+ * You can now copy text from an EVE mail message and navigate to links.
+ * A tooltip is shown when hovering over a link in an EVE mail message, informing about the address the link leads to
+         (implemented for security reasons - always look at the address before clicking on a link).
+ * The Overview tab will always be shown on EVEMon startup if it's the first.
+ * EFT Loadout Importation window is now aware of the selected plan in case you change the plan while this window is open.
+        However, the ability of having multiple instances of the window got disabled. Never the less, you can have an active window with each open Planner window.
+ * Prevents EVEMon from constantly querying the API due to CCP's API bug with the 'cachedUntil' timer.
+ * Links related to EVE in EVE mail messages will open in EVEGate. Also you can open a mail message in EVE Gate for reading, replying, forwarding.
+ * Improved the way EVE mail message window opens on double clicking.
+ * You can now choose which API keys to monitor. API keys management is now more descriptive.
+ * 'Skill Completion' and 'Claimable Certificates' windows no longer can be minimized or maximized.
+ * Characters skill group info in skill list has been made more readable. Headers have now a pseudo-3D look.
+ 
 == Misc ==
 
-* Renamed "Add" button to "Import" in Blank Character Creator.
-* Feature info in Feature window have been updated.
-* Switched OrderID to 64bit (see related devblog -  http://www.eveonline.com/devblog.asp?a=blog&bid=924).
-* EVEMon will temporarily display again market orders notifications in a not so accurate way, till CCP fixes the Market Orders API.
-* Some menu items in main EVEMon window have been re-arranged in alphabetical order.]]></message>
+ * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
