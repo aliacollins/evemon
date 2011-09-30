@@ -46,6 +46,7 @@ namespace EVEMon.Common
             // Compare plans
             switch (Sort)
             {
+                case PlanSort.Description:
                 case PlanSort.Name:
                     if (x != null && y != null)
                         return String.Compare(x.Name, y.Name);

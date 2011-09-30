@@ -357,7 +357,8 @@ namespace EVEMon.Common
     {
         Name = 0,
         Time = 1,
-        SkillsCount = 2
+        SkillsCount = 2,
+        Description = 3
     }
 
     public enum PlanFormat
