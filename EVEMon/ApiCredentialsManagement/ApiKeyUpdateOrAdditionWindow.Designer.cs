@@ -98,11 +98,12 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // FeaturesLinkLabel
             // 
+            this.FeaturesLinkLabel.AutoSize = true;
             this.FeaturesLinkLabel.CausesValidation = false;
             this.FeaturesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(75, 15);
             this.FeaturesLinkLabel.Location = new System.Drawing.Point(23, 28);
             this.FeaturesLinkLabel.Name = "FeaturesLinkLabel";
-            this.FeaturesLinkLabel.Size = new System.Drawing.Size(476, 18);
+            this.FeaturesLinkLabel.Size = new System.Drawing.Size(470, 18);
             this.FeaturesLinkLabel.TabIndex = 1;
             this.FeaturesLinkLabel.TabStop = true;
             this.FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
@@ -146,11 +147,12 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // ActiveLinksLabel
             // 
+            this.ActiveLinksLabel.AutoSize = true;
             this.ActiveLinksLabel.CausesValidation = false;
             this.ActiveLinksLabel.LinkArea = new System.Windows.Forms.LinkArea(100, 56);
             this.ActiveLinksLabel.Location = new System.Drawing.Point(23, 46);
             this.ActiveLinksLabel.Name = "ActiveLinksLabel";
-            this.ActiveLinksLabel.Size = new System.Drawing.Size(476, 30);
+            this.ActiveLinksLabel.Size = new System.Drawing.Size(468, 31);
             this.ActiveLinksLabel.TabIndex = 2;
             this.ActiveLinksLabel.TabStop = true;
             this.ActiveLinksLabel.Text = "If you have already an API key, you can install it directly by clicking on the [I" +
