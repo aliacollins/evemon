@@ -73,8 +73,9 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         private void OnServerStatusMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
         {
-            // Was there an error ?
             ServerStatus lastStatus = m_status;
+
+            // Was there an error ?
             if (result.HasError)
             {
                 // Checks if EVE Backend Database is temporarily disabled
