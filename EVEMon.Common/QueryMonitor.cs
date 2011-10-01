@@ -111,7 +111,7 @@ namespace EVEMon.Common
                     // If it's not a CCP error we try again in five minutes
                     // thus preventing spamming the trace file
                     if (LastResult.CachedUntil == DateTime.MinValue)
-                        return DateTime.UtcNow.AddMinutes(5);
+                        LastResult.CachedUntil = DateTime.UtcNow.AddMinutes(5);
 
                     // The 'return' condition have been placed to prevent any 'CCP screw up'
                     // with the cachedUntil timer as they have done in Incarna 1.0.1 expansion
