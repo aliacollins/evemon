@@ -38,8 +38,9 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.AutoSize = true;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(402, 23);
+            this.buttonCancel.Location = new System.Drawing.Point(412, 23);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(3, 20, 20, 3);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
@@ -51,7 +52,8 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(321, 23);
+            this.buttonOK.AutoSize = true;
+            this.buttonOK.Location = new System.Drawing.Point(331, 23);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
@@ -100,6 +102,7 @@
             this.Text = "Blank Character Creator";
             this.Load += new System.EventHandler(this.BlankCharacterWindow_Load);
             this.bottomPanel.ResumeLayout(false);
+            this.bottomPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
