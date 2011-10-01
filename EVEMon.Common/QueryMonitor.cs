@@ -110,7 +110,7 @@ namespace EVEMon.Common
                 {
                     // If it's not a CCP error we try again in five minutes
                     // thus preventing spamming the trace file
-                    if (LastResult.CachedUntil == DateTime.MinValue)
+                    if (LastResult.ErrorType != APIError.CCP && LastResult.CachedUntil == DateTime.MinValue)
                         LastResult.CachedUntil = DateTime.UtcNow.AddMinutes(5);
 
                     // The 'return' condition have been placed to prevent any 'CCP screw up'
