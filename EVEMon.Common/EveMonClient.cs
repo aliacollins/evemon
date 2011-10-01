@@ -115,6 +115,15 @@ namespace EVEMon.Common
         /// </value>
         public static bool IsDebugBuild { get; private set; }
 
+        /// <summary>
+        /// Gets the default dpi.
+        /// </summary>
+        /// <value>The default dpi.</value>
+        public static int DefaultDpi
+        {
+            get { return 96; }
+        }
+
         #endregion
 
 
