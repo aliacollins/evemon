@@ -98,7 +98,7 @@ namespace EVEMon.SkillPlanner
                 if (dpi > 125)
                     return 353;
 
-                return dpi > 96 ? 295 : 235;
+                return dpi > EveMonClient.DefaultDpi ? 295 : 235;
             }
         }
 
@@ -115,7 +115,7 @@ namespace EVEMon.SkillPlanner
                 if (dpi > 125)
                     return 110;
 
-                return dpi > 96 ? 92 : 73;
+                return dpi > EveMonClient.DefaultDpi ? 92 : 73;
             }
         }
 

@@ -431,17 +431,19 @@ namespace EVEMon
                                                              m_maxGroupNameWidth + (PadLeft / 2),
                                                              lbSkills.ItemHeight);
 
+            int skillsSummaryTextWidth = (int)(SkillsSummaryTextWidth * (g.DpiX / EveMonClient.DefaultDpi));
             Rectangle skillsSummaryTextRect = new Rectangle(
                 skillGroupNameTextRect.X + m_maxGroupNameWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                SkillsSummaryTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
+                skillsSummaryTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
 
+            int skillGroupTotalSPTextWidth = (int)(SkillGroupTotalSPTextWidth * (g.DpiX / EveMonClient.DefaultDpi));
             Rectangle skillsTotalSPTextRect = new Rectangle(
-                skillsSummaryTextRect.X + SkillsSummaryTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                SkillGroupTotalSPTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
+                skillsSummaryTextRect.X + skillsSummaryTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
+                skillGroupTotalSPTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
 
             Size skillInTrainingSuffixSize = TextRenderer.MeasureText(g, skillInTrainingSuffix, m_skillsFont, Size.Empty);
             Rectangle skillInTrainingSuffixRect = new Rectangle(
-                skillsTotalSPTextRect.X + SkillGroupTotalSPTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
+                skillsTotalSPTextRect.X + skillGroupTotalSPTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
                 skillInTrainingSuffixSize.Width, lbSkills.ItemHeight);
 
             Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty);

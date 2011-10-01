@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -109,6 +110,11 @@ namespace EVEMon
             base.OnLoad(e);
             if (DesignMode)
                 return;
+
+            Graphics g = Graphics.FromHwnd(Handle);
+            float dpi = g.DpiX;
+            int minimumSizeWidth = (int)(MinimumSize.Width * (dpi / EveMonClient.DefaultDpi));
+            MinimumSize = new Size(minimumSizeWidth, MinimumSize.Height);
 
             Visible = false;
             trayIcon.Text = Application.ProductName;
