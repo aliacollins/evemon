@@ -37,6 +37,7 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(402, 23);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(3, 20, 20, 3);
@@ -49,12 +50,13 @@
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(321, 23);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
-            this.buttonOK.Text = "Add";
+            this.buttonOK.Text = "Import";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
@@ -71,11 +73,13 @@
             // 
             // blankCharacterControl
             // 
+            this.blankCharacterControl.AutoSize = true;
             this.blankCharacterControl.BackColor = System.Drawing.Color.Transparent;
             this.blankCharacterControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.blankCharacterControl.ForeColor = System.Drawing.SystemColors.GrayText;
             this.blankCharacterControl.Location = new System.Drawing.Point(0, 0);
             this.blankCharacterControl.Name = "blankCharacterControl";
+            this.blankCharacterControl.Padding = new System.Windows.Forms.Padding(13);
             this.blankCharacterControl.Size = new System.Drawing.Size(497, 425);
             this.blankCharacterControl.TabIndex = 3;
             // 
@@ -83,16 +87,21 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(497, 482);
             this.Controls.Add(this.blankCharacterControl);
             this.Controls.Add(this.bottomPanel);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.MaximizeBox = false;
             this.Name = "BlankCharacterWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Blank Character Creator";
             this.Load += new System.EventHandler(this.BlankCharacterWindow_Load);
             this.bottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

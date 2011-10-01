@@ -135,6 +135,7 @@ namespace EVEMon.Sales
             this.MineralWorksheetStatusStrip.Location = new System.Drawing.Point(0, 510);
             this.MineralWorksheetStatusStrip.Name = "MineralWorksheetStatusStrip";
             this.MineralWorksheetStatusStrip.Size = new System.Drawing.Size(538, 22);
+            this.MineralWorksheetStatusStrip.SizingGrip = false;
             this.MineralWorksheetStatusStrip.TabIndex = 10;
             this.MineralWorksheetStatusStrip.Text = "statusStrip1";
             // 
