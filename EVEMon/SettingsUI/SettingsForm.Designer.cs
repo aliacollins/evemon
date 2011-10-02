@@ -2903,7 +2903,6 @@ namespace EVEMon.SettingsUI
             this.Controls.Add(this.multiPanel);
             this.Controls.Add(this.leftPanel);
             this.Controls.Add(this.bottomPanel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

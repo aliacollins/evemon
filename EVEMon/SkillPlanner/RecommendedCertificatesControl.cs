@@ -128,6 +128,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateDisplay()
         {
+            // We have nothing to display
+            if (m_object == null || m_plan == null)
+                return;
+
             m_trainTime = TimeSpan.Zero;
 
             // Default all known flag to true. Will be set to false in UpdateNode() if a requirement is not met

@@ -428,7 +428,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.upperToolStrip);
             this.Controls.Add(this.MainStatusStrip);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(780, 350);
             this.Name = "PlanWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

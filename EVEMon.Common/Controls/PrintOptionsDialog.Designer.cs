@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace EVEMon.Common.Controls
 {
     partial class PrintOptionsDialog
@@ -38,8 +40,8 @@ namespace EVEMon.Common.Controls
             this.checkPageNumbers = new System.Windows.Forms.CheckBox();
             this.checkDateInformation = new System.Windows.Forms.CheckBox();
             this.checkTotalTimes = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.btn_setDefs = new System.Windows.Forms.Button();
             this.checkNotes = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
@@ -57,7 +59,7 @@ namespace EVEMon.Common.Controls
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 13);
+            this.label1.Size = new System.Drawing.Size(37, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Printer";
             // 
@@ -66,7 +68,7 @@ namespace EVEMon.Common.Controls
             this.checkEntryNumber.AutoSize = true;
             this.checkEntryNumber.Location = new System.Drawing.Point(55, 44);
             this.checkEntryNumber.Name = "checkEntryNumber";
-            this.checkEntryNumber.Size = new System.Drawing.Size(117, 17);
+            this.checkEntryNumber.Size = new System.Drawing.Size(114, 17);
             this.checkEntryNumber.TabIndex = 2;
             this.checkEntryNumber.Text = "Print Entry Number";
             this.checkEntryNumber.UseVisualStyleBackColor = true;
@@ -76,7 +78,7 @@ namespace EVEMon.Common.Controls
             this.checkStartDate.AutoSize = true;
             this.checkStartDate.Location = new System.Drawing.Point(55, 90);
             this.checkStartDate.Name = "checkStartDate";
-            this.checkStartDate.Size = new System.Drawing.Size(101, 17);
+            this.checkStartDate.Size = new System.Drawing.Size(98, 17);
             this.checkStartDate.TabIndex = 3;
             this.checkStartDate.Text = "Print Start Date";
             this.checkStartDate.UseVisualStyleBackColor = true;
@@ -96,7 +98,7 @@ namespace EVEMon.Common.Controls
             this.checkFinishDate.AutoSize = true;
             this.checkFinishDate.Location = new System.Drawing.Point(55, 136);
             this.checkFinishDate.Name = "checkFinishDate";
-            this.checkFinishDate.Size = new System.Drawing.Size(104, 17);
+            this.checkFinishDate.Size = new System.Drawing.Size(103, 17);
             this.checkFinishDate.TabIndex = 5;
             this.checkFinishDate.Text = "Print Finish Date";
             this.checkFinishDate.UseVisualStyleBackColor = true;
@@ -126,7 +128,7 @@ namespace EVEMon.Common.Controls
             this.checkDateInformation.AutoSize = true;
             this.checkDateInformation.Location = new System.Drawing.Point(55, 205);
             this.checkDateInformation.Name = "checkDateInformation";
-            this.checkDateInformation.Size = new System.Drawing.Size(133, 17);
+            this.checkDateInformation.Size = new System.Drawing.Size(128, 17);
             this.checkDateInformation.TabIndex = 8;
             this.checkDateInformation.Text = "Print Date Information";
             this.checkDateInformation.UseVisualStyleBackColor = true;
@@ -141,26 +143,26 @@ namespace EVEMon.Common.Controls
             this.checkTotalTimes.Text = "Print Total Training Times";
             this.checkTotalTimes.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // buttonOK
             // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(39, 300);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnAccept);
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(39, 300);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.TabIndex = 10;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.OnAccept);
             // 
-            // button2
+            // buttonCancel
             // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(171, 300);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(171, 300);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 11;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
             // 
             // btn_setDefs
             // 
@@ -177,22 +179,22 @@ namespace EVEMon.Common.Controls
             this.checkNotes.AutoSize = true;
             this.checkNotes.Location = new System.Drawing.Point(55, 67);
             this.checkNotes.Name = "checkNotes";
-            this.checkNotes.Size = new System.Drawing.Size(79, 17);
+            this.checkNotes.Size = new System.Drawing.Size(78, 17);
             this.checkNotes.TabIndex = 13;
             this.checkNotes.Text = "Print Notes";
             this.checkNotes.UseVisualStyleBackColor = true;
             // 
             // PrintOptionsDialog
             // 
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button2;
+            ((Form)this).CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(290, 339);
             this.Controls.Add(this.checkNotes);
             this.Controls.Add(this.btn_setDefs);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.checkTotalTimes);
             this.Controls.Add(this.checkDateInformation);
             this.Controls.Add(this.checkPageNumbers);
@@ -207,7 +209,6 @@ namespace EVEMon.Common.Controls
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PrintOptionsDialog";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Skill Printer Options";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -226,8 +227,8 @@ namespace EVEMon.Common.Controls
         private System.Windows.Forms.CheckBox checkPageNumbers;
         private System.Windows.Forms.CheckBox checkDateInformation;
         private System.Windows.Forms.CheckBox checkTotalTimes;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button btn_setDefs;
         private System.Windows.Forms.CheckBox checkNotes;
     }

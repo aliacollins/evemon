@@ -145,7 +145,6 @@
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.cancelButton);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "ApiKeyDeletionWindow";
             this.Text = "Delete an API key";

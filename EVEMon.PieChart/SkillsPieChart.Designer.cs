@@ -91,9 +91,9 @@ namespace EVEMon.PieChart
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveButton.Location = new System.Drawing.Point(485, 3);
+            this.saveButton.Location = new System.Drawing.Point(482, 2);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(76, 24);
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 5;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -102,7 +102,8 @@ namespace EVEMon.PieChart
             // closeButton
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.Location = new System.Drawing.Point(567, 3);
+            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.closeButton.Location = new System.Drawing.Point(564, 2);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 4;
@@ -220,14 +221,15 @@ namespace EVEMon.PieChart
             // 
             // SkillsPieChart
             // 
+            this.AcceptButton = this.saveButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(666, 456);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.planSelector);
             this.Controls.Add(this.pieControlPanel);
             this.Controls.Add(this.skillPieChartControl);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(674, 490);
             this.Name = "SkillsPieChart";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

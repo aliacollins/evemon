@@ -150,14 +150,12 @@ namespace EVEMon.Schedule
             // 
             // lbEntries
             // 
-            this.lbEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbEntries.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbEntries.FormattingEnabled = true;
             this.lbEntries.IntegralHeight = false;
-            this.lbEntries.Location = new System.Drawing.Point(3, 20);
+            this.lbEntries.Location = new System.Drawing.Point(0, 0);
             this.lbEntries.Name = "lbEntries";
-            this.lbEntries.Size = new System.Drawing.Size(168, 210);
+            this.lbEntries.Size = new System.Drawing.Size(171, 233);
             this.lbEntries.TabIndex = 1;
             this.lbEntries.SelectedIndexChanged += new System.EventHandler(this.lbEntries_SelectedIndexChanged);
             this.lbEntries.DoubleClick += new System.EventHandler(this.lbEntries_DoubleClick);
@@ -219,7 +217,7 @@ namespace EVEMon.Schedule
             this.nudMonth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.nudMonth.Location = new System.Drawing.Point(382, 3);
             this.nudMonth.Name = "nudMonth";
-            this.nudMonth.Size = new System.Drawing.Size(93, 21);
+            this.nudMonth.Size = new System.Drawing.Size(93, 20);
             this.nudMonth.TabIndex = 5;
             this.nudMonth.Wrap = true;
             this.nudMonth.SelectedItemChanged += new System.EventHandler(this.nudMonth_ValueChanged);
@@ -234,7 +232,7 @@ namespace EVEMon.Schedule
             0,
             0});
             this.nudDay.Name = "nudDay";
-            this.nudDay.Size = new System.Drawing.Size(38, 21);
+            this.nudDay.Size = new System.Drawing.Size(38, 20);
             this.nudDay.TabIndex = 4;
             this.nudDay.Value = new decimal(new int[] {
             1,
@@ -258,7 +256,7 @@ namespace EVEMon.Schedule
             0,
             0});
             this.nudYear.Name = "nudYear";
-            this.nudYear.Size = new System.Drawing.Size(49, 21);
+            this.nudYear.Size = new System.Drawing.Size(49, 20);
             this.nudYear.TabIndex = 2;
             this.nudYear.Value = new decimal(new int[] {
             2006,
@@ -335,7 +333,6 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.ssStatusBar);
             this.Controls.Add(this.toolStrip1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(720, 522);
             this.Name = "ScheduleEditorWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

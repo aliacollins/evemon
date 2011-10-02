@@ -61,7 +61,6 @@ namespace EVEMon
             this.ClientSize = new System.Drawing.Size(414, 232);
             this.Controls.Add(this.readingPane);
             this.Controls.Add(this.throbber);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimumSize = new System.Drawing.Size(400, 250);
             this.Name = "EveMessageWindow";
             this.Text = "EVE Mail Message";

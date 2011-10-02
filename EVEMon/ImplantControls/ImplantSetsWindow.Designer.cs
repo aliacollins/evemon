@@ -68,7 +68,7 @@ namespace EVEMon.ImplantControls
             this.headerLabel.AutoSize = true;
             this.headerLabel.Location = new System.Drawing.Point(14, 172);
             this.headerLabel.Name = "headerLabel";
-            this.headerLabel.Size = new System.Drawing.Size(216, 26);
+            this.headerLabel.Size = new System.Drawing.Size(207, 26);
             this.headerLabel.TabIndex = 1;
             this.headerLabel.Text = "{0} has the skill for {1} Jump Clones\r\n(plus 1 for the implants in your active bo" +
                 "dy)";
@@ -76,7 +76,6 @@ namespace EVEMon.ImplantControls
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.AutoSize = true;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(459, 533);
             this.btnCancel.Name = "btnCancel";
@@ -89,11 +88,10 @@ namespace EVEMon.ImplantControls
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.AutoSize = true;
             this.btnOK.Location = new System.Drawing.Point(378, 533);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 2;
+            this.btnOK.TabIndex = 0;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -110,7 +108,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot10.IntegralHeight = false;
             this.cbSlot10.Location = new System.Drawing.Point(69, 501);
             this.cbSlot10.Name = "cbSlot10";
-            this.cbSlot10.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot10.Size = new System.Drawing.Size(464, 21);
             this.cbSlot10.TabIndex = 29;
             this.cbSlot10.ToolTip = null;
             this.cbSlot10.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -127,7 +125,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot9.IntegralHeight = false;
             this.cbSlot9.Location = new System.Drawing.Point(69, 474);
             this.cbSlot9.Name = "cbSlot9";
-            this.cbSlot9.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot9.Size = new System.Drawing.Size(464, 21);
             this.cbSlot9.TabIndex = 28;
             this.cbSlot9.ToolTip = null;
             this.cbSlot9.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -144,7 +142,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot8.IntegralHeight = false;
             this.cbSlot8.Location = new System.Drawing.Point(70, 447);
             this.cbSlot8.Name = "cbSlot8";
-            this.cbSlot8.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot8.Size = new System.Drawing.Size(464, 21);
             this.cbSlot8.TabIndex = 27;
             this.cbSlot8.ToolTip = null;
             this.cbSlot8.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -161,7 +159,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot7.IntegralHeight = false;
             this.cbSlot7.Location = new System.Drawing.Point(69, 420);
             this.cbSlot7.Name = "cbSlot7";
-            this.cbSlot7.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot7.Size = new System.Drawing.Size(464, 21);
             this.cbSlot7.TabIndex = 26;
             this.cbSlot7.ToolTip = null;
             this.cbSlot7.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -178,7 +176,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot6.IntegralHeight = false;
             this.cbSlot6.Location = new System.Drawing.Point(70, 393);
             this.cbSlot6.Name = "cbSlot6";
-            this.cbSlot6.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot6.Size = new System.Drawing.Size(464, 21);
             this.cbSlot6.TabIndex = 25;
             this.cbSlot6.ToolTip = null;
             this.cbSlot6.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -195,7 +193,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot5.IntegralHeight = false;
             this.cbSlot5.Location = new System.Drawing.Point(70, 366);
             this.cbSlot5.Name = "cbSlot5";
-            this.cbSlot5.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot5.Size = new System.Drawing.Size(464, 21);
             this.cbSlot5.TabIndex = 24;
             this.cbSlot5.ToolTip = null;
             this.cbSlot5.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -212,7 +210,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot4.IntegralHeight = false;
             this.cbSlot4.Location = new System.Drawing.Point(70, 339);
             this.cbSlot4.Name = "cbSlot4";
-            this.cbSlot4.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot4.Size = new System.Drawing.Size(464, 21);
             this.cbSlot4.TabIndex = 23;
             this.cbSlot4.ToolTip = null;
             this.cbSlot4.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -229,7 +227,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot3.IntegralHeight = false;
             this.cbSlot3.Location = new System.Drawing.Point(70, 312);
             this.cbSlot3.Name = "cbSlot3";
-            this.cbSlot3.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot3.Size = new System.Drawing.Size(464, 21);
             this.cbSlot3.TabIndex = 22;
             this.cbSlot3.ToolTip = null;
             this.cbSlot3.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -246,7 +244,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot2.IntegralHeight = false;
             this.cbSlot2.Location = new System.Drawing.Point(70, 285);
             this.cbSlot2.Name = "cbSlot2";
-            this.cbSlot2.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot2.Size = new System.Drawing.Size(464, 21);
             this.cbSlot2.TabIndex = 21;
             this.cbSlot2.ToolTip = null;
             this.cbSlot2.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -263,7 +261,7 @@ namespace EVEMon.ImplantControls
             this.cbSlot1.IntegralHeight = false;
             this.cbSlot1.Location = new System.Drawing.Point(70, 258);
             this.cbSlot1.Name = "cbSlot1";
-            this.cbSlot1.Size = new System.Drawing.Size(464, 22);
+            this.cbSlot1.Size = new System.Drawing.Size(464, 21);
             this.cbSlot1.TabIndex = 20;
             this.cbSlot1.ToolTip = null;
             this.cbSlot1.DropDownClosed += new System.EventHandler(this.cbSlotN_DropDownClosed);
@@ -443,7 +441,6 @@ namespace EVEMon.ImplantControls
             // importButton
             // 
             this.importButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.importButton.AutoSize = true;
             this.importButton.Location = new System.Drawing.Point(352, 172);
             this.importButton.Name = "importButton";
             this.importButton.Size = new System.Drawing.Size(181, 23);
@@ -458,6 +455,7 @@ namespace EVEMon.ImplantControls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(546, 568);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
@@ -486,7 +484,6 @@ namespace EVEMon.ImplantControls
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ImplantSetsWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

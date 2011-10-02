@@ -41,7 +41,6 @@ namespace EVEMon.Common.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Font = FontFactory.GetFont("Tahoma", 8.25F);
             RestoreLocation();
             m_loaded = true;
             SaveLocation();

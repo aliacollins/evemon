@@ -227,7 +227,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.Controls.Add(this.fileRadio);
             this.Controls.Add(this.urlTextBox);
             this.Controls.Add(this.urlRadio);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(597, 193);

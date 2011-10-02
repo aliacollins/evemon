@@ -38,7 +38,6 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.AutoSize = true;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(412, 23);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(3, 20, 20, 3);
@@ -52,7 +51,6 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.AutoSize = true;
             this.buttonOK.Location = new System.Drawing.Point(331, 23);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
             this.buttonOK.Name = "buttonOK";
@@ -95,7 +93,6 @@
             this.ClientSize = new System.Drawing.Size(497, 482);
             this.Controls.Add(this.blankCharacterControl);
             this.Controls.Add(this.bottomPanel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.Name = "BlankCharacterWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

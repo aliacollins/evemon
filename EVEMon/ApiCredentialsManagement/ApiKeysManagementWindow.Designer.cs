@@ -439,7 +439,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.ClientSize = new System.Drawing.Size(844, 492);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.closeButton);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(580, 530);
             this.Name = "ApiKeysManagementWindow";

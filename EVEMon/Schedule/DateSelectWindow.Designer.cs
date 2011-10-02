@@ -75,7 +75,6 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.monthCalendar1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

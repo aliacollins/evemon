@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
         protected override void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             base.EveMonClient_SettingsChanged(sender, e);
-            UpdateContolVisibility();
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace EVEMon.SkillPlanner
         {
             base.OnLoad(e);
 
-            UpdateContolVisibility();
+            UpdateControlVisibility();
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the contol visibility.
         /// </summary>
-        private void UpdateContolVisibility()
+        private void UpdateControlVisibility()
         {
             lblBattleclinic.Location = Settings.UI.SafeForWork
                                            ? new Point(Pad, lblBattleclinic.Location.Y)

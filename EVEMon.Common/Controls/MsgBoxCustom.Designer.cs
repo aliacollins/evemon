@@ -169,7 +169,6 @@
             this.MinimizeBox = false;
             this.Name = "MessageBoxCustom";
             this.ShowIcon = false;
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "<Caption>";
             this.panel1.ResumeLayout(false);

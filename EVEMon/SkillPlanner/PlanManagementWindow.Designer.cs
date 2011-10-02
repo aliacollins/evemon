@@ -420,7 +420,6 @@ namespace EVEMon.SkillPlanner
             this.ClientSize = new System.Drawing.Size(659, 425);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

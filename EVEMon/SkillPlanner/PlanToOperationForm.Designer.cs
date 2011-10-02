@@ -304,11 +304,9 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.rootMultiPanel);
             this.Controls.Add(this.previousButton);
             this.Controls.Add(this.cancelButton);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PlanToOperationForm";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "PlanToOperationForm";
             ((System.ComponentModel.ISupportInitialize)(this.warningPicture)).EndInit();
             this.rootMultiPanel.ResumeLayout(false);

@@ -912,7 +912,6 @@ namespace EVEMon
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.standardToolbar);
             this.Controls.Add(this.mainMenuBar);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MainMenuStrip = this.mainMenuBar;
             this.MinimumSize = new System.Drawing.Size(570, 350);
             this.Name = "MainWindow";

@@ -357,7 +357,6 @@ namespace EVEMon.Sales
             this.Controls.Add(this.MineralTileTableLayout);
             this.Controls.Add(this.MineralWorksheetStatusStrip);
             this.Controls.Add(this.MineralWorksheetToolStrip);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MineralWorksheet";

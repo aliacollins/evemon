@@ -584,12 +584,10 @@ namespace EVEMon.ApiCredentialsManagement
             this.Controls.Add(this.ButtonPrevious);
             this.Controls.Add(this.ButtonNext);
             this.Controls.Add(this.MultiPanel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ApiKeyUpdateOrAdditionWindow";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "API Key Importation";
             this.TopMost = true;
             this.MultiPanel.ResumeLayout(false);

@@ -636,7 +636,6 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.tbTitle);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

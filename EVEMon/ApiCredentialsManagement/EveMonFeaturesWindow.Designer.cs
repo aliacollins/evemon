@@ -244,7 +244,6 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(384, 367);
             this.Controls.Add(this.MainFlowLayoutPanel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -111,11 +111,6 @@ namespace EVEMon
             if (DesignMode)
                 return;
 
-            Graphics g = Graphics.FromHwnd(Handle);
-            float dpi = g.DpiX;
-            int minimumSizeWidth = (int)(MinimumSize.Width * (dpi / EveMonClient.DefaultDpi));
-            MinimumSize = new Size(minimumSizeWidth, MinimumSize.Height);
-
             Visible = false;
             trayIcon.Text = Application.ProductName;
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)

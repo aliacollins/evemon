@@ -63,6 +63,7 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// </summary>
+        [Browsable(false)]
         public BlueprintActivity Activity
         {
             get { return m_activity; }

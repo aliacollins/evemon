@@ -127,7 +127,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.characterToRemoveLabel);
             this.Controls.Add(this.pictureBox1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

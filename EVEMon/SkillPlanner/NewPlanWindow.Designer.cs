@@ -110,7 +110,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.PlanNameTextBox);
             this.Controls.Add(this.PlanNameLabel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

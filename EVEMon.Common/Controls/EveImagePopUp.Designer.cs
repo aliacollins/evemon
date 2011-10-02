@@ -50,7 +50,6 @@ namespace EVEMon.Common.Controls
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.Name = "EveImagePopUp";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "EveImagePopUp";
             this.ResumeLayout(false);
 
