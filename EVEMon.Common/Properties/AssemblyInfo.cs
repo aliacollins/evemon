@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("EVEMon.Common")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 3097 Local Changes: Yes Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.Common")] 
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 3115 Local Changes: No Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.Common")] 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -38,5 +38,5 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("1.5.0.3097")]
+[assembly: AssemblyVersion("1.5.1.3115")]
 [assembly: NeutralResourcesLanguage("en-US")]
