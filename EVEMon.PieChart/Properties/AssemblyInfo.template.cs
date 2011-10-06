@@ -33,5 +33,5 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("1.5.0.$WCREV$")]
+[assembly: AssemblyVersion("1.5.1.$WCREV$")]
 [assembly: NeutralResourcesLanguage("en-US")]
