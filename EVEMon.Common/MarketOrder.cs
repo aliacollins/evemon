@@ -67,86 +67,6 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Importation, Exportation
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        /// <returns></returns>
-        public abstract SerializableOrderBase Export();
-
-        /// <summary>
-        /// Fetches the data to the given source.
-        /// </summary>
-        /// <param name="src"></param>
-        protected void Export(SerializableOrderBase src)
-        {
-            src.Ignored = Ignored;
-            src.OrderID = ID;
-            src.State = m_state;
-            src.ItemID = m_itemID;
-            src.Item = (Item != null ? Item.Name : "Unknown Item");
-            src.StationID = Station.ID;
-            src.UnitaryPrice = UnitaryPrice;
-            src.InitialVolume = InitialVolume;
-            src.RemainingVolume = RemainingVolume;
-            src.LastStateChange = LastStateChange;
-            src.MinVolume = MinVolume;
-            src.Duration = Duration;
-            src.Issued = Issued;
-        }
-
-        /// <summary>
-        /// Try to update this order with a serialization object from the API.
-        /// </summary>
-        /// <param name="src"></param>
-        /// <param name="endedOrders"></param>
-        /// <returns></returns>
-        internal bool TryImport(SerializableOrderListItem src, List<MarketOrder> endedOrders)
-        {
-            // Note that, before a match is found, all orders have been marked for deletion : m_markedForDeletion == true
-
-            // Checks whether ID is the same (IDs can be recycled ?)
-            if (!MatchesWith(src))
-                return false;
-
-            // Prevent deletion
-            MarkedForDeletion = false;
-
-            // Update infos (if ID is the same it may have been modified either by the market 
-            // or by the user [modify order] so we update the orders info that are changeable)
-            if (IsModified(src))
-            {
-                // If it's a buying order, escrow may have changed
-                if (src.IsBuyOrder != 0)
-                    ((BuyOrder)this).Escrow = src.Escrow;
-
-                UnitaryPrice = src.UnitaryPrice;
-                RemainingVolume = src.RemainingVolume;
-                Issued = src.Issued;
-                m_state = OrderState.Modified;
-            }
-            else if (m_state == OrderState.Modified)
-                m_state = OrderState.Active;
-
-            // Update state
-            OrderState state = GetState(src);
-            if (m_state != OrderState.Modified && state != m_state) // it has either expired or fulfilled
-            {
-                m_state = state;
-                LastStateChange = DateTime.UtcNow;
-
-                // Should we notify it to the user ?
-                if ((state == OrderState.Expired || state == OrderState.Fulfilled) && !Ignored)
-                    endedOrders.Add(this);
-            }
-
-            return true;
-        }
-
-        #endregion
-
-
         #region Properties
 
         /// <summary>
@@ -253,6 +173,86 @@ namespace EVEMon.Common
         public bool IsAvailable
         {
             get { return (m_state == OrderState.Active || m_state == OrderState.Modified) && !IsExpired; }
+        }
+
+        #endregion
+
+
+        #region Importation, Exportation
+
+        /// <summary>
+        /// Exports the given object to a serialization object.
+        /// </summary>
+        /// <returns></returns>
+        public abstract SerializableOrderBase Export();
+
+        /// <summary>
+        /// Fetches the data to the given source.
+        /// </summary>
+        /// <param name="src"></param>
+        protected void Export(SerializableOrderBase src)
+        {
+            src.Ignored = Ignored;
+            src.OrderID = ID;
+            src.State = m_state;
+            src.ItemID = m_itemID;
+            src.Item = (Item != null ? Item.Name : "Unknown Item");
+            src.StationID = Station.ID;
+            src.UnitaryPrice = UnitaryPrice;
+            src.InitialVolume = InitialVolume;
+            src.RemainingVolume = RemainingVolume;
+            src.LastStateChange = LastStateChange;
+            src.MinVolume = MinVolume;
+            src.Duration = Duration;
+            src.Issued = Issued;
+        }
+
+        /// <summary>
+        /// Try to update this order with a serialization object from the API.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="endedOrders"></param>
+        /// <returns></returns>
+        internal bool TryImport(SerializableOrderListItem src, List<MarketOrder> endedOrders)
+        {
+            // Note that, before a match is found, all orders have been marked for deletion : m_markedForDeletion == true
+
+            // Checks whether ID is the same (IDs can be recycled ?)
+            if (!MatchesWith(src))
+                return false;
+
+            // Prevent deletion
+            MarkedForDeletion = false;
+
+            // Update infos (if ID is the same it may have been modified either by the market 
+            // or by the user [modify order] so we update the orders info that are changeable)
+            if (IsModified(src))
+            {
+                // If it's a buying order, escrow may have changed
+                if (src.IsBuyOrder != 0)
+                    ((BuyOrder)this).Escrow = src.Escrow;
+
+                UnitaryPrice = src.UnitaryPrice;
+                RemainingVolume = src.RemainingVolume;
+                Issued = src.Issued;
+                m_state = OrderState.Modified;
+            }
+            else if (m_state == OrderState.Modified)
+                m_state = OrderState.Active;
+
+            // Update state
+            OrderState state = GetState(src);
+            if (m_state != OrderState.Modified && state != m_state) // it has either expired or fulfilled
+            {
+                m_state = state;
+                LastStateChange = DateTime.UtcNow;
+
+                // Should we notify it to the user ?
+                if ((state == OrderState.Expired || state == OrderState.Fulfilled) && !Ignored)
+                    endedOrders.Add(this);
+            }
+
+            return true;
         }
 
         #endregion

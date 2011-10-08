@@ -420,7 +420,7 @@
   </data>
   <data name="BattleClinicLinkLabel.Text" xml:space="preserve">
     <value>BattleClinic provides various services, like the ability of storing your settings file
-online at there server and use it between different computers. In order to be
+online at their server and use it between different computers. In order to be
 able to use those services, you need to have an account with BattleClinic.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

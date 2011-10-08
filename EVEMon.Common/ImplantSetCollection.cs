@@ -135,20 +135,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports this collection to a serialization object.
-        /// </summary>
-        /// <returns></returns>
-        public SerializableImplantSetCollection Export()
-        {
-            SerializableImplantSetCollection serial = new SerializableImplantSetCollection
-                                                          { API = API.Export(), OldAPI = OldAPI.Export() };
-            serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
-            serial.SelectedIndex = Enumerate().IndexOf(m_current);
-            return serial;
-        }
-
-        /// <summary>
-        /// Imports data from an API serialization object provided by CCP
+        /// Imports data from an API serialization object provided by CCP.
         /// </summary>
         /// <param name="serial"></param>
         internal void Import(SerializableImplantSet serial)
@@ -172,6 +159,18 @@ namespace EVEMon.Common
             API.Import(serial);
 
             EveMonClient.OnSettingsChanged();
+        }
+
+        /// <summary>
+        /// Exports this collection to a serialization object.
+        /// </summary>
+        /// <returns></returns>
+        public SerializableImplantSetCollection Export()
+        {
+            SerializableImplantSetCollection serial = new SerializableImplantSetCollection { API = API.Export(), OldAPI = OldAPI.Export() };
+            serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
+            serial.SelectedIndex = Enumerate().IndexOf(m_current);
+            return serial;
         }
     }
 }
