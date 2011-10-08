@@ -615,13 +615,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal bool ShouldNotifyError(IAPIResult result, APIMethods method)
         {
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return false;
+
             // Notify an error occurred
             if (result.HasError)
             {
-                // Checks if EVE Backend Database is temporarily disabled
-                if (result.EVEBackendDatabaseDisabled)
-                    return false;
-
                 if (m_errorNotifiedMethod != APIMethods.None)
                     return false;
 

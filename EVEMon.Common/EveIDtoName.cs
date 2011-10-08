@@ -155,12 +155,12 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private static void OnQueryAPICharacterNameUpdated(APIResult<SerializableAPICharacterName> result)
         {
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return;
+
             if (result.HasError)
             {
-                // Checks if EVE Backend Database is temporarily disabled
-                if (result.EVEBackendDatabaseDisabled)
-                    return;
-
                 EveMonClient.Notifications.NotifyCharacterNameError(result);
                 return;
             }

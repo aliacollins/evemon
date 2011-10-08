@@ -149,8 +149,8 @@ namespace EVEMon.Common
             APIResult<SerializableAPIConquerableStationList> result =
                 Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(file, APIProvider.RowsetsTransform);
 
-            // Checks if EVE Backend Database is temporarily disabled
-            if (result.EVEBackendDatabaseDisabled)
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
                 return;
 
             // In case the file has an error we prevent the deserialization

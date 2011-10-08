@@ -58,10 +58,28 @@ namespace EVEMon.Common.Serialization.API
         }
 
         /// <summary>
+        /// Gets true when there is an unexpected failure accessing the database.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsUnexpectedDatabaseFailure
+        {
+            get { return (ErrorCode == 520); }
+        }
+
+        /// <summary>
         /// Gets true when EVE backend database is temporarily disabled.
         /// </summary>
         [XmlIgnore]
         public bool IsEVEBackendDatabaseDisabled
+        {
+            get { return (ErrorCode == 901); }
+        }
+
+        /// <summary>
+        /// Gets true when web site database is temporarily disabled.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsWebSiteDatabaseDisabled
         {
             get { return (ErrorCode == 902); }
         }

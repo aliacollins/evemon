@@ -246,13 +246,13 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         private void OnAPIKeyInfoUpdated(APIResult<SerializableAPIKeyInfo> result)
         {
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return;
+
             // Notify on error
             if (result.HasError)
             {
-                // Checks if EVE Backend Database is temporarily disabled
-                if (result.EVEBackendDatabaseDisabled)
-                    return;
-
                 EveMonClient.Notifications.NotifyCharacterListError(this, result);
 
                 return;
@@ -274,13 +274,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private void OnAccountStatusUpdated(APIResult<SerializableAPIAccountStatus> result)
         {
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return;
+
             // Return on error
             if (result.HasError)
             {
-                // Checks if EVE Backend Database is temporarily disabled
-                if (result.EVEBackendDatabaseDisabled)
-                    return;
-
                 EveMonClient.Notifications.NotifyAccountStatusError(this, result);
                 return;
             }
@@ -306,13 +306,13 @@ namespace EVEMon.Common
         {
             CCPCharacter ccpCharacter = EveMonClient.Characters.OfType<CCPCharacter>().FirstOrDefault(x => x.Name == characterName);
 
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return;
+
             // Return on error
             if (result.HasError)
             {
-                // Checks if EVE Backend Database is temporarily disabled
-                if (result.EVEBackendDatabaseDisabled)
-                    return;
-
                 if (ccpCharacter != null)
                     EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
 

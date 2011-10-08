@@ -144,7 +144,7 @@ namespace EVEMon.Common
         /// Notifies EVE Backend Database is temporarily disabled.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEBackendDatabaseDisabled(IAPIResult result)
+        internal void NotifyEVEDatabaseError(IAPIResult result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -160,14 +160,6 @@ namespace EVEMon.Common
 
 
         #region Server status API error
-
-        /// <summary>
-        /// Invalidates the notification for a server status querying error.
-        /// </summary>
-        internal void InvalidateServerStatusError()
-        {
-            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.QueryingError));
-        }
 
         /// <summary>
         /// Notifies a server status querying error.

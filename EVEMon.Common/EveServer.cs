@@ -75,13 +75,13 @@ namespace EVEMon.Common
         {
             ServerStatus lastStatus = m_status;
 
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return;
+
             // Was there an error ?
             if (result.HasError)
             {
-                // Checks if EVE Backend Database is temporarily disabled
-                if (result.EVEBackendDatabaseDisabled)
-                    return;
-
                 m_status = ServerStatus.Unknown;
                 EveMonClient.Notifications.NotifyServerStatusError(result);
 
@@ -93,7 +93,7 @@ namespace EVEMon.Common
             // Update status and users, notify no more errors
             m_users = result.Result.Players;
             m_status = (result.Result.Open ? ServerStatus.Online : ServerStatus.Offline);
-            EveMonClient.Notifications.InvalidateServerStatusError();
+            EveMonClient.Notifications.InvalidateAPIError();
 
             // Notify subscribers about update
             EveMonClient.OnServerStatusUpdated(this, lastStatus, m_status);

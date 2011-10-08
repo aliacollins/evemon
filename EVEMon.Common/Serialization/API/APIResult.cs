@@ -12,6 +12,7 @@ namespace EVEMon.Common.Serialization.API
         private APIError m_error = APIError.None;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
+        private bool m_databaseErrorNotified;
 
 
         #region Constructors
@@ -94,21 +95,6 @@ namespace EVEMon.Common.Serialization.API
 
         #region Errors handling
 
-        public bool EVEBackendDatabaseDisabled
-        {
-            get
-            {
-                if (CCPError != null && CCPError.IsEVEBackendDatabaseDisabled)
-                {
-                    EveMonClient.Notifications.NotifyEVEBackendDatabaseDisabled(this);
-                    return true;
-                }
-
-                EveMonClient.Notifications.InvalidateAPIError();
-                return false;
-            }
-        }
-
         /// <summary>
         /// Gets true if the information is outdated.
         /// </summary>
@@ -122,12 +108,37 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public bool HasError
         {
+            get { return CCPError != null || m_error != APIError.None; }
+        }
+
+        /// <summary>
+        /// Gets true if EVE database is out of service.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if EVE database is out of service; otherwise, <c>false</c>.
+        /// </value>
+        public bool EVEDatabaseError
+        {
             get
             {
-                if (CCPError != null)
+                if (CCPError != null && (CCPError.IsUnexpectedDatabaseFailure ||
+                                         CCPError.IsEVEBackendDatabaseDisabled ||
+                                         CCPError.IsWebSiteDatabaseDisabled))
+                {
+                    if (!m_databaseErrorNotified)
+                    {
+                        EveMonClient.Notifications.NotifyEVEDatabaseError(this);
+                        m_databaseErrorNotified = true;
+                    }
                     return true;
+                }
 
-                return m_error != APIError.None;
+                if (m_databaseErrorNotified)
+                {
+                    EveMonClient.Notifications.InvalidateAPIError();
+                    m_databaseErrorNotified = false;
+                }
+                return false;
             }
         }
 
