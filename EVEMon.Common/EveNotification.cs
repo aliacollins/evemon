@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -26,12 +25,12 @@ namespace EVEMon.Common
             Type = EveNotificationType.GetType(src.TypeID);
             Sender = GetIDToName(src.SenderID);
             SentDate = src.SentDate;
-            Recipient = GetRecipient();
+            Recipient = new List<string> { ccpCharacter.Name };
             EVENotificationText = new EveNotificationText(new SerializableNotificationTextsListItem
-                                                              {
-                                                                  NotificationID = 0,
-                                                                  NotificationText = String.Empty
-                                                              });
+            {
+                NotificationID = 0,
+                NotificationText = String.Empty
+            });
         }
 
         #endregion
@@ -108,33 +107,15 @@ namespace EVEMon.Common
             if (id == 0)
                 return "Unknown";
 
-            // Look into EVEMon's data file if it's an NPC corporation
-            Station station =
-                StaticGeography.AllStations.FirstOrDefault(x => x.CorporationID == id && !String.IsNullOrEmpty(x.CorporationName));
+            // Look into EVEMon's data file if it's an NPC corporation or a players null sec corporation
+            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
             if (station != null)
-                return station.Name;
+                return station.CorporationName;
 
             // Look into EVEMon's data file if it's an agent
-            Agent agent = StaticGeography.AllAgents.FirstOrDefault(x => x.ID == id && !String.IsNullOrEmpty(x.Name));
-            if (agent != null)
-                return agent.Name;
-
-            // Lookup if it's a players null sec corporation
-            // (while we have the data we can avoid unnecessary queries to the API)
-            Station conqStation = ConquerableStation.AllStations.FirstOrDefault(x => x.CorporationID == id);
-
-            // Didn't found any ? Query the API
-            return conqStation != null ? conqStation.CorporationName : EveIDToName.GetIDToName(id);
-        }
-
-        /// <summary>
-        /// Gets the recipient.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<string> GetRecipient()
-        {
-            Recipient = new List<string> { m_ccpCharacter.Name };
-            return Recipient;
+            // In case we didn't found any, query the API
+            Agent agent = StaticGeography.GetAgentByID(id);
+            return agent != null ? agent.Name : EveIDToName.GetIDToName(id);
         }
 
         #endregion
@@ -183,10 +164,10 @@ namespace EVEMon.Common
             {
                 result.Result.Texts.Add(
                     new SerializableNotificationTextsListItem
-                        {
-                            NotificationID = long.Parse(result.Result.MissingMessageIDs),
-                            NotificationText = "The text for this notification was reported missing."
-                        });
+                    {
+                        NotificationID = long.Parse(result.Result.MissingMessageIDs),
+                        NotificationText = "The text for this notification was reported missing."
+                    });
             }
 
             // Quit if for any reason there is no text
