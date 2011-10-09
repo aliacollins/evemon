@@ -98,6 +98,7 @@ namespace EVEMon
                                    { "justinian", "05" },
                                    { "Kingdud", "05" },
                                    { "Kw4h", "05" },
+                                   { "lerthe61", "05" },
                                    { "Lexiica", "05" },
                                    { "Master of Dice", "05" },
                                    { "Maximilian Kernbach", "05" },

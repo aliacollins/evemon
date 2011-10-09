@@ -197,7 +197,7 @@ namespace EVEMon.Common
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filename);
-                return DeserializeAPIResultCore<T>(transform, doc);
+                return DeserializeAPIResultCore<T>(doc, transform);
             }
             catch (XmlException exc)
             {
@@ -224,7 +224,7 @@ namespace EVEMon.Common
                         // Was there an HTTP error ?
                         APIResult<T> result = asyncResult.Error != null
                                                   ? new APIResult<T>(asyncResult.Error)
-                                                  : DeserializeAPIResultCore<T>(transform, asyncResult.Result);
+                                                  : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
 
                         // We got the result, let's invoke the callback on this actor
                         Dispatcher.Invoke(() => callback.Invoke(result));
@@ -257,7 +257,7 @@ namespace EVEMon.Common
                                 // Was there an HTTP error ?
                                 result = asyncResult.Error != null
                                              ? new APIResult<T>(asyncResult.Error)
-                                             : DeserializeAPIResultCore<T>(transform, asyncResult.Result);
+                                             : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
                             }
                             catch (Exception e)
                             {
@@ -287,7 +287,7 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static APIResult<T> DeserializeAPIResultCore<T>(XslCompiledTransform transform, XmlDocument doc)
+        private static APIResult<T> DeserializeAPIResultCore<T>( XmlDocument doc, XslCompiledTransform transform)
         {
             APIResult<T> result;
 

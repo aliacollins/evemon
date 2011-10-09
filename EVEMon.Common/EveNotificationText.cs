@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
+using System.Text.RegularExpressions;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -12,8 +14,11 @@ namespace EVEMon.Common
         public EveNotificationText(SerializableNotificationTextsListItem src)
         {
             NotificationID = src.NotificationID;
-            NotificationText = NewLinesToBreakLines(src.NotificationText);
+            NotificationText = FormatText(src.NotificationText);
         }
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the notification ID.
@@ -26,6 +31,23 @@ namespace EVEMon.Common
         /// </summary>
         /// <value>The notification text.</value>
         public string NotificationText { get; private set; }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Formats the notification text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        private static string FormatText(string text)
+        {
+            text = NewLinesToBreakLines(text);
+            text = DecodeUnicodeCharacters(text);
+            return text;
+        }
 
         /// <summary>
         /// Converts new lines to break lines.
@@ -48,5 +70,18 @@ namespace EVEMon.Common
             }
             return sw.GetStringBuilder().ToString();
         }
+
+        /// <summary>
+        /// Decodes the unicode characters.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        private static string DecodeUnicodeCharacters(string text)
+        {
+            return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
+                                 m => ((char)int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber)).ToString());
+        }
+
+        #endregion
     }
 }
