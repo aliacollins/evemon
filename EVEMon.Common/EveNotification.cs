@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -90,7 +89,7 @@ namespace EVEMon.Common
         /// <value>The text.</value>
         public string Text
         {
-            get { return HttpUtility.HtmlDecode(EVENotificationText.NotificationText.Normalize()); }
+            get { return EVENotificationText.NotificationText.Normalize(); }
         }
 
         #endregion
