@@ -74,7 +74,7 @@ namespace EVEMon.Common.SettingsObjects
                                      {
                                          Column = x,
                                          Visible = defaultColumns.Contains(x),
-                                         Width = -1
+                                         Width = -2
                                      }));
 
                 return marketOrderColumns;

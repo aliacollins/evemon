@@ -179,6 +179,14 @@ namespace EVEMon.Common
         /// </summary>
         internal bool IsUpdatingPortrait { get; set; }
 
+        /// <summary>
+        /// Gets true when the character is in a NPC corporation, false otherwise.
+        /// </summary>
+        public bool IsInNPCCorporation
+        {
+            get { return StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID); }
+        }
+
         #endregion
 
 
@@ -463,7 +471,7 @@ namespace EVEMon.Common
         /// Imports data from the given character info.
         /// </summary>
         /// <param name="serial">The serialized character info</param>
-        protected void Import(SerializableAPICharacterInfo serial)
+        internal void Import(SerializableAPICharacterInfo serial)
         {
             ShipName = serial.ShipName;
             ShipTypeName = serial.ShipTypeName;
@@ -483,13 +491,13 @@ namespace EVEMon.Common
         {
             // Bio
             m_name = serial.Name;
-            Birthday = serial.Birthday;
-            Race = serial.Race;
-            Ancestry = serial.Ancestry;
-            Gender = serial.Gender;
             Balance = serial.Balance;
-            Bloodline = serial.BloodLine;
-            CorporationName = serial.CorporationName;
+            Gender = serial.Gender ?? "Gender";
+            Race = serial.Race ?? "Race";
+            Bloodline = serial.BloodLine ?? "Bloodline";
+            Ancestry = serial.Ancestry ?? "Ancestry";
+            Birthday = serial.Birthday;
+            CorporationName = serial.CorporationName ?? "Unknown";
             CorporationID = serial.CorporationID;
             AllianceName = serial.AllianceName;
             AllianceID = serial.AllianceID;

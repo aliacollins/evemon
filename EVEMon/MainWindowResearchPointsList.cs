@@ -50,8 +50,6 @@ namespace EVEMon
             lvResearchPoints.ColumnWidthChanged += lvResearchPoints_ColumnWidthChanged;
             lvResearchPoints.ColumnReordered += lvResearchPoints_ColumnReordered;
 
-            Resize += MainWindowResearchPointsList_Resize;
-
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
             Disposed += OnDisposed;
@@ -113,7 +111,7 @@ namespace EVEMon
                 foreach (ColumnHeader header in lvResearchPoints.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
                     ResearchColumnSettings columnSetting = m_columns.First(x => x.Column == (ResearchColumn)header.Tag);
-                    if (columnSetting.Width != -1)
+                    if (columnSetting.Width > -1)
                         columnSetting.Width = header.Width;
 
                     newColumns.Add(columnSetting);
@@ -198,8 +196,7 @@ namespace EVEMon
 
                 foreach (ResearchColumnSettings column in m_columns.Where(x => x.Visible))
                 {
-                    ColumnHeader header = lvResearchPoints.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(),
-                                                                       column.Width);
+                    ColumnHeader header = lvResearchPoints.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = column.Column;
 
                     switch (column.Column)
@@ -217,19 +214,8 @@ namespace EVEMon
                 // We update the content
                 UpdateContent();
 
-                // Force the auto-resize of the columns with -1 width
-                ColumnHeaderAutoResizeStyle resizeStyle = (lvResearchPoints.Items.Count == 0
-                                                               ? ColumnHeaderAutoResizeStyle.HeaderSize
-                                                               : ColumnHeaderAutoResizeStyle.ColumnContent);
-
-                int index = 0;
-                foreach (ResearchColumnSettings column in m_columns.Where(x => x.Visible))
-                {
-                    if (column.Width == -1)
-                        lvResearchPoints.AutoResizeColumn(index, resizeStyle);
-
-                    index++;
-                }
+                // Adjust the size of the columns
+                AdjustColumns();
             }
             finally
             {
@@ -308,6 +294,43 @@ namespace EVEMon
             finally
             {
                 lvResearchPoints.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Adjusts the columns.
+        /// </summary>
+        private void AdjustColumns()
+        {
+            foreach (ColumnHeader column in lvResearchPoints.Columns.Cast<ColumnHeader>())
+            {
+                if (m_columns[column.Index].Width == -1)
+                    m_columns[column.Index].Width = -2;
+
+                column.Width = m_columns[column.Index].Width;
+
+                // Due to .NET design we need to prevent the last colummn to resize to the right end
+
+                // Return if it's not the last column and not set to auto-resize
+                if (column.Index != lvResearchPoints.Columns.Count - 1 || m_columns[column.Index].Width != -2)
+                    continue;
+
+                const int Pad = 4;
+
+                // Calculate column header text width with padding
+                int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
+
+                // If there is an image assigned to the header, add its width with padding
+                if (ilIcons.ImageSize.Width > 0)
+                    columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth = lvResearchPoints.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                        new[] { columnHeaderWidth }).Max() + Pad + 1;
+
+                // Assign the width found
+                column.Width = columnMaxWidth;
             }
         }
 
@@ -412,19 +435,6 @@ namespace EVEMon
 
 
         #region Local Event Handlers
-
-        /// <summary>
-        /// On resize, updates the controls visibility.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainWindowResearchPointsList_Resize(object sender, EventArgs e)
-        {
-            if (!m_init)
-                return;
-
-            UpdateContent();
-        }
 
         /// <summary>
         /// On column reorder we update the settings.

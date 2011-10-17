@@ -233,7 +233,6 @@ namespace EVEMon
             this.Controls.Add(this.noEVEMailMessagesLabel);
             this.Name = "MainWindowEveMailMessagesList";
             this.Size = new System.Drawing.Size(454, 434);
-            this.Resize += new System.EventHandler(this.MainWindowEVEMailMessagesList_Resize);
             this.contextMenu.ResumeLayout(false);
             this.splitContainerMailMessages.Panel1.ResumeLayout(false);
             this.splitContainerMailMessages.Panel2.ResumeLayout(false);

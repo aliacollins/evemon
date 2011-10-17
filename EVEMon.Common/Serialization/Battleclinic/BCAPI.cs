@@ -98,7 +98,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="requestMethod">A BCAPIMethods enumeration member specfying the method for which the URL is required.</param>
         public static BCAPIMethod GetMethod(BCAPIMethods requestMethod)
         {
-            foreach (BCAPIMethod method in s_methods.Where(method => method.Method == requestMethod))
+            foreach (BCAPIMethod method in s_methods.Where(method => method.Method.Equals(requestMethod)))
             {
                 return method;
             }

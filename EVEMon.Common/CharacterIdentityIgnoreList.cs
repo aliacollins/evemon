@@ -38,17 +38,15 @@ namespace EVEMon.Common
         public void Remove(CharacterIdentity id)
         {
             // If the id was not in list, returns the existing character or null if it does not exist
-            CCPCharacter ccpCharacter = id.CCPCharacter;
             if (!Items.Remove(id))
                 return;
 
             // If character exists, returns it
-            if (ccpCharacter != null)
+            if (id.CCPCharacter != null)
                 return;
 
             // Create a new CCP character
-            ccpCharacter = new CCPCharacter(id);
-            EveMonClient.Characters.Add(ccpCharacter, true);
+            EveMonClient.Characters.Add(new CCPCharacter(id));
         }
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace EVEMon.Common
             Items.Add(id);
 
             // If the identity was belonging to this API key, remove the character (won't be serialized anymore !)
-            if (id.APIKey == m_owner)
+            if (id.APIKeys.Contains(m_owner))
                 EveMonClient.Characters.Remove(character);
         }
 

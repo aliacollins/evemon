@@ -67,11 +67,13 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
+        [Browsable(false)]
         public Character Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
+        [Browsable(false)]
         public string TextFilter
         {
             get { return m_textFilter; }
@@ -86,6 +88,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
+        [Browsable(false)]
         public Enum Grouping
         {
             get { return m_grouping; }
@@ -100,6 +103,7 @@ namespace EVEMon
         /// <summary>
         /// 
         /// </summary>
+        [Browsable(false)]
         public ReadingPanePositioning PanePosition
         {
             get { return m_panePosition; }
@@ -143,7 +147,7 @@ namespace EVEMon
                 {
                     EveNotificationsColumnSettings columnSetting =
                         m_columns.First(x => x.Column == (EveNotificationsColumn)header.Tag);
-                    if (columnSetting.Width != -1)
+                    if (columnSetting.Width > -1)
                         columnSetting.Width = header.Width;
 
                     newColumns.Add(columnSetting);
@@ -232,27 +236,15 @@ namespace EVEMon
 
                 foreach (EveNotificationsColumnSettings column in m_columns.Where(x => x.Visible))
                 {
-                    ColumnHeader header = lvNotifications.Columns.Add(column.Column.GetHeader(), column.Column.GetHeader(),
-                                                                      column.Width);
+                    ColumnHeader header = lvNotifications.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = column.Column;
                 }
 
                 // We update the content
                 UpdateContent();
 
-                // Force the auto-resize of the columns with -1 width
-                ColumnHeaderAutoResizeStyle resizeStyle = (lvNotifications.Items.Count == 0
-                                                               ? ColumnHeaderAutoResizeStyle.HeaderSize
-                                                               : ColumnHeaderAutoResizeStyle.ColumnContent);
-
-                int index = 0;
-                foreach (EveNotificationsColumnSettings column in m_columns.Where(x => x.Visible))
-                {
-                    if (column.Width == -1)
-                        lvNotifications.AutoResizeColumn(index, resizeStyle);
-
-                    index++;
-                }
+                // Adjust the size of the columns
+                AdjustColumns();
             }
             finally
             {
@@ -396,6 +388,43 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Adjusts the columns.
+        /// </summary>
+        private void AdjustColumns()
+        {
+            foreach (ColumnHeader column in lvNotifications.Columns.Cast<ColumnHeader>())
+            {
+                if (m_columns[column.Index].Width == -1)
+                    m_columns[column.Index].Width = -2;
+
+                column.Width = m_columns[column.Index].Width;
+
+                // Due to .NET design we need to prevent the last colummn to resize to the right end
+
+                // Return if it's not the last column and not set to auto-resize
+                if (column.Index != lvNotifications.Columns.Count - 1 || m_columns[column.Index].Width != -2)
+                    continue;
+
+                const int Pad = 4;
+
+                // Calculate column header text width with padding
+                int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
+
+                // If there is an image assigned to the header, add its width with padding
+                if (ilIcons.ImageSize.Width > 0)
+                    columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth = lvNotifications.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                        new[] { columnHeaderWidth }).Max() + Pad + 1;
+
+                // Assign the width found
+                column.Width = columnMaxWidth;
+            }
+        }
+
+        /// <summary>
         /// Updates the item sorter.
         /// </summary>
         private void UpdateSort()
@@ -522,19 +551,6 @@ namespace EVEMon
 
 
         #region Local Event Handlers
-
-        /// <summary>
-        /// On resize, updates the controls visibility.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainWindowEVENotificationsList_Resize(object sender, EventArgs e)
-        {
-            if (!m_init)
-                return;
-
-            UpdateContent();
-        }
 
         /// <summary>
         /// When the selection update timer ticks, we process the changes caused by a selection change.

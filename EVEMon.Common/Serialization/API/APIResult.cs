@@ -12,7 +12,6 @@ namespace EVEMon.Common.Serialization.API
         private APIError m_error = APIError.None;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
-        private bool m_databaseErrorNotified;
 
 
         #region Constructors
@@ -125,18 +124,18 @@ namespace EVEMon.Common.Serialization.API
                                          CCPError.IsEVEBackendDatabaseDisabled ||
                                          CCPError.IsWebSiteDatabaseDisabled))
                 {
-                    if (!m_databaseErrorNotified)
+                    if (!EveMonClient.EVEDatabaseDisabled)
                     {
                         EveMonClient.Notifications.NotifyEVEDatabaseError(this);
-                        m_databaseErrorNotified = true;
+                        EveMonClient.EVEDatabaseDisabled = true;
                     }
                     return true;
                 }
 
-                if (m_databaseErrorNotified)
+                if (EveMonClient.EVEDatabaseDisabled)
                 {
                     EveMonClient.Notifications.InvalidateAPIError();
-                    m_databaseErrorNotified = false;
+                    EveMonClient.EVEDatabaseDisabled = false;
                 }
                 return false;
             }

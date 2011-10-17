@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.ApiCredentialsManagement
 {
-    partial class ApiKeyDeletionWindow
+    sealed partial class ApiKeyDeletionWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("John Doe");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Mary Jane");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Mary Jane");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiKeyDeletionWindow));
             this.deletionLabel = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -45,12 +45,13 @@
             // 
             // deletionLabel
             // 
+            this.deletionLabel.AutoSize = true;
             this.deletionLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.deletionLabel.Location = new System.Drawing.Point(51, 13);
+            this.deletionLabel.Location = new System.Drawing.Point(51, 22);
             this.deletionLabel.Name = "deletionLabel";
-            this.deletionLabel.Size = new System.Drawing.Size(376, 32);
+            this.deletionLabel.Size = new System.Drawing.Size(285, 13);
             this.deletionLabel.TabIndex = 4;
-            this.deletionLabel.Text = "You are about to delete an API key.";
+            this.deletionLabel.Text = "You are about to delete the API key with ID : {0}.";
             this.deletionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cancelButton
@@ -80,11 +81,11 @@
             // 
             this.charactersListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.charactersListView.CheckBoxes = true;
-            listViewItem1.StateImageIndex = 0;
-            listViewItem2.StateImageIndex = 0;
+            listViewItem3.StateImageIndex = 0;
+            listViewItem4.StateImageIndex = 0;
             this.charactersListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2});
+            listViewItem3,
+            listViewItem4});
             this.charactersListView.Location = new System.Drawing.Point(308, 28);
             this.charactersListView.Name = "charactersListView";
             this.charactersListView.Size = new System.Drawing.Size(181, 77);
@@ -151,6 +152,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.charactersListGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

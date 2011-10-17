@@ -26,23 +26,46 @@ namespace EVEMon.SettingsUI
             int height = RowHeight;
             
             // Gets the API methods
-            IEnumerable<APIMethods> apiMethods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>().Where(x => x.HasHeader());
+            IEnumerable<Enum> apiMethods = APIMethods.Methods.Where(x => x.HasHeader());
             
             // Group the methods by usage
-            List<APIMethods> methods = apiMethods.Where(x => x == (x & APIMethods.SupportMethods)).ToList();
-            methods.AddRange(apiMethods.Where(x => x == (x & APIMethods.BasicFeatures)));
-            methods.AddRange(apiMethods.Where(x => x == (x & APIMethods.AdvancedFeatures)).OrderBy(x => x.GetHeader()));
+            List<Enum> methods = apiMethods.Where(method => method is APIGenericMethods).ToList();
+
+            methods.AddRange(apiMethods.Where(method => method is APICharacterMethods).Cast<APICharacterMethods>().Where(
+                method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
+
+            methods.AddRange(apiMethods.Where(method => method is APICharacterMethods).Cast<APICharacterMethods>().Where(
+                method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().OrderBy(
+                    method => method.GetHeader()));
+
+            methods.AddRange(apiMethods.Where(method => method is APICorporationMethods).Cast<APICorporationMethods>().Where(
+                method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
+                    method => method.GetHeader()));
 
             // Add the controls for every member of the enumeration
-            foreach (APIMethods method in methods)
+            foreach (Enum method in methods)
             {
                 // Add the icon
                 Bitmap icon = CommonProperties.Resources.KeyGrey16;
                 string iconToolTip = "This is a basic feature query.";
-                if (method == (method & APIMethods.AdvancedFeatures))
+                if (method is APICharacterMethods)
                 {
-                    icon = CommonProperties.Resources.KeyGold16;
-                    iconToolTip = "This is an advanced feature query.";
+                    APICharacterMethods apiMethod = (APICharacterMethods)method;
+                    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCharacterFeatures))
+                    {
+                        icon = CommonProperties.Resources.KeyGold16;
+                        iconToolTip = "This is an advanced feature query.";
+                    }
+                }
+
+                if (method is APICorporationMethods)
+                {
+                    APICorporationMethods apiMethod = (APICorporationMethods)method;
+                    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCorporationFeatures))
+                    {
+                        icon = CommonProperties.Resources.KeyGold16;
+                        iconToolTip = "This is an advanced feature query.";
+                    }
                 }
 
                 PictureBox picture = new PictureBox
@@ -111,9 +134,9 @@ namespace EVEMon.SettingsUI
 
                 foreach (ComboBox combo in m_combos)
                 {
-                    APIMethods method = (APIMethods)combo.Tag;
+                    Enum method = (Enum)combo.Tag;
                     List<UpdatePeriod> periods = GetUpdatePeriods(method);
-                    combo.SelectedIndex = Math.Max(0, periods.IndexOf(m_settings.Periods[method]));
+                    combo.SelectedIndex = Math.Max(0, periods.IndexOf(m_settings.Periods[method.ToString()]));
                 }
             }
         }
@@ -126,16 +149,22 @@ namespace EVEMon.SettingsUI
         private void combo_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox combo = (ComboBox)sender;
-            APIMethods method = (APIMethods)combo.Tag;
+            Enum method = (Enum)combo.Tag;
             List<UpdatePeriod> periods = GetUpdatePeriods(method);
 
             if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count)
                 return;
 
-            if (method == APIMethods.CharacterList)
-                m_settings.Periods[APIMethods.APIKeyInfo] = periods[combo.SelectedIndex];
+            if (method.Equals(APICharacterMethods.MarketOrders))
+                m_settings.Periods[APICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
 
-            m_settings.Periods[method] = periods[combo.SelectedIndex];
+            if (method.Equals(APICharacterMethods.IndustryJobs))
+                m_settings.Periods[APICorporationMethods.CorporationIndustryJobs.ToString()] = periods[combo.SelectedIndex];
+
+            if (method.Equals(APIGenericMethods.CharacterList))
+                m_settings.Periods[APIGenericMethods.APIKeyInfo.ToString()] = periods[combo.SelectedIndex];
+
+            m_settings.Periods[method.ToString()] = periods[combo.SelectedIndex];
         }
 
         /// <summary>
@@ -143,7 +172,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        private static List<UpdatePeriod> GetUpdatePeriods(APIMethods method)
+        private static List<UpdatePeriod> GetUpdatePeriods(Enum method)
         {
             List<UpdatePeriod> periods = new List<UpdatePeriod> { UpdatePeriod.Never };
 

@@ -1,4 +1,7 @@
-﻿namespace EVEMon.Common
+﻿using System;
+using System.Linq;
+
+namespace EVEMon.Common
 {
     /// <summary>
     /// Represents a monitor for all queries related to characters and their corporations.
@@ -7,13 +10,14 @@
     public sealed class CharacterQueryMonitor<T> : QueryMonitor<T>
     {
         private readonly Character m_character;
+        private APIKey m_apiKey;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="method"></param>
-        internal CharacterQueryMonitor(Character character, APIMethods method)
+        internal CharacterQueryMonitor(Character character, Enum method)
             : base(method)
         {
             m_character = character;
@@ -25,7 +29,11 @@
         /// <returns>False if an API key was required and not found.</returns>
         protected override bool HasAPIKey
         {
-            get { return m_character.Identity.APIKey != null; }
+            get
+            {
+                return m_character.Identity.APIKeys.Any(
+                    apiKey => apiKey.Type == APIKeyType.Account || apiKey.Type == APIKeyType.Character);
+            }
         }
 
         /// <summary>
@@ -36,7 +44,11 @@
         /// </value>
         public override bool HasAccess
         {
-            get { return (int)Method == (m_character.Identity.APIKey.AccessMask & (int)Method); }
+            get
+            {
+                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((APICharacterMethods)Method);
+                return m_apiKey != null;
+            }
         }
 
         /// <summary>
@@ -46,8 +58,7 @@
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
         protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
         {
-            APIKey apiKey = m_character.Identity.APIKey;
-            provider.QueryMethodAsync(Method, apiKey.ID, apiKey.VerificationCode, m_character.CharacterID, callback);
+            provider.QueryMethodAsync(Method, m_apiKey.ID, m_apiKey.VerificationCode, m_character.CharacterID, callback);
         }
     }
 }

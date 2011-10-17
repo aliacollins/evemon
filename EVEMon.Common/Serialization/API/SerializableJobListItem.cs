@@ -114,5 +114,11 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         [XmlIgnore]
         public DateTime PauseProductionTime { get; set; }
+
+        /// <summary>
+        /// Which this job was issued for.
+        /// </summary>
+        [XmlIgnore]
+        public IssuedFor IssuedFor { get; set; }
     }
 }

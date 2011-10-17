@@ -13,9 +13,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public IQueryMonitor this[APIMethods method]
+        public IQueryMonitor this[Enum method]
         {
-            get { return Items.FirstOrDefault(monitor => monitor.Method == method); }
+            get { return Items.FirstOrDefault(monitor => monitor.Method.Equals(method)); }
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace EVEMon.Common
         /// Requests an update for the given method.
         /// </summary>
         /// <param name="method"></param>
-        public void Query(APIMethods method)
+        public void Query(Enum method)
         {
             IQueryMonitorEx monitor = this[method] as IQueryMonitorEx;
             if (monitor != null)
@@ -107,7 +107,7 @@ namespace EVEMon.Common
         /// Requests an update for the specified methods.
         /// </summary>
         /// <param name="methods">The methods.</param>
-        public void Query(IEnumerable<APIMethods> methods)
+        public void Query(IEnumerable<Enum> methods)
         {
             IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod]).OfType<IQueryMonitorEx>();
             foreach (IQueryMonitorEx monitor in monitors)
@@ -134,6 +134,15 @@ namespace EVEMon.Common
         internal void Add(IQueryMonitorEx monitor)
         {
             Items.Add(monitor);
+        }
+
+        /// <summary>
+        /// Removes this monitor from the collection.
+        /// </summary>
+        /// <param name="monitor"></param>
+        internal void Remove(IQueryMonitorEx monitor)
+        {
+            Items.Remove(monitor);
         }
     }
 }

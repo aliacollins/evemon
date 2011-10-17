@@ -838,7 +838,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="expiredOrders">The expired orders.</param>
-        internal void NotifyMarkerOrdersEnding(Character character, IEnumerable<MarketOrder> expiredOrders)
+        internal void NotifyMarkerOrdersEnded(Character character, IEnumerable<MarketOrder> expiredOrders)
         {
             MarketOrdersNotificationEventArgs notification =
                 new MarketOrdersNotificationEventArgs(character, expiredOrders)

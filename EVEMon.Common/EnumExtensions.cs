@@ -50,7 +50,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the header bound to the given enumeration member.
+        /// Gets the period bound to the given enumeration member.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -64,7 +64,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private static TAttribute GetAttribute<TAttribute>(this Enum item)
+        public static TAttribute GetAttribute<TAttribute>(this Enum item)
             where TAttribute : Attribute
         {
             MemberInfo[] members = item.GetType().GetMember(item.ToString());

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -30,7 +29,7 @@ namespace EVEMon.Common
                          ? GetMailingListIDToName(src.SenderID.ToString())
                          : EveIDToName.GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
-            Title = HttpUtility.HtmlDecode(src.Title);
+            Title = src.Title.HtmlDecode();
             ToCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
             ToCharacters = GetIDsToNames(src.ToCharacterIDs);
             ToMailingLists = GetMailingListIDsToNames(src.ToListID);
@@ -242,10 +241,15 @@ namespace EVEMon.Common
 
             m_queryPending = true;
 
+            // Quits if access denied
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.MailBodies);
+            if (apiKey == null)
+                return;
+
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
-                APIMethods.MailBodies,
-                m_ccpCharacter.Identity.APIKey.ID,
-                m_ccpCharacter.Identity.APIKey.VerificationCode,
+                APICharacterMethods.MailBodies,
+                apiKey.ID,
+                apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
                 MessageID,
                 OnEVEMailBodyDownloaded);
@@ -260,7 +264,7 @@ namespace EVEMon.Common
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.MailBodies))
+            if (m_ccpCharacter.CharacterDataQuerying.ShouldNotifyError(result, APICharacterMethods.MailBodies))
                 EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
 
             // Quits if there is an error

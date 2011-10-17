@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
@@ -28,6 +30,8 @@ namespace EVEMon.Common
         /// The last time the settings were saved.
         /// </summary>
         private static DateTime s_lastSaveTime;
+
+        private static XslCompiledTransform s_settingsTransform;
 
         /// <summary>
         /// Static constructor.
@@ -205,27 +209,15 @@ namespace EVEMon.Common
             }
 
             // Add missing API methods update periods
-            foreach (APIMethods method in EnumExtensions.GetValues<APIMethods>())
+            foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null).Where(
+                method => !Updates.Periods.ContainsKey(method.ToString())))
             {
-                // Special condition to exclude corp related methods
-                // (We had them implemented on pre CAK system,
-                // they are kept in enumeration for settings file backwards compatibility)
-                if (method == APIMethods.CorporationMarketOrders || method == APIMethods.CorporationIndustryJobs)
-                {
-                    Updates.Periods.Remove(method);
-                    continue;
-                }
-
-                if (Updates.Periods.ContainsKey(method))
-                    continue;
-
-                UpdateAttribute updateAttribute = method.GetUpdatePeriod();
-                if (updateAttribute != null)
-                    Updates.Periods.Add(method, updateAttribute.DefaultPeriod);
+                Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
                 // Bind the APIKeyInfo and CharacterList update period
-                if (method == APIMethods.APIKeyInfo && Updates.Periods[method] != Updates.Periods[APIMethods.CharacterList])
-                    Updates.Periods[method] = Updates.Periods[APIMethods.CharacterList];
+                if ((APIGenericMethods)method == APIGenericMethods.APIKeyInfo &&
+                    Updates.Periods[APIGenericMethods.CharacterList.ToString()] != Updates.Periods[method.ToString()])
+                    Updates.Periods[method.ToString()] = Updates.Periods[APIGenericMethods.CharacterList.ToString()];
             }
 
             // Initializes the plan columns or adds missing ones
@@ -245,10 +237,19 @@ namespace EVEMon.Common
 
             // Initializes the EVE notifications columns or adds missing ones
             UI.MainWindow.EVENotifications.Add(UI.MainWindow.EVENotifications.DefaultColumns.ToList());
+
+            // Removes reduntant windows locations
+            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
+            locations.AddRange(UI.WindowLocations);
+            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
+                windowLocation => windowLocation.Key == "FeaturesWindow"))
+            {
+                UI.WindowLocations.Remove(windowLocation.Key);
+            }
         }
 
         /// <summary>
-        /// Creates a seriablizable version of the settings.
+        /// Creates a serializable version of the settings.
         /// </summary>
         /// <returns></returns>
         public static SerializableSettings Export()
@@ -351,7 +352,7 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(settingsFile)
-                                                        : Util.DeserializeXML<SerializableSettings>(settingsFile);
+                                                        : Util.DeserializeXML<SerializableSettings>(settingsFile, SettingsTransform);
 
                     // If the settings loaded OK, make a backup as 'last good settings' and return
                     if (settings != null)
@@ -411,7 +412,7 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(backupFile)
-                                                        : Util.DeserializeXML<SerializableSettings>(backupFile);
+                                                        : Util.DeserializeXML<SerializableSettings>(backupFile, SettingsTransform);
 
                     // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
                     if (settings != null)
@@ -518,6 +519,14 @@ namespace EVEMon.Common
 
                 FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
             }
+        }
+
+        /// <summary>
+        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XmlSerializer"/>
+        /// </summary>
+        private static XslCompiledTransform SettingsTransform
+        {
+            get { return s_settingsTransform ?? (s_settingsTransform = Util.LoadXSLT(Properties.Resources.SettingsXSLT)); }
         }
 
         #endregion

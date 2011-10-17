@@ -34,10 +34,10 @@ namespace EVEMon.Common
         /// </summary>
         private APIKey()
         {
-            m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, APIMethods.APIKeyInfo);
+            m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, APIGenericMethods.APIKeyInfo);
             m_apiKeyInfoMonitor.Updated += OnAPIKeyInfoUpdated;
 
-            m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, APIMethods.AccountStatus);
+            m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, APICharacterMethods.AccountStatus);
             m_accountStatusMonitor.Updated += OnAccountStatusUpdated;
 
             IdentityIgnoreList = new CharacterIdentityIgnoreList(this);
@@ -128,7 +128,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities
         {
-            get { return EveMonClient.CharacterIdentities.Where(characterID => characterID.APIKey == this); }
+            get { return EveMonClient.CharacterIdentities.Where(characterID => characterID.APIKeys.Contains(this)); }
         }
 
         /// <summary>
@@ -203,10 +203,6 @@ namespace EVEMon.Common
             if (Type != APIKeyType.Account)
                 return;
 
-            // Quits if access denied
-            if ((int)APIMethods.CharacterSkillInTraining != (AccessMask & (int)APIMethods.CharacterSkillInTraining))
-                return;
-
             foreach (CharacterIdentity id in CharacterIdentities)
             {
                 string identity = id.Name;
@@ -215,7 +211,7 @@ namespace EVEMon.Common
                     m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
 
                 EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
-                    APIMethods.CharacterSkillInTraining, ID, VerificationCode, id.CharacterID,
+                    APICharacterMethods.CharacterSkillInTraining, ID, VerificationCode, id.CharacterID,
                     x => OnSkillInTrainingUpdated(x, identity));
             }
         }
@@ -246,6 +242,10 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         private void OnAPIKeyInfoUpdated(APIResult<SerializableAPIKeyInfo> result)
         {
+            // Quit if the API key was deleted while it was updating
+            if (!EveMonClient.APIKeys.Contains(this))
+                return;
+
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
                 return;
@@ -254,7 +254,6 @@ namespace EVEMon.Common
             if (result.HasError)
             {
                 EveMonClient.Notifications.NotifyCharacterListError(this, result);
-
                 return;
             }
 
@@ -438,7 +437,7 @@ namespace EVEMon.Common
                                                EventHandler<APIKeyCreationEventArgs> callback)
         {
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIKeyInfo>(
-                APIMethods.APIKeyInfo, id, verificationCode,
+                APIGenericMethods.APIKeyInfo, id, verificationCode,
                 result => callback(null, new APIKeyCreationEventArgs(id, verificationCode, result)));
         }
 
@@ -529,21 +528,25 @@ namespace EVEMon.Common
         private void ImportIdentities(IEnumerable<ISerializableCharacterIdentity> identities)
         {
             // Clear the API key on this character
-            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKey == this))
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKeys.Contains(this)))
             {
-                id.APIKey = null;
+                id.APIKeys.Remove(this);
             }
 
             // Return if there were errors in the query
             if (identities == null)
                 return;
 
-            // Assign owned identities to this API Key
+            // Assign owned identities to this API key
             foreach (CharacterIdentity id in identities.Select(
                 serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
                             EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
             {
-                id.APIKey = this;
+                id.APIKeys.Add(this);
+
+                // Notify subscribers
+                if (id.CCPCharacter != null)
+                    EveMonClient.OnCharacterUpdated(id.CCPCharacter);
             }
         }
 
@@ -583,12 +586,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates the API Key.
+        /// Updates the API key.
         /// </summary>
         /// <param name="e">The <see cref="APIKeyCreationEventArgs"/> instance containing the event data.</param>
         public void Update(APIKeyCreationEventArgs e)
         {
-
             VerificationCode = e.VerificationCode;
             AccessMask = e.AccessMask;
             Type = e.Type;
@@ -599,27 +601,29 @@ namespace EVEMon.Common
             NotifyAPIKeyExpiration();
 
             // Clear the API key for the currently associated identities
-            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKey == this))
+            foreach (CharacterIdentity id in EveMonClient.CharacterIdentities.Where(id => id.APIKeys.Contains(this)))
             {
-                id.APIKey = null;
+                id.APIKeys.Remove(this);
             }
 
             // Assign this API key to the new identities and create CCP characters
             foreach (CharacterIdentity id in e.Identities)
             {
+                id.APIKeys.Add(this);
+
                 // Skip if in the ignore list
-                id.APIKey = this;
                 if (IdentityIgnoreList.Contains(id))
                     continue;
 
                 // Retrieves the ccp character and create one if none
-                CCPCharacter ccpCharacter = id.CCPCharacter;
-                if (ccpCharacter != null)
+                if (id.CCPCharacter != null)
+                {
+                    // Notify subscribers
+                    EveMonClient.OnCharacterUpdated(id.CCPCharacter);
                     continue;
+                }
 
-                ccpCharacter = new CCPCharacter(id);
-                EveMonClient.Characters.Add(ccpCharacter, true);
-                ccpCharacter.Monitored = true;
+                EveMonClient.Characters.Add(new CCPCharacter(id));
             }
         }
 

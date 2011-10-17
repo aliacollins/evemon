@@ -32,9 +32,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override SerializableOrderBase Export()
         {
-            SerializableSellOrder serial = new SerializableSellOrder();
-            Export(serial);
-            return serial;
+            return Export(new SerializableSellOrder());
         }
     }
 }

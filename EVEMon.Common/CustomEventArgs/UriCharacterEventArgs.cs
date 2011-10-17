@@ -91,7 +91,7 @@ namespace EVEMon.Common.CustomEventArgs
                 uriCharacter = new UriCharacter(identity, Uri, ccpCharacter);
             }
 
-            EveMonClient.Characters.Add(uriCharacter, true);
+            EveMonClient.Characters.Add(uriCharacter);
             return uriCharacter;
         }
 

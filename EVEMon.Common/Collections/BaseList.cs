@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace EVEMon.Common.Collections
 {
     /// <summary>
-    /// A base class for lists when we want to be able to connect or disconnect items, or fire colection changes.
+    /// A base class for lists when we want to be able to connect or disconnect items, or fire collection changes.
     /// </summary>
     public abstract class BaseList<T> : IList<T>
         where T : class

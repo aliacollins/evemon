@@ -89,6 +89,12 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public DateTime Issued { get; set; }
 
+        /// <summary>
+        /// Which this order was issued for.
+        /// </summary>
+        [XmlIgnore]
+        public IssuedFor IssuedFor { get; set; }
+
         [XmlAttribute("issued")]
         public string IssuedXml
         {

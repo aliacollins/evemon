@@ -36,12 +36,12 @@ namespace EVEMon
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowMarketOrdersList));
             this.lvOrders = new System.Windows.Forms.ListView();
             this.itemColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.volumeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.priceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.unitaryPriceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.locationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ilListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noOrdersLabel = new System.Windows.Forms.Label();
-            this.marketExpPanelControl = new ExpandablePanelControl();
+            this.marketExpPanelControl = new EVEMon.Common.Controls.ExpandablePanelControl();
             this.SuspendLayout();
             // 
             // lvOrders
@@ -49,9 +49,9 @@ namespace EVEMon
             this.lvOrders.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvOrders.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.itemColumn,
-            this.volumeColumn,
-            this.priceColumn,
-            this.locationColumn});
+            this.locationColumn,
+            this.unitaryPriceColumn,
+            this.quantityColumn});
             this.lvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvOrders.FullRowSelect = true;
             listViewGroup1.Header = "Sell Orders";
@@ -65,7 +65,7 @@ namespace EVEMon
             this.lvOrders.Location = new System.Drawing.Point(0, 0);
             this.lvOrders.Name = "lvOrders";
             this.lvOrders.Size = new System.Drawing.Size(454, 334);
-            this.lvOrders.SmallImageList = this.ilListIcons;
+            this.lvOrders.SmallImageList = this.ilIcons;
             this.lvOrders.TabIndex = 0;
             this.lvOrders.UseCompatibleStateImageBehavior = false;
             this.lvOrders.View = System.Windows.Forms.View.Details;
@@ -75,28 +75,28 @@ namespace EVEMon
             this.itemColumn.Text = "Item";
             this.itemColumn.Width = 192;
             // 
-            // volumeColumn
+            // quantityColumn
             // 
-            this.volumeColumn.Text = "Volume";
-            this.volumeColumn.Width = 88;
+            this.quantityColumn.Text = "Quantity";
+            this.quantityColumn.Width = 88;
             // 
-            // priceColumn
+            // unitaryPriceColumn
             // 
-            this.priceColumn.Text = "Price";
-            this.priceColumn.Width = 92;
+            this.unitaryPriceColumn.Text = "Unit Price";
+            this.unitaryPriceColumn.Width = 92;
             // 
             // locationColumn
             // 
             this.locationColumn.Text = "System";
             this.locationColumn.Width = 80;
             // 
-            // ilListIcons
+            // ilIcons
             // 
-            this.ilListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilListIcons.ImageStream")));
-            this.ilListIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilListIcons.Images.SetKeyName(0, "arrow_up.png");
-            this.ilListIcons.Images.SetKeyName(1, "arrow_down.png");
-            this.ilListIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
             // 
             // noOrdersLabel
             // 
@@ -111,12 +111,14 @@ namespace EVEMon
             // 
             // marketExpPanelControl
             // 
-            this.marketExpPanelControl.AnimationSpeed = AnimationSpeed.Medium;
+            this.marketExpPanelControl.AnimationSpeed = EVEMon.Common.Controls.AnimationSpeed.Medium;
             this.marketExpPanelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.marketExpPanelControl.EnableContextMenu = false;
-            this.marketExpPanelControl.ExpandDirection = Direction.Down;
+            this.marketExpPanelControl.ExpandDirection = EVEMon.Common.Controls.Direction.Down;
+            this.marketExpPanelControl.ExpandedHeight = 100;
             this.marketExpPanelControl.ExpandedOnStartup = false;
             this.marketExpPanelControl.HeaderHeight = 30;
+            this.marketExpPanelControl.HeaderText = "Header Text";
             this.marketExpPanelControl.ImageCollapse = ((System.Drawing.Bitmap)(resources.GetObject("marketExpPanelControl.ImageCollapse")));
             this.marketExpPanelControl.ImageExpand = ((System.Drawing.Bitmap)(resources.GetObject("marketExpPanelControl.ImageExpand")));
             this.marketExpPanelControl.Location = new System.Drawing.Point(0, 334);
@@ -142,10 +144,10 @@ namespace EVEMon
         private System.Windows.Forms.ListView lvOrders;
         private System.Windows.Forms.Label noOrdersLabel;
         private System.Windows.Forms.ColumnHeader itemColumn;
-        private System.Windows.Forms.ColumnHeader volumeColumn;
+        private System.Windows.Forms.ColumnHeader quantityColumn;
         private System.Windows.Forms.ColumnHeader locationColumn;
-        private System.Windows.Forms.ColumnHeader priceColumn;
-        private System.Windows.Forms.ImageList ilListIcons;
+        private System.Windows.Forms.ColumnHeader unitaryPriceColumn;
+        private System.Windows.Forms.ImageList ilIcons;
         private ExpandablePanelControl marketExpPanelControl;
     }
 }

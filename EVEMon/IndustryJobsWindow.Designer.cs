@@ -35,7 +35,6 @@ namespace EVEMon
             // 
             this.jobsList.Character = null;
             this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
             this.jobsList.Size = new System.Drawing.Size(292, 266);

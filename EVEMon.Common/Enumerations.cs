@@ -157,41 +157,54 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Enumeration of the supported API methods. Each method should have an entry in APIMethods and
-    /// an equivalent string entry in APIConstants indicating the default path of the method.
+    /// Enumerations to support APIMethods.
     /// </summary>
     [Flags]
-    public enum APIMethods
+    public enum APIMethodsExtensions
     {
         None = 0,
 
         /// <summary>
-        /// The info of the provided API key.
+        /// The basic character features of APIMethods.
         /// </summary>
-        /// <remarks>
-        /// It also provides the characters list available by the API key.
-        /// The update period is bound to the CharacterList's period in Settings.
-        /// </remarks>
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        APIKeyInfo = 6,
+        BasicCharacterFeatures =
+            APICharacterMethods.CharacterSheet | APICharacterMethods.CharacterInfo | APICharacterMethods.SkillQueue |
+            APICharacterMethods.CharacterSkillInTraining,
 
         /// <summary>
-        /// The EVE server status.
+        /// The advanced character features of APIMethods.
         /// </summary>
-        [Header("EVE Server Status")]
-        [Description("The status of the EVE server.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
-        ServerStatus = 3,
+        AdvancedCharacterFeatures =
+            APICharacterMethods.AccountStatus | APICharacterMethods.MarketOrders | APICharacterMethods.IndustryJobs |
+            APICharacterMethods.ResearchPoints | APICharacterMethods.Standings | APICharacterMethods.MailMessages |
+            APICharacterMethods.MailBodies | APICharacterMethods.MailingLists | APICharacterMethods.Notifications |
+            APICharacterMethods.NotificationTexts,
 
         /// <summary>
-        /// The characters available on an API key.
+        /// The advanced corporation features of APIMethods.
         /// </summary>
-        [Header("Characters on API key")]
-        [Description("The retrieval of the characters list available by the API key.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        CharacterList = 5,
+        AdvancedCorporationFeatures = None,
+
+        /// <summary>
+        /// All character features of APIMethods.
+        /// </summary>
+        AllCharacterFeatures = BasicCharacterFeatures | AdvancedCharacterFeatures,
+
+        /// <summary>
+        /// All corporation features of APIMethods.
+        /// </summary>
+        AllCorporationFeatures = AdvancedCorporationFeatures
+    }
+
+    /// <summary>
+    /// Enumeration of the character related API methods. Each method has an access mask.
+    /// Each method should have an entry in APIMethods and
+    /// an equivalent string entry in NetworkConstants indicating the default path of the method.
+    /// </summary>
+    [Flags]
+    public enum APICharacterMethods
+    {
+        None = 0,
 
         /// <summary>
         /// A character sheet (bio, skills, implants, etc).
@@ -292,49 +305,88 @@ namespace EVEMon.Common
         NotificationTexts = 1 << 15,
 
         /// <summary>
+        /// The character info. Used to fetch active ship, security status and last known location. 
+        /// </summary>
+        CharacterInfo = 1 << 23 | 1 << 24,
+    }
+
+    /// <summary>
+    /// Enumeration of the corporation related API methods. Each method has an access mask.
+    /// Each method should have an entry in APIMethods and
+    /// an equivalent string entry in NetworkConstants indicating the default path of the method.
+    /// </summary>
+    [Flags]
+    public enum APICorporationMethods
+    {
+        None = 0,
+
+        /// <summary>
         /// The corporation issued market orders of a character.
         /// </summary>
-        /// <remarks> Deprecated due to CAK system. Kepted for settings file backwards compatibility. Must be removed sometime. </remarks>
+        [Header("Market Orders")]
+        [Description("The corporation market orders of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        CorporationMarketOrders = 10,
+        CorporationMarketOrders = 1 << 12,
 
         /// <summary>
         /// The corporation issued industry jobs of a character.
         /// </summary>
-        /// <remarks> Deprecated due to CAK system. Kepted for settings file backwards compatibility. Must be removed sometime. </remarks>
+        [Header("Industry Jobs")]
+        [Description("The corporation industry jobs of a character.")]
         [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
-        CorporationIndustryJobs = 11,
-
-        /// <summary>
-        /// The conquerable station list.
-        /// </summary>
-        ConquerableStationList = 12,
-
-        /// <summary>
-        /// The character name. Used to convert IDs to Names.
-        /// </summary>
-        CharacterName = 18,
-
-        /// <summary>
-        /// The character info. Used to fetch active ship, security status and last known location. 
-        /// </summary>
-        CharacterInfo = 1 << 23 | 1 << 24,
-
-        SupportMethods = ServerStatus | CharacterList,
-        BasicFeatures = CharacterSheet | CharacterInfo | SkillQueue | CharacterSkillInTraining,
-
-        AdvancedFeatures =
-            AccountStatus | EVEMailMessages | EVENotifications | IndustryJobs | MarketOrders | ResearchPoints | Standings,
-        AllFeatures = BasicFeatures | AdvancedFeatures,
-
-        EVEMailMessages = MailMessages | MailBodies | MailingLists,
-        EVENotifications = Notifications | NotificationTexts
+        CorporationIndustryJobs = 1 << 7,
     }
 
     #endregion
 
 
     #region Simple Enumerations
+
+    /// <summary>
+    /// Enumeration of the generic API methods. Those methods do not have access mask.
+    /// Each method should have an entry in APIMethods and
+    /// an equivalent string entry in NetworkConstants indicating the default path of the method.
+    /// </summary>
+    public enum APIGenericMethods
+    {
+        /// <summary>
+        /// The EVE server status.
+        /// </summary>
+        [Header("EVE Server Status")]
+        [Description("The status of the EVE server.")]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
+        ServerStatus,
+
+        /// <summary>
+        /// The characters available on an API key.
+        /// </summary>
+        [Header("Characters on API key")]
+        [Description("The retrieval of the characters list available by the API key.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        CharacterList,
+
+        /// <summary>
+        /// The info of the provided API key.
+        /// </summary>
+        /// <remarks>
+        /// It also provides the characters list available by the API key.
+        /// The update period is bound to the CharacterList's period in Settings.
+        /// </remarks>
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        APIKeyInfo,
+
+        /// <summary>
+        /// The conquerable station list.
+        /// </summary>
+        ConquerableStationList,
+
+        /// <summary>
+        /// The character name. Used to convert IDs to Names.
+        /// </summary>
+        CharacterName,
+    }
 
     public enum ThrobberState
     {
@@ -604,6 +656,17 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// For which the object was issued.
+    /// </summary>
+    public enum IssuedFor
+    {
+        None,
+        Character,
+        Corporation,
+        All
+    }
+
+    /// <summary>
     /// A blueprint's type.
     /// </summary>
     /// <remarks>The integer value determines the value assigned in <see cref="IndustryJob"/>.</remarks>
@@ -809,9 +872,9 @@ namespace EVEMon.Common
         Updating,
 
         /// <summary>
-        /// The query is disabled by the settings.
+        /// The query is disabled.
         /// </summary>
-        [Description("Disabled by settings.")]
+        [Description("Disabled.")]
         Disabled,
 
         /// <summary>

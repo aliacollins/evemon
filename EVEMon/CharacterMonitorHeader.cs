@@ -140,11 +140,9 @@ namespace EVEMon
                                                          "Security Status: {0:N2}", m_character.SecurityStatus);
                 ActiveShipLabel.Text = GetActiveShipText();
 
-                APIKey apiKey = m_character.Identity.APIKey;
+                APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
                 LocationInfoIndicationPictureBox.Visible =
-                    apiKey != null &&
-                    ((int)APIMethods.CharacterInfo == (apiKey.AccessMask & (int)APIMethods.CharacterInfo)) &&
-                    !String.IsNullOrWhiteSpace(m_character.LastKnownLocation);
+                    apiKey != null && !String.IsNullOrWhiteSpace(m_character.LastKnownLocation);
             }
             finally
             {
@@ -173,7 +171,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APIMethods.MarketOrders];
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 BalanceLabel.ForeColor = Color.Orange;
@@ -271,7 +269,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (ccpCharacter.Identity.APIKey == null || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
+            if (ccpCharacter.Identity.APIKeys.IsEmpty() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ToolTip.SetToolTip(UpdateThrobber, String.Empty);
                 return;
@@ -338,7 +336,16 @@ namespace EVEMon
 
             StringBuilder output = new StringBuilder();
 
-            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
+            // Skip character's corporation market orders and industry jobs monitor
+            // if they are bound with the character's personal monitor
+            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
+                monitor => monitor.HasAccess).Where(
+                    monitor =>
+                    !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
+                    ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders] == null).Where(
+                        monitor =>
+                        !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
+                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs] == null))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -363,7 +370,7 @@ namespace EVEMon
         /// Removes the monitor menu items and separator.
         /// </summary>
         /// <param name="contextMenu">The context menu.</param>
-        private void RemoveMonitorMenuItems(ContextMenuStrip contextMenu)
+        private void RemoveMonitorMenuItems(ToolStrip contextMenu)
         {
             // Remove all the items after the separator including the separator
             int separatorIndex = contextMenu.Items.IndexOf(ThrobberSeparator);
@@ -381,6 +388,9 @@ namespace EVEMon
         private static string GenerateTimeToNextUpdateText(IQueryMonitor monitor)
         {
             TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
+
+            if (monitor.Status == QueryStatus.Disabled)
+                return "(Disabled)";
 
             if (timeToNextUpdate <= TimeSpan.Zero)
                 return "(Pending)";
@@ -488,7 +498,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the active ship desciption.
+        /// Gets the active ship description.
         /// </summary>
         /// <returns></returns>
         private string GetActiveShipText()
@@ -520,7 +530,7 @@ namespace EVEMon
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             Disposed += OnDisposed;
         }
 
@@ -548,7 +558,7 @@ namespace EVEMon
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -641,7 +651,7 @@ namespace EVEMon
             // or character has no associated API key
             if (UpdateThrobber.State == ThrobberState.Strobing ||
                 ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate)||
-                ccpCharacter.Identity.APIKey == null)
+                ccpCharacter.Identity.APIKeys.IsEmpty())
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
@@ -674,8 +684,8 @@ namespace EVEMon
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
-            // Exit for non-CCP characters or no associated APi key
-            if (ccpCharacter == null || ccpCharacter.Identity.APIKey == null)
+            // Exit for non-CCP characters or no associated API key
+            if (ccpCharacter == null || ccpCharacter.Identity.APIKeys.IsEmpty() || ccpCharacter.QueryMonitors.IsEmpty())
             {
                 QueryEverythingMenuItem.Enabled = false;
                 return;
@@ -687,7 +697,16 @@ namespace EVEMon
             CreateNewToolStripSeparator();
 
             // Add monitor items
-            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Select(CreateNewMonitorToolStripMenuItem))
+            // Skip character's corporation market orders and industry jobs monitor
+            // if they are bound with the character's personal monitor
+            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
+                monitor =>
+                !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
+                ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders] == null).Where(
+                    monitor =>
+                    !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
+                    ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs] == null).Select(
+                        CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menu);
             }
@@ -708,10 +727,10 @@ namespace EVEMon
             if (e.ClickedItem == QueryEverythingMenuItem)
                 ccpCharacter.QueryMonitors.QueryEverything();
 
-            if (!(e.ClickedItem.Tag is APIMethods))
+            if (!(e.ClickedItem.Tag is Enum))
                 return;
 
-            APIMethods method = (APIMethods)e.ClickedItem.Tag;
+            Enum method = (Enum)e.ClickedItem.Tag;
 
             SetThrobberUpdating();
 
@@ -784,8 +803,8 @@ namespace EVEMon
                 return;
 
             // Show the tooltip on when the user provides api key
-            APIKey apiKey = m_character.Identity.APIKey;
-            if (apiKey == null || ((int)APIMethods.CharacterInfo != (apiKey.AccessMask & (int)APIMethods.CharacterInfo)))
+            APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
+            if (apiKey == null)
                 return;
 
             string location = "Lost in space";
@@ -835,7 +854,7 @@ namespace EVEMon
         private void ChangeAPIKeyInfoMenuItem_Click(object sender, EventArgs e)
         {
             // This menu should be enabled only for CCP characters
-            WindowsFactory<ApiKeyUpdateOrAdditionWindow>.ShowByTag(m_character.Identity.APIKey);
+            WindowsFactory<ApiKeyUpdateOrAdditionWindow>.ShowByTag(m_character.Identity.APIKeys);
         }
 
         #endregion

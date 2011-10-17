@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         /// <value>105</value> Invalid character id
         /// <value>201</value> Character does not belong to account
-        /// <value>202</value> Invalid API Key
+        /// <value>202</value> Invalid API key
         /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
         /// This is the variable that needs checking to see if the thing has worked.
         [XmlAttribute("code")]
@@ -40,21 +40,12 @@ namespace EVEMon.Common.Serialization.API
         }
 
         /// <summary>
-        /// Gets true when character has no corporation roles for market orders.
+        /// Gets true when character has no corporation roles.
         /// </summary>
         [XmlIgnore]
-        public bool IsOrdersRelatedCorpRolesError
+        public bool IsCorpRolesError
         {
-            get { return (ErrorCode == 208); }
-        }
-
-        /// <summary>
-        /// Gets true when character has no corporation roles for industry jobs.
-        /// </summary>
-        [XmlIgnore]
-        public bool IsJobsRelatedCorpRolesError
-        {
-            get { return (ErrorCode == 213); }
+            get { return (ErrorCode >= 206 && ErrorCode <= 209 || ErrorCode == 213); }
         }
 
         /// <summary>
@@ -103,7 +94,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         /// <summary>
-        /// Gets true when the API Key has expired.
+        /// Gets true when the API key has expired.
         /// </summary>
         [XmlIgnore]
         public bool IsAPIKeyExpired

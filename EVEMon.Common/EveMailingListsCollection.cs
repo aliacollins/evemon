@@ -6,18 +6,21 @@ namespace EVEMon.Common
 {
     public sealed class EveMailingListsCollection : ReadonlyCollection<EveMailingList>
     {
+        private readonly CCPCharacter m_ccpCharacter;
+
         /// <summary>
-        /// Constructor.
+        /// Internal constructor.
         /// </summary>
-        /// <param name="character">The character.</param>
-        public EveMailingListsCollection(Character character)
+        /// <param name="ccpCharacter">The CCP character.</param>
+        public EveMailingListsCollection(CCPCharacter ccpCharacter)
         {
+            m_ccpCharacter = ccpCharacter;
         }
 
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src">The SRC.</param>
+        /// <param name="src">The source.</param>
         internal void Import(IEnumerable<SerializableMailingListsListItem> src)
         {
             Items.Clear();
@@ -27,6 +30,9 @@ namespace EVEMon.Common
             {
                 Items.Add(new EveMailingList(srcEVEMailingList));
             }
+
+            // Fires the event regarding EVE mailing lists update
+            EveMonClient.OnCharacterEVEMailingListsUpdated(m_ccpCharacter);
         }
     }
 }

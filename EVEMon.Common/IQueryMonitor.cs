@@ -24,7 +24,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the API method monitored by this instance.
         /// </summary>
-        APIMethods Method { get; }
+        Enum Method { get; }
 
         /// <summary>
         /// Gets the last time this instance was updated (UTC).

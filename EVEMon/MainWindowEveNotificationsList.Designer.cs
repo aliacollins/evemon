@@ -142,7 +142,6 @@
             this.Controls.Add(this.noEVENotificationsLabel);
             this.Name = "MainWindowEveNotificationsList";
             this.Size = new System.Drawing.Size(454, 434);
-            this.Resize += new System.EventHandler(this.MainWindowEVENotificationsList_Resize);
             this.splitContainerNotifications.Panel1.ResumeLayout(false);
             this.splitContainerNotifications.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotifications)).EndInit();

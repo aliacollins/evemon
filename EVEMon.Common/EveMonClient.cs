@@ -52,6 +52,9 @@ namespace EVEMon.Common
 
                 Trace("EveMonClient.Initialize - begin");
 
+                // APIMethods collection initialization (always before members instatiation)
+                APIMethods.Initialize();
+
                 // Members instantiations
                 HttpWebService = new HttpWebService();
                 APIProviders = new GlobalAPIProviderCollection();
@@ -143,6 +146,14 @@ namespace EVEMon.Common
         /// Gets or sets the EVE Online application data folder.
         /// </summary>
         public static string EVEApplicationDataDir { get; private set; }
+
+        /// <summary>
+        /// Returns the state of the EVE database.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if EVE database is out of service; otherwise, <c>false</c>.
+        /// </value>
+        public static bool EVEDatabaseDisabled { get; set; }
 
         /// <summary>
         /// Returns the current data storage directory.
@@ -459,16 +470,6 @@ namespace EVEMon.Common
         public static event EventHandler CharacterCollectionChanged;
 
         /// <summary>
-        /// Occurs when the API key info have been updated.
-        /// </summary>
-        public static event EventHandler APIKeyInfoUpdated;
-
-        /// <summary>
-        /// Occurs when the list of characters in an API key has been updated.
-        /// </summary>
-        public static event EventHandler CharacterListUpdated;
-
-        /// <summary>
         /// Occurs when the collection of monitored characters changed.
         /// </summary>
         public static event EventHandler MonitoredCharacterCollectionChanged;
@@ -487,6 +488,16 @@ namespace EVEMon.Common
         /// Occurs when the conquerable station list has been updated.
         /// </summary>
         public static event EventHandler ConquerableStationListUpdated;
+
+        /// <summary>
+        /// Occurs when the API key info have been updated.
+        /// </summary>
+        public static event EventHandler APIKeyInfoUpdated;
+
+        /// <summary>
+        /// Occurs when the list of characters in an API key has been updated.
+        /// </summary>
+        public static event EventHandler<APIKeyInfoChangedEventArgs> CharacterListUpdated;
 
         /// <summary>
         /// Occurs when one or many queued skills have been completed.
@@ -524,14 +535,14 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
 
         /// <summary>
-        /// Occurs when the market orders of a character have been updated.
+        /// Occurs when market orders of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterMarketOrdersUpdated;
+        public static event EventHandler<CharacterChangedEventArgs> MarketOrdersUpdated;
 
         /// <summary>
-        /// Occurs when the industry jobs of a character have been updated.
+        /// Occurs when industry jobs of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterIndustryJobsUpdated;
+        public static event EventHandler<CharacterChangedEventArgs> IndustryJobsUpdated;
 
         /// <summary>
         /// Occurs when the industry jobs of a character have been completed.
@@ -547,6 +558,11 @@ namespace EVEMon.Common
         /// Occurs when the mail messages of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVEMailMessagesUpdated;
+
+        /// <summary>
+        /// Occurs when the mailing list of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterEVEMailingListsUpdated;
 
         /// <summary>
         /// Occurs when the body of a character EVE mail message has been downloaded.
@@ -627,7 +643,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the API Key collection changed.
+        /// Called when the API key collection changed.
         /// </summary>
         internal static void OnAPIKeyCollectionChanged()
         {
@@ -664,7 +680,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnConquerableStationListUpdated()
         {
-            Trace("EveMonClient.OnAccountStatusUpdated");
+            Trace("EveMonClient.OnConquerableStationListUpdated");
             if (ConquerableStationListUpdated != null)
                 ConquerableStationListUpdated(null, EventArgs.Empty);
         }
@@ -690,7 +706,7 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterListUpdated - {0}", apiKey);
             Settings.Save();
             if (CharacterListUpdated != null)
-                CharacterListUpdated(null, EventArgs.Empty);
+                CharacterListUpdated(null, new APIKeyInfoChangedEventArgs(apiKey));
         }
 
         /// <summary>
@@ -754,27 +770,27 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character market orders updated.
+        /// Called when both character and corporation issued market orders for a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterMarketOrdersUpdated(Character character)
+        internal static void OnMarketOrdersUpdated(Character character)
         {
-            Trace("EveMonClient.OnCharacterMarketOrdersUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnMarketOrdersUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterMarketOrdersUpdated != null)
-                CharacterMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
+            if (MarketOrdersUpdated != null)
+                MarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
-        /// Called when the character industry jobs updated.
+        /// Called when both character and corporation issued industry jobs for a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterIndustryJobsUpdated(Character character)
+        internal static void OnIndustryJobsUpdated(Character character)
         {
-            Trace("EveMonClient.OnCharacterIndustryJobsUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnIndustryJobsUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterIndustryJobsUpdated != null)
-                CharacterIndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
+            if (IndustryJobsUpdated != null)
+                IndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -811,6 +827,18 @@ namespace EVEMon.Common
             Settings.Save();
             if (CharacterEVEMailMessagesUpdated != null)
                 CharacterEVEMailMessagesUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character EVE mailing list updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterEVEMailingListsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterEVEMailingListsUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterEVEMailingListsUpdated != null)
+                CharacterEVEMailingListsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

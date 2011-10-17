@@ -387,6 +387,7 @@ namespace EVEMon
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 window.Grouping = MarketOrderGrouping.State;
+                window.ShowIssuedFor = IssuedFor.All;
                 return;
             }
 
@@ -398,6 +399,7 @@ namespace EVEMon
                 window.Jobs = jobsNotification.Jobs;
                 window.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
                 window.Grouping = IndustryJobGrouping.State;
+                window.ShowIssuedFor = IssuedFor.All;
                 return;
             }
         }

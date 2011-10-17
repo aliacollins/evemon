@@ -82,6 +82,9 @@ namespace EVEMon
             this.tsColumnSettingsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.hideInactiveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsOptionsSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showOnlyCharMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showOnlyCorpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsReadingPaneSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.readingPaneMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paneRightMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +143,7 @@ namespace EVEMon
             this.pnlTraining.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlTraining.Controls.Add(this.tlpStatus);
             this.pnlTraining.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlTraining.Location = new System.Drawing.Point(0, 281);
+            this.pnlTraining.Location = new System.Drawing.Point(0, 287);
             this.pnlTraining.Name = "pnlTraining";
             this.pnlTraining.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.pnlTraining.Size = new System.Drawing.Size(574, 42);
@@ -282,17 +285,18 @@ namespace EVEMon
             this.upperPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.upperPanel.Location = new System.Drawing.Point(0, 0);
             this.upperPanel.Name = "upperPanel";
-            this.upperPanel.Size = new System.Drawing.Size(574, 176);
+            this.upperPanel.Size = new System.Drawing.Size(574, 170);
             this.upperPanel.TabIndex = 14;
             // 
             // Header
             // 
+            this.Header.AutoSize = true;
             this.Header.Character = null;
             this.Header.Dock = System.Windows.Forms.DockStyle.Top;
             this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Header.Location = new System.Drawing.Point(0, 0);
             this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 176);
+            this.Header.Size = new System.Drawing.Size(574, 170);
             this.Header.TabIndex = 15;
             // 
             // skillQueuePanel
@@ -303,7 +307,7 @@ namespace EVEMon
             this.skillQueuePanel.Controls.Add(this.skillQueueTimePanel);
             this.skillQueuePanel.Controls.Add(this.skillQueueControl);
             this.skillQueuePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueuePanel.Location = new System.Drawing.Point(0, 225);
+            this.skillQueuePanel.Location = new System.Drawing.Point(0, 231);
             this.skillQueuePanel.Name = "skillQueuePanel";
             this.skillQueuePanel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
             this.skillQueuePanel.Size = new System.Drawing.Size(574, 56);
@@ -372,9 +376,9 @@ namespace EVEMon
             this.lowerPanel.Controls.Add(this.pnlTraining);
             this.lowerPanel.Controls.Add(this.toolstripPanel);
             this.lowerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lowerPanel.Location = new System.Drawing.Point(0, 176);
+            this.lowerPanel.Location = new System.Drawing.Point(0, 170);
             this.lowerPanel.Name = "lowerPanel";
-            this.lowerPanel.Size = new System.Drawing.Size(574, 323);
+            this.lowerPanel.Size = new System.Drawing.Size(574, 329);
             this.lowerPanel.TabIndex = 3;
             // 
             // skillsPanel
@@ -388,7 +392,7 @@ namespace EVEMon
             this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.skillsPanel.Name = "skillsPanel";
             this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.skillsPanel.Size = new System.Drawing.Size(574, 175);
+            this.skillsPanel.Size = new System.Drawing.Size(574, 181);
             this.skillsPanel.TabIndex = 3;
             // 
             // corePanel
@@ -400,7 +404,7 @@ namespace EVEMon
             this.corePanel.Margin = new System.Windows.Forms.Padding(0);
             this.corePanel.Name = "corePanel";
             this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(571, 99);
+            this.corePanel.Size = new System.Drawing.Size(571, 105);
             this.corePanel.TabIndex = 14;
             // 
             // multiPanel
@@ -417,7 +421,7 @@ namespace EVEMon
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(568, 81);
+            this.multiPanel.Size = new System.Drawing.Size(568, 87);
             this.multiPanel.TabIndex = 14;
             // 
             // standingsPage
@@ -446,7 +450,7 @@ namespace EVEMon
             this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPage.Location = new System.Drawing.Point(0, 0);
             this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(568, 81);
+            this.skillsPage.Size = new System.Drawing.Size(568, 87);
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
@@ -458,7 +462,7 @@ namespace EVEMon
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
             this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 81);
+            this.skillsList.Size = new System.Drawing.Size(568, 87);
             this.skillsList.TabIndex = 12;
             // 
             // ordersPage
@@ -476,9 +480,10 @@ namespace EVEMon
             // 
             this.ordersList.Character = null;
             this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.OrderTypeDesc;
+            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
+            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.ordersList.Size = new System.Drawing.Size(568, 74);
             this.ordersList.TabIndex = 13;
             this.ordersList.TextFilter = "";
@@ -522,6 +527,7 @@ namespace EVEMon
             this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
+            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.jobsList.Size = new System.Drawing.Size(568, 74);
             this.jobsList.TabIndex = 0;
             this.jobsList.TextFilter = "";
@@ -654,6 +660,9 @@ namespace EVEMon
             this.tsColumnSettingsSeparator,
             this.hideInactiveMenuItem,
             this.numberAbsFormatMenuItem,
+            this.tsOptionsSeparator,
+            this.showOnlyCharMenuItem,
+            this.showOnlyCorpMenuItem,
             this.tsReadingPaneSeparator,
             this.readingPaneMenuItem});
             this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
@@ -669,33 +678,54 @@ namespace EVEMon
             // columnSettingsMenuItem
             // 
             this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
-            this.columnSettingsMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.columnSettingsMenuItem.Size = new System.Drawing.Size(252, 22);
             this.columnSettingsMenuItem.Text = "Column Settings";
             this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
             // 
             // tsColumnSettingsSeparator
             // 
             this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
-            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(227, 6);
+            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(249, 6);
             // 
             // hideInactiveMenuItem
             // 
             this.hideInactiveMenuItem.Name = "hideInactiveMenuItem";
-            this.hideInactiveMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.hideInactiveMenuItem.Size = new System.Drawing.Size(252, 22);
             this.hideInactiveMenuItem.Text = "Hide Inactive Orders";
             this.hideInactiveMenuItem.Click += new System.EventHandler(this.hideInactiveMenuItem_Click);
             // 
             // numberAbsFormatMenuItem
             // 
             this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
-            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
             this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
             this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
+            // 
+            // tsOptionsSeparator
+            // 
+            this.tsOptionsSeparator.Name = "tsOptionsSeparator";
+            this.tsOptionsSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // showOnlyCharMenuItem
+            // 
+            this.showOnlyCharMenuItem.CheckOnClick = true;
+            this.showOnlyCharMenuItem.Name = "showOnlyCharMenuItem";
+            this.showOnlyCharMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyCharMenuItem.Text = "Show Only Issued for Character";
+            this.showOnlyCharMenuItem.Click += new System.EventHandler(this.showOnlyCharMenuItem_Click);
+            // 
+            // showOnlyCorpMenuItem
+            // 
+            this.showOnlyCorpMenuItem.CheckOnClick = true;
+            this.showOnlyCorpMenuItem.Name = "showOnlyCorpMenuItem";
+            this.showOnlyCorpMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyCorpMenuItem.Text = "Show Only Issued for Corporation";
+            this.showOnlyCorpMenuItem.Click += new System.EventHandler(this.showOnlyCorpMenuItem_Click);
             // 
             // tsReadingPaneSeparator
             // 
             this.tsReadingPaneSeparator.Name = "tsReadingPaneSeparator";
-            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(227, 6);
+            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(249, 6);
             // 
             // readingPaneMenuItem
             // 
@@ -704,7 +734,7 @@ namespace EVEMon
             this.paneBottomMenuItem,
             this.paneOffMenuItem});
             this.readingPaneMenuItem.Name = "readingPaneMenuItem";
-            this.readingPaneMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.readingPaneMenuItem.Size = new System.Drawing.Size(252, 22);
             this.readingPaneMenuItem.Text = "Reading Pane";
             this.readingPaneMenuItem.DropDownOpening += new System.EventHandler(this.readingPaneMenuItem_DropDownOpening);
             // 
@@ -939,6 +969,7 @@ namespace EVEMon
             this.flpStatusValues.ResumeLayout(false);
             this.flpStatusValues.PerformLayout();
             this.upperPanel.ResumeLayout(false);
+            this.upperPanel.PerformLayout();
             this.skillQueuePanel.ResumeLayout(false);
             this.skillQueueTimePanel.ResumeLayout(false);
             this.skillQueueTimePanel.PerformLayout();
@@ -1038,5 +1069,8 @@ namespace EVEMon
         private MultiPanelPage standingsPage;
         private MainWindowStandingsList standingsList;
         private System.Windows.Forms.ToolStripSeparator tsPagesSeparator;
+        private System.Windows.Forms.ToolStripSeparator tsOptionsSeparator;
+        private System.Windows.Forms.ToolStripMenuItem showOnlyCharMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showOnlyCorpMenuItem;
     }
 }

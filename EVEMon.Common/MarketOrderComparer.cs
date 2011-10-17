@@ -77,6 +77,9 @@ namespace EVEMon.Common
                 case MarketOrderColumn.Issued:
                     return x.Issued.CompareTo(y.Issued);
 
+                case MarketOrderColumn.IssuedFor:
+                    return x.IssuedFor.CompareTo(y.IssuedFor);
+
                 case MarketOrderColumn.Item:
                     return x.Item.Name.CompareTo(y.Item.Name);
 

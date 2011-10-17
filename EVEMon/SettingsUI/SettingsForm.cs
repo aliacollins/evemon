@@ -782,6 +782,9 @@ namespace EVEMon.SettingsUI
         private void btnAddAPIServer_Click(object sender, EventArgs e)
         {
             SerializableAPIProvider newProvider = new SerializableAPIProvider();
+            newProvider.Methods.AddRange(APIMethod.CreateDefaultSet().Select(
+                apiMethod => new SerializableAPIMethod { Method = apiMethod.Method.ToString(), Path = apiMethod.Path }));
+
             using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, newProvider))
             {
                 DialogResult result = apiForm.ShowDialog();
@@ -802,16 +805,13 @@ namespace EVEMon.SettingsUI
         private void btnEditAPIServer_Click(object sender, EventArgs e)
         {
             // Search the provider with the selected name
-            string name = (string)cbAPIServer.SelectedItem;
-            foreach (SerializableAPIProvider provider in m_settings.APIProviders.CustomProviders.Where(
-                provider => name == provider.Name))
+            SerializableAPIProvider customProvider =
+                m_settings.APIProviders.CustomProviders.First(provider => provider.Name == (string)cbAPIServer.SelectedItem);
+
+            // Open the config form for this provider
+            using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, customProvider))
             {
-                // Open the config form for this provider
-                using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, provider))
-                {
-                    apiForm.ShowDialog();
-                }
-                return;
+                apiForm.ShowDialog();
             }
         }
 

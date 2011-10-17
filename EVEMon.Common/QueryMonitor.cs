@@ -28,7 +28,7 @@ namespace EVEMon.Common
         /// Constructor.
         /// </summary>
         /// <param name="method"></param>
-        internal QueryMonitor(APIMethods method)
+        internal QueryMonitor(Enum method)
         {
             LastUpdate = DateTime.MinValue;
             m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
@@ -40,16 +40,6 @@ namespace EVEMon.Common
             NetworkMonitor.Register(this);
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-        }
-
-        /// <summary>
-        /// Handles the TimerTick event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            UpdateOnOneSecondTick();
         }
 
 
@@ -71,7 +61,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the API method monitored by this instance.
         /// </summary>
-        public APIMethods Method { get; private set; }
+        public Enum Method { get; private set; }
 
         /// <summary>
         /// Gets the last time this instance was updated (UTC).
@@ -121,7 +111,7 @@ namespace EVEMon.Common
                 }
 
                 // No error ? Then we compute the next update according to the settings
-                UpdatePeriod period = Settings.Updates.Periods[Method];
+                UpdatePeriod period = Settings.Updates.Periods[Method.ToString()];
                 if (period == UpdatePeriod.Never)
                     return DateTime.MaxValue;
 
@@ -163,6 +153,22 @@ namespace EVEMon.Common
         protected virtual bool HasAPIKey
         {
             get { return true; }
+        }
+
+        #endregion
+
+
+        #region  Event Handlers
+
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateOnOneSecondTick();
         }
 
         #endregion
@@ -305,7 +311,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Set the network availability.
         /// </summary>
-        private bool SetNetworkStatus { get;  set; }
+        private bool SetNetworkStatus { get; set; }
 
 
         #region Overriden Methods

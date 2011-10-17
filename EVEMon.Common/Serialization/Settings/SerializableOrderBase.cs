@@ -67,6 +67,12 @@ namespace EVEMon.Common.Serialization.Settings
         public DateTime Issued { get; set; }
 
         /// <summary>
+        /// Which this order was issued for.
+        /// </summary>
+        [XmlAttribute("issuedFor")]
+        public IssuedFor IssuedFor { get; set; }
+
+        /// <summary>
         /// The time this order was issued.
         /// </summary>
         [XmlAttribute("lastStateChange")]

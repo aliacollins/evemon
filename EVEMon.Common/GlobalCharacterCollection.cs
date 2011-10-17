@@ -36,9 +36,15 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="notify"></param>
-        internal void Add(Character character, bool notify)
+        internal void Add(Character character, bool notify = true)
         {
             Items.Add(character);
+            character.Monitored = true;
+
+            // For CCP characters, also remove it from the API key's ignore list
+            if (character is CCPCharacter)
+                character.Identity.APIKeys.ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
+
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
         }
@@ -55,13 +61,9 @@ namespace EVEMon.Common
             Items.Remove(character);
             character.Monitored = false;
 
-            // For CCP characters, also put it on the API key's ignore list
+            // For CCP characters, also add it on the API key's ignore list
             if (character is CCPCharacter)
-            {
-                APIKey apiKey = character.Identity.APIKey;
-                if (apiKey != null)
-                    apiKey.IdentityIgnoreList.Add(character);
-            }
+                character.Identity.APIKeys.ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -139,7 +141,7 @@ namespace EVEMon.Common
             // Clear the API key on every identity
             foreach (CharacterIdentity id in EveMonClient.CharacterIdentities)
             {
-                id.APIKey = null;
+                id.APIKeys.Clear();
             }
 
             // Import the characters, their identies, etc

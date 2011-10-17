@@ -70,9 +70,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override SerializableOrderBase Export()
         {
-            SerializableBuyOrder serial = new SerializableBuyOrder { Escrow = Escrow, Range = Range };
-            Export(serial);
-            return serial;
+            return Export(new SerializableBuyOrder { Escrow = Escrow, Range = Range });
         }
     }
 }

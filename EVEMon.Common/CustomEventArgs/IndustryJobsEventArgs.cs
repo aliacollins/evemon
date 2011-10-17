@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace EVEMon.Common.CustomEventArgs
 {
@@ -14,7 +15,7 @@ namespace EVEMon.Common.CustomEventArgs
         public IndustryJobsEventArgs(Character character, IEnumerable<IndustryJob> industryJobs)
         {
             Character = character;
-            CompletedJobs = new List<IndustryJob>(industryJobs).AsReadOnly();
+            CompletedJobs = industryJobs.ToList().AsReadOnly();
         }
 
         /// <summary>

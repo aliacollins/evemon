@@ -22,6 +22,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
+        [Browsable(false)]
         public Enum Grouping
         {
             get { return ordersList.Grouping; }
@@ -34,6 +35,25 @@ namespace EVEMon
 
                 ordersList.UpdateColumns();
                 ordersList.Visibility = !ordersList.Orders.IsEmpty();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ShowIssuedFor mode.
+        /// </summary>
+        [Browsable(false)]
+        public IssuedFor ShowIssuedFor
+        {
+            get { return ordersList.ShowIssuedFor; }
+            set
+            {
+                ordersList.ShowIssuedFor = value;
+
+                if (!m_init)
+                    return;
+
+                ordersList.UpdateColumns();
+                ordersList.Visible = !ordersList.Orders.IsEmpty();
             }
         }
 

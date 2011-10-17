@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
@@ -131,6 +132,17 @@ namespace EVEMon.ApiCredentialsManagement
                     break;
             }
 
+            // Associate account info for corporation type API key
+            // if related info exist in another API key of the binded character
+            foreach (APIKey apiKeyWithAccountStatusInfo in EveMonClient.CharacterIdentities.Where(
+                id => id.APIKeys.Contains(apiKey)).Select(id => id.APIKeys.FirstOrDefault(
+                    apikey => apikey.AccountCreated != DateTime.MinValue)).Where(
+                    apiKeyWithAccountStatusInfo => apiKeyWithAccountStatusInfo != null))
+            {
+                apiKey.AccountCreated = apiKeyWithAccountStatusInfo.AccountCreated;
+                apiKey.AccountExpires = apiKeyWithAccountStatusInfo.AccountExpires;
+            }
+
             Margin = new Padding((ItemHeight - icon.Height) / 2);
             int left = e.Bounds.Left + Margin.Left;
             int top = e.Bounds.Top;
@@ -148,9 +160,9 @@ namespace EVEMon.ApiCredentialsManagement
             {
                 // Draws the texts on the upper third
                 left += icon.Width + Margin.Left;
-                string id = apiKey.ID.ToString();
-                g.DrawString(id, boldFont, fontBrush, new PointF(left, top));
-                int indentedLeft = left + (int)g.MeasureString(id, boldFont).Width + Margin.Left;
+                string apiKeyId = apiKey.ID.ToString();
+                g.DrawString(apiKeyId, boldFont, fontBrush, new PointF(left, top));
+                int indentedLeft = left + (int)g.MeasureString(apiKeyId, boldFont).Width + Margin.Left;
 
                 g.DrawString(apiKey.VerificationCode, Font, fontBrush, new PointF(indentedLeft, top));
                 indentedLeft += (int)g.MeasureString(apiKey.VerificationCode, Font).Width + Margin.Left * 4;

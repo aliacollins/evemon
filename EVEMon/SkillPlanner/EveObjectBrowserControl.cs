@@ -77,7 +77,7 @@ namespace EVEMon.SkillPlanner
             UpdateControlsVisibility();
 
             // Force a refresh
-            OnSelectionChanged(null, null);
+            UpdateContent();
         }
 
         #endregion
@@ -160,17 +160,22 @@ namespace EVEMon.SkillPlanner
         {
         }
 
-        #endregion
-
-
-        #region Selection management
-
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected virtual void OnSelectionChanged(object sender, EventArgs e)
+        {
+            UpdateContent();
+        }
+
+        #endregion
+
+
+        #region Selection management
+
+        private void UpdateContent()
         {
             // Updates the header and the panels visibility.
             Item firstSelected = SelectControl.SelectedObject;
@@ -232,7 +237,9 @@ namespace EVEMon.SkillPlanner
                 // Fetch the new items to the list view
                 PropertiesList.Items.Clear();
                 PropertiesList.Items.AddRange(items.ToArray());
-                PropertiesList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                if (PropertiesList.Items.Count > 0)
+                    AdjustColumns();
             }
             finally
             {
@@ -333,7 +340,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="item">The list of items.</param>
         /// <param name="labels">The labels.</param>
         /// <param name="values">The values.</param>
-        private void AddValueForSelectedObjects(Object obj, ListViewItem item, string[] labels, float[] values)
+        private void AddValueForSelectedObjects(Object obj, ListViewItem item, IList<string> labels, IList<float> values)
         {
             float min = 0f;
             float max = 0f;
@@ -382,7 +389,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="items">The list of items.</param>
         /// <param name="group">The listGroup.</param>
-        private void AddFittingSlotProperty(List<ListViewItem> items, ListViewGroup group)
+        private void AddFittingSlotProperty(ICollection<ListViewItem> items, ListViewGroup group)
         {
             string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
 
@@ -398,7 +405,7 @@ namespace EVEMon.SkillPlanner
         /// Adds the reprocessing info.
         /// </summary>
         /// <param name="items">The list of items.</param>
-        private void AddReprocessingInfo(List<ListViewItem> items)
+        private void AddReprocessingInfo(ICollection<ListViewItem> items)
         {
             if (SelectControl.SelectedObjects.All(x => x.ReprocessingMaterials == null))
                 return;
@@ -468,7 +475,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="group">The listGroup.</param>
         /// <param name="items">The list of items.</param>
-        private void AddReprocessingSkill(ListViewGroup group, List<ListViewItem> items)
+        private void AddReprocessingSkill(ListViewGroup group, ICollection<ListViewItem> items)
         {
             // Create the list of labels
             List<string> labels = new List<string>();
@@ -496,6 +503,40 @@ namespace EVEMon.SkillPlanner
 
             // Add the value for every selected item
             AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] { });
+        }
+
+        /// <summary>
+        /// Adjusts the columns.
+        /// </summary>
+        protected void AdjustColumns()
+        {
+            foreach (ColumnHeader column in PropertiesList.Columns.Cast<ColumnHeader>())
+            {
+                column.Width = -2;
+
+                // Due to .NET design we need to prevent the last colummn to resize to the right end
+
+                // Return if it's not the last column and not set to auto-resize
+                if (column.Index != PropertiesList.Columns.Count - 1)
+                    continue;
+
+                const int ColumnPad = 4;
+
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth;
+                using (Graphics g = CreateGraphics())
+                {
+                    // Calculate column header text width with padding
+                    int columnHeaderWidth = TextRenderer.MeasureText(g, column.Text, Font).Width + ColumnPad * 2;
+
+                    columnMaxWidth = PropertiesList.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                        item => TextRenderer.MeasureText(g, item.SubItems[column.Index].Text, Font).Width).Concat(
+                            new[] { columnHeaderWidth }).Max() + ColumnPad + 1;
+                }
+
+                // Assign the width found
+                column.Width = columnMaxWidth;
+            }
         }
 
         #endregion

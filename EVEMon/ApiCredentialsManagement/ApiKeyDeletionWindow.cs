@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -6,7 +7,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.ApiCredentialsManagement
 {
-    public partial class ApiKeyDeletionWindow : EVEMonForm
+    public sealed partial class ApiKeyDeletionWindow : EVEMonForm
     {
         private readonly APIKey m_apiKey;
 
@@ -17,16 +18,58 @@ namespace EVEMon.ApiCredentialsManagement
         public ApiKeyDeletionWindow(APIKey apiKey)
         {
             InitializeComponent();
+            deletionLabel.Text = String.Format(deletionLabel.Text, apiKey.ID);
             m_apiKey = apiKey;
+
+            charactersListView.ItemCheck += charactersListView_ItemCheck;
 
             // Add characters
             charactersListView.Items.Clear();
+
             foreach (ListViewItem item in apiKey.CharacterIdentities.Select(
-                id => id.CCPCharacter).Where(ccpCharacter => ccpCharacter != null).Select(
-                    ccpCharacter => new ListViewItem(ccpCharacter.Name) { Tag = ccpCharacter, Checked = true }))
+                id => new ListViewItem(id.Name)
+                          {
+                              Tag = id.CCPCharacter,
+                              Checked = id.CCPCharacter != null &&
+                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != m_apiKey),
+                          }))
             {
+                // Gray out a character with another associated API key
+                if (!item.Checked)
+                    item.ForeColor = SystemColors.GrayText;
+
+                // Strikeout and gray out a character in the API key's ignored list
+                if (item.Tag == null)
+                {
+                    item.Font = FontFactory.GetFont(Font, FontStyle.Strikeout);
+                    item.ForeColor = SystemColors.GrayText;
+                    item.Checked = true;
+                }
+
                 charactersListView.Items.Add(item);
             }
+
+            // If character list is empty resize the window
+            if (charactersListView.Items.Count != 0)
+                return;
+
+            charactersListGroupBox.Visible = false;
+            Size = new Size(Size.Width - (charactersListGroupBox.Height / 2), Size.Height - charactersListGroupBox.Height);
+        }
+
+        /// <summary>
+        /// Handles the ItemCheck event of the charactersListView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.ItemCheckEventArgs"/> instance containing the event data.</param>
+        private void charactersListView_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            CCPCharacter ccpCharacter = charactersListView.Items[e.Index].Tag as CCPCharacter;
+            if(ccpCharacter == null)
+                e.NewValue = CheckState.Checked;
+
+            if (ccpCharacter != null && ccpCharacter.Identity.APIKeys.Any(key => key != m_apiKey))
+                e.NewValue = CheckState.Unchecked;
         }
 
         /// <summary>
@@ -36,12 +79,14 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            // Remove the API Key
+            // Remove the API key
             EveMonClient.APIKeys.Remove(m_apiKey);
 
-            // Remove the characters
+            // Remove the characters from the collection
             foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
-                item => item.Checked).Select(item => item.Tag as CCPCharacter))
+                item => item.Checked).Select(item => item.Tag as CCPCharacter).Where(
+                ccpCharacter => ccpCharacter != null).Where(
+                    ccpCharacter => ccpCharacter.Identity.APIKeys.IsEmpty()))
             {
                 EveMonClient.Characters.Remove(ccpCharacter);
             }

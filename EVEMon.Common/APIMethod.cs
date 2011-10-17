@@ -14,7 +14,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="method"></param>
         /// <param name="path"></param>
-        private APIMethod(APIMethods method, string path)
+        private APIMethod(Enum method, string path)
         {
             Method = method;
             Path = path;
@@ -23,7 +23,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Returns the APIMethods enumeration member for this APIMethod.
         /// </summary>
-        public APIMethods Method { get; private set; }
+        public Enum Method { get; private set; }
 
         /// <summary>
         /// Returns the defined URL suffix path for this APIMethod.
@@ -36,15 +36,14 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static IEnumerable<APIMethod> CreateDefaultSet()
         {
-            return Enum.GetNames(typeof(APIMethods)).Select(
-                methodName => new { methodName, methodEnum = (APIMethods)Enum.Parse(typeof(APIMethods), methodName) }).Select(
-                    methodName => new
-                                      {
-                                          methodName,
-                                          methodURL = NetworkConstants.ResourceManager.GetString(
-                                              String.Format("API{0}", methodName.methodName))
-                                      }).Select(
-                                          methodName => new APIMethod(methodName.methodName.methodEnum, methodName.methodURL));
+            return APIMethods.Methods.Where(method => method.ToString() != "None").Select(
+                methodName =>
+                new
+                    {
+                        methodName,
+                        methodURL = NetworkConstants.ResourceManager.GetString(String.Format("API{0}", methodName))
+                    }).Where(method => method.methodURL != null).Select(
+                        method => new APIMethod(method.methodName, method.methodURL));
         }
     }
 }

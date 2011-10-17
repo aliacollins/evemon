@@ -38,12 +38,13 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
 
-            EveMonClient_APIKeyCollectionChanged(null, null);
-            EveMonClient_CharacterCollectionChanged(null, null);
-            AdjustColumns();
+            UpdateAPIKeysList();
+            UpdateCharactersList();
+            AdjustLastColumn();
 
             // Selects the second page if no API key known so far
             if (EveMonClient.Characters.Count == 0)
@@ -59,6 +60,7 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.APIKeyCollectionChanged -= EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
             base.OnClosing(e);
@@ -71,7 +73,7 @@ namespace EVEMon.ApiCredentialsManagement
         protected override void OnSizeChanged(EventArgs e)
         {
             if (charactersListView != null)
-                AdjustColumns();
+                AdjustLastColumn();
 
             base.OnSizeChanged(e);
         }
@@ -86,8 +88,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void EveMonClient_APIKeyCollectionChanged(object sender, EventArgs e)
         {
-            apiKeysListBox.APIKeys = EveMonClient.APIKeys;
-            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.IsEmpty() ? noAPIKeysPage : apiKeysListPage);
+            UpdateAPIKeysList();
         }
 
         /// <summary>
@@ -97,6 +98,9 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
+            if (!Visible)
+                return;
+
             apiKeysListBox.Invalidate();
         }
 
@@ -107,20 +111,17 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
         {
-            // Begin the update
-            m_refreshingCharactersCounter++;
+            UpdateCharactersList();
+        }
 
-            // Update the list view item
-            UpdateCharactersListContent();
-
-            // Invalidates the accounts list
-            apiKeysListBox.Invalidate();
-
-            // Make a help message appears when no API keys exist
-            charactersMultiPanel.SelectedPage = EveMonClient.Characters.Count == 0 ? noCharactersPage : charactersListPage;
-
-            // End of the update
-            m_refreshingCharactersCounter--;
+        /// <summary>
+        /// When the monitored characters collection changed, we update the characters list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        {
+            UpdateCharactersList();
         }
 
         /// <summary>
@@ -130,9 +131,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            m_refreshingCharactersCounter++;
-            UpdateCharactersListContent();
-            m_refreshingCharactersCounter--;
+            UpdateCharactersList();
         }
 
         /// <summary>
@@ -142,6 +141,9 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void EveMonClient_AccountStatusUpdated(object sender, EventArgs e)
         {
+            if (!Visible)
+                return;
+
             apiKeysListBox.Invalidate();
         }
 
@@ -149,6 +151,18 @@ namespace EVEMon.ApiCredentialsManagement
 
 
         #region API keys management
+
+        /// <summary>
+        /// Updates the API keys list.
+        /// </summary>
+        private void UpdateAPIKeysList()
+        {
+            if (!Visible)
+                return;
+
+            apiKeysListBox.APIKeys = EveMonClient.APIKeys;
+            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.IsEmpty() ? noAPIKeysPage : apiKeysListPage);
+        }
 
         /// <summary>
         /// Handles the MouseClick event of the apiKeysListBox control.
@@ -285,6 +299,30 @@ namespace EVEMon.ApiCredentialsManagement
         #region Characters management
 
         /// <summary>
+        /// Updates the characters list.
+        /// </summary>
+        private void UpdateCharactersList()
+        {
+            if (!Visible)
+                return;
+
+            // Begin the update
+            m_refreshingCharactersCounter++;
+
+            // Update the list view item
+            UpdateCharactersListContent();
+
+            // Invalidates the API keys list
+            apiKeysListBox.Invalidate();
+
+            // Make a help message appears when no characters exist
+            charactersMultiPanel.SelectedPage = EveMonClient.Characters.Count == 0 ? noCharactersPage : charactersListPage;
+
+            // End of the update
+            m_refreshingCharactersCounter--;
+        }
+
+        /// <summary>
         /// Recreate the items in the characters listview
         /// </summary>
         private void UpdateCharactersListContent()
@@ -300,7 +338,7 @@ namespace EVEMon.ApiCredentialsManagement
 
                 // Grouping (no API key, API key #1, API key #2, character files, character urls)
                 bool isGrouping = groupingMenu.Checked;
-                ListViewGroup apiKeyGroup = new ListViewGroup("No API key");
+                ListViewGroup noAPIKeyGroup = new ListViewGroup("No API key");
                 ListViewGroup fileGroup = new ListViewGroup("Character files");
                 ListViewGroup urlGroup = new ListViewGroup("Character urls");
                 Dictionary<APIKey, ListViewGroup> apiKeyGroups = new Dictionary<APIKey, ListViewGroup>();
@@ -327,17 +365,22 @@ namespace EVEMon.ApiCredentialsManagement
                             // CCP character ?
                         else
                         {
-                            APIKey apiKey = character.Identity.APIKey;
-                            if (apiKey == null)
+                            if (character.Identity.APIKeys.IsEmpty())
                                 hasNoAPIKey = true;
-                            else if (!apiKeyGroups.ContainsKey(apiKey))
-                                apiKeyGroups.Add(apiKey, new ListViewGroup(String.Format("Key ID #{0}", apiKey.ID)));
+                            else
+                            {
+                                foreach (APIKey apiKey in character.Identity.APIKeys.Where(
+                                    apiKey => !apiKeyGroups.ContainsKey(apiKey)))
+                                {
+                                    apiKeyGroups.Add(apiKey, new ListViewGroup(String.Format("Key ID #{0}", apiKey.ID)));
+                                }
+                            }
                         }
                     }
 
                     // Add the groups
                     if (hasNoAPIKey)
-                        charactersListView.Groups.Add(apiKeyGroup);
+                        charactersListView.Groups.Add(noAPIKeyGroup);
 
                     foreach (ListViewGroup group in apiKeyGroups.Values)
                     {
@@ -356,9 +399,11 @@ namespace EVEMon.ApiCredentialsManagement
                 {
                     ListViewItem item = new ListViewItem { Checked = character.Monitored, Tag = character };
 
-                    // Retrieve the texts for the different columns.
-                    APIKey apiKey = character.Identity.APIKey;
-                    string apiKeyIDText = (apiKey == null ? String.Empty : apiKey.ID.ToString());
+                    // Retrieve the texts for the different columns
+                    IEnumerable<APIKey> apiKeys = character.Identity.APIKeys.OrderBy(apiKey => apiKey.ID);
+                    string apiKeyIDText = (apiKeys.IsEmpty()
+                                               ? String.Empty
+                                               : String.Join(", ", apiKeys.Select(apiKey => apiKey.ID)));
                     string typeText = "CCP";
                     string uriText = "-";
 
@@ -373,10 +418,21 @@ namespace EVEMon.ApiCredentialsManagement
                     }
                         // Grouping CCP characters
                     else if (isGrouping)
-                        item.Group = (apiKey == null ? apiKeyGroup : apiKeyGroups[apiKey]);
+                    {
+                        if (apiKeys.IsEmpty())
+                            item.Group = noAPIKeyGroup;
+                        else
+                        {
+                            APIKey accountTypeAPIKey = apiKeys.FirstOrDefault(apiKey => apiKey.Type == APIKeyType.Account);
+                            item.Group = accountTypeAPIKey != null
+                                             ? apiKeyGroups[accountTypeAPIKey]
+                                             : apiKeyGroups[apiKeys.First()];
+                        }
+                    }
 
                     // Add the item and its subitems
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, typeText));
+                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.CharacterID.ToString()));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.Name));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, apiKeyIDText));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));
@@ -385,6 +441,12 @@ namespace EVEMon.ApiCredentialsManagement
                     if (oldSelection.Contains(character))
                         item.Selected = true;
                 }
+
+                // Auto-resize the columns
+                charactersListView.Columns.Cast<ColumnHeader>().Where(
+                    column => column.Index != charactersListView.Columns.Count - 1).ToList().ForEach(column => column.Width = -2);
+
+                AdjustLastColumn();
             }
             finally
             {
@@ -392,17 +454,38 @@ namespace EVEMon.ApiCredentialsManagement
             }
 
             // Forces a refresh of the enabled/disabled items
-            charactersListView_SelectedIndexChanged(null, null);
+            UpdateControlsUsability();
         }
 
         /// <summary>
-        /// Adjust the columns sizes.
+        /// Adjusts the last column width.
         /// </summary>
-        private void AdjustColumns()
+        private void AdjustLastColumn()
         {
-            int width = (charactersListView.Columns.Cast<ColumnHeader>().Where(column => column != columnUri).Select(
+            ColumnHeader lastColumn = charactersListView.Columns[charactersListView.Columns.Count - 1];
+            int pad = Size.Width - charactersListView.Size.Width;
+            int width = (charactersListView.Columns.Cast<ColumnHeader>().Where(column => column.Index != lastColumn.Index).Select(
                 column => column.Width)).Sum();
-            columnUri.Width = charactersListView.ClientSize.Width - width;
+
+            int lastColumnMaxWidth = charactersListView.Columns[lastColumn.Index].ListView.Items.Cast<ListViewItem>().Select(
+                item => TextRenderer.MeasureText(item.SubItems[lastColumn.Index].Text, Font).Width).Concat(
+                    new[] { TextRenderer.MeasureText(charactersListView.Columns[lastColumn.Index].Text, Font).Width }).
+                                         Concat(new[] { charactersListView.ClientSize.Width - width - pad }).Max() + pad;
+
+            lastColumn.Width = lastColumnMaxWidth;
+        }
+
+        /// <summary>
+        /// Updates the controls usability.
+        /// </summary>
+        private void UpdateControlsUsability()
+        {
+            // "Edit uri" enabled when an uri char is selected
+            editUriMenu.Enabled = (charactersListView.SelectedItems.Count != 0) &&
+                                  ((charactersListView.SelectedItems[0].Tag as UriCharacter) != null);
+
+            // Delete char enabled if one character selected
+            deleteCharacterMenu.Enabled = (charactersListView.SelectedItems.Count != 0);
         }
 
         /// <summary>
@@ -447,12 +530,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void charactersListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // "Edit uri" enabled when an uri char is selected
-            editUriMenu.Enabled = (charactersListView.SelectedItems.Count != 0) &&
-                                  ((charactersListView.SelectedItems[0].Tag as UriCharacter) != null);
-
-            // Delete char enabled if one character selected
-            deleteCharacterMenu.Enabled = (charactersListView.SelectedItems.Count != 0);
+            UpdateControlsUsability();
         }
 
         /// <summary>

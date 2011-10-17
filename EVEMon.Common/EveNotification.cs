@@ -134,10 +134,15 @@ namespace EVEMon.Common
 
             m_queryPending = true;
 
+            // Quits if access denied
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.MailingLists);
+            if (apiKey == null)
+                return;
+
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
-                APIMethods.NotificationTexts,
-                m_ccpCharacter.Identity.APIKey.ID,
-                m_ccpCharacter.Identity.APIKey.VerificationCode,
+                APICharacterMethods.NotificationTexts,
+                apiKey.ID,
+                apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
                 NotificationID,
                 OnEVENotificationTextDownloaded);
@@ -152,7 +157,7 @@ namespace EVEMon.Common
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.NotificationTexts))
+            if (m_ccpCharacter.CharacterDataQuerying.ShouldNotifyError(result, APICharacterMethods.NotificationTexts))
                 EveMonClient.Notifications.NotifyEVENotificationTextsError(m_ccpCharacter, result);
 
             // Quits if there is an error

@@ -121,9 +121,7 @@ namespace EVEMon.Common
             QueuedSkill skillY = y.CurrentlyTrainingSkill;
             if (skillX == null && skillY == null)
                 return String.Compare(x.Name, y.Name);
-            if (skillX == null)
-                return 1;
-            if (skillY == null)
+            if (skillX == null || skillY == null)
                 return -1;
 
             // Compare end time

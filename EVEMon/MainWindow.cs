@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -552,7 +551,7 @@ namespace EVEMon
             m_popupNotifications.Add(e);
 
             // Group by API key
-            IGrouping<long, NotificationEventArgs>[] groups = m_popupNotifications.GroupBy(
+            IEnumerable<IGrouping<long, NotificationEventArgs>> groups = m_popupNotifications.GroupBy(
                 x =>
                     {
                         if (x.Sender == null)
@@ -561,16 +560,16 @@ namespace EVEMon
                         if (x.SenderAPIKey != null)
                             return x.SenderAPIKey.ID;
 
-                        return x.SenderCharacter.Identity.APIKey == null
+                        return x.SenderCharacter.Identity.APIKeys.IsEmpty()
                                    ? 1
-                                   : x.SenderCharacter.Identity.APIKey.ID;
-                    }).ToArray();
+                                   : x.SenderCharacter.Identity.APIKeys.First().ID;
+                    });
 
             // Add every group, order by character's name, accounts being on top
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
             foreach (IGrouping<long, NotificationEventArgs> group in groups)
             {
-                newList.AddRange(group.OrderBy(x => x.SenderCharacter == null ? "" : x.SenderCharacter.Name));
+                newList.AddRange(group.OrderBy(x => x.SenderCharacter == null ? String.Empty : x.SenderCharacter.Name));
             }
 
             m_popupNotifications.Clear();
@@ -1533,7 +1532,9 @@ namespace EVEMon
             if (firstSkill)
                 sb.Append("You don't have any skill books marked as \"Owned\".");
 
-            MessageBox.Show(sb.ToString(), "Skill books owned by " + character.Name, MessageBoxButtons.OK,
+            MessageBox.Show(sb.ToString(),
+                            String.Format(CultureConstants.DefaultCulture, "Skill books owned by {0}", character.Name),
+                            MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
         }
 

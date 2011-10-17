@@ -62,10 +62,9 @@ namespace EVEMon.Common
                                 {
                                     srcOrder,
                                     limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays)
-                                }).Where(
-                                    order => order.limit >= DateTime.UtcNow).Where(
-                                        order => !Items.Any(x => x.TryImport(order.srcOrder, endedOrders))).Select(
-                                            order => order.srcOrder))
+                                }).Where(order => order.limit >= DateTime.UtcNow).Where(
+                                    order => !Items.Any(x => x.TryImport(order.srcOrder, endedOrders))).Select(
+                                        order => order.srcOrder))
             {
                 // It's a new order, let's add it
                 if (srcOrder.IsBuyOrder != 0)
@@ -90,7 +89,7 @@ namespace EVEMon.Common
             Items.AddRange(newOrders);
 
             // Fires the event regarding market orders update
-            EveMonClient.OnCharacterMarketOrdersUpdated(m_character);
+            EveMonClient.OnMarketOrdersUpdated(m_character);
         }
 
         /// <summary>

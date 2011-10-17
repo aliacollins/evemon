@@ -25,7 +25,7 @@ namespace EVEMon.Common
         }
 
 
-        #region Public properties and methods
+        #region Public properties
 
         /// <summary>
         /// Gets the default provider.
@@ -75,6 +75,11 @@ namespace EVEMon.Common
             }
         }
 
+        #endregion
+
+
+        #region Indexer
+
         /// <summary>
         /// Gets an API provider by its name, returning null when not found.
         /// </summary>
@@ -113,9 +118,13 @@ namespace EVEMon.Common
                 // Providers' methods
                 foreach (SerializableAPIMethod sMethod in sProvider.Methods)
                 {
-                    APIMethod method = provider.GetMethod(sMethod.Method);
-                    if (method != null)
-                        method.Path = sMethod.Path;
+                    Enum method = APIMethods.Methods.FirstOrDefault(x => x.ToString() == sMethod.Method);
+                    if (method == null)
+                        continue;
+
+                    APIMethod apiMethod = provider.GetMethod(method);
+                    if (apiMethod != null)
+                        apiMethod.Path = sMethod.Path;
                 }
 
                 // Add this provider to our inner list
@@ -148,13 +157,9 @@ namespace EVEMon.Common
 
                 // Methods
                 serialProvider.Methods.Clear();
-                foreach (APIMethod method in provider.Methods.Where(
-                    method => !String.IsNullOrWhiteSpace(method.Path)).Where(
-                        method => method.Method != APIMethods.CorporationMarketOrders &&
-                                  method.Method != APIMethods.CorporationIndustryJobs)
-                    )
+                foreach (APIMethod method in provider.Methods.Where(method => !String.IsNullOrWhiteSpace(method.Path)))
                 {
-                    serialProvider.Methods.Add(new SerializableAPIMethod { Method = method.Method, Path = method.Path });
+                    serialProvider.Methods.Add(new SerializableAPIMethod { Method = method.Method.ToString(), Path = method.Path });
                 }
             }
 

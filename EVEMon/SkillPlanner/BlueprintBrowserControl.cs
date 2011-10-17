@@ -328,9 +328,8 @@ namespace EVEMon.SkillPlanner
                         if (isRawMaterial)
                         {
                             perfectMELevel =
-                                (int)
-                                Math.Round(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity, 0,
-                                           MidpointRounding.AwayFromZero);
+                                (int)Math.Round(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity, 0,
+                                                MidpointRounding.AwayFromZero);
                         }
 
                         // Store the highest perfect material efficiency level
@@ -339,8 +338,7 @@ namespace EVEMon.SkillPlanner
 
                         // Calculate the needed quantity by the character skills
                         int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
-                                               ? (int)
-                                                 Math.Round(
+                                               ? (int)Math.Round(
                                                      baseMaterialQuantity *
                                                      (1.25 - (0.05 * productionEfficiencyLevel)) +
                                                      (baseMaterialQuantity * m_waste), 0,
@@ -349,23 +347,21 @@ namespace EVEMon.SkillPlanner
 
                         // Calculate the perfect quantity
                         int perfectQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
-                                                   ? (int)
-                                                     Math.Round(baseMaterialQuantity * (1 + m_waste), 0,
-                                                                MidpointRounding.AwayFromZero)
+                                                   ? (int)Math.Round(baseMaterialQuantity * (1 + m_waste),
+                                                                     0, MidpointRounding.AwayFromZero)
                                                    : baseMaterialQuantity);
 
                         // Add the quantity for every item
-                        ListViewItem.ListViewSubItem subItemYou = new ListViewItem.ListViewSubItem(item,
-                                                                                                   youQuantity.ToString());
+                        ListViewItem.ListViewSubItem subItemYou =
+                            new ListViewItem.ListViewSubItem(item, youQuantity.ToString());
                         item.SubItems.Add(subItemYou);
 
                         // Has perfect values ?
                         hasPerfect |= (youQuantity != perfectQuantity);
 
                         // Add the perfect quantity for every item
-                        ListViewItem.ListViewSubItem subItemPerfect = new ListViewItem.ListViewSubItem(item,
-                                                                                                       perfectQuantity.
-                                                                                                           ToString());
+                        ListViewItem.ListViewSubItem subItemPerfect =
+                            new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString());
                         item.SubItems.Add(subItemPerfect);
 
                         // Has damage per run ?
@@ -375,8 +371,8 @@ namespace EVEMon.SkillPlanner
                         string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
                                                    ? String.Format("{0:P1}", material.DamagePerJob)
                                                    : String.Empty);
-                        ListViewItem.ListViewSubItem subItemDamagePerRun = new ListViewItem.ListViewSubItem(item,
-                                                                                                            damagePerRun);
+                        ListViewItem.ListViewSubItem subItemDamagePerRun =
+                            new ListViewItem.ListViewSubItem(item, damagePerRun);
                         item.SubItems.Add(subItemDamagePerRun);
                     }
 
@@ -402,8 +398,9 @@ namespace EVEMon.SkillPlanner
 
                 // Show/Hide the "no item required" label and autoresize the columns 
                 PropertiesList.Visible = PropertiesList.Items.Count > 0;
-                if (PropertiesList.Visible)
-                    PropertiesList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                if (PropertiesList.Items.Count > 0)
+                    AdjustColumns();
             }
             finally
             {

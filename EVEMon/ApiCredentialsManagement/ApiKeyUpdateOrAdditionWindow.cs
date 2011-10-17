@@ -78,7 +78,8 @@ namespace EVEMon.ApiCredentialsManagement
             {
                 ButtonPrevious.Enabled = true;
                 ButtonNext.Enabled = (ResultsMultiPanel.SelectedPage == CharactersListPage);
-                ButtonNext.Text = (m_updateMode ? "Update" : "Import");
+                ButtonNext.Text = (m_updateMode ? "&Update" : "&Import");
+                ButtonNext.Focus();
             }
         }
 
@@ -137,7 +138,7 @@ namespace EVEMon.ApiCredentialsManagement
                 KeyPicture.Image = CommonProperties.Resources.KeyWrong32;
                 KeyLabel.Text = "Cached timer not expired yet.";
                 CharactersGroupBox.Text = "Warning report";
-                CachedWarningLabel.Text += String.Format("\r\nTry again after: {0}", m_apiKey.CachedUntil.ToLocalTime());
+                CachedWarningLabel.Text = String.Format(CachedWarningLabel.Text, m_apiKey.CachedUntil.ToLocalTime());
                 ResultsMultiPanel.SelectedPage = CachedWarningPage;
                 Throbber.State = ThrobberState.Stopped;
                 MultiPanel.SelectedPage = ResultPage;
@@ -242,20 +243,18 @@ namespace EVEMon.ApiCredentialsManagement
                 case APIKeyType.Corporation:
                     KeyPicture.Image = CommonProperties.Resources.DefaultCorporationImage32;
                     KeyLabel.Text = "This is a 'Corporation' API key.";
-                    CharactersGroupBox.Text = "Corporation features not supported";
-                    ResultsMultiPanel.SelectedPage = NoCorpFeaturesYetPage;
+                    ResultsMultiPanel.SelectedPage = CharactersListPage;
                     break;
             }
 
             // Updates the characters list
             CharactersListView.Items.Clear();
-            foreach (ListViewItem item in e.Identities.Select(id =>
-                                                              new ListViewItem(id.Name)
-                                                                  {
-                                                                      Checked = (m_apiKey == null
-                                                                                 || !m_apiKey.IdentityIgnoreList.Contains(id)),
-                                                                      Tag = id
-                                                                  }))
+            foreach (ListViewItem item in e.Identities.Select(
+                id => new ListViewItem(id.Name)
+                          {
+                              Tag = id,
+                              Checked = (m_apiKey == null || !m_apiKey.IdentityIgnoreList.Contains(id))
+                          }))
             {
                 CharactersListView.Items.Add(item);
             }
@@ -267,7 +266,7 @@ namespace EVEMon.ApiCredentialsManagement
                 WarningLabel.Visible = true;
             }
                 // Issue a warning if the access of API key is less than needed for basic features
-            else if (e.AccessMask < (int)APIMethods.BasicFeatures)
+            else if (e.Type != APIKeyType.Corporation && e.AccessMask < (int)APIMethodsExtensions.BasicCharacterFeatures)
             {
                 WarningLabel.Text = "Beware! The data this API key provides does not suffice for basic features!";
                 WarningLabel.Visible = true;

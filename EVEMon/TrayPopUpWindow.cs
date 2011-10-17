@@ -238,11 +238,10 @@ namespace EVEMon
                 switch (Settings.UI.SystemTrayPopup.GroupBy)
                 {
                     case TrayPopupGrouping.None:
-                        newCharacters.AddRange(charactersList);
-                        return newCharacters;
+                        return charactersList;
                     case TrayPopupGrouping.Account:
-                        newCharacters.AddRange(charactersList.Where(x => x.Identity.APIKey != null));
-                        return newCharacters.GroupBy(x => x.Identity.APIKey).SelectMany(y => y);
+                        newCharacters.AddRange(charactersList.Where(x => !x.Identity.APIKeys.IsEmpty()));
+                        return newCharacters.GroupBy(AccountAPIKeyOrDefault).SelectMany(y => y);
                     case TrayPopupGrouping.TrainingAtTop:
                         newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
                         newCharacters.AddRange(charactersList.Where(x => !x.IsTraining));
@@ -255,6 +254,18 @@ namespace EVEMon
                         return characters;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the API key for characters in the same account or the default one.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns>The API key for characters in the same account; otherwise the default API key of the character</returns>
+        private static APIKey AccountAPIKeyOrDefault(Character character)
+        {
+            return character.Identity.APIKeys.First(
+                apiKey => EveMonClient.MonitoredCharacters.Any(
+                    monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
         }
 
         /// <summary>
@@ -283,13 +294,13 @@ namespace EVEMon
             if (Settings.UI.SystemTrayPopup.GroupBy == TrayPopupGrouping.Account &&
                 Settings.UI.SystemTrayPopup.IndentGroupedAccounts)
             {
-                long prevAPIKeyID = 0;
+                List<APIKey> prevAPIKeys = new List<APIKey>();
                 foreach (Character character in characters)
                 {
-                    if (character.Identity.APIKey.ID != prevAPIKeyID)
+                    if (!character.Identity.APIKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
                     {
                         mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
-                        prevAPIKeyID = character.Identity.APIKey.ID;
+                        prevAPIKeys = character.Identity.APIKeys;
                     }
                     else
                     {
@@ -304,7 +315,7 @@ namespace EVEMon
                         OverviewItem charPanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
                         accountGroupPanel.Controls.Add(charPanel);
                         mainPanel.Controls.Add(accountGroupPanel);
-                        prevAPIKeyID = character.Identity.APIKey.ID;
+                        prevAPIKeys = character.Identity.APIKeys;
                     }
                 }
             }

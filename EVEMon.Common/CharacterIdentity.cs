@@ -10,7 +10,7 @@ namespace EVEMon.Common
     public sealed class CharacterIdentity
     {
         private readonly long m_id;
-        private APIKey m_apiKey;
+        private readonly List<APIKey> m_apiKeys;
 
         /// <summary>
         /// Constructor from an id and a name.
@@ -21,6 +21,7 @@ namespace EVEMon.Common
         {
             m_id = id;
             Name = name;
+            m_apiKeys = new List<APIKey>();
         }
 
         /// <summary>
@@ -37,25 +38,52 @@ namespace EVEMon.Common
         public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets the API key this identity is associated with.
+        /// Gets the API keys this identity is associated with.
         /// </summary>
-        public APIKey APIKey
+        public List<APIKey> APIKeys
         {
-            get { return m_apiKey; }
-            internal set
-            {
-                if (m_apiKey == value)
-                    return;
+            get { return m_apiKeys; }
+        }
 
-                m_apiKey = value;
+        /// <summary>
+        /// Gets the character type API keys.
+        /// </summary>
+        /// <value>The character type API keys.</value>
+        public IEnumerable<APIKey> CharacterTypeAPIKeys
+        {
+            get { return APIKeys.Where(apikey => apikey.Type == APIKeyType.Account || apikey.Type == APIKeyType.Character); }
+        }
 
-                // Notify subscribers
-                CCPCharacter ccpCharacter = CCPCharacter;
-                if (ccpCharacter == null)
-                    return;
+        /// <summary>
+        /// Gets the corporation type API keys.
+        /// </summary>
+        /// <value>The corporation type API keys.</value>
+        public IEnumerable<APIKey> CorporationTypeAPIKeys
+        {
+            get { return APIKeys.Where(apikey => apikey.Type == APIKeyType.Corporation); }
+        }
 
-                EveMonClient.OnCharacterUpdated(ccpCharacter);
-            }
+        /// <summary>
+        /// Gets a value indicating whether this instance can query character related info.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance can query character related info; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanQueryCharacterRelatedInfo
+        {
+            get { return !CharacterTypeAPIKeys.IsEmpty(); }
+        }
+
+
+        /// <summary>
+        /// Gets a value indicating whether this instance can query corporation related info.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance can query corporation related info; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanQueryCorporationRelatedInfo
+        {
+            get { return !CorporationTypeAPIKeys.IsEmpty(); }
         }
 
         /// <summary>
@@ -76,6 +104,36 @@ namespace EVEMon.Common
         public static IEnumerable<UriCharacter> UriCharacters
         {
             get { return EveMonClient.Characters.OfType<UriCharacter>(); }
+        }
+
+        /// <summary>
+        /// Finds the API key with access to the specified API method.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The API key with access to the specified method or null if non found.</returns>
+        public APIKey FindAPIKeyWithAccess(APIGenericMethods method)
+        {
+            return CharacterTypeAPIKeys.FirstOrDefault(apiKey => (int)method == (apiKey.AccessMask & (int)method));
+        }
+
+        /// <summary>
+        /// Finds the API key with access to the specified API method.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The API key with access to the specified method or null if non found.</returns>
+        public APIKey FindAPIKeyWithAccess(APICharacterMethods method)
+        {
+            return CharacterTypeAPIKeys.FirstOrDefault(apiKey => (int)method == (apiKey.AccessMask & (int)method));
+        }
+
+        /// <summary>
+        /// Finds the API key with access to the specified API method.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The API key with access to the specified method or null if non found.</returns>
+        public APIKey FindAPIKeyWithAccess(APICorporationMethods method)
+        {
+            return CorporationTypeAPIKeys.FirstOrDefault(apiKey => (int)method == (apiKey.AccessMask & (int)method));
         }
     }
 }

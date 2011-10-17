@@ -211,10 +211,10 @@ namespace EVEMon.LogitechG15
                                       CCPCharacter ccpCharacter = e.Character as CCPCharacter;
                                       if (ccpCharacter != null)
                                       {
-                                          ccpCharacter.QueryMonitors.Query(new[]
+                                          ccpCharacter.QueryMonitors.Query(new Enum[]
                                                                                {
-                                                                                   APIMethods.CharacterSheet,
-                                                                                   APIMethods.SkillQueue
+                                                                                   APICharacterMethods.CharacterSheet,
+                                                                                   APICharacterMethods.SkillQueue
                                                                                });
                                       }
                                   });

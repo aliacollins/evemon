@@ -712,6 +712,27 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;
+        ///    xmlns:msxsl=&quot;urn:schemas-microsoft-com:xslt&quot; exclude-result-prefixes=&quot;msxsl&quot;
+        ///&gt;
+        ///    &lt;xsl:output method=&quot;xml&quot; indent=&quot;yes&quot;/&gt;
+        ///
+        ///    &lt;xsl:template match=&quot;@* | node()&quot;&gt;
+        ///        &lt;xsl:copy&gt;
+        ///            &lt;xsl:apply-templates select=&quot;@* | node()&quot;/&gt;
+        ///        &lt;/xsl:copy&gt;
+        ///    &lt;/xsl:template&gt;
+        ///&lt;/xsl:stylesheet&gt;
+        ///.
+        /// </summary>
+        public static string SettingsXSLT {
+            get {
+                return ResourceManager.GetString("SettingsXSLT", resourceCulture);
+            }
+        }
+        
         public static System.Drawing.Bitmap Ship {
             get {
                 object obj = ResourceManager.GetObject("Ship", resourceCulture);

@@ -31,7 +31,7 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            IQueryMonitor monitor = m_character.QueryMonitors[APIMethods.IndustryJobs];
+            IQueryMonitor monitor = m_character.QueryMonitors[APICharacterMethods.IndustryJobs];
             if (monitor == null || !monitor.Enabled)
                 return;
 
@@ -85,7 +85,7 @@ namespace EVEMon.Common
             Items.AddRange(newJobs);
 
             // Fires the event regarding industry jobs update
-            EveMonClient.OnCharacterIndustryJobsUpdated(m_character);
+            EveMonClient.OnIndustryJobsUpdated(m_character);
         }
 
         /// <summary>

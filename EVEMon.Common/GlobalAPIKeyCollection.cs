@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EVEMon.Common.Collections;
-using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -37,10 +33,13 @@ namespace EVEMon.Common
         /// <exception cref="InvalidOperationException">The API key does not exist in the list.</exception>
         public void Remove(APIKey apiKey)
         {
-            // Clears the API key on the owned identities
-            foreach (CharacterIdentity identity in apiKey.CharacterIdentities.Where(x => x.APIKey == apiKey))
+            // Removes the API key on the owned identities
+            foreach (CharacterIdentity identity in apiKey.CharacterIdentities.Where(x => x.APIKeys.Contains(apiKey)))
             {
-                identity.APIKey = null;
+                identity.APIKeys.Remove(apiKey);
+
+                if (identity.CCPCharacter != null)
+                    EveMonClient.OnCharacterUpdated(identity.CCPCharacter);
             }
 
             // Remove the API key

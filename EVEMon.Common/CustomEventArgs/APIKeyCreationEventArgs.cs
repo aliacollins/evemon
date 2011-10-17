@@ -6,6 +6,12 @@ namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class APIKeyCreationEventArgs : EventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="APIKeyCreationEventArgs"/> class.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <param name="verificationCode">The verification code.</param>
+        /// <param name="apiKeyInfo">The API key info.</param>
         public APIKeyCreationEventArgs(long id, string verificationCode,
                                        APIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {

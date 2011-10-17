@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Web;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.BattleClinic
@@ -29,7 +28,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         [XmlAttribute("name")]
         public string LoadoutName
         {
-            get { return HttpUtility.HtmlDecode(m_loadoutName); }
+            get { return m_loadoutName.HtmlDecode(); }
             set { m_loadoutName = value; }
         }
 

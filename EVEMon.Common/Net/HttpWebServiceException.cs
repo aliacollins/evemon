@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Text;
-using System.Xml;
 
 namespace EVEMon.Common.Net
 {

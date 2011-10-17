@@ -41,6 +41,7 @@ namespace EVEMon.Common
             MinVolume = src.MinVolume;
             Duration = src.Duration;
             Issued = src.Issued;
+            IssuedFor = src.IssuedFor;
         }
 
         /// <summary>
@@ -62,6 +63,7 @@ namespace EVEMon.Common
             MinVolume = src.MinVolume;
             Duration = src.Duration;
             Issued = src.Issued;
+            IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
         }
 
         #endregion
@@ -147,6 +149,11 @@ namespace EVEMon.Common
         public DateTime Issued { get; private set; }
 
         /// <summary>
+        /// Gets for which the order was issued.
+        /// </summary>
+        public IssuedFor IssuedFor { get; private set; }
+
+        /// <summary>
         /// Gets the estimated expiration time.
         /// </summary>
         public DateTime Expiration
@@ -190,7 +197,7 @@ namespace EVEMon.Common
         /// Fetches the data to the given source.
         /// </summary>
         /// <param name="src"></param>
-        protected void Export(SerializableOrderBase src)
+        protected SerializableOrderBase Export(SerializableOrderBase src)
         {
             src.Ignored = Ignored;
             src.OrderID = ID;
@@ -205,6 +212,9 @@ namespace EVEMon.Common
             src.MinVolume = MinVolume;
             src.Duration = Duration;
             src.Issued = Issued;
+            src.IssuedFor = IssuedFor;
+
+            return src;
         }
 
         /// <summary>

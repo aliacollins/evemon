@@ -56,11 +56,11 @@ namespace EVEMon.SettingsUI
         private void InitializeDataGrid()
         {
             dgMethods.Rows.Clear();
-            foreach (SerializableAPIMethod method in m_provider.Methods.Where(method => method.Method != APIMethods.None))
+            foreach (SerializableAPIMethod method in m_provider.Methods)
             {
                 // Fills empty path with the default one
                 if (String.IsNullOrEmpty(method.Path))
-                    method.Path = APIProvider.DefaultProvider.Methods.First(x => x.Method == method.Method).Path;
+                    method.Path = APIProvider.DefaultProvider.Methods.First(x => x.Method.ToString() == method.Method).Path;
 
                 // Skip method with no path
                 if (String.IsNullOrWhiteSpace(method.Path))
@@ -83,8 +83,8 @@ namespace EVEMon.SettingsUI
             foreach (DataGridViewRow row in dgMethods.Rows)
             {
                 SerializableAPIMethod rowMethod = (SerializableAPIMethod)row.Tag;
-                foreach (
-                    APIMethod defaultMethod in defaultMethods.Where(defaultMethod => defaultMethod.Method == rowMethod.Method))
+                foreach (APIMethod defaultMethod in defaultMethods.Where(
+                    defaultMethod => defaultMethod.Method.ToString() == rowMethod.Method))
                 {
                     row.Cells[1].Value = defaultMethod.Path;
                 }

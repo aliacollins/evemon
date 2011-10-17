@@ -90,6 +90,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIKeyQueryMonitor.cs" />
+    <Compile Include="APIMethods.cs" />
+    <Compile Include="CharacterDataQuerying.cs" />
     <Compile Include="CharacterIdentityIgnoreList.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
@@ -159,7 +161,10 @@
     <Compile Include="Controls\TrayIcon.Designer.cs">
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
+    <Compile Include="CorporationDataQuerying.cs" />
+    <Compile Include="CorporationQueryMonitor.cs" />
     <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />
+    <Compile Include="CustomEventArgs\APIKeyInfoChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
@@ -171,6 +176,7 @@
     <Compile Include="CustomEventArgs\SkillClickedEventArgs.cs" />
     <Compile Include="CustomEventArgs\UpdateAvailableEventArgs.cs" />
     <Compile Include="CustomEventArgs\UriCharacterEventArgs.cs" />
+    <Compile Include="DataQuerying.cs" />
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
@@ -315,6 +321,7 @@
     <Compile Include="StandingCollection.cs" />
     <Compile Include="Data\StaticSkillExtensions.cs" />
     <Compile Include="APIKey.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
@@ -850,6 +857,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Serialization\Settings\settings-transform.xslt" />
     <EmbeddedResource Include="Serialization\NotificationRefTypeIDs.xml" />
     <None Include="Resources\eve-blueprints-en-US.xml.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

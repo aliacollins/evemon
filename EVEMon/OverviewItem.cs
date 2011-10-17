@@ -214,7 +214,7 @@ namespace EVEMon
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter != null)
             {
-                IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APIMethods.MarketOrders];
+                IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
                 lblBalance.ForeColor = (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance &&
                                         marketMonitor != null && marketMonitor.Enabled
                                             ? Color.Orange

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -14,14 +13,6 @@ namespace EVEMon.Common.Serialization.Settings
             Name = "New provider";
             Url = NetworkConstants.APIBase;
             Methods = new List<SerializableAPIMethod>();
-            foreach (String methodName in Enum.GetNames(typeof(APIMethods)))
-            {
-                APIMethods methodEnum = (APIMethods)Enum.Parse(typeof(APIMethods), methodName);
-                string methodURL = NetworkConstants.ResourceManager.GetString(methodName);
-                if (methodEnum == APIMethods.CorporationMarketOrders || methodEnum == APIMethods.CorporationIndustryJobs)
-                    continue;
-                Methods.Add(new SerializableAPIMethod { Method = methodEnum, Path = methodURL });
-            }
         }
 
         [XmlElement("name")]

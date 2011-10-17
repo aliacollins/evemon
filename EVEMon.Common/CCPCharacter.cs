@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
@@ -12,22 +10,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
-        #region Fields
-
-        private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
-
-        private readonly List<IQueryMonitor> m_basicFeaturesMonitors; 
-
-        private APIMethods m_errorNotifiedMethod;
-
-        #endregion
+        private readonly CharacterDataQuerying m_characterDataQuerying;
+        private readonly CorporationDataQuerying m_corporationDataQuerying;
 
 
         #region Constructors
@@ -40,6 +24,7 @@ namespace EVEMon.Common
         private CCPCharacter(CharacterIdentity identity, Guid guid)
             : base(identity, guid)
         {
+            QueryMonitors = new QueryMonitorCollection();
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
             MarketOrders = new MarketOrderCollection(this);
@@ -48,59 +33,9 @@ namespace EVEMon.Common
             EVEMailMessages = new EveMailMessagesCollection(this);
             EVEMailingLists = new EveMailingListsCollection(this);
             EVENotifications = new EveNotificationsCollection(this);
-            QueryMonitors = new QueryMonitorCollection();
 
-            // Initializes the query monitors 
-            m_charSheetMonitor = new CharacterQueryMonitor<SerializableAPICharacterSheet>(this, APIMethods.CharacterSheet);
-            m_charSheetMonitor.Updated += OnCharacterSheetUpdated;
-            QueryMonitors.Add(m_charSheetMonitor);
-
-            m_skillQueueMonitor = new CharacterQueryMonitor<SerializableAPISkillQueue>(this, APIMethods.SkillQueue);
-            m_skillQueueMonitor.Updated += OnSkillQueueUpdated;
-            QueryMonitors.Add(m_skillQueueMonitor);
-
-            m_charStandingsMonitor = new CharacterQueryMonitor<SerializableAPIStandings>(this, APIMethods.Standings);
-            m_charStandingsMonitor.Updated += OnStandingsUpdated;
-            QueryMonitors.Add(m_charStandingsMonitor);
-
-            m_charMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIMarketOrders>(this, APIMethods.MarketOrders);
-            m_charMarketOrdersMonitor.Updated += OnCharacterMarketOrdersUpdated;
-            QueryMonitors.Add(m_charMarketOrdersMonitor);
-
-            m_charIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIIndustryJobs>(this, APIMethods.IndustryJobs);
-            m_charIndustryJobsMonitor.Updated += OnCharacterJobsUpdated;
-            QueryMonitors.Add(m_charIndustryJobsMonitor);
-
-            m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearch>(this, APIMethods.ResearchPoints)
-                                              { QueryOnStartup = true };
-            m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
-            QueryMonitors.Add(m_charResearchPointsMonitor);
-
-            m_charEVEMailMessagesMonitor = new CharacterQueryMonitor<SerializableAPIMailMessages>(this, APIMethods.MailMessages)
-                                               { QueryOnStartup = true };
-            m_charEVEMailMessagesMonitor.Updated += OnCharacterEVEMailMessagesUpdated;
-            QueryMonitors.Add(m_charEVEMailMessagesMonitor);
-
-            m_charEVENotificationsMonitor = new CharacterQueryMonitor<SerializableAPINotifications>(this, APIMethods.Notifications)
-                                                { QueryOnStartup = true };
-            m_charEVENotificationsMonitor.Updated += OnCharacterEVENotificationsUpdated;
-            QueryMonitors.Add(m_charEVENotificationsMonitor);
-
-            m_basicFeaturesMonitors = QueryMonitors.Where(
-                monitor => monitor.Method == (monitor.Method & APIMethods.BasicFeatures)).ToList();
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-        }
-
-        /// <summary>
-        /// Handles the TimerTick event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            // If character is monitored enable the basic feature monitoring
-            m_basicFeaturesMonitors.ForEach(monitor => monitor.Enabled = Monitored);
+            m_characterDataQuerying = new CharacterDataQuerying(this);
+            m_corporationDataQuerying = new CorporationDataQuerying(this);
         }
 
         /// <summary>
@@ -121,8 +56,8 @@ namespace EVEMon.Common
         internal CCPCharacter(CharacterIdentity identity)
             : this(identity, Guid.NewGuid())
         {
-            m_charSheetMonitor.ForceUpdate(true);
-            m_skillQueueMonitor.ForceUpdate(true);
+            m_characterDataQuerying.CharacterSheetMonitor.ForceUpdate(true);
+            m_characterDataQuerying.SkillQueueMonitor.ForceUpdate(true);
         }
 
         #endregion
@@ -137,8 +72,9 @@ namespace EVEMon.Common
         {
             get
             {
-                return ((Identity.APIKey == null) ||
-                        (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError))
+                return (Identity.APIKeys.IsEmpty() ||
+                        (m_characterDataQuerying.CharacterSheetMonitor.LastResult != null &&
+                         m_characterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
                            ? String.Format("{0} (cached)", Name)
                            : Name;
             }
@@ -185,6 +121,29 @@ namespace EVEMon.Common
         public EveNotificationsCollection EVENotifications { get; private set; }
 
         /// <summary>
+        /// Gets the query monitors enumeration.
+        /// </summary>
+        public QueryMonitorCollection QueryMonitors { get; private set; }
+
+        /// <summary>
+        /// Gets the character data querying.
+        /// </summary>
+        /// <value>The character data querying.</value>
+        public DataQuerying CharacterDataQuerying
+        {
+            get { return m_characterDataQuerying; }
+        }
+
+        /// <summary>
+        /// Gets the corporation data querying.
+        /// </summary>
+        /// <value>The corporation data querying.</value>
+        public DataQuerying CorporationDataQuerying
+        {
+            get { return m_corporationDataQuerying; }
+        }
+
+        /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
         /// </summary>
         public override bool IsTraining
@@ -207,21 +166,15 @@ namespace EVEMon.Common
         {
             get
             {
-                IEnumerable<MarketOrder> activeBuyOrders = MarketOrders.Where(
-                    x => (x.State == OrderState.Active || x.State == OrderState.Modified) && x is BuyOrder);
+                IEnumerable<BuyOrder> activeBuyOrders = MarketOrders.OfType<BuyOrder>().Where(
+                    order => (order.State == OrderState.Active || order.State == OrderState.Modified) &&
+                             order.IssuedFor == IssuedFor.Character);
 
-                decimal activeTotal = activeBuyOrders.Sum(x => x.TotalPrice);
-                decimal activeEscrow = activeBuyOrders.Sum(x => ((BuyOrder)x).Escrow);
-                decimal additionalToCover = activeTotal - activeEscrow;
+                decimal additionalToCover = activeBuyOrders.Sum(x => x.TotalPrice) - activeBuyOrders.Sum(order => order.Escrow);
 
                 return Balance >= additionalToCover;
             }
         }
-
-        /// <summary>
-        /// Gets the query monitors enumeration.
-        /// </summary>
-        public QueryMonitorCollection QueryMonitors { get; private set; }
 
         #endregion
 
@@ -259,7 +212,7 @@ namespace EVEMon.Common
             foreach (SerializableAPIUpdate update in QueryMonitors.Select(
                 monitor => new SerializableAPIUpdate
                                {
-                                   Method = monitor.Method,
+                                   Method = monitor.Method.ToString(),
                                    Time = monitor.LastUpdate
                                }))
             {
@@ -298,7 +251,8 @@ namespace EVEMon.Common
             // Last API updates
             foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
             {
-                IQueryMonitorEx monitor = QueryMonitors[lastUpdate.Method] as IQueryMonitorEx;
+                Enum method = APIMethods.Methods.First(x => x.ToString() == lastUpdate.Method);
+                IQueryMonitorEx monitor = QueryMonitors[method] as IQueryMonitorEx;
                 if (monitor != null)
                     monitor.Reset(lastUpdate.Time);
             }
@@ -309,335 +263,5 @@ namespace EVEMon.Common
 
         #endregion
 
-
-        #region Querying
-
-        /// <summary>
-        /// Queries the character's mailing list.
-        /// </summary>
-        private void QueryCharacterMailingList()
-        {
-            // Quits if no network
-            if (!NetworkMonitor.IsNetworkAvailable)
-                return;
-
-            // Quits if access denied
-            if ((int)APIMethods.MailingLists != (Identity.APIKey.AccessMask & (int)APIMethods.MailingLists))
-                return;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
-                APIMethods.MailingLists,
-                Identity.APIKey.ID,
-                Identity.APIKey.VerificationCode,
-                CharacterID,
-                OnCharacterMailingListUpdated);
-        }
-
-        /// <summary>
-        /// Queries the character's info.
-        /// </summary>
-        private void QueryCharacterInfo()
-        {
-            // Quits if no network
-            if (!NetworkMonitor.IsNetworkAvailable)
-                return;
-
-            // Quits if access denied
-            if ((int)APIMethods.CharacterInfo != (Identity.APIKey.AccessMask & (int)APIMethods.CharacterInfo))
-                return;
-
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
-                APIMethods.CharacterInfo,
-                Identity.APIKey.ID,
-                Identity.APIKey.VerificationCode,
-                CharacterID,
-                OnCharacterInfoUpdated);
-        }
-
-        /// <summary>
-        /// Processed the queried skill queue information.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnCharacterSheetUpdated(APIResult<SerializableAPICharacterSheet> result)
-        {
-            // Notify an error occurred
-            if (ShouldNotifyError(result, APIMethods.CharacterSheet))
-                EveMonClient.Notifications.NotifyCharacterSheetError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Query the Character's info
-            QueryCharacterInfo();
-
-            // Imports the data
-            Import(result);
-
-            // Check the character has a sufficient clone or send a notification
-            if (Monitored && (CloneSkillPoints < SkillPoints))
-                EveMonClient.Notifications.NotifyInsufficientClone(this);
-            else
-                EveMonClient.Notifications.InvalidateInsufficientClone(this);
-
-            // Check for claimable certificates
-            IEnumerable<Certificate> claimableCertificates = Certificates.Where(x => x.CanBeClaimed);
-            if (Monitored && claimableCertificates.Count() > 0)
-                EveMonClient.Notifications.NotifyClaimableCertificate(this, claimableCertificates);
-            else
-                EveMonClient.Notifications.InvalidateClaimableCertificate(this);
-        }
-
-        /// <summary>
-        /// Processes the queried character's info.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private void OnCharacterInfoUpdated(APIResult<SerializableAPICharacterInfo> result)
-        {
-            // Notify an error occured
-            if (ShouldNotifyError(result, APIMethods.CharacterInfo))
-                EveMonClient.Notifications.NotifyCharacterInfoError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            Import(result.Result);
-        }
-
-        /// <summary>
-        /// Processes the queried skill queue information.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnSkillQueueUpdated(APIResult<SerializableAPISkillQueue> result)
-        {
-            // Notify an error occurred
-            if (ShouldNotifyError(result, APIMethods.SkillQueue))
-                EveMonClient.Notifications.NotifySkillQueueError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            SkillQueue.Import(result.Result.Queue);
-
-            // Check the account has a character in training (if API key of type "Account")
-            Identity.APIKey.CharacterInTraining();
-
-            // Check the character has room in skill queue
-            if (IsTraining && (SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
-            {
-                EveMonClient.Notifications.NotifySkillQueueRoomAvailable(this);
-                return;
-            }
-
-            EveMonClient.Notifications.InvalidateSkillQueueRoomAvailability(this);
-        }
-
-        /// <summary>
-        /// Processes the queried skill queue information.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnStandingsUpdated(APIResult<SerializableAPIStandings> result)
-        {
-            // Notify an error occurred
-            if (ShouldNotifyError(result, APIMethods.Standings))
-                EveMonClient.Notifications.NotifyCharacterStandingsError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            Standings.Import(result.Result.CharacterNPCStandings.All);
-        }
-
-        /// <summary>
-        /// Processes the queried character's personal market orders.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
-        private void OnCharacterMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
-        {
-            // Notify an error occurred
-            if (ShouldNotifyError(result, APIMethods.MarketOrders))
-                EveMonClient.Notifications.NotifyCharacterMarketOrdersError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            List<MarketOrder> endedOrders = new List<MarketOrder>();
-            MarketOrders.Import(result.Result.Orders, endedOrders);
-
-            // Sends a notification
-            if (endedOrders.Count != 0)
-                EveMonClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
-
-            // Check the character has sufficient balance
-            // for its buying orders or send a notification
-            if (!HasSufficientBalance)
-            {
-                EveMonClient.Notifications.NotifyInsufficientBalance(this);
-                return;
-            }
-
-            EveMonClient.Notifications.InvalidateInsufficientBalance(this);
-        }
-
-        /// <summary>
-        /// Processes the queried character's personal industry jobs.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
-        private void OnCharacterJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
-        {
-            // Notify an error occurred
-            if (ShouldNotifyError(result, APIMethods.IndustryJobs))
-                EveMonClient.Notifications.NotifyCharacterIndustryJobsError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            IndustryJobs.Import(result.Result.Jobs);
-        }
-
-        /// <summary>
-        /// Processes the queried character's research points.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnCharacterResearchPointsUpdated(APIResult<SerializableAPIResearch> result)
-        {
-            // Notify an error occured
-            if (ShouldNotifyError(result, APIMethods.ResearchPoints))
-                EveMonClient.Notifications.NotifyResearchPointsError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            ResearchPoints.Import(result.Result.ResearchPoints);
-        }
-
-        /// <summary>
-        /// Processes the queried character's EVE mail messages.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnCharacterEVEMailMessagesUpdated(APIResult<SerializableAPIMailMessages> result)
-        {
-            // Notify an error occured
-            if (ShouldNotifyError(result, APIMethods.MailMessages))
-                EveMonClient.Notifications.NotifyEVEMailMessagesError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Each time we import a new batch of EVE mail messages,
-            // query the mailing lists so that we are always up to date
-            QueryCharacterMailingList();
-
-            // Import the data
-            EVEMailMessages.Import(result.Result.Messages);
-
-            // Notify on new messages
-            if (EVEMailMessages.NewMessages != 0)
-                EveMonClient.Notifications.NotifyNewEVEMailMessages(this, EVEMailMessages.NewMessages);
-        }
-
-        /// <summary>
-        /// Processes the queried character's EVE mailing lists.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private void OnCharacterMailingListUpdated(APIResult<SerializableAPIMailingLists> result)
-        {
-            // Notify an error occured
-            if (ShouldNotifyError(result, APIMethods.MailingLists))
-                EveMonClient.Notifications.NotifyMailingListsError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            EVEMailingLists.Import(result.Result.MailingLists);
-        }
-
-        /// <summary>
-        /// Processes the queried character's EVE notifications.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private void OnCharacterEVENotificationsUpdated(APIResult<SerializableAPINotifications> result)
-        {
-            // Notify an error occured
-            if (ShouldNotifyError(result, APIMethods.Notifications))
-                EveMonClient.Notifications.NotifyEVENotificationsError(this, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            EVENotifications.Import(result.Result.Notifications);
-
-            // Notify on new messages
-            if (EVENotifications.NewNotifications != 0)
-                EveMonClient.Notifications.NotifyNewEVENotifications(this, EVENotifications.NewNotifications);
-        }
-
-        #endregion
-
-
-        # region Helper Methods
-
-        /// <summary>
-        /// Forces an update on the selected query monitor.
-        /// </summary>
-        /// <param name="queryMonitor">The query monitor.</param>
-        public void ForceUpdate(IQueryMonitor queryMonitor)
-        {
-            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method] as IQueryMonitorEx;
-            if (monitor != null)
-                monitor.ForceUpdate(false);
-        }
-
-        /// <summary>
-        /// Checks whether we should notify an error.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        internal bool ShouldNotifyError(IAPIResult result, APIMethods method)
-        {
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError)
-                return false;
-
-            // Notify an error occurred
-            if (result.HasError)
-            {
-                if (m_errorNotifiedMethod != APIMethods.None)
-                    return false;
-
-                m_errorNotifiedMethod = method;
-                return true;
-            }
-
-            // Removes the previous error notification
-            if (m_errorNotifiedMethod == method)
-            {
-                EveMonClient.Notifications.InvalidateCharacterAPIError(this);
-                m_errorNotifiedMethod = APIMethods.None;
-            }
-            return false;
-        }
-
-        #endregion
     }
 }

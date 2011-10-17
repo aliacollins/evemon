@@ -22,6 +22,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
+        [Browsable(false)]
         public Enum Grouping
         {
             get { return jobsList.Grouping; }
@@ -34,6 +35,25 @@ namespace EVEMon
 
                 jobsList.UpdateColumns();
                 jobsList.Visibility = !jobsList.Jobs.IsEmpty();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the showIssuedFor mode.
+        /// </summary>
+        [Browsable(false)]
+        public IssuedFor ShowIssuedFor
+        {
+            get { return jobsList.ShowIssuedFor; }
+            set
+            {
+                jobsList.ShowIssuedFor = value;
+
+                if (!m_init)
+                    return;
+
+                jobsList.UpdateColumns();
+                jobsList.Visible = !jobsList.Jobs.IsEmpty();
             }
         }
 

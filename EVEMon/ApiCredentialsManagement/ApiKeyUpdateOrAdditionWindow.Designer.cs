@@ -73,8 +73,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.APIKeyExistsLabel = new System.Windows.Forms.Label();
             this.CachedWarningPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.CachedWarningLabel = new System.Windows.Forms.Label();
-            this.NoCorpFeaturesYetPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.NoCorpFeaturesYetLabel = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.MultiPanel.SuspendLayout();
             this.CredentialsPage.SuspendLayout();
@@ -92,7 +90,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.APIKeyExpiredErrorPage.SuspendLayout();
             this.APIKeyExistsErrorPage.SuspendLayout();
             this.CachedWarningPage.SuspendLayout();
-            this.NoCorpFeaturesYetPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -103,7 +100,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.FeaturesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(75, 15);
             this.FeaturesLinkLabel.Location = new System.Drawing.Point(23, 28);
             this.FeaturesLinkLabel.Name = "FeaturesLinkLabel";
-            this.FeaturesLinkLabel.Size = new System.Drawing.Size(470, 18);
+            this.FeaturesLinkLabel.Size = new System.Drawing.Size(473, 17);
             this.FeaturesLinkLabel.TabIndex = 1;
             this.FeaturesLinkLabel.TabStop = true;
             this.FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
@@ -118,7 +115,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.ApiKeysLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(33, 33);
             this.ApiKeysLinkLabel.Location = new System.Drawing.Point(23, 10);
             this.ApiKeysLinkLabel.Name = "ApiKeysLinkLabel";
-            this.ApiKeysLinkLabel.Size = new System.Drawing.Size(335, 18);
+            this.ApiKeysLinkLabel.Size = new System.Drawing.Size(331, 17);
             this.ApiKeysLinkLabel.TabIndex = 0;
             this.ApiKeysLinkLabel.TabStop = true;
             this.ApiKeysLinkLabel.Text = "Your API keys are available at : https://support.eveonline.com/api";
@@ -152,7 +149,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.ActiveLinksLabel.LinkArea = new System.Windows.Forms.LinkArea(100, 56);
             this.ActiveLinksLabel.Location = new System.Drawing.Point(23, 46);
             this.ActiveLinksLabel.Name = "ActiveLinksLabel";
-            this.ActiveLinksLabel.Size = new System.Drawing.Size(468, 31);
+            this.ActiveLinksLabel.Size = new System.Drawing.Size(456, 30);
             this.ActiveLinksLabel.TabIndex = 2;
             this.ActiveLinksLabel.TabStop = true;
             this.ActiveLinksLabel.Text = "If you have already an API key, you can install it directly by clicking on the [I" +
@@ -188,6 +185,7 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonCancel.CausesValidation = false;
+            this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.Location = new System.Drawing.Point(435, 177);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
@@ -233,7 +231,7 @@ namespace EVEMon.ApiCredentialsManagement
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.VerificationCodeTextBox.Location = new System.Drawing.Point(41, 141);
             this.VerificationCodeTextBox.Name = "VerificationCodeTextBox";
-            this.VerificationCodeTextBox.Size = new System.Drawing.Size(443, 21);
+            this.VerificationCodeTextBox.Size = new System.Drawing.Size(443, 20);
             this.VerificationCodeTextBox.TabIndex = 4;
             this.VerificationCodeTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
             this.VerificationCodeTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
@@ -243,7 +241,7 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.IDTextBox.Location = new System.Drawing.Point(41, 99);
             this.IDTextBox.Name = "IDTextBox";
-            this.IDTextBox.Size = new System.Drawing.Size(109, 21);
+            this.IDTextBox.Size = new System.Drawing.Size(109, 20);
             this.IDTextBox.TabIndex = 3;
             this.IDTextBox.TextChanged += new System.EventHandler(this.IDTextBox_TextChanged);
             this.IDTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.IDTextBox_Validating);
@@ -254,7 +252,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.VerificationCodeLabel.AutoSize = true;
             this.VerificationCodeLabel.Location = new System.Drawing.Point(38, 125);
             this.VerificationCodeLabel.Name = "VerificationCodeLabel";
-            this.VerificationCodeLabel.Size = new System.Drawing.Size(92, 13);
+            this.VerificationCodeLabel.Size = new System.Drawing.Size(90, 13);
             this.VerificationCodeLabel.TabIndex = 1;
             this.VerificationCodeLabel.Text = "Verification Code:";
             // 
@@ -263,7 +261,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.IDLabel.AutoSize = true;
             this.IDLabel.Location = new System.Drawing.Point(38, 83);
             this.IDLabel.Name = "IDLabel";
-            this.IDLabel.Size = new System.Drawing.Size(22, 13);
+            this.IDLabel.Size = new System.Drawing.Size(21, 13);
             this.IDLabel.TabIndex = 0;
             this.IDLabel.Text = "ID:";
             // 
@@ -296,7 +294,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.ResultPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultPage.Location = new System.Drawing.Point(0, 0);
             this.ResultPage.Name = "ResultPage";
-            this.ResultPage.Size = new System.Drawing.Size(503, 171);
+            this.ResultPage.Size = new System.Drawing.Size(522, 171);
             this.ResultPage.TabIndex = 2;
             this.ResultPage.Text = "resultPage";
             // 
@@ -314,16 +312,16 @@ namespace EVEMon.ApiCredentialsManagement
             this.KeyTableLayoutPanel.Name = "KeyTableLayoutPanel";
             this.KeyTableLayoutPanel.RowCount = 1;
             this.KeyTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.KeyTableLayoutPanel.Size = new System.Drawing.Size(479, 38);
+            this.KeyTableLayoutPanel.Size = new System.Drawing.Size(498, 38);
             this.KeyTableLayoutPanel.TabIndex = 0;
             // 
             // KeyLabel
             // 
             this.KeyLabel.AutoSize = true;
             this.KeyLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.KeyLabel.Location = new System.Drawing.Point(41, 0);
+            this.KeyLabel.Location = new System.Drawing.Point(43, 0);
             this.KeyLabel.Name = "KeyLabel";
-            this.KeyLabel.Size = new System.Drawing.Size(435, 38);
+            this.KeyLabel.Size = new System.Drawing.Size(452, 38);
             this.KeyLabel.TabIndex = 1;
             this.KeyLabel.Text = "Short description on info retrieval procedure.";
             this.KeyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -357,7 +355,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.ResultsMultiPanel.Controls.Add(this.APIKeyExpiredErrorPage);
             this.ResultsMultiPanel.Controls.Add(this.APIKeyExistsErrorPage);
             this.ResultsMultiPanel.Controls.Add(this.CachedWarningPage);
-            this.ResultsMultiPanel.Controls.Add(this.NoCorpFeaturesYetPage);
             this.ResultsMultiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultsMultiPanel.Location = new System.Drawing.Point(3, 17);
             this.ResultsMultiPanel.Name = "ResultsMultiPanel";
@@ -403,7 +400,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.WarningLabel.ForeColor = System.Drawing.Color.DarkRed;
             this.WarningLabel.Location = new System.Drawing.Point(3, 82);
             this.WarningLabel.Name = "WarningLabel";
-            this.WarningLabel.Size = new System.Drawing.Size(414, 13);
+            this.WarningLabel.Size = new System.Drawing.Size(402, 13);
             this.WarningLabel.TabIndex = 4;
             this.WarningLabel.Text = "Beware! When you remove characters, all their data and plans will be definitely l" +
                 "ost !";
@@ -544,30 +541,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.CachedWarningLabel.Size = new System.Drawing.Size(473, 98);
             this.CachedWarningLabel.TabIndex = 0;
             this.CachedWarningLabel.Text = "Due to the fact that the cached timer has not yet expired,\r\nyour query attempt wi" +
-                "ll result in getting the same data you already have.";
+                "ll result in getting the same data you already have.\r\nTry again after: {0}";
             this.CachedWarningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // NoCorpFeaturesYetPage
-            // 
-            this.NoCorpFeaturesYetPage.Controls.Add(this.NoCorpFeaturesYetLabel);
-            this.NoCorpFeaturesYetPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NoCorpFeaturesYetPage.Location = new System.Drawing.Point(0, 0);
-            this.NoCorpFeaturesYetPage.Name = "NoCorpFeaturesYetPage";
-            this.NoCorpFeaturesYetPage.Size = new System.Drawing.Size(473, 98);
-            this.NoCorpFeaturesYetPage.TabIndex = 6;
-            this.NoCorpFeaturesYetPage.Text = "noCorpFeaturesYetPage";
-            // 
-            // NoCorpFeaturesYetLabel
-            // 
-            this.NoCorpFeaturesYetLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NoCorpFeaturesYetLabel.Location = new System.Drawing.Point(0, 0);
-            this.NoCorpFeaturesYetLabel.Name = "NoCorpFeaturesYetLabel";
-            this.NoCorpFeaturesYetLabel.Size = new System.Drawing.Size(473, 98);
-            this.NoCorpFeaturesYetLabel.TabIndex = 0;
-            this.NoCorpFeaturesYetLabel.Text = "EVEMon does not support any Corporation feature yet.\r\nAdding such an API key has " +
-                "no meaning.\r\nSupport for Corporation features may happen in the near future, so " +
-                "stay tuned.";
-            this.NoCorpFeaturesYetLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // errorProvider
             // 
@@ -579,6 +554,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.CancelButton = this.ButtonCancel;
             this.ClientSize = new System.Drawing.Size(522, 212);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonPrevious);
@@ -610,7 +586,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.APIKeyExpiredErrorPage.ResumeLayout(false);
             this.APIKeyExistsErrorPage.ResumeLayout(false);
             this.CachedWarningPage.ResumeLayout(false);
-            this.NoCorpFeaturesYetPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
@@ -651,8 +626,6 @@ namespace EVEMon.ApiCredentialsManagement
         private System.Windows.Forms.Label APIKeyExistsLabel;
         private MultiPanelPage CachedWarningPage;
         private System.Windows.Forms.Label CachedWarningLabel;
-        private MultiPanelPage NoCorpFeaturesYetPage;
-        private System.Windows.Forms.Label NoCorpFeaturesYetLabel;
         private System.Windows.Forms.LinkLabel ApiKeysLinkLabel;
         private System.Windows.Forms.LinkLabel FeaturesLinkLabel;
         private System.Windows.Forms.LinkLabel ActiveLinksLabel;

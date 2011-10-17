@@ -21,7 +21,7 @@ namespace EVEMon.Common.SettingsObjects
             CheckTimeOnStartup = true;
             CheckEVEMonVersion = true;
             HttpTimeout = 20;
-            Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
+            Periods = new SerializableDictionary<String, UpdatePeriod>();
             IgnoreNetworkStatus = false;
             UpdateFrequency = 240;
             UseCustomUpdatesUrl = false;
@@ -91,7 +91,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The periods.</value>
         [XmlElement("periods")]
-        public SerializableDictionary<APIMethods, UpdatePeriod> Periods { get; set; }
+        public SerializableDictionary<String, UpdatePeriod> Periods { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP timeout.
