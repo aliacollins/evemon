@@ -21,13 +21,13 @@ namespace EVEMon.XmlGenerator
 
         private const int TotalTablesCount = 29;
         private const int PropGenTotal = 1602;
-        private const int ItemGenTotal = 8751;
+        private const int ItemGenTotal = 11431;
         private const int SkillGenTotal = 454;
         private const int CertGenTotal = 4272;
-        private const int BlueprintGenTotal = 3953;
+        private const int BlueprintGenTotal = 4010;
         private const int GeoGen = 5219;
         private const int GeoGenTotal = 19501;
-        private const int ReprocessGenTotal = 10074;
+        private const int ReprocessGenTotal = 11669;
 
         private static DateTime s_startTime;
         private static DateTime s_endTime;
@@ -486,6 +486,88 @@ namespace EVEMon.XmlGenerator
             s_startTime = DateTime.Now;
 
             // Create custom market groups that don't exist in EVE
+            ConfigureNullMarketItem();
+
+            Dictionary<int, SerializableMarketGroup> groups = new Dictionary<int, SerializableMarketGroup>();
+
+            // Create the market groups
+            foreach (InvMarketGroup srcGroup in s_marketGroups.Concat(s_injectedMarketGroups))
+            {
+                SerializableMarketGroup group = new SerializableMarketGroup { ID = srcGroup.ID, Name = srcGroup.Name };
+                groups[srcGroup.ID] = group;
+
+                // Add the items in this group
+                List<SerializableItem> items = new List<SerializableItem>();
+                foreach (InvType srcItem in s_types
+                    .Where(x => x.Published && (x.MarketGroupID.GetValueOrDefault() == srcGroup.ID)))
+                {
+                    CreateItem(srcItem, items);
+                }
+
+                // If this is an implant group, we add the implants with no market groups in this one.
+                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
+                    srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
+                {
+                    string slotString = srcGroup.Name.Substring("Implant Slot ".Length);
+                    int slot = Int32.Parse(slotString);
+
+                    // Enumerate all implants without market groups
+                    foreach (InvType srcItem in s_types.Where(
+                        x => x.MarketGroupID == null && s_groups[x.GroupID].CategoryID == DBConstants.ImplantCategoryID
+                             && x.GroupID != DBConstants.CyberLearningImplantsGroupID).Select(
+                                 srcItem =>
+                                 new
+                                     {
+                                         srcItem,
+                                         slotAttrib = s_typeAttributes.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
+                                     }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue() == slot).Select(
+                                         x => x.srcItem))
+                    {
+                        CreateItem(srcItem, items);
+                    }
+                }
+
+                // Store the items
+                group.Add(items.OrderBy(x => x.Name).ToList());
+            }
+
+            // Create the parent-children groups relations
+            foreach (SerializableMarketGroup group in groups.Values)
+            {
+                IOrderedEnumerable<SerializableMarketGroup> children =
+                    s_marketGroups.Concat(s_injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID)
+                        .Select(x => groups[x.ID]).OrderBy(x => x.Name);
+
+                group.Add(children.ToList());
+            }
+
+            // Pick the family
+            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Bpo);
+            SetItemFamilyByMarketGroup(groups[DBConstants.ShipsMarketGroupID], ItemFamily.Ship);
+            SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsMarketGroupID], ItemFamily.Implant);
+            SetItemFamilyByMarketGroup(groups[DBConstants.DronesMarketGroupID], ItemFamily.Drone);
+            SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresMarketGroupID], ItemFamily.StarbaseStructure);
+
+            // Sort groups
+            List<SerializableMarketGroup> rootGroups =
+                s_marketGroups.Concat(s_injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID])
+                    .OrderBy(x => x.Name).ToList();
+
+            s_endTime = DateTime.Now;
+            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+
+            // Serialize
+            ItemsDatafile datafile = new ItemsDatafile();
+            datafile.Add(rootGroups);
+
+            Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
+        }
+
+        /// <summary>
+        /// Configures the null market item.
+        /// </summary>
+        private static void ConfigureNullMarketItem()
+        {
             s_injectedMarketGroups = new List<InvMarketGroup>
                                          {
                                              new InvMarketGroup
@@ -583,6 +665,8 @@ namespace EVEMon.XmlGenerator
             // Set some attributes to items because their MarketGroupID is NULL
             foreach (InvType srcItem in s_types.Where(x => x.Published && x.MarketGroupID == null))
             {
+                srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
+
                 // Set some ships market group and race
                 switch (srcItem.ID)
                 {
@@ -614,128 +698,8 @@ namespace EVEMon.XmlGenerator
                         srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesNonMarketGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
-
-                        // Set some items market group to support blueprints
-                    case DBConstants.EliteDroneAIID:
-                    case DBConstants.StandardDecodingDeviceID:
-                    case DBConstants.EncodingMatrixComponentID:
-                    case DBConstants.ChalcopyriteID:
-                    case DBConstants.ClayPigeonID:
-                    case DBConstants.MinmatarDNAID:
-                    case DBConstants.BasicRoboticsID:
-                    case DBConstants.AmarrFactoryOutpostPlatformID:
-                    case DBConstants.CaldariResearchOutpostPlatformID:
-                    case DBConstants.GallenteAdministrativeOutpostPlatformID:
-                    case DBConstants.MinmatarServiceOutpostPlatformID:
-                    case DBConstants.SmallEWDroneRangeAugmentorIIID:
-                    case DBConstants.CivilianBallisticDeflectionFieldID:
-                    case DBConstants.CivilianDamageControlID:
-                    case DBConstants.CivilianExplosionDampeningFieldID:
-                    case DBConstants.CivilianHeatDissipationFieldID:
-                    case DBConstants.CivilianPhotonScatteringFieldID:
-                    case DBConstants.CivilianStasisWebifierID:
-                    case DBConstants.CrudeSculptureID:
-                    case DBConstants.GoldSculptureID:
-                    case DBConstants.MethrosEnhancedDecodingDeviceID:
-                    case DBConstants.ModifiedAugumeneAntidoteID:
-                    case DBConstants.ProcessInterruptiveWarpDisruptorID:
-                    case DBConstants.SleeperDataAnalyzerIID:
-                    case DBConstants.TalocanDataAnalyzerIID:
-                    case DBConstants.TerranDataAnalyzerIID:
-                    case DBConstants.TetrimonDataAnalyzerIID:
-                    case DBConstants.WildMinerIID:
-                    case DBConstants.AlphaCodebreakerIID:
-                    case DBConstants.CodexCodebreakerIID:
-                    case DBConstants.DaemonCodebreakerIID:
-                    case DBConstants.LibramCodebreakerIID:
-                        srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
-                        break;
                 }
-
-                // Set some items market group to support blueprints
-                if (srcItem.ID > DBConstants.SynthSoothSayerBoosterBlueprintID &&
-                    srcItem.ID < DBConstants.AmberMykoserocinID)
-                    srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
-
-                // Adding planets to support attribute browsing for command centers
-                if (srcItem.GroupID == DBConstants.PlanetGroupID)
-                    srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
             }
-
-            Dictionary<int, SerializableMarketGroup> groups = new Dictionary<int, SerializableMarketGroup>();
-
-            // Create the market groups
-            foreach (InvMarketGroup srcGroup in s_marketGroups.Concat(s_injectedMarketGroups))
-            {
-                SerializableMarketGroup group = new SerializableMarketGroup { ID = srcGroup.ID, Name = srcGroup.Name };
-                groups[srcGroup.ID] = group;
-
-                // Add the items in this group
-                List<SerializableItem> items = new List<SerializableItem>();
-                foreach (InvType srcItem in s_types
-                    .Where(x => x.Published && (x.MarketGroupID.GetValueOrDefault() == srcGroup.ID)))
-                {
-                    CreateItem(srcItem, items);
-                }
-
-                // If this is an implant group, we add the implants with no market groups in this one.
-                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
-                    srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
-                {
-                    string slotString = srcGroup.Name.Substring("Implant Slot ".Length);
-                    int slot = Int32.Parse(slotString);
-
-                    // Enumerate all implants without market groups
-                    foreach (InvType srcItem in s_types
-                        .Where(x => x.MarketGroupID == null
-                                    && s_groups[x.GroupID].CategoryID == DBConstants.ImplantCategoryID
-                                    && x.GroupID != DBConstants.CyberLearningImplantsGroupID)
-                        .Select(srcItem =>
-                                new
-                                    {
-                                        srcItem,
-                                        slotAttrib = s_typeAttributes.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
-                                    })
-                        .Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue() == slot).Select(x => x.srcItem))
-                    {
-                        CreateItem(srcItem, items);
-                    }
-                }
-
-                // Store the items
-                group.Add(items.OrderBy(x => x.Name).ToList());
-            }
-
-            // Create the parent-children groups relations
-            foreach (SerializableMarketGroup group in groups.Values)
-            {
-                IOrderedEnumerable<SerializableMarketGroup> children =
-                    s_marketGroups.Concat(s_injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID)
-                        .Select(x => groups[x.ID]).OrderBy(x => x.Name);
-
-                group.Add(children.ToList());
-            }
-
-            // Pick the family
-            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Bpo);
-            SetItemFamilyByMarketGroup(groups[DBConstants.ShipsMarketGroupID], ItemFamily.Ship);
-            SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsMarketGroupID], ItemFamily.Implant);
-            SetItemFamilyByMarketGroup(groups[DBConstants.DronesMarketGroupID], ItemFamily.Drone);
-            SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresMarketGroupID], ItemFamily.StarbaseStructure);
-
-            // Sort groups
-            List<SerializableMarketGroup> rootGroups =
-                s_marketGroups.Concat(s_injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID])
-                    .OrderBy(x => x.Name).ToList();
-
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
-
-            // Serialize
-            ItemsDatafile datafile = new ItemsDatafile();
-            datafile.Add(rootGroups);
-
-            Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
 
         /// <summary>
@@ -1489,16 +1453,16 @@ namespace EVEMon.XmlGenerator
             foreach (SerializableBlueprintMarketGroup group in groups.Values)
             {
                 List<SerializableBlueprintMarketGroup> children = s_marketGroups.Concat(
-                    s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(x => groups[x.ID]).OrderBy(x => x.Name).
-                    ToList();
+                    s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(
+                        x => groups[x.ID]).OrderBy(x => x.Name).ToList();
 
                 group.Add(children);
             }
 
             // Sort groups
             List<SerializableBlueprintMarketGroup> blueprintGroups = s_marketGroups.Concat(
-                s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsMarketGroupID)
-                .Select(x => groups[x.ID]).OrderBy(x => x.Name).ToList();
+                s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsMarketGroupID).Select(
+                    x => groups[x.ID]).OrderBy(x => x.Name).ToList();
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
@@ -1515,6 +1479,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         private static void ConfigureNullMarketBlueprint()
         {
+            // Create custom market groups that don't exist in EVE
             s_injectedMarketGroups = new List<InvMarketGroup>
                                          {
                                              new InvMarketGroup
@@ -1575,11 +1540,17 @@ namespace EVEMon.XmlGenerator
                                                  }
                                          };
 
-            // Create custom market groups that don't exist in EVE
-
-            // Set some blueprints to market groups manually
-            foreach (InvType item in s_types.Where(x => x.MarketGroupID == null))
+            // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
+            foreach (InvType item in s_types.Where(x => (x.MarketGroupID == null ||
+                                                         x.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
+                                                        !x.Name.Contains("TEST") &&
+                                                        s_blueprintTypes.Any(y => y.ID == x.ID) &&
+                                                        s_types.Any(z => z.ID == s_blueprintTypes[x.ID].ProductTypeID) &&
+                                                        s_types[s_blueprintTypes[x.ID].ProductTypeID].Published))
             {
+                UpdatePercentDone(BlueprintGenTotal);
+
+                // Set some blueprints to market groups manually
                 switch (item.ID)
                 {
                     case DBConstants.WildMinerIBlueprintID:
@@ -1638,18 +1609,9 @@ namespace EVEMon.XmlGenerator
                         item.MarketGroupID = DBConstants.BlueprintTechIINonMarketGroupID;
                         break;
                 }
-            }
 
-            // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
-            foreach (InvType item in s_types.Where(x => x.MarketGroupID == null && !x.Name.Contains("TEST")
-                                                        && s_blueprintTypes.Any(y => y.ID == x.ID) &&
-                                                        s_types.Any(z => z.ID == s_blueprintTypes[x.ID].ProductTypeID)
-                                                        && s_types[s_blueprintTypes[x.ID].ProductTypeID].Published))
-            {
-                UpdatePercentDone(BlueprintGenTotal);
-
-                foreach (InvMetaType relation in s_metaTypes
-                    .Where(x => x.ItemID == s_blueprintTypes[item.ID].ProductTypeID))
+                foreach (InvMetaType relation in s_metaTypes.Where(
+                    x => x.ItemID == s_blueprintTypes[item.ID].ProductTypeID))
                 {
                     switch (relation.MetaGroupID)
                     {
@@ -1671,7 +1633,7 @@ namespace EVEMon.XmlGenerator
                     }
                 }
 
-                if (item.MarketGroupID == null)
+                if (item.MarketGroupID == null || item.MarketGroupID == DBConstants.RootNonMarketGroupID)
                     item.MarketGroupID = DBConstants.BlueprintTechINonMarketGroupID;
             }
         }
@@ -1682,7 +1644,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="srcBlueprint"></param>
         /// <param name="blueprintsGroup"></param>
         /// <returns></returns>
-        private static void CreateBlueprint(InvType srcBlueprint, List<SerializableBlueprint> blueprintsGroup)
+        private static void CreateBlueprint(InvType srcBlueprint, ICollection<SerializableBlueprint> blueprintsGroup)
         {
             UpdatePercentDone(BlueprintGenTotal);
 
@@ -1752,6 +1714,9 @@ namespace EVEMon.XmlGenerator
                 case DBConstants.BlueprintFactionNonMarketGroupID:
                     blueprint.MetaGroup = ItemMetaGroup.Faction;
                     break;
+                case DBConstants.BlueprintOfficerNonMarketGroupID:
+                    blueprint.MetaGroup = ItemMetaGroup.Officer;
+                    break;
                 case DBConstants.BlueprintTechIIINonMarketGroupID:
                     blueprint.MetaGroup = ItemMetaGroup.T3;
                     break;
@@ -1767,8 +1732,6 @@ namespace EVEMon.XmlGenerator
             ExportRequirements(srcBlueprint, blueprint);
 
             // Look for the tech 2 variations that this blueprint invents
-
-            // Add invention blueprints to item
             List<int> listOfInventionTypeID =
                 (s_metaTypes.Where(x => x.ParentItemID == blueprint.ProduceItemID &&
                                         x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
@@ -1779,6 +1742,7 @@ namespace EVEMon.XmlGenerator
                                                 (relationItemID, variationItemID) => s_types[variationItemID].ID))
                     .ToList();
 
+            // Add invention blueprints to item
             blueprint.Add(listOfInventionTypeID);
 
             // Add this item
@@ -1790,7 +1754,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="srcBlueprint"></param>
         /// <param name="blueprint"></param>
-        private static void ExportRequirements(InvType srcBlueprint, SerializableBlueprint blueprint)
+        private static void ExportRequirements(IHasID srcBlueprint, SerializableBlueprint blueprint)
         {
             List<SerializablePrereqSkill> prerequisiteSkills = new List<SerializablePrereqSkill>();
             List<SerializableRequiredMaterial> requiredMaterials = new List<SerializableRequiredMaterial>();
@@ -1835,7 +1799,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="prerequisiteSkills">The prerequisite skills.</param>
         /// <param name="requiredMaterials">The required materials.</param>
         private static void AddRequiredExtraMaterials(int blueprintID,
-                                                      List<SerializablePrereqSkill> prerequisiteSkills,
+                                                      ICollection<SerializablePrereqSkill> prerequisiteSkills,
                                                       ICollection<SerializableRequiredMaterial> requiredMaterials)
         {
             // Find the additional extra materials and add them to the list
@@ -1899,7 +1863,7 @@ namespace EVEMon.XmlGenerator
         /// Add the prerequisite skills for a material used in invention activity.
         /// </summary>
         private static void MaterialPrereqSkill(RamTypeRequirements requirement,
-                                                List<SerializablePrereqSkill> prerequisiteSkills)
+                                                ICollection<SerializablePrereqSkill> prerequisiteSkills)
         {
             int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Count];
             int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
