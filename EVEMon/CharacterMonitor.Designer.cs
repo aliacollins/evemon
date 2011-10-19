@@ -106,6 +106,7 @@ namespace EVEMon
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.autoSizeColumnMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.flpStatusLabels.SuspendLayout();
@@ -657,6 +658,7 @@ namespace EVEMon
             this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.columnSettingsMenuItem,
+            this.autoSizeColumnMenuItem,
             this.tsColumnSettingsSeparator,
             this.hideInactiveMenuItem,
             this.numberAbsFormatMenuItem,
@@ -951,6 +953,13 @@ namespace EVEMon
             this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
             this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
             // 
+            // autoSizeColumnMenuItem
+            // 
+            this.autoSizeColumnMenuItem.Name = "autoSizeColumnMenuItem";
+            this.autoSizeColumnMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.autoSizeColumnMenuItem.Text = "Auto-Size Columns";
+            this.autoSizeColumnMenuItem.Click += new System.EventHandler(this.autoSizeColumnMenuItem_Click);
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1072,5 +1081,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator tsOptionsSeparator;
         private System.Windows.Forms.ToolStripMenuItem showOnlyCharMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlyCorpMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autoSizeColumnMenuItem;
     }
 }

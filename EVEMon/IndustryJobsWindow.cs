@@ -73,7 +73,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IndustryJobColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get { return jobsList.Columns; }
             set

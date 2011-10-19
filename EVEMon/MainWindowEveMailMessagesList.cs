@@ -13,7 +13,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowEveMailMessagesList : UserControl, IGroupingListView
+    public partial class MainWindowEveMailMessagesList : UserControl, IListView
     {
         #region Fields
 
@@ -138,7 +138,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<EveMailMessagesColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get
             {
@@ -163,7 +163,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value);
+                    m_columns.AddRange(value.Cast<EveMailMessagesColumnSettings>());
 
                 if (m_init)
                     UpdateColumns();
@@ -226,7 +226,7 @@ namespace EVEMon
         /// <summary>
         /// Updates the columns.
         /// </summary>
-        private void UpdateColumns()
+        public void UpdateColumns()
         {
             lvMailMessages.BeginUpdate();
             m_isUpdatingColumns = true;
@@ -813,7 +813,7 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.EVEMailMessages.Add(Columns.ToList());
+                Settings.UI.MainWindow.EVEMailMessages.Add(Columns.Cast<EveMailMessagesColumnSettings>().ToList());
 
                 // Recreate the columns
                 Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;

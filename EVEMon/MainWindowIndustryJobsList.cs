@@ -12,7 +12,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowIndustryJobsList : UserControl, IGroupingListView
+    public partial class MainWindowIndustryJobsList : UserControl, IListView
     {
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
@@ -172,7 +172,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IndustryJobColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get
             {
@@ -196,7 +196,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value);
+                    m_columns.AddRange(value.Cast<IndustryJobColumnSettings>());
 
                 // Whenever the columns changes, we need to
                 // reset the dipslay index of the TTC column
@@ -872,7 +872,7 @@ namespace EVEMon
             if (!m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.IndustryJobs.Add(Columns.ToList());
+            Settings.UI.MainWindow.IndustryJobs.Add(Columns.Cast<IndustryJobColumnSettings>().ToList());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;

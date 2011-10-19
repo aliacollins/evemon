@@ -16,7 +16,7 @@ namespace EVEMon
     /// <summary>
     /// Displays a list of market orders.
     /// </summary>
-    public partial class MainWindowMarketOrdersList : UserControl, IGroupingListView
+    public partial class MainWindowMarketOrdersList : UserControl, IListView
     {
         private readonly List<MarketOrderColumnSettings> m_columns = new List<MarketOrderColumnSettings>();
         private readonly List<MarketOrder> m_list = new List<MarketOrder>();
@@ -198,7 +198,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<MarketOrderColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get
             {
@@ -221,7 +221,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value);
+                    m_columns.AddRange(value.Cast<MarketOrderColumnSettings>());
 
                 if (m_init)
                     UpdateColumns();
@@ -838,7 +838,7 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.MarketOrders.Add(Columns.ToList());
+                Settings.UI.MainWindow.MarketOrders.Add(Columns.Cast<MarketOrderColumnSettings>().ToList());
 
                 // Recreate the columns
                 Columns = Settings.UI.MainWindow.MarketOrders.Columns;

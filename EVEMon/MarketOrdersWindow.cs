@@ -73,7 +73,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<MarketOrderColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get { return ordersList.Columns; }
             set

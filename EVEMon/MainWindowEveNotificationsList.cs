@@ -13,7 +13,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowEveNotificationsList : UserControl, IGroupingListView
+    public partial class MainWindowEveNotificationsList : UserControl, IListView
     {
         #region Fields
 
@@ -137,7 +137,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<EveNotificationsColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get
             {
@@ -162,7 +162,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value);
+                    m_columns.AddRange(value.Cast<EveNotificationsColumnSettings>());
 
                 if (m_init)
                     UpdateColumns();
@@ -225,7 +225,7 @@ namespace EVEMon
         /// <summary>
         /// Updates the columns.
         /// </summary>
-        private void UpdateColumns()
+        public void UpdateColumns()
         {
             lvNotifications.BeginUpdate();
             m_isUpdatingColumns = true;
@@ -653,7 +653,7 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.EVENotifications.Add(Columns.ToList());
+                Settings.UI.MainWindow.EVENotifications.Add(Columns.Cast<EveNotificationsColumnSettings>().ToList());
 
                 // Recreate the columns
                 Columns = Settings.UI.MainWindow.EVENotifications.Columns;

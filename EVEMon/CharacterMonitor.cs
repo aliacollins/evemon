@@ -956,84 +956,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Display the window to select columns.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void columnSettingsMenuItem_Click(object sender, EventArgs e)
-        {
-            if (multiPanel.SelectedPage == ordersPage)
-            {
-                using (MarketOrdersColumnsSelectWindow f =
-                    new MarketOrdersColumnsSelectWindow(ordersList.Columns))
-                {
-                    DialogResult dr = f.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        ordersList.Columns = f.Columns.Cast<MarketOrderColumnSettings>();
-                        Settings.UI.MainWindow.MarketOrders.Add(ordersList.Columns.ToList());
-                    }
-                }
-            }
-
-            if (multiPanel.SelectedPage == jobsPage)
-            {
-                using (IndustryJobsColumnsSelectWindow f =
-                    new IndustryJobsColumnsSelectWindow(jobsList.Columns))
-                {
-                    DialogResult dr = f.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        jobsList.Columns = f.Columns.Cast<IndustryJobColumnSettings>();
-                        Settings.UI.MainWindow.IndustryJobs.Add(jobsList.Columns.ToList());
-                    }
-                }
-            }
-
-            if (multiPanel.SelectedPage == researchPage)
-            {
-                using (ResearchColumnsSelectWindow f =
-                    new ResearchColumnsSelectWindow(researchList.Columns))
-                {
-                    DialogResult dr = f.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        researchList.Columns = f.Columns.Cast<ResearchColumnSettings>();
-                        Settings.UI.MainWindow.Research.Add(researchList.Columns.ToList());
-                    }
-                }
-            }
-
-            if (multiPanel.SelectedPage == mailMessagesPage)
-            {
-                using (EveMailMessagesColumnsSelectWindow f =
-                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns))
-                {
-                    DialogResult dr = f.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        mailMessagesList.Columns = f.Columns.Cast<EveMailMessagesColumnSettings>();
-                        Settings.UI.MainWindow.EVEMailMessages.Add(mailMessagesList.Columns.ToList());
-                    }
-                }
-            }
-
-            if (multiPanel.SelectedPage == eveNotificationsPage)
-            {
-                using (EveNotificationsColumnsSelectWindow f =
-                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns))
-                {
-                    DialogResult dr = f.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        eveNotificationsList.Columns = f.Columns.Cast<EveNotificationsColumnSettings>();
-                        Settings.UI.MainWindow.EVENotifications.Add(eveNotificationsList.Columns.ToList());
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// On menu opening we update the menu items.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -1079,17 +1001,113 @@ namespace EVEMon
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
+                preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
             }
 
             if (multiPanel.SelectedPage == mailMessagesPage || multiPanel.SelectedPage == eveNotificationsPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
+                preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
                 preferencesMenu.DropDownItems.Add(tsReadingPaneSeparator);
                 preferencesMenu.DropDownItems.Add(readingPaneMenuItem);
             }
 
             hideInactiveMenuItem.Text = (hideInactive ? "Unhide Inactive" : "Hide Inactive");
+        }
+
+        /// <summary>
+        /// Display the window to select columns.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void columnSettingsMenuItem_Click(object sender, EventArgs e)
+        {
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                using (MarketOrdersColumnsSelectWindow f =
+                    new MarketOrdersColumnsSelectWindow(ordersList.Columns.Cast<MarketOrderColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        ordersList.Columns = f.Columns;
+                        Settings.UI.MainWindow.MarketOrders.Add(ordersList.Columns.Cast<MarketOrderColumnSettings>().ToList());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == jobsPage)
+            {
+                using (IndustryJobsColumnsSelectWindow f =
+                    new IndustryJobsColumnsSelectWindow(jobsList.Columns.Cast<IndustryJobColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        jobsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.IndustryJobs.Add(jobsList.Columns.Cast<IndustryJobColumnSettings>().ToList());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == researchPage)
+            {
+                using (ResearchColumnsSelectWindow f =
+                    new ResearchColumnsSelectWindow(researchList.Columns.Cast<ResearchColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        researchList.Columns = f.Columns;
+                        Settings.UI.MainWindow.Research.Add(researchList.Columns.Cast<ResearchColumnSettings>().ToList());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                using (EveMailMessagesColumnsSelectWindow f =
+                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        mailMessagesList.Columns = f.Columns;
+                        Settings.UI.MainWindow.EVEMailMessages.Add(
+                            mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>().ToList());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                using (EveNotificationsColumnsSelectWindow f =
+                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        eveNotificationsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.EVENotifications.Add(
+                            eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>().ToList());
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles the Click event of the autoSizeColumnMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void autoSizeColumnMenuItem_Click(object sender, EventArgs e)
+        {
+            IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
+            if (list == null)
+                return;
+            list.Columns.Where(column => column.Visible).ToList().ForEach(column => column.Width = -2);
+            list.UpdateColumns();
         }
 
         /// <summary>
@@ -1305,7 +1323,7 @@ namespace EVEMon
         /// <typeparam name="T">The grouping type.</typeparam>
         /// <typeparam name="T1">The grouping base type.</typeparam>
         /// <param name="list">The list.</param>
-        private void CreateGroupMenuList<T, T1>(IGroupingListView list)
+        private void CreateGroupMenuList<T, T1>(IListView list)
             where T : T1
         {
             foreach (ToolStripButton menu in EnumExtensions.GetValues<T>().Select(
@@ -1328,7 +1346,7 @@ namespace EVEMon
         /// <typeparam name="T1">The grouping base type.</typeparam>
         /// <param name="item">The item.</param>
         /// <param name="list">The list.</param>
-        private void GroupMenuSetting<T, T1>(ToolStripItem item, IGroupingListView list)
+        private void GroupMenuSetting<T, T1>(ToolStripItem item, IListView list)
             where T : T1
         {
             Enum grouping = item.Tag as Enum;

@@ -197,7 +197,7 @@
     <Compile Include="EveNotificationsCollection.cs" />
     <Compile Include="EveNotificationsComparer.cs" />
     <Compile Include="EveNotificationText.cs" />
-    <Compile Include="IGroupingListView.cs" />
+    <Compile Include="IListView.cs" />
     <Compile Include="IPlanOrderPluggable.cs" />
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />

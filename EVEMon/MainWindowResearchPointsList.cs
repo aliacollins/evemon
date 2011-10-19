@@ -102,7 +102,7 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<ResearchColumnSettings> Columns
+        public IEnumerable<IColumnSettings> Columns
         {
             get
             {
@@ -126,7 +126,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value);
+                    m_columns.AddRange(value.Cast<ResearchColumnSettings>());
 
                 if (m_init)
                     UpdateColumns();
@@ -185,7 +185,7 @@ namespace EVEMon
         /// <summary>
         /// Updates the columns.
         /// </summary>
-        private void UpdateColumns()
+        public void UpdateColumns()
         {
             lvResearchPoints.BeginUpdate();
             m_isUpdatingColumns = true;
@@ -493,7 +493,7 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.Research.Add(Columns.ToList());
+                Settings.UI.MainWindow.Research.Add(Columns.Cast<ResearchColumnSettings>().ToList());
 
                 // Recreate the columns
                 Columns = Settings.UI.MainWindow.Research.Columns;
