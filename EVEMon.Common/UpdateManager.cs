@@ -167,9 +167,8 @@ namespace EVEMon.Common
             if (!result.FilesHaveChanged)
                 return;
 
-            // Requests a notification to subscribers and quit
+            // Requests a notification to subscribers
             EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
-            return;
         }
     }
 }

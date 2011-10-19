@@ -65,8 +65,8 @@ namespace EVEMon
             {
                 DownloadUpdates();
 
-                if (m_args.ChangedFiles.Count != 0)
-                    continue;
+                if (m_args.ChangedFiles.Count == 0)
+                    break;
 
                 // One or more files failed
                 string message = String.Format(CultureConstants.DefaultCulture,

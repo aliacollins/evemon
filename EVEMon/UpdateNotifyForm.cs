@@ -62,14 +62,8 @@ namespace EVEMon
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
                 DialogResult result = DialogResult.Yes;
-                bool downloadedSuccessfully = false;
-                while (!downloadedSuccessfully && result == DialogResult.Yes)
+                while (!DownloadUpdate() && result == DialogResult.Yes)
                 {
-                    downloadedSuccessfully = DownloadUpdate();
-
-                    if (downloadedSuccessfully)
-                        continue;
-
                     // File download failed
                     string message = String.Format(CultureConstants.DefaultCulture,
                                                    "File failed to download correctly, do you wish to try again?");
