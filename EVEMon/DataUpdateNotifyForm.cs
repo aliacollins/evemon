@@ -65,8 +65,8 @@ namespace EVEMon
             {
                 DownloadUpdates();
 
-                if (m_args.ChangedFiles.Count == 0)
-                    break;
+                if (m_args.ChangedFiles.Count != 0)
+                    continue;
 
                 // One or more files failed
                 string message = String.Format(CultureConstants.DefaultCulture,
@@ -111,7 +111,7 @@ namespace EVEMon
 
                     Datafile downloadedDatafile = new Datafile(Path.GetFileName(newFilename));
 
-                    if (downloadedDatafile.MD5Sum != versionDatafile.MD5Sum)
+                    if (versionDatafile.MD5Sum != null && versionDatafile.MD5Sum != downloadedDatafile.MD5Sum)
                     {
                         File.Delete(newFilename);
                         continue;

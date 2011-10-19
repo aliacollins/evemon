@@ -997,7 +997,8 @@ namespace EVEMon
                 if (f.DialogResult == DialogResult.OK)
                 {
                     m_isUpdating = true;
-                    Settings.Save();
+                    // Save the settings to make sure we don't loose anything
+                    Settings.SaveImmediate();
                     Close();
                 }
             }

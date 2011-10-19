@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -68,7 +67,10 @@ namespace EVEMon
                 {
                     downloadedSuccessfully = DownloadUpdate();
 
-                    // One or more files failed
+                    if (downloadedSuccessfully)
+                        continue;
+
+                    // File download failed
                     string message = String.Format(CultureConstants.DefaultCulture,
                                                    "File failed to download correctly, do you wish to try again?");
 
@@ -104,11 +106,11 @@ namespace EVEMon
 
                 if (form.DialogResult == DialogResult.OK)
                 {
-                    string md5Sum = Util.CreateMD5From(localFilename);
-                    if (m_args.MD5Sum != md5Sum)
+                    string downloadedFileMD5Sum = Util.CreateMD5From(localFilename);
+                    if (m_args.MD5Sum != null && m_args.MD5Sum != downloadedFileMD5Sum)
                         return false;
 
-                    ExecPatcher(localFilename, m_args.AutoInstallArguments);
+                    ExecutePatcher(localFilename, m_args.AutoInstallArguments);
                 }
             }
             return true;
@@ -119,7 +121,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="args"></param>
-        private void ExecPatcher(string filename, string args)
+        private void ExecutePatcher(string filename, string args)
         {
             try
             {

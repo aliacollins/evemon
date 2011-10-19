@@ -11,14 +11,14 @@ namespace EVEMon.Common.Serialization.BattleClinic
         [XmlElement("version")]
         public string Version { get; set; }
 
+        [XmlElement("md5")]
+        public string MD5Sum { get; set; }
+
         [XmlElement("url")]
         public string TopicUrl { get; set; }
 
         [XmlElement("autopatchurl")]
         public string Url { get; set; }
-
-        [XmlElement("md5")]
-        public string MD5Sum { get; set; }
 
         [XmlElement("autopatchargs")]
         public string InstallerArgs { get; set; }
