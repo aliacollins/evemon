@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -15,7 +14,7 @@ namespace EVEMon.XmlGenerator
     public static class Util
     {
         /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur
+        /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
@@ -27,7 +26,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur
+        /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
@@ -40,7 +39,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur
+        /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
@@ -53,7 +52,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur
+        /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
@@ -153,55 +152,34 @@ namespace EVEMon.XmlGenerator
 
         /// <summary>
         /// Creates one file alongside the resources file containing
-        /// the MD5 sums for each resource
+        /// the MD5 sums for each resource.
         /// </summary>
         /// <param name="filename">Filename of resource .xml.gz</param>
         internal static void CreateMD5SumsFile(string filename)
         {
             const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
-            string file = Path.Combine(ResourcesPath, filename);
+            string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
 
-            StreamWriter md5File = File.CreateText(file);
+            StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath);
 
-            foreach (string datafile in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            foreach (string file in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
             {
-                md5File.WriteLine(CreateMD5From(datafile));
+                FileInfo datafile = new FileInfo(file);
+                if (!datafile.Exists)
+                    throw new Exception(file + " not found!");
+
+                string line = String.Format("{0} *{1}", Common.Util.CreateMD5From(file), datafile.Name);
+                md5SumsFile.WriteLine(line);
             }
 
-            md5File.Close();
+            md5SumsFile.Close();
 
             Console.WriteLine("MD5Sums File Created Successfully");
             Console.WriteLine();
         }
 
         /// <summary>
-        /// Creates a MD5Sum from datafile
-        /// </summary>
-        private static string CreateMD5From(string filename)
-        {
-            FileInfo datafile = new FileInfo(filename);
-            if (!datafile.Exists)
-                throw new ApplicationException(datafile + " not found!");
-
-            StringBuilder sb = new StringBuilder();
-
-            MD5 md5 = MD5.Create();
-            using (FileStream fs = File.Open(datafile.FullName, FileMode.Open))
-            {
-                foreach (byte b in md5.ComputeHash(fs))
-                {
-                    sb.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
-                }
-            }
-
-            // Constract the fileline
-            string fileline = String.Format("{0} *{1}", sb, datafile.Name);
-
-            return fileline;
-        }
-
-        /// <summary>
-        /// Copies a file from source to destination
+        /// Copies a file from source to destination.
         /// </summary>
         /// <param name="srcFile">Fully qualified source filename</param>
         /// <param name="destFile">Fully quallified destination filename</param>

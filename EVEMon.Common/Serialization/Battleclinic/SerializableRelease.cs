@@ -17,6 +17,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
         [XmlElement("autopatchurl")]
         public string Url { get; set; }
 
+        [XmlElement("md5")]
+        public string MD5Sum { get; set; }
+
         [XmlElement("autopatchargs")]
         public string InstallerArgs { get; set; }
 

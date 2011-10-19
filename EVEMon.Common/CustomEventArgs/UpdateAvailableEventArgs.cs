@@ -4,8 +4,19 @@ namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class UpdateAvailableEventArgs : EventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateAvailableEventArgs"/> class.
+        /// </summary>
+        /// <param name="forumUrl">The forum URL.</param>
+        /// <param name="installerUrl">The installer URL.</param>
+        /// <param name="updateMessage">The update message.</param>
+        /// <param name="currentVersion">The current version.</param>
+        /// <param name="newestVersion">The newest version.</param>
+        /// <param name="md5Sum">The MD5 sum.</param>
+        /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
+        /// <param name="installArgs">The install args.</param>
         public UpdateAvailableEventArgs(string forumUrl, string installerUrl, string updateMessage,
-                                        Version currentVersion, Version newestVersion,
+                                        Version currentVersion, Version newestVersion, string md5Sum,
                                         bool canAutoInstall, string installArgs)
         {
             ForumUrl = forumUrl;
@@ -13,6 +24,7 @@ namespace EVEMon.Common.CustomEventArgs
             UpdateMessage = updateMessage;
             CurrentVersion = currentVersion;
             NewestVersion = newestVersion;
+            MD5Sum = md5Sum;
             CanAutoInstall = canAutoInstall;
             AutoInstallArguments = installArgs;
         }
@@ -46,6 +58,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <value>The newest version.</value>
         public Version NewestVersion { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the MD5 sum.
+        /// </summary>
+        /// <value>The M d5 sum.</value>
+        public string MD5Sum { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance can auto install.

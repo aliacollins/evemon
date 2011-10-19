@@ -65,7 +65,7 @@ namespace EVEMon
         /// <summary>
         /// Progresses the changed.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="e">The event.</param>
         private void ProgressChanged(DownloadProgressChangedArgs e)
         {
             if (e.TotalBytesToReceive > 0)
@@ -92,18 +92,18 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Downloads the completed callback.
+        /// Callback for the completed download.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="e">The event.</param>
         private void DownloadCompletedCallback(DownloadFileAsyncResult e)
         {
             Invoke((MethodInvoker)(() => DownloadCompleted(e)));
         }
 
         /// <summary>
-        /// Downloads the completed.
+        /// Called when download is completed.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="e">The event.</param>
         private void DownloadCompleted(DownloadFileAsyncResult e)
         {
             if (e.Error != null)

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -287,7 +288,7 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static APIResult<T> DeserializeAPIResultCore<T>( XmlDocument doc, XslCompiledTransform transform)
+        private static APIResult<T> DeserializeAPIResultCore<T>(XmlDocument doc, XslCompiledTransform transform)
         {
             APIResult<T> result;
 
@@ -553,6 +554,34 @@ namespace EVEMon.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Creates an MD5Sum of the file.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        public static string CreateMD5From(string filename)
+        {
+            if (!File.Exists(filename))
+                throw new Exception(String.Format("{0} not found!", filename));
+
+            MD5 md5 = MD5.Create();
+            StringBuilder builder = new StringBuilder();
+
+            using (Stream fileStream = new FileStream(filename, FileMode.Open))
+            {
+                using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
+                {
+                    byte[] hash = md5.ComputeHash(bufferedStream);
+                    foreach (byte b in hash)
+                    {
+                        builder.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
+                    }
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }

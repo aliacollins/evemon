@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace EVEMon.Common
 {
@@ -24,23 +22,7 @@ namespace EVEMon.Common
             Filename = filename;
 
             // Compute the MD5 sum
-            string fullpath = GetFullPath(filename);
-            MD5 md5 = MD5.Create();
-            StringBuilder builder = new StringBuilder();
-
-            using (Stream fileStream = new FileStream(fullpath, FileMode.Open))
-            {
-                using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
-                {
-                    byte[] hash = md5.ComputeHash(bufferedStream);
-                    foreach (byte b in hash)
-                    {
-                        builder.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
-                    }
-                }
-            }
-
-            MD5Sum = builder.ToString();
+            MD5Sum = Util.CreateMD5From(GetFullPath(filename));
         }
 
         /// <summary>
@@ -79,7 +61,7 @@ namespace EVEMon.Common
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
-                throw new FileNotFoundException(baseFile + " not found!");
+                throw new FileNotFoundException(String.Format("{0} not found!", baseFile));
 
             // The file was in the installation directory, let's copy it to %APPDATA%
             FileHelper.OverwriteOrWarnTheUser(baseFile, filepath);

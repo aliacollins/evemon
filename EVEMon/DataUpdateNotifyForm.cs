@@ -40,12 +40,12 @@ namespace EVEMon
         {
             StringBuilder changedFiles = new StringBuilder();
             StringBuilder notes = new StringBuilder("UPDATE NOTES:\n");
-            foreach (SerializableDatafile dfv in m_args.ChangedFiles)
+            foreach (SerializableDatafile versionDatafile in m_args.ChangedFiles)
             {
                 changedFiles.AppendFormat(CultureConstants.DefaultCulture,
                                           "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
-                                          dfv.Name, dfv.Date, dfv.Url, Environment.NewLine);
-                notes.AppendLine(dfv.Message);
+                                          versionDatafile.Name, versionDatafile.Date, versionDatafile.Url, Environment.NewLine);
+                notes.AppendLine(versionDatafile.Message);
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
             tbNotes.Lines = notes.ToString().Split('\n');
@@ -68,16 +68,15 @@ namespace EVEMon
                 if (m_args.ChangedFiles.Count == 0)
                     break;
 
-                // one or more files failed
-                string message = String.Format(
-                    CultureConstants.DefaultCulture,
-                    "{0} file{1} failed to download, do you wish to try again?",
-                    m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
+                // One or more files failed
+                string message = String.Format(CultureConstants.DefaultCulture,
+                                               "{0} file{1} failed to download, do you wish to try again?",
+                                               m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
 
                 result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
             }
 
-            // If no files were updated, abort the update process.
+            // If no files were updated, abort the update process
             DialogResult = m_args.ChangedFiles.Count == changedFilesCount ? DialogResult.Abort : DialogResult.OK;
 
             Close();
@@ -90,14 +89,14 @@ namespace EVEMon
         {
             List<SerializableDatafile> datafiles = new List<SerializableDatafile>();
 
-            // Copy the list of datafiles
+            // Copy the new datafiles to a new list
             datafiles.AddRange(m_args.ChangedFiles);
 
-            foreach (SerializableDatafile dfv in datafiles)
+            foreach (SerializableDatafile versionDatafile in datafiles)
             {
                 // Work out the new names of the files
-                string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
-                string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, dfv.Name);
+                string url = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", versionDatafile.Url, versionDatafile.Name);
+                string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, versionDatafile.Name);
                 string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
 
                 // If the file already exists delete it
@@ -105,22 +104,21 @@ namespace EVEMon
                     File.Delete(newFilename);
 
                 // Show the download dialog, which will download the file
-                using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
+                using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))
                 {
-                    if (f.ShowDialog() != DialogResult.OK)
+                    if (form.ShowDialog() != DialogResult.OK)
                         continue;
 
-                    string filename = Path.GetFileName(newFilename);
-                    Datafile datafile = new Datafile(filename);
+                    Datafile downloadedDatafile = new Datafile(Path.GetFileName(newFilename));
 
-                    if (datafile.MD5Sum != dfv.MD5Sum)
+                    if (downloadedDatafile.MD5Sum != versionDatafile.MD5Sum)
                     {
                         File.Delete(newFilename);
                         continue;
                     }
 
                     ReplaceDatafile(oldFilename, newFilename);
-                    m_args.ChangedFiles.Remove(dfv);
+                    m_args.ChangedFiles.Remove(versionDatafile);
                 }
             }
         }

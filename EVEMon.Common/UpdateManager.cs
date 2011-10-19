@@ -23,9 +23,8 @@ namespace EVEMon.Common
         /// </summary>
         public static void DeleteInstallationFiles()
         {
-            foreach (
-                string file in
-                    Directory.GetFiles(EveMonClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
+            foreach (string file in Directory.GetFiles(
+                EveMonClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
@@ -148,6 +147,7 @@ namespace EVEMon.Common
                 string updateMessage = result.Release.Message;
                 string installArgs = result.Release.InstallerArgs;
                 string installerUrl = result.Release.Url;
+                string md5Sum = result.Release.MD5Sum;
                 string additionalArgs = result.Release.AdditionalArgs;
                 bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl) && !String.IsNullOrEmpty(installArgs));
 
@@ -160,16 +160,16 @@ namespace EVEMon.Common
 
                 // Requests a notification to subscribers and quit
                 EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
-                                               newestVersion, canAutoInstall, installArgs);
+                                               newestVersion, md5Sum, canAutoInstall, installArgs);
                 return;
             }
 
-            if (result.FilesHaveChanged)
-            {
-                // Requests a notification to subscribers and quit
-                EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+            if (!result.FilesHaveChanged)
                 return;
-            }
+
+            // Requests a notification to subscribers and quit
+            EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+            return;
         }
     }
 }

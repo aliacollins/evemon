@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -61,17 +62,17 @@ namespace EVEMon
         {
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
-                Uri updateURI = new Uri(m_args.InstallerUrl);
-                string filename = Path.GetFileName(updateURI.AbsolutePath);
-                if (filename != null)
+                DialogResult result = DialogResult.Yes;
+                bool downloadedSuccessfully = false;
+                while (!downloadedSuccessfully && result == DialogResult.Yes)
                 {
-                    string localFilename = Path.Combine(EveMonClient.EVEMonDataDir, filename);
-                    using (UpdateDownloadForm f = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
-                    {
-                        f.ShowDialog();
-                        if (f.DialogResult == DialogResult.OK)
-                            ExecPatcher(localFilename, m_args.AutoInstallArguments);
-                    }
+                    downloadedSuccessfully = DownloadUpdate();
+
+                    // One or more files failed
+                    string message = String.Format(CultureConstants.DefaultCulture,
+                                                   "File failed to download correctly, do you wish to try again?");
+
+                    result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
                 }
             }
             else
@@ -83,24 +84,55 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Downloads the update.
+        /// </summary>
+        private bool DownloadUpdate()
+        {
+            string filename = Path.GetFileName(m_args.InstallerUrl);
+            if (filename == null)
+                return false;
+
+            string localFilename = Path.Combine(EveMonClient.EVEMonDataDir, filename);
+
+            // If the file already exists delete it
+            if (File.Exists(localFilename))
+                File.Delete(localFilename);
+
+            using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
+            {
+                form.ShowDialog();
+
+                if (form.DialogResult == DialogResult.OK)
+                {
+                    string md5Sum = Util.CreateMD5From(localFilename);
+                    if (m_args.MD5Sum != md5Sum)
+                        return false;
+
+                    ExecPatcher(localFilename, m_args.AutoInstallArguments);
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Initiates the auto installer.
         /// </summary>
-        /// <param name="fn"></param>
+        /// <param name="filename"></param>
         /// <param name="args"></param>
-        private void ExecPatcher(string fn, string args)
+        private void ExecPatcher(string filename, string args)
         {
             try
             {
-                Process.Start(fn, args);
+                Process.Start(filename, args);
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogRethrowException(e);
-                if (File.Exists(fn))
+                if (File.Exists(filename))
                 {
                     try
                     {
-                        File.Delete(fn);
+                        File.Delete(filename);
                     }
                     catch
                     {
