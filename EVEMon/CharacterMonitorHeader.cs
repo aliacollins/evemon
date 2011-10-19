@@ -179,7 +179,7 @@ namespace EVEMon
                 return;
             }
 
-            BalanceLabel.ForeColor = SystemColors.ControlText;
+            BalanceLabel.ForeColor = !Settings.UI.SafeForWork && m_character.Balance < 0 ? Color.Red : SystemColors.ControlText;
             BalanceLabel.Font = FontFactory.GetFont(Font);
         }
 

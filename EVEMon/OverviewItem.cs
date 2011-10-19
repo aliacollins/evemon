@@ -15,7 +15,7 @@ namespace EVEMon
     /// </summary>
     public partial class OverviewItem : UserControl
     {
-        private readonly Color m_lightForeColor;
+        private readonly Color m_settingsForeColor;
         private readonly bool m_showConflicts;
         private readonly bool m_tooltip;
         private readonly bool m_showSkillInTraining;
@@ -64,7 +64,7 @@ namespace EVEMon
             m_showConflicts = true;
             m_showSkillQueueTrainingTime = true;
             m_portraitSize = 96;
-            m_lightForeColor = lblCompletionTime.ForeColor;
+            m_settingsForeColor = lblCompletionTime.ForeColor;
 
             // Initialize the skill queue free room label text
             lblSkillQueueTrainingTime.Text = String.Empty;
@@ -114,11 +114,11 @@ namespace EVEMon
             if (!Settings.UI.SystemTrayPopup.UseIncreasedContrast)
                 return;
 
-            lblBalance.ForeColor = Color.Black;
-            lblRemainingTime.ForeColor = Color.Black;
-            lblSkillInTraining.ForeColor = Color.Black;
-            lblCompletionTime.ForeColor = Color.Black;
-            m_lightForeColor = lblCompletionTime.ForeColor;
+            m_settingsForeColor = Color.Black;
+            lblBalance.ForeColor = m_settingsForeColor;
+            lblRemainingTime.ForeColor = m_settingsForeColor;
+            lblSkillInTraining.ForeColor = m_settingsForeColor;
+            lblCompletionTime.ForeColor = m_settingsForeColor;
         }
 
         /// <summary>
@@ -137,11 +137,11 @@ namespace EVEMon
             if (!Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
                 return;
 
-            lblBalance.ForeColor = Color.Black;
-            lblRemainingTime.ForeColor = Color.Black;
-            lblSkillInTraining.ForeColor = Color.Black;
-            lblCompletionTime.ForeColor = Color.Black;
-            m_lightForeColor = lblCompletionTime.ForeColor;
+            m_settingsForeColor = Color.Black;
+            lblBalance.ForeColor = m_settingsForeColor;
+            lblRemainingTime.ForeColor = m_settingsForeColor;
+            lblSkillInTraining.ForeColor = m_settingsForeColor;
+            lblCompletionTime.ForeColor = m_settingsForeColor;
         }
 
         /// <summary>
@@ -211,17 +211,8 @@ namespace EVEMon
 
             lblCharName.Text = Character.Name;
             pbCharacterPortrait.Character = Character;
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter != null)
-            {
-                IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
-                lblBalance.ForeColor = (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance &&
-                                        marketMonitor != null && marketMonitor.Enabled
-                                            ? Color.Orange
-                                            : lblBalance.ForeColor);
-            }
 
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", Character.Balance);
+            FormatBalance();
 
             // Character in training ? We have labels to fill
             if (Character.IsTraining)
@@ -238,10 +229,9 @@ namespace EVEMon
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
-                lblCompletionTime.ForeColor = (
-                                                  m_showConflicts && Scheduler.SkillIsBlockedAt(endTime, out blockingEntry)
-                                                      ? Color.Red
-                                                      : m_lightForeColor);
+                lblCompletionTime.ForeColor = m_showConflicts && Scheduler.SkillIsBlockedAt(endTime, out blockingEntry)
+                                                  ? Color.Red
+                                                  : m_settingsForeColor;
 
                 // Updates the time remaining label
                 lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
@@ -266,6 +256,29 @@ namespace EVEMon
 
             // Adjusts all the controls layout.
             PerformCustomLayout(m_tooltip);
+        }
+
+        /// <summary>
+        /// Formats the balance.
+        /// </summary>
+        private void FormatBalance()
+        {
+
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", Character.Balance);
+
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
+
+            if (ccpCharacter == null)
+                return;
+
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
+            if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
+            {
+                lblBalance.ForeColor = Color.Orange;
+                return;
+            }
+
+            lblBalance.ForeColor = !Settings.UI.SafeForWork && ccpCharacter.Balance < 0 ? Color.Red : m_settingsForeColor;
         }
 
         /// <summary>
@@ -319,11 +332,11 @@ namespace EVEMon
                 // More than one entry in queue ? Display total queue remaining time
                 if (ccpCharacter.SkillQueue.Count > 1)
                 {
-                    lblSkillQueueTrainingTime.ForeColor = lblRemainingTime.ForeColor;
-                    lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                                                                   "Queue finishes in: {0}",
-                                                                   skillQueueEndTime.ToRemainingTimeShortDescription(
-                                                                       DateTimeKind.Utc));
+                    lblSkillQueueTrainingTime.ForeColor = m_settingsForeColor;
+                    lblSkillQueueTrainingTime.Text = String.Format(
+                        CultureConstants.DefaultCulture,
+                        "Queue finishes in: {0}",
+                        skillQueueEndTime.ToRemainingTimeShortDescription(DateTimeKind.Utc));
                     return;
                 }
 
