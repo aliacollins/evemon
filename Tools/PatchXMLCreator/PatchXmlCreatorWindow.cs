@@ -28,8 +28,8 @@ namespace PatchXmlCreator
 
         private const string DateTimeFormat = "dd MMMM yyyy";
         private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
-        private const string InstallerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer";
-        private const string InstallerFilename = "EVEMon-install-{0}.exe";
+        internal const string InstallerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer";
+        internal const string InstallerFilename = "EVEMon-install-{0}.exe";
 
         private const string PatchFilename = "patch.xml";
         private const string PatchDir = @"..\..\..\..\Website";
@@ -65,7 +65,7 @@ namespace PatchXmlCreator
         /// <summary>
         /// Get EVEMon's assembly version.
         /// </summary>
-        private static string AssemblyVersion
+        internal static string AssemblyVersion
         {
             get { return Assembly.LoadFrom(Path.Combine(EVEMonExecDir, EVEMonExecFilename)).GetName().Version.ToString(); }
         }
