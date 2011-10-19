@@ -987,18 +987,19 @@ namespace EVEMon.Common
         /// <param name="updateMessage">The update message.</param>
         /// <param name="currentVersion">The current version.</param>
         /// <param name="newestVersion">The newest version.</param>
+        /// <param name="md5Sum">The MD5 sum.</param>
         /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
         /// <param name="installArgs">The install args.</param>
         internal static void OnUpdateAvailable(string forumUrl, string installerUrl, string updateMessage,
-                                               Version currentVersion, Version newestVersion,
+                                               Version currentVersion, Version newestVersion, string md5Sum,
                                                bool canAutoInstall, string installArgs)
         {
             Trace("EveMonClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
                   currentVersion, newestVersion, canAutoInstall, installArgs);
             if (UpdateAvailable != null)
             {
-                UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage,
-                                                                   currentVersion, newestVersion, canAutoInstall, installArgs));
+                UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage, currentVersion,
+                                                                   newestVersion, md5Sum, canAutoInstall, installArgs));
             }
         }
 
