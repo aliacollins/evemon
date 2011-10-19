@@ -79,7 +79,6 @@ namespace PatchXmlCreator
             this.lblMD5Sum.AutoSize = true;
             this.lblMD5Sum.Location = new System.Drawing.Point(219, 21);
             this.lblMD5Sum.Name = "lblMD5Sum";
-            this.lblMD5Sum.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.lblMD5Sum.Size = new System.Drawing.Size(54, 13);
             this.lblMD5Sum.TabIndex = 2;
             this.lblMD5Sum.Text = "MD5 Sum";

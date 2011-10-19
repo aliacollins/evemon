@@ -28,6 +28,7 @@ namespace PatchXmlCreator
 
         private const string DateTimeFormat = "dd MMMM yyyy";
         private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
+        private const string InstallerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer";
         private const string InstallerFilename = "EVEMon-install-{0}.exe";
 
         private const string PatchFilename = "patch.xml";
@@ -115,14 +116,14 @@ namespace PatchXmlCreator
         /// </summary>
         private void UpdateReleaseInfo()
         {
-            string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             string installerFile = String.Format(InstallerFilename, AssemblyVersion);
-            string installerPath = String.Format("{1}{0}{2}", Path.DirectorySeparatorChar, desktopDir, installerFile);
+            string installerPath = String.Format("{1}{0}{2}", Path.DirectorySeparatorChar, InstallerDir, installerFile);
             FileInfo installerFileInfo = new FileInfo(installerPath);
 
             // Assign info
             lblEVEMonVersion.Text = AssemblyVersion;
             dtpRelease.Value = (File.Exists(installerPath) ? installerFileInfo.LastWriteTime : DateTime.Now);
+            lblMD5Sum.Text = Util.CreateMD5From(installerPath);
         }
 
         /// <summary>
@@ -166,11 +167,10 @@ namespace PatchXmlCreator
                     newDatafileControl.Font = new Font(Font, FontStyle.Regular);
                     newDatafileControl.Anchor |= AnchorStyles.Right;
                     newDatafileControl.Size = new Size(gbDatafiles.Width - (Pad * 3), newDatafileControl.Height);
-                    newDatafileControl.Name = String.Format("gbDatafile_{0}",
-                                                            newDatafileControl.gbDatafile.Text.Replace(DatafileHeader,
-                                                                                                       String.Empty).Replace(
-                                                                                                           DatafileTail,
-                                                                                                           String.Empty));
+                    newDatafileControl.Name =
+                        String.Format("gbDatafile_{0}",
+                                      newDatafileControl.gbDatafile.Text.Replace(DatafileHeader, String.Empty).Replace(
+                                          DatafileTail, String.Empty));
 
                     // Calculate window height and next control point
                     Height += datafileControl.Height + Pad;
@@ -453,6 +453,7 @@ namespace PatchXmlCreator
             serialRelease.Version = lblEVEMonVersion.Text;
             serialRelease.TopicUrl = rtbTopicUrl.Text;
             serialRelease.Url = String.Concat(rtbReleaseUrl.Text, String.Format(InstallerFilename, lblEVEMonVersion.Text));
+            serialRelease.MD5Sum = lblMD5Sum.Text;
             serialRelease.InstallerArgs = InstallerArgs;
             serialRelease.AdditionalArgs = AdditionalArgs;
             serialRelease.Message = rtbReleaseMessage.Text;
@@ -578,6 +579,7 @@ namespace PatchXmlCreator
             rtbReleaseUrl.Text = patch.Release.Url.Remove(
                 patch.Release.Url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1,
                 patch.Release.Url.Length - (patch.Release.Url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
+            lblMD5Sum.Text = patch.Release.MD5Sum;
             rtbReleaseMessage.Text = patch.Release.Message;
 
             UpdateCreateButtonEnabled();

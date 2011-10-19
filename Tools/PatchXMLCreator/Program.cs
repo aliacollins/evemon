@@ -41,7 +41,6 @@ namespace PatchXmlCreator
                 "An EVEMon release version has to be created first\r\nbefore you can use {0}.", PatchXmlCreatorWindow.Caption);
             MessageBox.Show(text, PatchXmlCreatorWindow.Caption, MessageBoxButtons.OK, MessageBoxIcon.Stop);
             s_exitRequested = true;
-            Application.Exit();
         }
     }
 }

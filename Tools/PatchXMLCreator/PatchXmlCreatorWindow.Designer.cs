@@ -35,6 +35,7 @@ namespace PatchXmlCreator
             this.dtpRelease = new System.Windows.Forms.DateTimePicker();
             this.lblEVEMonVersion = new System.Windows.Forms.Label();
             this.gbRelease = new System.Windows.Forms.GroupBox();
+            this.lblMD5Sum = new System.Windows.Forms.Label();
             this.btnInstallerClear = new System.Windows.Forms.Button();
             this.btnLoadReleaseInfo = new System.Windows.Forms.Button();
             this.lblMessage = new System.Windows.Forms.Label();
@@ -48,7 +49,6 @@ namespace PatchXmlCreator
             this.lblExpVersion = new System.Windows.Forms.Label();
             this.tbExpVersion = new System.Windows.Forms.TextBox();
             this.btnDatafilesClear = new System.Windows.Forms.Button();
-            this.datafileControl = new PatchXmlCreator.DatafileControl();
             this.btnLoadDatafileInfo = new System.Windows.Forms.Button();
             this.lblRevision = new System.Windows.Forms.Label();
             this.tbExpRevision = new System.Windows.Forms.TextBox();
@@ -58,9 +58,11 @@ namespace PatchXmlCreator
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.splitContainerMinFixed = new EVEMon.Common.Controls.SplitContainerMinFixed();
+            this.datafileControl = new PatchXmlCreator.DatafileControl();
             this.gbRelease.SuspendLayout();
             this.gbDatafiles.SuspendLayout();
             this.pnlButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMinFixed)).BeginInit();
             this.splitContainerMinFixed.Panel1.SuspendLayout();
             this.splitContainerMinFixed.Panel2.SuspendLayout();
             this.splitContainerMinFixed.SuspendLayout();
@@ -95,7 +97,7 @@ namespace PatchXmlCreator
             // 
             this.lblEVEMonReleaseDate.AutoSize = true;
             this.lblEVEMonReleaseDate.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.lblEVEMonReleaseDate.Location = new System.Drawing.Point(4, 20);
+            this.lblEVEMonReleaseDate.Location = new System.Drawing.Point(5, 20);
             this.lblEVEMonReleaseDate.Name = "lblEVEMonReleaseDate";
             this.lblEVEMonReleaseDate.Size = new System.Drawing.Size(78, 13);
             this.lblEVEMonReleaseDate.TabIndex = 2;
@@ -137,7 +139,7 @@ namespace PatchXmlCreator
             this.lblEVEMonVersion.Name = "lblEVEMonVersion";
             this.lblEVEMonVersion.Size = new System.Drawing.Size(76, 21);
             this.lblEVEMonVersion.TabIndex = 5;
-            this.lblEVEMonVersion.Text = "1.3.1.xxxx";
+            this.lblEVEMonVersion.Text = "1.0.0.0";
             this.lblEVEMonVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // gbRelease
@@ -154,6 +156,7 @@ namespace PatchXmlCreator
             this.gbRelease.Controls.Add(this.lblEVEMonVersion);
             this.gbRelease.Controls.Add(this.lblVersion);
             this.gbRelease.Controls.Add(this.dtpRelease);
+            this.gbRelease.Controls.Add(this.lblMD5Sum);
             this.gbRelease.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbRelease.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.gbRelease.Location = new System.Drawing.Point(10, 10);
@@ -163,6 +166,19 @@ namespace PatchXmlCreator
             this.gbRelease.TabStop = false;
             this.gbRelease.Text = "Release Info";
             this.gbRelease.MouseCaptureChanged += new System.EventHandler(this.OnClick);
+            // 
+            // lblMD5Sum
+            // 
+            this.lblMD5Sum.AutoSize = true;
+            this.lblMD5Sum.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblMD5Sum.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.lblMD5Sum.Location = new System.Drawing.Point(342, 17);
+            this.lblMD5Sum.Name = "lblMD5Sum";
+            this.lblMD5Sum.Padding = new System.Windows.Forms.Padding(0, 70, 0, 0);
+            this.lblMD5Sum.Size = new System.Drawing.Size(51, 83);
+            this.lblMD5Sum.TabIndex = 13;
+            this.lblMD5Sum.Text = "MD5 Sum";
+            this.lblMD5Sum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnInstallerClear
             // 
@@ -193,7 +209,7 @@ namespace PatchXmlCreator
             // 
             this.lblMessage.AutoSize = true;
             this.lblMessage.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.lblMessage.Location = new System.Drawing.Point(6, 89);
+            this.lblMessage.Location = new System.Drawing.Point(5, 100);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(56, 13);
             this.lblMessage.TabIndex = 12;
@@ -207,13 +223,13 @@ namespace PatchXmlCreator
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbReleaseMessage.DetectUrls = false;
             this.rtbReleaseMessage.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.rtbReleaseMessage.Location = new System.Drawing.Point(7, 105);
+            this.rtbReleaseMessage.Location = new System.Drawing.Point(7, 116);
             this.rtbReleaseMessage.Name = "rtbReleaseMessage";
-            this.rtbReleaseMessage.Size = new System.Drawing.Size(382, 72);
+            this.rtbReleaseMessage.Size = new System.Drawing.Size(383, 47);
             this.rtbReleaseMessage.TabIndex = 11;
             this.rtbReleaseMessage.Text = "Type your message here.";
-            this.rtbReleaseMessage.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbReleaseMessage.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
+            this.rtbReleaseMessage.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbReleaseMessage.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // rtbReleaseUrl
@@ -228,15 +244,15 @@ namespace PatchXmlCreator
             this.rtbReleaseUrl.Size = new System.Drawing.Size(352, 21);
             this.rtbReleaseUrl.TabIndex = 10;
             this.rtbReleaseUrl.Text = "http://evemon.static.battleclinic.com/builds/installers/";
-            this.rtbReleaseUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbReleaseUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
+            this.rtbReleaseUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbReleaseUrl.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // lblInstallerUrl
             // 
             this.lblInstallerUrl.AutoSize = true;
             this.lblInstallerUrl.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.lblInstallerUrl.Location = new System.Drawing.Point(4, 66);
+            this.lblInstallerUrl.Location = new System.Drawing.Point(5, 66);
             this.lblInstallerUrl.Name = "lblInstallerUrl";
             this.lblInstallerUrl.Size = new System.Drawing.Size(27, 13);
             this.lblInstallerUrl.TabIndex = 9;
@@ -255,15 +271,15 @@ namespace PatchXmlCreator
             this.rtbTopicUrl.Size = new System.Drawing.Size(324, 21);
             this.rtbTopicUrl.TabIndex = 7;
             this.rtbTopicUrl.Text = "http://forum.battleclinic.com/index.php/topic,######";
-            this.rtbTopicUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbTopicUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
+            this.rtbTopicUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbTopicUrl.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // lblForumUrl
             // 
             this.lblForumUrl.AutoSize = true;
             this.lblForumUrl.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.lblForumUrl.Location = new System.Drawing.Point(4, 44);
+            this.lblForumUrl.Location = new System.Drawing.Point(5, 44);
             this.lblForumUrl.Name = "lblForumUrl";
             this.lblForumUrl.Size = new System.Drawing.Size(55, 13);
             this.lblForumUrl.TabIndex = 6;
@@ -303,8 +319,8 @@ namespace PatchXmlCreator
             this.gbDatafiles.TabIndex = 7;
             this.gbDatafiles.TabStop = false;
             this.gbDatafiles.Text = "Data Files Info";
-            this.gbDatafiles.MouseCaptureChanged += new System.EventHandler(this.OnClick);
             this.gbDatafiles.GotFocus += new System.EventHandler(this.OnClick);
+            this.gbDatafiles.MouseCaptureChanged += new System.EventHandler(this.OnClick);
             // 
             // lblExpVersion
             // 
@@ -326,8 +342,8 @@ namespace PatchXmlCreator
             this.tbExpVersion.Text = "Version";
             this.tbExpVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbExpVersion.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
-            this.tbExpVersion.Leave += new System.EventHandler(this.Control_Leave);
             this.tbExpVersion.Enter += new System.EventHandler(this.Control_Enter);
+            this.tbExpVersion.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // btnDatafilesClear
             // 
@@ -340,17 +356,6 @@ namespace PatchXmlCreator
             this.btnDatafilesClear.Text = "Clear All";
             this.btnDatafilesClear.UseVisualStyleBackColor = true;
             this.btnDatafilesClear.Click += new System.EventHandler(this.btnDatafilesClear_Click);
-            // 
-            // datafileControl
-            // 
-            this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.datafileControl.AutoSize = true;
-            this.datafileControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.datafileControl.Location = new System.Drawing.Point(9, 65);
-            this.datafileControl.Name = "datafileControl";
-            this.datafileControl.Size = new System.Drawing.Size(427, 91);
-            this.datafileControl.TabIndex = 21;
             // 
             // btnLoadDatafileInfo
             // 
@@ -386,8 +391,8 @@ namespace PatchXmlCreator
             this.tbExpRevision.Text = "Exp. Revision";
             this.tbExpRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbExpRevision.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
-            this.tbExpRevision.Leave += new System.EventHandler(this.Control_Leave);
             this.tbExpRevision.Enter += new System.EventHandler(this.Control_Enter);
+            this.tbExpRevision.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // lblExpansion
             // 
@@ -412,8 +417,8 @@ namespace PatchXmlCreator
             this.rtbDatafileUrl.Size = new System.Drawing.Size(390, 21);
             this.rtbDatafileUrl.TabIndex = 15;
             this.rtbDatafileUrl.Text = "http://evemon.static.battleclinic.com/builds/updates/";
-            this.rtbDatafileUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbDatafileUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
+            this.rtbDatafileUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbDatafileUrl.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // tbExpansion
@@ -426,8 +431,8 @@ namespace PatchXmlCreator
             this.tbExpansion.Text = "Expansion Name";
             this.tbExpansion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbExpansion.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
-            this.tbExpansion.Leave += new System.EventHandler(this.Control_Leave);
             this.tbExpansion.Enter += new System.EventHandler(this.Control_Enter);
+            this.tbExpansion.Leave += new System.EventHandler(this.Control_Leave);
             // 
             // lblUrl
             // 
@@ -477,6 +482,17 @@ namespace PatchXmlCreator
             this.splitContainerMinFixed.TabIndex = 10;
             this.splitContainerMinFixed.Click += new System.EventHandler(this.OnClick);
             // 
+            // datafileControl
+            // 
+            this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.datafileControl.AutoSize = true;
+            this.datafileControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.datafileControl.Location = new System.Drawing.Point(9, 65);
+            this.datafileControl.Name = "datafileControl";
+            this.datafileControl.Size = new System.Drawing.Size(427, 91);
+            this.datafileControl.TabIndex = 21;
+            // 
             // PatchXmlCreatorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -495,6 +511,7 @@ namespace PatchXmlCreator
             this.pnlButtons.PerformLayout();
             this.splitContainerMinFixed.Panel1.ResumeLayout(false);
             this.splitContainerMinFixed.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMinFixed)).EndInit();
             this.splitContainerMinFixed.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -532,5 +549,6 @@ namespace PatchXmlCreator
         private System.Windows.Forms.Button btnDatafilesClear;
         private System.Windows.Forms.Label lblExpVersion;
         private System.Windows.Forms.TextBox tbExpVersion;
+        private System.Windows.Forms.Label lblMD5Sum;
     }
 }
