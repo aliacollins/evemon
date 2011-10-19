@@ -79,10 +79,36 @@ namespace EVEMon.XmlGenerator
             // Data dumps are available from CCP
             Console.Write("Loading Data from SQL Server... ");
 
-
-            #region Read Tables From Database
-
             // Read tables from database
+            CreateTablesFromDatabase();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+
+            // Generate datafiles
+            Console.WriteLine("Datafile Generating In Progress");
+            Console.WriteLine();
+
+            GenerateProperties();
+            GenerateItems(); // Requires GenerateProperties()
+            GenerateSkills();
+            GenerateCertificates();
+            GenerateBlueprints();
+            GenerateGeography();
+            GenerateReprocessing(); // Requires GenerateItems()
+
+            GenerateMD5Sums();
+
+            Console.WriteLine("Done");
+            Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Creates the tables from database.
+        /// </summary>
+        private static void CreateTablesFromDatabase()
+        {
             s_agents = Database.Agents();
             UpdateProgress();
             s_agentTypes = Database.AgentTypes();
@@ -141,29 +167,6 @@ namespace EVEMon.XmlGenerator
             UpdateProgress();
             s_crtRelationships = Database.CertificateRelationships();
             UpdateProgress();
-
-            Console.WriteLine();
-            Console.WriteLine();
-
-            #endregion
-
-
-            // Generate datafiles
-            Console.WriteLine("Datafile Generating In Progress");
-            Console.WriteLine();
-
-            GenerateProperties();
-            GenerateItems(); // Requires GenerateProperties()
-            GenerateSkills();
-            GenerateCertificates();
-            GenerateBlueprints();
-            GenerateGeography();
-            GenerateReprocessing(); // Requires GenerateItems()
-
-            GenerateMD5Sums();
-
-            Console.WriteLine("Done");
-            Console.ReadLine();
         }
 
         #endregion
