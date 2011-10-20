@@ -66,7 +66,7 @@ namespace EVEMon.SkillPlanner
             this.tsbToggleRemapping = new System.Windows.Forms.ToolStripButton();
             this.tssColorKey = new System.Windows.Forms.ToolStripSeparator();
             this.tsbColorKey = new System.Windows.Forms.ToolStripButton();
-            this.ilListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.tmrSelect = new System.Windows.Forms.Timer(this.components);
             this.pFooter = new System.Windows.Forms.Panel();
             this.gbColorKey = new System.Windows.Forms.GroupBox();
@@ -80,13 +80,16 @@ namespace EVEMon.SkillPlanner
             this.lblDowntime = new System.Windows.Forms.Label();
             this.lblCurrentlyTraining = new System.Windows.Forms.Label();
             this.lblPartiallyTrained = new System.Windows.Forms.Label();
-            this.pscPlan = new PersistentSplitContainer();
-            this.lvSkills = new DraggableListView();
-            this.pHeader = new System.Windows.Forms.Panel();
-            this.tsPreferences = new System.Windows.Forms.ToolStrip();
-            this.tsbSelectColumns = new System.Windows.Forms.ToolStripButton();
-            this.cbChooseImplantSet = new System.Windows.Forms.ComboBox();
+            this.pscPlan = new EVEMon.Common.Controls.PersistentSplitContainer();
+            this.lvSkills = new EVEMon.Common.Controls.DraggableListView();
+            this.tlpHeader = new System.Windows.Forms.TableLayoutPanel();
+            this.implantSetterPanel = new System.Windows.Forms.Panel();
             this.lblChooseImplantSet = new System.Windows.Forms.Label();
+            this.cbChooseImplantSet = new System.Windows.Forms.ComboBox();
+            this.tsPreferences = new System.Windows.Forms.ToolStrip();
+            this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoSizeColumnsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.cmsContextMenu.SuspendLayout();
             this.tsPlan.SuspendLayout();
@@ -97,7 +100,8 @@ namespace EVEMon.SkillPlanner
             this.pscPlan.Panel1.SuspendLayout();
             this.pscPlan.Panel2.SuspendLayout();
             this.pscPlan.SuspendLayout();
-            this.pHeader.SuspendLayout();
+            this.tlpHeader.SuspendLayout();
+            this.implantSetterPanel.SuspendLayout();
             this.tsPreferences.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -144,7 +148,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miShowInSkillExplorer
             // 
-            this.miShowInSkillExplorer.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
+            this.miShowInSkillExplorer.Image = ((System.Drawing.Image)(resources.GetObject("miShowInSkillExplorer.Image")));
             this.miShowInSkillExplorer.Name = "miShowInSkillExplorer";
             this.miShowInSkillExplorer.Size = new System.Drawing.Size(250, 22);
             this.miShowInSkillExplorer.Text = "Show in Skill Explorer";
@@ -183,7 +187,7 @@ namespace EVEMon.SkillPlanner
             this.miChangeTo3,
             this.miChangeTo4,
             this.miChangeTo5});
-            this.miChangeLevel.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
+            this.miChangeLevel.Image = ((System.Drawing.Image)(resources.GetObject("miChangeLevel.Image")));
             this.miChangeLevel.Name = "miChangeLevel";
             this.miChangeLevel.Size = new System.Drawing.Size(250, 22);
             this.miChangeLevel.Text = "Change Planned Level...";
@@ -338,7 +342,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsSortPriorities.CheckOnClick = true;
             this.tsSortPriorities.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsSortPriorities.Image = global::EVEMon.Common.Properties.Resources.List;
+            this.tsSortPriorities.Image = ((System.Drawing.Image)(resources.GetObject("tsSortPriorities.Image")));
             this.tsSortPriorities.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsSortPriorities.Name = "tsSortPriorities";
             this.tsSortPriorities.Size = new System.Drawing.Size(38, 20);
@@ -379,7 +383,7 @@ namespace EVEMon.SkillPlanner
             // tsbColorKey
             // 
             this.tsbColorKey.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbColorKey.Image = global::EVEMon.Common.Properties.Resources.Information16;
+            this.tsbColorKey.Image = ((System.Drawing.Image)(resources.GetObject("tsbColorKey.Image")));
             this.tsbColorKey.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbColorKey.Name = "tsbColorKey";
             this.tsbColorKey.Size = new System.Drawing.Size(38, 20);
@@ -387,17 +391,17 @@ namespace EVEMon.SkillPlanner
             this.tsbColorKey.ToolTipText = "Toggle Color Key Panel";
             this.tsbColorKey.Click += new System.EventHandler(this.tsbColorKey_Click);
             // 
-            // ilListIcons
+            // ilIcons
             // 
-            this.ilListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilListIcons.ImageStream")));
-            this.ilListIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilListIcons.Images.SetKeyName(0, "RedArrow.png");
-            this.ilListIcons.Images.SetKeyName(1, "BlueArrow.png");
-            this.ilListIcons.Images.SetKeyName(2, "GreenArrow.png");
-            this.ilListIcons.Images.SetKeyName(3, "shape_align_middle.png");
-            this.ilListIcons.Images.SetKeyName(4, "arrow_up.png");
-            this.ilListIcons.Images.SetKeyName(5, "arrow_down.png");
-            this.ilListIcons.Images.SetKeyName(6, "16x16Transparant.png");
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "RedArrow.png");
+            this.ilIcons.Images.SetKeyName(1, "BlueArrow.png");
+            this.ilIcons.Images.SetKeyName(2, "GreenArrow.png");
+            this.ilIcons.Images.SetKeyName(3, "shape_align_middle.png");
+            this.ilIcons.Images.SetKeyName(4, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(5, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(6, "16x16Transparant.png");
             // 
             // tmrSelect
             // 
@@ -572,7 +576,7 @@ namespace EVEMon.SkillPlanner
             // pscPlan.Panel1
             // 
             this.pscPlan.Panel1.Controls.Add(this.lvSkills);
-            this.pscPlan.Panel1.Controls.Add(this.pHeader);
+            this.pscPlan.Panel1.Controls.Add(this.tlpHeader);
             // 
             // pscPlan.Panel2
             // 
@@ -591,11 +595,12 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.ContextMenuStrip = this.cmsContextMenu;
             this.lvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSkills.FullRowSelect = true;
+            this.lvSkills.HideSelection = false;
             this.lvSkills.Location = new System.Drawing.Point(0, 33);
             this.lvSkills.Name = "lvSkills";
             this.lvSkills.ShowItemToolTips = true;
             this.lvSkills.Size = new System.Drawing.Size(719, 487);
-            this.lvSkills.SmallImageList = this.ilListIcons;
+            this.lvSkills.SmallImageList = this.ilIcons;
             this.lvSkills.TabIndex = 0;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
             this.lvSkills.View = System.Windows.Forms.View.Details;
@@ -610,63 +615,94 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyDown);
             this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
             // 
-            // pHeader
+            // tlpHeader
             // 
-            this.pHeader.Controls.Add(this.tsPreferences);
-            this.pHeader.Controls.Add(this.cbChooseImplantSet);
-            this.pHeader.Controls.Add(this.lblChooseImplantSet);
-            this.pHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pHeader.Location = new System.Drawing.Point(0, 0);
-            this.pHeader.Name = "pHeader";
-            this.pHeader.Size = new System.Drawing.Size(719, 33);
-            this.pHeader.TabIndex = 1;
+            this.tlpHeader.ColumnCount = 2;
+            this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            this.tlpHeader.Controls.Add(this.implantSetterPanel, 0, 0);
+            this.tlpHeader.Controls.Add(this.tsPreferences, 1, 0);
+            this.tlpHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tlpHeader.Location = new System.Drawing.Point(0, 0);
+            this.tlpHeader.Name = "tlpHeader";
+            this.tlpHeader.RowCount = 1;
+            this.tlpHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpHeader.Size = new System.Drawing.Size(719, 33);
+            this.tlpHeader.TabIndex = 4;
             // 
-            // tsPreferences
+            // implantSetterPanel
             // 
-            this.tsPreferences.CanOverflow = false;
-            this.tsPreferences.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tsPreferences.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.tsPreferences.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbSelectColumns});
-            this.tsPreferences.Location = new System.Drawing.Point(695, 0);
-            this.tsPreferences.Name = "tsPreferences";
-            this.tsPreferences.Padding = new System.Windows.Forms.Padding(0, 5, 1, 0);
-            this.tsPreferences.Size = new System.Drawing.Size(24, 33);
-            this.tsPreferences.TabIndex = 3;
-            this.tsPreferences.Text = "tsPreferences";
+            this.implantSetterPanel.AutoSize = true;
+            this.implantSetterPanel.Controls.Add(this.lblChooseImplantSet);
+            this.implantSetterPanel.Controls.Add(this.cbChooseImplantSet);
+            this.implantSetterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.implantSetterPanel.Location = new System.Drawing.Point(0, 0);
+            this.implantSetterPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.implantSetterPanel.Name = "implantSetterPanel";
+            this.implantSetterPanel.Size = new System.Drawing.Size(686, 33);
+            this.implantSetterPanel.TabIndex = 1;
             // 
-            // tsbSelectColumns
+            // lblChooseImplantSet
             // 
-            this.tsbSelectColumns.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSelectColumns.Image = global::EVEMon.Common.Properties.Resources.Settings;
-            this.tsbSelectColumns.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSelectColumns.Name = "tsbSelectColumns";
-            this.tsbSelectColumns.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsbSelectColumns.Size = new System.Drawing.Size(21, 20);
-            this.tsbSelectColumns.Text = "Select Columns";
-            this.tsbSelectColumns.ToolTipText = "Select Columns";
-            this.tsbSelectColumns.Click += new System.EventHandler(this.tsbSelectColumns_Click);
+            this.lblChooseImplantSet.AutoSize = true;
+            this.lblChooseImplantSet.Location = new System.Drawing.Point(3, 10);
+            this.lblChooseImplantSet.Name = "lblChooseImplantSet";
+            this.lblChooseImplantSet.Size = new System.Drawing.Size(102, 13);
+            this.lblChooseImplantSet.TabIndex = 1;
+            this.lblChooseImplantSet.Text = "Choose Implant Set:";
             // 
             // cbChooseImplantSet
             // 
             this.cbChooseImplantSet.DisplayMember = "Name";
             this.cbChooseImplantSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbChooseImplantSet.FormattingEnabled = true;
-            this.cbChooseImplantSet.Location = new System.Drawing.Point(113, 5);
+            this.cbChooseImplantSet.Location = new System.Drawing.Point(111, 6);
             this.cbChooseImplantSet.Name = "cbChooseImplantSet";
             this.cbChooseImplantSet.Size = new System.Drawing.Size(170, 21);
             this.cbChooseImplantSet.TabIndex = 2;
             this.cbChooseImplantSet.SelectedIndexChanged += new System.EventHandler(this.cbChooseImplantSet_SelectedIndexChanged);
             this.cbChooseImplantSet.DropDownClosed += new System.EventHandler(this.cbChooseImplantSet_DropDownClosed);
             // 
-            // lblChooseImplantSet
+            // tsPreferences
             // 
-            this.lblChooseImplantSet.AutoSize = true;
-            this.lblChooseImplantSet.Location = new System.Drawing.Point(5, 8);
-            this.lblChooseImplantSet.Name = "lblChooseImplantSet";
-            this.lblChooseImplantSet.Size = new System.Drawing.Size(102, 13);
-            this.lblChooseImplantSet.TabIndex = 1;
-            this.lblChooseImplantSet.Text = "Choose Implant Set:";
+            this.tsPreferences.CanOverflow = false;
+            this.tsPreferences.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tsPreferences.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tsPreferences.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesMenu});
+            this.tsPreferences.Location = new System.Drawing.Point(686, 0);
+            this.tsPreferences.Name = "tsPreferences";
+            this.tsPreferences.Size = new System.Drawing.Size(33, 33);
+            this.tsPreferences.TabIndex = 3;
+            this.tsPreferences.Text = "tsPreferences";
+            // 
+            // preferencesMenu
+            // 
+            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnSettingsMenuItem,
+            this.autoSizeColumnsMenuItem});
+            this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
+            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.preferencesMenu.Name = "preferencesMenu";
+            this.preferencesMenu.Size = new System.Drawing.Size(29, 30);
+            this.preferencesMenu.Text = "Preferences";
+            this.preferencesMenu.ToolTipText = "Preferences";
+            // 
+            // columnSettingsMenuItem
+            // 
+            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
+            this.columnSettingsMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.columnSettingsMenuItem.Text = "Column Settings";
+            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
+            // 
+            // autoSizeColumnsMenuItem
+            // 
+            this.autoSizeColumnsMenuItem.Name = "autoSizeColumnsMenuItem";
+            this.autoSizeColumnsMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.autoSizeColumnsMenuItem.Text = "Auto-Size Columns";
+            this.autoSizeColumnsMenuItem.Click += new System.EventHandler(this.autoSizeColumnsMenuItem_Click);
             // 
             // skillSelectControl
             // 
@@ -701,8 +737,10 @@ namespace EVEMon.SkillPlanner
             this.pscPlan.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pscPlan)).EndInit();
             this.pscPlan.ResumeLayout(false);
-            this.pHeader.ResumeLayout(false);
-            this.pHeader.PerformLayout();
+            this.tlpHeader.ResumeLayout(false);
+            this.tlpHeader.PerformLayout();
+            this.implantSetterPanel.ResumeLayout(false);
+            this.implantSetterPanel.PerformLayout();
             this.tsPreferences.ResumeLayout(false);
             this.tsPreferences.PerformLayout();
             this.ResumeLayout(false);
@@ -722,11 +760,11 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbMoveUp;
         private System.Windows.Forms.ToolStripButton tsbMoveDown;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.Panel pHeader;
+        private System.Windows.Forms.Panel implantSetterPanel;
         private System.Windows.Forms.ToolStripMenuItem miChangeNote;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripLabel tslSort;
-        private System.Windows.Forms.ImageList ilListIcons;
+        private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem miPlanGroups;
@@ -767,6 +805,9 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblChooseImplantSet;
         private System.Windows.Forms.ToolStripMenuItem MoveToTopMenuItem;
         private System.Windows.Forms.ToolStrip tsPreferences;
-        private System.Windows.Forms.ToolStripButton tsbSelectColumns;
+        private System.Windows.Forms.ToolStripDropDownButton preferencesMenu;
+        private System.Windows.Forms.ToolStripMenuItem columnSettingsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autoSizeColumnsMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tlpHeader;
     }
 }

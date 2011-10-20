@@ -43,9 +43,6 @@ namespace EVEMon.SkillPlanner
         // The ImplantsControl or the AttributesOptimizationForm
         private IPlanOrderPluggable m_pluggable;
 
-        // Sort key are identified 
-        private PlanEntrySort m_columnWithSortFeedback = PlanEntrySort.None;
-
         // Drag and drop
         private MouseButtons m_dragButton = MouseButtons.None;
 
@@ -683,16 +680,15 @@ namespace EVEMon.SkillPlanner
                 foreach (PlanColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     // Add the column
-                    ColumnHeader header = new ColumnHeader
-                                              { Text = column.Column.GetHeader(), Tag = column, Width = column.Width };
-                    lvSkills.Columns.Add(header);
+                    ColumnHeader header = lvSkills.Columns.Add(column.Column.GetHeader(), column.Width);
+                    header.Tag = column;
 
                     // Add a temporary column when there is a pluggable (implants calc, attributes optimizer, etc)
                     if (m_pluggable == null || column.Column != PlanColumn.TrainingTime)
                         continue;
 
-                    header = new ColumnHeader { Tag = null, Text = "Diff with Calc Atts" };
-                    lvSkills.Columns.Add(header);
+                    header = lvSkills.Columns.Add("Diff with Calc Atts", -2);
+                    header.Tag = null;
                 }
 
                 // Update the items
@@ -701,27 +697,8 @@ namespace EVEMon.SkillPlanner
                 // Update the sort arrows
                 UpdateSortVisualFeedback();
 
-                // Force the auto-resize of the columns with -1 width
-                ColumnHeaderAutoResizeStyle resizeStyle = (lvSkills.Items.Count == 0
-                                                               ? ColumnHeaderAutoResizeStyle.HeaderSize
-                                                               : ColumnHeaderAutoResizeStyle.ColumnContent);
-
-                int index = 0;
-                foreach (PlanColumnSettings column in m_columns.Where(x => x.Visible))
-                {
-                    // When the temporary column is present we increase
-                    // the index to sync with the visible column index
-                    if (lvSkills.Columns[index].Tag == null)
-                    {
-                        lvSkills.AutoResizeColumn(index, resizeStyle);
-                        index++;
-                    }
-
-                    if (column.Width == -1)
-                        lvSkills.AutoResizeColumn(index, resizeStyle);
-
-                    index++;
-                }
+                // Adjust the size of the columns
+                AdjustColumns();
             }
             finally
             {
@@ -897,7 +874,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="displayEntry"></param>
         /// <returns></returns>
-        private PlanEntry GetOriginalEntry(PlanEntry displayEntry)
+        private PlanEntry GetOriginalEntry(ISkillLevel displayEntry)
         {
             return m_plan.GetEntry(displayEntry.Skill, displayEntry.Level);
         }
@@ -1118,7 +1095,7 @@ namespace EVEMon.SkillPlanner
                 if (column == null)
                     continue;
 
-                if (column.Width != -1)
+                if (column.Width > -1)
                     column.Width = columnHeader.Width;
                 column.Visible = true;
                 newList.Add(column);
@@ -1291,26 +1268,61 @@ namespace EVEMon.SkillPlanner
             // Updates the menu icons on the left toolbar
             tsSortPriorities.Checked = m_plan.SortingPreferences.GroupByPriority;
 
-
-            // Removes the icon from the old column
-            ColumnHeader lastColumn = GetColumn(m_columnWithSortFeedback);
-            if (lastColumn != null)
-                lastColumn.ImageIndex = 6; // see xml comments
-            m_columnWithSortFeedback = m_plan.SortingPreferences.Criteria;
-
-
-            // Adds the icon on the new column
-            if (m_plan.SortingPreferences.Criteria == PlanEntrySort.None ||
-                m_plan.SortingPreferences.Order == ThreeStateSortOrder.None)
-                return;
-
-            ColumnHeader column = GetColumn(m_plan.SortingPreferences.Criteria);
-
-            if (column != null)
+            ColumnHeader columnWithSortCriteria = GetColumn(m_plan.SortingPreferences.Criteria);
+            foreach (ColumnHeader columnHeader in lvSkills.Columns.Cast<ColumnHeader>())
             {
-                column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending
-                                         ? ArrowUpIndex
-                                         : ArrowDownIndex);
+                if (columnWithSortCriteria == columnHeader)
+                {
+                    if (m_plan.SortingPreferences.Criteria == PlanEntrySort.None ||
+                        m_plan.SortingPreferences.Order == ThreeStateSortOrder.None)
+                    {
+                        columnHeader.ImageIndex = 6;
+                        continue;
+                    }
+
+                    columnHeader.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending
+                                                   ? ArrowUpIndex
+                                                   : ArrowDownIndex);
+                }
+                else
+                    columnHeader.ImageIndex = 6;
+            }
+        }
+
+        /// <summary>
+        /// Adjusts the columns.
+        /// </summary>
+        private void AdjustColumns()
+        {
+            foreach (ColumnHeader column in lvSkills.Columns.Cast<ColumnHeader>())
+            {
+                if (m_columns[column.Index].Width == -1)
+                    m_columns[column.Index].Width = -2;
+
+                column.Width = m_columns[column.Index].Width;
+
+                // Due to .NET design we need to prevent the last colummn to resize to the right end
+
+                // Return if it's not the last column and not set to auto-resize
+                if (column.Index != lvSkills.Columns.Count - 1 || m_columns[column.Index].Width != -2)
+                    continue;
+
+                const int Pad = 4;
+
+                // Calculate column header text width with padding
+                int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
+
+                // If there is an image assigned to the header, add its width with padding
+                if (ilIcons.ImageSize.Width > 0)
+                    columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth = lvSkills.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                        new[] { columnHeaderWidth }).Max() + Pad + 1;
+
+                // Assign the width found
+                column.Width = columnMaxWidth;
             }
         }
 
@@ -2126,16 +2138,15 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the user clicks the "select columns" button,
+        /// When the user clicks the "Columns Settings",
         /// we display the suggestions window and save the changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsbSelectColumns_Click(object sender, EventArgs e)
+        private void columnSettingsMenuItem_Click(object sender, EventArgs e)
         {
             // Update the settings from the current columns
-            IEnumerable<PlanColumnSettings> columns = ExportColumnSettings();
-            using (PlanColumnSelectWindow dialog = new PlanColumnSelectWindow(columns))
+            using (PlanColumnSelectWindow dialog = new PlanColumnSelectWindow(ExportColumnSettings()))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                     return;
@@ -2143,6 +2154,20 @@ namespace EVEMon.SkillPlanner
                 ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
                 Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
             }
+        }
+
+        /// <summary>
+        /// Auto-Sizes the columns width.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void autoSizeColumnsMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ColumnHeader column in lvSkills.Columns.Cast<ColumnHeader>())
+            {
+                m_columns[column.Index].Width = -2;
+            }
+            UpdateListColumns();
         }
 
         /// <summary>
