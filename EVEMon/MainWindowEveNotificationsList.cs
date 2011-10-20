@@ -415,7 +415,7 @@ namespace EVEMon
                     columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
-                int columnMaxWidth = lvNotifications.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
                     item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
                         new[] { columnHeaderWidth }).Max() + Pad + 1;
 
@@ -440,13 +440,13 @@ namespace EVEMon
         /// </summary>
         private void UpdateSortVisualFeedback()
         {
-            for (int i = 0; i < lvNotifications.Columns.Count; i++)
+            foreach (ColumnHeader columnHeader in lvNotifications.Columns.Cast<ColumnHeader>())
             {
-                EveNotificationsColumn column = (EveNotificationsColumn)lvNotifications.Columns[i].Tag;
+                EveNotificationsColumn column = (EveNotificationsColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    lvNotifications.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
-                    lvNotifications.Columns[i].ImageIndex = 2;
+                    columnHeader.ImageIndex = 2;
             }
         }
 

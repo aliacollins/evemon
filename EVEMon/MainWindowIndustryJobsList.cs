@@ -497,7 +497,7 @@ namespace EVEMon
                     columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
-                int columnMaxWidth = lvJobs.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
                     item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
                         new[] { columnHeaderWidth }).Max() + Pad + 1;
 
@@ -522,13 +522,13 @@ namespace EVEMon
         /// </summary>
         private void UpdateSortVisualFeedback()
         {
-            for (int i = 0; i < lvJobs.Columns.Count; i++)
+            foreach (ColumnHeader columnHeader in lvJobs.Columns.Cast<ColumnHeader>())
             {
-                IndustryJobColumn column = (IndustryJobColumn)lvJobs.Columns[i].Tag;
+                IndustryJobColumn column = (IndustryJobColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    lvJobs.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
-                    lvJobs.Columns[i].ImageIndex = 2;
+                    columnHeader.ImageIndex = 2;
             }
         }
 

@@ -355,15 +355,8 @@ namespace EVEMon
                 if (Character != null && m_hideInactive)
                     orders = orders.Where(x => x.IsAvailable);
 
-                switch (m_showIssuedFor)
-                {
-                    case IssuedFor.Character:
-                        orders = orders.Where(x => x.IssuedFor == IssuedFor.Character);
-                        break;
-                    case IssuedFor.Corporation:
-                        orders = orders.Where(x => x.IssuedFor == IssuedFor.Corporation);
-                        break;
-                }
+                if (m_showIssuedFor != IssuedFor.All)
+                    orders = orders.Where(x => x.IssuedFor == m_showIssuedFor);
 
                 UpdateSort();
 
@@ -499,8 +492,7 @@ namespace EVEMon
                     // Creates the subitems
                     for (int i = 0; i < lvOrders.Columns.Count; i++)
                     {
-                        ColumnHeader header = lvOrders.Columns[i];
-                        MarketOrderColumn column = (MarketOrderColumn)header.Tag;
+                        MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
                         SetColumn(order, item.SubItems[i], column);
                     }
 
@@ -548,7 +540,7 @@ namespace EVEMon
                     columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
-                int columnMaxWidth = lvOrders.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
                     item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
                         new[] { columnHeaderWidth }).Max() + Pad + 1;
 
@@ -573,13 +565,13 @@ namespace EVEMon
         /// </summary>
         private void UpdateSortVisualFeedback()
         {
-            for (int i = 0; i < lvOrders.Columns.Count; i++)
+            foreach (ColumnHeader columnHeader in lvOrders.Columns.Cast<ColumnHeader>())
             {
-                MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
+                MarketOrderColumn column = (MarketOrderColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    lvOrders.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
-                    lvOrders.Columns[i].ImageIndex = 2;
+                    columnHeader.ImageIndex = 2;
             }
         }
 
@@ -608,7 +600,7 @@ namespace EVEMon
                 case MarketOrderColumn.InitialVolume:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.InitialVolume.ToString("N0")));
+                                     : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.Issued:
                     item.Text = order.Issued.ToLocalTime().ToShortDateString();
@@ -630,7 +622,7 @@ namespace EVEMon
                 case MarketOrderColumn.MinimumVolume:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.MinVolume.ToString("N0")));
+                                     : order.MinVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.Region:
                     item.Text = order.Station.SolarSystem.Constellation.Region.Name;
@@ -638,7 +630,7 @@ namespace EVEMon
                 case MarketOrderColumn.RemainingVolume:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.RemainingVolume.ToString("N0")));
+                                     : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.SolarSystem:
                     item.Text = order.Station.SolarSystem.Name;
@@ -651,27 +643,24 @@ namespace EVEMon
                 case MarketOrderColumn.TotalPrice:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.TotalPrice.ToString("N2")));
+                                     : order.TotalPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
                     item.Text = (m_numberFormat
                                      ? MarketOrder.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : String.Format(CultureConstants.DefaultCulture, order.UnitaryPrice.ToString("N2")));
+                                     : order.UnitaryPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.Volume:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0} / {1}",
-                                              (m_numberFormat
-                                                   ? MarketOrder.Format(order.RemainingVolume,
-                                                                        AbbreviationFormat.AbbreviationSymbols)
-                                                   : String.Format(CultureConstants.DefaultCulture,
-                                                                   order.RemainingVolume.ToString("N0"))),
-                                              (m_numberFormat
-                                                   ? MarketOrder.Format(order.InitialVolume,
-                                                                        AbbreviationFormat.AbbreviationSymbols)
-                                                   : String.Format(CultureConstants.DefaultCulture,
-                                                                   order.InitialVolume.ToString("N0"))));
+                    item.Text = String.Format(
+                        CultureConstants.DefaultCulture, "{0} / {1}",
+                        (m_numberFormat
+                             ? MarketOrder.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
+                             : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture)),
+                        (m_numberFormat
+                             ? MarketOrder.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
+                             : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture)));
                     break;
                 case MarketOrderColumn.LastStateChange:
                     item.Text = order.LastStateChange.ToLocalTime().ToShortDateString();
@@ -685,8 +674,7 @@ namespace EVEMon
                     {
                         item.Text = (m_numberFormat
                                          ? MarketOrder.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
-                                         : String.Format(CultureConstants.DefaultCulture,
-                                                         buyOrder.Escrow.ToString("N2")));
+                                         : buyOrder.Escrow.ToString("N2", CultureConstants.DefaultCulture));
                         item.ForeColor = Color.DarkBlue;
                     }
                     break;

@@ -456,7 +456,7 @@ namespace EVEMon
                     columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
-                int columnMaxWidth = lvMailMessages.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
                     item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
                         new[] { columnHeaderWidth }).Max() + Pad + 1;
 
@@ -481,13 +481,13 @@ namespace EVEMon
         /// </summary>
         private void UpdateSortVisualFeedback()
         {
-            for (int i = 0; i < lvMailMessages.Columns.Count; i++)
+            foreach (ColumnHeader columnHeader in lvMailMessages.Columns.Cast<ColumnHeader>())
             {
-                EveMailMessagesColumn column = (EveMailMessagesColumn)lvMailMessages.Columns[i].Tag;
+                EveMailMessagesColumn column = (EveMailMessagesColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    lvMailMessages.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
-                    lvMailMessages.Columns[i].ImageIndex = 2;
+                    columnHeader.ImageIndex = 2;
             }
         }
 

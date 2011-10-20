@@ -331,7 +331,7 @@ namespace EVEMon
                     columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
-                int columnMaxWidth = lvResearchPoints.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
                     item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
                         new[] { columnHeaderWidth }).Max() + Pad + 1;
 
@@ -356,13 +356,13 @@ namespace EVEMon
         /// </summary>
         private void UpdateSortVisualFeedback()
         {
-            for (int i = 0; i < lvResearchPoints.Columns.Count; i++)
+            foreach (ColumnHeader columnHeader in lvResearchPoints.Columns.Cast<ColumnHeader>())
             {
-                ResearchColumn column = (ResearchColumn)lvResearchPoints.Columns[i].Tag;
+                ResearchColumn column = (ResearchColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    lvResearchPoints.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
-                    lvResearchPoints.Columns[i].ImageIndex = 2;
+                    columnHeader.ImageIndex = 2;
             }
         }
 
@@ -386,10 +386,10 @@ namespace EVEMon
                     item.Text = researchPoint.Field;
                     break;
                 case ResearchColumn.CurrentRP:
-                    item.Text = researchPoint.CurrentRP.ToString("N2");
+                    item.Text = researchPoint.CurrentRP.ToString("N2", CultureConstants.DefaultCulture);
                     break;
                 case ResearchColumn.PointsPerDay:
-                    item.Text = researchPoint.PointsPerDay.ToString("N2");
+                    item.Text = researchPoint.PointsPerDay.ToString("N2", CultureConstants.DefaultCulture);
                     break;
                 case ResearchColumn.StartDate:
                     item.Text = researchPoint.StartDate.ToLocalTime().ToString();
