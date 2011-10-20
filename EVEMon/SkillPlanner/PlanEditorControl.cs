@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,6 +21,8 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class PlanEditorControl : UserControl
     {
+        #region Fields
+
         private const int ArrowUpIndex = 4;
         private const int ArrowDownIndex = 5;
 
@@ -51,6 +52,11 @@ namespace EVEMon.SkillPlanner
         private bool m_columnsOrderChanged;
         private readonly List<PlanColumnSettings> m_columns = new List<PlanColumnSettings>();
 
+        #endregion
+
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -74,6 +80,11 @@ namespace EVEMon.SkillPlanner
             Disposed += OnDisposed;
         }
 
+        #endregion
+
+
+        #region Inherited Events
+
         /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
@@ -88,6 +99,8 @@ namespace EVEMon.SkillPlanner
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             Disposed -= OnDisposed;
         }
+
+
 
         /// <summary>
         /// On load, updates the controls.
@@ -110,7 +123,7 @@ namespace EVEMon.SkillPlanner
             m_remappingBackColor = SystemColors.Info;
 
             // Update the skill list
-            UpdateSkillList(true);
+            UpdateSkillList();
 
             base.OnLoad(e);
         }
@@ -145,6 +158,11 @@ namespace EVEMon.SkillPlanner
                 UpdateListColumns();
             }
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the version of the plan as it is currently displayed.
@@ -191,6 +209,8 @@ namespace EVEMon.SkillPlanner
             get { return SelectedEntries.GetNotKnownSkillBooksCost(); }
         }
 
+        #endregion
+
 
         #region Global events
 
@@ -205,7 +225,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             UpdateDisplayPlan();
-            UpdateSkillList(true);
+            UpdateSkillList();
         }
 
         /// <summary>
@@ -216,7 +236,7 @@ namespace EVEMon.SkillPlanner
         private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdateDisplayPlan();
-            UpdateSkillList(true);
+            UpdateSkillList();
             UpdateListColumns();
         }
 
@@ -232,7 +252,7 @@ namespace EVEMon.SkillPlanner
             cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex;
             UpdateImplantSet();
 
-            UpdateSkillList(true);
+            UpdateSkillList();
         }
 
         /// <summary>
@@ -243,7 +263,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
         {
-            UpdateSkillList(true);
+            UpdateSkillList();
             UpdateListColumns();
         }
 
@@ -310,7 +330,7 @@ namespace EVEMon.SkillPlanner
         /// Full intialization, especially the columns values and such, will be completed in <see cref="UpdateListViewItems"/>.
         /// </summary>
         /// <param name="restoreSelectionAndFocus">When false, selection and focus will be reseted.</param>
-        private void UpdateSkillList(bool restoreSelectionAndFocus)
+        private void UpdateSkillList(bool restoreSelectionAndFocus = true)
         {
             // Disable controls, they will be restored one the selection is updated
             tsbMoveUp.Enabled = false;
@@ -424,8 +444,6 @@ namespace EVEMon.SkillPlanner
             lvSkills.BeginUpdate();
             try
             {
-                NumberFormatInfo nfi = NumberFormatInfo.CurrentInfo;
-
                 // Scroll through entries
                 for (int i = 0; i < lvSkills.Items.Count; i++)
                 {
@@ -495,8 +513,7 @@ namespace EVEMon.SkillPlanner
 
                                 lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
                                 lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
-                                lvi.SubItems[columnIndex].Text = GetColumnTextForItem(entry, columnSettings.Column, blockingEntry,
-                                                                                      nfi);
+                                lvi.SubItems[columnIndex].Text = GetColumnTextForItem(entry, columnSettings.Column, blockingEntry);
                             }
                                 // Training time differences
                             else
@@ -585,11 +602,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="entry"></param>
         /// <param name="column"></param>
         /// <param name="blockingEntry"></param>
-        /// <param name="format"></param>
         /// <exception cref="NotImplementedException"></exception>
         /// <returns></returns>
-        private static string GetColumnTextForItem(PlanEntry entry, PlanColumn column, string blockingEntry,
-                                                   NumberFormatInfo format)
+        private static string GetColumnTextForItem(PlanEntry entry, PlanColumn column, string blockingEntry)
         {
             const int MaxNotesLength = 60;
 
@@ -597,70 +612,55 @@ namespace EVEMon.SkillPlanner
             {
                 case PlanColumn.SkillName:
                     return entry.ToString();
-
                 case PlanColumn.PlanGroup:
                     return entry.PlanGroupsDescription;
-
                 case PlanColumn.TrainingTime:
                     return entry.TrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-
                 case PlanColumn.TrainingTimeNatural:
                     return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-
                 case PlanColumn.EarliestStart:
-                    return entry.StartTime.ToString("ddd ") + entry.StartTime.ToString();
-
+                    return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.StartTime);
                 case PlanColumn.EarliestEnd:
-                    return entry.EndTime.ToString("ddd ") + entry.EndTime.ToString();
-
+                    return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.EndTime);
                 case PlanColumn.PercentComplete:
-                    return entry.FractionCompleted.ToString("0%");
-
+                    return entry.FractionCompleted.ToString("P0", CultureConstants.DefaultCulture);
                 case PlanColumn.SkillRank:
                     return entry.Skill.Rank.ToString();
-
                 case PlanColumn.PrimaryAttribute:
                     return entry.Skill.PrimaryAttribute.ToString();
-
                 case PlanColumn.SecondaryAttribute:
                     return entry.Skill.SecondaryAttribute.ToString();
-
                 case PlanColumn.SkillGroup:
                     return entry.Skill.Group.Name;
-
                 case PlanColumn.PlanType:
                     return entry.Type.ToString();
-
                 case PlanColumn.SPTotal:
-                    return entry.EstimatedTotalSkillPoints.ToString("N0", format);
-
+                    return entry.EstimatedTotalSkillPoints.ToString("N0", CultureConstants.DefaultCulture);
                 case PlanColumn.SPPerHour:
                     return entry.SpPerHour.ToString();
-
                 case PlanColumn.Priority:
                     return entry.Priority.ToString();
-
                 case PlanColumn.Conflicts:
                     return blockingEntry;
-
                 case PlanColumn.Notes:
-                    if (String.IsNullOrEmpty(entry.Notes))
-                        return String.Empty;
+                    {
+                        if (String.IsNullOrEmpty(entry.Notes))
+                            return String.Empty;
 
-                    string result = Regex.Replace(entry.Notes, @"(\r|\n)+", " ", RegexOptions.None);
-                    if (result.Length <= MaxNotesLength)
-                        return result;
+                        string result = Regex.Replace(entry.Notes, @"(\r|\n)+", " ", RegexOptions.None);
+                        if (result.Length <= MaxNotesLength)
+                            return result;
 
-                    return result.Substring(0, MaxNotesLength) + "...";
-
+                        return result.Substring(0, MaxNotesLength) + "...";
+                    }
                 case PlanColumn.Cost:
-                    if (entry.Level != 1 || entry.CharacterSkill.IsKnown)
-                        return String.Empty;
-                    return entry.CharacterSkill.IsOwned ? "Owned" : entry.Skill.FormattedCost;
-
+                    {
+                        if (entry.Level != 1 || entry.CharacterSkill.IsKnown)
+                            return String.Empty;
+                        return entry.CharacterSkill.IsOwned ? "Owned" : entry.Skill.FormattedCost;
+                    }
                 case PlanColumn.SkillPointsRequired:
-                    return entry.SkillPointsRequired.ToString("N0", format);
-
+                    return entry.SkillPointsRequired.ToString("N0", CultureConstants.DefaultCulture);
                 default:
                     throw new NotImplementedException();
             }
@@ -728,7 +728,7 @@ namespace EVEMon.SkillPlanner
         /// Restores the selection from a dictionary where keys are tags' hash codes.
         /// </summary>
         /// <param name="c"></param>
-        private void RestoreSelection(Dictionary<int, bool> c)
+        private void RestoreSelection(IDictionary<int, bool> c)
         {
             for (int i = lvSkills.Items.Count - 1; i >= 0; i--)
             {
@@ -768,7 +768,7 @@ namespace EVEMon.SkillPlanner
         {
             m_plan.CleanObsoleteEntries(policy);
             UpdateDisplayPlan();
-            UpdateSkillList(true);
+            UpdateSkillList();
         }
 
         /// <summary>
@@ -860,7 +860,7 @@ namespace EVEMon.SkillPlanner
         {
             m_pluggable.Disposed -= pluggable_Disposed;
             m_pluggable = null;
-            UpdateSkillList(true);
+            UpdateSkillList();
             UpdateListColumns();
         }
 
@@ -908,9 +908,8 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                return lvSkills.SelectedItems.Cast<ListViewItem>()
-                    .Where(x => x.Tag is PlanEntry)
-                    .Select(x => x.Tag as PlanEntry);
+                return lvSkills.SelectedItems.Cast<ListViewItem>().Where(
+                    x => x.Tag is PlanEntry).Select(x => x.Tag as PlanEntry);
             }
         }
 
@@ -1150,7 +1149,7 @@ namespace EVEMon.SkillPlanner
         {
             m_plan.SortingPreferences.GroupByPriority = tsSortPriorities.Checked;
             UpdateDisplayPlan();
-            UpdateSkillList(true);
+            UpdateSkillList();
         }
 
         /// <summary>
@@ -1191,7 +1190,7 @@ namespace EVEMon.SkillPlanner
             // Updates UI and display plan
             UpdateSortVisualFeedback();
             UpdateDisplayPlan();
-            UpdateSkillList(true);
+            UpdateSkillList();
         }
 
         /// <summary>
@@ -1520,10 +1519,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miChangePriority_Click(object sender, EventArgs e)
         {
-            // TODO: Unscramble
-
             IEnumerable<PlanEntry> entries = SelectedEntries;
-
             using (PlanPrioritiesEditorForm form = new PlanPrioritiesEditorForm())
             {
                 // Gets the entry's priority (or default if more than one item selected)
@@ -1544,34 +1540,44 @@ namespace EVEMon.SkillPlanner
                 if (m_plan.TrySetPriority(DisplayPlan, entries, form.Priority))
                     return;
 
-                bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
+                ShowPriorityDialogBox(entries, form);
+            }
+        }
 
-                // User wishes the dialog to be displayed
-                if (showDialog)
-                {
-                    string text = String.Concat("This would result in a priority conflict.",
-                                                " (Either pre-requisites with a lower priority or dependant skills with a higher priority).\r\n\r\n",
-                                                "Click Yes if you wish to do this and adjust the other skills\r\nor No if you do not wish to change the priority.");
-                    const string CaptionText = "Priority Conflict";
-                    const string CbOptionText = "Do not show this dialog again";
+        /// <summary>
+        /// Shows the priority dialog box.
+        /// </summary>
+        /// <param name="entries">The entries.</param>
+        /// <param name="form">The form.</param>
+        private void ShowPriorityDialogBox(IEnumerable<PlanEntry> entries, PlanPrioritiesEditorForm form)
+        {
+            bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
 
-                    // Shows the custom dialog box
-                    MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
-                    DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo,
-                                                         MessageBoxIcon.Exclamation);
-                    Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = !msgBoxCustom.CheckBoxChecked;
+            // User wishes the dialog to be displayed
+            if (showDialog)
+            {
+                string text = String.Concat("This would result in a priority conflict.",
+                                            " (Either pre-requisites with a lower priority or dependant skills with a higher priority).\r\n\r\n",
+                                            "Click Yes if you wish to do this and adjust the other skills\r\nor No if you do not wish to change the priority.");
+                const string CaptionText = "Priority Conflict";
+                const string CbOptionText = "Do not show this dialog again";
 
-                    // When the checkbox is checked we store the dialog result
-                    if (msgBoxCustom.CheckBoxChecked)
-                        Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
+                // Shows the custom dialog box
+                MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
+                DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo,
+                                                     MessageBoxIcon.Exclamation);
+                Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = !msgBoxCustom.CheckBoxChecked;
 
-                    if (drb == DialogResult.Yes)
-                        m_plan.SetPriority(DisplayPlan, entries, form.Priority);
-                }
-                    // User wishes the dialog not to be displayed and has set the dialog result to "Yes"
-                else if (Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult == DialogResult.Yes)
+                // When the checkbox is checked we store the dialog result
+                if (msgBoxCustom.CheckBoxChecked)
+                    Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
+
+                if (drb == DialogResult.Yes)
                     m_plan.SetPriority(DisplayPlan, entries, form.Priority);
             }
+                // User wishes the dialog not to be displayed and has set the dialog result to "Yes"
+            else if (Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult == DialogResult.Yes)
+                m_plan.SetPriority(DisplayPlan, entries, form.Priority);
         }
 
         /// <summary>
@@ -1906,7 +1912,7 @@ namespace EVEMon.SkillPlanner
                     break;
                 case Keys.F5:
                     UpdateDisplayPlan();
-                    UpdateSkillList(true);
+                    UpdateSkillList();
                     break;
                 case Keys.Delete:
                     RemoveSelectedEntries();
@@ -2181,7 +2187,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             UpdateImplantSet();
-            UpdateSkillList(true);
+            UpdateSkillList();
         }
 
         /// <summary>

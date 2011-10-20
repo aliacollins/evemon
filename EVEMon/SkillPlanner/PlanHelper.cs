@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 
@@ -18,10 +19,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="level"></param>
         public static bool UpdatesRegularPlanToMenu(ToolStripItem menu, Plan plan, Skill skill, int level)
         {
-            if (level == 0)
-                menu.Text = "Remove";
-            else
-                menu.Text = "Level " + level.ToString();
+            menu.Text = level == 0 ? "Remove" : String.Format("Level {0}", level);
 
             menu.Enabled = EnablePlanTo(plan, skill, level);
             if (menu.Enabled)
@@ -46,7 +44,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         /// <param name="level">A integer between 0 (remove all entries for this skill) and 5.</param>
         /// <returns></returns>
-        private static bool EnablePlanTo(Plan plan, Skill skill, int level)
+        private static bool EnablePlanTo(BasePlan plan, Skill skill, int level)
         {
             // The entry actually wants to remove the item
             if (level == 0)
