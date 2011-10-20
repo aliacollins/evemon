@@ -319,7 +319,7 @@ namespace EVEMon
         {
             CCPCharacter ccpCharacter = Character as CCPCharacter;
 
-            // Current character isn't a CCP character, so can't have a Queue.
+            // Current character isn't a CCP character, so can't have a Queue
             if (ccpCharacter == null)
                 return;
 
@@ -348,7 +348,15 @@ namespace EVEMon
             // Training completed ?
             if (timeLeft == TimeSpan.Zero)
             {
-                lblSkillQueueTrainingTime.Text = "Completed";
+                // We don't display anything
+                lblSkillQueueTrainingTime.Text = String.Empty;
+                return;
+            }
+
+            // Skill queue is empty ?
+            if (timeLeft > TimeSpan.FromDays(1))
+            {
+                lblSkillQueueTrainingTime.Text = "Skill queue is empty";
                 return;
             }
 
