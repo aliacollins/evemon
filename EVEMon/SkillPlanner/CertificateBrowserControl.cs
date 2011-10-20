@@ -346,6 +346,9 @@ namespace EVEMon.SkillPlanner
             Certificate cert = certDisplayCtl.SelectedCertificateLevel;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
+            if (certClass == null)
+                return;
+
             // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
             if (cert == null || cert.Class != certClass)
             {
