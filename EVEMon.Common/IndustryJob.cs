@@ -68,7 +68,7 @@ namespace EVEMon.Common
             EndProductionTime = src.EndProductionTime;
             PauseProductionTime = src.PauseProductionTime;
             LastStateChange = src.LastStateChange;
-            IssuedFor = src.IssuedFor;
+            IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
             ActiveJobState = GetActiveJobState();
         }
 
