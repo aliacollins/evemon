@@ -11,7 +11,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowResearchPointsList : UserControl
+    public partial class MainWindowResearchPointsList : UserControl, IListView
     {
         #region Fields
 
@@ -96,6 +96,12 @@ namespace EVEMon
                 m_list.AddRange(value);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the grouping of a listview.
+        /// </summary>
+        /// <value></value>
+        public Enum Grouping { get; set; }
 
         /// <summary>
         /// Gets or sets the settings used for columns.

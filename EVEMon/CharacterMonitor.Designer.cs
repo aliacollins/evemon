@@ -79,6 +79,7 @@ namespace EVEMon
             this.toolStripContextual = new System.Windows.Forms.ToolStrip();
             this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoSizeColumnMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsColumnSettingsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.hideInactiveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,7 +107,6 @@ namespace EVEMon
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.autoSizeColumnMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.flpStatusLabels.SuspendLayout();
@@ -684,6 +684,13 @@ namespace EVEMon
             this.columnSettingsMenuItem.Text = "Column Settings";
             this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
             // 
+            // autoSizeColumnMenuItem
+            // 
+            this.autoSizeColumnMenuItem.Name = "autoSizeColumnMenuItem";
+            this.autoSizeColumnMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.autoSizeColumnMenuItem.Text = "Auto-Size Columns";
+            this.autoSizeColumnMenuItem.Click += new System.EventHandler(this.autoSizeColumnMenuItem_Click);
+            // 
             // tsColumnSettingsSeparator
             // 
             this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
@@ -952,13 +959,6 @@ namespace EVEMon
             this.featuresMenu.ToolTipText = "Advanced features";
             this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
             this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
-            // 
-            // autoSizeColumnMenuItem
-            // 
-            this.autoSizeColumnMenuItem.Name = "autoSizeColumnMenuItem";
-            this.autoSizeColumnMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.autoSizeColumnMenuItem.Text = "Auto-Size Columns";
-            this.autoSizeColumnMenuItem.Click += new System.EventHandler(this.autoSizeColumnMenuItem_Click);
             // 
             // CharacterMonitor
             // 
