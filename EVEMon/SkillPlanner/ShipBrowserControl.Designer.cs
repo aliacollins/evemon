@@ -37,7 +37,7 @@ namespace EVEMon.SkillPlanner
             this.ShipPropertiesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
-            this.scDetailsLowerRight = new EVEMon.Common.Controls.SplitContainerMinFixed();
+            this.scDetailsLowerRight = new System.Windows.Forms.SplitContainer();
             this.gbRecommendedCert = new System.Windows.Forms.GroupBox();
             this.recommendedCertificatesControl = new EVEMon.SkillPlanner.RecommendedCertificatesControl();
             this.gbRequiredSkills = new System.Windows.Forms.GroupBox();
@@ -292,7 +292,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.LinkLabel lblBattleclinic;
         private System.Windows.Forms.ContextMenuStrip ShipPropertiesContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
-        private EVEMon.Common.Controls.SplitContainerMinFixed scDetailsLowerRight;
+        private System.Windows.Forms.SplitContainer scDetailsLowerRight;
         private System.Windows.Forms.GroupBox gbRecommendedCert;
         private System.Windows.Forms.GroupBox gbRequiredSkills;
         private RequiredSkillsControl requiredSkillsControl;

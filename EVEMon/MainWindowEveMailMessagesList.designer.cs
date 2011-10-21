@@ -40,7 +40,7 @@ namespace EVEMon
             this.mailGateReply = new System.Windows.Forms.ToolStripMenuItem();
             this.mailGateReplyAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mailGateForward = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainerMailMessages = new EVEMon.Common.Controls.SplitContainerMinFixed();
+            this.splitContainerMailMessages = new System.Windows.Forms.SplitContainer();
             this.lvMailMessages = new System.Windows.Forms.ListView();
             this.chSenderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -252,7 +252,7 @@ namespace EVEMon
         private System.Windows.Forms.ColumnHeader chToCorpOrAlliance;
         private System.Windows.Forms.ColumnHeader chToCharacterIDs;
         private System.Windows.Forms.ColumnHeader chToListID;
-        private EVEMon.Common.Controls.SplitContainerMinFixed splitContainerMailMessages;
+        private System.Windows.Forms.SplitContainer splitContainerMailMessages;
         private System.Windows.Forms.ListView lvMailMessages;
         private System.Windows.Forms.Timer timer;
         private ReadingPane eveMailReadingPane;

@@ -483,9 +483,6 @@
     <Compile Include="Controls\SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SplitContainerMinFixed.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\TreeView.cs">
       <SubType>Component</SubType>
     </Compile>

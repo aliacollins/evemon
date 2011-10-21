@@ -33,8 +33,8 @@ namespace EVEMon.SkillPlanner
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EveObjectBrowserControl));
             this.scObjectBrowser = new PersistentSplitContainer();
             this.pnlDetails = new System.Windows.Forms.Panel();
-            this.scDetails = new EVEMon.Common.Controls.SplitContainerMinFixed();
-            this.scDetailsRight = new EVEMon.Common.Controls.SplitContainerMinFixed();
+            this.scDetails = new System.Windows.Forms.SplitContainer();
+            this.scDetailsRight = new System.Windows.Forms.SplitContainer();
             this.gbDescription = new System.Windows.Forms.GroupBox();
             this.tbDescription = new System.Windows.Forms.RichTextBox();
             this.pnlBrowserHeader = new System.Windows.Forms.Panel();
@@ -228,8 +228,8 @@ namespace EVEMon.SkillPlanner
         protected System.Windows.Forms.Panel pnlDetails;
         protected System.Windows.Forms.Panel pnlBrowserHeader;
         protected System.Windows.Forms.Label lblHelp;
-        protected EVEMon.Common.Controls.SplitContainerMinFixed scDetailsRight;
-        protected EVEMon.Common.Controls.SplitContainerMinFixed scDetails;
+        protected System.Windows.Forms.SplitContainer scDetailsRight;
+        protected System.Windows.Forms.SplitContainer scDetails;
         protected System.Windows.Forms.GroupBox gbDescription;
         protected System.Windows.Forms.RichTextBox tbDescription;
 
