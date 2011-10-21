@@ -727,14 +727,18 @@ namespace EVEMon
             if (e.ClickedItem == QueryEverythingMenuItem)
                 ccpCharacter.QueryMonitors.QueryEverything();
 
-            if (!(e.ClickedItem.Tag is Enum))
-                return;
+            Enum method = e.ClickedItem.Tag as Enum;
 
-            Enum method = (Enum)e.ClickedItem.Tag;
+            if (method == null)
+                return;
 
             SetThrobberUpdating();
 
-            ccpCharacter.QueryMonitors.Query(method);
+            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.Where(
+                monitor => monitor.Method.ToString().Contains(method.ToString())))
+            {
+                ccpCharacter.QueryMonitors.Query(monitor.Method);
+            }
         }
 
         /// <summary>

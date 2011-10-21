@@ -19,7 +19,6 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
-
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
 
@@ -115,6 +114,30 @@ namespace EVEMon.Common
         {
             get { return m_skillQueueMonitor; }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [char orders updated].
+        /// </summary>
+        /// <value><c>true</c> if [char orders updated]; otherwise, <c>false</c>.</value>
+        internal bool CharOrdersUpdated { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [char orders added].
+        /// </summary>
+        /// <value><c>true</c> if [char orders added]; otherwise, <c>false</c>.</value>
+        internal bool CharOrdersAdded { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [char jobs updated].
+        /// </summary>
+        /// <value><c>true</c> if [char jobs updated]; otherwise, <c>false</c>.</value>
+        internal bool CharJobsUpdated { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [char jobs added].
+        /// </summary>
+        /// <value><c>true</c> if [char jobs added]; otherwise, <c>false</c>.</value>
+        internal bool CharJobsAdded { get; private set; }
 
         #endregion
 
@@ -283,6 +306,76 @@ namespace EVEMon.Common
 
             // Import the data
             CCPCharacter.ResearchPoints.Import(result.Result.ResearchPoints);
+        }
+
+        /// <summary>
+        /// Processes the queried character's personal market orders.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
+        private void OnCharacterMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
+        {
+            CharOrdersUpdated = true;
+
+            // Notify an error occurred
+            if (ShouldNotifyError(result, APICharacterMethods.MarketOrders))
+                EveMonClient.Notifications.NotifyCharacterMarketOrdersError(CCPCharacter, result);
+
+            CorporationDataQuerying corporationDataQuerying = (CorporationDataQuerying)CCPCharacter.CorporationDataQuerying;
+
+            // Add orders to list
+            CharOrdersAdded = AddOrders(result, corporationDataQuerying.CorpOrdersAdded, IssuedFor.Character);
+
+            // If character can not query corporation data, we switch the corp orders updated flag
+            // and proceed with the orders importation
+            IQueryMonitor corporationMarketOrdersMonitor =
+                CCPCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders];
+            corporationDataQuerying.CorpOrdersUpdated |= corporationMarketOrdersMonitor == null ||
+                                                         !corporationMarketOrdersMonitor.Enabled;
+
+            // Import the data if all queried
+            if (!corporationDataQuerying.CorpOrdersUpdated)
+                return;
+
+            ImportOrders();
+
+            // Reset flags
+            CharOrdersUpdated = false;
+            CharOrdersAdded = false;
+        }
+
+        /// <summary>
+        /// Processes the queried character's personal industry jobs.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
+        private void OnCharacterIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
+        {
+            CharJobsUpdated = true;
+
+            // Notify an error occurred
+            if (ShouldNotifyError(result, APICharacterMethods.IndustryJobs))
+                EveMonClient.Notifications.NotifyCharacterIndustryJobsError(CCPCharacter, result);
+
+            CorporationDataQuerying corporationDataQuerying = (CorporationDataQuerying)CCPCharacter.CorporationDataQuerying;
+
+            // Add jobs to list
+            CharJobsAdded = AddJobs(result, corporationDataQuerying.CorpJobsAdded, IssuedFor.Character);
+
+            // If character can not query corporation data, we switch the corp jobs updated flag
+            // and proceed with the jobs importation
+            IQueryMonitor corpIndustryJobsMonitor = CCPCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
+            corporationDataQuerying.CorpJobsUpdated |= corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled;
+
+            // Import the data if all queried
+            if (!corporationDataQuerying.CorpJobsUpdated)
+                return;
+
+            ImportJobs();
+
+            // Reset flags
+            CharJobsUpdated = false;
+            CharJobsAdded = false;
         }
 
         /// <summary>

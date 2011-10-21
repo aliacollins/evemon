@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a character from CCP, with additional capacities for training and such
+    /// Represents a character from CCP, with additional capacities for training and such.
     /// </summary>
     public sealed class CCPCharacter : Character
     {
