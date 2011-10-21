@@ -205,7 +205,7 @@
     <Compile Include="MainWindowEveMailMessagesList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowEveMailMessagesList.designer.cs">
+    <Compile Include="MainWindowEveMailMessagesList.Designer.cs">
       <DependentUpon>MainWindowEveMailMessagesList.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindowResearchPointsList.cs">
@@ -471,13 +471,13 @@
     <Compile Include="SkillPlanner\BlueprintBrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\BlueprintBrowserControl.designer.cs">
+    <Compile Include="SkillPlanner\BlueprintBrowserControl.Designer.cs">
       <DependentUpon>BlueprintBrowserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\BlueprintSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\BlueprintSelectControl.designer.cs">
+    <Compile Include="SkillPlanner\BlueprintSelectControl.Designer.cs">
       <DependentUpon>BlueprintSelectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\CertificateBrowserControl.cs">
