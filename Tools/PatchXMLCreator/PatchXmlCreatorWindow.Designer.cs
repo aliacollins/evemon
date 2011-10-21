@@ -57,15 +57,15 @@ namespace PatchXmlCreator
             this.tbExpansion = new System.Windows.Forms.TextBox();
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
-            this.splitContainerMinFixed = new EVEMon.Common.Controls.SplitContainerMinFixed();
+            this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.datafileControl = new PatchXmlCreator.DatafileControl();
             this.gbRelease.SuspendLayout();
             this.gbDatafiles.SuspendLayout();
             this.pnlButtons.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMinFixed)).BeginInit();
-            this.splitContainerMinFixed.Panel1.SuspendLayout();
-            this.splitContainerMinFixed.Panel2.SuspendLayout();
-            this.splitContainerMinFixed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            this.splitContainer.Panel1.SuspendLayout();
+            this.splitContainer.Panel2.SuspendLayout();
+            this.splitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -458,29 +458,29 @@ namespace PatchXmlCreator
             this.pnlButtons.TabIndex = 9;
             this.pnlButtons.Click += new System.EventHandler(this.OnClick);
             // 
-            // splitContainerMinFixed
+            // splitContainer
             // 
-            this.splitContainerMinFixed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerMinFixed.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerMinFixed.Name = "splitContainerMinFixed";
+            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer.Name = "splitContainer";
             // 
-            // splitContainerMinFixed.Panel1
+            // splitContainer.Panel1
             // 
-            this.splitContainerMinFixed.Panel1.Controls.Add(this.gbRelease);
-            this.splitContainerMinFixed.Panel1.Padding = new System.Windows.Forms.Padding(10, 10, 5, 10);
-            this.splitContainerMinFixed.Panel1.Click += new System.EventHandler(this.OnClick);
-            this.splitContainerMinFixed.Panel1MinSize = 411;
+            this.splitContainer.Panel1.Controls.Add(this.gbRelease);
+            this.splitContainer.Panel1.Padding = new System.Windows.Forms.Padding(10, 10, 5, 10);
+            this.splitContainer.Panel1.Click += new System.EventHandler(this.OnClick);
+            this.splitContainer.Panel1MinSize = 411;
             // 
-            // splitContainerMinFixed.Panel2
+            // splitContainer.Panel2
             // 
-            this.splitContainerMinFixed.Panel2.Controls.Add(this.gbDatafiles);
-            this.splitContainerMinFixed.Panel2.Padding = new System.Windows.Forms.Padding(5, 10, 10, 10);
-            this.splitContainerMinFixed.Panel2.Click += new System.EventHandler(this.OnClick);
-            this.splitContainerMinFixed.Panel2MinSize = 455;
-            this.splitContainerMinFixed.Size = new System.Drawing.Size(870, 231);
-            this.splitContainerMinFixed.SplitterDistance = 411;
-            this.splitContainerMinFixed.TabIndex = 10;
-            this.splitContainerMinFixed.Click += new System.EventHandler(this.OnClick);
+            this.splitContainer.Panel2.Controls.Add(this.gbDatafiles);
+            this.splitContainer.Panel2.Padding = new System.Windows.Forms.Padding(5, 10, 10, 10);
+            this.splitContainer.Panel2.Click += new System.EventHandler(this.OnClick);
+            this.splitContainer.Panel2MinSize = 455;
+            this.splitContainer.Size = new System.Drawing.Size(870, 231);
+            this.splitContainer.SplitterDistance = 411;
+            this.splitContainer.TabIndex = 10;
+            this.splitContainer.Click += new System.EventHandler(this.OnClick);
             // 
             // datafileControl
             // 
@@ -498,7 +498,7 @@ namespace PatchXmlCreator
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(870, 290);
-            this.Controls.Add(this.splitContainerMinFixed);
+            this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.pnlButtons);
             this.Name = "PatchXmlCreatorWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -509,10 +509,10 @@ namespace PatchXmlCreator
             this.gbDatafiles.PerformLayout();
             this.pnlButtons.ResumeLayout(false);
             this.pnlButtons.PerformLayout();
-            this.splitContainerMinFixed.Panel1.ResumeLayout(false);
-            this.splitContainerMinFixed.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMinFixed)).EndInit();
-            this.splitContainerMinFixed.ResumeLayout(false);
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            this.splitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -544,7 +544,7 @@ namespace PatchXmlCreator
         private System.Windows.Forms.RichTextBox rtbReleaseUrl;
         private System.Windows.Forms.RichTextBox rtbReleaseMessage;
         private DatafileControl datafileControl;
-        private EVEMon.Common.Controls.SplitContainerMinFixed splitContainerMinFixed;
+        private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.Button btnInstallerClear;
         private System.Windows.Forms.Button btnDatafilesClear;
         private System.Windows.Forms.Label lblExpVersion;
