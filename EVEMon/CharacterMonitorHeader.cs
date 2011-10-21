@@ -104,12 +104,12 @@ namespace EVEMon
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
                 BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                  "{0} - {1} - {2} - {3}", m_character.Gender, m_character.Race,
-                                                  m_character.Bloodline, m_character.Ancestry);
+                                                  "{0} - {1} - {2} - {3}", m_character.Gender ?? "Gender", m_character.Race ?? "Race",
+                                                  m_character.Bloodline ?? "Bloodline", m_character.Ancestry ?? "Ancestry");
                 BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
                                                    "Birthday: {0}", m_character.Birthday.ToLocalTime());
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                          "Corporation: {0}", m_character.CorporationName);
+                                                          "Corporation: {0}", m_character.CorporationName ?? "Unknown");
 
                 AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
 

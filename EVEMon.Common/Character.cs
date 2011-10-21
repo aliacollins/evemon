@@ -492,12 +492,12 @@ namespace EVEMon.Common
             // Bio
             m_name = serial.Name;
             Balance = serial.Balance;
-            Gender = serial.Gender ?? "Gender";
-            Race = serial.Race ?? "Race";
-            Bloodline = serial.BloodLine ?? "Bloodline";
-            Ancestry = serial.Ancestry ?? "Ancestry";
+            Gender = serial.Gender;
+            Race = serial.Race;
+            Bloodline = serial.BloodLine;
+            Ancestry = serial.Ancestry;
             Birthday = serial.Birthday;
-            CorporationName = serial.CorporationName ?? "Unknown";
+            CorporationName = serial.CorporationName;
             CorporationID = serial.CorporationID;
             AllianceName = serial.AllianceName;
             AllianceID = serial.AllianceID;
