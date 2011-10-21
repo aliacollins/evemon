@@ -486,7 +486,7 @@ namespace EVEMon
                 {
                     monitor.Enabled = IsEnabledFeature(button.Text);
                     if (monitor.QueryOnStartup && monitor.Enabled && monitor.LastResult == null)
-                        ccpCharacter.CharacterDataQuerying.ForceUpdate(monitor);
+                        ccpCharacter.ForceUpdate(monitor);
                 }
             }
         }

@@ -157,7 +157,7 @@ namespace EVEMon.Common
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.CharacterDataQuerying.ShouldNotifyError(result, APICharacterMethods.NotificationTexts))
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.NotificationTexts))
                 EveMonClient.Notifications.NotifyEVENotificationTextsError(m_ccpCharacter, result);
 
             // Quits if there is an error

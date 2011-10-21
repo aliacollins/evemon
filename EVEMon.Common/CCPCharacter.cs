@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
@@ -10,8 +11,9 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
-        private readonly CharacterDataQuerying m_characterDataQuerying;
-        private readonly CorporationDataQuerying m_corporationDataQuerying;
+        private readonly List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
+        private readonly List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
+        private Enum m_errorNotifiedMethod;
 
 
         #region Constructors
@@ -34,8 +36,8 @@ namespace EVEMon.Common
             EVEMailingLists = new EveMailingListsCollection(this);
             EVENotifications = new EveNotificationsCollection(this);
 
-            m_characterDataQuerying = new CharacterDataQuerying(this);
-            m_corporationDataQuerying = new CorporationDataQuerying(this);
+            CharacterDataQuerying = new CharacterDataQuerying(this);
+            CorporationDataQuerying = new CorporationDataQuerying(this);
         }
 
         /// <summary>
@@ -56,8 +58,8 @@ namespace EVEMon.Common
         internal CCPCharacter(CharacterIdentity identity)
             : this(identity, Guid.NewGuid())
         {
-            m_characterDataQuerying.CharacterSheetMonitor.ForceUpdate(true);
-            m_characterDataQuerying.SkillQueueMonitor.ForceUpdate(true);
+            CharacterDataQuerying.CharacterSheetMonitor.ForceUpdate(true);
+            CharacterDataQuerying.SkillQueueMonitor.ForceUpdate(true);
         }
 
         #endregion
@@ -73,8 +75,8 @@ namespace EVEMon.Common
             get
             {
                 return (Identity.APIKeys.IsEmpty() ||
-                        (m_characterDataQuerying.CharacterSheetMonitor.LastResult != null &&
-                         m_characterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
+                        (CharacterDataQuerying.CharacterSheetMonitor.LastResult != null &&
+                         CharacterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
                            ? String.Format("{0} (cached)", Name)
                            : Name;
             }
@@ -129,19 +131,13 @@ namespace EVEMon.Common
         /// Gets the character data querying.
         /// </summary>
         /// <value>The character data querying.</value>
-        public DataQuerying CharacterDataQuerying
-        {
-            get { return m_characterDataQuerying; }
-        }
+        public CharacterDataQuerying CharacterDataQuerying { get; private set; }
 
         /// <summary>
         /// Gets the corporation data querying.
         /// </summary>
         /// <value>The corporation data querying.</value>
-        public DataQuerying CorporationDataQuerying
-        {
-            get { return m_corporationDataQuerying; }
-        }
+        public CorporationDataQuerying CorporationDataQuerying { get; private set; }
 
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
@@ -259,6 +255,162 @@ namespace EVEMon.Common
 
             // Fire the global event
             EveMonClient.OnCharacterUpdated(this);
+        }
+
+        #endregion
+
+
+        # region Querying Helper Methods
+
+        /// <summary>
+        /// Forces an update on the selected query monitor.
+        /// </summary>
+        /// <param name="queryMonitor">The query monitor.</param>
+        public void ForceUpdate(IQueryMonitor queryMonitor)
+        {
+            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method] as IQueryMonitorEx;
+            if (monitor != null)
+                monitor.ForceUpdate(false);
+        }
+
+
+        /// <summary>
+        /// Checks whether we should notify an error.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        internal bool ShouldNotifyError(IAPIResult result, Enum method)
+        {
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return false;
+
+            // We don't want to be notified about corp roles error
+            if (result.CCPError != null && !result.CCPError.IsCorpRolesError)
+                return false;
+
+            // Notify an error occurred
+            if (result.HasError)
+            {
+                if (!m_errorNotifiedMethod.Equals(APIMethodsExtensions.None))
+                    return false;
+
+                m_errorNotifiedMethod = method;
+                return true;
+            }
+
+            // Removes the previous error notification
+            if (m_errorNotifiedMethod == method)
+            {
+                //EveMonClient.Notifications.InvalidateCharacterAPIError(CCPCharacter);
+                m_errorNotifiedMethod = APIMethodsExtensions.None;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Add the queried orders to a list.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="ordersAdded"></param>
+        /// <param name="issuedFor"></param>
+        /// <returns>True if orders get added, false otherwise</returns>
+        internal bool AddOrders(APIResult<SerializableAPIMarketOrders> result, bool ordersAdded, IssuedFor issuedFor)
+        {
+            // Add orders if there isn't an error
+            if (result.HasError)
+                return false;
+
+            // Check to see if other market
+            // orders have been added before
+            if (!ordersAdded)
+                m_orders.Clear();
+
+            // Add orders in list
+            result.Result.Orders.ForEach(order => order.IssuedFor = issuedFor);
+            m_orders.AddRange(result.Result.Orders);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Import the orders from both market orders querying.
+        /// </summary>
+        internal void ImportOrders()
+        {
+            // Exclude orders that wheren't issued by this character
+            // (Delete this line upon implementing an exclusive corporation market monitor)
+            IEnumerable<SerializableOrderListItem> characterOrders = m_orders.Where(x => x.OwnerID == CharacterID);
+
+            List<MarketOrder> endedOrders = new List<MarketOrder>();
+            MarketOrders.Import(characterOrders, endedOrders);
+
+            // Notify for ended orders
+            if (endedOrders.Count() != 0)
+                EveMonClient.Notifications.NotifyMarkerOrdersEnded(this, endedOrders);
+
+            // Reset flags
+            CharacterDataQuerying.CharOrdersUpdated = false;
+            CharacterDataQuerying.CharOrdersAdded = false;
+            CorporationDataQuerying.CorpJobsUpdated = false;
+            CorporationDataQuerying.CorpJobsAdded = false;
+
+            // Check the character has sufficient balance
+            // for its buying orders and send a notification if not
+            if (!HasSufficientBalance)
+            {
+                EveMonClient.Notifications.NotifyInsufficientBalance(this);
+                return;
+            }
+
+            EveMonClient.Notifications.InvalidateInsufficientBalance(this);
+        }
+
+        /// <summary>
+        /// Add the queried jobs to a list.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="jobsAdded"></param>
+        /// <param name="issuedFor"></param>
+        /// <returns>True if jobs get added, false otherwise</returns>
+        internal bool AddJobs(APIResult<SerializableAPIIndustryJobs> result, bool jobsAdded, IssuedFor issuedFor)
+        {
+            // Add orders if there isn't an error
+            if (result.HasError)
+                return false;
+
+            // Check to see if other jobs
+            // have been added before
+            if (!jobsAdded)
+                m_jobs.Clear();
+
+            // Add jobs in list
+            result.Result.Jobs.ForEach(x => x.IssuedFor = issuedFor);
+            m_jobs.AddRange(result.Result.Jobs);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Import the jobs from both industry jobs querying.
+        /// </summary>
+        internal void ImportJobs()
+        {
+            // Exclude jobs that wheren't issued by this character
+            // (Delete this line upon implementing an exclusive corporation jobs monitor)
+            IEnumerable<SerializableJobListItem> characterJobs = m_jobs.Where(x => x.InstallerID == CharacterID);
+
+            IndustryJobs.Import(characterJobs);
+
+            // Fires the event regarding industry jobs update
+            EveMonClient.OnIndustryJobsUpdated(this);
+
+            // Reset flags
+            CharacterDataQuerying.CharJobsUpdated = false;
+            CharacterDataQuerying.CharJobsAdded = false;
+            CorporationDataQuerying.CorpOrdersUpdated = false;
+            CorporationDataQuerying.CorpOrdersAdded = false;
         }
 
         #endregion

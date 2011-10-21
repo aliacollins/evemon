@@ -7,7 +7,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class CharacterDataQuerying : DataQuerying
+    public sealed class CharacterDataQuerying
     {
         #region Fields
 
@@ -21,6 +21,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
+        private readonly CCPCharacter m_ccpCharacter;
 
         #endregion
 
@@ -32,8 +33,8 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
         public CharacterDataQuerying(CCPCharacter ccpCharacter)
-            : base(ccpCharacter)
         {
+            m_ccpCharacter = ccpCharacter;
             m_characterQueryMonitors = new List<IQueryMonitorEx>();
 
             // Initializes the query monitors 
@@ -125,7 +126,7 @@ namespace EVEMon.Common
         /// Gets or sets a value indicating whether [char orders added].
         /// </summary>
         /// <value><c>true</c> if [char orders added]; otherwise, <c>false</c>.</value>
-        internal bool CharOrdersAdded { get; private set; }
+        internal bool CharOrdersAdded { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [char jobs updated].
@@ -137,7 +138,7 @@ namespace EVEMon.Common
         /// Gets or sets a value indicating whether [char jobs added].
         /// </summary>
         /// <value><c>true</c> if [char jobs added]; otherwise, <c>false</c>.</value>
-        internal bool CharJobsAdded { get; private set; }
+        internal bool CharJobsAdded { get; set; }
 
         #endregion
 
@@ -154,7 +155,7 @@ namespace EVEMon.Common
                 return;
 
             // Quits if access denied
-            APIKey apiKey = CCPCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.MailingLists);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.MailingLists);
             if (apiKey == null)
                 return;
 
@@ -162,7 +163,7 @@ namespace EVEMon.Common
                 APICharacterMethods.MailingLists,
                 apiKey.ID,
                 apiKey.VerificationCode,
-                CCPCharacter.CharacterID,
+                m_ccpCharacter.CharacterID,
                 OnCharacterMailingListsUpdated);
         }
 
@@ -176,7 +177,7 @@ namespace EVEMon.Common
                 return;
 
             // Quits if access denied
-            APIKey apiKey = CCPCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return;
 
@@ -184,7 +185,7 @@ namespace EVEMon.Common
                 APICharacterMethods.CharacterInfo,
                 apiKey.ID,
                 apiKey.VerificationCode,
-                CCPCharacter.CharacterID,
+                m_ccpCharacter.CharacterID,
                 OnCharacterInfoUpdated);
         }
 
@@ -195,8 +196,8 @@ namespace EVEMon.Common
         private void OnCharacterSheetUpdated(APIResult<SerializableAPICharacterSheet> result)
         {
             // Notify an error occurred
-            if (ShouldNotifyError(result, APICharacterMethods.CharacterSheet))
-                EveMonClient.Notifications.NotifyCharacterSheetError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterSheet))
+                EveMonClient.Notifications.NotifyCharacterSheetError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -206,20 +207,20 @@ namespace EVEMon.Common
             QueryCharacterInfo();
 
             // Imports the data
-            CCPCharacter.Import(result);
+            m_ccpCharacter.Import(result);
 
             // Check the character has a sufficient clone or send a notification
-            if (CCPCharacter.Monitored && (CCPCharacter.CloneSkillPoints < CCPCharacter.SkillPoints))
-                EveMonClient.Notifications.NotifyInsufficientClone(CCPCharacter);
+            if (m_ccpCharacter.Monitored && (m_ccpCharacter.CloneSkillPoints < m_ccpCharacter.SkillPoints))
+                EveMonClient.Notifications.NotifyInsufficientClone(m_ccpCharacter);
             else
-                EveMonClient.Notifications.InvalidateInsufficientClone(CCPCharacter);
+                EveMonClient.Notifications.InvalidateInsufficientClone(m_ccpCharacter);
 
             // Check for claimable certificates
-            IEnumerable<Certificate> claimableCertificates = CCPCharacter.Certificates.Where(x => x.CanBeClaimed);
-            if (CCPCharacter.Monitored && claimableCertificates.Count() > 0)
-                EveMonClient.Notifications.NotifyClaimableCertificate(CCPCharacter, claimableCertificates);
+            IEnumerable<Certificate> claimableCertificates = m_ccpCharacter.Certificates.Where(x => x.CanBeClaimed);
+            if (m_ccpCharacter.Monitored && claimableCertificates.Count() > 0)
+                EveMonClient.Notifications.NotifyClaimableCertificate(m_ccpCharacter, claimableCertificates);
             else
-                EveMonClient.Notifications.InvalidateClaimableCertificate(CCPCharacter);
+                EveMonClient.Notifications.InvalidateClaimableCertificate(m_ccpCharacter);
         }
 
         /// <summary>
@@ -229,15 +230,15 @@ namespace EVEMon.Common
         private void OnCharacterInfoUpdated(APIResult<SerializableAPICharacterInfo> result)
         {
             // Notify an error occured
-            if (ShouldNotifyError(result, APICharacterMethods.CharacterInfo))
-                EveMonClient.Notifications.NotifyCharacterInfoError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterInfo))
+                EveMonClient.Notifications.NotifyCharacterInfoError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
                 return;
 
             // Import the data
-            CCPCharacter.Import(result.Result);
+            m_ccpCharacter.Import(result.Result);
         }
 
         /// <summary>
@@ -247,29 +248,29 @@ namespace EVEMon.Common
         private void OnSkillQueueUpdated(APIResult<SerializableAPISkillQueue> result)
         {
             // Notify an error occurred
-            if (ShouldNotifyError(result, APICharacterMethods.SkillQueue))
-                EveMonClient.Notifications.NotifySkillQueueError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.SkillQueue))
+                EveMonClient.Notifications.NotifySkillQueueError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
                 return;
 
             // Import the data
-            CCPCharacter.SkillQueue.Import(result.Result.Queue);
+            m_ccpCharacter.SkillQueue.Import(result.Result.Queue);
 
             // Check the account has a character in training (if API key of type "Account")
-            APIKey apikey = CCPCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSkillInTraining);
+            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSkillInTraining);
             if (apikey != null)
                 apikey.CharacterInTraining();
 
             // Check the character has room in skill queue
-            if (CCPCharacter.IsTraining && (CCPCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
+            if (m_ccpCharacter.IsTraining && (m_ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
             {
-                EveMonClient.Notifications.NotifySkillQueueRoomAvailable(CCPCharacter);
+                EveMonClient.Notifications.NotifySkillQueueRoomAvailable(m_ccpCharacter);
                 return;
             }
 
-            EveMonClient.Notifications.InvalidateSkillQueueRoomAvailability(CCPCharacter);
+            EveMonClient.Notifications.InvalidateSkillQueueRoomAvailability(m_ccpCharacter);
         }
 
         /// <summary>
@@ -279,33 +280,15 @@ namespace EVEMon.Common
         private void OnStandingsUpdated(APIResult<SerializableAPIStandings> result)
         {
             // Notify an error occurred
-            if (ShouldNotifyError(result, APICharacterMethods.Standings))
-                EveMonClient.Notifications.NotifyCharacterStandingsError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Standings))
+                EveMonClient.Notifications.NotifyCharacterStandingsError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
                 return;
 
             // Import the data
-            CCPCharacter.Standings.Import(result.Result.CharacterNPCStandings.All);
-        }
-
-        /// <summary>
-        /// Processes the queried character's research points.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnCharacterResearchPointsUpdated(APIResult<SerializableAPIResearch> result)
-        {
-            // Notify an error occured
-            if (ShouldNotifyError(result, APICharacterMethods.ResearchPoints))
-                EveMonClient.Notifications.NotifyResearchPointsError(CCPCharacter, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            CCPCharacter.ResearchPoints.Import(result.Result.ResearchPoints);
+            m_ccpCharacter.Standings.Import(result.Result.CharacterNPCStandings.All);
         }
 
         /// <summary>
@@ -318,18 +301,18 @@ namespace EVEMon.Common
             CharOrdersUpdated = true;
 
             // Notify an error occurred
-            if (ShouldNotifyError(result, APICharacterMethods.MarketOrders))
-                EveMonClient.Notifications.NotifyCharacterMarketOrdersError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MarketOrders))
+                EveMonClient.Notifications.NotifyCharacterMarketOrdersError(m_ccpCharacter, result);
 
-            CorporationDataQuerying corporationDataQuerying = (CorporationDataQuerying)CCPCharacter.CorporationDataQuerying;
+            CorporationDataQuerying corporationDataQuerying = m_ccpCharacter.CorporationDataQuerying;
 
             // Add orders to list
-            CharOrdersAdded = AddOrders(result, corporationDataQuerying.CorpOrdersAdded, IssuedFor.Character);
+            CharOrdersAdded = m_ccpCharacter.AddOrders(result, corporationDataQuerying.CorpOrdersAdded, IssuedFor.Character);
 
             // If character can not query corporation data, we switch the corp orders updated flag
             // and proceed with the orders importation
             IQueryMonitor corporationMarketOrdersMonitor =
-                CCPCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders];
+                m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders];
             corporationDataQuerying.CorpOrdersUpdated |= corporationMarketOrdersMonitor == null ||
                                                          !corporationMarketOrdersMonitor.Enabled;
 
@@ -337,11 +320,7 @@ namespace EVEMon.Common
             if (!corporationDataQuerying.CorpOrdersUpdated)
                 return;
 
-            ImportOrders();
-
-            // Reset flags
-            CharOrdersUpdated = false;
-            CharOrdersAdded = false;
+            m_ccpCharacter.ImportOrders();
         }
 
         /// <summary>
@@ -354,28 +333,42 @@ namespace EVEMon.Common
             CharJobsUpdated = true;
 
             // Notify an error occurred
-            if (ShouldNotifyError(result, APICharacterMethods.IndustryJobs))
-                EveMonClient.Notifications.NotifyCharacterIndustryJobsError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.IndustryJobs))
+                EveMonClient.Notifications.NotifyCharacterIndustryJobsError(m_ccpCharacter, result);
 
-            CorporationDataQuerying corporationDataQuerying = (CorporationDataQuerying)CCPCharacter.CorporationDataQuerying;
+            CorporationDataQuerying corporationDataQuerying = m_ccpCharacter.CorporationDataQuerying;
 
             // Add jobs to list
-            CharJobsAdded = AddJobs(result, corporationDataQuerying.CorpJobsAdded, IssuedFor.Character);
+            CharJobsAdded = m_ccpCharacter.AddJobs(result, corporationDataQuerying.CorpJobsAdded, IssuedFor.Character);
 
             // If character can not query corporation data, we switch the corp jobs updated flag
             // and proceed with the jobs importation
-            IQueryMonitor corpIndustryJobsMonitor = CCPCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
+            IQueryMonitor corpIndustryJobsMonitor = m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
             corporationDataQuerying.CorpJobsUpdated |= corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled;
 
             // Import the data if all queried
             if (!corporationDataQuerying.CorpJobsUpdated)
                 return;
 
-            ImportJobs();
+            m_ccpCharacter.ImportJobs();
+        }
 
-            // Reset flags
-            CharJobsUpdated = false;
-            CharJobsAdded = false;
+        /// <summary>
+        /// Processes the queried character's research points.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterResearchPointsUpdated(APIResult<SerializableAPIResearch> result)
+        {
+            // Notify an error occured
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.ResearchPoints))
+                EveMonClient.Notifications.NotifyResearchPointsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.ResearchPoints.Import(result.Result.ResearchPoints);
         }
 
         /// <summary>
@@ -385,8 +378,8 @@ namespace EVEMon.Common
         private void OnCharacterEVEMailMessagesUpdated(APIResult<SerializableAPIMailMessages> result)
         {
             // Notify an error occured
-            if (ShouldNotifyError(result, APICharacterMethods.MailMessages))
-                EveMonClient.Notifications.NotifyEVEMailMessagesError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MailMessages))
+                EveMonClient.Notifications.NotifyEVEMailMessagesError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -397,11 +390,11 @@ namespace EVEMon.Common
             QueryCharacterMailingLists();
 
             // Import the data
-            CCPCharacter.EVEMailMessages.Import(result.Result.Messages);
+            m_ccpCharacter.EVEMailMessages.Import(result.Result.Messages);
 
             // Notify on new messages
-            if (CCPCharacter.EVEMailMessages.NewMessages != 0)
-                EveMonClient.Notifications.NotifyNewEVEMailMessages(CCPCharacter, CCPCharacter.EVEMailMessages.NewMessages);
+            if (m_ccpCharacter.EVEMailMessages.NewMessages != 0)
+                EveMonClient.Notifications.NotifyNewEVEMailMessages(m_ccpCharacter, m_ccpCharacter.EVEMailMessages.NewMessages);
         }
 
         /// <summary>
@@ -411,15 +404,15 @@ namespace EVEMon.Common
         private void OnCharacterMailingListsUpdated(APIResult<SerializableAPIMailingLists> result)
         {
             // Notify an error occured
-            if (ShouldNotifyError(result, APICharacterMethods.MailingLists))
-                EveMonClient.Notifications.NotifyMailingListsError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MailingLists))
+                EveMonClient.Notifications.NotifyMailingListsError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
                 return;
 
             // Import the data
-            CCPCharacter.EVEMailingLists.Import(result.Result.MailingLists);
+            m_ccpCharacter.EVEMailingLists.Import(result.Result.MailingLists);
         }
 
         /// <summary>
@@ -429,20 +422,20 @@ namespace EVEMon.Common
         private void OnCharacterEVENotificationsUpdated(APIResult<SerializableAPINotifications> result)
         {
             // Notify an error occured
-            if (ShouldNotifyError(result, APICharacterMethods.Notifications))
-                EveMonClient.Notifications.NotifyEVENotificationsError(CCPCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Notifications))
+                EveMonClient.Notifications.NotifyEVENotificationsError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
                 return;
 
             // Import the data
-            CCPCharacter.EVENotifications.Import(result.Result.Notifications);
+            m_ccpCharacter.EVENotifications.Import(result.Result.Notifications);
 
             // Notify on new messages
-            if (CCPCharacter.EVENotifications.NewNotifications != 0)
-                EveMonClient.Notifications.NotifyNewEVENotifications(CCPCharacter,
-                                                                     CCPCharacter.EVENotifications.NewNotifications);
+            if (m_ccpCharacter.EVENotifications.NewNotifications != 0)
+                EveMonClient.Notifications.NotifyNewEVENotifications(m_ccpCharacter,
+                                                                     m_ccpCharacter.EVENotifications.NewNotifications);
         }
 
         #endregion
@@ -458,8 +451,8 @@ namespace EVEMon.Common
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // If character is monitored enable the basic feature monitoring
-            m_basicFeaturesMonitors.ForEach(monitor => monitor.Enabled = CCPCharacter.Monitored &&
-                                                                         CCPCharacter.QueryMonitors.Contains(monitor));
+            m_basicFeaturesMonitors.ForEach(monitor => monitor.Enabled = m_ccpCharacter.Monitored &&
+                                                                         m_ccpCharacter.QueryMonitors.Contains(monitor));
         }
 
         /// <summary>
@@ -469,22 +462,22 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.APIKeyInfoChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterListUpdated(object sender, APIKeyInfoChangedEventArgs e)
         {
-            if (!CCPCharacter.Identity.APIKeys.Contains(e.APIKey))
+            if (!m_ccpCharacter.Identity.APIKeys.Contains(e.APIKey))
                 return;
 
             if (e.APIKey.Type == APIKeyType.Corporation &&
-                CCPCharacter.Identity.APIKeys.All(apiKey => apiKey.Type == APIKeyType.Corporation) &&
-                m_characterQueryMonitors.Exists(monitor => CCPCharacter.QueryMonitors.Contains(monitor)))
+                m_ccpCharacter.Identity.APIKeys.All(apiKey => apiKey.Type == APIKeyType.Corporation) &&
+                m_characterQueryMonitors.Exists(monitor => m_ccpCharacter.QueryMonitors.Contains(monitor)))
             {
-                m_characterQueryMonitors.ForEach(monitor => CCPCharacter.QueryMonitors.Remove(monitor));
+                m_characterQueryMonitors.ForEach(monitor => m_ccpCharacter.QueryMonitors.Remove(monitor));
                 return;
             }
 
             if ((e.APIKey.Type != APIKeyType.Account && e.APIKey.Type != APIKeyType.Character) ||
-                m_characterQueryMonitors.Exists(monitor => CCPCharacter.QueryMonitors.Contains(monitor)))
+                m_characterQueryMonitors.Exists(monitor => m_ccpCharacter.QueryMonitors.Contains(monitor)))
                 return;
 
-            m_characterQueryMonitors.ForEach(monitor => CCPCharacter.QueryMonitors.Add(monitor));
+            m_characterQueryMonitors.ForEach(monitor => m_ccpCharacter.QueryMonitors.Add(monitor));
         }
 
         #endregion

@@ -264,7 +264,7 @@ namespace EVEMon.Common
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.CharacterDataQuerying.ShouldNotifyError(result, APICharacterMethods.MailBodies))
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MailBodies))
                 EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
 
             // Quits if there is an error
