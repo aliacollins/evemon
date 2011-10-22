@@ -36,6 +36,7 @@ namespace EVEMon.Common
         {
             m_ccpCharacter = ccpCharacter;
             m_characterQueryMonitors = new List<IQueryMonitorEx>();
+            EndedOrders = new List<MarketOrder>();
 
             // Initializes the query monitors 
             m_charSheetMonitor =
@@ -307,7 +308,6 @@ namespace EVEMon.Common
                 return;
 
             result.Result.Orders.ForEach(order => order.IssuedFor = IssuedFor.Character);
-            EndedOrders = new List<MarketOrder>();
 
             // Import the data
             m_ccpCharacter.CharacterMarketOrders.Import(result.Result.Orders, EndedOrders);

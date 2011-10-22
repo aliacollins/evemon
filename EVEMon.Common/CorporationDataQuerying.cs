@@ -23,6 +23,7 @@ namespace EVEMon.Common
         {
             m_ccpCharacter = ccpCharacter;
             m_corporationQueryMonitors = new List<IQueryMonitorEx>();
+            EndedOrders = new List<MarketOrder>();
 
             // Initializes the query monitors 
             m_corpMarketOrdersMonitor =
@@ -38,6 +39,7 @@ namespace EVEMon.Common
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
+
 
             EveMonClient.CharacterListUpdated += EveMonClient_CharacterListUpdated;
         }
@@ -57,10 +59,10 @@ namespace EVEMon.Common
         internal bool CorporationMarketOrdersQueried { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [corporation industryjobs queried].
+        /// Gets or sets a value indicating whether [corporation industry jobs queried].
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [corporation industryjobs queried]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if [corporation industry jobs queried]; otherwise, <c>false</c>.
         /// </value>
         internal bool CorporationIndustryJobsQueried { get; set; }
 
@@ -94,7 +96,6 @@ namespace EVEMon.Common
                 return;
 
             result.Result.Orders.ForEach(x => x.IssuedFor = IssuedFor.Corporation);
-            EndedOrders = new List<MarketOrder>();
 
             // Exclude orders that wheren't issued by this character
             // (Delete this line upon implementing an exclusive corporation related monitor)
