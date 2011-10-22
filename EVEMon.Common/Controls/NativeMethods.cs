@@ -40,7 +40,7 @@ namespace EVEMon.Common.Controls
             int left = frm.Left;
             int top = frm.Top;
 
-            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE);
+            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
             ShowWindow(frm.Handle, SW_SHOWNOACTIVATE);
         }
 

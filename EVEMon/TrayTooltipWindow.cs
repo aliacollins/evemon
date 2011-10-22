@@ -74,12 +74,8 @@ namespace EVEMon
         {
             base.OnShown(e);
 
-            // Equivalent to setting TopMost = true, except don't activate the window
-            NativeMethods.SetWindowPos(Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
-                                       NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
-
-            // Show the window without activating it
-            NativeMethods.ShowWindow(Handle, NativeMethods.SW_SHOWNOACTIVATE);
+            // Show the given form on topmost without activating it
+            this.ShowInactiveTopmost();
         }
 
         /// <summary>
