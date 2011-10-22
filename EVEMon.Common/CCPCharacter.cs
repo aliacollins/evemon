@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -11,8 +12,9 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
-        private readonly List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
-        private readonly List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
+        private readonly CharacterDataQuerying m_characterDataQuerying;
+        private readonly CorporationDataQuerying m_corporationDataQuerying;
+
         private Enum m_errorNotifiedMethod;
 
 
@@ -29,15 +31,22 @@ namespace EVEMon.Common
             QueryMonitors = new QueryMonitorCollection();
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
-            MarketOrders = new MarketOrderCollection(this);
-            IndustryJobs = new IndustryJobCollection(this);
+            CharacterMarketOrders = new MarketOrderCollection(this);
+            CorporationMarketOrders = new MarketOrderCollection(this);
+            CharacterIndustryJobs = new IndustryJobCollection(this);
+            CorporationIndustryJobs = new IndustryJobCollection(this);
             ResearchPoints = new ResearchPointCollection(this);
             EVEMailMessages = new EveMailMessagesCollection(this);
             EVEMailingLists = new EveMailingListsCollection(this);
             EVENotifications = new EveNotificationsCollection(this);
 
-            CharacterDataQuerying = new CharacterDataQuerying(this);
-            CorporationDataQuerying = new CorporationDataQuerying(this);
+            m_characterDataQuerying = new CharacterDataQuerying(this);
+            m_corporationDataQuerying = new CorporationDataQuerying(this);
+
+            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CorporationMarketOrdersUpdated += EveMonClient_CorporationMarketOrdersUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated += EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CorporationIndustryJobsUpdated += EveMonClient_CorporationIndustryJobsUpdated;
         }
 
         /// <summary>
@@ -58,8 +67,8 @@ namespace EVEMon.Common
         internal CCPCharacter(CharacterIdentity identity)
             : this(identity, Guid.NewGuid())
         {
-            CharacterDataQuerying.CharacterSheetMonitor.ForceUpdate(true);
-            CharacterDataQuerying.SkillQueueMonitor.ForceUpdate(true);
+            m_characterDataQuerying.CharacterSheetMonitor.ForceUpdate(true);
+            m_characterDataQuerying.SkillQueueMonitor.ForceUpdate(true);
         }
 
         #endregion
@@ -75,8 +84,8 @@ namespace EVEMon.Common
             get
             {
                 return (Identity.APIKeys.IsEmpty() ||
-                        (CharacterDataQuerying.CharacterSheetMonitor.LastResult != null &&
-                         CharacterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
+                        (m_characterDataQuerying.CharacterSheetMonitor.LastResult != null &&
+                         m_characterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
                            ? String.Format("{0} (cached)", Name)
                            : Name;
             }
@@ -95,12 +104,42 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of market orders.
         /// </summary>
-        public MarketOrderCollection MarketOrders { get; private set; }
+        public IEnumerable<MarketOrder> MarketOrders
+        {
+            get { return CharacterMarketOrders.Concat(CorporationMarketOrders); }
+        }
+
+        /// <summary>
+        /// Gets or sets the character market orders.
+        /// </summary>
+        /// <value>The character market orders.</value>
+        public MarketOrderCollection CharacterMarketOrders { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the corporation market orders.
+        /// </summary>
+        /// <value>The corporation market orders.</value>
+        public MarketOrderCollection CorporationMarketOrders { get; private set; }
 
         /// <summary>
         /// Gets the collection of industry jobs.
         /// </summary>
-        public IndustryJobCollection IndustryJobs { get; private set; }
+        public IEnumerable<IndustryJob> IndustryJobs
+        {
+            get { return CharacterIndustryJobs.Concat(CorporationIndustryJobs); }
+        }
+
+        /// <summary>
+        /// Gets or sets the character industry jobs.
+        /// </summary>
+        /// <value>The character industry jobs.</value>
+        public IndustryJobCollection CharacterIndustryJobs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the corporation industry jobs.
+        /// </summary>
+        /// <value>The corporation industry jobs.</value>
+        public IndustryJobCollection CorporationIndustryJobs { get; set; }
 
         /// <summary>
         /// Gets the collection of research points.
@@ -126,18 +165,6 @@ namespace EVEMon.Common
         /// Gets the query monitors enumeration.
         /// </summary>
         public QueryMonitorCollection QueryMonitors { get; private set; }
-
-        /// <summary>
-        /// Gets the character data querying.
-        /// </summary>
-        /// <value>The character data querying.</value>
-        public CharacterDataQuerying CharacterDataQuerying { get; private set; }
-
-        /// <summary>
-        /// Gets the corporation data querying.
-        /// </summary>
-        /// <value>The corporation data querying.</value>
-        public CorporationDataQuerying CorporationDataQuerying { get; private set; }
 
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
@@ -193,10 +220,10 @@ namespace EVEMon.Common
             serial.Standings = Standings.Export();
 
             // Market orders
-            serial.MarketOrders = MarketOrders.Export();
+            serial.MarketOrders = MarketOrdersExport();
 
             // Industry jobs
-            serial.IndustryJobs = IndustryJobs.Export();
+            serial.IndustryJobs = IndustryJobsExport();
 
             // Eve mail messages IDs
             serial.EveMailMessagesIDs = EVEMailMessages.Export();
@@ -219,6 +246,24 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Exports the market orders.
+        /// </summary>
+        /// <returns></returns>
+        private List<SerializableOrderBase> MarketOrdersExport()
+        {
+            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.Export()).ToList();
+        }
+
+        /// <summary>
+        /// Exports the industry jobs.
+        /// </summary>
+        /// <returns></returns>
+        private List<SerializableJob> IndustryJobsExport()
+        {
+            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.Export()).ToList();
+        }
+
+        /// <summary>
         /// Imports data from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
@@ -233,10 +278,10 @@ namespace EVEMon.Common
             Standings.Import(serial.Standings);
 
             // Market orders
-            MarketOrders.Import(serial.MarketOrders);
+            MarketOrdersImport(serial.MarketOrders);
 
             // Industry jobs
-            IndustryJobs.Import(serial.IndustryJobs);
+            IndustryJobsImport(serial.IndustryJobs);
 
             // EVE mail messages IDs
             EVEMailMessages.Import(serial.EveMailMessagesIDs);
@@ -257,10 +302,30 @@ namespace EVEMon.Common
             EveMonClient.OnCharacterUpdated(this);
         }
 
+        /// <summary>
+        /// Imports the market orders.
+        /// </summary>
+        /// <param name="marketOrders">The market orders.</param>
+        private void MarketOrdersImport(IEnumerable<SerializableOrderBase> marketOrders)
+        {
+            CharacterMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Character));
+            CorporationMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Corporation));
+        }
+
+        /// <summary>
+        /// Imports the industry jobs.
+        /// </summary>
+        /// <param name="industryJobs">The industry jobs.</param>
+        private void IndustryJobsImport(IEnumerable<SerializableJob> industryJobs)
+        {
+            CharacterIndustryJobs.Import(industryJobs.Where(job => job.IssuedFor == IssuedFor.Character));
+            CorporationIndustryJobs.Import(industryJobs.Where(job => job.IssuedFor == IssuedFor.Corporation));
+        }
+
         #endregion
 
 
-        # region Querying Helper Methods
+        #region Helper Methods
 
         /// <summary>
         /// Forces an update on the selected query monitor.
@@ -272,7 +337,6 @@ namespace EVEMon.Common
             if (monitor != null)
                 monitor.ForceUpdate(false);
         }
-
 
         /// <summary>
         /// Checks whether we should notify an error.
@@ -303,59 +367,59 @@ namespace EVEMon.Common
             // Removes the previous error notification
             if (m_errorNotifiedMethod == method)
             {
-                //EveMonClient.Notifications.InvalidateCharacterAPIError(CCPCharacter);
+                EveMonClient.Notifications.InvalidateCharacterAPIError(this);
                 m_errorNotifiedMethod = APIMethodsExtensions.None;
             }
             return false;
         }
 
         /// <summary>
-        /// Add the queried orders to a list.
+        /// Notifies for market orders related events.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="ordersAdded"></param>
-        /// <param name="issuedFor"></param>
-        /// <returns>True if orders get added, false otherwise</returns>
-        internal bool AddOrders(APIResult<SerializableAPIMarketOrders> result, bool ordersAdded, IssuedFor issuedFor)
+        private void NotifyForMarketOrdersRelatedEvents()
         {
-            // Add orders if there isn't an error
-            if (result.HasError)
-                return false;
+            // If character can not query corporation related data or corporation market orders monitor is not enabled
+            // we switch the flag to proceed with notifications
+            IQueryMonitor corpMarketOrdersMonitor = QueryMonitors[APICorporationMethods.CorporationMarketOrders];
+            m_corporationDataQuerying.CorporationMarketOrdersQueried |= corpMarketOrdersMonitor == null ||
+                                                                        !corpMarketOrdersMonitor.Enabled;
 
-            // Check to see if other market
-            // orders have been added before
-            if (!ordersAdded)
-                m_orders.Clear();
+            // Quit if not all market orders where queried
+            if (!m_characterDataQuerying.CharacterMarketOrdersQueried || !m_corporationDataQuerying.CorporationMarketOrdersQueried)
+                return;
 
-            // Add orders in list
-            result.Result.Orders.ForEach(order => order.IssuedFor = issuedFor);
-            m_orders.AddRange(result.Result.Orders);
+            // Notify for ended orders
+            NotifyEndedOrders();
 
-            return true;
+            // Notify for insufficient balance
+            NotifyInsufficientBalance();
+
+            // Reset flags
+            m_characterDataQuerying.CharacterMarketOrdersQueried = false;
+            m_corporationDataQuerying.CorporationMarketOrdersQueried = false;
+
+            // Fires the event regarding market orders update
+            EveMonClient.OnMarketOrdersUpdated(this);
         }
 
         /// <summary>
-        /// Import the orders from both market orders querying.
+        /// Notifies for ended orders.
         /// </summary>
-        internal void ImportOrders()
+        private void NotifyEndedOrders()
         {
-            // Exclude orders that wheren't issued by this character
-            // (Delete this line upon implementing an exclusive corporation market monitor)
-            IEnumerable<SerializableOrderListItem> characterOrders = m_orders.Where(x => x.OwnerID == CharacterID);
-
-            List<MarketOrder> endedOrders = new List<MarketOrder>();
-            MarketOrders.Import(characterOrders, endedOrders);
+            IEnumerable<MarketOrder> endedOrders =
+                m_characterDataQuerying.EndedOrders.Concat(m_corporationDataQuerying.EndedOrders);
 
             // Notify for ended orders
             if (endedOrders.Count() != 0)
                 EveMonClient.Notifications.NotifyMarkerOrdersEnded(this, endedOrders);
+        }
 
-            // Reset flags
-            CharacterDataQuerying.CharOrdersUpdated = false;
-            CharacterDataQuerying.CharOrdersAdded = false;
-            CorporationDataQuerying.CorpJobsUpdated = false;
-            CorporationDataQuerying.CorpJobsAdded = false;
-
+        /// <summary>
+        /// Notifies for insufficient balance.
+        /// </summary>
+        private void NotifyInsufficientBalance()
+        {
             // Check the character has sufficient balance
             // for its buying orders and send a notification if not
             if (!HasSufficientBalance)
@@ -368,52 +432,85 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Add the queried jobs to a list.
+        /// Notifies for industry jobs related events.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="jobsAdded"></param>
-        /// <param name="issuedFor"></param>
-        /// <returns>True if jobs get added, false otherwise</returns>
-        internal bool AddJobs(APIResult<SerializableAPIIndustryJobs> result, bool jobsAdded, IssuedFor issuedFor)
+        private void NotifyForIndustryJobsRelatedEvents()
         {
-            // Add orders if there isn't an error
-            if (result.HasError)
-                return false;
+            // If character can not query corporation related data or corporation industry jobs monitor is not enabled
+            // we switch the flag to proceed with notifications
+            IQueryMonitor corpIndustryJobsMonitor = QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
+            m_corporationDataQuerying.CorporationMarketOrdersQueried |= corpIndustryJobsMonitor == null ||
+                                                                        !corpIndustryJobsMonitor.Enabled;
 
-            // Check to see if other jobs
-            // have been added before
-            if (!jobsAdded)
-                m_jobs.Clear();
-
-            // Add jobs in list
-            result.Result.Jobs.ForEach(x => x.IssuedFor = issuedFor);
-            m_jobs.AddRange(result.Result.Jobs);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Import the jobs from both industry jobs querying.
-        /// </summary>
-        internal void ImportJobs()
-        {
-            // Exclude jobs that wheren't issued by this character
-            // (Delete this line upon implementing an exclusive corporation jobs monitor)
-            IEnumerable<SerializableJobListItem> characterJobs = m_jobs.Where(x => x.InstallerID == CharacterID);
-
-            IndustryJobs.Import(characterJobs);
-
-            // Fires the event regarding industry jobs update
-            EveMonClient.OnIndustryJobsUpdated(this);
+            // Quit if not all industry jobs where queried
+            if (!m_characterDataQuerying.CharacterIndustryJobsQueried || !m_corporationDataQuerying.CorporationIndustryJobsQueried)
+                return;
 
             // Reset flags
-            CharacterDataQuerying.CharJobsUpdated = false;
-            CharacterDataQuerying.CharJobsAdded = false;
-            CorporationDataQuerying.CorpOrdersUpdated = false;
-            CorporationDataQuerying.CorpOrdersAdded = false;
+            m_characterDataQuerying.CharacterIndustryJobsQueried = false;
+            m_corporationDataQuerying.CorporationIndustryJobsQueried = false;
+
+            // Fires the event regarding industry jobs  update
+            EveMonClient.OnIndustryJobsUpdated(this);
         }
 
         #endregion
 
+
+        #region Global Events
+
+        /// <summary>
+        /// Handles the CharacterMarketOrdersUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            NotifyForMarketOrdersRelatedEvents();
+        }
+
+        /// <summary>
+        /// Handles the CorporationMarketOrdersUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CorporationMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            NotifyForMarketOrdersRelatedEvents();
+        }
+
+        /// <summary>
+        /// Handles the CharacterIndustryJobsUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            NotifyForIndustryJobsRelatedEvents();
+        }
+
+        /// <summary>
+        /// Handles the CorporationIndustryJobsUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CorporationIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            NotifyForIndustryJobsRelatedEvents();
+        }
+
+        #endregion
     }
 }

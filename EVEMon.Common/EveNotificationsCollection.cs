@@ -92,8 +92,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal String Export()
         {
-            IEnumerable<String> serial = Items.Select(notification => notification.NotificationID.ToString());
-            return String.Join(",", serial);
+            return String.Join(",", Items.Select(notification => notification.NotificationID.ToString()));
         }
 
         #endregion

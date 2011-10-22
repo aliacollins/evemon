@@ -535,14 +535,34 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
 
         /// <summary>
-        /// Occurs when market orders of a character have been updated.
+        /// Occurs when both personal and corporation market orders of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> MarketOrdersUpdated;
+
+        /// <summary>
+        /// Occurs when personal market orders of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterMarketOrdersUpdated;
+
+        /// <summary>
+        /// Occurs when corporation market orders of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CorporationMarketOrdersUpdated;
 
         /// <summary>
         /// Occurs when industry jobs of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> IndustryJobsUpdated;
+
+        /// <summary>
+        /// Occurs when industry jobs of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterIndustryJobsUpdated;
+
+        /// <summary>
+        /// Occurs when industry jobs of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CorporationIndustryJobsUpdated;
 
         /// <summary>
         /// Occurs when the industry jobs of a character have been completed.
@@ -770,7 +790,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when both character and corporation issued market orders for a character updated.
+        /// Called when the personal market orders of a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
         internal static void OnMarketOrdersUpdated(Character character)
@@ -779,6 +799,28 @@ namespace EVEMon.Common
             Settings.Save();
             if (MarketOrdersUpdated != null)
                 MarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the personal market orders of a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterMarketOrdersUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterMarketOrdersUpdated - {0}", character.Name);
+            if (CharacterMarketOrdersUpdated != null)
+                CharacterMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the corporation market orders of a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCorporationMarketOrdersUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCorporationMarketOrdersUpdated - {0}", character.Name);
+            if (CorporationMarketOrdersUpdated != null)
+                CorporationMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -791,6 +833,28 @@ namespace EVEMon.Common
             Settings.Save();
             if (IndustryJobsUpdated != null)
                 IndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character industry jobs for a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterIndustryJobsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterIndustryJobsUpdated - {0}", character.Name);
+            if (CharacterIndustryJobsUpdated != null)
+                CharacterIndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the corporation issued industry jobs for a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCorporationIndustryJobsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCorporationIndustryJobsUpdated - {0}", character.Name);
+            if (CorporationIndustryJobsUpdated != null)
+                CorporationIndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

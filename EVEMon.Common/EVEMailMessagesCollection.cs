@@ -106,10 +106,8 @@ namespace EVEMon.Common
         internal String Export()
         {
             // Store only the mail messages IDs from the inbox in a descending order
-            IEnumerable<String> serial = Items.Where(x => x.Sender != m_ccpCharacter.Name).OrderByDescending(
-                x => x.MessageID).Select(message => message.MessageID.ToString());
-
-            return String.Join(",", serial);
+            return String.Join(",", Items.Where(x => x.Sender != m_ccpCharacter.Name).OrderByDescending(
+                x => x.MessageID).Select(message => message.MessageID.ToString()));
         }
 
         #endregion

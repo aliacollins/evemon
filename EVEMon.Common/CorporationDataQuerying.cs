@@ -49,33 +49,32 @@ namespace EVEMon.Common
         #region Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether [corp orders updated].
+        /// Gets or sets a value indicating whether [corporation market orders queried].
         /// </summary>
-        /// <value><c>true</c> if [corp orders updated]; otherwise, <c>false</c>.</value>
-        internal bool CorpOrdersUpdated { get; set; }
+        /// <value>
+        /// 	<c>true</c> if [corporation market orders queried]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool CorporationMarketOrdersQueried { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [corp orders added].
+        /// Gets or sets a value indicating whether [corporation industryjobs queried].
         /// </summary>
-        /// <value><c>true</c> if [corp orders added]; otherwise, <c>false</c>.</value>
-        internal bool CorpOrdersAdded { get; set; }
+        /// <value>
+        /// 	<c>true</c> if [corporation industryjobs queried]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool CorporationIndustryJobsQueried { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [corp jobs updated].
+        /// Gets or sets the ended orders.
         /// </summary>
-        /// <value><c>true</c> if [corp jobs updated]; otherwise, <c>false</c>.</value>
-        internal bool CorpJobsUpdated { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [corp jobs added].
-        /// </summary>
-        /// <value><c>true</c> if [corp jobs added]; otherwise, <c>false</c>.</value>
-        internal bool CorpJobsAdded { get; set; }
+        /// <value>The ended orders.</value>
+        internal List<MarketOrder> EndedOrders { get; private set; }
 
         #endregion
 
 
         #region Querying
+
 
         /// <summary>
         /// Processes the queried character's corporation market orders.
@@ -84,30 +83,31 @@ namespace EVEMon.Common
         /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
         private void OnCorporationMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
-            CorpOrdersUpdated = true;
+            CorporationMarketOrdersQueried = true;
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationMarketOrders))
                 EveMonClient.Notifications.NotifyCorporationMarketOrdersError(m_ccpCharacter, result);
 
-            CharacterDataQuerying characterDataQuerying = m_ccpCharacter.CharacterDataQuerying;
-
-            // Add orders to list
-            CorpOrdersAdded = m_ccpCharacter.AddOrders(result, characterDataQuerying.CharOrdersAdded, IssuedFor.Corporation);
-
-            // If character can not query character data, we switch the char orders updated flag
-            // and proceed with the orders importation
-            IQueryMonitor characterMarketOrdersMonitor = m_ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
-            characterDataQuerying.CharOrdersUpdated |= characterMarketOrdersMonitor == null ||
-                                                       !characterMarketOrdersMonitor.Enabled;
-
-            // Import the data if all queried
-            if (!characterDataQuerying.CharOrdersUpdated)
+            // Quits if there is an error
+            if (result.HasError)
                 return;
 
-            m_ccpCharacter.ImportOrders();
+            result.Result.Orders.ForEach(x => x.IssuedFor = IssuedFor.Corporation);
+            EndedOrders = new List<MarketOrder>();
 
+            // Exclude orders that wheren't issued by this character
+            // (Delete this line upon implementing an exclusive corporation related monitor)
+            IEnumerable<SerializableOrderListItem> characterOrders = result.Result.Orders.Where(
+                x => x.OwnerID == m_ccpCharacter.CharacterID);
+
+            // Import the data
+            m_ccpCharacter.CharacterMarketOrders.Import(characterOrders, EndedOrders);
+
+            // Fires the event regarding corporation market orders update
+            EveMonClient.OnCorporationMarketOrdersUpdated(m_ccpCharacter);
         }
+
 
         /// <summary>
         /// Processes the queried character's corporation industry jobs.
@@ -116,27 +116,28 @@ namespace EVEMon.Common
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
         private void OnCorporationIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
         {
-            CorpJobsUpdated = true;
+            CorporationIndustryJobsQueried = true;
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationIndustryJobs))
                 EveMonClient.Notifications.NotifyCorporationIndustryJobsError(m_ccpCharacter, result);
 
-            CharacterDataQuerying characterDataQuerying = m_ccpCharacter.CharacterDataQuerying;
-
-            // Add jobs to list
-            CorpJobsAdded = m_ccpCharacter.AddJobs(result, characterDataQuerying.CharJobsAdded, IssuedFor.Corporation);
-
-            // If character can not query character data, we switch the char jobs updated flag
-            // and proceed with the jobs importation
-            IQueryMonitor charIndustryJobsMonitor = m_ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs];
-            characterDataQuerying.CharJobsUpdated |= charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled;
-
-            // Import the data if all queried
-            if (!characterDataQuerying.CharJobsUpdated)
+            // Quits if there is an error
+            if (result.HasError)
                 return;
 
-            m_ccpCharacter.ImportJobs();
+            result.Result.Jobs.ForEach(x => x.IssuedFor = IssuedFor.Corporation);
+
+            // Exclude jobs that wheren't issued by this character
+            // (Delete this line upon implementing an exclusive corporation related monitor)
+            IEnumerable<SerializableJobListItem> characterJobs = result.Result.Jobs.Where(
+                x => x.InstallerID == m_ccpCharacter.CharacterID);
+
+            // Import the data
+            m_ccpCharacter.CorporationIndustryJobs.Import(characterJobs);
+
+            // Fires the event regarding corporation industry jobs update
+            EveMonClient.OnCorporationIndustryJobsUpdated(m_ccpCharacter);
         }
 
         #endregion

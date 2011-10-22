@@ -87,20 +87,15 @@ namespace EVEMon.Common
             // Replace the old list with the new one
             Items.Clear();
             Items.AddRange(newOrders);
-
-            // Fires the event regarding market orders update
-            EveMonClient.OnMarketOrdersUpdated(m_character);
         }
 
         /// <summary>
         /// Exports the orders to a serialization object for the settings file.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableOrderBase> Export()
+        internal IEnumerable<SerializableOrderBase> Export()
         {
-            List<SerializableOrderBase> serial = new List<SerializableOrderBase>(Items.Count);
-            serial.AddRange(Items.Select(order => order.Export()));
-            return serial;
+            return Items.Select(order => order.Export());
         }
     }
 }

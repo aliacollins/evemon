@@ -66,7 +66,7 @@ namespace EVEMon.Common
             }
 
             // Import the jobs from the API
-            List<IndustryJob> newJobs = (src.Select(
+            List<IndustryJob> newJobs = src.Select(
                 srcJob => new
                               {
                                   srcJob,
@@ -75,7 +75,7 @@ namespace EVEMon.Common
                                   job => job.limit >= DateTime.UtcNow).Where(
                                       job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
                                           job => new IndustryJob(job.srcJob)).Where(
-                                              job => job.InstalledItem != null)).ToList();
+                                              job => job.InstalledItem != null).ToList();
 
             // Add the items that are no longer marked for deletion
             newJobs.AddRange(Items.Where(x => !x.MarkedForDeletion));
@@ -83,21 +83,15 @@ namespace EVEMon.Common
             // Replace the old list with the new one
             Items.Clear();
             Items.AddRange(newJobs);
-
-            // Fires the event regarding industry jobs update
-            EveMonClient.OnIndustryJobsUpdated(m_character);
         }
 
         /// <summary>
         /// Exports the orders to a serialization object for the settings file.
         /// </summary>
         /// <returns>List of serializable jobs.</returns>
-        internal List<SerializableJob> Export()
+        internal IEnumerable<SerializableJob> Export()
         {
-            List<SerializableJob> serial = new List<SerializableJob>(Items.Count);
-            serial.AddRange(Items.Select(job => job.Export()));
-
-            return serial;
+            return Items.Select(job => job.Export());
         }
 
         /// <summary>

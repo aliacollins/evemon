@@ -744,7 +744,7 @@ namespace EVEMon
         #endregion
 
 
-        #region Event Handlers
+        #region Local Event Handlers
 
         /// <summary>
         /// On column reorder we update the settings.
@@ -816,6 +816,10 @@ namespace EVEMon
                     break;
             }
         }
+        # endregion
+
+
+        #region Global Event Handlers
 
         /// <summary>
         /// On timer tick, we update the column settings if any changes have been made to them.

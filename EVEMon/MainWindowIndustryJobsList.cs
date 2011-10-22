@@ -299,7 +299,6 @@ namespace EVEMon
             if (!Visible)
                 return;
 
-
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (lvJobs.SelectedItems.Count > 0
                                     ? lvJobs.SelectedItems[0].Tag.GetHashCode()
@@ -783,7 +782,7 @@ namespace EVEMon
         # endregion
 
 
-        #region Global events
+        #region Global Events
 
         /// <summary>
         /// Handles the IndustryJobsCompleted event of the EveMonClient control.
@@ -1035,19 +1034,19 @@ namespace EVEMon
         private void CalculatePanelInfo()
         {
             m_activeManufJobsIssuedForCharacterCount = m_list.Where(
-                x => (x.State == JobState.Active) && x.Activity == BlueprintActivity.Manufacturing &&
+                x => x.State == JobState.Active && x.Activity == BlueprintActivity.Manufacturing &&
                      x.IssuedFor == IssuedFor.Character).Count();
 
             m_activeManufJobsIssuedForCorporationCount = m_list.Where(
-                x => (x.State == JobState.Active) && x.Activity == BlueprintActivity.Manufacturing &&
+                x => x.State == JobState.Active && x.Activity == BlueprintActivity.Manufacturing &&
                      x.IssuedFor == IssuedFor.Corporation).Count();
 
             m_activeResearchJobsIssuedForCharacterCount = m_list.Where(
-                x => (x.State == JobState.Active) && x.Activity != BlueprintActivity.Manufacturing &&
+                x => x.State == JobState.Active && x.Activity != BlueprintActivity.Manufacturing &&
                      x.IssuedFor == IssuedFor.Character).Count();
 
             m_activeResearchJobsIssuedForCorporationCount = m_list.Where(
-                x => (x.State == JobState.Active) && x.Activity != BlueprintActivity.Manufacturing &&
+                x => x.State == JobState.Active && x.Activity != BlueprintActivity.Manufacturing &&
                      x.IssuedFor == IssuedFor.Corporation).Count();
 
             // Calculate character's max manufacturing jobs

@@ -117,28 +117,26 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [char orders updated].
+        /// Gets or sets a value indicating whether [character market orders queried].
         /// </summary>
-        /// <value><c>true</c> if [char orders updated]; otherwise, <c>false</c>.</value>
-        internal bool CharOrdersUpdated { get; set; }
+        /// <value>
+        /// 	<c>true</c> if [character market orders queried]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool CharacterMarketOrdersQueried { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [char orders added].
+        /// Gets or sets a value indicating whether [character industry jobs queried].
         /// </summary>
-        /// <value><c>true</c> if [char orders added]; otherwise, <c>false</c>.</value>
-        internal bool CharOrdersAdded { get; set; }
+        /// <value>
+        /// 	<c>true</c> if [character industry jobs queried]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool CharacterIndustryJobsQueried { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [char jobs updated].
+        /// Gets or sets the ended orders.
         /// </summary>
-        /// <value><c>true</c> if [char jobs updated]; otherwise, <c>false</c>.</value>
-        internal bool CharJobsUpdated { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [char jobs added].
-        /// </summary>
-        /// <value><c>true</c> if [char jobs added]; otherwise, <c>false</c>.</value>
-        internal bool CharJobsAdded { get; set; }
+        /// <value>The ended orders.</value>
+        internal List<MarketOrder> EndedOrders { get; private set; }
 
         #endregion
 
@@ -298,29 +296,24 @@ namespace EVEMon.Common
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
         private void OnCharacterMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
-            CharOrdersUpdated = true;
+            CharacterMarketOrdersQueried = true;
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MarketOrders))
                 EveMonClient.Notifications.NotifyCharacterMarketOrdersError(m_ccpCharacter, result);
 
-            CorporationDataQuerying corporationDataQuerying = m_ccpCharacter.CorporationDataQuerying;
-
-            // Add orders to list
-            CharOrdersAdded = m_ccpCharacter.AddOrders(result, corporationDataQuerying.CorpOrdersAdded, IssuedFor.Character);
-
-            // If character can not query corporation data, we switch the corp orders updated flag
-            // and proceed with the orders importation
-            IQueryMonitor corporationMarketOrdersMonitor =
-                m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders];
-            corporationDataQuerying.CorpOrdersUpdated |= corporationMarketOrdersMonitor == null ||
-                                                         !corporationMarketOrdersMonitor.Enabled;
-
-            // Import the data if all queried
-            if (!corporationDataQuerying.CorpOrdersUpdated)
+            // Quits if there is an error
+            if (result.HasError)
                 return;
 
-            m_ccpCharacter.ImportOrders();
+            result.Result.Orders.ForEach(order => order.IssuedFor = IssuedFor.Character);
+            EndedOrders = new List<MarketOrder>();
+
+            // Import the data
+            m_ccpCharacter.CharacterMarketOrders.Import(result.Result.Orders, EndedOrders);
+
+            // Fires the event regarding character market orders update
+            EveMonClient.OnCharacterMarketOrdersUpdated(m_ccpCharacter);
         }
 
         /// <summary>
@@ -330,27 +323,23 @@ namespace EVEMon.Common
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
         private void OnCharacterIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
         {
-            CharJobsUpdated = true;
+            CharacterIndustryJobsQueried = true;
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.IndustryJobs))
                 EveMonClient.Notifications.NotifyCharacterIndustryJobsError(m_ccpCharacter, result);
 
-            CorporationDataQuerying corporationDataQuerying = m_ccpCharacter.CorporationDataQuerying;
-
-            // Add jobs to list
-            CharJobsAdded = m_ccpCharacter.AddJobs(result, corporationDataQuerying.CorpJobsAdded, IssuedFor.Character);
-
-            // If character can not query corporation data, we switch the corp jobs updated flag
-            // and proceed with the jobs importation
-            IQueryMonitor corpIndustryJobsMonitor = m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
-            corporationDataQuerying.CorpJobsUpdated |= corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled;
-
-            // Import the data if all queried
-            if (!corporationDataQuerying.CorpJobsUpdated)
+            // Quits if there is an error
+            if (result.HasError)
                 return;
 
-            m_ccpCharacter.ImportJobs();
+            result.Result.Jobs.ForEach(x => x.IssuedFor = IssuedFor.Character);
+
+            // Import the data
+            m_ccpCharacter.CharacterIndustryJobs.Import(result.Result.Jobs);
+
+            // Fires the event regarding character industry jobs update
+            EveMonClient.OnCharacterIndustryJobsUpdated(m_ccpCharacter);
         }
 
         /// <summary>
@@ -432,7 +421,7 @@ namespace EVEMon.Common
             // Import the data
             m_ccpCharacter.EVENotifications.Import(result.Result.Notifications);
 
-            // Notify on new messages
+            // Notify on new notifications
             if (m_ccpCharacter.EVENotifications.NewNotifications != 0)
                 EveMonClient.Notifications.NotifyNewEVENotifications(m_ccpCharacter,
                                                                      m_ccpCharacter.EVENotifications.NewNotifications);
