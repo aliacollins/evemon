@@ -30,6 +30,7 @@ namespace EVEMon.Common
         protected MarketOrder(SerializableOrderListItem src)
         {
             m_state = GetState(src);
+            OwnerID = src.OwnerID;
             ID = src.OrderID;
             m_itemID = src.ItemID;
             Item = StaticItems.GetItemByID(src.ItemID);
@@ -99,6 +100,12 @@ namespace EVEMon.Common
         /// Gets the order ID.
         /// </summary>
         public long ID { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the owner ID.
+        /// </summary>
+        /// <value>The owner ID.</value>
+        public long OwnerID { get; set; }
 
         /// <summary>
         /// Gets the item.

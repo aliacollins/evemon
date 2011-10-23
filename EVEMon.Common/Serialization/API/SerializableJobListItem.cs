@@ -24,7 +24,7 @@ namespace EVEMon.Common.Serialization.API
         public int InstalledItemMaterialLevel { get; set; }
 
         [XmlAttribute("installerID")]
-        public int InstallerID { get; set; }
+        public long InstallerID { get; set; }
 
         [XmlAttribute("runs")]
         public int Runs { get; set; }

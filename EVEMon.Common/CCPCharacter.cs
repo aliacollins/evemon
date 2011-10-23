@@ -14,6 +14,8 @@ namespace EVEMon.Common
     {
         private readonly CharacterDataQuerying m_characterDataQuerying;
         private readonly CorporationDataQuerying m_corporationDataQuerying;
+        private readonly List<MarketOrder> m_endedOrdersForCharacter;
+        private readonly List<MarketOrder> m_endedOrdersForCorporation;
 
         private Enum m_errorNotifiedMethod;
 
@@ -42,6 +44,8 @@ namespace EVEMon.Common
 
             m_characterDataQuerying = new CharacterDataQuerying(this);
             m_corporationDataQuerying = new CorporationDataQuerying(this);
+            m_endedOrdersForCharacter = new List<MarketOrder>();
+            m_endedOrdersForCorporation = new List<MarketOrder>();
 
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated += EveMonClient_CorporationMarketOrdersUpdated;
@@ -106,7 +110,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<MarketOrder> MarketOrders
         {
-            get { return CharacterMarketOrders.Concat(CorporationMarketOrders); }
+            get { return CharacterMarketOrders.Concat(CorporationMarketOrders.Where(order => order.OwnerID == CharacterID)); }
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<IndustryJob> IndustryJobs
         {
-            get { return CharacterIndustryJobs.Concat(CorporationIndustryJobs); }
+            get { return CharacterIndustryJobs.Concat(CorporationIndustryJobs.Where(job => job.InstallerID == CharacterID)); }
         }
 
         /// <summary>
@@ -251,7 +255,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private List<SerializableOrderBase> MarketOrdersExport()
         {
-            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.Export()).ToList();
+            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter()).ToList();
         }
 
         /// <summary>
@@ -260,7 +264,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private List<SerializableJob> IndustryJobsExport()
         {
-            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.Export()).ToList();
+            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter()).ToList();
         }
 
         /// <summary>
@@ -378,13 +382,7 @@ namespace EVEMon.Common
         /// </summary>
         private void NotifyForMarketOrdersRelatedEvents()
         {
-            // If character can not query corporation related data or corporation market orders monitor is not enabled
-            // we switch the flag to proceed with notifications
-            IQueryMonitor corpMarketOrdersMonitor = QueryMonitors[APICorporationMethods.CorporationMarketOrders];
-            m_corporationDataQuerying.CorporationMarketOrdersQueried |= corpMarketOrdersMonitor == null ||
-                                                                        !corpMarketOrdersMonitor.Enabled;
-
-            // Quit if not all market orders where queried
+            // Quit if not all market orders where queried (we have already predected the occasion where either monitor is not enabled)
             if (!m_characterDataQuerying.CharacterMarketOrdersQueried || !m_corporationDataQuerying.CorporationMarketOrdersQueried)
                 return;
 
@@ -397,6 +395,8 @@ namespace EVEMon.Common
             // Reset flags
             m_characterDataQuerying.CharacterMarketOrdersQueried = false;
             m_corporationDataQuerying.CorporationMarketOrdersQueried = false;
+            m_endedOrdersForCharacter.Clear();
+            m_endedOrdersForCorporation.Clear();
 
             // Fires the event regarding market orders update
             EveMonClient.OnMarketOrdersUpdated(this);
@@ -407,12 +407,9 @@ namespace EVEMon.Common
         /// </summary>
         private void NotifyEndedOrders()
         {
-            IEnumerable<MarketOrder> endedOrders =
-                m_characterDataQuerying.EndedOrders.Concat(m_corporationDataQuerying.EndedOrders);
-
-            // Notify for ended orders
-            if (endedOrders.Count() != 0)
-                EveMonClient.Notifications.NotifyMarkerOrdersEnded(this, endedOrders);
+            // Notify ended orders issued by the character
+            if (m_endedOrdersForCharacter.Count != 0)
+                EveMonClient.Notifications.NotifyMarkerOrdersEnded(this, m_endedOrdersForCharacter);
         }
 
         /// <summary>
@@ -436,13 +433,7 @@ namespace EVEMon.Common
         /// </summary>
         private void NotifyForIndustryJobsRelatedEvents()
         {
-            // If character can not query corporation related data or corporation industry jobs monitor is not enabled
-            // we switch the flag to proceed with notifications
-            IQueryMonitor corpIndustryJobsMonitor = QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
-            m_corporationDataQuerying.CorporationMarketOrdersQueried |= corpIndustryJobsMonitor == null ||
-                                                                        !corpIndustryJobsMonitor.Enabled;
-
-            // Quit if not all industry jobs where queried
+            // Quit if not all industry jobs where queried (we have already predected the occasion where either monitor is not enabled)
             if (!m_characterDataQuerying.CharacterIndustryJobsQueried || !m_corporationDataQuerying.CorporationIndustryJobsQueried)
                 return;
 
@@ -450,7 +441,7 @@ namespace EVEMon.Common
             m_characterDataQuerying.CharacterIndustryJobsQueried = false;
             m_corporationDataQuerying.CorporationIndustryJobsQueried = false;
 
-            // Fires the event regarding industry jobs  update
+            // Fires the event regarding industry jobs update
             EveMonClient.OnIndustryJobsUpdated(this);
         }
 
@@ -464,10 +455,12 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterMarketOrdersUpdated(object sender, MarketOrdersEventArgs e)
         {
             if (e.Character != this)
                 return;
+
+            m_endedOrdersForCharacter.AddRange(e.EndedOrders);
 
             NotifyForMarketOrdersRelatedEvents();
         }
@@ -477,10 +470,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CorporationMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CorporationMarketOrdersUpdated(object sender, MarketOrdersEventArgs e)
         {
             if (e.Character != this)
                 return;
+
+            m_endedOrdersForCharacter.AddRange(e.EndedOrders.Where(order => order.OwnerID == CharacterID));
+            m_endedOrdersForCorporation.AddRange(e.EndedOrders);
 
             NotifyForMarketOrdersRelatedEvents();
         }

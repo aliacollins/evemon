@@ -47,7 +47,7 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (SerializableJob srcJob in src)
             {
-                Items.Add(new IndustryJob(srcJob));
+                Items.Add(new IndustryJob(srcJob) { InstallerID = m_character.CharacterID });
             }
         }
 
@@ -86,9 +86,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports the orders to a serialization object for the settings file.
+        /// Exports only the character issued jobs to a serialization object for the settings file.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Used to export only the corporation jobs issued by the character.</remarks>
+        internal IEnumerable<SerializableJob> ExportOnlyIssuedByCharacter()
+        {
+            return Items.Where(job => job.InstallerID == m_character.CharacterID).Select(job => job.Export());
+        }
+
+        /// <summary>
+        /// Exports the jobs to a serialization object for the settings file.
         /// </summary>
         /// <returns>List of serializable jobs.</returns>
+        /// <remarks>Used to export all jobs of the collection.</remarks>
         internal IEnumerable<SerializableJob> Export()
         {
             return Items.Select(job => job.Export());
@@ -103,14 +114,12 @@ namespace EVEMon.Common
             if (Items.IsEmpty())
                 return;
 
-            List<IndustryJob> jobsCompleted = new List<IndustryJob>();
-
             // Add the not notified "Ready" jobs to the completed list
-            foreach (IndustryJob job in Items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
-            {
-                jobsCompleted.Add(job);
-                job.NotificationSend = true;
-            }
+            List<IndustryJob> jobsCompleted = Items.Where(
+                x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend &&
+                    x.InstallerID == m_character.CharacterID).ToList();
+
+            jobsCompleted.ForEach(x => x.NotificationSend = true);
 
             // We exit if no jobs have been completed
             if (jobsCompleted.IsEmpty())
@@ -120,7 +129,7 @@ namespace EVEMon.Common
             EveMonClient.Notifications.NotifyIndustryJobCompletion(m_character, jobsCompleted);
 
             // Fires the event regarding industry jobs completed
-            EveMonClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted);
+            EveMonClient.OnIndustryJobsCompleted(m_character, jobsCompleted);
         }
     }
 }

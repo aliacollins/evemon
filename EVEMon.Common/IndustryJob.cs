@@ -23,6 +23,7 @@ namespace EVEMon.Common
         {
             State = GetState(src);
             ID = src.JobID;
+            InstallerID = src.InstallerID;
             InstalledItemID = src.InstalledItemTypeID;
             InstalledItem = StaticBlueprints.GetBlueprintByID(src.InstalledItemTypeID);
             OutputItemID = src.OutputTypeID;
@@ -70,36 +71,6 @@ namespace EVEMon.Common
             LastStateChange = src.LastStateChange;
             IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
             ActiveJobState = GetActiveJobState();
-        }
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        internal SerializableJob Export()
-        {
-            return new SerializableJob
-                       {
-                           Ignored = Ignored,
-                           JobID = ID,
-                           State = State,
-                           InstalledItemID = InstalledItemID,
-                           InstalledItem = InstalledItem.Name,
-                           OutputItemID = OutputItemID,
-                           OutputItem = OutputItem.Name,
-                           Runs = Runs,
-                           Activity = Activity,
-                           BlueprintType = BlueprintType,
-                           ItemLocation = Installation,
-                           SolarSystemID = SolarSystem.ID,
-                           InstalledTime = InstalledTime,
-                           InstalledItemME = InstalledME,
-                           InstalledItemPE = InstalledPE,
-                           BeginProductionTime = BeginProductionTime,
-                           EndProductionTime = EndProductionTime,
-                           PauseProductionTime = PauseProductionTime,
-                           IssuedFor = IssuedFor,
-                           LastStateChange = LastStateChange,
-                       };
         }
 
         #endregion
@@ -161,6 +132,12 @@ namespace EVEMon.Common
         /// Gets the job ID.
         /// </summary>
         public long ID { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the installer ID.
+        /// </summary>
+        /// <value>The installer ID.</value>
+        public long InstallerID { get; set; }
 
         /// <summary>
         /// Gets the installed item ID.
@@ -283,6 +260,36 @@ namespace EVEMon.Common
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Exports the given object to a serialization object.
+        /// </summary>
+        internal SerializableJob Export()
+        {
+            return new SerializableJob
+            {
+                Ignored = Ignored,
+                JobID = ID,
+                State = State,
+                InstalledItemID = InstalledItemID,
+                InstalledItem = InstalledItem.Name,
+                OutputItemID = OutputItemID,
+                OutputItem = OutputItem.Name,
+                Runs = Runs,
+                Activity = Activity,
+                BlueprintType = BlueprintType,
+                ItemLocation = Installation,
+                SolarSystemID = SolarSystem.ID,
+                InstalledTime = InstalledTime,
+                InstalledItemME = InstalledME,
+                InstalledItemPE = InstalledPE,
+                BeginProductionTime = BeginProductionTime,
+                EndProductionTime = EndProductionTime,
+                PauseProductionTime = PauseProductionTime,
+                IssuedFor = IssuedFor,
+                LastStateChange = LastStateChange,
+            };
+        }
 
         /// <summary>
         /// Try to update this job with a serialization object from the API.

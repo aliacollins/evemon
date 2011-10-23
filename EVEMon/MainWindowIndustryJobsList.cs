@@ -788,7 +788,7 @@ namespace EVEMon
         /// Handles the IndustryJobsCompleted event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.IndustryJobsEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="IndustryJobsEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_IndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
         {
             UpdateContent();

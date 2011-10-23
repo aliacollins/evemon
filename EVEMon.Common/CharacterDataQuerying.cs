@@ -23,6 +23,9 @@ namespace EVEMon.Common
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
 
+        private bool m_charMarketOrdersQueried;
+        private bool m_charIndustryJobsQueried;
+
         #endregion
 
 
@@ -36,7 +39,6 @@ namespace EVEMon.Common
         {
             m_ccpCharacter = ccpCharacter;
             m_characterQueryMonitors = new List<IQueryMonitorEx>();
-            EndedOrders = new List<MarketOrder>();
 
             // Initializes the query monitors 
             m_charSheetMonitor =
@@ -123,7 +125,19 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if [character market orders queried]; otherwise, <c>false</c>.
         /// </value>
-        internal bool CharacterMarketOrdersQueried { get; set; }
+        internal bool CharacterMarketOrdersQueried
+        {
+            get
+            {
+                // If character can not query character related data
+                // or character market orders monitor is not enabled
+                // we switch the flag
+                IQueryMonitor charMarketOrdersMonitor =
+                    m_ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
+                return m_charMarketOrdersQueried |= charMarketOrdersMonitor == null || !charMarketOrdersMonitor.Enabled;
+            }
+            set { m_charMarketOrdersQueried = value; }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether [character industry jobs queried].
@@ -131,13 +145,19 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if [character industry jobs queried]; otherwise, <c>false</c>.
         /// </value>
-        internal bool CharacterIndustryJobsQueried { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ended orders.
-        /// </summary>
-        /// <value>The ended orders.</value>
-        internal List<MarketOrder> EndedOrders { get; private set; }
+        internal bool CharacterIndustryJobsQueried
+        {
+            get
+            {
+                // If character can not query character related data
+                // or character industry jobs monitor is not enabled
+                // we switch the flag
+                IQueryMonitor charIndustryJobsMonitor =
+                    m_ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs];
+                return m_charIndustryJobsQueried |= charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled;
+            }
+            set { m_charIndustryJobsQueried = value; }
+        }
 
         #endregion
 
@@ -310,10 +330,11 @@ namespace EVEMon.Common
             result.Result.Orders.ForEach(order => order.IssuedFor = IssuedFor.Character);
 
             // Import the data
-            m_ccpCharacter.CharacterMarketOrders.Import(result.Result.Orders, EndedOrders);
+            List<MarketOrder> endedOrders = new List<MarketOrder>();
+            m_ccpCharacter.CharacterMarketOrders.Import(result.Result.Orders, endedOrders);
 
             // Fires the event regarding character market orders update
-            EveMonClient.OnCharacterMarketOrdersUpdated(m_ccpCharacter);
+            EveMonClient.OnCharacterMarketOrdersUpdated(m_ccpCharacter, endedOrders);
         }
 
         /// <summary>

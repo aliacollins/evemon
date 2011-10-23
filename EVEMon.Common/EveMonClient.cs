@@ -542,12 +542,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when personal market orders of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterMarketOrdersUpdated;
+        public static event EventHandler<MarketOrdersEventArgs> CharacterMarketOrdersUpdated;
 
         /// <summary>
         /// Occurs when corporation market orders of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CorporationMarketOrdersUpdated;
+        public static event EventHandler<MarketOrdersEventArgs> CorporationMarketOrdersUpdated;
 
         /// <summary>
         /// Occurs when industry jobs of a character have been updated.
@@ -805,22 +805,24 @@ namespace EVEMon.Common
         /// Called when the personal market orders of a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterMarketOrdersUpdated(Character character)
+        /// <param name="endedOrders">The ended orders.</param>
+        internal static void OnCharacterMarketOrdersUpdated(Character character, IEnumerable<MarketOrder> endedOrders)
         {
             Trace("EveMonClient.OnCharacterMarketOrdersUpdated - {0}", character.Name);
             if (CharacterMarketOrdersUpdated != null)
-                CharacterMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
+                CharacterMarketOrdersUpdated(null, new MarketOrdersEventArgs(character, endedOrders));
         }
 
         /// <summary>
         /// Called when the corporation market orders of a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCorporationMarketOrdersUpdated(Character character)
+        /// <param name="endedOrders">The ended orders.</param>
+        internal static void OnCorporationMarketOrdersUpdated(Character character, IEnumerable<MarketOrder> endedOrders)
         {
             Trace("EveMonClient.OnCorporationMarketOrdersUpdated - {0}", character.Name);
             if (CorporationMarketOrdersUpdated != null)
-                CorporationMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
+                CorporationMarketOrdersUpdated(null, new MarketOrdersEventArgs(character, endedOrders));
         }
 
         /// <summary>
@@ -862,9 +864,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="jobsCompleted">The jobs completed.</param>
-        internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
+        internal static void OnIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
-            Trace("EveMonClient.OnCharacterIndustryJobsCompleted - {0}", character.Name);
+            Trace("EveMonClient.OnIndustryJobsCompleted - {0}", character.Name);
             if (CharacterIndustryJobsCompleted != null)
                 CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }

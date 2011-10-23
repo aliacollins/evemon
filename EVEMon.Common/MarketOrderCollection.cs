@@ -33,9 +33,9 @@ namespace EVEMon.Common
             {
                 SerializableBuyOrder buyOrder = srcOrder as SerializableBuyOrder;
                 if (buyOrder != null)
-                    Items.Add(new BuyOrder(buyOrder));
+                    Items.Add(new BuyOrder(buyOrder) { OwnerID = m_character.CharacterID });
                 else
-                    Items.Add(new SellOrder((SerializableSellOrder)srcOrder));
+                    Items.Add(new SellOrder((SerializableSellOrder)srcOrder) { OwnerID = m_character.CharacterID });
             }
         }
 
@@ -90,9 +90,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Exports only the character issued orders to a serialization object for the settings file.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Used to export only the corporation orders issued by a character.</remarks>
+        internal IEnumerable<SerializableOrderBase> ExportOnlyIssuedByCharacter()
+        {
+            return Items.Where(order => order.OwnerID == m_character.CharacterID).Select(order => order.Export());
+        }
+
+        /// <summary>
         /// Exports the orders to a serialization object for the settings file.
         /// </summary>
         /// <returns></returns>
+        /// <remarks>Used to export all orders of the collection.</remarks>
         internal IEnumerable<SerializableOrderBase> Export()
         {
             return Items.Select(order => order.Export());
