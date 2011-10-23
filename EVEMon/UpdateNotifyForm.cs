@@ -92,7 +92,7 @@ namespace EVEMon
 
             // If the file already exists delete it
             if (File.Exists(localFilename))
-                File.Delete(localFilename);
+                UpdateManager.DeleteInstallationFiles();
 
             using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
             {
@@ -104,6 +104,7 @@ namespace EVEMon
                     if (m_args.MD5Sum != null && m_args.MD5Sum != downloadedFileMD5Sum)
                         return false;
 
+                    UpdateManager.DeleteDataFiles();
                     ExecutePatcher(localFilename, m_args.AutoInstallArguments);
                 }
             }

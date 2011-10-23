@@ -38,6 +38,25 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Delete the data files on an autoupdate.
+        /// </summary>
+        public static void DeleteDataFiles()
+        {
+            foreach (string file in Directory.GetFiles(
+                EveMonClient.EVEMonDataDir, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets whether the autoupdater is enabled.
         /// </summary>
         public static bool Enabled

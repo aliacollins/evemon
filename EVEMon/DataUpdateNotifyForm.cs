@@ -101,7 +101,16 @@ namespace EVEMon
 
                 // If the file already exists delete it
                 if (File.Exists(newFilename))
-                    File.Delete(newFilename);
+                {
+                    try
+                    {
+                        File.Delete(newFilename);
+                    }
+                    catch (IOException ex)
+                    {
+                        ExceptionHandler.LogException(ex, true);
+                    }
+                }
 
                 // Show the download dialog, which will download the file
                 using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))
@@ -113,7 +122,14 @@ namespace EVEMon
 
                     if (versionDatafile.MD5Sum != null && versionDatafile.MD5Sum != downloadedDatafile.MD5Sum)
                     {
-                        File.Delete(newFilename);
+                        try
+                        {
+                            File.Delete(newFilename);
+                        }
+                        catch (IOException ex)
+                        {
+                            ExceptionHandler.LogException(ex, true);
+                        }
                         continue;
                     }
 
