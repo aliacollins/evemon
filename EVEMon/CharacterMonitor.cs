@@ -188,10 +188,6 @@ namespace EVEMon
         /// </summary>
         private void UpdateFrequentControls()
         {
-            // No need to do anything when the control is not visible
-            if (!Visible)
-                return;
-
             try
             {
                 SuspendLayout();
@@ -216,6 +212,10 @@ namespace EVEMon
         /// </summary>
         private void UpdateTrainingControls()
         {
+            // No need to do anything when the control is not visible
+            if (!Visible)
+                return;
+
             // Is the character in training ?
             if (Character.IsTraining)
             {
@@ -324,10 +324,9 @@ namespace EVEMon
             if (!Visible)
                 return;
 
+            SuspendLayout();
             try
             {
-                SuspendLayout();
-
                 // "Update Calendar" button
                 btnAddToCalendar.Visible = Settings.Calendar.Enabled;
 
@@ -355,8 +354,8 @@ namespace EVEMon
                 foreach (ToolStripButton item in toolStripFeatures.Items.OfType<ToolStripButton>())
                 {
                     item.DisplayStyle = Settings.UI.ShowTextInToolStrip
-                                             ? ToolStripItemDisplayStyle.ImageAndText
-                                             : ToolStripItemDisplayStyle.Image;
+                                            ? ToolStripItemDisplayStyle.ImageAndText
+                                            : ToolStripItemDisplayStyle.Image;
                 }
 
                 featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
