@@ -34,6 +34,7 @@ namespace EVEMon.ApiCredentialsManagement
 
             apiKeysListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
             charactersListView.Font = FontFactory.GetFont("Tahoma", 9.75f);
+            ListViewHelper.EnableDoubleBuffer(charactersListView);
 
             EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
