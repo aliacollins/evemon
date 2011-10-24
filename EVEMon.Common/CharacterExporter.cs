@@ -134,9 +134,9 @@ namespace EVEMon.Common
 
             APIKey apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSheet);
 
-            builder.AppendFormat(CultureConstants.DefaultCulture, "ID={0}{1}", apiKey.ID,
+            builder.AppendFormat(CultureConstants.DefaultCulture, "KeyID={0}{1}", apiKey.ID,
                                  Environment.NewLine);
-            builder.AppendFormat(CultureConstants.DefaultCulture, "vCode={0}{1}", apiKey.VerificationCode,
+            builder.AppendFormat(CultureConstants.DefaultCulture, "VCode={0}{1}", apiKey.VerificationCode,
                                  Environment.NewLine);
 
             builder.AppendFormat(CultureConstants.DefaultCulture, "CharID={0}{1}", character.CharacterID,
