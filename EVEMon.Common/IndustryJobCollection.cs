@@ -130,8 +130,9 @@ namespace EVEMon.Common
             if (Items.All(job => job.IssuedFor == IssuedFor.Corporation))
             {
                 // Fires the event regarding the corporation industry jobs completion, issued by the character
-                EveMonClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted.Where(
-                    job => job.InstallerID == m_character.CharacterID));
+                IEnumerable<IndustryJob> characterJobs = jobsCompleted.Where(job => job.InstallerID == m_character.CharacterID);
+                if (characterJobs.Count() > 0)
+                    EveMonClient.OnCharacterIndustryJobsCompleted(m_character, characterJobs);
 
                 // Fires the event regarding the corporation industry jobs completion
                 EveMonClient.OnCorporationIndustryJobsCompleted(m_character, jobsCompleted);
