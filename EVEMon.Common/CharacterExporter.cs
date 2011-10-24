@@ -37,8 +37,8 @@ namespace EVEMon.Common
                                  Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "Bloodline: {0}{1}", character.Bloodline,
                                  Environment.NewLine);
-            builder.AppendFormat(CultureConstants.DefaultCulture, "  Balance: {0} ISK{1}",
-                                 character.Balance.ToString("N2"), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "  Balance: {0:N2} ISK{1}",
+                                 character.Balance, Environment.NewLine);
             builder.AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Intelligence: {0}{1}",
                                  character.Intelligence.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
@@ -79,9 +79,9 @@ namespace EVEMon.Common
                         x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
 
                 // Skill Group
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}, {1} Skill{2}, {3} Points{4}",
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}, {1} Skill{2}, {3:N0} Points{4}",
                                      skillGroup.Name, count, count > 1 ? "s" : String.Empty,
-                                     skillGroupTotalSP.ToString("N0"), Environment.NewLine);
+                                     skillGroupTotalSP, Environment.NewLine);
 
                 // Skills
                 foreach (Skill skill in skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))))
@@ -89,10 +89,10 @@ namespace EVEMon.Common
                     SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
 
                     string skillDesc = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", skill, skill.Rank);
-                    builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2}/{3} Points{4}",
+                    builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2:N0}/{3:N0} Points{4}",
                                          skillDesc.PadRight(45), mergedSkill.Level.ToString().PadRight(5),
-                                         mergedSkill.Skillpoints.ToString("N0"),
-                                         skill.StaticData.GetPointsRequiredForLevel(5).ToString("N0"),
+                                         mergedSkill.Skillpoints,
+                                         skill.StaticData.GetPointsRequiredForLevel(5),
                                          Environment.NewLine);
 
                     // If the skill is in training...
@@ -132,13 +132,13 @@ namespace EVEMon.Common
                                      Environment.NewLine);
             }
 
-            foreach (APIKey apiKey in character.Identity.APIKeys)
-            {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "keyID={0}{1}", apiKey.ID,
-                                     Environment.NewLine);
-                builder.AppendFormat(CultureConstants.DefaultCulture, "vCode={0}{1}", apiKey.VerificationCode,
-                                     Environment.NewLine);
-            }
+            APIKey apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSheet);
+
+            builder.AppendFormat(CultureConstants.DefaultCulture, "ID={0}{1}", apiKey.ID,
+                                 Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "vCode={0}{1}", apiKey.VerificationCode,
+                                 Environment.NewLine);
+
             builder.AppendFormat(CultureConstants.DefaultCulture, "CharID={0}{1}", character.CharacterID,
                                  Environment.NewLine);
 
