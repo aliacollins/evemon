@@ -34,34 +34,9 @@ namespace EVEMon.SettingsUI
         public SettingsForm()
         {
             InitializeComponent();
+
             m_settings = Settings.Export();
             m_oldSettings = Settings.Export();
-
-            // Platform is Unix ?
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                runAtStartupComboBox.Enabled = false;
-                treeView.Nodes["trayIconNode"].Remove();
-            }
-
-            // Run with Mono ?
-            if (Type.GetType("Mono.Runtime") != null)
-                treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
-
-            // Fill the overview portraits sizes
-            overviewPortraitSizeComboBox.Items.AddRange(
-                Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
-                    x =>
-                        {
-                            // Transforms x64 to 64 by 64
-                            string size = x.ToString().Substring(1);
-                            return String.Format("{0} by {0}", size);
-                        }).ToArray());
-
-            // Expands the left panel and selects the first page and node.
-            treeView.ExpandAll();
-            treeView.SelectedNode = treeView.Nodes[0];
-            multiPanel.SelectedPage = generalPage;
         }
 
 
@@ -122,6 +97,31 @@ namespace EVEMon.SettingsUI
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             m_isLoading = true;
+
+            // Platform is Unix ?
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                runAtStartupComboBox.Enabled = false;
+                treeView.Nodes["trayIconNode"].Remove();
+            }
+
+            // Run with Mono ?
+            if (Type.GetType("Mono.Runtime") != null)
+                treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
+
+            // Fill the overview portraits sizes
+            overviewPortraitSizeComboBox.Items.AddRange(
+                Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
+                    x =>
+                    {
+                        // Transforms x64 to 64 by 64
+                        string size = x.ToString().Substring(1);
+                        return String.Format("{0} by {0}", size);
+                    }).ToArray());
+
+            // Expands the left panel and selects the first page and node
+            treeView.ExpandAll();
+            treeView.SelectedNode = treeView.Nodes.Cast<TreeNode>().First();
 
             // Misc settings
             cbWorksafeMode.Checked = m_settings.UI.SafeForWork;
@@ -871,6 +871,16 @@ namespace EVEMon.SettingsUI
             }
         }
 
+        /// <summary>
+        /// Opens the EVEMon data directory.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void btnEVEMonDataDir_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(EveMonClient.EVEMonDataDir);
+        }
+
         #endregion
 
 
@@ -972,12 +982,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            string text = e.Node.Tag as string;
-            foreach (MultiPanelPage page in multiPanel.Controls.Cast<MultiPanelPage>().Where(page => page.Name == text))
-            {
-                multiPanel.SelectedPage = page;
-                return;
-            }
+            multiPanel.SelectedPage = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(
+                page => page.Name == (string)e.Node.Tag);
         }
 
         /// <summary>
@@ -1009,5 +1015,6 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
+
     }
 }
