@@ -369,17 +369,14 @@ namespace EVEMon.Common
                     case CCPJobCompletedStatus.Aborted:
                     case CCPJobCompletedStatus.GM_Aborted:
                         return JobState.Canceled;
-
                         // Failed States
                     case CCPJobCompletedStatus.Inflight_Unanchored:
                     case CCPJobCompletedStatus.Destroyed:
                     case CCPJobCompletedStatus.Failed:
                         return JobState.Failed;
-
                         // Delivered States
                     case CCPJobCompletedStatus.Delivered:
                         return JobState.Delivered;
-
                     default:
                         throw new NotImplementedException();
                 }

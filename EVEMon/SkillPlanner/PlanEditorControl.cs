@@ -380,9 +380,7 @@ namespace EVEMon.SkillPlanner
                         lvi.ForeColor = m_nonImmedTrainablePlanEntryColor;
 
                     // Enable refresh every 30s if a skill is in training
-                    Skill skill = entry.CharacterSkill;
-                    if (skill.IsTraining)
-                        tmrAutoRefresh.Enabled = true;
+                    tmrAutoRefresh.Enabled = entry.CharacterSkill.IsTraining;
                 }
 
                 // We avoid clear + AddRange because it causes the sliders position to reset
