@@ -29,7 +29,15 @@ namespace EVEMon.Common.Notifications
         public object Sender { get; private set; }
 
         /// <summary>
-        /// Gets the character who sent this notification, or null if the sender was not a character.
+        /// Gets the API key that sent this notification, or null if the sender was not an account.
+        /// </summary>
+        public APIKey SenderAPIKey
+        {
+            get { return Sender as APIKey; }
+        }
+
+        /// <summary>
+        /// Gets the character that sent this notification, or null if the sender was not a character.
         /// </summary>
         public Character SenderCharacter
         {
@@ -37,11 +45,11 @@ namespace EVEMon.Common.Notifications
         }
 
         /// <summary>
-        /// Gets the account which sent this notification, or null if the sender was not an account.
+        /// Gets the corporation that sent this notification, or null if the sender was not a corporation.
         /// </summary>
-        public APIKey SenderAPIKey
+        public Corporation SenderCorporation
         {
-            get { return Sender as APIKey; }
+            get { return Sender as Corporation; }
         }
 
         /// <summary>

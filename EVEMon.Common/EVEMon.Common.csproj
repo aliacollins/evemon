@@ -161,6 +161,7 @@
     <Compile Include="Controls\TrayIcon.Designer.cs">
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Corporation.cs" />
     <Compile Include="CorporationDataQuerying.cs" />
     <Compile Include="CorporationQueryMonitor.cs" />
     <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />

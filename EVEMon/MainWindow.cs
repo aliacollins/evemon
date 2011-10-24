@@ -554,15 +554,22 @@ namespace EVEMon
             IEnumerable<IGrouping<long, NotificationEventArgs>> groups = m_popupNotifications.GroupBy(
                 x =>
                     {
+                        // It's an API server related notification
                         if (x.Sender == null)
                             return 0;
 
+                        // It's an API key related notification
                         if (x.SenderAPIKey != null)
                             return x.SenderAPIKey.ID;
 
-                        return x.SenderCharacter.Identity.APIKeys.IsEmpty()
+                        // It's a corporation related notification
+                        if (x.SenderCorporation != null)
+                            return x.SenderCorporation.ID;
+
+                        // It's a character related notification
+                        return x.SenderCharacter is UriCharacter
                                    ? 1
-                                   : x.SenderCharacter.Identity.APIKeys.First().ID;
+                                   : x.SenderCharacter.CharacterID;
                     });
 
             // Add every group, order by character's name, accounts being on top
@@ -608,7 +615,7 @@ namespace EVEMon
         /// </summary>
         private void DisplayTooltipNotifications()
         {
-            // Ensures the active entries do not prohibit EVEMon to fire tooltips.
+            // Ensures the active entries do not prohibit EVEMon to fire tooltips
             if (Scheduler.SilentMode)
             {
                 niAlertIcon.Visible = false;
@@ -630,6 +637,10 @@ namespace EVEMon
                 {
                     bool senderIsCharacter = (notification.Sender != null) &&
                                              (notification.Sender == notification.SenderCharacter);
+
+                    bool senderIsCorporation = (notification.Sender != null) &&
+                         (notification.Sender == notification.SenderCorporation);
+
                     string tooltipText = notification.Description;
                     maxlevel = Math.Max(maxlevel, (int)notification.Priority);
                     int level = (int)notification.Priority;
@@ -639,26 +650,32 @@ namespace EVEMon
 
                     lastSender = notification.Sender;
 
-                    if (senderIsCharacter)
+                    if (senderIsCharacter || senderIsCorporation)
                     {
                         switch (level)
                         {
                             case 0:
                                 tooltipText = tooltipText.Replace(".", " ");
                                 tooltipText += String.Format(CultureConstants.DefaultCulture, "for {0}.",
-                                                             notification.SenderCharacter);
+                                                             senderIsCharacter
+                                                                 ? notification.SenderCharacter.Name
+                                                                 : notification.SenderCorporation.Name);
                                 break;
                             case 1:
-                                string character = notification.SenderCharacter.ToString();
-                                tooltipText = tooltipText.Replace("This character", character);
+                                tooltipText = tooltipText.Replace("This character", senderIsCharacter
+                                                                                        ? notification.SenderCharacter.Name
+                                                                                        : notification.SenderCorporation.Name);
+
                                 break;
                             case 2:
                                 tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.",
-                                                             notification.SenderCharacter);
+                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.", senderIsCharacter
+                                                                                        ? notification.SenderCharacter.Name
+                                                                                        : notification.SenderCorporation.Name);
                                 break;
                         }
                     }
+
                     builder.AppendLine(tooltipText);
                 }
                     // When the text gets too long we add an informative text once

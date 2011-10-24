@@ -570,6 +570,11 @@ namespace EVEMon.Common
         public static event EventHandler<IndustryJobsEventArgs> CharacterIndustryJobsCompleted;
 
         /// <summary>
+        /// Occurs when the industry jobs of a character have been completed.
+        /// </summary>
+        public static event EventHandler<IndustryJobsEventArgs> CorporationIndustryJobsCompleted;
+
+        /// <summary>
         /// Occurs when the research points of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterResearchPointsUpdated;
@@ -860,15 +865,27 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character industry jobs completed.
+        /// Called when the character's industry jobs completed.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="jobsCompleted">The jobs completed.</param>
-        internal static void OnIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
+        internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
-            Trace("EveMonClient.OnIndustryJobsCompleted - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterIndustryJobsCompleted - {0}", character.Name);
             if (CharacterIndustryJobsCompleted != null)
                 CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
+        }
+
+        /// <summary>
+        /// Called when the character's corporation industry jobs completed.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="jobsCompleted">The jobs completed.</param>
+        internal static void OnCorporationIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
+        {
+            Trace("EveMonClient.OnCorporationIndustryJobsCompleted - {0}", character.CorporationName);
+            if (CorporationIndustryJobsCompleted != null)
+                CorporationIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
 
         /// <summary>

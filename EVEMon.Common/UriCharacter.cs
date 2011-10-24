@@ -5,14 +5,14 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a character bound to an uri (pointing at a character sheet) rather than CCP API
+    /// Represents a character bound to an uri (pointing at a character sheet) rather than CCP API.
     /// </summary>
     public sealed class UriCharacter : Character
     {
         private Uri m_uri;
 
         /// <summary>
-        /// Default constructor for new uri characters
+        /// Default constructor for new uri characters.
         /// </summary>
         /// <param name="identity">The identitiy for this character</param>
         /// <param name="uri">The uri the provided deserialization object was acquired from</param>
@@ -25,12 +25,12 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exported character constructor
+        /// Exported character constructor.
         /// </summary>
         /// <param name="identity">The identitiy for this character</param>
         /// <param name="uri">The uri the provided deserialization object was acquired from</param>
         /// <param name="serial">The serial.</param>
-        internal UriCharacter(CharacterIdentity identity, Uri uri, SerializableCCPCharacter serial)
+        internal UriCharacter(CharacterIdentity identity, Uri uri, SerializableSettingsCharacter serial)
             : base(identity, Guid.NewGuid())
         {
             m_uri = uri;
@@ -38,7 +38,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="identity"></param>
         /// <param name="serial"></param>
@@ -75,7 +75,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Create a serializable character sheet for this character
+        /// Create a serializable character sheet for this character.
         /// </summary>
         /// <returns></returns>
         public override SerializableSettingsCharacter Export()
@@ -88,7 +88,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from a serialization object
+        /// Imports data from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
         public void Import(SerializableUriCharacter serial)
@@ -115,7 +115,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates this character with the given informations
+        /// Updates this character with the given informations.
         /// </summary>
         /// <param name="identity"></param>
         /// <param name="uri"></param>

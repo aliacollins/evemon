@@ -52,7 +52,7 @@ namespace EVEMon.Common
                     case ServerStatus.Offline:
                         return String.Format("{0} Server Offline", Name);
                     case ServerStatus.CheckDisabled:
-                        return "Server Status Check Disabled";
+                        return String.Format("{0} Server Status Check Disabled", Name);
                     default:
                         return String.Format("{0} Server Status Unknown", Name);
                 }

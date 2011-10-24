@@ -534,13 +534,13 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(NotificationCategory.APIKeyExpiration, apiKey)
-                {
-                    Description = String.Format(
-                        "This API key expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
-                        apiKey),
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = priority
-                };
+                    {
+                        Description = String.Format(
+                            "This API key expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
+                            apiKey),
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = priority
+                    };
             Notify(notification);
         }
 
@@ -834,14 +834,30 @@ namespace EVEMon.Common
         #region Market orders expiration
 
         /// <summary>
-        /// Notify some market orders expired or have been fulfilled.
+        /// Notify some character market orders have been expired or fulfilled.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="expiredOrders">The expired orders.</param>
-        internal void NotifyMarkerOrdersEnded(Character character, IEnumerable<MarketOrder> expiredOrders)
+        internal void NotifyCharacterMarkerOrdersEnded(Character character, IEnumerable<MarketOrder> expiredOrders)
         {
             MarketOrdersNotificationEventArgs notification =
                 new MarketOrdersNotificationEventArgs(character, expiredOrders)
+                    {
+                        Behaviour = NotificationBehaviour.Merge,
+                        Priority = NotificationPriority.Information
+                    };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notify some corporation market orders have been expired or fulfilled.
+        /// </summary>
+        /// <param name="corporation">The corporation.</param>
+        /// <param name="expiredOrders">The expired orders.</param>
+        internal void NotifyCorporationMarketOrdersEnded(Corporation corporation, IEnumerable<MarketOrder> expiredOrders)
+        {
+            MarketOrdersNotificationEventArgs notification =
+                new MarketOrdersNotificationEventArgs(corporation, expiredOrders)
                     {
                         Behaviour = NotificationBehaviour.Merge,
                         Priority = NotificationPriority.Information
@@ -855,14 +871,30 @@ namespace EVEMon.Common
         #region Industry jobs completion
 
         /// <summary>
-        /// Notify some industry jobs have ended.
+        /// Notify some character industry jobs have ended.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="jobsCompleted">The completed jobs.</param>
-        internal void NotifyIndustryJobCompletion(Character character, IEnumerable<IndustryJob> jobsCompleted)
+        internal void NotifyCharacterIndustryJobCompletion(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
             IndustryJobsNotificationEventArgs notification =
                 new IndustryJobsNotificationEventArgs(character, jobsCompleted)
+                    {
+                        Behaviour = NotificationBehaviour.Merge,
+                        Priority = NotificationPriority.Information
+                    };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notify some corporation industry jobs have ended.
+        /// </summary>
+        /// <param name="corporation">The corporation.</param>
+        /// <param name="jobsCompleted">The completed jobs.</param>
+        internal void NotifyCorporationIndustryJobCompletion(Corporation corporation, IEnumerable<IndustryJob> jobsCompleted)
+        {
+            IndustryJobsNotificationEventArgs notification =
+                new IndustryJobsNotificationEventArgs(corporation, jobsCompleted)
                     {
                         Behaviour = NotificationBehaviour.Merge,
                         Priority = NotificationPriority.Information

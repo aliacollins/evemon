@@ -31,8 +31,10 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            IQueryMonitor monitor = m_character.QueryMonitors[APICharacterMethods.IndustryJobs];
-            if (monitor == null || !monitor.Enabled)
+            IQueryMonitor charIndustryJobsMonitor = m_character.QueryMonitors[APICharacterMethods.IndustryJobs];
+            IQueryMonitor corpIndustryJobsMonitor = m_character.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
+            if ((charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled) &&
+                (corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled))
                 return;
 
             UpdateOnTimerTick();
@@ -116,20 +118,27 @@ namespace EVEMon.Common
 
             // Add the not notified "Ready" jobs to the completed list
             List<IndustryJob> jobsCompleted = Items.Where(
-                x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend &&
-                    x.InstallerID == m_character.CharacterID).ToList();
+                job => job.ActiveJobState == ActiveJobState.Ready && !job.NotificationSend).ToList();
 
-            jobsCompleted.ForEach(x => x.NotificationSend = true);
+            jobsCompleted.ForEach(job => job.NotificationSend = true);
 
             // We exit if no jobs have been completed
             if (jobsCompleted.IsEmpty())
                 return;
 
             // Sends a notification
-            EveMonClient.Notifications.NotifyIndustryJobCompletion(m_character, jobsCompleted);
+            if (Items.All(job => job.IssuedFor == IssuedFor.Corporation))
+            {
+                // Fires the event regarding the corporation industry jobs completion, issued by the character
+                EveMonClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted.Where(
+                    job => job.InstallerID == m_character.CharacterID));
 
-            // Fires the event regarding industry jobs completed
-            EveMonClient.OnIndustryJobsCompleted(m_character, jobsCompleted);
+                // Fires the event regarding the corporation industry jobs completion
+                EveMonClient.OnCorporationIndustryJobsCompleted(m_character, jobsCompleted);
+            }
+            else
+                // Fires the event regarding the character's industry jobs completion
+                EveMonClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted);
         }
     }
 }

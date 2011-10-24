@@ -16,6 +16,7 @@ namespace EVEMon
     {
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
+        private readonly Timer m_timer = new Timer {Interval = 1000};
 
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
@@ -67,9 +68,11 @@ namespace EVEMon
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
 
+            m_timer.Tick += m_timer_Tick;
+
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_IndustryJobsCompleted;
+            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             Disposed += OnDisposed;
         }
 
@@ -221,7 +224,7 @@ namespace EVEMon
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_IndustryJobsCompleted;
+            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             Disposed -= OnDisposed;
         }
 
@@ -404,7 +407,9 @@ namespace EVEMon
                     lvJobs.Visible = !jobs.IsEmpty();
                     industryExpPanelControl.Visible = true;
                     industryExpPanelControl.Header.Visible = true;
+                    m_timer.Enabled = !jobs.IsEmpty();
                 }
+
             }
             finally
             {
@@ -700,10 +705,76 @@ namespace EVEMon
                    || x.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
         }
 
+        /// <summary>
+        /// Updates the time to completion.
+        /// </summary>
+        private void UpdateTimeToCompletion()
+        {
+            const int Pad = 4;
+            int columnTTCIndex = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
+
+            foreach (ListViewItem listViewItem in lvJobs.Items.Cast<ListViewItem>())
+            {
+                IndustryJob job = (IndustryJob)listViewItem.Tag;
+                if (!job.IsActive || job.ActiveJobState == ActiveJobState.Ready)
+                    continue;
+
+                // Update the time to completion
+                if (columnTTCIndex != -1 && m_columns[columnTTCIndex].Visible)
+                {
+                    if (m_columnTTCDisplayIndex == -1)
+                        m_columnTTCDisplayIndex = lvJobs.Columns[columnTTCIndex].DisplayIndex;
+
+                    listViewItem.SubItems[m_columnTTCDisplayIndex].Text = job.TTC;
+
+                    // Using AutoResizeColumn when TTC is the first column
+                    // results to a nasty visual bug due to ListViewItem.ImageIndex placeholder
+                    if (m_columnTTCDisplayIndex == 0)
+                    {
+                        // Calculate column header text width with padding
+                        int columnHeaderWidth =
+                            TextRenderer.MeasureText(lvJobs.Columns[m_columnTTCDisplayIndex].Text, Font).Width + Pad * 2;
+
+                        // If there is an image assigned to the header, add its width with padding
+                        if (ilIcons.ImageSize.Width > 0)
+                            columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+
+                        int columnWidth = (lvJobs.Items.Cast<ListViewItem>().Select(
+                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width)).Concat(
+                                new[] { columnHeaderWidth }).Max() + Pad + 2;
+                        lvJobs.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
+                    }
+                    else
+                        lvJobs.AutoResizeColumn(m_columnTTCDisplayIndex, ColumnHeaderAutoResizeStyle.HeaderSize);
+                }
+
+                // Job was pending and its time to start
+                if (job.ActiveJobState == ActiveJobState.Pending && job.BeginProductionTime < DateTime.UtcNow)
+                {
+                    job.ActiveJobState = ActiveJobState.InProgress;
+                    UpdateContent();
+                }
+
+                // Job is ready
+                if (job.TTC.Length == 0)
+                    job.ActiveJobState = ActiveJobState.Ready;
+            }
+        }
+
         #endregion
 
 
         #region Event Handlers
+
+        /// <summary>
+        /// Handles the Tick event of the m_timer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void m_timer_Tick(object sender, EventArgs e)
+        {
+            UpdateTimeToCompletion();
+        }
 
         /// <summary>
         /// On column reorder we update the settings.
@@ -789,7 +860,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="IndustryJobsEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_IndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
+        private void EveMonClient_CharacterIndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
         {
             UpdateContent();
         }
@@ -811,62 +882,26 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On timer tick, we update the time to completion, the active job state
+        /// On timer tick, we update the internal timer and 
         /// and the columns settings if any changes have beem made to them.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            const int Pad = 4;
-            int columnTTCIndex = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
-
-            for (int i = 0; i < lvJobs.Items.Count; i++)
+            if (!Visible)
             {
-                IndustryJob job = (IndustryJob)lvJobs.Items[i].Tag;
-                if (!job.IsActive || job.ActiveJobState == ActiveJobState.Ready)
-                    continue;
-
-                // Update the time to completion
-                if (columnTTCIndex != -1 && m_columns[columnTTCIndex].Visible)
-                {
-                    if (m_columnTTCDisplayIndex == -1)
-                        m_columnTTCDisplayIndex = lvJobs.Columns[columnTTCIndex].DisplayIndex;
-
-                    lvJobs.Items[i].SubItems[m_columnTTCDisplayIndex].Text = job.TTC;
-
-                    // Using AutoResizeColumn when TTC is the first column
-                    // results to a nasty visual bug due to ListViewItem.ImageIndex placeholder
-                    if (m_columnTTCDisplayIndex == 0)
-                    {
-                        // Calculate column header text width with padding
-                        int columnHeaderWidth =
-                            TextRenderer.MeasureText(lvJobs.Columns[m_columnTTCDisplayIndex].Text, Font).Width + Pad * 2;
-
-                        // If there is an image assigned to the header, add its width with padding
-                        if (ilIcons.ImageSize.Width > 0)
-                            columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
-
-                        int columnWidth = (lvJobs.Items.Cast<ListViewItem>().Select(
-                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width)).Concat(
-                                new[] { columnHeaderWidth }).Max() + Pad + 2;
-                        lvJobs.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
-                    }
-                    else
-                        lvJobs.AutoResizeColumn(m_columnTTCDisplayIndex, ColumnHeaderAutoResizeStyle.HeaderSize);
-                }
-
-                // Job was pending and its time to start
-                if (job.ActiveJobState == ActiveJobState.Pending && job.BeginProductionTime < DateTime.UtcNow)
-                {
-                    job.ActiveJobState = ActiveJobState.InProgress;
-                    UpdateContent();
-                }
-
-                // Job is ready
-                if (job.TTC.Length == 0)
-                    job.ActiveJobState = ActiveJobState.Ready;
+                m_timer.Enabled = false;
+                return;
             }
+
+            // Find how many jobs are active and not ready
+            int activeJobs = lvJobs.Items.Cast<ListViewItem>().Select(
+                item => (IndustryJob)item.Tag).Where(job => job.IsActive && job.ActiveJobState != ActiveJobState.Ready).Count();
+
+            // We use time dilation according to the ammount of active jobs that are not ready,
+            // due to excess CPU usage for computing the 'time to completion' when there are too many jobs
+            m_timer.Interval = 900 + (100 * activeJobs);
 
             if (!m_columnsChanged)
                 return;

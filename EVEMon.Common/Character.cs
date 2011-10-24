@@ -40,6 +40,8 @@ namespace EVEMon.Common
             Identity = identity;
             Guid = guid;
 
+            Corporation = new Corporation(this);
+
             SkillGroups = new SkillGroupCollection(this);
             Skills = new SkillCollection(this);
 
@@ -56,10 +58,10 @@ namespace EVEMon.Common
             }
 
             UISettings = new CharacterUISettings();
+
         }
 
         #endregion
-
 
         #region Bio
 
@@ -138,14 +140,20 @@ namespace EVEMon.Common
         public string Gender { get; private set; }
 
         /// <summary>
-        /// Gets the name of the character's corporation.
+        /// Gets or sets the corporation.
         /// </summary>
-        public string CorporationName { get; private set; }
+        /// <value>The corporation.</value>
+        public Corporation Corporation { get; private set; }
 
         /// <summary>
         /// Gets the id of the character's corporation.
         /// </summary>
         public int CorporationID { get; private set; }
+
+        /// <summary>
+        /// Gets the name of the character's corporation.
+        /// </summary>
+        public string CorporationName { get; private set; }
 
         /// <summary>
         /// Gets the name of the character's alliance.
@@ -563,7 +571,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the name fo the character.
+        /// Gets the name of the character.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

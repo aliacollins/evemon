@@ -16,6 +16,7 @@ namespace EVEMon.Common
         private readonly CorporationDataQuerying m_corporationDataQuerying;
         private readonly List<MarketOrder> m_endedOrdersForCharacter;
         private readonly List<MarketOrder> m_endedOrdersForCorporation;
+        private readonly List<IndustryJob> m_jobsCompletedForCharacter;
 
         private Enum m_errorNotifiedMethod;
 
@@ -44,13 +45,18 @@ namespace EVEMon.Common
 
             m_characterDataQuerying = new CharacterDataQuerying(this);
             m_corporationDataQuerying = new CorporationDataQuerying(this);
+
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
+
+            m_jobsCompletedForCharacter = new List<IndustryJob>();
 
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated += EveMonClient_CorporationMarketOrdersUpdated;
             EveMonClient.CharacterIndustryJobsUpdated += EveMonClient_CharacterIndustryJobsUpdated;
             EveMonClient.CorporationIndustryJobsUpdated += EveMonClient_CorporationIndustryJobsUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
+            EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
         }
 
         /// <summary>
@@ -409,7 +415,12 @@ namespace EVEMon.Common
         {
             // Notify ended orders issued by the character
             if (m_endedOrdersForCharacter.Count != 0)
-                EveMonClient.Notifications.NotifyMarkerOrdersEnded(this, m_endedOrdersForCharacter);
+                EveMonClient.Notifications.NotifyCharacterMarkerOrdersEnded(this, m_endedOrdersForCharacter);
+
+            // Uncomment upon implementing an exclusive corporation monitor
+            // Notify ended orders issued for the corporation
+            //if (m_endedOrdersForCorporation.Count != 0)
+                //EveMonClient.Notifications.NotifyCorporationMarketOrdersEnded(Corporation, m_endedOrdersForCorporation);
         }
 
         /// <summary>
@@ -505,6 +516,46 @@ namespace EVEMon.Common
                 return;
 
             NotifyForIndustryJobsRelatedEvents();
+        }
+
+        /// <summary>
+        /// Handles the CharacterIndustryJobsCompleted event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.IndustryJobsEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterIndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            // Add the completed jobs to a list
+            m_jobsCompletedForCharacter.AddRange(e.CompletedJobs);
+
+            // If character has completed corporation issued jobs, we wait till we gather those too
+            if (!CorporationIndustryJobs.IsEmpty() && CorporationIndustryJobs.Any(
+                job => job.ActiveJobState == ActiveJobState.Ready && !job.NotificationSend))
+                return;
+
+            // Notify completed jobs issued by the character
+            EveMonClient.Notifications.NotifyCharacterIndustryJobCompletion(this, m_jobsCompletedForCharacter);
+            
+            // Now that we have send the notification clear the list
+            m_jobsCompletedForCharacter.Clear();
+        }
+
+        /// <summary>
+        /// Handles the CorporationIndustryJobsCompleted event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.IndustryJobsEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CorporationIndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            // Uncomment upon implementing an exclusive corporation monitor
+            // Notify completed jobs issued for the corporation
+            //EveMonClient.Notifications.NotifyCorporationIndustryJobCompletion(Corporation, e.CompletedJobs);
         }
 
         #endregion
