@@ -828,14 +828,13 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (m_columnsChanged)
-            {
-                Settings.UI.MainWindow.MarketOrders.Add(Columns.Cast<MarketOrderColumnSettings>().ToList());
+            if (!Visible || !m_columnsChanged)
+                return;
 
-                // Recreate the columns
-                Columns = Settings.UI.MainWindow.MarketOrders.Columns;
-            }
+            Settings.UI.MainWindow.MarketOrders.Add(Columns.Cast<MarketOrderColumnSettings>().ToList());
 
+            // Recreate the columns
+            Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             m_columnsChanged = false;
         }
 

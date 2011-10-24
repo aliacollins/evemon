@@ -651,14 +651,13 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (m_columnsChanged)
-            {
-                Settings.UI.MainWindow.EVENotifications.Add(Columns.Cast<EveNotificationsColumnSettings>().ToList());
+            if (!Visible || !m_columnsChanged)
+                return;
 
-                // Recreate the columns
-                Columns = Settings.UI.MainWindow.EVENotifications.Columns;
-            }
+            Settings.UI.MainWindow.EVENotifications.Add(Columns.Cast<EveNotificationsColumnSettings>().ToList());
 
+            // Recreate the columns
+            Columns = Settings.UI.MainWindow.EVENotifications.Columns;
             m_columnsChanged = false;
         }
 

@@ -497,14 +497,13 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (m_columnsChanged)
-            {
-                Settings.UI.MainWindow.Research.Add(Columns.Cast<ResearchColumnSettings>().ToList());
+            if (!Visible || !m_columnsChanged)
+                return;
 
-                // Recreate the columns
-                Columns = Settings.UI.MainWindow.Research.Columns;
-            }
+            Settings.UI.MainWindow.Research.Add(Columns.Cast<ResearchColumnSettings>().ToList());
 
+            // Recreate the columns
+            Columns = Settings.UI.MainWindow.Research.Columns;
             m_columnsChanged = false;
         }
 
