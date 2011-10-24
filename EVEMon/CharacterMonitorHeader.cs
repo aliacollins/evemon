@@ -49,9 +49,6 @@ namespace EVEMon
                     return;
 
                 m_character = value;
-
-                UpdateFrequentControls();
-                UpdateInfrequentControls();
             }
         }
 
@@ -545,6 +542,7 @@ namespace EVEMon
             if (!Visible)
                 return;
 
+            UpdateFrequentControls();
             UpdateInfrequentControls();
         }
 
