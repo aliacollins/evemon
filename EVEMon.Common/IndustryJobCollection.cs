@@ -118,7 +118,7 @@ namespace EVEMon.Common
 
             // Add the not notified "Ready" jobs to the completed list
             List<IndustryJob> jobsCompleted = Items.Where(
-                job => job.ActiveJobState == ActiveJobState.Ready && !job.NotificationSend).ToList();
+                job => job.IsActive && job.TTC.Length == 0 && !job.NotificationSend).ToList();
 
             jobsCompleted.ForEach(job => job.NotificationSend = true);
 
