@@ -533,7 +533,7 @@ namespace EVEMon.Common
         internal void NotifyAPIKeyExpiration(APIKey apiKey, DateTime expireDate, NotificationPriority priority)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.APIKeyExpiration, apiKey)
+                new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
                     {
                         Description = String.Format(
                             "This API key expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
@@ -567,7 +567,7 @@ namespace EVEMon.Common
         internal void NotifyAccountExpiration(APIKey apiKey, DateTime expireDate, NotificationPriority priority)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.AccountExpiration, apiKey)
+                new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                     {
                         Description = String.Format(
                             "This account expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
@@ -599,7 +599,7 @@ namespace EVEMon.Common
         internal void NotifyAccountNotInTraining(APIKey apiKey)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.AccountNotInTraining, apiKey)
+                new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)
                     {
                         Description = String.Format("This account has no characters in training: {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
@@ -629,7 +629,7 @@ namespace EVEMon.Common
         internal void NotifyInsufficientBalance(CCPCharacter character)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.InsufficientBalance, character)
+                new NotificationEventArgs(character, NotificationCategory.InsufficientBalance)
                     {
                         Description = "This character has insufficient balance to fulfill its buying orders.",
                         Behaviour = NotificationBehaviour.Overwrite,
@@ -659,7 +659,7 @@ namespace EVEMon.Common
         internal void NotifyInsufficientClone(CCPCharacter character)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.InsufficientClone, character)
+                new NotificationEventArgs(character, NotificationCategory.InsufficientClone)
                     {
                         Description = "This character has an insufficient clone.",
                         Behaviour = NotificationBehaviour.Overwrite,
@@ -710,7 +710,7 @@ namespace EVEMon.Common
         internal void NotifySkillQueueRoomAvailable(CCPCharacter character)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.SkillQueueRoomAvailable, character)
+                new NotificationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable)
                     {
                         Description = "This character has free room in the skill queue.",
                         Behaviour = NotificationBehaviour.Overwrite,
@@ -789,7 +789,7 @@ namespace EVEMon.Common
                 return;
 
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.ServerStatusChange, null)
+                new NotificationEventArgs(null, NotificationCategory.ServerStatusChange)
                     {
                         Description = text,
                         Behaviour = NotificationBehaviour.Overwrite,
@@ -818,7 +818,7 @@ namespace EVEMon.Common
         internal void NotifyIgbServiceException(int port)
         {
             NotificationEventArgs notification =
-                new NotificationEventArgs(NotificationCategory.IgbServiceException, null)
+                new NotificationEventArgs(null, NotificationCategory.IgbServiceException)
                     {
                         Description = String.Format(CultureConstants.DefaultCulture,
                                                     "Failed to start the IGB server on port {0}.", port),

@@ -14,7 +14,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="jobs">The jobs.</param>
         public IndustryJobsNotificationEventArgs(Object sender, IEnumerable<IndustryJob> jobs)
-            : base(NotificationCategory.IndustryJobsCompletion, sender)
+            : base(sender, NotificationCategory.IndustryJobsCompletion)
         {
             Jobs = new List<IndustryJob>(jobs);
             UpdateDescription();

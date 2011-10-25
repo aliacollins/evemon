@@ -11,7 +11,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="certificates">The certificates.</param>
         public ClaimableCertificateNotificationEventArgs(Object sender, IEnumerable<Certificate> certificates)
-            : base(NotificationCategory.ClaimableCertificate, sender)
+            : base(sender, NotificationCategory.ClaimableCertificate)
         {
             Certificates = new List<Certificate>();
             foreach (Certificate cert in certificates)

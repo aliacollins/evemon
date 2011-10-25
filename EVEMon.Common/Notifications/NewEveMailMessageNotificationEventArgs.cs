@@ -12,7 +12,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="newMessages">The new messages.</param>
         public NewEveMailMessageNotificationEventArgs(Object sender, int newMessages)
-            : base(NotificationCategory.NewEveMailMessage, sender)
+            : base(sender, NotificationCategory.NewEveMailMessage)
         {
             m_newMailMessagesCount = newMessages;
             UpdateDescription();

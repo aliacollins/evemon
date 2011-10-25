@@ -12,10 +12,10 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         /// <param name="category"></param>
         /// <param name="sender"></param>
-        public NotificationEventArgs(NotificationCategory category, Object sender)
+        public NotificationEventArgs(Object sender, NotificationCategory category)
         {
-            Category = category;
             Sender = sender;
+            Category = category;
         }
 
         /// <summary>

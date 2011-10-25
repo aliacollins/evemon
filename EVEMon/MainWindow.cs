@@ -1961,7 +1961,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.TestNofitication, null)
+            NotificationEventArgs notification = new NotificationEventArgs(null, NotificationCategory.TestNofitication)
                                                      {
                                                          Priority = NotificationPriority.Information,
                                                          Behaviour = NotificationBehaviour.Overwrite,

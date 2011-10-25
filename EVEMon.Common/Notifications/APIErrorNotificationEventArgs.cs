@@ -11,7 +11,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="result">The result.</param>
         public APIErrorNotificationEventArgs(Object sender, IAPIResult result)
-            : base(NotificationCategory.QueryingError, sender)
+            : base(sender, NotificationCategory.QueryingError)
         {
             Result = result;
         }

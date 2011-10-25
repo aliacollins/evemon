@@ -60,7 +60,7 @@ namespace EVEMon
                 return;
 
             List<NotificationEventArgs> list = new List<NotificationEventArgs>();
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
+            NotificationEventArgs notification = new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
                                                      {
                                                          Priority = NotificationPriority.Information,
                                                          Description = "Some information"
@@ -68,11 +68,11 @@ namespace EVEMon
 
             list.Add(notification);
 
-            notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
+            notification = new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
                                { Priority = NotificationPriority.Warning, Description = "Some warning" };
             list.Add(notification);
 
-            notification = new NotificationEventArgs(NotificationCategory.AccountNotInTraining, null)
+            notification = new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
                                { Priority = NotificationPriority.Error, Description = "Some error" };
             list.Add(notification);
 

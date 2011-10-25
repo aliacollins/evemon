@@ -11,7 +11,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender">The sender.</param>
         /// <param name="orders">The orders.</param>
         public MarketOrdersNotificationEventArgs(Object sender, IEnumerable<MarketOrder> orders)
-            : base(NotificationCategory.MarketOrdersEnding, sender)
+            : base(sender, NotificationCategory.MarketOrdersEnding)
         {
             Orders = new List<MarketOrder>(orders);
             UpdateDescription();

@@ -1378,7 +1378,7 @@ namespace EVEMon
         /// </summary>
         internal void TestCharacterNotification()
         {
-            NotificationEventArgs notification = new NotificationEventArgs(NotificationCategory.TestNofitication, Character)
+            NotificationEventArgs notification = new NotificationEventArgs(Character, NotificationCategory.TestNofitication)
                                                      {
                                                          Priority = NotificationPriority.Warning,
                                                          Behaviour = NotificationBehaviour.Overwrite,

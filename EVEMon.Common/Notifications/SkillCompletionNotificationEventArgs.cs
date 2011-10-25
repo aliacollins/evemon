@@ -12,7 +12,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="sender"></param>
         /// <param name="skills"></param>
         public SkillCompletionNotificationEventArgs(Object sender, IEnumerable<QueuedSkill> skills)
-            : base(NotificationCategory.SkillCompletion, sender)
+            : base(sender, NotificationCategory.SkillCompletion)
         {
             Skills = new List<QueuedSkill>();
             foreach (QueuedSkill skill in skills)
