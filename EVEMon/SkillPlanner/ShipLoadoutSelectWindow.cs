@@ -210,6 +210,9 @@ namespace EVEMon.SkillPlanner
             lvLoadouts.Sort();
             UpdateSortVisualFeedback();
 
+            // Adjust the size of the columns
+            AdjustColumns();
+
             throbberLoadouts.State = ThrobberState.Stopped;
             persistentSplitContainer.Visible = lvLoadouts.Items.Count > 0;
         }
@@ -360,9 +363,6 @@ namespace EVEMon.SkillPlanner
                 else
                     columnHeader.ImageIndex = 2;
             }
-
-            // Adjust the size of the columns
-            AdjustColumns();
         }
 
         /// <summary>
