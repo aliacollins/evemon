@@ -95,7 +95,7 @@ namespace EVEMon.SkillPlanner
             // Download the loadouts feed
             string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
                                        m_ship.ID.ToString());
-            Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutFeedDownloaded);
+            Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded);
 
             // Set labels while the user wait
             lblShipName.Text = m_ship.Name;
@@ -175,8 +175,8 @@ namespace EVEMon.SkillPlanner
             if (!String.IsNullOrEmpty(errorMessage))
             {
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                                                 "There was a problem connecting to BattleClinic, it may be down for maintainance.\r\n{0}",
-                                                 errorMessage);
+                                                 "There was a problem connecting to BattleClinic, it may be down for maintainance.{0}{1}",
+                                                 Environment.NewLine, errorMessage);
                 return;
             }
 
@@ -192,11 +192,10 @@ namespace EVEMon.SkillPlanner
             lvLoadouts.Items.Clear();
             foreach (SerializableLoadout loadout in feed.Race.Loadouts)
             {
-                ListViewItem lvi = new ListViewItem(loadout.LoadoutName) { Text = loadout.LoadoutName };
+                ListViewItem lvi = new ListViewItem(loadout.LoadoutName) { Text = loadout.LoadoutName, Tag = loadout };
                 lvi.SubItems.Add(loadout.Author);
                 lvi.SubItems.Add(loadout.Rating.ToString());
                 lvi.SubItems.Add(loadout.SubmissionDate.ToString());
-                lvi.Tag = loadout;
                 lvLoadouts.Items.Add(lvi);
             }
 
@@ -227,7 +226,7 @@ namespace EVEMon.SkillPlanner
             // Download the loadout details
             string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
                                        m_selectedLoadout.LoadoutID);
-            Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutDownloaded);
+            Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded);
         }
 
         /// <summary>
@@ -248,10 +247,10 @@ namespace EVEMon.SkillPlanner
             Cursor.Current = Cursors.Default;
 
             // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race.Loadouts.Count == 0)
+            if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race == null || loadoutFeed.Race.Loadouts.Count == 0)
             {
-                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.\r\n{0}",
-                                                  errorMessage);
+                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.{0}{1}",
+                                                  Environment.NewLine, errorMessage);
                 lblTrainTime.Visible = true;
                 return;
             }

@@ -273,7 +273,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             string url = GetMethodUrl(method);
-            Util.DownloadXMLAsync(url, postData, callback);
+            Util.DownloadXMLAsync(url, callback, postData);
         }
 
         /// <summary>

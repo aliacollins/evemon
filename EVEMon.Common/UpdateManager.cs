@@ -113,7 +113,7 @@ namespace EVEMon.Common
             EveMonClient.Trace("UpdateManager.BeginCheck");
 
             // Otherwise, query BattleClinic
-            Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, null, OnCheckCompleted);
+            Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, OnCheckCompleted);
         }
 
         private static void OnCheckCompleted(SerializablePatch result, string errorMessage)

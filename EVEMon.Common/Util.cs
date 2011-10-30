@@ -359,7 +359,7 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <returns></returns>
-        public static void DownloadXMLAsync<T>(string url, HttpPostData postData, DownloadCallback<T> callback)
+        public static void DownloadXMLAsync<T>(string url, DownloadCallback<T> callback, HttpPostData postData = null)
             where T : class
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
@@ -396,8 +396,7 @@ namespace EVEMon.Common
                         }
 
                         // We got the result, let's invoke the callback on this actor
-                        Dispatcher.Invoke(
-                            () => callback.Invoke(result, errorMessage));
+                        Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
                     },
                 null);
         }
