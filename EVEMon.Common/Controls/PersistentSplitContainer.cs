@@ -21,22 +21,22 @@ namespace EVEMon.Common.Controls
                 m_rememberDistanceKey = value;
 
                 // Set the splitter width here rather than in an override of CreateControl()
-                // because CreatControl is only called when we make the container visible
+                // because CreateControl is only called when we make the container visible
                 // so if the container is created, but never shown, the persistant splitter 
                 // width will be reset to the default for the base SplitContainer
                 try
                 {
-                    if (!String.IsNullOrEmpty(m_rememberDistanceKey))
+                    if (String.IsNullOrEmpty(m_rememberDistanceKey))
+                        return;
+
+                    if (Settings.UI.Splitters.ContainsKey(m_rememberDistanceKey))
                     {
-                        if (Settings.UI.Splitters.ContainsKey(m_rememberDistanceKey))
-                        {
-                            int d = Settings.UI.Splitters[m_rememberDistanceKey];
-                            d = VerifyValidSplitterDistance(d);
-                            SplitterDistance = d;
-                        }
-                        else
-                            Settings.UI.Splitters.Add(m_rememberDistanceKey, Math.Min(Width / 4, 100));
+                        int d = Settings.UI.Splitters[m_rememberDistanceKey];
+                        d = VerifyValidSplitterDistance(d);
+                        SplitterDistance = d;
                     }
+                    else
+                        Settings.UI.Splitters.Add(m_rememberDistanceKey, Math.Min(Width / 4, 100));
                 }
                 catch (Exception err)
                 {

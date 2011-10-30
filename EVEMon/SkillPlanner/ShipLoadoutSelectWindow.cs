@@ -47,7 +47,8 @@ namespace EVEMon.SkillPlanner
         public ShipLoadoutSelectWindow(Item ship, Plan plan)
             : this()
         {
-            persistentSplitContainer1.RememberDistanceKey = "ShipLoadoutBrowser";
+            persistentSplitContainer.RememberDistanceKey = "ShipLoadoutBrowser";
+            persistentSplitContainer.Visible = false;
 
             m_character = (Character)plan.Character;
             m_plan = plan;
@@ -86,15 +87,16 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void QueryLoadoutsFeed()
         {
-            // Wait cursor until we retrieved the loadout.
+            // Wait cursor until we retrieved the loadout
             Cursor.Current = Cursors.WaitCursor;
+            throbberLoadouts.State = ThrobberState.Rotating;
 
             //Download the eve image
             eveImage.EveItem = m_ship;
 
             // Download the loadouts feed
             string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
-                                       m_ship.ID.ToString());
+                                       m_ship.ID);
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded);
 
             // Set labels while the user wait
@@ -174,6 +176,7 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage))
             {
+                throbberLoadouts.State = ThrobberState.Strobing;
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
                                                  "There was a problem connecting to BattleClinic, it may be down for maintainance.{0}{1}",
                                                  Environment.NewLine, errorMessage);
@@ -183,6 +186,7 @@ namespace EVEMon.SkillPlanner
             // Are there no feeds ?
             if (feed.Race == null || feed.Race.Loadouts.Count == 0)
             {
+                throbberLoadouts.State = ThrobberState.Strobing;
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
                                                  "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
                 return;
@@ -204,16 +208,25 @@ namespace EVEMon.SkillPlanner
 
             // Update the listview's comparer and sort
             lvLoadouts.Sort();
+            UpdateSortVisualFeedback();
+
+            throbberLoadouts.State = ThrobberState.Stopped;
+            persistentSplitContainer.Visible = lvLoadouts.Items.Count > 0;
         }
 
         /// <summary>
-        /// Downloads the given loadout
+        /// Downloads the given loadout.
         /// </summary>
         /// <param name="loadout"></param>
         private void DownloadLoadout(SerializableLoadout loadout)
         {
-            // See the cursor to wait
+            // Reset controls and set the cursor to wait
+            btnPlan.Enabled = false;
+            lblTrainTime.Visible = false;
             Cursor.Current = Cursors.WaitCursor;
+            throbberFitting.State = ThrobberState.Rotating;
+            throbberFitting.BringToFront();
+            tvLoadout.Nodes.Clear();
 
             // Retrieve the selected loadout
             m_selectedLoadout = loadout;
@@ -241,7 +254,6 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Reset the controls
-            btnPlan.Enabled = false;
             m_prerequisites.Clear();
             tvLoadout.Nodes.Clear();
             Cursor.Current = Cursors.Default;
@@ -249,16 +261,17 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race == null || loadoutFeed.Race.Loadouts.Count == 0)
             {
+                throbberFitting.State = ThrobberState.Strobing;
                 lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.{0}{1}",
                                                   Environment.NewLine, errorMessage);
                 lblTrainTime.Visible = true;
                 return;
             }
 
-            SerializableLoadout loadout = loadoutFeed.Race.Loadouts[0];
-
             // Fill the items tree
-            IEnumerable<IGrouping<string, SerializableLoadoutSlot>> slotTypes = loadout.Slots.GroupBy(x => x.SlotType);
+            IEnumerable<IGrouping<string, SerializableLoadoutSlot>> slotTypes =
+                loadoutFeed.Race.Loadouts.First().Slots.GroupBy(x => x.SlotType);
+
             foreach (IGrouping<string, SerializableLoadoutSlot> slotType in slotTypes)
             {
                 TreeNode typeNode = new TreeNode(s_typeMap[slotType.Key]);
@@ -279,8 +292,11 @@ namespace EVEMon.SkillPlanner
             }
 
             // Compute the training time
-            UpdatePlanningControls();
             tvLoadout.ExpandAll();
+            UpdatePlanningControls();
+
+            throbberFitting.State = ThrobberState.Stopped;
+            throbberFitting.SendToBack();
         }
 
         /// <summary>
@@ -323,13 +339,64 @@ namespace EVEMon.SkillPlanner
 
             TimeSpan trainingTime = scratchpad.TrainingTime.Subtract(startTime);
 
-            // update the labels
-            btnPlan.Enabled = true;
-            lblPlanned.Text = String.Empty;
-            lblPlanned.Visible = false;
-            lblTrainTime.Visible = true;
+            // Update the labels
             lblTrainTime.Text = trainingTime.ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+            lblTrainTime.Visible = true;
+            lblPlanned.Text = String.Empty;
+            lblPlanned.Visible = false;
+            btnPlan.Enabled = true;
+        }
+
+        /// <summary>
+        /// Updates the sort visual feedback.
+        /// </summary>
+        private void UpdateSortVisualFeedback()
+        {
+            foreach (ColumnHeader columnHeader in lvLoadouts.Columns.Cast<ColumnHeader>())
+            {
+                if (m_columnSorter.SortColumn == columnHeader.Index)
+                    columnHeader.ImageIndex = (m_columnSorter.OrderOfSort == SortOrder.Ascending ? 0 : 1);
+                else
+                    columnHeader.ImageIndex = 2;
+            }
+
+            // Adjust the size of the columns
+            AdjustColumns();
+        }
+
+        /// <summary>
+        /// Adjusts the columns.
+        /// </summary>
+        private void AdjustColumns()
+        {
+            foreach (ColumnHeader column in lvLoadouts.Columns.Cast<ColumnHeader>())
+            {
+                column.Width = -2;
+
+                // Due to .NET design we need to prevent the last colummn to resize to the right end
+
+                // Return if it's not the last column and not set to auto-resize
+                if (column.Index != lvLoadouts.Columns.Count - 1)
+                    continue;
+
+                const int Pad = 4;
+
+                // Calculate column header text width with padding
+                int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
+
+                // If there is an image assigned to the header, add its width with padding
+                if (ilIcons.ImageSize.Width > 0)
+                    columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                        new[] { columnHeaderWidth }).Max() + Pad + 1;
+
+                // Assign the width found
+                column.Width = columnMaxWidth;
+            }
         }
 
         #endregion
@@ -403,6 +470,7 @@ namespace EVEMon.SkillPlanner
             // Sort
             lvLoadouts.ListViewItemSorter = m_columnSorter;
             lvLoadouts.Sort();
+            UpdateSortVisualFeedback();
         }
 
         /// <summary>
@@ -482,7 +550,6 @@ namespace EVEMon.SkillPlanner
                 return;
 
             PlanWindow window = WindowsFactory<PlanWindow>.ShowByTag(m_plan);
-
             window.ShowItemInBrowser(item);
         }
 
@@ -536,7 +603,7 @@ namespace EVEMon.SkillPlanner
             return items;
         }
 
-        private string FormatForEFT(Dictionary<String, List<string>> items)
+        private string FormatForEFT(IDictionary<string, List<string>> items)
         {
             // Build the output format for EFT
             StringBuilder exportText = new StringBuilder();
@@ -573,7 +640,7 @@ namespace EVEMon.SkillPlanner
         /// Extracts the properties.
         /// </summary>
         /// <param name="items">The items.</param>
-        private void ExtractProperties(Dictionary<String, List<string>> items)
+        private void ExtractProperties(IDictionary<string, List<string>> items)
         {
             // Add "empty slot" mentions for every slot type
             foreach (EvePropertyValue prop in m_ship.Properties.Where(prop => prop.Property != null))

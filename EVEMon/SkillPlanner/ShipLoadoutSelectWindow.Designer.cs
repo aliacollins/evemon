@@ -32,16 +32,20 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipLoadoutSelectWindow));
             this.lblLoadouts = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.persistentSplitContainer1 = new PersistentSplitContainer();
+            this.persistentSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
             this.lvLoadouts = new System.Windows.Forms.ListView();
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colRating = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.tvLoadout = new System.Windows.Forms.TreeView();
+            this.throbberFitting = new EVEMon.Common.Controls.Throbber();
+            this.throbberLoadouts = new EVEMon.Common.Controls.Throbber();
             this.lblSubmitDate = new System.Windows.Forms.Label();
             this.SubDateLabel = new System.Windows.Forms.Label();
             this.lblForum = new System.Windows.Forms.LinkLabel();
@@ -60,10 +64,12 @@ namespace EVEMon.SkillPlanner
             this.miExportToEFT = new System.Windows.Forms.ToolStripMenuItem();
             this.eveImage = new EVEMon.Common.Controls.EveImage();
             this.lowerPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer1)).BeginInit();
-            this.persistentSplitContainer1.Panel1.SuspendLayout();
-            this.persistentSplitContainer1.Panel2.SuspendLayout();
-            this.persistentSplitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
+            this.persistentSplitContainer.Panel1.SuspendLayout();
+            this.persistentSplitContainer.Panel2.SuspendLayout();
+            this.persistentSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbberFitting)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.throbberLoadouts)).BeginInit();
             this.cmNode.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,7 +78,7 @@ namespace EVEMon.SkillPlanner
             this.lblLoadouts.AutoSize = true;
             this.lblLoadouts.Location = new System.Drawing.Point(104, 82);
             this.lblLoadouts.Name = "lblLoadouts";
-            this.lblLoadouts.Size = new System.Drawing.Size(103, 13);
+            this.lblLoadouts.Size = new System.Drawing.Size(101, 13);
             this.lblLoadouts.TabIndex = 1;
             this.lblLoadouts.Text = "Found {0} Loadouts";
             // 
@@ -90,33 +96,36 @@ namespace EVEMon.SkillPlanner
             // 
             // lowerPanel
             // 
-            this.lowerPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lowerPanel.Controls.Add(this.persistentSplitContainer1);
+            this.lowerPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lowerPanel.Controls.Add(this.persistentSplitContainer);
+            this.lowerPanel.Controls.Add(this.throbberLoadouts);
             this.lowerPanel.Location = new System.Drawing.Point(0, 123);
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(716, 342);
             this.lowerPanel.TabIndex = 6;
             // 
-            // persistentSplitContainer1
+            // persistentSplitContainer
             // 
-            this.persistentSplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.persistentSplitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.persistentSplitContainer1.Name = "persistentSplitContainer1";
+            this.persistentSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.persistentSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.persistentSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.persistentSplitContainer.Name = "persistentSplitContainer";
             // 
-            // persistentSplitContainer1.Panel1
+            // persistentSplitContainer.Panel1
             // 
-            this.persistentSplitContainer1.Panel1.Controls.Add(this.lvLoadouts);
-            this.persistentSplitContainer1.Panel1MinSize = 350;
+            this.persistentSplitContainer.Panel1.Controls.Add(this.lvLoadouts);
+            this.persistentSplitContainer.Panel1MinSize = 350;
             // 
-            // persistentSplitContainer1.Panel2
+            // persistentSplitContainer.Panel2
             // 
-            this.persistentSplitContainer1.Panel2.Controls.Add(this.tvLoadout);
-            this.persistentSplitContainer1.RememberDistanceKey = null;
-            this.persistentSplitContainer1.Size = new System.Drawing.Size(716, 342);
-            this.persistentSplitContainer1.SplitterDistance = 373;
-            this.persistentSplitContainer1.TabIndex = 5;
+            this.persistentSplitContainer.Panel2.Controls.Add(this.tvLoadout);
+            this.persistentSplitContainer.Panel2.Controls.Add(this.throbberFitting);
+            this.persistentSplitContainer.RememberDistanceKey = null;
+            this.persistentSplitContainer.Size = new System.Drawing.Size(716, 342);
+            this.persistentSplitContainer.SplitterDistance = 373;
+            this.persistentSplitContainer.TabIndex = 5;
             // 
             // lvLoadouts
             // 
@@ -133,6 +142,7 @@ namespace EVEMon.SkillPlanner
             this.lvLoadouts.MultiSelect = false;
             this.lvLoadouts.Name = "lvLoadouts";
             this.lvLoadouts.Size = new System.Drawing.Size(373, 342);
+            this.lvLoadouts.SmallImageList = this.ilIcons;
             this.lvLoadouts.TabIndex = 0;
             this.lvLoadouts.UseCompatibleStateImageBehavior = false;
             this.lvLoadouts.View = System.Windows.Forms.View.Details;
@@ -159,6 +169,14 @@ namespace EVEMon.SkillPlanner
             this.colDate.Text = "Date";
             this.colDate.Width = 90;
             // 
+            // ilIcons
+            // 
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            // 
             // tvLoadout
             // 
             this.tvLoadout.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -168,6 +186,32 @@ namespace EVEMon.SkillPlanner
             this.tvLoadout.TabIndex = 3;
             this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
             this.tvLoadout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
+            // 
+            // throbberFitting
+            // 
+            this.throbberFitting.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.throbberFitting.BackColor = System.Drawing.SystemColors.Window;
+            this.throbberFitting.Location = new System.Drawing.Point(157, 159);
+            this.throbberFitting.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbberFitting.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbberFitting.Name = "throbberFitting";
+            this.throbberFitting.Size = new System.Drawing.Size(24, 24);
+            this.throbberFitting.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbberFitting.TabIndex = 4;
+            this.throbberFitting.TabStop = false;
+            // 
+            // throbberLoadouts
+            // 
+            this.throbberLoadouts.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.throbberLoadouts.BackColor = System.Drawing.Color.Transparent;
+            this.throbberLoadouts.Location = new System.Drawing.Point(346, 159);
+            this.throbberLoadouts.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbberLoadouts.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbberLoadouts.Name = "throbberLoadouts";
+            this.throbberLoadouts.Size = new System.Drawing.Size(24, 24);
+            this.throbberLoadouts.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbberLoadouts.TabIndex = 6;
+            this.throbberLoadouts.TabStop = false;
             // 
             // lblSubmitDate
             // 
@@ -204,7 +248,7 @@ namespace EVEMon.SkillPlanner
             this.AuthorLabel.AutoSize = true;
             this.AuthorLabel.Location = new System.Drawing.Point(104, 38);
             this.AuthorLabel.Name = "AuthorLabel";
-            this.AuthorLabel.Size = new System.Drawing.Size(44, 13);
+            this.AuthorLabel.Size = new System.Drawing.Size(41, 13);
             this.AuthorLabel.TabIndex = 22;
             this.AuthorLabel.Text = "Author:";
             // 
@@ -231,7 +275,7 @@ namespace EVEMon.SkillPlanner
             this.lblAuthor.AutoSize = true;
             this.lblAuthor.Location = new System.Drawing.Point(194, 38);
             this.lblAuthor.Name = "lblAuthor";
-            this.lblAuthor.Size = new System.Drawing.Size(67, 13);
+            this.lblAuthor.Size = new System.Drawing.Size(66, 13);
             this.lblAuthor.TabIndex = 19;
             this.lblAuthor.Text = "AuthorName";
             // 
@@ -240,7 +284,7 @@ namespace EVEMon.SkillPlanner
             this.lblLoadoutName.AutoSize = true;
             this.lblLoadoutName.Location = new System.Drawing.Point(194, 25);
             this.lblLoadoutName.Name = "lblLoadoutName";
-            this.lblLoadoutName.Size = new System.Drawing.Size(73, 13);
+            this.lblLoadoutName.Size = new System.Drawing.Size(74, 13);
             this.lblLoadoutName.TabIndex = 18;
             this.lblLoadoutName.Text = "LoadoutName";
             // 
@@ -249,7 +293,7 @@ namespace EVEMon.SkillPlanner
             this.lblShipName.AutoSize = true;
             this.lblShipName.Location = new System.Drawing.Point(194, 12);
             this.lblShipName.Name = "lblShipName";
-            this.lblShipName.Size = new System.Drawing.Size(54, 13);
+            this.lblShipName.Size = new System.Drawing.Size(56, 13);
             this.lblShipName.TabIndex = 17;
             this.lblShipName.Text = "ShipName";
             // 
@@ -268,7 +312,7 @@ namespace EVEMon.SkillPlanner
             this.TrainingTimeLabel.AutoSize = true;
             this.TrainingTimeLabel.Location = new System.Drawing.Point(12, 481);
             this.TrainingTimeLabel.Name = "TrainingTimeLabel";
-            this.TrainingTimeLabel.Size = new System.Drawing.Size(176, 13);
+            this.TrainingTimeLabel.Size = new System.Drawing.Size(173, 13);
             this.TrainingTimeLabel.TabIndex = 26;
             this.TrainingTimeLabel.Text = "Training Time for selected loadout: ";
             // 
@@ -278,7 +322,7 @@ namespace EVEMon.SkillPlanner
             this.lblTrainTime.AutoSize = true;
             this.lblTrainTime.Location = new System.Drawing.Point(191, 481);
             this.lblTrainTime.Name = "lblTrainTime";
-            this.lblTrainTime.Size = new System.Drawing.Size(25, 13);
+            this.lblTrainTime.Size = new System.Drawing.Size(27, 13);
             this.lblTrainTime.TabIndex = 27;
             this.lblTrainTime.Text = "N/A";
             // 
@@ -355,10 +399,12 @@ namespace EVEMon.SkillPlanner
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.lowerPanel.ResumeLayout(false);
-            this.persistentSplitContainer1.Panel1.ResumeLayout(false);
-            this.persistentSplitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer1)).EndInit();
-            this.persistentSplitContainer1.ResumeLayout(false);
+            this.persistentSplitContainer.Panel1.ResumeLayout(false);
+            this.persistentSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).EndInit();
+            this.persistentSplitContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.throbberFitting)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.throbberLoadouts)).EndInit();
             this.cmNode.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -374,7 +420,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader colAuthor;
         private System.Windows.Forms.ColumnHeader colRating;
         private System.Windows.Forms.ColumnHeader colDate;
-        private PersistentSplitContainer persistentSplitContainer1;
+        private PersistentSplitContainer persistentSplitContainer;
         private System.Windows.Forms.Panel lowerPanel;
         private System.Windows.Forms.Label lblSubmitDate;
         private System.Windows.Forms.Label SubDateLabel;
@@ -394,5 +440,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miShowInBrowser;
         private System.Windows.Forms.ToolStripMenuItem miExportToEFT;
         private Common.Controls.EveImage eveImage;
+        private System.Windows.Forms.ImageList ilIcons;
+        private Throbber throbberLoadouts;
+        private Throbber throbberFitting;
     }
 }
