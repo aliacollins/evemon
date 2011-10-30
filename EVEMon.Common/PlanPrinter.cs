@@ -19,11 +19,10 @@ namespace EVEMon.Common
         private readonly SolidBrush m_brush;
         private readonly PlanExportSettings m_settings;
 
-        private int m_entryToPrint;
+        private TimeSpan m_trainingTime;
+        private DateTime m_completionDate;
         private Point m_point;
-        private DateTime m_currentDate = DateTime.Now;
-        private readonly DateTime m_printStartTime = DateTime.Now;
-        private TimeSpan m_trainingTime = TimeSpan.Zero;
+        private int m_entryToPrint;
 
         /// <summary>
         /// Constructor
@@ -91,7 +90,6 @@ namespace EVEMon.Common
         {
             Graphics g = e.Graphics;
             string s = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
-            int index = 0;
 
             m_point.X = 5;
             m_point.Y = 5;
@@ -109,9 +107,10 @@ namespace EVEMon.Common
 
             bool resetTotal = true;
             if (m_entryToPrint == 0)
-                m_currentDate = m_printStartTime;
+                m_completionDate = DateTime.Now;
 
             // Scroll through entries
+            int index = 0;
             foreach (PlanEntry pe in m_plan)
             {
                 index++;
@@ -128,6 +127,7 @@ namespace EVEMon.Common
                     m_trainingTime = TimeSpan.Zero;
 
                 m_trainingTime += pe.TrainingTime;
+                m_completionDate = pe.EndTime;
                 resetTotal = false;
 
                 // Print entry
@@ -165,7 +165,7 @@ namespace EVEMon.Common
             // Print entry index
             if (m_settings.EntryNumber)
             {
-                size = Print(g, index.ToString() + ": ");
+                size = Print(g, String.Format("{0}: ", index));
                 m_point.X += (int)size.Width;
             }
 
@@ -274,7 +274,7 @@ namespace EVEMon.Common
                 size = Print(g, index.ToString());
                 m_point.X += (int)size.Width;
 
-                size = Print(g, index != 1 ? " skills" : " skill");
+                size = Print(g, index > 1 ? " skill levels" : " skill level");
 
                 m_point.X += (int)size.Width;
                 needComma = true;
@@ -311,7 +311,7 @@ namespace EVEMon.Common
                 }
                 size = Print(g, "Completion: ");
                 m_point.X += (int)size.Width;
-                size = Print(g, m_currentDate.ToString());
+                size = Print(g, m_completionDate.ToString());
                 m_point.X += (int)size.Width;
             }
 
