@@ -101,7 +101,7 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lowerPanel.Controls.Add(this.persistentSplitContainer);
             this.lowerPanel.Controls.Add(this.throbberLoadouts);
-            this.lowerPanel.Location = new System.Drawing.Point(0, 123);
+            this.lowerPanel.Location = new System.Drawing.Point(6, 123);
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(716, 342);
             this.lowerPanel.TabIndex = 6;
@@ -109,14 +109,14 @@ namespace EVEMon.SkillPlanner
             // persistentSplitContainer
             // 
             this.persistentSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.persistentSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.persistentSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.persistentSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.persistentSplitContainer.Name = "persistentSplitContainer";
             // 
             // persistentSplitContainer.Panel1
             // 
             this.persistentSplitContainer.Panel1.Controls.Add(this.lvLoadouts);
-            this.persistentSplitContainer.Panel1MinSize = 350;
+            this.persistentSplitContainer.Panel1MinSize = 300;
             // 
             // persistentSplitContainer.Panel2
             // 

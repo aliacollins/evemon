@@ -87,7 +87,7 @@ namespace EVEMon.SkillPlanner
                               "\"View Plan\" from the drop down in the upper left.");
 
             //Update the controls
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
+            UpdateControlsVisibility();
 
             //Update the status bar
             UpdateStatusBar();
@@ -171,6 +171,11 @@ namespace EVEMon.SkillPlanner
                 if (eftloadoutImportation != null)
                     eftloadoutImportation.Plan = value;
 
+                // If the ShipLoadoutSelectWindow is open, assign the new plan
+                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetByTag(m_plan);
+                if (loadoutSelect != null)
+                    loadoutSelect.Plan = value;
+
                 m_plan = value;
 
                 // The tag is used by WindowsFactory.ShowByTag
@@ -196,11 +201,6 @@ namespace EVEMon.SkillPlanner
                 skillBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
-                // If the ShipLoadoutSelectWindow is open, assign the new plan
-                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique;
-                if (loadoutSelect != null)
-                    loadoutSelect.Plan = m_plan;
-
                 // Check to see if one or more invalid entries were 
                 // found, we do this last so as not to cause problems
                 // for background update tasks.
@@ -212,6 +212,30 @@ namespace EVEMon.SkillPlanner
 
 
         #region Helper methods
+
+        /// <summary>
+        /// Updates the controls visibility.
+        /// </summary>
+        private void UpdateControlsVisibility()
+        {
+            tabControl.ImageList = (!Settings.UI.SafeForWork
+                                        ? ilTabIcons
+                                        : new ImageList { ImageSize = new Size(24, 24) });
+
+            foreach (ToolStripItem button in upperToolStrip.Items)
+            {
+                button.DisplayStyle = (!Settings.UI.SafeForWork
+                                           ? ToolStripItemDisplayStyle.ImageAndText
+                                           : ToolStripItemDisplayStyle.Text);
+            }
+
+            foreach (ToolStripItem label in MainStatusStrip.Items)
+            {
+                label.DisplayStyle = (!Settings.UI.SafeForWork
+                                          ? ToolStripItemDisplayStyle.ImageAndText
+                                          : ToolStripItemDisplayStyle.Text);
+            }
+        }
 
         /// <summary>
         /// Opens this skill in the skill browser and switches to this tab.
@@ -373,23 +397,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            tabControl.ImageList = (!Settings.UI.SafeForWork
-                                        ? ilTabIcons
-                                        : new ImageList { ImageSize = new Size(24, 24) });
-
-            foreach (ToolStripItem button in upperToolStrip.Items)
-            {
-                button.DisplayStyle = (!Settings.UI.SafeForWork
-                                           ? ToolStripItemDisplayStyle.ImageAndText
-                                           : ToolStripItemDisplayStyle.Text);
-            }
-
-            foreach (ToolStripItem label in MainStatusStrip.Items)
-            {
-                label.DisplayStyle = (!Settings.UI.SafeForWork
-                                          ? ToolStripItemDisplayStyle.ImageAndText
-                                          : ToolStripItemDisplayStyle.Text);
-            }
+            UpdateControlsVisibility();
         }
 
         #endregion

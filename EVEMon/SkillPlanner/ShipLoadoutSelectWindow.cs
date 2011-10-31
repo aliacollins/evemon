@@ -22,7 +22,7 @@ namespace EVEMon.SkillPlanner
 
         private Item m_ship;
         private Plan m_plan;
-        private readonly Character m_character;
+        private Character m_character;
         private SerializableLoadout m_selectedLoadout;
         private readonly List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
         private readonly LoadoutListSorter m_columnSorter;
@@ -40,26 +40,22 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="ship"></param>
         /// <param name="plan"></param>
-        public ShipLoadoutSelectWindow(Item ship, Plan plan)
+        public ShipLoadoutSelectWindow(Plan plan)
             : this()
         {
             persistentSplitContainer.RememberDistanceKey = "ShipLoadoutBrowser";
-            persistentSplitContainer.Visible = false;
 
-            m_character = (Character)plan.Character;
-            m_plan = plan;
-            m_ship = ship;
+            Plan = plan;
 
             m_columnSorter = new LoadoutListSorter { OrderOfSort = SortOrder.Descending, SortColumn = 2 };
             lvLoadouts.ListViewItemSorter = m_columnSorter;
         }
 
         /// <summary>
-        /// On load, download the loadouts feed for this ship
+        /// On load, download the loadouts feed for this ship.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -78,8 +74,6 @@ namespace EVEMon.SkillPlanner
 
             // Subscribe global events
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
-
-            QueryLoadoutsFeed();
         }
 
         /// <summary>
@@ -90,8 +84,14 @@ namespace EVEMon.SkillPlanner
             // Wait cursor until we retrieved the loadout
             Cursor.Current = Cursors.WaitCursor;
             throbberLoadouts.State = ThrobberState.Rotating;
+            persistentSplitContainer.Visible = false;
 
-            //Download the eve image
+            // We clear previous data
+            lvLoadouts.Items.Clear();
+            tvLoadout.Nodes.Clear();
+            m_prerequisites.Clear();
+
+            // Download the eve image
             eveImage.EveItem = m_ship;
 
             // Download the loadouts feed
@@ -104,7 +104,10 @@ namespace EVEMon.SkillPlanner
             lblLoadoutName.Text = "No Loadout Selected";
             lblAuthor.Text = String.Empty;
             lblSubmitDate.Text = String.Empty;
+            lblPlanned.Text = String.Empty;
+            lblPlanned.Visible = false;
             lblTrainTime.Text = "N/A";
+            lblTrainTime.Visible = true;
             lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
             btnPlan.Enabled = false;
         }
@@ -132,6 +135,10 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
+                m_character = (Character)m_plan.Character;
+                Tag = value;
+                Text = String.Format("{0} [{1}] - BattleClinic Loadout Selection", value.Character, value.Name);
+
                 UpdatePlanningControls();
             }
         }
@@ -158,7 +165,7 @@ namespace EVEMon.SkillPlanner
         #region Downloads
 
         /// <summary>
-        /// Occurs when we downloaded a loadouts feed from BattleClinic
+        /// Occurs when we downloaded a loadouts feed from BattleClinic.
         /// </summary>
         /// <param name="feed"></param>
         /// <param name="errorMessage"></param>
@@ -170,7 +177,6 @@ namespace EVEMon.SkillPlanner
 
             // Restore the default cursor instead of the waiting one
             Cursor.Current = Cursors.Default;
-            m_selectedLoadout = null;
             btnPlan.Enabled = false;
 
             // Was there an error ?
@@ -193,7 +199,6 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add the listview items for every loadout
-            lvLoadouts.Items.Clear();
             foreach (SerializableLoadout loadout in feed.Race.Loadouts)
             {
                 ListViewItem lvi = new ListViewItem(loadout.LoadoutName) { Text = loadout.LoadoutName, Tag = loadout };
@@ -223,6 +228,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="loadout"></param>
         private void DownloadLoadout(SerializableLoadout loadout)
         {
+            // Prevent downloading the same loadout
+            if (m_selectedLoadout == loadout)
+                return;
+
             // Reset controls and set the cursor to wait
             btnPlan.Enabled = false;
             lblTrainTime.Visible = false;
@@ -231,7 +240,7 @@ namespace EVEMon.SkillPlanner
             throbberFitting.BringToFront();
             tvLoadout.Nodes.Clear();
 
-            // Retrieve the selected loadout
+            // Store the selected loadout
             m_selectedLoadout = loadout;
 
             // Set the headings
@@ -307,6 +316,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlanningControls()
         {
+            if (m_prerequisites.IsEmpty())
+                return;
+
             // Are all the prerequisites trained ?
             if (m_prerequisites.All(x => m_character.GetSkillLevel(x.Skill) >= x.Level))
             {
@@ -421,7 +433,7 @@ namespace EVEMon.SkillPlanner
         #region Controls' events handlers
 
         /// <summary>
-        /// When the user double-click a loadout, we download it.
+        /// When the user click a loadout, we download it.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -430,18 +442,17 @@ namespace EVEMon.SkillPlanner
             if (lvLoadouts.SelectedItems.Count == 0)
                 return;
 
-            SerializableLoadout loadout = lvLoadouts.SelectedItems[0].Tag as SerializableLoadout;
+            SerializableLoadout loadout = (SerializableLoadout)lvLoadouts.SelectedItems[0].Tag;
             DownloadLoadout(loadout);
         }
 
         /// <summary>
-        /// When the user clicks cancel, we quit
+        /// When the user clicks cancel, we quit.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            m_selectedLoadout = null;
             DialogResult = DialogResult.Cancel;
             Close();
         }
