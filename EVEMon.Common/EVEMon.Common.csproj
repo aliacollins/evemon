@@ -203,42 +203,18 @@
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
-    <Compile Include="Notifications\APIErrorNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\IndustryJobsNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\MarketOrdersNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NewEveMailMessageNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NewEveNotificationNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NotificationBehaviour.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NotificationCategory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NotificationInvalidationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\NotificationPriority.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Notifications\APIErrorNotificationEventArgs.cs" />
+    <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs" />
+    <Compile Include="Notifications\IndustryJobsNotificationEventArgs.cs" />
+    <Compile Include="Notifications\MarketOrdersNotificationEventArgs.cs" />
+    <Compile Include="Notifications\NewEveMailMessageNotificationEventArgs.cs" />
+    <Compile Include="Notifications\NewEveNotificationNotificationEventArgs.cs" />
+    <Compile Include="Notifications\NotificationBehaviour.cs" />
+    <Compile Include="Notifications\NotificationCategory.cs" />
+    <Compile Include="Notifications\NotificationEventArgs.cs" />
+    <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
+    <Compile Include="Notifications\NotificationPriority.cs" />
+    <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs" />
     <Compile Include="PlanPrinter.cs" />
     <Compile Include="RemappingResult.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
@@ -254,12 +230,8 @@
     <Compile Include="Serialization\API\SerializableEmploymentHistoryListItem.cs" />
     <Compile Include="Serialization\API\SerializableFactionStanding.cs" />
     <Compile Include="Serialization\API\SerializableNPCCorporationStanding.cs" />
-    <Compile Include="Serialization\API\SerializableStandings.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Serialization\API\SerializableStandingsListItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Serialization\API\SerializableStandings.cs" />
+    <Compile Include="Serialization\API\SerializableStandingsListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterInfo.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
@@ -648,9 +620,7 @@
       <DependentUpon>DatafileConstants.resx</DependentUpon>
     </Compile>
     <Compile Include="Serialization\Datafiles\GeoDatafile.cs" />
-    <Compile Include="Serialization\Datafiles\ItemsDatafile.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Serialization\Datafiles\ItemsDatafile.cs" />
     <Compile Include="Serialization\Datafiles\PropertiesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\ReprocessingDatafile.cs" />
     <Compile Include="Serialization\Exportation\OutputCharacter.cs" />
@@ -708,9 +678,7 @@
     <Compile Include="SettingsObjects\MonitoredCharacterSettings.cs" />
     <Compile Include="SettingsObjects\PlanColumnSettings.cs" />
     <Compile Include="SettingsObjects\PlanSorting.cs" />
-    <Compile Include="SettingsObjects\ProxySettings.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="SettingsObjects\ProxySettings.cs" />
     <Compile Include="SettingsObjects\SchedulerUISettings.cs" />
     <Compile Include="SettingsObjects\G15Settings.cs" />
     <Compile Include="SettingsObjects\MainWindowSettings.cs" />
@@ -918,17 +886,17 @@
     <None Include="Resources\Images\EditPlan.png" />
     <None Include="Resources\Images\Error16.png" />
     <None Include="Resources\Images\clock_16.png" />
-    <Content Include="Resources\Files\gpl.txt">
+    <None Include="Resources\Files\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Images\BattleClinic.png" />
-    <Content Include="Resources\Images\bee.jpg" />
-    <Content Include="Resources\Images\DefaultAllianceImage32.png" />
-    <Content Include="Resources\Images\DefaultCharacterImage32.png" />
-    <Content Include="Resources\Images\DefaultCorporationImage32.png" />
-    <Content Include="Resources\Images\default_char_pic.png" />
-    <Content Include="Resources\Images\default_char_pic_old.png" />
-    <Content Include="Resources\Images\EVEMail.png" />
+    </None>
+    <None Include="Resources\Images\BattleClinic.png" />
+    <None Include="Resources\Images\bee.jpg" />
+    <None Include="Resources\Images\DefaultAllianceImage32.png" />
+    <None Include="Resources\Images\DefaultCharacterImage32.png" />
+    <None Include="Resources\Images\DefaultCorporationImage32.png" />
+    <None Include="Resources\Images\default_char_pic.png" />
+    <None Include="Resources\Images\default_char_pic_old.png" />
+    <None Include="Resources\Images\EVEMail.png" />
     <None Include="Resources\Images\EVEMon16.png" />
     <None Include="Resources\Images\Exit.png" />
     <None Include="Resources\Images\Expand_large.png" />
@@ -982,18 +950,18 @@
     <None Include="Resources\Images\Error32.png" />
     <None Include="Resources\Images\Warning16.png" />
     <None Include="Resources\Images\Window.png" />
-    <Content Include="Resources\Images\EVEMonLogoBlue.png" />
-    <Content Include="Resources\Images\AccountWide32.png" />
-    <Content Include="Resources\Images\logo-100.png" />
-    <Content Include="Resources\Images\MoveDown.png" />
-    <Content Include="Resources\Images\MoveUp.png" />
-    <Content Include="Resources\Images\Rename.png" />
-    <Content Include="Resources\Images\Throbber.png" />
-    <Content Include="Resources\Audio\SkillTrained.wav">
+    <None Include="Resources\Images\EVEMonLogoBlue.png" />
+    <None Include="Resources\Images\AccountWide32.png" />
+    <None Include="Resources\Images\logo-100.png" />
+    <None Include="Resources\Images\MoveDown.png" />
+    <None Include="Resources\Images\MoveUp.png" />
+    <None Include="Resources\Images\Rename.png" />
+    <None Include="Resources\Images\Throbber.png" />
+    <None Include="Resources\Audio\SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Serialization\Exportation\output-html.xslt" />
-    <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
+    </None>
+    <None Include="Serialization\Exportation\output-html.xslt" />
+    <None Include="Serialization\Importation\input-settings-and-plan.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -1003,12 +971,14 @@
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
     </SGen>
   </Target>
-  <Target Name="BeforeBuild">
+  <UsingTask TaskName="HgVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
+  <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' ">
+    <HgVersionFile TemplateFile="Properties\AssemblyInfo.template.cs" DestinationFile="Properties\AssemblyInfo.cs" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)
-</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

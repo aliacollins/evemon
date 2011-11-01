@@ -1,0 +1,11 @@
+syntax: glob
+*.ReSharper
+*.ncb
+*.suo
+*.user
+Thumbs.db
+UpgradeLog.XML
+_ReSharper.*
+_UpgradeReport_Files
+bin
+obj

@@ -121,6 +121,7 @@
     <Compile Include="ApiCredentialsManagement\EveMonFeaturesWindow.Designer.cs">
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </Compile>
+    <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="BlankCharacter\BlankCharacterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -380,7 +381,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>UpdateNotifyForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Schedule\CalendarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -869,9 +869,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="app.config" />
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <EmbeddedResource Include="ApiErrorHandling\ApiErrorWindow.resx">
       <DependentUpon>ApiErrorWindow.cs</DependentUpon>
@@ -989,13 +987,15 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+       Other similar extension points exist, see Microsoft.Common.targets. -->
+  <UsingTask TaskName="HgVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
+  <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' ">
+    <HgVersionFile TemplateFile="Properties\AssemblyInfo.template.cs" DestinationFile="Properties\AssemblyInfo.cs" />
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
