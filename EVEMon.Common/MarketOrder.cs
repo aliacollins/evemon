@@ -253,9 +253,13 @@ namespace EVEMon.Common
                 RemainingVolume = src.RemainingVolume;
                 Issued = src.Issued;
                 m_state = OrderState.Modified;
+                LastStateChange = DateTime.UtcNow;
             }
             else if (m_state == OrderState.Modified)
+            {
                 m_state = OrderState.Active;
+                LastStateChange = DateTime.UtcNow;
+            }
 
             // Update state
             OrderState state = GetState(src);
