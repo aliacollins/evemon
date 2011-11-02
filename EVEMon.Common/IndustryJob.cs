@@ -315,12 +315,16 @@ namespace EVEMon.Common
 
                 State = (PauseProductionTime == DateTime.MinValue ? JobState.Active : JobState.Paused);
                 ActiveJobState = GetActiveJobState();
+                LastStateChange = DateTime.UtcNow;
             }
 
             // Update state
             JobState state = GetState(src);
             if (State != JobState.Paused && state != State)
+            {
                 State = state;
+                LastStateChange = DateTime.UtcNow;
+            }
 
             return true;
         }
