@@ -9,3 +9,5 @@ _ReSharper.*
 _UpgradeReport_Files
 bin
 obj
+*.patch
+*.diff
