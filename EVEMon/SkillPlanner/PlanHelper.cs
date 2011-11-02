@@ -92,14 +92,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static void PerformSilently(Form parentForm, IPlanOperation operation)
+        private static void PerformSilently(IWin32Window parentForm, IPlanOperation operation)
         {
             if (operation == null)
                 return;
 
             // A window is required
-            if (RequiresWindow(operation))
-                Perform(parentForm, operation);
+            if (RequiresWindow(operation) && Perform(parentForm, operation) != DialogResult.OK)
+                return;
 
             // Silent way
             operation.Perform();
@@ -122,11 +122,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="parentForm"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static void Perform(Form parentForm, IPlanOperation operation)
+        private static DialogResult Perform(IWin32Window parentForm, IPlanOperation operation)
         {
             using (PlanToOperationForm window = new PlanToOperationForm(operation))
             {
-               window.ShowDialog(parentForm);
+                window.ShowDialog(parentForm);
+                return window.DialogResult;
             }
         }
 

@@ -1125,6 +1125,10 @@ namespace EVEMon.SkillPlanner
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Prepares the selection removal.
+        /// </summary>
+        /// <returns></returns>
         private IPlanOperation PrepareSelectionRemoval()
         {
             IEnumerable<PlanEntry> entriesToRemove =
