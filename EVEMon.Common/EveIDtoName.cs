@@ -88,10 +88,7 @@ namespace EVEMon.Common
             SerializableEveIDToName cache = Util.DeserializeXML<SerializableEveIDToName>(s_file);
 
             // Reset the cache if anything went wrong
-            if (cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
-                cache = null;
-
-            if (cache == null)
+            if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
             {
                 EveMonClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
                 File.Delete(s_file);
