@@ -18,7 +18,7 @@ namespace EVEMon.Common
         private readonly List<MarketOrder> m_endedOrdersForCorporation;
         private readonly List<IndustryJob> m_jobsCompletedForCharacter;
 
-        private Enum m_errorNotifiedMethod;
+        private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
 
 
         #region Constructors

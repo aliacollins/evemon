@@ -348,14 +348,11 @@ namespace EVEMon.Common
                 case CCPOrderState.Canceled:
                 case CCPOrderState.CharacterDeleted:
                     return OrderState.Canceled;
-
                 case CCPOrderState.Pending:
                 case CCPOrderState.Opened:
                     return OrderState.Active;
-
                 case CCPOrderState.ExpiredOrFulfilled:
                     return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
-
                 default:
                     throw new NotImplementedException();
             }
