@@ -15,6 +15,8 @@ namespace EVEMon
     /// </summary>
     public partial class OverviewItem : UserControl
     {
+        #region Fields
+
         private readonly Color m_settingsForeColor;
         private readonly bool m_showConflicts;
         private readonly bool m_tooltip;
@@ -28,7 +30,6 @@ namespace EVEMon
 
         private bool m_hovered;
         private bool m_pressed;
-        private bool m_pendingUpdate;
         private int m_preferredWidth = 1;
         private int m_preferredHeight = 1;
 
@@ -37,8 +38,10 @@ namespace EVEMon
         private bool m_hasSkillInTraining;
         private bool m_hasSkillQueueTrainingTime;
 
+        #endregion
 
-        #region Initialization, destruction
+
+        #region Constructors
 
         /// <summary>
         /// Default constructor for designer.
@@ -72,6 +75,7 @@ namespace EVEMon
             // Global events
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -153,26 +157,11 @@ namespace EVEMon
         {
             EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
-        }
-
-        /// <summary>
-        /// Completes initialization.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            // Returns in design mode or when no char
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
-
-            // Character Name
-            UpdateContent();
-
-            base.OnLoad(e);
         }
 
         #endregion
@@ -194,7 +183,7 @@ namespace EVEMon
         #endregion
 
 
-        #region Global events and content update
+        #region Content update
 
         /// <summary>
         /// Update the controls.
@@ -202,14 +191,9 @@ namespace EVEMon
         private void UpdateContent()
         {
             if (!Visible)
-            {
-                m_pendingUpdate = true;
                 return;
-            }
 
-            m_pendingUpdate = false;
-
-            lblCharName.Text = Character.Name;
+            lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
 
             FormatBalance();
@@ -370,6 +354,11 @@ namespace EVEMon
                                                            "{0} free room in skill queue", timeLeftText);
         }
 
+        #endregion
+
+
+        #region Global Events
+
         /// <summary>
         /// On every second, we update the remaining time.
         /// </summary>
@@ -412,6 +401,19 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// On character market orders updated, update the balance format.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != Character)
+                return;
+
+            FormatBalance();
+        }
+
+        /// <summary>
         /// On character sheet changed, update everything.
         /// </summary>
         /// <param name="sender"></param>
@@ -440,7 +442,22 @@ namespace EVEMon
         #endregion
 
 
-        #region Controls events
+        #region Inherited Events
+
+        /// <summary>
+        /// Completes initialization.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            // Returns in design mode or when no char
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            UpdateContent();
+
+            base.OnLoad(e);
+        }
 
         /// <summary>
         /// Occurs when the visibility changed.
@@ -448,15 +465,13 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            base.OnVisibleChanged(e);
-
             if (!Visible)
                 return;
 
-            if (m_pendingUpdate)
-                UpdateContent();
-
+            UpdateContent();
             UpdateTrainingTime();
+
+            base.OnVisibleChanged(e);
         }
 
         /// <summary>
@@ -465,12 +480,12 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (m_hovered)
-            {
-                ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
-                                                                            ? PushButtonState.Pressed
-                                                                            : PushButtonState.Hot);
-            }
+            if (!m_hovered)
+                return;
+
+            ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
+                                                                        ? PushButtonState.Pressed
+                                                                        : PushButtonState.Hot);
             base.OnPaint(e);
         }
 

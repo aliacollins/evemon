@@ -65,9 +65,9 @@ namespace EVEMon
             if (m_character == null)
                 return;
 
+            SuspendLayout();
             try
             {
-                SuspendLayout();
                 RefreshThrobber();
 
                 // Only update the skill summary when the skill points change
@@ -100,9 +100,11 @@ namespace EVEMon
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                  "{0} - {1} - {2} - {3}", m_character.Gender ?? "Gender", m_character.Race ?? "Race",
-                                                  m_character.Bloodline ?? "Bloodline", m_character.Ancestry ?? "Ancestry");
+                BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1} - {2} - {3}",
+                                                  m_character.Gender ?? "Gender",
+                                                  m_character.Race ?? "Race",
+                                                  m_character.Bloodline ?? "Bloodline",
+                                                  m_character.Ancestry ?? "Ancestry");
                 BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
                                                    "Birthday: {0}", m_character.Birthday.ToLocalTime());
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
@@ -596,7 +598,7 @@ namespace EVEMon
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible)
+            if (!Visible || e.Character != m_character)
                 return;
 
             UpdateInfrequentControls();
@@ -610,7 +612,7 @@ namespace EVEMon
         private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible)
+            if (!Visible || e.Character != m_character)
                 return;
 
             UpdateInfoControls();
@@ -624,7 +626,7 @@ namespace EVEMon
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
-            if (!Visible)
+            if (!Visible || e.Character != m_character)
                 return;
 
             FormatBalance();
@@ -648,7 +650,7 @@ namespace EVEMon
             // or updating now will return the same data because the cache has not expired
             // or character has no associated API key
             if (UpdateThrobber.State == ThrobberState.Strobing ||
-                ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate)||
+                ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate) ||
                 ccpCharacter.Identity.APIKeys.IsEmpty())
             {
                 ThrobberContextMenu.Show(MousePosition);
