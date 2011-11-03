@@ -118,7 +118,7 @@ namespace EVEMon.Common
 
             // Import the data
             List<MarketOrder> endedOrders = new List<MarketOrder>();
-            m_ccpCharacter.CharacterMarketOrders.Import(result.Result.Orders, endedOrders);
+            m_ccpCharacter.CorporationMarketOrders.Import(result.Result.Orders, endedOrders);
 
             // Fires the event regarding corporation market orders update
             EveMonClient.OnCorporationMarketOrdersUpdated(m_ccpCharacter, endedOrders);
