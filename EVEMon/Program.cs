@@ -66,7 +66,6 @@ namespace EVEMon
             finally
             {
                 Settings.SaveImmediate();
-                EveIDToName.Save();
                 BCAPI.UploadSettingsFile();
                 EveMonClient.Trace("Closed");
                 EveMonClient.StopTraceLogging();

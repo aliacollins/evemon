@@ -18,6 +18,26 @@ namespace EVEMon.Common
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
         private static bool s_isLoaded;
+        private static bool s_savePending;
+        private static DateTime s_lastSaveTime;
+
+        /// <summary>
+        /// Static Constructor.
+        /// </summary>
+        static EveIDToName()
+        {
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+        }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateOnOneSecondTick();
+        }
 
         /// <summary>
         /// Gets the owner name from its ID.
@@ -166,6 +186,9 @@ namespace EVEMon.Common
 
             // Deserialize the result
             Import(result.Result.Entities);
+
+            // We save the data to the disk
+            Save();
         }
 
         /// <summary>
@@ -190,9 +213,31 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Every timer tick, checks whether we should save the list every 2s.
+        /// </summary>
+        private static void UpdateOnOneSecondTick()
+        {
+            // Is a save requested and is the last save older than 2s ?
+            if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(2))
+                SaveImmediate();
+        }
+
+        /// <summary>
+        /// Saves the list to disk.
+        /// </summary>
+        /// <remarks>
+        /// Saves will be cached for 2 seconds to avoid thrashing the disk when this method is called very rapidly.
+        /// If a save is currently pending, no action is needed. 
+        /// </remarks>
+        private static void Save()
+        {
+            s_savePending = true;
+        }
+
+        /// <summary>
         /// Saves this cache list to a file.
         /// </summary>
-        public static void Save()
+        private static void SaveImmediate()
         {
             SerializableEveIDToName serial = Export();
             XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
@@ -204,6 +249,9 @@ namespace EVEMon.Common
                                                               fs.Flush();
                                                               return true;
                                                           });
+            // Reset savePending flag
+            s_lastSaveTime = DateTime.UtcNow;
+            s_savePending = false;
         }
 
         /// <summary>
