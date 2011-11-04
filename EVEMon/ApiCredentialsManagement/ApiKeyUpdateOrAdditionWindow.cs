@@ -428,7 +428,7 @@ namespace EVEMon.ApiCredentialsManagement
         private void VerificationCodeTextBox_Validating(object sender, CancelEventArgs e)
         {
             string vCode = VerificationCodeTextBox.Text.Trim();
-            if (!String.IsNullOrEmpty(vCode))
+            if (vCode.Length != 0)
                 return;
 
             errorProvider.SetError(VerificationCodeTextBox, "Verification Code cannot be blank.");

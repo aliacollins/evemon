@@ -28,5 +28,19 @@ namespace EVEMon.Common
         {
             get { return s_items; }
         }
+
+        /// <summary>
+        /// Gets the non account related API generic methods.
+        /// </summary>
+        /// <value>The non account generic methods.</value>
+        public static IEnumerable<Enum> NonAccountGenericMethods
+        {
+            get
+            {
+                return s_items.OfType<APIGenericMethods>().Where(
+                    method => method != APIGenericMethods.APIKeyInfo &&
+                              method != APIGenericMethods.CharacterList).Cast<Enum>();
+            }
+        }
     }
 }

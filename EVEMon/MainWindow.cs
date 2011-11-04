@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using EVEMon.APITester;
 using EVEMon.ApiCredentialsManagement;
 using EVEMon.BlankCharacter;
 using EVEMon.Common;
@@ -1450,6 +1451,28 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Tools > API Tester.
+        /// Open the API tester window.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void apiTesterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory<APITesterWindow>.ShowUnique();
+        }
+
+        /// <summary>
+        /// Tools > Blank Character Creator.
+        /// Open the blank character creation window.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void blankCharacterMenu_Click(object sender, EventArgs e)
+        {
+            WindowsFactory<BlankCharacterWindow>.ShowUnique();
+        }
+
+        /// <summary>
         /// Tools > Mineral Worksheet.
         /// Open the worksheet window.
         /// </summary>
@@ -1486,17 +1509,6 @@ namespace EVEMon
         private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WindowsFactory<ScheduleEditorWindow>.ShowUnique();
-        }
-
-        /// <summary>
-        /// Tools > Blank Character Creator.
-        /// Open the blank character creation window.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void blankCharacterMenu_Click(object sender, EventArgs e)
-        {
-            WindowsFactory<BlankCharacterWindow>.ShowUnique();
         }
 
         /// <summary>

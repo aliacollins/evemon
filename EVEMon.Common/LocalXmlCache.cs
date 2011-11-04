@@ -57,7 +57,7 @@ namespace EVEMon.Common
                 // Writes in the target file
                 EveMonClient.EnsureCacheDirInit();
                 string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
-                string content = Util.GetXMLStringRepresentation(xdoc);
+                string content = Util.XMLToStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName,
                                                   fs =>
                                                       {

@@ -228,7 +228,7 @@ namespace EVEMon.Common
             XmlDocument htmlDoc = Util.Transform(doc, xslt);
 
             // Returns the string representation of the generated doc
-            return Util.GetXMLStringRepresentation(htmlDoc);
+            return Util.XMLToStringRepresentation(htmlDoc);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace EVEMon.Common
             }
 
             XmlDocument doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
-            return Util.GetXMLStringRepresentation(doc);
+            return Util.XMLToStringRepresentation(doc);
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace EVEMon.Common
         {
             // Try to use the last XML character sheet downloaded from CCP
             XmlDocument doc = LocalXmlCache.GetCharacterXml(character.Name);
-            return doc != null ? Util.GetXMLStringRepresentation(doc) : null;
+            return doc != null ? Util.XMLToStringRepresentation(doc) : null;
         }
 
         /// <summary>

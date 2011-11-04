@@ -122,7 +122,7 @@ namespace EVEMon.BlankCharacter
                     blankCharacterControl.Enabled = false;
 
                     XmlDocument xmlDoc = Util.SerializeToXmlDocument(serial.GetType(), serial);
-                    string content = Util.GetXMLStringRepresentation(xmlDoc);
+                    string content = Util.XMLToStringRepresentation(xmlDoc);
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                                                       fs =>
                                                           {

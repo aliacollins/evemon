@@ -121,6 +121,7 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
+            this.apiTesterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -470,6 +471,7 @@ namespace EVEMon
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.apiTesterToolStripMenuItem,
             this.addBlankCharacterMenu,
             this.mineralWorksheetToolStripMenuItem,
             this.schedulerToolStripMenuItem,
@@ -902,6 +904,14 @@ namespace EVEMon
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             // 
+            // apiTesterToolStripMenuItem
+            // 
+            this.apiTesterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("apiTesterToolStripMenuItem.Image")));
+            this.apiTesterToolStripMenuItem.Name = "apiTesterToolStripMenuItem";
+            this.apiTesterToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.apiTesterToolStripMenuItem.Text = "API Tester...";
+            this.apiTesterToolStripMenuItem.Click += new System.EventHandler(this.apiTesterToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1025,5 +1035,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem addBlankCharacterMenu;
         private System.Windows.Forms.ToolStripMenuItem clearCacheToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansSeparator;
+        private System.Windows.Forms.ToolStripMenuItem apiTesterToolStripMenuItem;
     }
 }

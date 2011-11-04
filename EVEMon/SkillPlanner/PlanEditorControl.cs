@@ -299,10 +299,7 @@ namespace EVEMon.SkillPlanner
         {
             // Populate the "choose implant set"
             cbChooseImplantSet.Items.Clear();
-            foreach (ImplantSet set in m_character.ImplantSets)
-            {
-                cbChooseImplantSet.Items.Add(set);
-            }
+            cbChooseImplantSet.Items.AddRange(m_character.ImplantSets.ToArray());
         }
 
         /// <summary>

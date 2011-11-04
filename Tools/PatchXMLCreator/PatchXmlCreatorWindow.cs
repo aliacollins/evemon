@@ -439,7 +439,7 @@ namespace PatchXmlCreator
             ExportDatafiles(serial.Datafiles);
 
             XmlDocument doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
-            return (doc != null ? Util.GetXMLStringRepresentation(doc) : String.Empty);
+            return (doc != null ? Util.XMLToStringRepresentation(doc) : String.Empty);
         }
 
         /// <summary>
@@ -497,17 +497,17 @@ namespace PatchXmlCreator
 
             try
             {
-                FileHelper.OverwriteOrWarnTheUser(filenamePath, fs =>
-                                                                    {
-                                                                        using (
-                                                                            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                                                                        {
-                                                                            sw.Write(patch);
-                                                                            sw.Flush();
-                                                                            sw.Close();
-                                                                        }
-                                                                        return true;
-                                                                    });
+                FileHelper.OverwriteOrWarnTheUser(filenamePath,
+                                                  fs =>
+                                                      {
+                                                          using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                                          {
+                                                              sw.Write(patch);
+                                                              sw.Flush();
+                                                              sw.Close();
+                                                          }
+                                                          return true;
+                                                      });
             }
             finally
             {

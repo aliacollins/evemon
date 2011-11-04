@@ -317,4 +317,7 @@
   <data name="APICorporationMarketOrders" xml:space="preserve">
     <value>/corp/MarketOrders.xml.aspx</value>
   </data>
+  <data name="PostDataCharacterIDOnly" xml:space="preserve">
+    <value>characterID={0}</value>
+  </data>
 </root>

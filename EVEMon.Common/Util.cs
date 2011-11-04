@@ -240,8 +240,7 @@ namespace EVEMon.Common
         /// <param name="url">The url to query</param>
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData,
-                                                          XslCompiledTransform transform)
+        internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData, XslCompiledTransform transform)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
                                                    String.Format("Time out on querying {0}", url));
@@ -406,7 +405,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GetXMLStringRepresentation(XmlDocument doc)
+        public static string XMLToStringRepresentation(XmlDocument doc)
         {
             // Creates the settings for the text writer
             XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };

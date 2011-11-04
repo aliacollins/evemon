@@ -29,46 +29,47 @@ namespace EVEMon.Controls
             Character character = (Character)plans.First().Character;
 
             // Prompt the user to pick a file name
-            SaveFileDialog sfdSave = new SaveFileDialog
+            using (SaveFileDialog sfdSave = new SaveFileDialog
+                                                {
+                                                    FileName = String.Format("{0} - Plans Backup", character.Name),
+                                                    Title = "Save to File",
+                                                    Filter = "EVEMon Plans Backup Format (*.epb)|*.epb",
+                                                    FilterIndex = (int)PlanFormat.Emp
+                                                })
             {
-                FileName = String.Format("{0} - Plans Backup", character.Name),
-                Title = "Save to File",
-                Filter = "EVEMon Plans Backup Format (*.epb)|*.epb",
-                FilterIndex = (int)PlanFormat.Emp
-            };
+                DialogResult dr = sfdSave.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                    return;
 
-            DialogResult dr = sfdSave.ShowDialog();
-            if (dr == DialogResult.Cancel)
-                return;
+                try
+                {
+                    string content = PlanIOHelper.ExportAsXML(plans);
 
-            try
-            {
-                string content = PlanIOHelper.ExportAsXML(plans);
-
-                // Moves to the final file
-                FileHelper.OverwriteOrWarnTheUser(
-                    sfdSave.FileName,
-                    fs =>
-                    {
-                        // Emp is actually compressed xml
-                        using (Stream stream = new GZipStream(fs, CompressionMode.Compress))
-                        {
-                            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                    // Moves to the final file
+                    FileHelper.OverwriteOrWarnTheUser(
+                        sfdSave.FileName,
+                        fs =>
                             {
-                                writer.Write(content);
-                                writer.Flush();
-                                stream.Flush();
-                                fs.Flush();
-                            }
-                        }
-                        return true;
-                    });
-            }
-            catch (IOException err)
-            {
-                ExceptionHandler.LogException(err, true);
-                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                // Emp is actually compressed xml
+                                using (Stream stream = new GZipStream(fs, CompressionMode.Compress))
+                                {
+                                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                                    {
+                                        writer.Write(content);
+                                        writer.Flush();
+                                        stream.Flush();
+                                        fs.Flush();
+                                    }
+                                }
+                                return true;
+                            });
+                }
+                catch (IOException err)
+                {
+                    ExceptionHandler.LogException(err, true);
+                    MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -92,71 +93,72 @@ namespace EVEMon.Controls
             }
 
             // Prompt the user to pick a file name
-            SaveFileDialog sfdSave = new SaveFileDialog
+            using (SaveFileDialog sfdSave = new SaveFileDialog
                                          {
                                              FileName = planSaveName,
                                              Title = "Save to File",
                                              Filter =
                                                  "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt",
                                              FilterIndex = (int)PlanFormat.Emp
-                                         };
-
-            DialogResult dr = sfdSave.ShowDialog();
-            if (dr == DialogResult.Cancel)
-                return;
-
-            // Serialize
-            try
+                                         })
             {
-                PlanFormat format = (PlanFormat)sfdSave.FilterIndex;
+                DialogResult dr = sfdSave.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                    return;
 
-                string content;
-                switch (format)
+                // Serialize
+                try
                 {
-                    case PlanFormat.Emp:
-                    case PlanFormat.Xml:
-                        content = PlanIOHelper.ExportAsXML(plan);
-                        break;
-                    case PlanFormat.Text:
-                        // Prompts the user and returns if canceled
-                        PlanExportSettings settings = PromptUserForPlanExportSettings(plan);
-                        if (settings == null)
-                            return;
+                    PlanFormat format = (PlanFormat)sfdSave.FilterIndex;
 
-                        content = PlanIOHelper.ExportAsText(plan, settings);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                    string content;
+                    switch (format)
+                    {
+                        case PlanFormat.Emp:
+                        case PlanFormat.Xml:
+                            content = PlanIOHelper.ExportAsXML(plan);
+                            break;
+                        case PlanFormat.Text:
+                            // Prompts the user and returns if canceled
+                            PlanExportSettings settings = PromptUserForPlanExportSettings(plan);
+                            if (settings == null)
+                                return;
 
-                // Moves to the final file
-                FileHelper.OverwriteOrWarnTheUser(
-                    sfdSave.FileName,
-                    fs =>
-                        {
-                            Stream stream = fs;
-                            // Emp is actually compressed text
-                            if (format == PlanFormat.Emp)
-                                stream = new GZipStream(fs, CompressionMode.Compress);
+                            content = PlanIOHelper.ExportAsText(plan, settings);
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
 
-                            using (stream)
+                    // Moves to the final file
+                    FileHelper.OverwriteOrWarnTheUser(
+                        sfdSave.FileName,
+                        fs =>
                             {
-                                using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                                Stream stream = fs;
+                                // Emp is actually compressed text
+                                if (format == PlanFormat.Emp)
+                                    stream = new GZipStream(fs, CompressionMode.Compress);
+
+                                using (stream)
                                 {
-                                    writer.Write(content);
-                                    writer.Flush();
-                                    stream.Flush();
-                                    fs.Flush();
+                                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                                    {
+                                        writer.Write(content);
+                                        writer.Flush();
+                                        stream.Flush();
+                                        fs.Flush();
+                                    }
                                 }
-                            }
-                            return true;
-                        });
-            }
-            catch (IOException err)
-            {
-                ExceptionHandler.LogException(err, true);
-                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return true;
+                            });
+                }
+                catch (IOException err)
+                {
+                    ExceptionHandler.LogException(err, true);
+                    MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

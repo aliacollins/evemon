@@ -242,7 +242,7 @@ namespace EVEMon.Common
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlan), output);
-            return Util.GetXMLStringRepresentation(doc);
+            return Util.XMLToStringRepresentation(doc);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace EVEMon.Common
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlans), output);
-            return Util.GetXMLStringRepresentation(doc);
+            return Util.XMLToStringRepresentation(doc);
         }
 
         /// <summary>
