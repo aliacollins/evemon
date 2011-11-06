@@ -84,7 +84,6 @@ namespace EVEMon
             this.toolsOwnedOptionsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stackExchangeMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -555,7 +554,6 @@ namespace EVEMon
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stackExchangeMenu,
             this.forumsMenuItem,
             this.knownProblemsMenuItem,
             this.userVoiceMenuItem,
@@ -564,13 +562,6 @@ namespace EVEMon
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
-            // 
-            // stackExchangeMenu
-            // 
-            this.stackExchangeMenu.Name = "stackExchangeMenu";
-            this.stackExchangeMenu.Size = new System.Drawing.Size(238, 22);
-            this.stackExchangeMenu.Text = "EVE Online &Q&&A";
-            this.stackExchangeMenu.Click += new System.EventHandler(this.stackExchangeMenu_Click);
             // 
             // forumsMenuItem
             // 
@@ -1021,7 +1012,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem testCharacterNotificationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem trayTestCharacterNotificationTSMI;
         private System.Windows.Forms.ToolStripMenuItem testTimeoutOneSecToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stackExchangeMenu;
         private System.Windows.Forms.ToolStripMenuItem addBlankCharacterMenu;
         private System.Windows.Forms.ToolStripMenuItem clearCacheToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansSeparator;
