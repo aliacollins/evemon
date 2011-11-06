@@ -25,7 +25,7 @@ namespace EVEMon.Common.SettingsObjects
             IgnoreNetworkStatus = false;
             UpdateFrequency = 240;
             UseCustomUpdatesUrl = false;
-            UpdatesUrl = NetworkConstants.BattleclinicUpdates;
+            UpdatesUrl = NetworkConstants.EVEMonUpdates;
         }
 
         /// <summary>
@@ -74,14 +74,14 @@ namespace EVEMon.Common.SettingsObjects
             get
             {
                 if (!UseCustomUpdatesUrl)
-                    return NetworkConstants.BattleclinicUpdates;
+                    return NetworkConstants.EVEMonUpdates;
 
                 if (String.IsNullOrEmpty(m_updatesUrl))
-                    return NetworkConstants.BattleclinicUpdates;
+                    return NetworkConstants.EVEMonUpdates;
 
                 // We don't want this to be abused, so we lock the custom update url to localhost.
                 // For convenience any localhost path can be used on any port. file:// does not work anyway.
-                return !m_updatesUrl.StartsWith("http://localhost:") ? NetworkConstants.BattleclinicUpdates : m_updatesUrl;
+                return !m_updatesUrl.StartsWith("http://localhost:") ? NetworkConstants.EVEMonUpdates : m_updatesUrl;
             }
             set { m_updatesUrl = value; }
         }
