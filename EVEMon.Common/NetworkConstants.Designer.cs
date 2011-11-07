@@ -556,7 +556,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/downloads/patch.xml.
+        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki/updates/patch.xml.
         /// </summary>
         public static string EVEMonUpdates {
             get {
