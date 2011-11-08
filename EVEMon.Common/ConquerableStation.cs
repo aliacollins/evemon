@@ -170,23 +170,14 @@ namespace EVEMon.Common
             s_conqStationsByID.Clear();
             s_conqStationsByName.Clear();
 
-            try
+            foreach (SerializableOutpost outpost in outposts)
             {
-                foreach (SerializableOutpost outpost in outposts)
-                {
-                    s_conqStationsByID.Add(outpost.StationID, new ConquerableStation(outpost));
-                    s_conqStationsByName.Add(outpost.StationName, new ConquerableStation(outpost));
-                }
+                s_conqStationsByID.Add(outpost.StationID, new ConquerableStation(outpost));
+                s_conqStationsByName.Add(outpost.StationName, new ConquerableStation(outpost));
             }
-            catch (Exception exc)
-            {
-                ExceptionHandler.LogException(exc, true);
-            }
-            finally
-            {
-                s_loaded = true;
-                EveMonClient.Trace("ConquerableStationList.Import - done");
-            }
+
+            s_loaded = true;
+            EveMonClient.Trace("ConquerableStationList.Import - done");
         }
 
         #endregion

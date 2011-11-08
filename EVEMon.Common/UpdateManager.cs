@@ -30,7 +30,7 @@ namespace EVEMon.Common
                 {
                     File.Delete(file);
                 }
-                catch (Exception e)
+                catch (UnauthorizedAccessException e)
                 {
                     ExceptionHandler.LogException(e, false);
                 }
@@ -49,7 +49,7 @@ namespace EVEMon.Common
                 {
                     File.Delete(file);
                 }
-                catch (Exception e)
+                catch (UnauthorizedAccessException e)
                 {
                     ExceptionHandler.LogException(e, false);
                 }

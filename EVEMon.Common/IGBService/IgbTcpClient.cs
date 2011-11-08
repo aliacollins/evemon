@@ -127,10 +127,11 @@ namespace EVEMon.Common.IgbService
                         BeginRead(true);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ExceptionHandler.LogException(e, true);
                 Close();
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
             }
         }
 

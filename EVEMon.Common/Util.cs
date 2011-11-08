@@ -39,9 +39,9 @@ namespace EVEMon.Common
             {
                 Process.Start(url);
             }
-            catch (Exception ex)
+            catch (FileNotFoundException ex)
             {
-                ExceptionHandler.LogException(ex, true);
+                ExceptionHandler.LogException(ex, false);
             }
         }
 
@@ -265,6 +265,7 @@ namespace EVEMon.Common
                             {
                                 ExceptionHandler.LogException(e, true);
                                 result = new APIResult<T>(APIError.Http, e.Message);
+                                throw;
                             }
                             finally
                             {

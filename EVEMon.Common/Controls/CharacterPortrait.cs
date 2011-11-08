@@ -192,7 +192,12 @@ namespace EVEMon.Common.Controls
                 }
                 return image;
             }
-            catch (Exception e)
+            catch (IOException e)
+            {
+                ExceptionHandler.LogException(e, false);
+                return null;
+            }
+            catch (UnauthorizedAccessException e)
             {
                 ExceptionHandler.LogException(e, false);
                 return null;
@@ -273,9 +278,8 @@ namespace EVEMon.Common.Controls
                 // Notify the other controls we updated this portrait
                 EveMonClient.OnCharacterPortraitUpdated(m_character);
             }
-            catch (Exception e)
+            catch (IOException e)
             {
-                // TODO : Add a tooltip here
                 ExceptionHandler.LogException(e, false);
             }
             finally
@@ -308,68 +312,60 @@ namespace EVEMon.Common.Controls
 
                 // Now, search in the game folder all matching files 
                 // (different resolutions are available for every character)
-                try
+                // Retrieve all files in the EVE cache directory which matches "<characterId>*"
+                List<FileInfo> filesInEveCache = new List<FileInfo>();
+                List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
+                foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
+                    evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
                 {
-                    // Retrieve all files in the EVE cache directory which matches "<characterId>*"
-                    List<FileInfo> filesInEveCache = new List<FileInfo>();
-                    List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
-                    foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
-                        evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
-                    {
-                        filesInEveCache.AddRange(di.GetFiles(String.Format("{0}*", m_id)));
+                    filesInEveCache.AddRange(di.GetFiles(String.Format("{0}*", m_id)));
 
-                        // Look up for an image file and add it to the list
-                        // (CCP changed image format in Incursion 1.1.0
-                        // as part of new character portraits creator,
-                        // so I added an image file check method to provide compatibility
-                        // with all image formats (Jimi))
-                        imageFilesInEveCache.AddRange(filesInEveCache.Where(IsImageFile));
-                    }
-
-                    // Displays an error message if none found.
-                    if (imageFilesInEveCache.Count == 0)
-                    {
-                        StringBuilder message = new StringBuilder();
-
-                        message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}",
-                                             Environment.NewLine);
-                        message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
-                        message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
-                        message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
-                        message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}",
-                                             EveMonClient.EVEApplicationDataDir, Environment.NewLine);
-
-                        MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                        IsUpdating = false;
-                        return;
-                    }
-
-                    // Search for the biggest portrait
-                    int bestSize = 0;
-                    string bestFile = String.Empty;
-                    int charIDLength = m_id.ToString().Length;
-                    foreach (FileInfo file in imageFilesInEveCache)
-                    {
-                        int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
-                        int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
-
-                        if (imageSize <= bestSize)
-                            continue;
-
-                        bestFile = file.FullName;
-                        bestSize = imageSize;
-                    }
-
-                    // Open the largest image and save it
-                    Image image = Image.FromFile(bestFile);
-                    SavePortraitToCache(image);
+                    // Look up for an image file and add it to the list
+                    // (CCP changed image format in Incursion 1.1.0
+                    // as part of new character portraits creator,
+                    // so I added an image file check method to provide compatibility
+                    // with all image formats (Jimi))
+                    imageFilesInEveCache.AddRange(filesInEveCache.Where(IsImageFile));
                 }
-                catch (Exception e)
+
+                // Displays an error message if none found.
+                if (imageFilesInEveCache.Count == 0)
                 {
-                    // TODO : Add a tooltip here
-                    ExceptionHandler.LogException(e, false);
+                    StringBuilder message = new StringBuilder();
+
+                    message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}",
+                                         Environment.NewLine);
+                    message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
+                    message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
+                    message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
+                    message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}",
+                                         EveMonClient.EVEApplicationDataDir, Environment.NewLine);
+
+                    MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                    IsUpdating = false;
+                    return;
                 }
+
+                // Search for the biggest portrait
+                int bestSize = 0;
+                string bestFile = String.Empty;
+                int charIDLength = m_id.ToString().Length;
+                foreach (FileInfo file in imageFilesInEveCache)
+                {
+                    int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
+                    int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
+
+                    if (imageSize <= bestSize)
+                        continue;
+
+                    bestFile = file.FullName;
+                    bestSize = imageSize;
+                }
+
+                // Open the largest image and save it
+                Image image = Image.FromFile(bestFile);
+                SavePortraitToCache(image);
             }
             finally
             {

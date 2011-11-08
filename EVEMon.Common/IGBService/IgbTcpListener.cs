@@ -134,9 +134,10 @@ namespace EVEMon.Common.IgbService
                     if (!ar.CompletedSynchronously)
                         BeginAcceptTcpClient(true);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    ExceptionHandler.LogException(e, false);
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
                 }
             }
         }

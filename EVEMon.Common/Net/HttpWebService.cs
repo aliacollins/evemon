@@ -56,7 +56,7 @@ namespace EVEMon.Common.Net
                     return false;
                 }
             }
-            catch (Exception)
+            catch (UriFormatException)
             {
                 errorMsg = String.Format(CultureConstants.DefaultCulture, "\"{0}\" is not a valid URL for an HTTP request.", url);
                 return false;

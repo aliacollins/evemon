@@ -65,7 +65,11 @@ namespace EVEMon.Common
                     callback(image);
                     return;
                 }
-                catch (Exception e)
+                catch (IOException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                }
+                catch (UnauthorizedAccessException e)
                 {
                     ExceptionHandler.LogException(e, false);
                 }
@@ -104,9 +108,10 @@ namespace EVEMon.Common
                                                                              return true;
                                                                          });
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    ExceptionHandler.LogException(e, false);
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
                 }
             }
         }

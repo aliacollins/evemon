@@ -44,9 +44,9 @@ namespace EVEMon.Common
                         double timediff = Math.Abs((timeNow.ToLocalTime() - completionTime).TotalSeconds);
                         isSynchronised = timediff < 60;
                     }
-                    catch (Exception ex)
+                    catch (FormatException ex)
                     {
-                        ExceptionHandler.LogException(ex, true);
+                        ExceptionHandler.LogException(ex, false);
                     }
                 }
             }

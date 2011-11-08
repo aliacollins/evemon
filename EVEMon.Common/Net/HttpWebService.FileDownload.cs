@@ -79,7 +79,7 @@ namespace EVEMon.Common.Net
                 {
                     fileResult = new FileInfo(requestState.FilePath);
                 }
-                catch (Exception ex)
+                catch (UnauthorizedAccessException ex)
                 {
                     requestState.Error = HttpWebServiceException.FileError(requestState.Request.BaseUrl, ex);
                 }

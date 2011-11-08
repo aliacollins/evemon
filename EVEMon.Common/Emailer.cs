@@ -202,9 +202,8 @@ namespace EVEMon.Common
                 if (settings.EmailAuthenticationRequired)
                 {
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential(
-                        settings.EmailAuthenticationUserName,
-                        settings.EmailAuthenticationPassword);
+                    client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
+                                                               settings.EmailAuthenticationPassword);
                 }
 
                 // SSL
@@ -214,7 +213,12 @@ namespace EVEMon.Common
                 client.SendAsync(msg, null);
                 return true;
             }
-            catch (Exception e)
+            catch (InvalidOperationException e)
+            {
+                ExceptionHandler.LogException(e, true);
+                return false;
+            }
+            catch (SmtpException e)
             {
                 ExceptionHandler.LogException(e, true);
                 return false;
