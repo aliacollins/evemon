@@ -83,7 +83,8 @@ namespace EVEMon.SkillPlanner
                     case ItemSlot.Low:
                         cbSlotFilter.SelectedIndex = 3;
                         break;
-                    case ItemSlot.None:
+                    case ItemSlot.None:                 
+                    case ItemSlot.NoSlot:
                         cbSlotFilter.SelectedIndex = 4;
                         break;
                     default:
@@ -95,7 +96,7 @@ namespace EVEMon.SkillPlanner
                 {
                     ccbGroupFilter.SetItemChecked(i,
                                                   (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) !=
-                                                  ItemMetaGroup.Empty);
+                                                  ItemMetaGroup.None);
                 }
 
                 tbSearchText.Text = Settings.UI.ItemBrowser.TextSearch;
@@ -185,13 +186,13 @@ namespace EVEMon.SkillPlanner
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.Low;
                     break;
                 case 4:
-                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.None;
+                    Settings.UI.ItemBrowser.SlotFilter = ItemSlot.NoSlot;
                     break;
             }
 
             // Update the predicate
             ItemSlot slot = Settings.UI.ItemBrowser.SlotFilter;
-            m_slotPredicate = x => (x.FittingSlot & slot) != ItemSlot.Empty;
+            m_slotPredicate = x => (x.FittingSlot & slot) != ItemSlot.None;
 
             // Update the control's content
             UpdateContent();
@@ -205,7 +206,7 @@ namespace EVEMon.SkillPlanner
         private void ccbGroupFilter_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             // Update the settings
-            Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.Empty;
+            Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.None;
             for (int i = 0; i < m_metaGroups.Count; i++)
             {
                 if (ccbGroupFilter.GetItemChecked(i))
@@ -214,7 +215,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the predicate
             ItemMetaGroup filter = Settings.UI.ItemBrowser.MetagroupFilter;
-            m_metaGroupPredicate = x => (x.MetaGroup & filter) != ItemMetaGroup.Empty;
+            m_metaGroupPredicate = x => (x.MetaGroup & filter) != ItemMetaGroup.None;
 
             // Update the control's content
             UpdateContent();

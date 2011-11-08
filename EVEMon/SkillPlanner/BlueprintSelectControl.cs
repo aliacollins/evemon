@@ -47,17 +47,17 @@ namespace EVEMon.SkillPlanner
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
 
                 cbTech1.Checked =
-                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.Empty;
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.None;
                 cbTech2.Checked =
-                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.Empty;
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.None;
                 cbTech3.Checked =
-                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.None;
                 cbFaction.Checked =
-                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.None;
                 cbStoryline.Checked =
-                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.None;
                 cbOfficer.Checked =
-                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Officer) != ItemMetaGroup.Empty;
+                    (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Officer) != ItemMetaGroup.None;
             }
             else
             {
@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
         private void cbMetagroup_CheckedChanged(object sender, EventArgs e)
         {
             // Retrieve the metagroup
-            ItemMetaGroup metagroup = ItemMetaGroup.Empty;
+            ItemMetaGroup metagroup = ItemMetaGroup.None;
             if (cbTech1.Checked)
                 metagroup |= ItemMetaGroup.T1;
             if (cbTech2.Checked)
@@ -180,7 +180,7 @@ namespace EVEMon.SkillPlanner
             Settings.UI.BlueprintBrowser.MetagroupFilter |= metagroup;
 
             // Update the predicate
-            m_metaGroupPredicate = x => (x.MetaGroup & metagroup) != ItemMetaGroup.Empty;
+            m_metaGroupPredicate = x => (x.MetaGroup & metagroup) != ItemMetaGroup.None;
 
             // Update content
             UpdateContent();

@@ -59,7 +59,6 @@ namespace EVEMon.Common
     [Flags]
     public enum ItemMetaGroup
     {
-        None = 1,
         T1 = 2,
         T2 = 4,
         T3 = 8,
@@ -73,10 +72,10 @@ namespace EVEMon.Common
         Named = 257,
         Other = 513,
 
-        Empty = 0,
+        None = 0,
         AllTechLevel = T1 | T2 | T3,
         AllNonTechLevel = Faction | Officer | Deadspace | Storyline,
-        All = AllTechLevel | AllNonTechLevel | None
+        All = AllTechLevel | AllNonTechLevel
     }
 
     /// <summary>
@@ -85,13 +84,13 @@ namespace EVEMon.Common
     [Flags]
     public enum ItemSlot
     {
-        Empty = 0,
-        None = 1,
+        None = 0,
+        NoSlot = 1,
         Low = 2,
         Medium = 4,
         High = 8,
 
-        All = Low | Medium | High | None
+        All = Low | Medium | High | NoSlot
     }
 
     /// <summary>
@@ -148,7 +147,8 @@ namespace EVEMon.Common
     [Flags]
     public enum EveImageSize
     {
-        x0 = 0,
+        None = 0,
+        x0 = 1,
         x16 = 16,
         x32 = 32,
         x64 = 64,
@@ -183,17 +183,12 @@ namespace EVEMon.Common
         /// <summary>
         /// The advanced corporation features of APIMethods.
         /// </summary>
-        AdvancedCorporationFeatures = None,
+        //AdvancedCorporationFeatures = None,
 
         /// <summary>
         /// All character features of APIMethods.
         /// </summary>
         AllCharacterFeatures = BasicCharacterFeatures | AdvancedCharacterFeatures,
-
-        /// <summary>
-        /// All corporation features of APIMethods.
-        /// </summary>
-        AllCorporationFeatures = AdvancedCorporationFeatures
     }
 
     /// <summary>
@@ -415,6 +410,7 @@ namespace EVEMon.Common
 
     public enum PlanFormat
     {
+        None = 0,
         Emp = 1,
         Xml = 2,
         Text = 3
