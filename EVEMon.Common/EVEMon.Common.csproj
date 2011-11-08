@@ -193,6 +193,7 @@
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
     <Compile Include="GlobalAPIKeyCollection.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IEveMessage.cs" />
     <Compile Include="EveNotification.cs" />
     <Compile Include="EveNotificationsCollection.cs" />
