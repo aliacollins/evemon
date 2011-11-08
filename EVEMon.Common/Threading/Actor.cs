@@ -36,8 +36,11 @@ namespace EVEMon.Common.Threading
         /// <param name="priority">The underlying thread's priority</param>
         public Actor(ThreadPriority priority)
         {
+            using(AutoResetEvent autoResetEvent = new AutoResetEvent(false))
+            {
+                m_waitHandle = autoResetEvent;
+            }
             m_messageQueue = new Queue<Message>();
-            m_waitHandle = new AutoResetEvent(false);
             m_thread = new Thread(MessagePump) { Priority = priority };
             m_thread.Start();
         }
