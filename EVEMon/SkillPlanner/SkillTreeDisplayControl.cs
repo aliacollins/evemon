@@ -23,7 +23,7 @@ namespace EVEMon.SkillPlanner
         private const DescriptiveTextOptions TimeFormat =
             DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
 
-        public event SkillClickedHandler SkillClicked;
+        public event EventHandler<SkillClickedEventArgs> SkillClicked;
 
         private Plan m_plan;
         private Skill m_rootSkill;
@@ -463,10 +463,11 @@ namespace EVEMon.SkillPlanner
             }
 
             // Fires the event when skill not null
-            if (skill == null || SkillClicked == null)
+            if (skill == null)
                 return;
 
-            SkillClicked(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
+            if (SkillClicked != null)
+                SkillClicked(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
         }
 
         /// <summary>

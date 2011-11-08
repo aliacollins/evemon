@@ -17,8 +17,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="method"></param>
-        internal CharacterQueryMonitor(Character character, Enum method)
-            : base(method)
+        /// <param name="onUpdated"></param>
+        internal CharacterQueryMonitor(Character character, Enum method, QueryCallback<T> onUpdated)
+            : base(method, onUpdated)
         {
             m_character = character;
         }

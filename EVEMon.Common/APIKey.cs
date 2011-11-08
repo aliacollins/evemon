@@ -34,11 +34,11 @@ namespace EVEMon.Common
         /// </summary>
         private APIKey()
         {
-            m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, APIGenericMethods.APIKeyInfo);
-            m_apiKeyInfoMonitor.Updated += OnAPIKeyInfoUpdated;
+            m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, APIGenericMethods.APIKeyInfo,
+                                                                                 OnAPIKeyInfoUpdated);
 
-            m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, APICharacterMethods.AccountStatus);
-            m_accountStatusMonitor.Updated += OnAccountStatusUpdated;
+            m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, APICharacterMethods.AccountStatus,
+                                                                                          OnAccountStatusUpdated);
 
             IdentityIgnoreList = new CharacterIdentityIgnoreList(this);
 

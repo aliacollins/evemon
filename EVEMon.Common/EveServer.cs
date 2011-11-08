@@ -19,9 +19,8 @@ namespace EVEMon.Common
         {
             m_status = ServerStatus.Online;
 
-            m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(APIGenericMethods.ServerStatus);
-            m_serverStatusMonitor.Updated += OnServerStatusMonitorUpdated;
-            m_serverStatusMonitor.Enabled = true;
+            m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(APIGenericMethods.ServerStatus,
+                                                                                  OnServerStatusMonitorUpdated) { Enabled = true };
         }
 
         /// <summary>
