@@ -27,16 +27,17 @@ namespace EVEMon.Common
         /// Constructor.
         /// </summary>
         /// <param name="method"></param>
-        /// <param name="onUpdated"></param>
-        internal QueryMonitor(Enum method, QueryCallback<T> onUpdated)
+        /// <param name="callback"></param>
+        internal QueryMonitor(Enum method, QueryCallback<T> callback)
         {
-            if (onUpdated == null)
-                throw new ArgumentNullException("onUpdated");
+            // Check callback not null
+            if (callback == null)
+                throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             LastUpdate = DateTime.MinValue;
             m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
-            m_onUpdated = onUpdated;
+            m_onUpdated = callback;
             Method = method;
             Enabled = false;
             QueryOnStartup = false;

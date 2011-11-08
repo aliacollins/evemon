@@ -181,6 +181,7 @@
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
+    <Compile Include="Data\MaterialCollection.cs" />
     <Compile Include="Data\NPCCorporation.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
     <Compile Include="EmploymentHistoryCollection.cs" />
@@ -325,7 +326,6 @@
     <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanSorter.cs" />
-    <Compile Include="QueryCallback.cs" />
     <Compile Include="ResearchPoint.cs" />
     <Compile Include="ResearchPointCollection.cs" />
     <Compile Include="ResearchPointComparer.cs" />

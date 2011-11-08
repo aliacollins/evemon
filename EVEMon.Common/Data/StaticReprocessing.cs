@@ -10,7 +10,7 @@ namespace EVEMon.Common.Data
     public static class StaticReprocessing
     {
         private static bool s_initialized;
-        private static readonly Dictionary<long, List<Material>> s_itemMaterialsByID = new Dictionary<long, List<Material>>();
+        private static readonly Dictionary<long, MaterialCollection> s_itemMaterialsByID = new Dictionary<long, MaterialCollection>();
 
         /// <summary>
         /// Ensures the reprocessing informations have been intialized.
@@ -24,8 +24,8 @@ namespace EVEMon.Common.Data
 
             foreach (SerializableItemMaterials item in datafile.Items)
             {
-                List<Material> listOfMaterials = item.Materials.Select(itemMaterial => new Material(itemMaterial)).ToList();
-                s_itemMaterialsByID[item.ID] = listOfMaterials;
+                MaterialCollection materials = new MaterialCollection(item.Materials.Select(itemMaterial => new Material(itemMaterial)));
+                s_itemMaterialsByID[item.ID] = materials;
             }
 
             // Mark as initialized
@@ -35,7 +35,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets an enumeration of all the reprocessing materials.
         /// </summary>
-        public static IEnumerable<List<Material>> AllReprocessingMaterials
+        public static IEnumerable<MaterialCollection> AllReprocessingMaterials
         {
             get
             {
@@ -52,7 +52,7 @@ namespace EVEMon.Common.Data
         public static IEnumerable<Material> GetItemMaterialsByID(long id)
         {
             EnsureInitialized();
-            List<Material> result;
+            MaterialCollection result;
             s_itemMaterialsByID.TryGetValue(id, out result);
             return result;
         }

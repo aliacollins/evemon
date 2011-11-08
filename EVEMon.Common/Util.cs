@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
@@ -352,6 +353,82 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Asynchronously download an XML and deserializes it into the specified type.
+        /// </summary>
+        /// <typeparam name="T">The inner type to deserialize</typeparam>
+        /// <param name="url">The url to query</param>
+        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="callback">The callback to call once the query has been completed.</param>
+        internal static void DownloadBCAPIResultAsync<T>(string url, Serialization.BattleClinic.QueryCallback<T> callback,
+                                                       HttpPostData postData = null)
+        {
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
+                (asyncResult, userState) =>
+                    {
+                        BCAPIResult<T> result = asyncResult.Error != null
+                                                    ? null
+                                                    : DeserializeBCAPIResultCore<T>(asyncResult.Result);
+
+                        string errorMessage = asyncResult.Error == null
+                                                  ? String.Empty
+                                                  : asyncResult.Error.InnerException == null
+                                                        ? asyncResult.Error.Message
+                                                        : asyncResult.Error.InnerException.Message;
+
+                        // We got the result, let's invoke the callback on this actor
+                        Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
+                    },
+                null);
+        }
+
+        /// <summary>
+        /// Process XML document.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize from the document</typeparam>
+        /// <param name="doc">The XML document to deserialize from.</param>
+        /// <returns>The result of the deserialization.</returns>
+        private static BCAPIResult<T> DeserializeBCAPIResultCore<T>(XmlNode doc)
+        {
+            BCAPIResult<T> result;
+
+            try
+            {
+                // Deserialization with a transform
+                using (XmlNodeReader reader = new XmlNodeReader(doc))
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(BCAPIResult<T>));
+                    result = (BCAPIResult<T>)xs.Deserialize(reader);
+                }
+            }
+                // An error occurred during the deserialization
+            catch (InvalidOperationException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                BCAPIError error = new BCAPIError
+                                       {
+                                           ErrorMessage = exc.InnerException == null
+                                                              ? exc.Message
+                                                              : exc.InnerException.Message
+                                       };
+                result = new BCAPIResult<T> { Error = error };
+            }
+            catch (XmlException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                BCAPIError error = new BCAPIError
+                                       {
+                                           ErrorMessage = exc.InnerException == null
+                                                              ? exc.Message
+                                                              : exc.InnerException.Message
+                                       };
+                result = new BCAPIResult<T> { Error = error };
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Asynchronously download an object from an XML stream.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -385,8 +462,15 @@ namespace EVEMon.Common
                                     result = (T)xs.Deserialize(reader);
                                 }
                             }
-                                // An error occurred during the deserialization
+                            // An error occurred during the deserialization
                             catch (InvalidOperationException exc)
+                            {
+                                ExceptionHandler.LogException(exc, true);
+                                errorMessage = (exc.InnerException == null
+                                                    ? exc.Message
+                                                    : exc.InnerException.Message);
+                            }
+                            catch (XmlException exc)
                             {
                                 ExceptionHandler.LogException(exc, true);
                                 errorMessage = (exc.InnerException == null
