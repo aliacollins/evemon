@@ -31,15 +31,15 @@ namespace EVEMon.SettingsUI
             // Group the methods by usage
             List<Enum> methods = apiMethods.Where(method => method is APIGenericMethods).ToList();
 
-            methods.AddRange(apiMethods.Where(method => method is APICharacterMethods).Cast<APICharacterMethods>().Where(
+            methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                 method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
 
-            methods.AddRange(apiMethods.Where(method => method is APICharacterMethods).Cast<APICharacterMethods>().Where(
+            methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                 method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().OrderBy(
                     method => method.GetHeader()));
 
             // Uncomment upon implementing an exclicit corporation monitor feature
-            //methods.AddRange(apiMethods.Where(method => method is APICorporationMethods).Cast<APICorporationMethods>().Where(
+            //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
             //    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
             //        method => method.GetHeader()));
 
