@@ -579,9 +579,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private sealed class Cell
         {
-            private readonly SkillTreeDisplayControl m_std = new SkillTreeDisplayControl();
-
-
             #region Constructor
 
             /// <summary>
@@ -692,18 +689,21 @@ namespace EVEMon.SkillPlanner
             /// <returns></returns>
             private void FirstPassLayout(int left, int top)
             {
-                // Layout this cell
-                Rectangle = new Rectangle(left, top, m_std.CellWidth, m_std.CellHeight);
-
-                // Layout the children
-                int childrenTop = top + m_std.CellHeight + SkillboxMarginUd;
-                int childrenWidth = Cells.Count * m_std.CellWidth + (Cells.Count - 1) * SkillboxMarginLr;
-
-                left += (m_std.CellWidth - childrenWidth) / 2;
-                foreach (Cell cell in Cells)
+                using (SkillTreeDisplayControl stdc = new SkillTreeDisplayControl())
                 {
-                    cell.FirstPassLayout(left, childrenTop);
-                    left += m_std.CellWidth + SkillboxMarginLr;
+                    // Layout this cell
+                    Rectangle = new Rectangle(left, top, stdc.CellWidth, stdc.CellHeight);
+
+                    // Layout the children
+                    int childrenTop = top + stdc.CellHeight + SkillboxMarginUd;
+                    int childrenWidth = Cells.Count * stdc.CellWidth + (Cells.Count - 1) * SkillboxMarginLr;
+
+                    left += (stdc.CellWidth - childrenWidth) / 2;
+                    foreach (Cell cell in Cells)
+                    {
+                        cell.FirstPassLayout(left, childrenTop);
+                        left += stdc.CellWidth + SkillboxMarginLr;
+                    }
                 }
             }
 
