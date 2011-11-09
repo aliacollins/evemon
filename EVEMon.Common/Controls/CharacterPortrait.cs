@@ -220,7 +220,9 @@ namespace EVEMon.Common.Controls
 
             IsUpdating = true;
 
-            ImageService.GetCharacterImageAsync(m_id, OnGotCharacterImageFromCCP);
+            // Skip if it's a blank character
+            if (m_id != UriCharacter.BlankCharacterID)
+                ImageService.GetCharacterImageAsync(m_id, OnGotCharacterImageFromCCP);
         }
 
         /// <summary>

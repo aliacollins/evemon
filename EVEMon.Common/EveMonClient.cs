@@ -34,6 +34,7 @@ namespace EVEMon.Common
         private static bool s_running;
         private static string s_traceFile;
 
+        public const int DefaultDpi = 96;
 
         #region Initialization and threading
 
@@ -117,15 +118,6 @@ namespace EVEMon.Common
         /// 	<c>true</c> if this instance is debug build; otherwise, <c>false</c>.
         /// </value>
         public static bool IsDebugBuild { get; private set; }
-
-        /// <summary>
-        /// Gets the default dpi.
-        /// </summary>
-        /// <value>The default dpi.</value>
-        public static int DefaultDpi
-        {
-            get { return 96; }
-        }
 
         #endregion
 

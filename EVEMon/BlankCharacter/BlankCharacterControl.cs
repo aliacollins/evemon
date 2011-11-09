@@ -95,7 +95,6 @@ namespace EVEMon.BlankCharacter
             get { return tbCharacterName.Text; }
         }
 
-
         #region Update Methods
 
         /// <summary>
@@ -356,7 +355,7 @@ namespace EVEMon.BlankCharacter
         {
             return new SerializableCCPCharacter
                        {
-                           ID = 9999999,
+                           ID = UriCharacter.BlankCharacterID,
                            Name = tbCharacterName.Text,
                            Birthday = DateTime.UtcNow,
                            Race = m_race.ToString(),
