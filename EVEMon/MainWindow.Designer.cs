@@ -74,6 +74,7 @@ namespace EVEMon
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apiTesterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addBlankCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mineralWorksheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.schedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,7 +121,6 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
-            this.apiTesterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -483,6 +483,14 @@ namespace EVEMon
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // apiTesterToolStripMenuItem
+            // 
+            this.apiTesterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("apiTesterToolStripMenuItem.Image")));
+            this.apiTesterToolStripMenuItem.Name = "apiTesterToolStripMenuItem";
+            this.apiTesterToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.apiTesterToolStripMenuItem.Text = "API Tester...";
+            this.apiTesterToolStripMenuItem.Click += new System.EventHandler(this.apiTesterToolStripMenuItem_Click);
             // 
             // addBlankCharacterMenu
             // 
@@ -894,14 +902,6 @@ namespace EVEMon
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
-            // 
-            // apiTesterToolStripMenuItem
-            // 
-            this.apiTesterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("apiTesterToolStripMenuItem.Image")));
-            this.apiTesterToolStripMenuItem.Name = "apiTesterToolStripMenuItem";
-            this.apiTesterToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.apiTesterToolStripMenuItem.Text = "API Tester...";
-            this.apiTesterToolStripMenuItem.Click += new System.EventHandler(this.apiTesterToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
