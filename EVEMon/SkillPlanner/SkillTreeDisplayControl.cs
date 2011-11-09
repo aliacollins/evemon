@@ -354,12 +354,9 @@ namespace EVEMon.SkillPlanner
 
                 // Fill the background
                 if (Settings.UI.SafeForWork)
-                {
-                    fillBrush.Dispose();
                     fillBrush = new SolidBrush(SystemColors.Control);
-                }
-                g.FillRectangle(fillBrush, rect);
 
+                g.FillRectangle(fillBrush, rect);
 
                 // Draw text (two to five lines)
                 Point drawPoint = new Point(rect.Left + 5, rect.Top + 5);

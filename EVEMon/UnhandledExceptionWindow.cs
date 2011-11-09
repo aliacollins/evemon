@@ -61,21 +61,26 @@ namespace EVEMon
             string trace;
             EveMonClient.StopTraceLogging();
 
+            FileStream traceStream = null;
             try
             {
-                using (FileStream traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read)
-                    )
+                traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read);
+
+                using (StreamReader traceReader = new StreamReader(traceStream))
                 {
-                    using (StreamReader traceReader = new StreamReader(traceStream))
-                    {
-                        trace = traceReader.ReadToEnd();
-                    }
+                    traceStream = null;
+                    trace = traceReader.ReadToEnd();
                 }
             }
             catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex, false);
                 trace = "Unable to load trace file for inclusion in report";
+            }
+            finally
+            {
+                if (traceStream != null)
+                    traceStream.Dispose();
             }
 
             try
