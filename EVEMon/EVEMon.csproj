@@ -156,6 +156,7 @@
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainWindowStandingsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
