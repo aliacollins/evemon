@@ -144,8 +144,8 @@
   <data name="BattleclinicLoadoutTopic" xml:space="preserve">
     <value>http://forum.battleclinic.com/index.php/topic,{0}.0.html</value>
   </data>
-  <data name="BattleclinicUpdates" xml:space="preserve">
-    <value>http://evemon.static.battleclinic.com/builds/patch.xml</value>
+  <data name="EVEMonUpdates" xml:space="preserve">
+    <value>https://bitbucket.org/BattleClinic/evemon/wiki/updates/patch.xml</value>
   </data>
   <data name="CCPIcons" xml:space="preserve">
     <value>http://eve.no-ip.de/{0}/{1}/{2}.png</value>

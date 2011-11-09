@@ -219,8 +219,8 @@ namespace EVEMon.ApiCredentialsManagement
                                         font = smallBoldFont;
 
                                     // Draws character's name
-                                    g.DrawString(identity.Name, font, fontBrush, new PointF(left, top));
-                                    left += (int)g.MeasureString(identity.Name, font).Width;
+                                    g.DrawString(identity.CharacterName, font, fontBrush, new PointF(left, top));
+                                    left += (int)g.MeasureString(identity.CharacterName, font).Width;
                                 }
                             }
                         }

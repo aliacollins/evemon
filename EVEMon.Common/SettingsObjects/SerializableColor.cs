@@ -51,15 +51,5 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         #endregion
-
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal SerializableColor Clone()
-        {
-            return (SerializableColor)MemberwiseClone();
-        }
     }
 }

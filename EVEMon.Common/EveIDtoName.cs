@@ -17,7 +17,6 @@ namespace EVEMon.Common
         private static readonly List<string> s_listOfNames = new List<string>();
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
-        private static bool s_isLoaded;
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
 
@@ -92,11 +91,10 @@ namespace EVEMon.Common
         /// </summary>
         private static void EnsureCacheFileLoad()
         {
-            if (!File.Exists(s_file) || s_isLoaded)
+            if (!File.Exists(s_file) || !s_cacheList.IsEmpty())
                 return;
 
             TryDeserializeCacheFile();
-            s_isLoaded = true;
         }
 
         /// <summary>
@@ -213,12 +211,12 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Every timer tick, checks whether we should save the list every 2s.
+        /// Every timer tick, checks whether we should save the list every 10s.
         /// </summary>
         private static void UpdateOnOneSecondTick()
         {
-            // Is a save requested and is the last save older than 2s ?
-            if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(2))
+            // Is a save requested and is the last save older than 10s ?
+            if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
                 SaveImmediate();
         }
 
@@ -226,7 +224,7 @@ namespace EVEMon.Common
         /// Saves the list to disk.
         /// </summary>
         /// <remarks>
-        /// Saves will be cached for 2 seconds to avoid thrashing the disk when this method is called very rapidly.
+        /// Saves will be cached for 10 seconds to avoid thrashing the disk when this method is called very rapidly.
         /// If a save is currently pending, no action is needed. 
         /// </remarks>
         private static void Save()

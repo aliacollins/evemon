@@ -42,46 +42,46 @@ namespace EVEMon.Common
 
             // Initializes the query monitors 
             m_charSheetMonitor =
-                new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, APICharacterMethods.CharacterSheet);
-            m_charSheetMonitor.Updated += OnCharacterSheetUpdated;
+                new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, APICharacterMethods.CharacterSheet,
+                                                                         OnCharacterSheetUpdated);
             m_characterQueryMonitors.Add(m_charSheetMonitor);
 
             m_skillQueueMonitor =
-                new CharacterQueryMonitor<SerializableAPISkillQueue>(ccpCharacter, APICharacterMethods.SkillQueue);
-            m_skillQueueMonitor.Updated += OnSkillQueueUpdated;
+                new CharacterQueryMonitor<SerializableAPISkillQueue>(ccpCharacter, APICharacterMethods.SkillQueue,
+                                                                     OnSkillQueueUpdated);
             m_characterQueryMonitors.Add(m_skillQueueMonitor);
 
             m_charStandingsMonitor =
-                new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings);
-            m_charStandingsMonitor.Updated += OnStandingsUpdated;
+                new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
+                                                                    OnStandingsUpdated);
             m_characterQueryMonitors.Add(m_charStandingsMonitor);
 
             m_charMarketOrdersMonitor =
-                new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders);
-            m_charMarketOrdersMonitor.Updated += OnCharacterMarketOrdersUpdated;
+                new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
+                                                                       OnCharacterMarketOrdersUpdated);
             m_characterQueryMonitors.Add(m_charMarketOrdersMonitor);
 
             m_charIndustryJobsMonitor =
-                new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs);
-            m_charIndustryJobsMonitor.Updated += OnCharacterIndustryJobsUpdated;
+                new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
+                                                                       OnCharacterIndustryJobsUpdated);
             m_characterQueryMonitors.Add(m_charIndustryJobsMonitor);
 
             m_charResearchPointsMonitor =
-                new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, APICharacterMethods.ResearchPoints)
-                    { QueryOnStartup = true };
-            m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
+                new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, APICharacterMethods.ResearchPoints,
+                                                                   OnCharacterResearchPointsUpdated) { QueryOnStartup = true };
+            
             m_characterQueryMonitors.Add(m_charResearchPointsMonitor);
 
             m_charEVEMailMessagesMonitor =
-                new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, APICharacterMethods.MailMessages)
+                new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, APICharacterMethods.MailMessages,
+                                                                       OnCharacterEVEMailMessagesUpdated)
                     { QueryOnStartup = true };
-            m_charEVEMailMessagesMonitor.Updated += OnCharacterEVEMailMessagesUpdated;
             m_characterQueryMonitors.Add(m_charEVEMailMessagesMonitor);
 
             m_charEVENotificationsMonitor =
-                new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications)
+                new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications,
+                                                                        OnCharacterEVENotificationsUpdated)
                     { QueryOnStartup = true };
-            m_charEVENotificationsMonitor.Updated += OnCharacterEVENotificationsUpdated;
             m_characterQueryMonitors.Add(m_charEVENotificationsMonitor);
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(

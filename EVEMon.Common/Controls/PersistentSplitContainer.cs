@@ -38,13 +38,18 @@ namespace EVEMon.Common.Controls
                     else
                         Settings.UI.Splitters.Add(m_rememberDistanceKey, Math.Min(Width / 4, 100));
                 }
-                catch (Exception err)
+                catch (InvalidOperationException err)
                 {
                     // This occurs when we're in the designer. DesignMode doesn't get set
                     // when the control is a subcontrol of a user control, so we should handle
                     // this here :(
-                    ExceptionHandler.LogException(err, true);
+                    ExceptionHandler.LogException(err, false);
                     return;
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
                 }
             }
         }

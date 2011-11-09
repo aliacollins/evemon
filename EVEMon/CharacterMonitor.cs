@@ -22,6 +22,7 @@ namespace EVEMon
         private readonly List<ToolStripButton> m_advancedFeatures = new List<ToolStripButton>();
         private readonly ToolStripItem[] m_preferenceMenu;
 
+
         #region Constructor
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace EVEMon
 
             Font = FontFactory.GetFont("Tahoma");
             lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
-            
+
             // We make a copy of the preference menu for later use
             m_preferenceMenu = new ToolStripItem[preferencesMenu.DropDownItems.Count];
             preferencesMenu.DropDownItems.CopyTo(m_preferenceMenu, 0);
@@ -188,10 +189,9 @@ namespace EVEMon
         /// </summary>
         private void UpdateFrequentControls()
         {
+            SuspendLayout();
             try
             {
-                SuspendLayout();
-
                 // Hides or shows the warning about a character with no API key
                 warningLabel.Visible = (Character.Identity.APIKeys.IsEmpty());
 

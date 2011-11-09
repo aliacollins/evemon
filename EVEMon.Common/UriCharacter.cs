@@ -9,6 +9,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class UriCharacter : Character
     {
+        public const int BlankCharacterID = 9999999;
         private Uri m_uri;
 
         /// <summary>

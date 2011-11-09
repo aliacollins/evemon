@@ -13,13 +13,10 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("name")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal SerializableCharacterIdentity Clone()
-        {
-            return (SerializableCharacterIdentity)MemberwiseClone();
-        }
+        [XmlAttribute("corporationID")]
+        public long CorporationID { get; set; }
+
+        [XmlAttribute("corporationName")]
+        public string CorporationName { get; set; }
     }
 }

@@ -13,8 +13,7 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public class QueryMonitor<T> : IQueryMonitorEx, INetworkChangeSubscriber
     {
-        public event QueryCallback<T> Updated;
-
+        private readonly QueryCallback<T> m_onUpdated;
         private readonly string m_methodHeader;
 
         private bool m_forceUpdate;
@@ -28,11 +27,17 @@ namespace EVEMon.Common
         /// Constructor.
         /// </summary>
         /// <param name="method"></param>
-        internal QueryMonitor(Enum method)
+        /// <param name="callback"></param>
+        internal QueryMonitor(Enum method, QueryCallback<T> callback)
         {
+            // Check callback not null
+            if (callback == null)
+                throw new ArgumentNullException("callback", "The callback cannot be null.");
+
             LastUpdate = DateTime.MinValue;
             m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
+            m_onUpdated = callback;
             Method = method;
             Enabled = false;
             QueryOnStartup = false;
@@ -177,10 +182,10 @@ namespace EVEMon.Common
         /// <summary>
         /// Manually updates this monitor with the provided data, like if it has just been updated from CCP.
         /// </summary>
+        /// <param name="result">The result.</param>
         /// <remarks>
-        /// This method does not fire the <see cref="Updated"/> event.
+        /// This method does not fire any event.
         /// </remarks>
-        /// <param name="result"></param>
         internal void UpdateWith(APIResult<T> result)
         {
             LastResult = result;
@@ -284,8 +289,8 @@ namespace EVEMon.Common
             LastResult = result;
 
             // Notify subscribers
-            if (Updated != null)
-                Updated(result);
+            if (m_onUpdated != null)
+                m_onUpdated(result);
         }
 
         /// <summary>

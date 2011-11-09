@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace EVEMon.Common
 {
-    public class InstanceManager
+    public sealed class InstanceManager
     {
         public event EventHandler<EventArgs> Signaled;
 
@@ -17,8 +17,11 @@ namespace EVEMon.Common
         /// </summary>
         private InstanceManager()
         {
-            m_semaphore = new Semaphore(0, 1, "EVEMonInstance", out m_createdNew);
-            ThreadPool.RegisterWaitForSingleObject(m_semaphore, SemaphoreReleased, null, -1, false);
+            using (Semaphore semaphore = new Semaphore(0, 1, "EVEMonInstance", out m_createdNew))
+            {
+                ThreadPool.RegisterWaitForSingleObject(semaphore, SemaphoreReleased, null, -1, false);
+                m_semaphore = semaphore;
+            }
         }
 
         /// <summary>

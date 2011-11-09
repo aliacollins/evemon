@@ -30,15 +30,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Creates and stores a new character identity.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
+        /// <param name="id">The id.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="corpId">The corp id.</param>
+        /// <param name="corpName">Name of the corp.</param>
         /// <returns></returns>
-        internal CharacterIdentity Add(long id, string name)
+        internal CharacterIdentity Add(long id, string name, long corpId, string corpName)
         {
             if (Items.ContainsKey(id))
                 throw new ArgumentException("An identity with the same ID already exists.");
 
-            CharacterIdentity identity = new CharacterIdentity(id, name);
+            CharacterIdentity identity = new CharacterIdentity(id, name, corpId, corpName);
             Items[id] = identity;
             return identity;
         }

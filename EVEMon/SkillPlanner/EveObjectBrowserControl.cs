@@ -301,7 +301,7 @@ namespace EVEMon.SkillPlanner
                 // Check if the objects belong to an item family that has fitting slot property 
                 if (category.Name == "General" &&
                     SelectControl.SelectedObjects.Any(x => (x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone) &&
-                                                           x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
+                                                           x.FittingSlot != ItemSlot.NoSlot && x.FittingSlot != ItemSlot.None))
                     AddFittingSlotProperty(items, group);
 
                 // Add properties

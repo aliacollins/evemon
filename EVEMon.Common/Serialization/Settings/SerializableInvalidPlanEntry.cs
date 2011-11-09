@@ -15,14 +15,5 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlAttribute("acknowledged")]
         public bool Acknowledged { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal SerializableInvalidPlanEntry Clone()
-        {
-            return (SerializableInvalidPlanEntry)MemberwiseClone();
-        }
     }
 }

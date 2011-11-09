@@ -29,7 +29,7 @@ namespace EVEMon.SettingsUI
             IEnumerable<Enum> apiMethods = APIMethods.Methods.Where(x => x.HasHeader());
             
             // Group the methods by usage
-            List<Enum> methods = apiMethods.OfType<APIGenericMethods>().Cast<Enum>().ToList();
+            List<Enum> methods = apiMethods.Where(method => method is APIGenericMethods).ToList();
 
             methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                 method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
@@ -38,9 +38,10 @@ namespace EVEMon.SettingsUI
                 method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().OrderBy(
                     method => method.GetHeader()));
 
-            methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
-                method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
-                    method => method.GetHeader()));
+            // Uncomment upon implementing an exclicit corporation monitor feature
+            //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
+            //    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
+            //        method => method.GetHeader()));
 
             // Add the controls for every member of the enumeration
             foreach (Enum method in methods)
@@ -58,15 +59,16 @@ namespace EVEMon.SettingsUI
                     }
                 }
 
-                if (method is APICorporationMethods)
-                {
-                    APICorporationMethods apiMethod = (APICorporationMethods)method;
-                    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCorporationFeatures))
-                    {
-                        icon = CommonProperties.Resources.KeyGold16;
-                        iconToolTip = "This is an advanced feature query.";
-                    }
-                }
+                // Uncomment upon implementing an exclicit corporation monitor feature
+                //if (method is APICorporationMethods)
+                //{
+                //    APICorporationMethods apiMethod = (APICorporationMethods)method;
+                //    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCorporationFeatures))
+                //    {
+                //        icon = CommonProperties.Resources.KeyGold16;
+                //        iconToolTip = "This is an advanced feature query.";
+                //    }
+                //}
 
                 PictureBox picture = new PictureBox
                                          {

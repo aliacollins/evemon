@@ -11,8 +11,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="method"></param>
-        internal APIKeyQueryMonitor(APIKey apiKey, Enum method)
-            : base(method)
+        /// <param name="onUpdated"></param>
+        internal APIKeyQueryMonitor(APIKey apiKey, Enum method, QueryCallback<T> onUpdated)
+            : base(method, onUpdated)
         {
             m_apiKey = apiKey;
         }

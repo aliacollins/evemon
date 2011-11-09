@@ -176,7 +176,7 @@ namespace EVEMon.SkillPlanner
             this.ccbGroupFilter.Size = new System.Drawing.Size(179, 21);
             this.ccbGroupFilter.TabIndex = 7;
             this.ccbGroupFilter.TextForAll = "Any group";
-            this.ccbGroupFilter.TextForNone = "Regular items only";
+            this.ccbGroupFilter.TextForNone = "No group";
             this.ccbGroupFilter.ToolTip = null;
             this.ccbGroupFilter.ValueSeparator = ", ";
             // 

@@ -918,6 +918,7 @@ namespace EVEMon.Common.Controls
                 // GKM - Untrapped exceptions were killing me for debugging purposes.
                 // It probably shouldn't be here permanently, but it was causing real trouble for me.
                 MessageBox.Show(this, ex.ToString());
+                throw;
             }
 #endif
         }

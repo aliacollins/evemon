@@ -213,7 +213,7 @@ namespace EVEMon.Common.Data
                             return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.###} {1}", numericValue, Unit);
                     }
                 }
-                catch
+                catch (FormatException)
                 {
                     return "N/A";
                 }

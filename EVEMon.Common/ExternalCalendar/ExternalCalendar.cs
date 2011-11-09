@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
+using Google.GData.Client;
 
 namespace EVEMon.Common.ExternalCalendar
 {
@@ -37,7 +38,8 @@ namespace EVEMon.Common.ExternalCalendar
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
                 }
             }
         }
@@ -90,17 +92,14 @@ namespace EVEMon.Common.ExternalCalendar
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
                 }
             }
             catch (Exception ex)
             {
-                string text = String.Format(
-                    CultureConstants.DefaultCulture,
-                    "{0} {1}{1} {2}", "There was a problem accessing the Outlook Libraries",
-                    Environment.NewLine, ex.Message);
-                MessageBox.Show(text, "Problem integrating to Outlook");
-                return;
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
             }
         }
 
@@ -159,12 +158,18 @@ namespace EVEMon.Common.ExternalCalendar
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "EVEMon Error");
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
                 }
+            }
+            catch (InvalidCredentialsException ex)
+            {
+                MessageBox.Show(ex.Message, "Google says:");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Google says:");
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
             }
         }
     }

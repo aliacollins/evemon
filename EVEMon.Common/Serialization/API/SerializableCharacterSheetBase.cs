@@ -51,7 +51,7 @@ namespace EVEMon.Common.Serialization.API
         public string CorporationName { get; set; }
 
         [XmlElement("corporationID")]
-        public int CorporationID { get; set; }
+        public long CorporationID { get; set; }
 
         [XmlElement("allianceName")]
         public string AllianceName { get; set; }

@@ -250,7 +250,7 @@ namespace EVEMon.ApiCredentialsManagement
             // Updates the characters list
             CharactersListView.Items.Clear();
             foreach (ListViewItem item in e.Identities.Select(
-                id => new ListViewItem(id.Name)
+                id => new ListViewItem(id.CharacterName)
                           {
                               Tag = id,
                               Checked = (m_apiKey == null || !m_apiKey.IdentityIgnoreList.Contains(id))

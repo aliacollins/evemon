@@ -18,14 +18,5 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlAttribute("groupByPriority")]
         public bool GroupByPriority { get; set; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal PlanSorting Clone()
-        {
-            return (PlanSorting)MemberwiseClone();
-        }
     }
 }

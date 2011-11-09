@@ -10,6 +10,12 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common
 {
     /// <summary>
+    /// A delegate for query callbacks.
+    /// </summary>
+    /// <param name="result"></param>
+    public delegate void QueryCallback<T>(APIResult<T> result);
+
+    /// <summary>
     /// Serializable class abstracting an API queries provider and its configuration.
     /// </summary>
     [EnforceUIThreadAffinity]

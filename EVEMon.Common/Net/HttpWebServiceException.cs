@@ -1,15 +1,35 @@
 using System;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace EVEMon.Common.Net
 {
     /// <summary>
-    /// Exception class for all exceptions thrown by HttpWebService requests
+    /// Exception class for all exceptions thrown by HttpWebService requests.
     /// </summary>
     [Serializable]
     public sealed class HttpWebServiceException : ApplicationException
     {
+        public HttpWebServiceException()
+        {
+        }
+
+        public HttpWebServiceException(string message)
+            :base(message)
+        {
+        }
+
+        public HttpWebServiceException(string message, Exception ex)
+            : base(message, ex)
+        {
+        }
+
+        private HttpWebServiceException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
         /// </summary>

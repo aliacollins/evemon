@@ -333,7 +333,7 @@ namespace EVEMon.Common.Controls
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 ExceptionHandler.LogException(ex, true);
             }

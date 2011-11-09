@@ -13,8 +13,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="method"></param>
-        public CorporationQueryMonitor(Character character, Enum method)
-            : base(method)
+        /// <param name="onUpdated"></param>
+        public CorporationQueryMonitor(Character character, Enum method, QueryCallback<T> onUpdated)
+            : base(method, onUpdated)
         {
             m_character = character;
         }

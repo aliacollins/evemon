@@ -4,12 +4,10 @@ using System.Windows.Forms;
 
 namespace EVEMon.Common.CustomEventArgs
 {
-    public delegate void SkillClickedHandler(object sender, SkillClickedEventArgs e);
-
     /// <summary>
     /// Arguments for the skill clicked event args
     /// </summary>
-    public class SkillClickedEventArgs : EventArgs
+    public sealed class SkillClickedEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SkillClickedEventArgs"/> class.

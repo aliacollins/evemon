@@ -358,15 +358,6 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://evemon.static.battleclinic.com/builds/patch.xml.
-        /// </summary>
-        public static string BattleclinicUpdates {
-            get {
-                return ResourceManager.GetString("BattleclinicUpdates", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to http://api.battleclinic.com/api_key.php.
         /// </summary>
         public static string BCAPIAccountCredentials {
@@ -561,6 +552,15 @@ namespace EVEMon.Common {
         public static string EVEMonMainPage {
             get {
                 return ResourceManager.GetString("EVEMonMainPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki/updates/patch.xml.
+        /// </summary>
+        public static string EVEMonUpdates {
+            get {
+                return ResourceManager.GetString("EVEMonUpdates", resourceCulture);
             }
         }
         

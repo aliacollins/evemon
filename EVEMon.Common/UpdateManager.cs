@@ -30,7 +30,7 @@ namespace EVEMon.Common
                 {
                     File.Delete(file);
                 }
-                catch (Exception e)
+                catch (UnauthorizedAccessException e)
                 {
                     ExceptionHandler.LogException(e, false);
                 }
@@ -49,7 +49,7 @@ namespace EVEMon.Common
                 {
                     File.Delete(file);
                 }
-                catch (Exception e)
+                catch (UnauthorizedAccessException e)
                 {
                     ExceptionHandler.LogException(e, false);
                 }
@@ -112,10 +112,29 @@ namespace EVEMon.Common
 
             EveMonClient.Trace("UpdateManager.BeginCheck");
 
-            // Otherwise, query BattleClinic
-            Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, OnCheckCompleted);
+            // Otherwise, query for the patch file
+            // First look up for an emergency patch
+            Util.DownloadXMLAsync<SerializablePatch>(
+                String.Format("{0}-emergency.xml", Settings.Updates.UpdatesUrl.Replace(".xml", String.Empty)),
+                (result, errorMessage) =>
+                    {
+                        // If no emergency patch found proceed with the regular
+                        if (!String.IsNullOrEmpty(errorMessage))
+                        {
+                            Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, OnCheckCompleted);
+                            return;
+                        }
+
+                        // Proccess the emergency patch
+                        OnCheckCompleted(result, errorMessage);
+                    });
         }
 
+        /// <summary>
+        /// Called when patch file check completed.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="errorMessage">The error message.</param>
         private static void OnCheckCompleted(SerializablePatch result, string errorMessage)
         {
             // If update manager has been disabled since the last
@@ -154,6 +173,10 @@ namespace EVEMon.Common
             EveMonClient.Trace("UpdateManager.OnCheckCompleted");
         }
 
+        /// <summary>
+        /// Scans the update feed.
+        /// </summary>
+        /// <param name="result">The result.</param>
         private static void ScanUpdateFeed(SerializablePatch result)
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;

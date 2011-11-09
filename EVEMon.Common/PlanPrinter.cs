@@ -16,7 +16,6 @@ namespace EVEMon.Common
         private readonly Character m_character;
         private readonly Font m_font;
         private readonly Font m_boldFont;
-        private readonly SolidBrush m_brush;
         private readonly PlanExportSettings m_settings;
 
         private TimeSpan m_trainingTime;
@@ -36,7 +35,6 @@ namespace EVEMon.Common
             m_character = (Character)plan.Character;
             m_settings = Settings.Exportation.PlanToText;
 
-            m_brush = new SolidBrush(Color.Black);
             m_font = FontFactory.GetFont("Arial", 10);
             m_boldFont = FontFactory.GetFont("Arial", 10, FontStyle.Bold | FontStyle.Underline);
         }
@@ -58,9 +56,8 @@ namespace EVEMon.Common
         {
             PrintDocument doc = new PrintDocument
                                     {
-                                        DocumentName =
-                                            String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})",
-                                                          m_character.Name, m_plan.Name)
+                                        DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})",
+                                                                     m_character.Name, m_plan.Name)
                                     };
             doc.PrintPage += doc_PrintPage;
 
@@ -328,9 +325,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         private SizeF PrintBold(Graphics g, string s)
         {
-            SizeF f = g.MeasureString(s, m_boldFont);
-            g.DrawString(s, m_boldFont, m_brush, m_point);
-            return f;
+            using (SolidBrush brush = new SolidBrush(Color.Black))
+            {
+                g.DrawString(s, m_boldFont, brush, m_point);
+            }
+            return g.MeasureString(s, m_boldFont);
         }
 
         /// <summary>
@@ -341,9 +340,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         private SizeF Print(Graphics g, string s)
         {
-            SizeF f = g.MeasureString(s, m_font);
-            g.DrawString(s, m_font, m_brush, m_point);
-            return f;
+            using (SolidBrush brush = new SolidBrush(Color.Black))
+            {
+                g.DrawString(s, m_font, brush, m_point);
+            }
+            return g.MeasureString(s, m_font);
         }
     }
 }

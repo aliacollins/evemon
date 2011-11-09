@@ -7,8 +7,6 @@ using EVEMon.Common.Controls.MultiPanel.Design;
 
 namespace EVEMon.Common.Controls.MultiPanel
 {
-    public delegate void MultiPanelSelectionChangeHandler(object sender, MultiPanelSelectionChangeEventArgs args);
-
     /// <summary>
     /// A panel with multiple pages that can be switched.
     /// </summary>
@@ -19,7 +17,7 @@ namespace EVEMon.Common.Controls.MultiPanel
     [Designer(typeof(MultiPanelDesigner))]
     public class MultiPanel : Panel
     {
-        public event MultiPanelSelectionChangeHandler SelectionChange;
+        public event EventHandler<MultiPanelSelectionChangeEventArgs> SelectionChange;
 
         private MultiPanelPage m_selectedPage;
 

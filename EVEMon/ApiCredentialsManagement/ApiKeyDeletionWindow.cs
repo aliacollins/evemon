@@ -27,7 +27,7 @@ namespace EVEMon.ApiCredentialsManagement
             charactersListView.Items.Clear();
 
             foreach (ListViewItem item in apiKey.CharacterIdentities.Select(
-                id => new ListViewItem(id.Name)
+                id => new ListViewItem(id.CharacterName)
                           {
                               Tag = id.CCPCharacter,
                               Checked = id.CCPCharacter != null &&

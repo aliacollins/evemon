@@ -13,10 +13,10 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("name")]
         public string Name { get; set; }
 
-        [XmlAttribute("corporationName")]
-        public string CorporationName { get; set; }
-
         [XmlAttribute("corporationID")]
         public long CorporationID { get; set; }
+
+        [XmlAttribute("corporationName")]
+        public string CorporationName { get; set; }
     }
 }

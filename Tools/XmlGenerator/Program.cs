@@ -725,7 +725,7 @@ namespace EVEMon.XmlGenerator
                                             Description = srcItem.Description,
                                             Icon = (srcItem.IconID.HasValue ? s_icons[srcItem.IconID.Value].Icon : String.Empty),
                                             PortionSize = srcItem.PortionSize,
-                                            MetaGroup = ItemMetaGroup.Empty
+                                            MetaGroup = ItemMetaGroup.None
                                         };
 
 
@@ -936,7 +936,7 @@ namespace EVEMon.XmlGenerator
 
             // Metagroup
             foreach (InvMetaType relation in s_metaTypes
-                .Where(x => x.ItemID == srcItem.ID && item.MetaGroup == ItemMetaGroup.Empty))
+                .Where(x => x.ItemID == srcItem.ID && item.MetaGroup == ItemMetaGroup.None))
             {
                 switch (relation.MetaGroupID)
                 {
@@ -967,7 +967,7 @@ namespace EVEMon.XmlGenerator
                 }
             }
 
-            if (item.MetaGroup == ItemMetaGroup.Empty)
+            if (item.MetaGroup == ItemMetaGroup.None)
                 item.MetaGroup = ItemMetaGroup.T1;
 
             // Race ID
@@ -997,7 +997,7 @@ namespace EVEMon.XmlGenerator
             else if (s_typeEffects.Contains(srcItem.ID, DBConstants.HiSlotEffectID))
                 item.Slot = ItemSlot.High;
             else
-                item.Slot = ItemSlot.None;
+                item.Slot = ItemSlot.NoSlot;
 
             // Add this item
             groupItems.Add(item);
@@ -1728,7 +1728,7 @@ namespace EVEMon.XmlGenerator
                     break;
             }
 
-            if (blueprint.MetaGroup == ItemMetaGroup.Empty)
+            if (blueprint.MetaGroup == ItemMetaGroup.None)
                 blueprint.MetaGroup = ItemMetaGroup.T1;
 
             // Export item requirements

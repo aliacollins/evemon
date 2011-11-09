@@ -10,6 +10,13 @@ using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
+    /// <summary>
+    /// A delegate for BattleClinic query callbacks.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="errorMessage"></param>
+    public delegate void QueryCallback<T>(BCAPIResult<T> result, string errorMessage);
+
     public static class BCAPI
     {
         private static readonly List<BCAPIMethod> s_methods = new List<BCAPIMethod>(BCAPIMethod.CreateDefaultSet());
@@ -204,8 +211,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="userID">The user ID.</param>
         /// <param name="apiKey">The API key.</param>
         /// <param name="callback">The callback.</param>
-        public static void CheckAPICredentialsAsync(uint userID, string apiKey,
-                                                    DownloadCallback<BCAPIResult<SerializableBCAPICredentials>> callback)
+        public static void CheckAPICredentialsAsync(uint userID, string apiKey, QueryCallback<SerializableBCAPICredentials> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}",
                                                                    userID, apiKey, BCAPISettings.Default.BCApplicationKey));
@@ -217,7 +223,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// Asyncronously saves a file content to the BattleClinic server.
         /// </summary>
         /// <param name="callback">The callback.</param>
-        public static void FileSaveAsync(DownloadCallback<BCAPIResult<SerializableBCAPIFiles>> callback)
+        public static void FileSaveAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
             HttpPostData postData =
                 new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
@@ -232,7 +238,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// Asyncronously gets the file content by the file name.
         /// </summary>
         /// <param name="callback">The callback.</param>
-        public static void FileGetByNameAsync(DownloadCallback<BCAPIResult<SerializableBCAPIFiles>> callback)
+        public static void FileGetByNameAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                                                                    BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
@@ -265,15 +271,14 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="callback">The callback.</param>
-        private static void QueryMethodAsync<T>(BCAPIMethods method, HttpPostData postData,
-                                                DownloadCallback<BCAPIResult<T>> callback)
+        private static void QueryMethodAsync<T>(BCAPIMethods method, HttpPostData postData, QueryCallback<T> callback)
         {
             // Check callback not null
             if (callback == null)
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             string url = GetMethodUrl(method);
-            Util.DownloadXMLAsync(url, callback, postData);
+            Util.DownloadBCAPIResultAsync(url, callback, postData);
         }
 
         /// <summary>

@@ -392,6 +392,7 @@ namespace EVEMon.Common
     /// </summary>
     public enum CharacterSaveFormat
     {
+        None = 0,
         Text = 1,
         EFTCHR = 2,
         HTML = 3,

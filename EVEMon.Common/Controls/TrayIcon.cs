@@ -1,7 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
+
+using Timer = System.Threading.Timer;
 
 namespace EVEMon.Common.Controls
 {
@@ -474,12 +477,12 @@ namespace EVEMon.Common.Controls
         /// the mouse must remain stationary for the length of time specified
         /// by TrayIcon.MouseHoverTime.
         /// </summary>
-        private class MouseStateOver : MouseState
+        private sealed class MouseStateOver : MouseState, IDisposable
         {
             /// <summary>
             /// A <see cref="System.Threading.Timer"/> used to monitor mouse hover.
             /// </summary>
-            private System.Threading.Timer m_timer;
+            private Timer m_timer;
 
             /// <summary>
             /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
@@ -499,8 +502,7 @@ namespace EVEMon.Common.Controls
                 lock (SyncLock)
                 {
                     // Start the hover timer
-                    m_timer = new System.Threading.Timer(HoverTimeout, null, TrayIcon.MouseHoverTime,
-                                                         System.Threading.Timeout.Infinite);
+                    m_timer = new Timer(HoverTimeout, null, TrayIcon.MouseHoverTime, Timeout.Infinite);
 
                     // Start tracking the mouse
                     EnableMouseTracking();
@@ -515,7 +517,7 @@ namespace EVEMon.Common.Controls
                 try
                 {
                     // Mouse has moved, so reset the hover timer
-                    m_timer.Change(TrayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
+                    m_timer.Change(TrayIcon.MouseHoverTime, Timeout.Infinite);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -523,6 +525,20 @@ namespace EVEMon.Common.Controls
                     // Can only occur if timings cause a MouseMove after we've disposed of the timer
                     // Shouldn't happen, but catch it just in case
                 }
+            }
+
+            /// <summary>
+            /// Releases unmanaged and - optionally - managed resources
+            /// </summary>
+            /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+            private void Dispose(bool disposing)
+            {
+                if (!disposing)
+                    return;
+
+                // Dispose timer
+                m_timer.Dispose();
+                m_timer = null;
             }
 
             /// <summary>
@@ -552,8 +568,7 @@ namespace EVEMon.Common.Controls
                     finally
                     {
                         // Dispose of the timer since we're done with it
-                        m_timer.Dispose();
-                        m_timer = null;
+                        Dispose();
                     }
 
                     // Mouse tracking no longer required
@@ -564,6 +579,14 @@ namespace EVEMon.Common.Controls
                     // when HoverTimeout is called it means its no longer over the icon
                     ChangeState(Control.MousePosition == MousePosition ? States.MouseHovering : States.MouseOut);
                 }
+            }
+
+            /// <summary>
+            /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            /// </summary>
+            public void Dispose()
+            {
+                Dispose(true);
             }
         }
 
@@ -580,11 +603,11 @@ namespace EVEMon.Common.Controls
         /// <remarks>
         /// The mouse position is monitored every 100ms. If the mouse position changes but does not match
         /// the position from the last MouseMove event, we assume the mouse has moved away and fire
-        /// the paretn TrayIcon's MouseLeave event.
+        /// the parent TrayIcon's MouseLeave event.
         /// </remarks>
-        private class MouseStateHovering : MouseState
+        private sealed class MouseStateHovering : MouseState, IDisposable
         {
-            private readonly System.Threading.Timer m_timer;
+            private Timer m_timer;
 
             /// <summary>
             /// Initialises a new instance of the <see cref="MouseState"/> class with the given trayIcon and mousePosition.
@@ -600,11 +623,11 @@ namespace EVEMon.Common.Controls
                 // Lock the syncLock to make sure the timer is initialised before mouse events are handled
                 lock (SyncLock)
                 {
+                    // Start the timer to monitor mouse position
+                    m_timer = new Timer(MouseMonitor, null, 100, Timeout.Infinite);
+
                     // Start tracking the mouse
                     EnableMouseTracking();
-
-                    // Start the timer to monitor mouse position
-                    m_timer = new System.Threading.Timer(MouseMonitor, null, 100, System.Threading.Timeout.Infinite);
                 }
             }
 
@@ -620,17 +643,21 @@ namespace EVEMon.Common.Controls
             {
                 lock (SyncLock)
                 {
+                    // We may have multiple callbacks pending because the threads in the threadpool were busy waiting for our requests to CCP
+                    // As a result, they're going to execute one after the other one, raising ObjectDisposedException when trying to stops the timer
+                    if (m_timer == null)
+                        return;
+
                     if (Control.MousePosition == MousePosition)
                     {
                         // Mouse hasn't moved so check back in 100ms
-                        m_timer.Change(100, System.Threading.Timeout.Infinite);
+                        m_timer.Change(100, Timeout.Infinite);
                         return;
                     }
 
-                    // Mouse has moved, and since we're tracking it over the icon
-                    // this means its moved away
+                    // Mouse has moved, and since we're tracking it over the icon this means its moved away
                     // Dispose of the timer since we're done with it
-                    m_timer.Dispose();
+                    Dispose();
 
                     // Switch of mouse tracking
                     DisableMouseTracking();
@@ -641,6 +668,28 @@ namespace EVEMon.Common.Controls
                     // Change to MouseOut state
                     ChangeState(States.MouseOut);
                 }
+            }
+
+            /// <summary>
+            /// Releases unmanaged and - optionally - managed resources
+            /// </summary>
+            /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+            private void Dispose(bool disposing)
+            {
+                if (!disposing)
+                    return;
+
+                // Dispose timer
+                m_timer.Dispose();
+                m_timer = null;
+            }
+
+            /// <summary>
+            /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            /// </summary>
+            public void Dispose()
+            {
+                Dispose(true);
             }
         }
 

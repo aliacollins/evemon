@@ -64,7 +64,7 @@ namespace EVEMon.Common.Data
             MarketGroup = group;
             Icon = src.Icon;
             Race = src.Race;
-            FittingSlot = src.Slot;
+            FittingSlot = src.Slot == ItemSlot.None ? ItemSlot.NoSlot : src.Slot;
             Family = src.Family;
             Description = src.Description;
 
@@ -229,7 +229,7 @@ namespace EVEMon.Common.Data
             if (cpuAvailable == null && gridAvailable == null)
                 return true;
 
-            if (FittingSlot != ItemSlot.Empty)
+            if (FittingSlot != ItemSlot.None)
             {
                 // If we have a slot index, we're a fittable item
                 // Now see if we can find our usage numbers

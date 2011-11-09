@@ -755,9 +755,12 @@ namespace EVEMon
                     UpdateContent();
                 }
 
+                if (job.TTC.Length != 0)
+                    continue;
+
                 // Job is ready
-                if (job.TTC.Length == 0)
-                    job.ActiveJobState = ActiveJobState.Ready;
+                job.ActiveJobState = ActiveJobState.Ready;
+                UpdateContent();
             }
         }
 

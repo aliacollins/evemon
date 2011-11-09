@@ -30,14 +30,13 @@ namespace EVEMon.Common
             // Initializes the query monitors 
             m_corpMarketOrdersMonitor =
                 new CorporationQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationMarketOrders);
-            m_corpMarketOrdersMonitor.Updated += OnCorporationMarketOrdersUpdated;
+                                                                         APICorporationMethods.CorporationMarketOrders,
+                                                                         OnCorporationMarketOrdersUpdated);
             m_corporationQueryMonitors.Add(m_corpMarketOrdersMonitor);
 
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationIndustryJobs);
-            m_corpIndustryJobsMonitor.Updated += OnCorporationIndustryJobsUpdated;
+                                                                         APICorporationMethods.CorporationIndustryJobs, OnCorporationIndustryJobsUpdated);
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
