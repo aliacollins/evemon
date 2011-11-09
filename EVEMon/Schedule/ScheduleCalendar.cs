@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace EVEMon.Schedule
 {
     public class ScheduleCalendar : CalendarControl
     {
-        private readonly List<ScheduleEntry> m_entries = new List<ScheduleEntry>();
+        private readonly Collection<ScheduleEntry> m_entries = new Collection<ScheduleEntry>();
 
         private const int LegendX = 5;
         private const int LegendY = 5;
@@ -82,7 +83,7 @@ namespace EVEMon.Schedule
         /// Gets the entries.
         /// </summary>
         /// <value>The entries.</value>
-        public List<ScheduleEntry> Entries
+        public Collection<ScheduleEntry> Entries
         {
             get { return m_entries; }
         }

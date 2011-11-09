@@ -218,7 +218,7 @@ namespace EVEMon.SkillPlanner
         /// All the selected objects (through multi-select).
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), DefaultValue(null), Browsable(false)]
-        public List<Item> SelectedObjects { get; private set; }
+        public IEnumerable<Item> SelectedObjects { get; private set; }
 
         /// <summary>
         /// The primary selected object.
@@ -228,10 +228,10 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (SelectedObjects == null || SelectedObjects.Count == 0)
+                if (SelectedObjects == null || SelectedObjects.Count() == 0)
                     return null;
 
-                return SelectedObjects[0];
+                return SelectedObjects.First();
             }
             set
             {
@@ -253,10 +253,10 @@ namespace EVEMon.SkillPlanner
             SelectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
 
             // Selects the proper nodes
-            if (SelectedObjects.Count == 1)
+            if (SelectedObjects.Count() == 1)
             {
                 // If the object is not already selected
-                Item obj = SelectedObjects[0];
+                Item obj = SelectedObjects.First();
                 tvItems.SelectNodeWithTag(obj);
             }
 

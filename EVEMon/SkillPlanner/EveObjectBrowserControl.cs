@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add the value for every selected item
-            for (int index = 0; index < SelectControl.SelectedObjects.Count; index++)
+            for (int index = 0; index < SelectControl.SelectedObjects.Count(); index++)
             {
                 // Create the subitem and choose its forecolor
                 ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
@@ -374,7 +374,7 @@ namespace EVEMon.SkillPlanner
 
                     item.UseItemStyleForSubItems = false;
                 }
-                else if (SelectControl.SelectedObjects.Count > 1)
+                else if (SelectControl.SelectedObjects.Count() > 1)
                 {
                     subItem.ForeColor = Color.DarkGray;
                     item.UseItemStyleForSubItems = false;
