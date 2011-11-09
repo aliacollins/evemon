@@ -153,7 +153,11 @@ namespace EVEMon.Common
             }
             else
             {
-                ExceptionHandler.LogException(e.Error, true);
+                if (e.Error.Status == HttpWebServiceExceptionStatus.Timeout)
+                    EveMonClient.Trace("ImageService: {0}", e.Error.Message);
+                else
+                    ExceptionHandler.LogException(e.Error, true);
+
                 callback(null);
             }
         }
