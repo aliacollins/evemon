@@ -112,7 +112,7 @@ namespace EVEMon.Common
                                               Name = m_name,
                                               Owner = character.Guid,
                                               Description = m_description,
-                                              SortingPreferences = SortingPreferences.Clone()
+                                              SortingPreferences = SortingPreferences
                                           };
 
             // Add entries

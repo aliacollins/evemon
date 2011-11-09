@@ -5,9 +5,5 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializableSellOrder : SerializableOrderBase
     {
-        public SerializableSellOrder Clone()
-        {
-            return (SerializableSellOrder)MemberwiseClone();
-        }
     }
 }

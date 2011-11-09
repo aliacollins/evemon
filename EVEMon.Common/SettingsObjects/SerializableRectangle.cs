@@ -41,14 +41,5 @@ namespace EVEMon.Common.SettingsObjects
         {
             return new SerializableRectangle { Left = rect.Left, Top = rect.Top, Width = rect.Width, Height = rect.Height };
         }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        internal SerializableRectangle Clone()
-        {
-            return (SerializableRectangle)MemberwiseClone();
-        }
     }
 }
