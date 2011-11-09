@@ -17,7 +17,6 @@ namespace EVEMon.Common
         private static readonly List<string> s_listOfNames = new List<string>();
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
-        private static bool s_isLoaded;
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
 
@@ -92,11 +91,10 @@ namespace EVEMon.Common
         /// </summary>
         private static void EnsureCacheFileLoad()
         {
-            if (!File.Exists(s_file) || s_isLoaded)
+            if (!File.Exists(s_file) || !s_cacheList.IsEmpty())
                 return;
 
             TryDeserializeCacheFile();
-            s_isLoaded = true;
         }
 
         /// <summary>
