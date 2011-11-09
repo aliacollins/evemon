@@ -122,7 +122,8 @@ namespace EVEMon.Common.CustomEventArgs
         {
             // Retrieve the identity and create one if needed
             return EveMonClient.CharacterIdentities[character.ID] ??
-                   EveMonClient.CharacterIdentities.Add(character.ID, character.Name);
+                   EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
+                                                        character.CorporationID, character.CorporationName);
         }
     }
 }

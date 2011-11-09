@@ -76,7 +76,8 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (CharacterIdentity id in serialIDList.Select(
                 serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
-                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
+                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name,
+                                                                 serialID.CorporationID, serialID.CorporationName)))
             {
                 Items.Add(id);
             }
@@ -88,7 +89,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal List<SerializableCharacterIdentity> Export()
         {
-            return Items.Select(id => new SerializableCharacterIdentity { ID = id.CharacterID, Name = id.Name }).ToList();
+            return Items.Select(id => new SerializableCharacterIdentity
+                                          {
+                                              ID = id.CharacterID,
+                                              Name = id.CharacterName,
+                                              CorporationID = id.CorporationID,
+                                              CorporationName = id.CorporationName
+                                          }).ToList();
         }
     }
 }

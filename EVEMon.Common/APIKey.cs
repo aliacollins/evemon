@@ -205,7 +205,7 @@ namespace EVEMon.Common
 
             foreach (CharacterIdentity id in CharacterIdentities)
             {
-                string identity = id.Name;
+                string identity = id.CharacterName;
 
                 if (!m_skillInTrainingCache.ContainsKey(identity))
                     m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
@@ -330,7 +330,7 @@ namespace EVEMon.Common
             // and characters have been removed from the API key since they were queried
             // remove those characters from the cache
             IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
-                m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
+                m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.CharacterName == x.Key));
 
             foreach (KeyValuePair<string, SkillInTrainingResponse> charToRemove in toRemove)
             {
@@ -540,13 +540,25 @@ namespace EVEMon.Common
             // Assign owned identities to this API key
             foreach (CharacterIdentity id in identities.Select(
                 serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
-                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
+                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name,
+                                                                 serialID.CorporationID, serialID.CorporationName)))
             {
+                // Update the corporation info as they may have changed
+                id.CorporationID = identities.First(x => x.ID == id.CharacterID).CorporationID;
+                id.CorporationName = identities.First(x => x.ID == id.CharacterID).CorporationName;
+
+                // Add the API key to the identity
                 id.APIKeys.Add(this);
 
+                if (id.CCPCharacter == null)
+                    continue;
+
+                // Update the corporation info
+                id.CCPCharacter.CorporationID = id.CorporationID;
+                id.CCPCharacter.CorporationName = id.CorporationName;
+
                 // Notify subscribers
-                if (id.CCPCharacter != null)
-                    EveMonClient.OnCharacterUpdated(id.CCPCharacter);
+                EveMonClient.OnCharacterUpdated(id.CCPCharacter);
             }
         }
 
@@ -609,6 +621,10 @@ namespace EVEMon.Common
             // Assign this API key to the new identities and create CCP characters
             foreach (CharacterIdentity id in e.Identities)
             {
+                // Update the corporation info as they may have changed
+                id.CorporationID = e.Identities.First(x => x.CharacterID == id.CharacterID).CorporationID;
+                id.CorporationName = e.Identities.First(x => x.CharacterID == id.CharacterID).CorporationName;
+
                 id.APIKeys.Add(this);
 
                 // Skip if in the ignore list
@@ -618,6 +634,10 @@ namespace EVEMon.Common
                 // Retrieves the ccp character and create one if none
                 if (id.CCPCharacter != null)
                 {
+                    // Update the corporation info
+                    id.CCPCharacter.CorporationID = id.CorporationID;
+                    id.CCPCharacter.CorporationName = id.CorporationName;
+
                     // Notify subscribers
                     EveMonClient.OnCharacterUpdated(id.CCPCharacter);
                     continue;
@@ -646,7 +666,7 @@ namespace EVEMon.Common
             StringBuilder names = new StringBuilder();
             foreach (CharacterIdentity id in CharacterIdentities)
             {
-                names.Append(id.Name);
+                names.Append(id.CharacterName);
                 if (id != CharacterIdentities.Last())
                     names.Append(", ");
             }

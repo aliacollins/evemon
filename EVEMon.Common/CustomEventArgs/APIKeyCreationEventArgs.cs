@@ -6,6 +6,8 @@ namespace EVEMon.Common.CustomEventArgs
 {
     public sealed class APIKeyCreationEventArgs : EventArgs
     {
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="APIKeyCreationEventArgs"/> class.
         /// </summary>
@@ -41,30 +43,65 @@ namespace EVEMon.Common.CustomEventArgs
                 // Look for an existing character ID and update its name
                 CharacterIdentity identity = EveMonClient.CharacterIdentities[character.ID];
                 if (identity != null)
-                    identity.Name = character.Name;
+                    identity.CharacterName = character.Name;
                 else
                 {
                     // Create an identity if necessary
-                    identity = EveMonClient.CharacterIdentities.Add(character.ID, character.Name);
+                    identity = EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
+                                                                    character.CorporationID, character.CorporationName);
                 }
 
                 Identities.Add(identity);
             }
         }
 
-        public long ID { get; set; }
 
-        public string VerificationCode { get; set; }
+        #endregion
 
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the ID.
+        /// </summary>
+        /// <value>The ID.</value>
+        public long ID { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the verification code.
+        /// </summary>
+        /// <value>The verification code.</value>
+        public string VerificationCode { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the access mask.
+        /// </summary>
+        /// <value>The access mask.</value>
         public long AccessMask { get; private set; }
 
-        public APIKeyType Type { get; set; }
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        public APIKeyType Type { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the expiration.
+        /// </summary>
+        /// <value>The expiration.</value>
         public DateTime Expiration { get; private set; }
 
-        public string KeyTestError { get; set; }
+        /// <summary>
+        /// Gets or sets the key test error.
+        /// </summary>
+        /// <value>The key test error.</value>
+        public string KeyTestError { get; private set; }
 
-        public APICCPError CCPError { get; set; }
+        /// <summary>
+        /// Gets or sets the CCP error.
+        /// </summary>
+        /// <value>The CCP error.</value>
+        public APICCPError CCPError { get; private set; }
 
         /// <summary>
         /// Gets the result which occurred when the API key info was queried.
@@ -75,6 +112,11 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets the list of identities available from this API key.
         /// </summary>
         public List<CharacterIdentity> Identities { get; private set; }
+
+        #endregion
+
+
+        #region Methods
 
         /// <summary>
         /// Creates the or update.
@@ -100,5 +142,7 @@ namespace EVEMon.Common.CustomEventArgs
 
             return apiKey;
         }
+
+        #endregion
     }
 }

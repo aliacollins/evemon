@@ -36,7 +36,10 @@ namespace EVEMon.Common
         protected Character(CharacterIdentity identity, Guid guid)
         {
             CharacterID = identity.CharacterID;
-            m_name = identity.Name;
+            m_name = identity.CharacterName;
+            CorporationID = identity.CorporationID;
+            CorporationName = identity.CharacterName;
+
             Identity = identity;
             Guid = guid;
 
@@ -62,6 +65,7 @@ namespace EVEMon.Common
         }
 
         #endregion
+
 
         #region Bio
 
@@ -148,12 +152,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the id of the character's corporation.
         /// </summary>
-        public int CorporationID { get; private set; }
+        public long CorporationID { get; set; }
 
         /// <summary>
         /// Gets the name of the character's corporation.
         /// </summary>
-        public string CorporationName { get; private set; }
+        public string CorporationName { get; set; }
 
         /// <summary>
         /// Gets the name of the character's alliance.

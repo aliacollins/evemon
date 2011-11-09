@@ -9,33 +9,48 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CharacterIdentity
     {
-        private readonly long m_id;
         private readonly List<APIKey> m_apiKeys;
 
         /// <summary>
         /// Constructor from an id and a name.
         /// </summary>
         /// <param name="id">The id for this identity</param>
-        /// <param name="name"></param>
-        internal CharacterIdentity(long id, string name)
+        /// <param name="name">The name.</param>
+        /// <param name="corpId">The corp id.</param>
+        /// <param name="corpName">Name of the corp.</param>
+        internal CharacterIdentity(long id, string name, long corpId, string corpName)
         {
-            m_id = id;
-            Name = name;
+            CharacterID = id;
+            CharacterName = name;
+            CorporationID = corpId;
+            CorporationName = corpName;
+
             m_apiKeys = new List<APIKey>();
         }
 
         /// <summary>
         /// Gets the character ID.
         /// </summary>
-        public long CharacterID
-        {
-            get { return m_id; }
-        }
+        /// <value>The character ID.</value>
+        public long CharacterID { get; private set; }
 
         /// <summary>
         /// Gets the character's name.
         /// </summary>
-        public string Name { get; internal set; }
+        /// <value>The name of the character.</value>
+        public string CharacterName { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the corporation ID.
+        /// </summary>
+        /// <value>The corporation ID.</value>
+        public long CorporationID { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the name of the corporation.
+        /// </summary>
+        /// <value>The name of the corporation.</value>
+        public string CorporationName { get; set; }
 
         /// <summary>
         /// Gets the API keys this identity is associated with.
@@ -94,7 +109,7 @@ namespace EVEMon.Common
             get
             {
                 return EveMonClient.Characters.OfType<CCPCharacter>().Where(
-                    character => character.CharacterID == m_id).FirstOrDefault();
+                    character => character.CharacterID == CharacterID).FirstOrDefault();
             }
         }
 

@@ -7,5 +7,7 @@ namespace EVEMon.Common.Serialization.API
     {
         long ID { get; }
         string Name { get; }
+        long CorporationID { get; }
+        string CorporationName { get; }
     }
 }
