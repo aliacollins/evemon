@@ -518,8 +518,6 @@ namespace EVEMon
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-
             // Fonts
             Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
@@ -531,6 +529,8 @@ namespace EVEMon
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             Disposed += OnDisposed;
+
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -539,13 +539,13 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            base.OnVisibleChanged(e);
-
             if (!Visible)
                 return;
 
             UpdateFrequentControls();
             UpdateInfrequentControls();
+
+            base.OnVisibleChanged(e);
         }
 
         /// <summary>
