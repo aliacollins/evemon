@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Schedule
 {
@@ -13,10 +14,9 @@ namespace EVEMon.Schedule
 
     public partial class CalendarControl : UserControl
     {
-        public delegate void DaySelectedEvent(DateTime datetime, MouseEventArgs mouse, Point loc);
 
-        public event DaySelectedEvent DayClicked;
-        public event DaySelectedEvent DayDoubleClicked;
+        public event EventHandler<DaySelectedEventArgs> DayClicked;
+        public event EventHandler<DaySelectedEventArgs> DayDoubleClicked;
 
         private const double CellAspectRatio = 7.0d / 10.0d;
         private const int MaxRows = 6;
@@ -307,8 +307,8 @@ namespace EVEMon.Schedule
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
 
-            Point p = mouse.Location;
-            DateTime newDate = GetDateFromPoint(p);
+            Point point = mouse.Location;
+            DateTime newDate = GetDateFromPoint(point);
             DateTime oldDate = m_date;
             if (newDate == new DateTime(0))
                 return;
@@ -318,7 +318,7 @@ namespace EVEMon.Schedule
 
             // Only send out the events if we clicked on a day this month
             if (newDate.Month == oldDate.Month && mouse.Clicks == 1)
-                DayClicked(m_date, mouse, p);
+                DayClicked(null, new DaySelectedEventArgs(m_date, mouse, point));
         }
 
         /// <summary>
@@ -329,14 +329,14 @@ namespace EVEMon.Schedule
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
 
-            Point p = mouse.Location;
-            DateTime newDate = GetDateFromPoint(p);
+            Point point = mouse.Location;
+            DateTime newDate = GetDateFromPoint(point);
             DateTime oldDate = m_date;
             if (newDate == new DateTime(0))
                 return;
 
             if (newDate.Month == oldDate.Month && mouse.Clicks == 2)
-                DayDoubleClicked(m_date, mouse, p);
+                DayDoubleClicked(null, new DaySelectedEventArgs(m_date, mouse, point));
         }
 
         // 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Scheduling;
 
 namespace EVEMon.Schedule
@@ -278,12 +279,11 @@ namespace EVEMon.Schedule
         /// <summary>
         /// When the user double-clicks a day on the calendar control, we allow him to add a new entry.
         /// </summary>
-        /// <param name="datetime"></param>
-        /// <param name="mouse"></param>
-        /// <param name="loc"></param>
-        private void calControl_DayDoubleClicked(DateTime datetime, MouseEventArgs mouse, Point loc)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
+        private static void calControl_DayDoubleClicked(object sender, DaySelectedEventArgs e)
         {
-            using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
+            using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(e.DateTime))
             {
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
@@ -296,18 +296,17 @@ namespace EVEMon.Schedule
         /// <summary>
         /// When the user clicks the calendar controls (main control)
         /// </summary>
-        /// <param name="datetime"></param>
-        /// <param name="mouse"></param>
-        /// <param name="location"></param>
-        private void calControl_DayClicked(DateTime datetime, MouseEventArgs mouse, Point location)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
+        private void calControl_DayClicked(object sender, DaySelectedEventArgs e)
         {
-            switch (mouse.Button)
+            switch (e.Mouse.Button)
             {
                 case MouseButtons.Left:
-                    ShowCalendarTooltip(datetime);
+                    ShowCalendarTooltip(e.DateTime);
                     break;
                 case MouseButtons.Right:
-                    ShowCalendarContextMenu(datetime, location);
+                    ShowCalendarContextMenu(e.DateTime, e.Location);
                     break;
             }
         }

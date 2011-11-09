@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.SkillPlanner
 {
@@ -212,8 +213,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping">An <see cref="RemappingResult"/> object</param>
         /// <param name="remappingList">List of remappings</param>
-        private void UpdateForm(RemappingResult remapping,
-                                List<RemappingResult> remappingList)
+        private void UpdateForm(RemappingResult remapping, List<RemappingResult> remappingList)
         {
             // If the thread has been canceled, we stop right now to prevent an exception
             if (m_thread == null)
@@ -255,7 +255,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the UI once the computations with remapping points strategy have been done.
         /// </summary>
         /// <param name="remappingList">The remapping list.</param>
-        private void UpdateForRemappingList(List<RemappingResult> remappingList)
+        private void UpdateForRemappingList(ICollection<RemappingResult> remappingList)
         {
             // Display "no result" or "summary"
             if (remappingList.Count == 0)
@@ -438,24 +438,25 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Racalculating plan and summary page after change of a <see cref="AttributesOptimizationControl"/>.
         /// </summary>
-        /// <param name="control"></param>
-        /// <param name="remapping"></param>
-        private void AttributesOptimizationControl_AttributeChanged(AttributesOptimizationControl control,
-                                                                    RemappingResult remapping)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="AttributeChangedEventArgs"/> instance containing the event data.</param>
+        private void AttributesOptimizationControl_AttributeChanged(object sender, AttributeChangedEventArgs e)// AttributesOptimizationControl control,RemappingResult remapping)
         {
             // Update the plan order's column
             if (m_planEditor == null)
                 return;
 
+            AttributesOptimizationControl control = (AttributesOptimizationControl)sender;
+
             if (m_strategy == Strategy.RemappingPoints)
             {
-                m_remappingDictionary[control] = remapping;
+                m_remappingDictionary[control] = e.Remapping;
                 UpdateSummaryInformation(m_remappingDictionary.Values);
             }
 
-            m_statisticsScratchpad = remapping.BestScratchpad.Clone();
+            m_statisticsScratchpad = e.Remapping.BestScratchpad.Clone();
             m_planEditor.ShowWithPluggable(this);
-            m_remapping = remapping;
+            m_remapping = e.Remapping;
         }
 
 

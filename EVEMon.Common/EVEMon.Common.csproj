@@ -166,11 +166,14 @@
     <Compile Include="CorporationQueryMonitor.cs" />
     <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />
     <Compile Include="CustomEventArgs\APIKeyInfoChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\AttributeChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\DataUpdateAvailableEventArgs.cs" />
+    <Compile Include="CustomEventArgs\DaySelectedEventArgs.cs" />
     <Compile Include="CustomEventArgs\EveServerEventArgs.cs" />
+    <Compile Include="CustomEventArgs\AttributeHighlightingEventArgs.cs" />
     <Compile Include="CustomEventArgs\IndustryJobsEventArgs.cs" />
     <Compile Include="CustomEventArgs\MarketOrdersEventArgs.cs" />
     <Compile Include="CustomEventArgs\PlanChangedEventArgs.cs" />
@@ -178,6 +181,8 @@
     <Compile Include="CustomEventArgs\SkillClickedEventArgs.cs" />
     <Compile Include="CustomEventArgs\UpdateAvailableEventArgs.cs" />
     <Compile Include="CustomEventArgs\UriCharacterEventArgs.cs" />
+    <Compile Include="CustomEventArgs\AttributeValueChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\AttributeValueChangingEventArgs.cs" />
     <Compile Include="Data\Agent.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />

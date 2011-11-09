@@ -2,29 +2,10 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.SkillPlanner
 {
-    /// <summary>
-    /// Represents the method that will handle changing of the attribute's value.
-    /// </summary>
-    /// <param name="sender">Source control</param>
-    /// <param name="deltaValue">Change of the value. Can be adjusted in a handler.</param>
-    public delegate void ValueChangingHandler(AttributeBarControl sender, ref int deltaValue);
-
-    /// <summary>
-    /// Represents the method that will handle change of the attribute value.
-    /// </summary>
-    /// <param name="sender">Source control</param>
-    public delegate void ValueChangedHandler(AttributeBarControl sender);
-
-    /// <summary>
-    /// Represents the method that will handle highlighting of a cell.
-    /// </summary>
-    /// <param name="sender">Source control</param>
-    /// <param name="highlightValue">Cell index</param>
-    public delegate void HighlightingHandler(AttributeBarControl sender, ref int highlightValue);
-
     /// <summary>
     /// This control shows the value of an attribute in form of cells.
     /// Also it allows to change value by clicking on a cell.
@@ -36,6 +17,8 @@ namespace EVEMon.SkillPlanner
         private SolidBrush m_inactiveBrush = new SolidBrush(Color.DimGray);
         private SolidBrush m_basePointBrush = new SolidBrush(Color.LightGray);
         private SolidBrush m_spentPointBrush = new SolidBrush(Color.LimeGreen);
+        
+        private MouseEventArgs m_mouseEvent;
 
         private int m_points = 5;
         private int m_baseValue;
@@ -43,6 +26,8 @@ namespace EVEMon.SkillPlanner
         private int m_tileWidth = 6;
         private int m_tileHeight = 20;
         private int m_highlightedItem = -1;
+
+        private readonly Timer m_timer;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AttributeBarControl"/>.
@@ -53,7 +38,22 @@ namespace EVEMon.SkillPlanner
                      ControlStyles.Opaque |
                      ControlStyles.UserPaint, true);
             UpdateStyles();
+
+            m_timer = new Timer { Interval = 500 };
+            m_timer.Tick += m_timer_Tick;
         }
+
+        /// <summary>
+        /// Gets or sets the delta value.
+        /// </summary>
+        /// <value>The delta value.</value>
+        internal int DeltaValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the highlighed value.
+        /// </summary>
+        /// <value>The highlighed value.</value>
+        internal int HighlightedValue { private get; set; }
 
         /// <summary>
         /// Gets or sets the color of the border between cells.
@@ -185,15 +185,28 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Occurs when value changing.
+        /// </summary>
         [Category("Behavior")]
-        public event ValueChangingHandler ValueChanging;
+        public event EventHandler<AttributeValueChangingEventArgs> ValueChanging;
 
+        /// <summary>
+        /// Occurs when value changed.
+        /// </summary>
         [Category("Behavior")]
-        public event ValueChangedHandler ValueChanged;
+        public event EventHandler<AttributeValueChangedEventArgs> ValueChanged;
 
+        /// <summary>
+        /// Occurs when highlighting.
+        /// </summary>
         [Category("Behavior")]
-        public event HighlightingHandler Highlighting;
+        public event EventHandler<AttributeHighlightingEventArgs> Highlighting;
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Resize"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
@@ -261,22 +274,26 @@ namespace EVEMon.SkillPlanner
             int value = GetValueAt(e.Location);
             Cursor = (value == -1) ? Cursors.Arrow : Cursors.Hand;
 
-            int newHighlight = value;
-            if (newHighlight >= 0 && newHighlight < m_baseValue)
-                newHighlight = m_baseValue;
+            HighlightedValue = value;
+            if (HighlightedValue >= 0 && HighlightedValue < m_baseValue)
+                HighlightedValue = m_baseValue;
 
             if (Highlighting != null)
-                Highlighting(this, ref newHighlight);
+                Highlighting(this, new AttributeHighlightingEventArgs(HighlightedValue));
 
             // To zero-based value
-            newHighlight--;
+            HighlightedValue--;
 
-            if (m_highlightedItem == newHighlight)
+            if (m_highlightedItem == HighlightedValue)
                 return;
 
-            ChangeHighlight(newHighlight);
+            ChangeHighlight(HighlightedValue);
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseLeave"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
@@ -284,37 +301,36 @@ namespace EVEMon.SkillPlanner
             ChangeHighlight(-1);
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseClick"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
 
-            if (!Enabled)
-                return;
-
-            int newValue = GetValueAt(e.Location);
-
-            if (newValue == -1)
-                return;
-
-            if (newValue < m_baseValue)
-                newValue = m_baseValue;
-
-            int deltaValue = newValue - m_value;
-
-            if (deltaValue == 0)
-                return;
-
-            if (ValueChanging != null)
-                ValueChanging(this, ref deltaValue);
-
-            if (deltaValue == 0)
-                return;
-
-            Value += deltaValue;
-            if (ValueChanged != null)
-                ValueChanged(this);
+            // Store the single mouse click event
+            m_mouseEvent = e;
+            m_timer.Enabled = true;
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseDoubleClick"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+
+            // Store the double mouse click event
+            m_mouseEvent = e;
+            m_timer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -334,11 +350,61 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Handles the Tick event of the m_timer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void m_timer_Tick(object sender, EventArgs e)
+        {
+            m_timer.Enabled = false;
+
+            if (!Enabled)
+                return;
+
+            // Actions according to mouse clicks
+            switch (m_mouseEvent.Clicks)
+            {
+                case 1:
+                    {
+                        int newValue = GetValueAt(m_mouseEvent.Location);
+
+                        if (newValue == -1)
+                            return;
+
+                        if (newValue < m_baseValue)
+                            newValue = m_baseValue;
+
+                        DeltaValue = newValue - m_value;
+
+                        if (DeltaValue == 0)
+                            return;
+
+                        // Fires the value changing event
+                        if (ValueChanging != null)
+                            ValueChanging(this, new AttributeValueChangingEventArgs(DeltaValue));
+
+                        if (DeltaValue == 0)
+                            return;
+
+                        Value += DeltaValue;
+                    }
+                    break;
+                case 2:
+                    Value = m_baseValue;
+                    break;
+            }
+
+            // Fires the value changed event
+            if (ValueChanged != null)
+                ValueChanged(this, new AttributeValueChangedEventArgs());
+        }
+
+        /// <summary>
         /// Draws a tile.
         /// </summary>
         /// <param name="g">A <see cref="System.Drawing.Graphics"/> object for drawing</param>
         /// <param name="iTile">Index of the tile</param>
-        protected void DrawTile(Graphics g, int iTile)
+        private void DrawTile(Graphics g, int iTile)
         {
             // Select brush
             SolidBrush brush;

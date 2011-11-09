@@ -1,3 +1,5 @@
+using EVEMon.Common.CustomEventArgs;
+
 namespace EVEMon.Schedule
 {
     partial class ScheduleEditorWindow
@@ -194,8 +196,8 @@ namespace EVEMon.Schedule
             this.calControl.Size = new System.Drawing.Size(533, 421);
             this.calControl.TabIndex = 0;
             this.calControl.TextColor = System.Drawing.Color.White;
-            this.calControl.DayClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayClicked);
-            this.calControl.DayDoubleClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayDoubleClicked);
+            this.calControl.DayClicked += new System.EventHandler<DaySelectedEventArgs>(this.calControl_DayClicked);
+            this.calControl.DayDoubleClicked += new System.EventHandler<DaySelectedEventArgs>(calControl_DayDoubleClicked);
             this.calControl.MouseEnter += new System.EventHandler(this.calControl_MouseEnter);
             this.calControl.MouseLeave += new System.EventHandler(this.calControl_MouseLeave);
             // 
