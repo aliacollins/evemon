@@ -27,7 +27,7 @@ namespace EVEMon.SkillPlanner
         private int m_tileHeight = 20;
         private int m_highlightedItem = -1;
 
-        private readonly Timer m_timer;
+        private readonly Timer m_timer = new Timer();
 
         /// <summary>
         /// Initializes a new instance of <see cref="AttributeBarControl"/>.
@@ -39,7 +39,7 @@ namespace EVEMon.SkillPlanner
                      ControlStyles.UserPaint, true);
             UpdateStyles();
 
-            m_timer = new Timer { Interval = 500 };
+            m_timer.Interval = 500;
             m_timer.Tick += m_timer_Tick;
         }
 
@@ -419,7 +419,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Highlight cell color
                 const int Shift = 50;
-                brush = new SolidBrush(ShiftColor(brush.Color, Shift));
+                brush = ShiftBrushColor(brush.Color, Shift);
             }
 
             int x = 1 + iTile * m_tileWidth;
@@ -437,14 +437,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Makes a color lighter or darker.
         /// </summary>
-        /// <param name="color">Source color</param>
+        /// <param name="brushColor">Color of the brush.</param>
         /// <param name="shift">Color shift</param>
         /// <returns></returns>
-        private static Color ShiftColor(Color color, int shift)
+        private static SolidBrush ShiftBrushColor(Color brushColor, int shift)
         {
-            return Color.FromArgb(Math.Min(color.R + shift, 255),
-                                  Math.Min(color.G + shift, 255),
-                                  Math.Min(color.B + shift, 255));
+            Color color = Color.FromArgb(Math.Min(brushColor.R + shift, 255),
+                                         Math.Min(brushColor.G + shift, 255),
+                                         Math.Min(brushColor.B + shift, 255));
+            return new SolidBrush(color);
         }
     }
 }

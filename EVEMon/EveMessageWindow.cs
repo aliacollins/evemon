@@ -10,7 +10,7 @@ namespace EVEMon
 {
     public sealed partial class EveMessageWindow : EVEMonForm
     {
-        private Timer m_timer;
+        private Timer m_timer = new Timer();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.
@@ -48,14 +48,11 @@ namespace EVEMon
             base.OnLoad(e);
             throbber.State = ThrobberState.Rotating;
 
-            // Adding a timer to close the form on queries timeout
-            m_timer = new Timer
-                          {
-                              Enabled = true,
-                              Interval = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds
-                          };
+            // Configure the timer to close the form on queries timeout
+            m_timer.Enabled = true;
+            m_timer.Interval = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
+
             m_timer.Tick += timer_Tick;
-            m_timer.Start();
         }
 
         /// <summary>
@@ -78,7 +75,6 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            m_timer.Stop();
             m_timer.Enabled = false;
 
             // Close the form when there is nothing to show after query timeout

@@ -353,33 +353,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Creates the new tool strip separator.
-        /// </summary>
-        private void CreateNewToolStripSeparator()
-        {
-            if (ThrobberContextMenu.Items.Contains(ThrobberSeparator))
-                return;
-
-            // Add new separator before monitor items
-            ThrobberSeparator = new ToolStripSeparator { Name = "throbberSeparator" };
-            ThrobberContextMenu.Items.Add(ThrobberSeparator);
-        }
-
-        /// <summary>
-        /// Removes the monitor menu items and separator.
-        /// </summary>
-        /// <param name="contextMenu">The context menu.</param>
-        private void RemoveMonitorMenuItems(ToolStrip contextMenu)
-        {
-            // Remove all the items after the separator including the separator
-            int separatorIndex = contextMenu.Items.IndexOf(ThrobberSeparator);
-            while (separatorIndex > -1 && separatorIndex < contextMenu.Items.Count)
-            {
-                contextMenu.Items.RemoveAt(separatorIndex);
-            }
-        }
-
-        /// <summary>
         /// Generates text representing the time to next update.
         /// </summary>
         /// <param name="monitor">The monitor.</param>
@@ -446,7 +419,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Creates the new monitor tool strip menu item.
+        /// Creates the new monitor toolstrip menu item.
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>New menu item for a monitor.</returns>
@@ -455,12 +428,22 @@ namespace EVEMon
             string menuText = String.Format(CultureConstants.DefaultCulture,
                                             "Update {0} {1}", monitor, GenerateTimeToNextUpdateText(monitor));
 
-            ToolStripMenuItem menu = new ToolStripMenuItem(menuText)
-                                         {
-                                             Tag = monitor.Method,
-                                             Enabled = monitor.CanForceUpdate && monitor.HasAccess
-                                         };
+            ToolStripMenuItem menu;
+            ToolStripMenuItem tempMenu = null;
+            try
+            {
+                tempMenu = new ToolStripMenuItem(menuText);
+                tempMenu.Tag = monitor.Method;
+                tempMenu.Enabled = monitor.CanForceUpdate && monitor.HasAccess;
 
+                menu = tempMenu;
+                tempMenu = null;
+            }
+            finally
+            {
+                if (tempMenu != null)
+                    tempMenu.Dispose();
+            }
             return menu;
         }
 
@@ -678,9 +661,14 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void ThrobberContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            ContextMenuStrip contextMenu = sender as ContextMenuStrip;
+            ContextMenuStrip contextMenu = (ContextMenuStrip)sender;
 
-            RemoveMonitorMenuItems(contextMenu);
+            // Remove all the items after the separator including the separator
+            int separatorIndex = contextMenu.Items.IndexOf(ThrobberSeparator);
+            while (separatorIndex > -1 && separatorIndex < contextMenu.Items.Count)
+            {
+                contextMenu.Items.RemoveAt(separatorIndex);
+            }
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
@@ -694,7 +682,9 @@ namespace EVEMon
             // Enables / Disables the "query everything" menu item
             QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.All(x => x.CanForceUpdate);
 
-            CreateNewToolStripSeparator();
+            // Add a separator before monitor items if it doesn't exist already
+            if (!ThrobberContextMenu.Items.Contains(ThrobberSeparator))
+                ThrobberContextMenu.Items.Add(ThrobberSeparator);
 
             // Add monitor items
             // Skip character's corporation market orders and industry jobs monitor

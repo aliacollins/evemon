@@ -258,8 +258,10 @@ namespace EVEMon
             // Draw a line at the bottom of the panel
             using (Graphics g = flPanelHeader.CreateGraphics())
             {
-                Pen blackPen = new Pen(Color.Black);
-                g.DrawLine(blackPen, 5, flPanelHeader.Height - 1, flPanelHeader.Width - 5, flPanelHeader.Height - 1);
+                using (Pen blackPen = new Pen(Color.Black))
+                {
+                    g.DrawLine(blackPen, 5, flPanelHeader.Height - 1, flPanelHeader.Width - 5, flPanelHeader.Height - 1);
+                }
             }
         }
 

@@ -258,7 +258,7 @@ namespace EVEMon.SkillPlanner
             // sfdSave
             // 
             this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*." +
-                "txt";
+    "txt";
             this.sfdSave.Title = "Save to File";
             // 
             // tabControl
@@ -319,7 +319,7 @@ namespace EVEMon.SkillPlanner
             this.skillBrowser.Name = "skillBrowser";
             this.skillBrowser.Plan = null;
             this.skillBrowser.SelectedSkill = null;
-            this.skillBrowser.Size = new System.Drawing.Size(192, 74);
+            this.skillBrowser.Size = new System.Drawing.Size(816, 480);
             this.skillBrowser.TabIndex = 0;
             // 
             // tpCertificateBrowser
@@ -341,7 +341,7 @@ namespace EVEMon.SkillPlanner
             this.certBrowser.Name = "certBrowser";
             this.certBrowser.Plan = null;
             this.certBrowser.SelectedCertificateClass = null;
-            this.certBrowser.Size = new System.Drawing.Size(192, 74);
+            this.certBrowser.Size = new System.Drawing.Size(816, 480);
             this.certBrowser.TabIndex = 0;
             // 
             // tpShipBrowser
@@ -363,7 +363,7 @@ namespace EVEMon.SkillPlanner
             this.shipBrowser.Name = "shipBrowser";
             this.shipBrowser.Plan = null;
             this.shipBrowser.SelectedObject = null;
-            this.shipBrowser.Size = new System.Drawing.Size(192, 74);
+            this.shipBrowser.Size = new System.Drawing.Size(816, 480);
             this.shipBrowser.TabIndex = 0;
             // 
             // tpItemBrowser
@@ -385,7 +385,7 @@ namespace EVEMon.SkillPlanner
             this.itemBrowser.Name = "itemBrowser";
             this.itemBrowser.Plan = null;
             this.itemBrowser.SelectedObject = null;
-            this.itemBrowser.Size = new System.Drawing.Size(192, 74);
+            this.itemBrowser.Size = new System.Drawing.Size(816, 480);
             this.itemBrowser.TabIndex = 0;
             // 
             // tpBlueprintBrowser
@@ -406,7 +406,7 @@ namespace EVEMon.SkillPlanner
             this.blueprintBrowser.Name = "blueprintBrowser";
             this.blueprintBrowser.Plan = null;
             this.blueprintBrowser.SelectedObject = null;
-            this.blueprintBrowser.Size = new System.Drawing.Size(192, 74);
+            this.blueprintBrowser.Size = new System.Drawing.Size(816, 480);
             this.blueprintBrowser.TabIndex = 0;
             // 
             // ilTabIcons

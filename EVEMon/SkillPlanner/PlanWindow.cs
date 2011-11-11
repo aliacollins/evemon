@@ -20,6 +20,9 @@ namespace EVEMon.SkillPlanner
     {
         private static PlanWindow s_lastActivated;
 
+        // Blank image list for 'Safe for work' setting
+        private readonly ImageList m_emptyImageList = new ImageList();
+
         private Plan m_plan;
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
@@ -60,6 +63,9 @@ namespace EVEMon.SkillPlanner
 
             if (DesignMode)
                 return;
+
+            m_emptyImageList.ImageSize = new Size(24, 24);
+            m_emptyImageList.Images.Add(new Bitmap(24, 24));
 
             // Global events (unsubscribed on window closing)
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
@@ -220,7 +226,7 @@ namespace EVEMon.SkillPlanner
         {
             tabControl.ImageList = (!Settings.UI.SafeForWork
                                         ? ilTabIcons
-                                        : new ImageList { ImageSize = new Size(24, 24) });
+                                        : m_emptyImageList);
 
             foreach (ToolStripItem button in upperToolStrip.Items)
             {

@@ -650,42 +650,8 @@ namespace EVEMon
             Skill skill = (Skill)item;
             if (e.Button == MouseButtons.Right)
             {
-                // "Show in Skill Explorer" menu item
-                ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer",
-                                                                          CommonProperties.Resources.LeadsTo);
-                tmSkillExplorer.Click += tmSkillExplorer_Click;
-                tmSkillExplorer.Tag = skill;
-
-                // Add to the context menu
-                contextMenuStripPlanPopup.Items.Clear();
-                contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
-
-                if (skill.Level < 5)
-                {
-                    // Reset the menu.
-                    ToolStripMenuItem tm =
-                        new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
-
-                    // Build the level options.
-                    int nextLevel = Math.Min(5, skill.Level + 1);
-                    for (int level = nextLevel; level < 6; level++)
-                    {
-                        ToolStripMenuItem menuLevel = new ToolStripMenuItem(
-                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
-                        tm.DropDownItems.Add(menuLevel);
-                        Character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
-                                                                           {
-                                                                               menuPlanItem.Click += menuPlanItem_Click;
-                                                                               menuPlanItem.Tag = new Pair<Plan, SkillLevel>(
-                                                                                   plan, new SkillLevel(skill, level));
-                                                                           });
-                    }
-
-
-                    // Add to the context menu
-                    contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-                    contextMenuStripPlanPopup.Items.Add(tm);
-                }
+                // Build the context menu
+                BuildContextMenu(skill);
 
                 // Display the context menu
                 contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
@@ -719,6 +685,90 @@ namespace EVEMon
             // If we went so far, we're not over anything
             m_lastTooltipItem = null;
             ttToolTip.Active = false;
+        }
+
+        /// <summary>
+        /// Builds the context menu.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        private void BuildContextMenu(Skill skill)
+        {
+            contextMenuStripPlanPopup.Items.Clear();
+
+            // "Show in Skill Explorer" menu item
+            ToolStripMenuItem tmSkillExplorerTemp = null;
+            try
+            {
+                tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill Explorer", CommonProperties.Resources.LeadsTo);
+                tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
+                tmSkillExplorerTemp.Tag = skill;
+                
+                ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
+                tmSkillExplorerTemp = null;
+
+                // Add to the context menu
+                contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
+            }
+            finally
+            {
+                if (tmSkillExplorerTemp != null)
+                    tmSkillExplorerTemp.Dispose();
+            }
+
+            // Quit here if skill is fully trained
+            if (skill.Level == 5)
+                return;
+
+            // Add a separator
+            contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
+
+            ToolStripMenuItem tempMenuItem = null;
+            try
+            {
+                // Reset the menu
+                tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+
+                // Build the level options
+                int nextLevel = Math.Min(5, skill.Level + 1);
+                for (int level = nextLevel; level < 6; level++)
+                {
+                    ToolStripMenuItem tempMenuLevel = null;
+                    try
+                    {
+                        tempMenuLevel = new ToolStripMenuItem(
+                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
+
+                        Character.Plans.AddTo(tempMenuLevel.DropDownItems,
+                                              (menuPlanItem, plan) =>
+                                                  {
+                                                      menuPlanItem.Click += menuPlanItem_Click;
+                                                      menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan,
+                                                                                                    new SkillLevel(skill, level));
+                                                  });
+
+                        ToolStripMenuItem menuLevel = tempMenuLevel;
+                        tempMenuLevel = null;
+
+                        tempMenuItem.DropDownItems.Add(menuLevel);
+                    }
+                    finally
+                    {
+                        if (tempMenuLevel != null)
+                            tempMenuLevel.Dispose();
+                    }
+                }
+
+                ToolStripMenuItem menuItem = tempMenuItem;
+                tempMenuItem = null;
+
+                // Add to the context menu
+                contextMenuStripPlanPopup.Items.Add(menuItem);
+            }
+            finally
+            {
+                if (tempMenuItem != null)
+                    tempMenuItem.Dispose();
+            }
         }
 
         /// <summary>

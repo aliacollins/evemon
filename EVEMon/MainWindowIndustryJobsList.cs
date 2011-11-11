@@ -16,7 +16,7 @@ namespace EVEMon
     {
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        private readonly Timer m_timer = new Timer {Interval = 1000};
+        private readonly Timer m_timer = new Timer();
 
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
@@ -68,6 +68,7 @@ namespace EVEMon
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
 
+            m_timer.Interval = 1000;
             m_timer.Tick += m_timer_Tick;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;

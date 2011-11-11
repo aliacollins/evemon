@@ -20,6 +20,7 @@ namespace EVEMon.ApiErrorHandling
     {
         private APIErrorNotificationEventArgs m_notification;
         private ApiErrorTroubleshooter m_troubleshooter;
+        private HttpTimeoutTroubleshooter m_httpTimeoutTroubleshooter = new HttpTimeoutTroubleshooter();
         private bool m_troubleshooterUsed;
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace EVEMon.ApiErrorHandling
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns>A troubleshooter for the error message.</returns>
-        private static ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
+        private ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
         {
             if (exception == null)
                 return null;
@@ -81,7 +82,7 @@ namespace EVEMon.ApiErrorHandling
             if (httpException == null)
                 return null;
 
-            return httpException.Status == HttpWebServiceExceptionStatus.Timeout ? new HttpTimeoutTroubleshooter() : null;
+            return httpException.Status == HttpWebServiceExceptionStatus.Timeout ? m_httpTimeoutTroubleshooter : null;
         }
 
         /// <summary>

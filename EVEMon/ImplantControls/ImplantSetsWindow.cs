@@ -78,15 +78,26 @@ namespace EVEMon.ImplantControls
                     combo.Items.Add(implant);
                 }
 
-                Label label = new Label
-                                  {
-                                      AutoSize = false,
-                                      Anchor = combo.Anchor,
-                                      Bounds = combo.Bounds,
-                                      TextAlign = ContentAlignment.MiddleLeft
-                                  };
-                label.MouseMove += label_MouseMove;
-                m_labels[(int)slot] = label;
+                Label tempLabel = null;
+                try
+                {
+                    tempLabel = new Label();
+                    tempLabel.MouseMove += label_MouseMove;
+                    tempLabel.AutoSize = false;
+                    tempLabel.Anchor = combo.Anchor;
+                    tempLabel.Bounds = combo.Bounds;
+                    tempLabel.TextAlign = ContentAlignment.MiddleLeft;
+
+                    Label label = tempLabel;
+                    tempLabel = null;
+
+                    m_labels[(int)slot] = label;
+                }
+                finally
+                {
+                    if (tempLabel != null)
+                        tempLabel.Dispose();
+                }
             }
 
             // Adds the labels
@@ -152,9 +163,23 @@ namespace EVEMon.ImplantControls
         /// <param name="set"></param>
         private void AddRow(SerializableSettingsImplantSet set)
         {
-            DataGridViewRow row = new DataGridViewRow { Tag = set };
-            row.CreateCells(setsGrid, set.Name);
-            setsGrid.Rows.Add(row);
+            DataGridViewRow tempRow = null;
+            try
+            {
+                tempRow = new DataGridViewRow();
+                tempRow.CreateCells(setsGrid, set.Name);
+                tempRow.Tag = set;
+
+                DataGridViewRow row = tempRow;
+                tempRow = null;
+
+                setsGrid.Rows.Add(row);
+            }
+            finally
+            {
+                if (tempRow != null)
+                    tempRow.Dispose();
+            }
         }
 
         /// <summary>

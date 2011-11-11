@@ -21,10 +21,13 @@ namespace EVEMon.SkillPlanner
         private const int SkillIcon = 5;
         private const int Planned = 6;
 
+        // Blank image list for 'Safe for work' setting
+        private readonly ImageList m_emptyImageList = new ImageList();
+
         private Plan m_plan;
         private Character m_character;
         private CertificateClass m_class;
-        private readonly Font m_boldFont;
+        private Font m_boldFont;
 
         private bool m_allExpanded;
 
@@ -47,22 +50,10 @@ namespace EVEMon.SkillPlanner
             UpdateStyles();
 
             InitializeComponent();
-
-            treeView.DrawNode += treeView_DrawNode;
-            treeView.MouseDown += treeView_MouseDown;
-
-            cmListSkills.Opening += cmListSkills_Opening;
-            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
-            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
-
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
-            Disposed += OnDisposed;
         }
 
         #endregion
+
 
 
         #region Public Properties
@@ -156,6 +147,33 @@ namespace EVEMon.SkillPlanner
 
 
         #region Event Handlers
+
+        /// <summary>
+        /// On load, complete the initialization.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            treeView.DrawNode += treeView_DrawNode;
+            treeView.MouseDown += treeView_MouseDown;
+
+            cmListSkills.Opening += cmListSkills_Opening;
+            
+            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
+            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
+
+            m_emptyImageList.ImageSize = new Size(24, 24);
+            m_emptyImageList.Images.Add(new Bitmap(24, 24));
+
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -272,11 +290,7 @@ namespace EVEMon.SkillPlanner
             Certificate oldSelection = SelectedCertificate;
             TreeNode newSelection = null;
 
-            // Blank image list for 'Safe for work' setting
-            ImageList newImageList = new ImageList { ImageSize = new Size(24, 24) };
-            newImageList.Images.Add(new Bitmap(24, 24));
-
-            treeView.ImageList = (Settings.UI.SafeForWork ? newImageList : imageList);
+            treeView.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : imageList);
 
             treeView.BeginUpdate();
             try

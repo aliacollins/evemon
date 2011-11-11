@@ -313,6 +313,21 @@ namespace EVEMon
             }
 
             // Updates the pages
+            PerformLayout(pages);
+
+            // Reselect
+            if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
+                tcCharacterTabs.SelectedTab = selectedTab;
+
+            UpdateControlsOnTabSelectionChange();
+        }
+
+        /// <summary>
+        /// Performs the layout.
+        /// </summary>
+        /// <param name="pages">The pages.</param>
+        private void PerformLayout(Dictionary<Character, TabPage> pages)
+        {
             tcCharacterTabs.SuspendLayout();
             try
             {
@@ -335,21 +350,21 @@ namespace EVEMon
                     // Does the page match with the character ?
                     if (currentTag != character)
                     {
-                        // Retrieve the page when it was previously created
                         TabPage page;
+                        // Retrieve the page when it was previously created
                         // Is the character later in the collection ?
                         if (pages.TryGetValue(character, out page))
                         {
                             // Remove the page from old location
                             tcCharacterTabs.TabPages.Remove(page);
                         }
-                            // So we need to inserts it now
                         else
                         {
                             // Creates a new page
                             page = CreateTab(character);
                         }
-                        // Inserts the page
+
+                        // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
                     }
 
@@ -360,29 +375,7 @@ namespace EVEMon
                 }
 
                 // Ensures the overview has been added when necessary
-                if (Settings.UI.MainWindow.ShowOverview)
-                {
-                    if (tpOverview != null && !tcCharacterTabs.TabPages.Contains(tpOverview))
-                    {
-                        // Trim the overview page index
-                        int overviewIndex = Settings.UI.MainWindow.OverviewIndex;
-                        overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, overviewIndex));
-
-                        // Inserts it
-                        tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
-
-                        // Select the Overview tab if it's the first tab
-                        if (overviewIndex == 0)
-                            tcCharacterTabs.SelectedTab = tpOverview;
-                    }
-                }
-                    // Or remove it when it should not be here anymore
-                else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
-                    tcCharacterTabs.TabPages.Remove(tpOverview);
-
-                // Reselect
-                if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
-                    tcCharacterTabs.SelectedTab = selectedTab;
+                AddOverviewTab();
 
                 // Dispose the removed tabs
                 foreach (TabPage page in pages.Values)
@@ -393,8 +386,33 @@ namespace EVEMon
             finally
             {
                 tcCharacterTabs.ResumeLayout();
-                UpdateControlsOnTabSelectionChange();
             }
+        }
+
+        /// <summary>
+        /// Adds the overview tab.
+        /// </summary>
+        private void AddOverviewTab()
+        {
+            if (Settings.UI.MainWindow.ShowOverview)
+            {
+                if (tpOverview != null && !tcCharacterTabs.TabPages.Contains(tpOverview))
+                {
+                    // Trim the overview page index
+                    int overviewIndex = Settings.UI.MainWindow.OverviewIndex;
+                    overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, overviewIndex));
+
+                    // Inserts it
+                    tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
+
+                    // Select the Overview tab if it's the first tab
+                    if (overviewIndex == 0)
+                        tcCharacterTabs.SelectedTab = tpOverview;
+                }
+            }
+                // Or remove it when it should not be here anymore
+            else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
+                tcCharacterTabs.TabPages.Remove(tpOverview);
         }
 
         /// <summary>
@@ -404,15 +422,26 @@ namespace EVEMon
         private static TabPage CreateTab(Character character)
         {
             // Create the tab
-            TabPage page = new TabPage(character.Name)
-                               {
-                                   UseVisualStyleBackColor = true,
-                                   Padding = new Padding(5),
-                                   Tag = character
-                               };
+            TabPage page;
+            TabPage tempPage = null;
+            try
+            {
+                tempPage = new TabPage(character.Name);
+                tempPage.UseVisualStyleBackColor = true;
+                tempPage.Padding = new Padding(5);
+                tempPage.Tag = character;
 
-            // Create the character monitor
-            new CharacterMonitor((Character)page.Tag) { Parent = page, Dock = DockStyle.Fill };
+                // Create the character monitor
+                new CharacterMonitor((Character)tempPage.Tag) { Parent = tempPage, Dock = DockStyle.Fill };
+
+                page = tempPage;
+                tempPage = null;
+            }
+            finally
+            {
+                if (tempPage != null)
+                    tempPage.Dispose();
+            }
 
             return page;
         }
@@ -1095,8 +1124,9 @@ namespace EVEMon
                                                  UseShellExecute = false
                                              };
 
-            using (Process evemonProc = new Process { StartInfo = startInfo })
+            using (Process evemonProc = new Process())
             {
+                evemonProc.StartInfo = startInfo;
                 evemonProc.Start();
             }
         }

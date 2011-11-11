@@ -38,8 +38,8 @@
             // 
             // MainTableLayoutPanel
             // 
-            this.MainTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.MainTableLayoutPanel.AutoSize = true;
             this.MainTableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.MainTableLayoutPanel.ColumnCount = 2;
@@ -68,7 +68,7 @@
             this.ExplanationLabel.Size = new System.Drawing.Size(343, 26);
             this.ExplanationLabel.TabIndex = 0;
             this.ExplanationLabel.Text = "The server EVEMon contacted did not respond in a timely manner, you can extend th" +
-                "e length of time EVEMon waits before giving up:";
+    "e length of time EVEMon waits before giving up:";
             // 
             // TimeoutLabel
             // 

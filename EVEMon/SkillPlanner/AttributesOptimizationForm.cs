@@ -406,12 +406,28 @@ namespace EVEMon.SkillPlanner
         private void AddTabPage(RemappingResult remapping, string tabName, string description)
         {
             AttributesOptimizationControl ctl = CreateAttributesOptimizationControl(remapping, description);
+
+            if (ctl == null)
+                return;
+
             m_remappingDictionary[ctl] = remapping;
 
-            TabPage page = new TabPage(tabName);
-            page.Controls.Add(ctl);
+            TabPage tempPage = null;
+            try
+            {
+                tempPage = new TabPage(tabName);
+                tempPage.Controls.Add(ctl);
 
-            tabControl.TabPages.Add(page);
+                TabPage page = tempPage;
+                tempPage = null;
+
+                tabControl.TabPages.Add(page);
+            }
+            finally
+            {
+                if (tempPage != null)
+                    tempPage.Dispose();
+            }
         }
 
         /// <summary>
@@ -420,19 +436,30 @@ namespace EVEMon.SkillPlanner
         /// <param name="remapping">The remapping object to represents.</param>
         /// <param name="description">The description.</param>
         /// <returns>The created control.</returns>
-        private AttributesOptimizationControl CreateAttributesOptimizationControl(
-            RemappingResult remapping, string description)
+        private AttributesOptimizationControl CreateAttributesOptimizationControl(RemappingResult remapping, string description)
         {
-            AttributesOptimizationControl ctl = new AttributesOptimizationControl(m_character, m_plan, remapping,
-                                                                                  description);
-            ctl.AttributeChanged += AttributesOptimizationControl_AttributeChanged;
+            AttributesOptimizationControl control;
+            AttributesOptimizationControl ctl = null;
+            try
+            {
+                ctl = new AttributesOptimizationControl(m_character, m_plan, remapping, description);
+                ctl.AttributeChanged += AttributesOptimizationControl_AttributeChanged;
 
-            // For a manually edited point, we initialize the control with the attributes from the current remapping point
-            if (m_strategy == Strategy.ManualRemappingPointEdition &&
-                m_manuallyEditedRemappingPoint.Status == RemappingPointStatus.UpToDate)
-                ctl.UpdateValuesFrom(m_manuallyEditedRemappingPoint);
+                // For a manually edited point, we initialize the control with the attributes from the current remapping point
+                if (m_strategy == Strategy.ManualRemappingPointEdition &&
+                    m_manuallyEditedRemappingPoint.Status == RemappingPointStatus.UpToDate)
+                    ctl.UpdateValuesFrom(m_manuallyEditedRemappingPoint);
 
-            return ctl;
+                control = ctl;
+                ctl = null;
+            }
+            finally
+            {
+                if (ctl != null)
+                    ctl.Dispose();
+            }
+
+            return control;
         }
 
         /// <summary>
@@ -440,7 +467,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="AttributeChangedEventArgs"/> instance containing the event data.</param>
-        private void AttributesOptimizationControl_AttributeChanged(object sender, AttributeChangedEventArgs e)// AttributesOptimizationControl control,RemappingResult remapping)
+        private void AttributesOptimizationControl_AttributeChanged(object sender, AttributeChangedEventArgs e)
         {
             // Update the plan order's column
             if (m_planEditor == null)
