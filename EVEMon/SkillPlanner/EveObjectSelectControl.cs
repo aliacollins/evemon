@@ -13,11 +13,6 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler SelectionChanged;
 
-        protected Func<Item, Boolean> UsabilityPredicate;
-        protected ObjectActivityFilter ActivityFilter;
-        protected BlueprintActivity Activity;
-        protected bool AllExpanded;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -29,7 +24,32 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan { get; set; }
+
+        /// <summary>
+        /// Gets or sets the usability predicate.
+        /// </summary>
+        /// <value>The usability predicate.</value>
+        protected Func<Item, Boolean> UsabilityPredicate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity filter.
+        /// </summary>
+        /// <value>The activity filter.</value>
+        protected ObjectActivityFilter ActivityFilter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity.
+        /// </summary>
+        /// <value>The activity.</value>
+        protected BlueprintActivity Activity { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [all expanded].
+        /// </summary>
+        /// <value><c>true</c> if [all expanded]; otherwise, <c>false</c>.</value>
+        protected bool AllExpanded { get; set; }
 
         /// <summary>
         /// Occurs when the control is loaded.
