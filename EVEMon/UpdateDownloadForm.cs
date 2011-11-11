@@ -47,9 +47,8 @@ namespace EVEMon
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex, true);
-                DialogResult = DialogResult.Cancel;
-                Close();
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
             }
         }
 
@@ -120,7 +119,7 @@ namespace EVEMon
                     {
                         File.Delete(m_fileName);
                     }
-                    catch (Exception ex)
+                    catch (UnauthorizedAccessException ex)
                     {
                         ExceptionHandler.LogException(ex, false);
                     }
