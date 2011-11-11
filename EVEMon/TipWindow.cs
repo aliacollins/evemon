@@ -69,6 +69,9 @@ namespace EVEMon
         /// <param name="tiptext">The text of the tip window.</param>
         public static void ShowTip(Form form, string key, string title, string tiptext)
         {
+            if (form == null)
+                throw new ArgumentNullException("form");
+
             lock (s_lockObject)
             {
                 if (Settings.UI.ConfirmedTips.Contains(key))

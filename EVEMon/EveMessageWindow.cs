@@ -29,6 +29,9 @@ namespace EVEMon
         public EveMessageWindow(IEveMessage message)
             : this()
         {
+            if (message == null)
+                throw new ArgumentNullException("message");
+
             EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
             EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;

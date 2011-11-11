@@ -296,6 +296,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="point"></param>
         public void UpdateValuesFrom(RemappingPoint point)
         {
+            if (point == null)
+                throw new ArgumentNullException("point");
+
             // Creates a scratchpad with the base values from the provided point.
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));
             for (int i = 0; i < 5; i++)

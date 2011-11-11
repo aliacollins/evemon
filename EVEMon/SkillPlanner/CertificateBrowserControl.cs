@@ -488,6 +488,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public void SelectedCertificate(Certificate certificate)
         {
+            if (certificate == null)
+                throw new ArgumentNullException("certificate");
+
             if (SelectedCertificateClass == certificate.Class && certDisplayCtl.SelectedCertificate == certificate)
                 return;
 

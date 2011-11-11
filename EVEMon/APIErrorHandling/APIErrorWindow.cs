@@ -40,6 +40,9 @@ namespace EVEMon.ApiErrorHandling
             get { return m_notification; }
             set
             {
+                if (value == null)
+                    return;
+
                 m_notification = value;
                 ErrorLabel.Text = GetErrorLabelText(value);
                 DetailsTextBox.Text = GetXmlData(value.Result);

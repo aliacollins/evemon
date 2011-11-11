@@ -341,6 +341,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="areRemappingPointsActive"></param>
         public void UpdateStatistics(BasePlan plan, out bool areRemappingPointsActive)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             areRemappingPointsActive = true;
 
             CharacterScratchpad scratchpad = CreateModifiedScratchpad();

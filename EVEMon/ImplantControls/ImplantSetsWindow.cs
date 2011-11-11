@@ -42,6 +42,9 @@ namespace EVEMon.ImplantControls
         public ImplantSetsWindow(Character character)
             : this()
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             m_character = character;
             m_sets = character.ImplantSets.Export();
             m_maxJumpClones = character.Skills[DBConstants.InfomorphPsychologySkillID].Level;

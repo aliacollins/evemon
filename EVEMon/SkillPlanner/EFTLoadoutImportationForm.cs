@@ -32,12 +32,24 @@ namespace EVEMon.SkillPlanner
         #region Constructors
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        public EFTLoadoutImportationForm(Plan plan)
+        private EFTLoadoutImportationForm()
         {
             InitializeComponent();
+
             topSplitContainer.RememberDistanceKey = "EFTLoadoutImportationForm";
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="plan">The plan.</param>
+        public EFTLoadoutImportationForm(Plan plan)
+            : this()
+        {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
 
             m_plan = plan;
             m_character = m_plan.Character;

@@ -73,6 +73,9 @@ namespace EVEMon.Controls
         /// <param name="plan"></param>
         public static void ExportPlan(Plan plan)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             Character character = (Character)plan.Character;
 
             // Assemble an initial filename and remove prohibited characters
@@ -182,6 +185,12 @@ namespace EVEMon.Controls
         /// <param name="plan">The plan.</param>
         public static void ExportAfterPlanCharacter(Character character, Plan plan)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             // Open the dialog box
             using (SaveFileDialog characterSaveDialog = new SaveFileDialog())
             {
@@ -292,6 +301,15 @@ namespace EVEMon.Controls
         public static void AddTo(this IEnumerable<Plan> plans, ToolStripItemCollection list,
                                  Action<ToolStripMenuItem, Plan> initialize)
         {
+            if (plans == null)
+                throw new ArgumentNullException("plans");
+
+            if (list == null)
+                throw new ArgumentNullException("list");
+
+            if (initialize == null)
+                throw new ArgumentNullException("initialize");
+
             //Scroll through plans
             foreach (Plan plan in plans)
             {

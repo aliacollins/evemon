@@ -410,9 +410,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Filter for all items.
         /// </summary>
-        /// <param name="eo"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        protected bool SelectAll(Item eo)
+        protected bool SelectAll(Item item)
         {
             return true;
         }
@@ -420,19 +420,22 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Filter for items which can be used (prereqs met).
         /// </summary>
-        /// <param name="eo"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        protected bool CanUse(Item eo)
+        protected bool CanUse(Item item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             IEnumerable<StaticSkillLevel> prerequisites =
-                eo.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+                item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
             bool bpBrowserControl = this is BlueprintSelectControl;
 
             // Is item a blueprint and supports the selected activity ?  
             if (bpBrowserControl)
             {
                 bool hasSelectedActivity = prerequisites.Any(x => x.Activity == Activity)
-                                           || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == Activity);
+                                           || ((Blueprint)item).MaterialRequirements.Any(x => x.Activity == Activity);
 
                 // Can not be used when item doesn't support the selected activity
                 if ((ActivityFilter == ObjectActivityFilter.Manufacturing || ActivityFilter == ObjectActivityFilter.Invention)
@@ -495,11 +498,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Filter for items which can not be used (prereqs not met).
         /// </summary>
-        /// <param name="eo"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        protected bool CannotUse(Item eo)
+        protected bool CannotUse(Item item)
         {
-            return !CanUse(eo);
+            return !CanUse(item);
         }
 
         #endregion

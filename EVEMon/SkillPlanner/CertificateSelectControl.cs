@@ -146,7 +146,7 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set
             {
-                if (m_plan == value)
+                if (value == null || m_plan == value)
                     return;
 
                 m_plan = value;

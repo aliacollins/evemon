@@ -55,6 +55,12 @@ namespace EVEMon.SkillPlanner
                                           string description)
             : this()
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             m_character = character;
             m_baseCharacter = character.After(plan.ChosenImplantSet);
             m_strategy = strategy;
@@ -72,6 +78,12 @@ namespace EVEMon.SkillPlanner
         public AttributesOptimizationForm(Character character, Plan plan, RemappingPoint point)
             : this()
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             m_plan = plan;
             m_character = character;
             m_baseCharacter = character.After(plan.ChosenImplantSet);
@@ -470,6 +482,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="areRemappingPointsActive"></param>
         public void UpdateStatistics(BasePlan plan, out bool areRemappingPointsActive)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             areRemappingPointsActive = m_areRemappingPointsActive;
 
             if (m_areRemappingPointsActive)

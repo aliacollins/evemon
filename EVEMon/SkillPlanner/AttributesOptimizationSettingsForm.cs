@@ -12,10 +12,20 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributesOptimizationSettingsForm"/> class.
         /// </summary>
-        /// <param name="plan">The plan.</param>
-        public AttributesOptimizationSettingsForm(Plan plan)
+        private AttributesOptimizationSettingsForm()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributesOptimizationSettingsForm"/> class.
+        /// </summary>
+        /// <param name="plan">The plan.</param>
+        public AttributesOptimizationSettingsForm(Plan plan)
+            : this()
+        {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
 
             buttonWholePlan.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);
             buttonCharacter.Font = FontFactory.GetFont("Microsoft Sans Serif", 10F);

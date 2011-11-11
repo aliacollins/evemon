@@ -98,6 +98,9 @@ namespace EVEMon.Schedule
 
         protected override void PaintMonthEntriesForDay(Graphics g, DateTime datetime, Rectangle cellRect)
         {
+            if (g == null)
+                throw new ArgumentNullException("g");
+
             List<ScheduleEntry> todays = m_entries.Where(entry => entry.IsToday(datetime)).ToList();
 
             // Sort Todays Entries Alphabetically
