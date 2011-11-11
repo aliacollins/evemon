@@ -296,7 +296,8 @@ namespace EVEMon
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Size standingGroupTextSize = TextRenderer.MeasureText(g, group.ToUpper(), m_standingsBoldFont, Size.Empty, Format);
+            Size standingGroupTextSize = TextRenderer.MeasureText(g, group.ToUpper(CultureConstants.DefaultCulture),
+                                                                  m_standingsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                             e.Bounds.Top +
                                                             ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
@@ -304,8 +305,8 @@ namespace EVEMon
                                                             standingGroupTextSize.Height);
 
             // Draws the text header
-            TextRenderer.DrawText(g, group.ToUpper(), m_standingsBoldFont, standingGroupTextRect, Color.White, Color.Transparent,
-                                  Format);
+            TextRenderer.DrawText(g, group.ToUpper(CultureConstants.DefaultCulture), m_standingsBoldFont, standingGroupTextRect,
+                                  Color.White, Color.Transparent, Format);
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);

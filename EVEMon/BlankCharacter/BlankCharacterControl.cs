@@ -197,9 +197,15 @@ namespace EVEMon.BlankCharacter
             pbAncestry1.Image = ilAncestry.Images[index];
             pbAncestry2.Image = ilAncestry.Images[index + 1];
             pbAncestry3.Image = ilAncestry.Images[index + 2];
-            lblAncestry1.Text = ((Ancestry)Enum.ToObject(typeof(Ancestry), index)).ToString().ToUpper().Replace("_", " ");
-            lblAncestry2.Text = ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 1)).ToString().ToUpper().Replace("_", " ");
-            lblAncestry3.Text = ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 2)).ToString().ToUpper().Replace("_", " ");
+            lblAncestry1.Text =
+                ((Ancestry)Enum.ToObject(typeof(Ancestry), index)).ToString().ToUpper(CultureConstants.DefaultCulture).Replace(
+                    "_", " ");
+            lblAncestry2.Text =
+                ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 1)).ToString().ToUpper(CultureConstants.DefaultCulture).Replace
+                    ("_", " ");
+            lblAncestry3.Text =
+                ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 2)).ToString().ToUpper(CultureConstants.DefaultCulture).Replace
+                    ("_", " ");
             lblAncestry1.Tag = (Ancestry)Enum.ToObject(typeof(Ancestry), index);
             lblAncestry2.Tag = (Ancestry)Enum.ToObject(typeof(Ancestry), index + 1);
             lblAncestry3.Tag = (Ancestry)Enum.ToObject(typeof(Ancestry), index + 2);

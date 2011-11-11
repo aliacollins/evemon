@@ -525,7 +525,7 @@ namespace EVEMon.SettingsUI
             cbGoogleReminder.Items.Clear();
             foreach (string text in GoogleAppointmentFilter.ReminderMethods.Cast<Enum>().Select(item => item.ToString()))
             {
-                cbGoogleReminder.Items.Add(char.ToUpper(text[0]) + text.Substring(1));
+                cbGoogleReminder.Items.Add(char.ToUpper(text[0], CultureConstants.DefaultCulture) + text.Substring(1));
             }
         }
 
