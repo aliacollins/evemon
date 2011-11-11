@@ -9,7 +9,7 @@ namespace EVEMon
 {
     public partial class UpdateDownloadForm : EVEMonForm
     {
-        private readonly string m_url;
+        private readonly Uri m_url;
         private readonly string m_fileName;
         private object m_request;
 
@@ -26,7 +26,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="filename">The filename.</param>
-        public UpdateDownloadForm(string url, string filename)
+        public UpdateDownloadForm(Uri url, string filename)
             : this()
         {
             m_url = url;
@@ -42,7 +42,7 @@ namespace EVEMon
         {
             try
             {
-                m_request = EveMonClient.HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback,
+                m_request = EveMonClient.HttpWebService.DownloadFileAsync(m_url.AbsoluteUri, m_fileName, DownloadCompletedCallback,
                                                                           ProgressChangedCallback);
             }
             catch (Exception ex)

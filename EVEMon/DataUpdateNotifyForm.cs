@@ -113,7 +113,7 @@ namespace EVEMon
                 }
 
                 // Show the download dialog, which will download the file
-                using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))
+                using (UpdateDownloadForm form = new UpdateDownloadForm(new Uri(url), newFilename))
                 {
                     if (form.ShowDialog() != DialogResult.OK)
                         continue;

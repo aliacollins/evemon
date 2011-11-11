@@ -94,7 +94,7 @@ namespace EVEMon
             if (File.Exists(localFilename))
                 UpdateManager.DeleteInstallationFiles();
 
-            using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
+            using (UpdateDownloadForm form = new UpdateDownloadForm(new Uri(m_args.InstallerUrl), localFilename))
             {
                 form.ShowDialog();
 
