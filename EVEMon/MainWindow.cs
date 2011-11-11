@@ -725,6 +725,27 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Checks whether a sound must be played on skill training.
+        /// </summary>
+        /// <returns></returns>
+        private static void TryPlaySkillCompletionSound()
+        {
+            // Returns if the user disabled the option
+            if (!Settings.Notifications.PlaySoundOnSkillCompletion)
+                return;
+
+            // Checks the schedule 
+            if (Scheduler.SilentMode)
+                return;
+
+            // Play the sound
+            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
+            {
+                sp.Play();
+            }
+        }
+
+        /// <summary>
         /// Occurs when the alerts ballon icon is clicked.
         /// </summary>
         /// <param name="sender"></param>
@@ -763,27 +784,6 @@ namespace EVEMon
         {
             // Play a sound
             TryPlaySkillCompletionSound();
-        }
-
-        /// <summary>
-        /// Checks whether a sound must be played on skill training.
-        /// </summary>
-        /// <returns></returns>
-        private static void TryPlaySkillCompletionSound()
-        {
-            // Returns if the user disabled the option
-            if (!Settings.Notifications.PlaySoundOnSkillCompletion)
-                return;
-
-            // Checks the schedule 
-            if (Scheduler.SilentMode)
-                return;
-
-            // Play the sound
-            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
-            {
-                sp.Play();
-            }
         }
 
         #endregion
@@ -1588,16 +1588,6 @@ namespace EVEMon
         private void userVoiceMenuItem_Click(object sender, EventArgs e)
         {
             Util.OpenURL(NetworkConstants.EVEMonUserVoice);
-        }
-
-        /// <summary>
-        /// Help > EVE Online Q&A
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void stackExchangeMenu_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(NetworkConstants.StackExchangeEveOnlineURL);
         }
 
         /// <summary>

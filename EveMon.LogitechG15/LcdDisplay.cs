@@ -907,15 +907,6 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// On skill completion, switch to the display of the proper message.
         /// </summary>
-        public void SkillCompleted(Character character)
-        {
-            CurrentCharacter = character as CCPCharacter;
-            SwitchState(LcdState.SkillComplete);
-        }
-
-        /// <summary>
-        /// On skill completion, switch to the display of the proper message.
-        /// </summary>
         public void SkillCompleted(Character character, int skillCount)
         {
             CurrentCharacter = character as CCPCharacter;
