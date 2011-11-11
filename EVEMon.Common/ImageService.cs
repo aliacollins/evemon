@@ -103,7 +103,9 @@ namespace EVEMon.Common
                     string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
                                                                          {
-                                                                             image.Save(fs, ImageFormat.Png);
+                                                                             // We need to create a copy of the image because GDI+ is locking it
+                                                                             Image newImage = new Bitmap(image);
+                                                                             newImage.Save(fs, ImageFormat.Png);
                                                                              fs.Flush();
                                                                              return true;
                                                                          });
