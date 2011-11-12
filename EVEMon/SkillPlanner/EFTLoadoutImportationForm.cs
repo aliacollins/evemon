@@ -176,7 +176,7 @@ namespace EVEMon.SkillPlanner
 
             // Error on first line ?
             string line = PasteTextBox.Lines[0];
-            if (String.IsNullOrEmpty(line) || !line.StartsWith("[") || !line.Contains(","))
+            if (String.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
             {
                 ResultsTreeView.Nodes.Add("Cannot determine ship type");
                 ResultsTreeView.Enabled = false;
@@ -300,7 +300,7 @@ namespace EVEMon.SkillPlanner
 
             // Error on first line ?
             string line = lines[0];
-            if (String.IsNullOrEmpty(line) || !line.StartsWith("[") || !line.Contains(","))
+            if (String.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
                 return false;
 
             // Retrieve the ship
@@ -326,7 +326,7 @@ namespace EVEMon.SkillPlanner
             string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
 
             // Look up if it's a drone
-            itemName = itemName.Contains(" x") ? itemName.Substring(0, line.LastIndexOf(" x")) : itemName;
+            itemName = itemName.Contains(" x") ? itemName.Substring(0, line.LastIndexOf(" x", StringComparison.CurrentCulture)) : itemName;
 
             Item item = StaticItems.GetItemByName(itemName);
             Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.GetItemByName(chargeName) : null;

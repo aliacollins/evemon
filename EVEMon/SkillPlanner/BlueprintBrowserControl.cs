@@ -611,16 +611,18 @@ namespace EVEMon.SkillPlanner
             if (m_activity != BlueprintActivity.Manufacturing)
                 return 1.0d;
 
-            if (text.StartsWith("Rapid"))
+            if (text.StartsWith("Rapid", StringComparison.CurrentCulture))
             {
                 m_timeMultiplier = 0.65d;
                 materialMultiplier = 1.2d;
             }
 
-            if (text.StartsWith("Subsystem") || text.StartsWith("Capital") || text.StartsWith("NPC"))
+            if (text.StartsWith("Subsystem", StringComparison.CurrentCulture) ||
+                text.StartsWith("Capital", StringComparison.CurrentCulture) ||
+                text.StartsWith("NPC", StringComparison.CurrentCulture))
                 m_timeMultiplier = 1.0d;
 
-            if (text.StartsWith("Advanced"))
+            if (text.StartsWith("Advanced", StringComparison.CurrentCulture))
                 materialMultiplier = 1.1d;
 
             return m_timeMultiplier;
@@ -635,7 +637,7 @@ namespace EVEMon.SkillPlanner
         {
             string text = cbFacility.Text;
 
-            if (text.StartsWith("Mobile"))
+            if (text.StartsWith("Mobile", StringComparison.CurrentCulture))
             {
                 switch (activity)
                 {
@@ -646,7 +648,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            if (text.StartsWith("Advance Mobile"))
+            if (text.StartsWith("Advance Mobile", StringComparison.CurrentCulture))
             {
                 switch (activity)
                 {

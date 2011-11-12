@@ -278,7 +278,8 @@ namespace EVEMon
                 return;
 
             // If the link complies with HTTP or HTTPS, open the link on the system's default browser
-            if (e.Url.ToString().StartsWith("http://") || e.Url.ToString().StartsWith("https://"))
+            if (e.Url.ToString().StartsWith("http://", StringComparison.CurrentCulture) ||
+                e.Url.ToString().StartsWith("https://", StringComparison.CurrentCulture))
                 Util.OpenURL(e.Url.ToString());
 
             // Prevents the browser to navigate past the shown page

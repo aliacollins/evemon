@@ -392,7 +392,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
             }
 
-            if (IDTextBox.Text.StartsWith("0"))
+            if (IDTextBox.Text.StartsWith("0", StringComparison.CurrentCulture))
             {
                 errorProvider.SetError(IDTextBox, "ID must not start with zero.");
                 e.Cancel = true;

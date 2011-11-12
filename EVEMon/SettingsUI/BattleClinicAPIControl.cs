@@ -175,7 +175,7 @@ namespace EVEMon.SettingsUI
                 return;
             }
 
-            if (bcUserIDTextBox.Text.StartsWith("0"))
+            if (bcUserIDTextBox.Text.StartsWith("0", StringComparison.CurrentCulture))
             {
                 errorProvider.SetError(bcUserIDTextBox, "UserID must not start with zero.");
                 e.Cancel = true;

@@ -758,10 +758,10 @@ namespace EVEMon.SkillPlanner
                 switch (SortColumn)
                 {
                     case 0: // sort by name
-                        compareResult = String.Compare(a.Text, b.Text);
+                        compareResult = String.Compare(a.Text, b.Text, StringComparison.CurrentCulture);
                         break;
                     case 1: // Author
-                        compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text);
+                        compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text, StringComparison.CurrentCulture);
                         break;
                     case 2: // Rating
                         if (slb != null && (sla != null && sla.Rating < slb.Rating))
