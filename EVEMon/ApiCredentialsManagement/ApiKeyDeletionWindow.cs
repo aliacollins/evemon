@@ -30,7 +30,7 @@ namespace EVEMon.ApiCredentialsManagement
                 throw new ArgumentNullException("apiKey", "API key can't be null");
 
             m_apiKey = apiKey;
-            deletionLabel.Text = String.Format(deletionLabel.Text, apiKey.ID);
+            deletionLabel.Text = String.Format(CultureConstants.DefaultCulture, deletionLabel.Text, apiKey.ID);
 
             charactersListView.ItemCheck += charactersListView_ItemCheck;
 

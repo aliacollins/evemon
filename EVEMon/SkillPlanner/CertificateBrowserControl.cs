@@ -310,9 +310,8 @@ namespace EVEMon.SkillPlanner
                     tslbEligible.Text += " (improved from \"none\")";
                 else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                 {
-                    tslbEligible.Text += String.Format(" (improved from \"{0}\")",
-                                                       highestClaimedCertificate.Grade.ToString().ToLower(
-                                                           CultureConstants.DefaultCulture));
+                    tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
+                                                       highestClaimedCertificate.Grade);
                 }
                 else
                     tslbEligible.Text += " (no change)";
@@ -392,14 +391,14 @@ namespace EVEMon.SkillPlanner
             {
                 Certificate firstCert = certClass.LowestGradeCertificate;
                 textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
-                lblName.Text = String.Format("{0} {1}", certClass.Name,
+                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name,
                                              (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             }
                 // So, one of our cert class's grades has been selected, we use its description
             else
             {
                 textboxDescription.Text = cert.Description;
-                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade);
+                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name, cert.Grade);
             }
         }
 

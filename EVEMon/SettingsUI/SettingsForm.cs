@@ -116,7 +116,7 @@ namespace EVEMon.SettingsUI
                     {
                         // Transforms x64 to 64 by 64
                         string size = x.ToString().Substring(1);
-                        return String.Format("{0} by {0}", size);
+                        return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
                     }).ToArray());
 
             // Expands the left panel and selects the first page and node
@@ -191,7 +191,7 @@ namespace EVEMon.SettingsUI
             // IGB Server
             igbCheckBox.Checked = m_settings.IGB.IGBServerEnabled;
             cbIGBPublic.Checked = m_settings.IGB.IGBServerPublic;
-            igbPortTextBox.Text = m_settings.IGB.IGBServerPort.ToString();
+            igbPortTextBox.Text = m_settings.IGB.IGBServerPort.ToString(CultureConstants.DefaultCulture);
 
             // Notifications
             notificationsControl.Settings = m_settings.Notifications;
@@ -200,7 +200,7 @@ namespace EVEMon.SettingsUI
             // Email Notifications
             mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
             tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
-            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString();
+            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString(CultureConstants.DefaultCulture);
             cbEmailServerRequireSsl.Checked = m_settings.Notifications.EmailServerRequiresSSL;
             cbEmailUseShortFormat.Checked = m_settings.Notifications.UseEmailShortFormat;
             cbEmailAuthRequired.Checked = m_settings.Notifications.EmailAuthenticationRequired;
@@ -211,7 +211,7 @@ namespace EVEMon.SettingsUI
 
             // Proxy settings
             customProxyCheckBox.Checked = m_settings.Proxy.Enabled;
-            proxyPortTextBox.Text = m_settings.Proxy.Port.ToString();
+            proxyPortTextBox.Text = m_settings.Proxy.Port.ToString(CultureConstants.DefaultCulture);
             proxyHttpHostTextBox.Text = m_settings.Proxy.Host;
             proxyAuthenticationButton.Tag = m_settings.Proxy;
 
@@ -270,7 +270,7 @@ namespace EVEMon.SettingsUI
             tbGoogleURI.Text = m_settings.Calendar.GoogleURL;
             cbGoogleReminder.SelectedIndex = (int)m_settings.Calendar.GoogleReminder;
             cbSetReminder.Checked = m_settings.Calendar.UseReminding;
-            tbReminder.Text = m_settings.Calendar.RemindingInterval.ToString();
+            tbReminder.Text = m_settings.Calendar.RemindingInterval.ToString(CultureConstants.DefaultCulture);
             cbUseAlterateReminder.Checked = m_settings.Calendar.UseRemindingRange;
             dtpEarlyReminder.Value = m_settings.Calendar.EarlyReminding;
             dtpLateReminder.Value = m_settings.Calendar.LateReminding;
@@ -438,7 +438,7 @@ namespace EVEMon.SettingsUI
                                                      : GoogleCalendarReminder.None;
 
             m_settings.Calendar.UseReminding = cbSetReminder.Checked;
-            m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text);
+            m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text, CultureConstants.DefaultCulture);
             m_settings.Calendar.UseRemindingRange = cbUseAlterateReminder.Checked;
             m_settings.Calendar.EarlyReminding = dtpEarlyReminder.Value;
             m_settings.Calendar.LateReminding = dtpLateReminder.Value;
@@ -581,7 +581,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void igbPortTextBox_TextChanged(object sender, EventArgs e)
         {
-            igbUrlTextBox.Text = String.Format("http://localhost:{0}/", igbPortTextBox.Text);
+            igbUrlTextBox.Text = String.Format(CultureConstants.DefaultCulture, "http://localhost:{0}/", igbPortTextBox.Text);
         }
 
         /// <summary>
@@ -907,20 +907,25 @@ namespace EVEMon.SettingsUI
             }
 
             if ((groupname != null
-                 && !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                               Path.DirectorySeparatorChar,
-                                               AppDomain.CurrentDomain.BaseDirectory,
-                                               (cbSkillIconSet.SelectedIndex + 1),
-                                               groupname)))
-                || !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                              Path.DirectorySeparatorChar,
-                                              AppDomain.CurrentDomain.BaseDirectory)))
+                 &&
+                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                            "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                            Path.DirectorySeparatorChar,
+                                            AppDomain.CurrentDomain.BaseDirectory,
+                                            (cbSkillIconSet.SelectedIndex + 1),
+                                            groupname)))
+                ||
+                !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                           "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                           Path.DirectorySeparatorChar,
+                                           AppDomain.CurrentDomain.BaseDirectory)))
                 groupname = null;
 
             if (groupname != null)
             {
                 IResourceReader basic =
-                    new ResourceReader(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                    new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                     "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                                                      Path.DirectorySeparatorChar,
                                                      AppDomain.CurrentDomain.BaseDirectory));
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
@@ -930,7 +935,8 @@ namespace EVEMon.SettingsUI
                 }
                 basic.Close();
                 basic =
-                    new ResourceReader(String.Format("{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                    new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                     "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                                                      Path.DirectorySeparatorChar,
                                                      AppDomain.CurrentDomain.BaseDirectory,
                                                      (cbSkillIconSet.SelectedIndex + 1),

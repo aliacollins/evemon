@@ -160,7 +160,7 @@ namespace EVEMon.ApiCredentialsManagement
             {
                 // Draws the texts on the upper third
                 left += icon.Width + Margin.Left;
-                string apiKeyId = apiKey.ID.ToString();
+                string apiKeyId = apiKey.ID.ToString(CultureConstants.DefaultCulture);
                 g.DrawString(apiKeyId, boldFont, fontBrush, new PointF(left, top));
                 int indentedLeft = left + (int)g.MeasureString(apiKeyId, boldFont).Width + Margin.Left;
 

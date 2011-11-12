@@ -216,9 +216,10 @@ namespace EVEMon
             SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
-            string standingText = String.Format("{0}  {1:N2}", standing.EntityName, standing.EffectiveStanding);
-            string standingStatusText = String.Format("({0})", standing.Status);
-            string standingsDetailsText = String.Format("{0} raises your effective standing from {1:N2}",
+            string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
+                                                standing.EffectiveStanding);
+            string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})", standing.Status);
+            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture, "{0} raises your effective standing from {1:N2}",
                                                         (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
                                                         standing.StandingValue);
 

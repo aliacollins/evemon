@@ -137,7 +137,8 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
                 Tag = value;
-                Text = String.Format("{0} [{1}] - BattleClinic Loadout Selection", value.Character, value.Name);
+                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - BattleClinic Loadout Selection",
+                                     value.Character, value.Name);
 
                 UpdatePlanningControls();
             }
@@ -203,7 +204,7 @@ namespace EVEMon.SkillPlanner
             {
                 ListViewItem lvi = new ListViewItem(loadout.LoadoutName) { Text = loadout.LoadoutName, Tag = loadout };
                 lvi.SubItems.Add(loadout.Author);
-                lvi.SubItems.Add(loadout.Rating.ToString());
+                lvi.SubItems.Add(loadout.Rating.ToString(CultureConstants.DefaultCulture));
                 lvi.SubItems.Add(loadout.SubmissionDate.ToString());
                 lvLoadouts.Items.Add(lvi);
             }
@@ -494,7 +495,7 @@ namespace EVEMon.SkillPlanner
             if (m_selectedLoadout != null)
             {
                 Util.OpenURL(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic,
-                                           m_selectedLoadout.Topic.ToString()));
+                                           m_selectedLoadout.Topic));
             }
             else
             {
@@ -658,7 +659,7 @@ namespace EVEMon.SkillPlanner
             {
                 if (prop.Property.Name.Contains("High Slots"))
                 {
-                    int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
+                    int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
                     while (items.ContainsKey("high") && items["high"].Count < highSlots)
                     {
                         items["high"].Add("[empty high slot]");
@@ -666,7 +667,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Med Slots"))
                 {
-                    int medSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
+                    int medSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
                     while (items.ContainsKey("med") && items["med"].Count < medSlots)
                     {
                         items["med"].Add("[empty med slot]");
@@ -674,7 +675,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Low Slots"))
                 {
-                    int lowSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
+                    int lowSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
                     while (items.ContainsKey("lo") && items["lo"].Count < lowSlots)
                     {
                         items["lo"].Add("[empty low slot]");
@@ -682,7 +683,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Rig Slots"))
                 {
-                    int rigsSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
+                    int rigsSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
                     while (items.ContainsKey("rig") && items["rig"].Count < rigsSlots)
                     {
                         items["rig"].Add("[empty rig slot]");
@@ -690,7 +691,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Sub System Slots"))
                 {
-                    int subSysSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
+                    int subSysSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
                     while (items.ContainsKey("subSystem") && items["subSystem"].Count < subSysSlots)
                     {
                         items["subSystem"].Add(String.Empty);

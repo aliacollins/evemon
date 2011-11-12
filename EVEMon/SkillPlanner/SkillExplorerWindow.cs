@@ -381,7 +381,7 @@ namespace EVEMon.SkillPlanner
                             TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
                                 x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
 
-                            node.Text = String.Format("{0} ({1})", node.Text,
+                            node.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", node.Text,
                                                       string.Join(", ", listOfActivities.Select(
                                                           activity => activity.GetDescription()).ToList()));
                             levelNode.Nodes.Add(node);

@@ -143,7 +143,7 @@ namespace EVEMon.SettingsUI
                                                      switch (capture)
                                                      {
                                                          case 'i':
-                                                             value = level.ToString();
+                                                             value = level.ToString(CultureConstants.DefaultCulture);
                                                              break;
                                                          case 'r':
                                                              value = Skill.GetRomanFromInt(level);

@@ -134,7 +134,7 @@ namespace EVEMon.Common.Data
         private string Format(string value)
         {
             float numericValue;
-            if (float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out numericValue))
+            if (float.TryParse(value, NumberStyles.Number, CultureConstants.InvariantCulture, out numericValue))
             {
                 try
                 {
@@ -235,7 +235,7 @@ namespace EVEMon.Common.Data
 
             // Try to parse it as a float
             float result;
-            return float.TryParse(number, NumberStyles.Number, CultureInfo.InvariantCulture, out result) ? result : default(float);
+            return float.TryParse(number, NumberStyles.Number, CultureConstants.InvariantCulture, out result) ? result : default(float);
         }
 
         #endregion

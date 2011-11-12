@@ -60,7 +60,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void CheckAPICredentials()
         {
-            uint bcUserID = Convert.ToUInt32(bcUserIDTextBox.Text);
+            uint bcUserID = Convert.ToUInt32(bcUserIDTextBox.Text, CultureConstants.DefaultCulture);
             string bcAPIKey = bcAPIKeyTextBox.Text;
 
             BCAPI.CheckAPICredentials(bcUserID, bcAPIKey);
@@ -89,7 +89,7 @@ namespace EVEMon.SettingsUI
             if (!BCAPI.HasCredentialsStored)
                 return;
 
-            bcUserIDTextBox.Text = BCAPISettings.Default.BCUserID.ToString();
+            bcUserIDTextBox.Text = BCAPISettings.Default.BCUserID.ToString(CultureConstants.DefaultCulture);
             bcAPIKeyTextBox.Text = BCAPISettings.Default.BCAPIKey;
 
             CheckAPICredentials();

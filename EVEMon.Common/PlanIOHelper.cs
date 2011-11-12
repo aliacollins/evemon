@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -47,7 +46,7 @@ namespace EVEMon.Common
                     boldEnd = "[/b]";
                     break;
                 case MarkupType.Html:
-                    lineFeed = String.Format(CultureInfo.InvariantCulture, "<br />{0}", Environment.NewLine);
+                    lineFeed = String.Format(CultureConstants.InvariantCulture, "<br />{0}", Environment.NewLine);
                     boldStart = "<b>";
                     boldEnd = "</b>";
                     break;

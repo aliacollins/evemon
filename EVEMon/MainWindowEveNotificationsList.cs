@@ -362,7 +362,7 @@ namespace EVEMon
                 // Add the items in every group
                 foreach (EveNotification eveNotification in group)
                 {
-                    if (String.IsNullOrEmpty(eveNotification.NotificationID.ToString()))
+                    if (String.IsNullOrEmpty(eveNotification.NotificationID.ToString(CultureConstants.DefaultCulture)))
                         continue;
 
                     ListViewItem item = new ListViewItem(eveNotification.Sender, listGroup)

@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Forms;
+using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
@@ -32,8 +33,8 @@ namespace EVEMon.SkillPlanner
             // Get mouse location from message.lparam
             // x is low order word, y is high order word
             string lparam = m.LParam.ToString("X08");
-            int x = int.Parse(lparam.Substring(4, 4), NumberStyles.HexNumber);
-            int y = int.Parse(lparam.Substring(0, 4), NumberStyles.HexNumber);
+            int x = int.Parse(lparam.Substring(4, 4), NumberStyles.HexNumber, CultureConstants.InvariantCulture);
+            int y = int.Parse(lparam.Substring(0, 4), NumberStyles.HexNumber, CultureConstants.InvariantCulture);
 
             // Test for a treenode at this location
             TreeViewHitTestInfo info = HitTest(x, y);

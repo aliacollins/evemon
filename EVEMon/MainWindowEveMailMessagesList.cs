@@ -403,7 +403,7 @@ namespace EVEMon
                 // Add the items in every group
                 foreach (EveMailMessage eveMailMessage in group)
                 {
-                    if (String.IsNullOrEmpty(eveMailMessage.MessageID.ToString()))
+                    if (String.IsNullOrEmpty(eveMailMessage.MessageID.ToString(CultureConstants.DefaultCulture)))
                         continue;
 
                     ListViewItem item = new ListViewItem(eveMailMessage.Sender, listGroup)
@@ -572,8 +572,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                       String.Format(NetworkConstants.EVEGateMailOpen, message.MessageID)));
+            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailOpen,
+                                                     message.MessageID)));
         }
 
         /// <summary>
@@ -583,8 +584,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                       String.Format(NetworkConstants.EVEGateMailReply, message.MessageID)));
+            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReply,
+                                                     message.MessageID)));
         }
 
         /// <summary>
@@ -594,8 +596,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                       String.Format(NetworkConstants.EVEGateMailReplyAll, message.MessageID)));
+            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReplyAll,
+                                                     message.MessageID)));
         }
 
         /// <summary>
@@ -605,8 +608,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                       String.Format(NetworkConstants.EVEGateMailForward, message.MessageID)));
+            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailForward,
+                                                     message.MessageID)));
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
@@ -38,7 +39,7 @@ namespace EVEMon.SettingsUI
                         {
                             // Transforms x64 to 64 by 64
                             string size = x.ToString().Substring(1);
-                            return String.Format("{0} by {0}", size);
+                            return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
                         }).ToArray();
         }
 

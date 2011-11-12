@@ -252,8 +252,7 @@ namespace EVEMon
                                      ? "???"
                                      : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
                                                      training.Skill.SkillPointsPerHour));
-            lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                                                completionTime.ToString("ddd"), completionTime.ToString("G"));
+            lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0:ddd} {1:G}", completionTime, completionTime);
 
             // Dipslay a warning if anything scheduled is blocking us
             string conflictMessage;
@@ -791,10 +790,11 @@ namespace EVEMon
                     monitors.Add(((CCPCharacter)Character).QueryMonitors[method]);
             }
 
-            if (Enum.IsDefined(typeof(APICorporationMethods), String.Format("Corporation{0}", page.Tag)))
+            if (Enum.IsDefined(typeof(APICorporationMethods), String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
             {
                 APICorporationMethods method =
-                    (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), String.Format("Corporation{0}", page.Tag));
+                    (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
+                                                      String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag));
                 if (((CCPCharacter)Character).QueryMonitors[method] != null)
                     monitors.Add(((CCPCharacter)Character).QueryMonitors[method]);
             }

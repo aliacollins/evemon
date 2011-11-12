@@ -47,7 +47,7 @@ namespace EVEMon.ApiCredentialsManagement
 
             WarningLabel.Visible = m_updateMode;
             VerificationCodeTextBox.Text = (m_apiKey != null ? m_apiKey.VerificationCode : String.Empty);
-            IDTextBox.Text = (m_apiKey != null ? m_apiKey.ID.ToString() : String.Empty);
+            IDTextBox.Text = (m_apiKey != null ? m_apiKey.ID.ToString(CultureConstants.DefaultCulture) : String.Empty);
             IDTextBox.ReadOnly = m_updateMode;
             CharactersListView.Items.Clear();
 
@@ -138,7 +138,8 @@ namespace EVEMon.ApiCredentialsManagement
                 KeyPicture.Image = CommonProperties.Resources.KeyWrong32;
                 KeyLabel.Text = "Cached timer not expired yet.";
                 CharactersGroupBox.Text = "Warning report";
-                CachedWarningLabel.Text = String.Format(CachedWarningLabel.Text, m_apiKey.CachedUntil.ToLocalTime());
+                CachedWarningLabel.Text = String.Format(CultureConstants.DefaultCulture, CachedWarningLabel.Text,
+                                                        m_apiKey.CachedUntil.ToLocalTime());
                 ResultsMultiPanel.SelectedPage = CachedWarningPage;
                 Throbber.State = ThrobberState.Stopped;
                 MultiPanel.SelectedPage = ResultPage;
@@ -298,7 +299,7 @@ namespace EVEMon.ApiCredentialsManagement
             if (e.CCPError.IsAPIKeyExpired)
                 return APIKeyExpiredErrorPage;
 
-            GeneralErrorLabel.Text = String.Format(GeneralErrorLabel.Text, e.KeyTestError);
+            GeneralErrorLabel.Text = String.Format(CultureConstants.DefaultCulture, GeneralErrorLabel.Text, e.KeyTestError);
             return GeneralErrorPage;
         }
 
@@ -369,7 +370,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void APIKeyExpiredLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(String.Format(NetworkConstants.APICredentialsUpdate, IDTextBox.Text));
+            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsUpdate, IDTextBox.Text));
         }
 
         /// <summary>

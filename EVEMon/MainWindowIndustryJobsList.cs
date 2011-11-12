@@ -565,7 +565,7 @@ namespace EVEMon
                     item.Text = job.InstalledItem.MarketGroup.Name;
                     break;
                 case IndustryJobColumn.OutputItem:
-                    item.Text = String.Format("{0} Unit{1} of {2}", GetUnitCount(job),
+                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Unit{1} of {2}", GetUnitCount(job),
                                               (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.Name);
                     break;
                 case IndustryJobColumn.OutputItemType:
@@ -585,22 +585,22 @@ namespace EVEMon
                     break;
                 case IndustryJobColumn.InstalledME:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity
-                                     ? job.InstalledME.ToString()
+                                     ? job.InstalledME.ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.EndME:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity
-                                     ? (job.InstalledME + job.Runs).ToString()
+                                     ? (job.InstalledME + job.Runs).ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.InstalledPE:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity
-                                     ? job.InstalledPE.ToString()
+                                     ? job.InstalledPE.ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.EndPE:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity
-                                     ? (job.InstalledPE + job.Runs).ToString()
+                                     ? (job.InstalledPE + job.Runs).ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.Location:

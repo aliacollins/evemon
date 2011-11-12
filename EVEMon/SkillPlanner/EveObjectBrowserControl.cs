@@ -456,7 +456,7 @@ namespace EVEMon.SkillPlanner
                         values.Add(0f);
                         continue;
                     }
-                    labels.Add(material.Quantity.ToString("N0"));
+                    labels.Add(material.Quantity.ToString("N0", CultureConstants.DefaultCulture));
                     values.Add(material.Quantity);
                 }
 

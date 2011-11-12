@@ -88,14 +88,14 @@ namespace EVEMon.SkillPlanner
             if (remapping.BestDuration < remapping.BaseDuration)
             {
                 lbGain.ForeColor = Color.Black;
-                lbGain.Text = String.Format("{0} better than current",
+                lbGain.Text = String.Format(CultureConstants.DefaultCulture, "{0} better than current",
                                             remapping.BaseDuration.Subtract(remapping.BestDuration).ToDescriptiveText(
                                                 DescriptiveTextOptions.IncludeCommas));
             }
             else if (remapping.BaseDuration < remapping.BestDuration)
             {
                 lbGain.ForeColor = Color.DarkRed;
-                lbGain.Text = String.Format("{0} slower than current",
+                lbGain.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current",
                                             remapping.BestDuration.Subtract(remapping.BaseDuration).ToDescriptiveText(
                                                 DescriptiveTextOptions.IncludeCommas));
             }
@@ -142,8 +142,8 @@ namespace EVEMon.SkillPlanner
             int implantsBonus = remapping.BestScratchpad[attrib].ImplantBonus;
 
             // Update the label
-            label.Text = String.Format("{0} (new : {1} ; old : {2})", effectiveAttribute, remappableAttribute,
-                                       oldBaseAttribute);
+            label.Text = String.Format(CultureConstants.DefaultCulture, "{0} (new : {1} ; old : {2})",
+                                       effectiveAttribute, remappableAttribute, oldBaseAttribute);
 
             // Update the bars
             pbRemappable.Value = remappableAttribute - EveConstants.CharacterBaseAttributePoints;

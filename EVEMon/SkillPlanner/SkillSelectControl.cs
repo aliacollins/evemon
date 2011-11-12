@@ -186,13 +186,13 @@ namespace EVEMon.SkillPlanner
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
-            if ((groupname != null && !File.Exists(String.Format(
+            if ((groupname != null && !File.Exists(String.Format(CultureConstants.InvariantCulture,
                 "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                 Path.DirectorySeparatorChar,
                 AppDomain.CurrentDomain.BaseDirectory,
                 index,
                 groupname)) ||
-                 !File.Exists(String.Format(
+                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
                      "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                      Path.DirectorySeparatorChar,
                      AppDomain.CurrentDomain.BaseDirectory))))
@@ -200,7 +200,7 @@ namespace EVEMon.SkillPlanner
 
             if (groupname != null)
             {
-                IResourceReader basic = new ResourceReader(String.Format(
+                IResourceReader basic = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
                     "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                     Path.DirectorySeparatorChar,
                     AppDomain.CurrentDomain.BaseDirectory));
@@ -214,7 +214,7 @@ namespace EVEMon.SkillPlanner
 
                 basic.Close();
 
-                basic = new ResourceReader(String.Format(
+                basic = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
                     "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                     Path.DirectorySeparatorChar,
                     AppDomain.CurrentDomain.BaseDirectory,
@@ -420,7 +420,8 @@ namespace EVEMon.SkillPlanner
                         // Create node and adds it
                         TreeNode node = new TreeNode
                                             {
-                                                Text = String.Format("{0} ({1})", skill.Name, skill.Rank),
+                                                Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
+                                                                     skill.Name, skill.Rank),
                                                 ImageIndex = imageIndex,
                                                 SelectedImageIndex = imageIndex,
                                                 Tag = skill
@@ -639,13 +640,13 @@ namespace EVEMon.SkillPlanner
                     // Skill rank
                 case SkillSort.Rank:
                     skills = skills.ToArray().OrderBy(x => x.Rank);
-                    labels = skills.Select(x => x.Rank.ToString());
+                    labels = skills.Select(x => x.Rank.ToString(CultureConstants.DefaultCulture));
                     return "Rank";
 
                     // Skill SP/hour
                 case SkillSort.SPPerHour:
                     skills = skills.ToArray().OrderBy(x => x.SkillPointsPerHour).Reverse();
-                    labels = skills.Select(x => x.SkillPointsPerHour.ToString());
+                    labels = skills.Select(x => x.SkillPointsPerHour.ToString(CultureConstants.DefaultCulture));
                     return "SP/hour";
             }
         }
@@ -868,11 +869,11 @@ namespace EVEMon.SkillPlanner
 
             cmiExpandSelected.Text = (SelectedSkill == null && node != null &&
                                       !node.IsExpanded
-                                          ? String.Format("Expand \"{0}\"", node.Text)
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
                                           : String.Empty);
             cmiCollapseSelected.Text = (SelectedSkill == null && node != null &&
                                         node.IsExpanded
-                                            ? String.Format("Collapse \"{0}\"", node.Text)
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menus

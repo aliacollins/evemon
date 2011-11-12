@@ -25,7 +25,7 @@ namespace EVEMon.SkillPlanner
             if (plan == null)
                 throw new ArgumentNullException("plan");
 
-            menu.Text = level == 0 ? "Remove" : String.Format("Level {0}", level);
+            menu.Text = level == 0 ? "Remove" : String.Format(CultureConstants.DefaultCulture, "Level {0}", level);
 
             menu.Enabled = EnablePlanTo(plan, skill, level);
             if (menu.Enabled)

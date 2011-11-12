@@ -270,7 +270,7 @@ namespace EVEMon.SkillPlanner
                 if (m_selectedSkill.Level != 5)
                 {
                     float percentDone = m_selectedSkill.FractionCompleted;
-                    sb.AppendFormat(CultureConstants.DefaultCulture, " ({0} complete)", percentDone.ToString("P0"));
+                    sb.AppendFormat(CultureConstants.DefaultCulture, " ({0:P0} complete)", percentDone);
                 }
             }
 

@@ -846,11 +846,11 @@ namespace EVEMon.SkillPlanner
 
             tsmExpandSelected.Text = (certClass == null && node != null &&
                                       !node.IsExpanded
-                                          ? String.Format("Expand \"{0}\"", node.Text)
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
                                           : String.Empty);
             tsmCollapseSelected.Text = (certClass == null && node != null &&
                                         node.IsExpanded
-                                            ? String.Format("Collapse \"{0}\"", node.Text)
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menu

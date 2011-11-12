@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -63,7 +62,7 @@ namespace EVEMon.Common
                     double number;
                     // If the value is a number format it as so; as string otherwise
                     sb.Append(Double.TryParse(elements[0], out number)
-                                  ? MakeCSVNumber(ignoreComma, number.ToString(CultureInfo.InvariantCulture))
+                                  ? MakeCSVNumber(ignoreComma, number.ToString(CultureConstants.InvariantCulture))
                                   : MakeCSVString(ignoreComma, listViewToExport.Items[line].SubItems[subitem].Text));
 
                     ignoreComma = false;

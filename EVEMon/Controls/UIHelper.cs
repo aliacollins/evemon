@@ -31,7 +31,7 @@ namespace EVEMon.Controls
             // Prompt the user to pick a file name
             using (SaveFileDialog sfdSave = new SaveFileDialog())
             {
-                sfdSave.FileName = String.Format("{0} - Plans Backup", character.Name);
+                sfdSave.FileName = String.Format(CultureConstants.DefaultCulture, "{0} - Plans Backup", character.Name);
                 sfdSave.Title = "Save to File";
                 sfdSave.Filter = "EVEMon Plans Backup Format (*.epb)|*.epb";
                 sfdSave.FilterIndex = (int)PlanFormat.Emp;
@@ -79,7 +79,7 @@ namespace EVEMon.Controls
             Character character = (Character)plan.Character;
 
             // Assemble an initial filename and remove prohibited characters
-            string planSaveName = String.Format("{0} - {1}", character.Name, plan.Name);
+            string planSaveName = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", character.Name, plan.Name);
             char[] invalidFileChars = Path.GetInvalidFileNameChars();
             int fileInd = planSaveName.IndexOfAny(invalidFileChars);
             while (fileInd != -1)

@@ -63,7 +63,7 @@ namespace EVEMon
             tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
             overview.CharacterClicked += overview_CharacterClicked;
             tcCharacterTabs.TabPages.Remove(tpOverview);
-            lblServerStatus.Text = String.Format("// {0}", EveMonClient.EVEServer.StatusText);
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -547,7 +547,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = String.Format("// {0}", e.Server.StatusText);
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", e.Server.StatusText);
         }
 
         /// <summary>
@@ -2008,7 +2008,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void testTimeoutOneSecToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(String.Format("Timeout Was: {0}, now 1", Settings.Updates.HttpTimeout));
+            MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Timeout was: {0}, now 1", Settings.Updates.HttpTimeout));
             Settings.Updates.HttpTimeout = 1;
         }
 

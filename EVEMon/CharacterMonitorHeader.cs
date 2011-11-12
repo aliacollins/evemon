@@ -487,7 +487,8 @@ namespace EVEMon
         {
             return String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
                                  (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
-                                      ? String.Format("{0} [{1}]", m_character.ShipTypeName, m_character.ShipName)
+                                      ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
+                                                      m_character.ShipName)
                                       : "Unknown"));
         }
 
@@ -747,7 +748,7 @@ namespace EVEMon
                     sb.AppendLine();
 
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel,
-                                count.ToString().PadLeft(5));
+                                count.ToString(CultureConstants.DefaultCulture).PadLeft(5));
             }
 
             ToolTip.SetToolTip((Label)sender, sb.ToString());
@@ -815,12 +816,14 @@ namespace EVEMon
 
                 // Not in a solar system ??? Then show default location
                 if (system != null)
-                    location = String.Format("{0} ({1:N1})", system.FullLocation, system.SecurityLevel);
+                    location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})", system.FullLocation,
+                                             system.SecurityLevel);
             }
             else
             {
                 ConquerableStation outpost = station as ConquerableStation;
-                location = String.Format("{0} ({1:N1})\nDocked in {2}", station.SolarSystem.FullLocation,
+                location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})\nDocked in {2}",
+                                         station.SolarSystem.FullLocation,
                                          station.SolarSystem.SecurityLevel,
                                          (outpost != null ? outpost.FullName : station.Name));
             }

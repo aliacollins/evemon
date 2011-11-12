@@ -69,7 +69,7 @@ namespace EVEMon.ImplantControls
                 if (combo == null)
                     continue;
 
-                int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", String.Empty)) - 1;
+                int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", String.Empty), CultureConstants.InvariantCulture) - 1;
                 ImplantSlots slot = (ImplantSlots)slotIndex;
 
                 combo.Tag = slot;

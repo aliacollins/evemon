@@ -38,7 +38,7 @@ namespace EVEMon
             Disposed += OnDisposed;
 
             Tag = message;
-            Text = String.Format("{0} - EVE Message", message.Title);
+            Text = String.Format(CultureConstants.DefaultCulture, "{0} - EVE Message", message.Title);
             readingPane.SelectedObject = message;
         }
 

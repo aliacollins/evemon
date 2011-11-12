@@ -623,7 +623,7 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.PercentComplete:
                     return entry.FractionCompleted.ToString("P0", CultureConstants.DefaultCulture);
                 case PlanColumn.SkillRank:
-                    return entry.Skill.Rank.ToString();
+                    return entry.Skill.Rank.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.PrimaryAttribute:
                     return entry.Skill.PrimaryAttribute.ToString();
                 case PlanColumn.SecondaryAttribute:
@@ -635,9 +635,9 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.SPTotal:
                     return entry.EstimatedTotalSkillPoints.ToString("N0", CultureConstants.DefaultCulture);
                 case PlanColumn.SPPerHour:
-                    return entry.SpPerHour.ToString();
+                    return entry.SpPerHour.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.Priority:
-                    return entry.Priority.ToString();
+                    return entry.Priority.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.Conflicts:
                     return blockingEntry;
                 case PlanColumn.Notes:
@@ -1642,7 +1642,9 @@ namespace EVEMon.SkillPlanner
 
             // Create a new plan
             Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
-            IPlanOperation operation = newPlan.TryAddSet(entries, String.Format("Exported from {0}", m_plan.Name));
+            IPlanOperation operation = newPlan.TryAddSet(entries,
+                                                         String.Format(CultureConstants.DefaultCulture,
+                                                                       "Exported from {0}", m_plan.Name));
             operation.Perform();
 
             // Add plan and save

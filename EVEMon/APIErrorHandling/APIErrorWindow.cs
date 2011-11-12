@@ -143,8 +143,10 @@ namespace EVEMon.ApiErrorHandling
                 return "No error selected.";
 
             return value.Result == null
-                       ? String.Format("{0}{1}No details were provided.", value, Environment.NewLine)
-                       : String.Format("{0}{1}{2}", value, Environment.NewLine, GetErrorLabelTextDetail(value.Result));
+                       ? String.Format(CultureConstants.DefaultCulture, "{0}{1}No details were provided.", value,
+                                       Environment.NewLine)
+                       : String.Format(CultureConstants.DefaultCulture, "{0}{1}{2}", value, Environment.NewLine,
+                                       GetErrorLabelTextDetail(value.Result));
         }
 
         /// <summary>

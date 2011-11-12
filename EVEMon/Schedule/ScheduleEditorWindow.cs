@@ -403,18 +403,21 @@ namespace EVEMon.Schedule
                     // In case local time conversion extends beyond the entry date,
                     // we display also the ending date
                     string toLocalTime = (to.Day == to.ToLocalTime().Day
-                                              ? to.ToLocalTime().ToString("HH:mm")
+                                              ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
                                               : to.ToLocalTime().ToString());
 
-                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
-                    content.AppendFormat(" [ Local Time: {0} - {1} ] ", from.ToLocalTime().ToString("HH:mm"), toLocalTime);
+                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
+                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
+                    content.AppendFormat(" [ Local Time: {0} - {1} ] ",
+                                         from.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture), toLocalTime);
                 }
                 else
-                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
+                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
+                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
                 content.AppendLine();
             }
 
-            m_tooltip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0}", datetime.ToString("d"));
+            m_tooltip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0:d}", datetime);
             m_tooltip.SetToolTip(calControl, content.ToString());
             m_tooltip.Active = true;
         }

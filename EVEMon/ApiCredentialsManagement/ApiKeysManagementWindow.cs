@@ -373,7 +373,9 @@ namespace EVEMon.ApiCredentialsManagement
                                 foreach (APIKey apiKey in character.Identity.APIKeys.Where(
                                     apiKey => !apiKeyGroups.ContainsKey(apiKey)))
                                 {
-                                    apiKeyGroups.Add(apiKey, new ListViewGroup(String.Format("Key ID #{0}", apiKey.ID)));
+                                    apiKeyGroups.Add(apiKey,
+                                                     new ListViewGroup(String.Format(CultureConstants.DefaultCulture,
+                                                                                     "Key ID #{0}", apiKey.ID)));
                                 }
                             }
                         }
@@ -433,7 +435,7 @@ namespace EVEMon.ApiCredentialsManagement
 
                     // Add the item and its subitems
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, typeText));
-                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.CharacterID.ToString()));
+                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.CharacterID.ToString(CultureConstants.DefaultCulture)));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.Name));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, apiKeyIDText));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));

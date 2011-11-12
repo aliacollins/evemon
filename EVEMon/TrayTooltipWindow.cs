@@ -162,7 +162,7 @@ namespace EVEMon
                     TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
 
                     tooltip = Regex.Replace(tooltip,
-                                            '%' + character.CharacterID.ToString() + 'r',
+                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
                                             remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
                                             RegexOptions.Compiled);
                 }
@@ -171,8 +171,8 @@ namespace EVEMon
                 if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
                 {
                     tooltip = Regex.Replace(tooltip,
-                                            '%' + character.CharacterID.ToString() + 'r', "(Paused)",
-                                            RegexOptions.Compiled);
+                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
+                                            "(Paused)", RegexOptions.Compiled);
                 }
             }
 
@@ -200,7 +200,7 @@ namespace EVEMon
                                                 case 'n':
                                                     return character.Name;
                                                 case 'b':
-                                                    return character.Balance.ToString("N2");
+                                                    return character.Balance.ToString("N2", CultureConstants.DefaultCulture);
                                             }
 
                                             CCPCharacter ccpCharacter = character as CCPCharacter;
@@ -211,11 +211,13 @@ namespace EVEMon
                                                 switch (m.Groups[1].Value[0])
                                                 {
                                                     case 'r':
-                                                        return '%' + character.CharacterID.ToString() + 'r';
+                                                        return String.Format(CultureConstants.DefaultCulture, "%{0}r",
+                                                                             character.CharacterID);
                                                     case 's':
                                                         return character.CurrentlyTrainingSkill.SkillName;
                                                     case 'd':
-                                                        return character.CurrentlyTrainingSkill.EndTime.ToString("g");
+                                                        return character.CurrentlyTrainingSkill.EndTime.ToString(
+                                                            "g", CultureConstants.DefaultCulture);
                                                     case 'c':
                                                         level = character.CurrentlyTrainingSkill.Level - 1;
                                                         break;
@@ -232,7 +234,7 @@ namespace EVEMon
                                                     switch (m.Groups[1].Value[1])
                                                     {
                                                         case 'i':
-                                                            return level.ToString();
+                                                            return level.ToString(CultureConstants.DefaultCulture);
                                                         case 'r':
                                                             return Skill.GetRomanFromInt(level);
                                                         default:

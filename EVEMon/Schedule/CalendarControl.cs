@@ -144,7 +144,7 @@ namespace EVEMon.Schedule
             CalculateCellMetrics();
 
             DateTime mdt = new DateTime(m_date.Year, m_date.Month, 1);
-            string ymDesc = mdt.ToString("y");
+            string ymDesc = mdt.ToString("y", CultureConstants.DefaultCulture);
 
             DayOfWeek firstDayDow = mdt.DayOfWeek;
             DayOfWeek cDow = m_firstDayOfWeek;
@@ -228,7 +228,7 @@ namespace EVEMon.Schedule
 
                             if (isValidDay)
                             {
-                                TextRenderer.DrawText(g, dayNum.ToString(), Font,
+                                TextRenderer.DrawText(g, dayNum.ToString(CultureConstants.DefaultCulture), Font,
                                                       new Point(cellRect.Left + 2, cellRect.Top + 2), Color.Black,
                                                       Color.Transparent,
                                                       TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);

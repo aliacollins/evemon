@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common
@@ -40,7 +39,7 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        timeNow = DateTime.ParseExact(timeString, "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz", CultureInfo.InvariantCulture);
+                        timeNow = DateTime.ParseExact(timeString, "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz", CultureConstants.InvariantCulture);
                         double timediff = Math.Abs((timeNow.ToLocalTime() - completionTime).TotalSeconds);
                         isSynchronised = timediff < 60;
                     }

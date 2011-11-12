@@ -391,10 +391,12 @@ namespace EVEMon.SkillPlanner
             cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
 
             cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                                          ? String.Format("Expand \"{0}\"", node.Text.Replace("&", "&&"))
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"",
+                                                          node.Text.Replace("&", "&&"))
                                           : String.Empty);
             cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                                            ? String.Format("Collapse \"{0}\"", node.Text.Replace("&", "&&"))
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"",
+                                                            node.Text.Replace("&", "&&"))
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menu

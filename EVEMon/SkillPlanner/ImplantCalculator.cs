@@ -57,7 +57,7 @@ namespace EVEMon.SkillPlanner
                 if (nud == null)
                     continue;
 
-                EveAttribute attrib = (EveAttribute)(int.Parse((string)nud.Tag));
+                EveAttribute attrib = (EveAttribute)(int.Parse((string)nud.Tag, CultureConstants.InvariantCulture));
                 nud.Minimum = m_character[attrib].EffectiveValue - m_character[attrib].ImplantBonus;
                 nud.Maximum = (m_plan.ChosenImplantSet[attrib].Bonus > EveConstants.MaxImplantPoints
                                    ? nud.Minimum + m_plan.ChosenImplantSet[attrib].Bonus
@@ -106,7 +106,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="myValue"></param>
         /// <param name="lblAdjust"></param>
         /// <param name="lblEffectiveAttribute"></param>
-        private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffectiveAttribute)
+        private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Control lblAdjust, Control lblEffectiveAttribute)
         {
             int baseAttr = m_characterScratchpad[attrib].EffectiveValue - m_characterScratchpad[attrib].ImplantBonus;
             int adjust = myValue - baseAttr;
@@ -114,15 +114,15 @@ namespace EVEMon.SkillPlanner
             if (adjust >= 0)
             {
                 lblAdjust.ForeColor = SystemColors.ControlText;
-                lblAdjust.Text = String.Format("+{0}", adjust);
+                lblAdjust.Text = String.Format(CultureConstants.DefaultCulture, "+{0}", adjust);
             }
             else
             {
                 lblAdjust.ForeColor = Color.Red;
-                lblAdjust.Text = adjust.ToString();
+                lblAdjust.Text = adjust.ToString(CultureConstants.DefaultCulture);
             }
 
-            lblEffectiveAttribute.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("0");
+            lblEffectiveAttribute.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("N0", CultureConstants.DefaultCulture);
         }
 
         /// <summary>
@@ -156,14 +156,14 @@ namespace EVEMon.SkillPlanner
             if (thisSpan > baseSpan)
             {
                 lblComparedToBase.ForeColor = Color.Red;
-                lblComparedToBase.Text = String.Format("{0} slower than current base",
+                lblComparedToBase.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current base",
                                                        thisSpan.Subtract(baseSpan).ToDescriptiveText(
                                                            DescriptiveTextOptions.IncludeCommas));
             }
             else if (thisSpan < baseSpan)
             {
                 lblComparedToBase.ForeColor = Color.Green;
-                lblComparedToBase.Text = String.Format("{0} faster than current base",
+                lblComparedToBase.Text = String.Format(CultureConstants.DefaultCulture, "{0} faster than current base",
                                                        baseSpan.Subtract(thisSpan).ToDescriptiveText(
                                                            DescriptiveTextOptions.IncludeCommas));
             }
@@ -177,14 +177,14 @@ namespace EVEMon.SkillPlanner
             if (thisSpan > currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.DarkRed;
-                lblComparedToCurrent.Text = String.Format("{0} slower than current",
+                lblComparedToCurrent.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current",
                                                           thisSpan.Subtract(currentSpan).ToDescriptiveText(
                                                               DescriptiveTextOptions.IncludeCommas));
             }
             else if (thisSpan < currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.DarkGreen;
-                lblComparedToCurrent.Text = String.Format("{0} faster than current",
+                lblComparedToCurrent.Text = String.Format(CultureConstants.DefaultCulture, "{0} faster than current",
                                                           currentSpan.Subtract(thisSpan).ToDescriptiveText(
                                                               DescriptiveTextOptions.IncludeCommas));
             }

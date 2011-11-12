@@ -457,7 +457,7 @@ namespace EVEMon.SkillPlanner
             TimeStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} to train {1}",
                                                  totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
                                                  selected
-                                                     ? String.Format("selected skill{0}",
+                                                     ? String.Format(CultureConstants.DefaultCulture, "selected skill{0}",
                                                                      skillCount == 1 ? String.Empty : "s")
                                                      : "whole plan");
         }

@@ -207,12 +207,12 @@ namespace EVEMon.SkillPlanner
             }
 
             // Runs per copy
-            lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString();
+            lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString(CultureConstants.DefaultCulture);
 
             // Wastage factor
             m_waste = ((double)m_blueprint.WasteFactor / 100) *
                       (double)(nudME.Value >= 0 ? 1 / (nudME.Value + 1) : (1 - nudME.Value));
-            lblWaste.Text = m_waste.ToString("0.0#%");
+            lblWaste.Text = m_waste.ToString("0.0#%", CultureConstants.DefaultCulture);
 
             // Multipliers
             double materialMultiplier;
@@ -353,7 +353,7 @@ namespace EVEMon.SkillPlanner
 
                         // Add the quantity for every item
                         ListViewItem.ListViewSubItem subItemYou =
-                            new ListViewItem.ListViewSubItem(item, youQuantity.ToString());
+                            new ListViewItem.ListViewSubItem(item, youQuantity.ToString(CultureConstants.DefaultCulture));
                         item.SubItems.Add(subItemYou);
 
                         // Has perfect values ?
@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
 
                         // Add the perfect quantity for every item
                         ListViewItem.ListViewSubItem subItemPerfect =
-                            new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString());
+                            new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString(CultureConstants.DefaultCulture));
                         item.SubItems.Add(subItemPerfect);
 
                         // Has damage per run ?
@@ -369,7 +369,7 @@ namespace EVEMon.SkillPlanner
 
                         // Add the damage per run for every item (empty string if it's 1)
                         string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
-                                                   ? String.Format("{0:P1}", material.DamagePerJob)
+                                                   ? String.Format(CultureConstants.DefaultCulture, "{0:P1}", material.DamagePerJob)
                                                    : String.Empty);
                         ListViewItem.ListViewSubItem subItemDamagePerRun =
                             new ListViewItem.ListViewSubItem(item, damagePerRun);
@@ -394,7 +394,7 @@ namespace EVEMon.SkillPlanner
 
                 // Display the Perfect ME
                 if (tabControl.SelectedTab == tpManufacturing)
-                    lblPerfectMEValue.Text = perfectME.ToString("N0");
+                    lblPerfectMEValue.Text = perfectME.ToString("N0", CultureConstants.DefaultCulture);
 
                 // Show/Hide the "no item required" label and autoresize the columns 
                 PropertiesList.Visible = PropertiesList.Items.Count > 0;
@@ -532,7 +532,7 @@ namespace EVEMon.SkillPlanner
             double activityTimeModifier = (1 - (factor * skillLevel));
             TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
             bool includeSeconds = (time.Hours == 0 && time.Minutes < 10);
-            return String.Format("{0} (You{1})", TimeSpanToText(time, includeSeconds),
+            return String.Format(CultureConstants.DefaultCulture, "{0} (You{1})", TimeSpanToText(time, includeSeconds),
                                  (copyActivity ? " Per Single Copy" : String.Empty));
         }
 
@@ -672,7 +672,7 @@ namespace EVEMon.SkillPlanner
         private double GetImplantMultiplier(string implantType)
         {
             ImplantSet implantSet = (ImplantSet)cbImplantSet.Tag;
-            string implantSubname = String.Format("Zainou 'Beancounter' {0}", implantType);
+            string implantSubname = String.Format(CultureConstants.DefaultCulture, "Zainou 'Beancounter' {0}", implantType);
 
             Implant implant = implantSet.FirstOrDefault(x => x.Name.Contains(implantSubname));
 
