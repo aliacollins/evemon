@@ -111,19 +111,18 @@ namespace EVEMon
             if (String.IsNullOrEmpty(Settings.UI.SystemTrayTooltip.Format))
             {
                 // Bad tooltip format
-                displayTimer.Enabled = false;
+                displayTimer.Stop();
                 sb.Append("You can configure this tooltip in the options/general panel");
             }
             else if (m_characters.Count == 0)
             {
                 // No character in training
-                displayTimer.Enabled = false;
+                displayTimer.Stop();
                 sb.Append("No Characters in training!");
             }
             else
             {
                 // Start the display timer
-                displayTimer.Enabled = true;
                 displayTimer.Start();
 
                 // Assemble tooltip base format with character informations

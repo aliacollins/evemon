@@ -30,12 +30,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// Constructor to update a character.
         /// </summary>
         public CharacterImportationWindow(UriCharacter character)
+            : this()
         {
-            InitializeComponent();
-            errorPanel.Visible = false;
-            namePanel.Visible = false;
-            okButton.Enabled = false;
-
             Character = character;
             if (Character.Uri.IsFile)
             {

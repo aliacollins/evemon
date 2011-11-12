@@ -895,7 +895,9 @@ namespace EVEMon
         {
             if (!Visible)
             {
-                m_timer.Enabled = false;
+                if (m_timer.Enabled)
+                    m_timer.Stop();
+
                 return;
             }
 

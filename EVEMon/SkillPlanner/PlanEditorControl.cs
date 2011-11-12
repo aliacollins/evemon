@@ -335,7 +335,7 @@ namespace EVEMon.SkillPlanner
             // Disable controls, they will be restored one the selection is updated
             tsbMoveUp.Enabled = false;
             tsbMoveDown.Enabled = false;
-            tmrAutoRefresh.Enabled = false;
+            tmrAutoRefresh.Stop();
 
             // Stores selection and focus, to restore them after the update
             Dictionary<int, bool> selection = (restoreSelectionAndFocus ? StoreSelection() : null);
@@ -1936,8 +1936,6 @@ namespace EVEMon.SkillPlanner
             if (tmrSelect.Enabled)
                 return;
 
-            tmrSelect.Interval = 100;
-            tmrSelect.Enabled = true;
             tmrSelect.Start();
         }
 
@@ -1948,7 +1946,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrSelect_Tick(object sender, EventArgs e)
         {
-            tmrSelect.Enabled = false;
+            tmrSelect.Stop();
             OnSelectionChanged();
         }
 

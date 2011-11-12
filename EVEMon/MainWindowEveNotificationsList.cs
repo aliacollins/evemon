@@ -559,7 +559,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            timer.Enabled = false;
+            timer.Stop();
             OnSelectionChanged();
         }
 
@@ -573,8 +573,6 @@ namespace EVEMon
             if (timer.Enabled)
                 return;
 
-            timer.Interval = 100;
-            timer.Enabled = true;
             timer.Start();
         }
 

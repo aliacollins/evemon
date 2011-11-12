@@ -31,7 +31,7 @@ namespace EVEMon.Watchdog
         /// <param name="e"></param>
         private void WatchdogWindow_Load(object sender, EventArgs e)
         {
-            WaitTimer.Enabled = true;
+            WaitTimer.Start();
             StatusLabel.Text = "Waiting for EVEMon to close.";
         }
 

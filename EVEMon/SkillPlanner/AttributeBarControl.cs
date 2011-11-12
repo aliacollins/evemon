@@ -311,7 +311,7 @@ namespace EVEMon.SkillPlanner
 
             // Store the single mouse click event
             m_mouseEvent = e;
-            m_timer.Enabled = true;
+            m_timer.Start();
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace EVEMon.SkillPlanner
 
             // Store the double mouse click event
             m_mouseEvent = e;
-            m_timer.Enabled = true;
+            m_timer.Start();
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void m_timer_Tick(object sender, EventArgs e)
         {
-            m_timer.Enabled = false;
+            m_timer.Stop();
 
             if (!Enabled)
                 return;

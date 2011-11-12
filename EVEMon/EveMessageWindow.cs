@@ -52,7 +52,7 @@ namespace EVEMon
             throbber.State = ThrobberState.Rotating;
 
             // Configure the timer to close the form on queries timeout
-            m_timer.Enabled = true;
+            m_timer.Start();
             m_timer.Interval = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
 
             m_timer.Tick += timer_Tick;
@@ -78,7 +78,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            m_timer.Enabled = false;
+            m_timer.Stop();
 
             // Close the form when there is nothing to show after query timeout
             if (!readingPane.Visible)
