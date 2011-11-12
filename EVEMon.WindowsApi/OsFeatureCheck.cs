@@ -8,7 +8,7 @@ namespace EVEMon.WindowsApi
     public static class OSFeatureCheck
     {
         /// <summary>
-        /// Checks to see if the current opperating system is Windows
+        /// Checks to see if the current operating system is Windows
         /// </summary>
         public static bool IsWindows
         {
@@ -25,7 +25,7 @@ namespace EVEMon.WindowsApi
         }
 
         /// <summary>
-        /// Checks to see if the current opperating system is Windows NT
+        /// Checks to see if the current operating system is Windows NT
         /// </summary>
         public static bool IsWindowsNT
         {

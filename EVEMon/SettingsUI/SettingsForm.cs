@@ -386,8 +386,8 @@ namespace EVEMon.SettingsUI
             m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
             m_settings.IGB.IGBServerPublic = cbIGBPublic.Checked;
             int igbServerPort;
-            Int32.TryParse(igbPortTextBox.Text, out igbServerPort);
-            m_settings.IGB.IGBServerPort = igbServerPort;
+            if (Int32.TryParse(igbPortTextBox.Text, out igbServerPort))
+                m_settings.IGB.IGBServerPort = igbServerPort;
 
 
             // Main window - Overview
@@ -410,8 +410,8 @@ namespace EVEMon.SettingsUI
             // Proxy
             m_settings.Proxy.Enabled = customProxyCheckBox.Checked;
             int proxyPort;
-            Int32.TryParse(proxyPortTextBox.Text, out proxyPort);
-            m_settings.Proxy.Port = proxyPort;
+            if (Int32.TryParse(proxyPortTextBox.Text, out proxyPort))
+                m_settings.Proxy.Port = proxyPort;
             m_settings.Proxy.Host = proxyHttpHostTextBox.Text;
 
             // Updates
@@ -593,16 +593,18 @@ namespace EVEMon.SettingsUI
         private static bool IsValidPort(string str, string portName)
         {
             int port;
-            Int32.TryParse(str, out port);
+            if (!Int32.TryParse(str, out port))
+                return false;
 
             if ((port < IPEndPoint.MinPort) || (port > IPEndPoint.MaxPort))
             {
                 ShowErrorMessage("Invalid port",
-                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName,
-                                               IPEndPoint.MinPort, IPEndPoint.MaxPort));
+                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}",
+                                               portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
 
                 return false;
             }
+
             return true;
         }
 

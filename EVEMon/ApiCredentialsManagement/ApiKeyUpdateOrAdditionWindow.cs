@@ -157,9 +157,10 @@ namespace EVEMon.ApiCredentialsManagement
 
             // Or creating a new one ?
             long id;
-            long.TryParse(IDTextBox.Text, out id);
-            bool apiKeyExists = EveMonClient.APIKeys.Any(apiKey => apiKey.ID == id &&
-                                                                   apiKey.VerificationCode == VerificationCodeTextBox.Text);
+            bool apiKeyExists = false;
+            if (Int64.TryParse(IDTextBox.Text, out id))
+                apiKeyExists = EveMonClient.APIKeys.Any(apiKey => apiKey.ID == id &&
+                                                                  apiKey.VerificationCode == VerificationCodeTextBox.Text);
             // Does this API key already exists in our list ?
             if (apiKeyExists)
             {
