@@ -324,69 +324,7 @@ namespace EVEMon
 
                 UpdateSort();
 
-                switch (m_grouping)
-                {
-                    case IndustryJobGrouping.State:
-                        IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups0 =
-                            jobs.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
-                        UpdateContent(groups0);
-                        break;
-                    case IndustryJobGrouping.StateDesc:
-                        IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups1 =
-                            jobs.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
-                        UpdateContent(groups1);
-                        break;
-                    case IndustryJobGrouping.EndDate:
-                        IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
-                            jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
-                        UpdateContent(groups2);
-                        break;
-                    case IndustryJobGrouping.EndDateDesc:
-                        IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
-                            jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
-                        UpdateContent(groups3);
-                        break;
-                    case IndustryJobGrouping.InstalledItemType:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups4 =
-                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
-                        UpdateContent(groups4);
-                        break;
-                    case IndustryJobGrouping.InstalledItemTypeDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups5 =
-                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
-                        UpdateContent(groups5);
-                        break;
-                    case IndustryJobGrouping.OutputItemType:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups6 =
-                            jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
-                        UpdateContent(groups6);
-                        break;
-                    case IndustryJobGrouping.OutputItemTypeDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups7 =
-                            jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
-                        UpdateContent(groups7);
-                        break;
-                    case IndustryJobGrouping.Activity:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups8 =
-                            jobs.GroupBy(x => x.Activity.GetDescription()).OrderBy(x => x.Key);
-                        UpdateContent(groups8);
-                        break;
-                    case IndustryJobGrouping.ActivityDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups9 =
-                            jobs.GroupBy(x => x.Activity.GetDescription()).OrderByDescending(x => x.Key);
-                        UpdateContent(groups9);
-                        break;
-                    case IndustryJobGrouping.Location:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups10 =
-                            jobs.GroupBy(x => x.Installation).OrderBy(x => x.Key);
-                        UpdateContent(groups10);
-                        break;
-                    case IndustryJobGrouping.LocationDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups11 =
-                            jobs.GroupBy(x => x.Installation).OrderByDescending(x => x.Key);
-                        UpdateContent(groups11);
-                        break;
-                }
+                UpdateContentByGroup(jobs);
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -415,6 +353,77 @@ namespace EVEMon
             finally
             {
                 lvJobs.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Updates the content by group.
+        /// </summary>
+        /// <param name="jobs">The jobs.</param>
+        private void UpdateContentByGroup(IEnumerable<IndustryJob> jobs)
+        {
+            switch (m_grouping)
+            {
+                case IndustryJobGrouping.State:
+                    IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups0 =
+                        jobs.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
+                    UpdateContent(groups0);
+                    break;
+                case IndustryJobGrouping.StateDesc:
+                    IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups1 =
+                        jobs.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
+                    UpdateContent(groups1);
+                    break;
+                case IndustryJobGrouping.EndDate:
+                    IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
+                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
+                    UpdateContent(groups2);
+                    break;
+                case IndustryJobGrouping.EndDateDesc:
+                    IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
+                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
+                    UpdateContent(groups3);
+                    break;
+                case IndustryJobGrouping.InstalledItemType:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups4 =
+                        jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
+                    UpdateContent(groups4);
+                    break;
+                case IndustryJobGrouping.InstalledItemTypeDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups5 =
+                        jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
+                    UpdateContent(groups5);
+                    break;
+                case IndustryJobGrouping.OutputItemType:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups6 =
+                        jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
+                    UpdateContent(groups6);
+                    break;
+                case IndustryJobGrouping.OutputItemTypeDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups7 =
+                        jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
+                    UpdateContent(groups7);
+                    break;
+                case IndustryJobGrouping.Activity:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups8 =
+                        jobs.GroupBy(x => x.Activity.GetDescription()).OrderBy(x => x.Key);
+                    UpdateContent(groups8);
+                    break;
+                case IndustryJobGrouping.ActivityDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups9 =
+                        jobs.GroupBy(x => x.Activity.GetDescription()).OrderByDescending(x => x.Key);
+                    UpdateContent(groups9);
+                    break;
+                case IndustryJobGrouping.Location:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups10 =
+                        jobs.GroupBy(x => x.Installation).OrderBy(x => x.Key);
+                    UpdateContent(groups10);
+                    break;
+                case IndustryJobGrouping.LocationDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups11 =
+                        jobs.GroupBy(x => x.Installation).OrderByDescending(x => x.Key);
+                    UpdateContent(groups11);
+                    break;
             }
         }
 

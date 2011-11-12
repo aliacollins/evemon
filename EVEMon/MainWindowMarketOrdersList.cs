@@ -360,59 +360,7 @@ namespace EVEMon
 
                 UpdateSort();
 
-                switch (m_grouping)
-                {
-                    case MarketOrderGrouping.State:
-                        IOrderedEnumerable<IGrouping<OrderState, MarketOrder>> groups0 =
-                            orders.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
-                        UpdateContent(groups0);
-                        break;
-                    case MarketOrderGrouping.StateDesc:
-                        IOrderedEnumerable<IGrouping<OrderState, MarketOrder>> groups1 =
-                            orders.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
-                        UpdateContent(groups1);
-                        break;
-                    case MarketOrderGrouping.Issued:
-                        IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups2 =
-                            orders.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
-                        UpdateContent(groups2);
-                        break;
-                    case MarketOrderGrouping.IssuedDesc:
-                        IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups3 =
-                            orders.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
-                        UpdateContent(groups3);
-                        break;
-                    case MarketOrderGrouping.ItemType:
-                        IOrderedEnumerable<IGrouping<MarketGroup, MarketOrder>> groups4 =
-                            orders.GroupBy(x => x.Item.MarketGroup).OrderBy(x => x.Key.Name);
-                        UpdateContent(groups4);
-                        break;
-                    case MarketOrderGrouping.ItemTypeDesc:
-                        IOrderedEnumerable<IGrouping<MarketGroup, MarketOrder>> groups5 =
-                            orders.GroupBy(x => x.Item.MarketGroup).OrderByDescending(x => x.Key.Name);
-                        UpdateContent(groups5);
-                        break;
-                    case MarketOrderGrouping.Location:
-                        IOrderedEnumerable<IGrouping<Station, MarketOrder>> groups6 =
-                            orders.GroupBy(x => x.Station).OrderBy(x => x.Key.Name);
-                        UpdateContent(groups6);
-                        break;
-                    case MarketOrderGrouping.LocationDesc:
-                        IOrderedEnumerable<IGrouping<Station, MarketOrder>> groups7 =
-                            orders.GroupBy(x => x.Station).OrderByDescending(x => x.Key.Name);
-                        UpdateContent(groups7);
-                        break;
-                    case MarketOrderGrouping.OrderType:
-                        IOrderedEnumerable<IGrouping<string, MarketOrder>> groups8 =
-                            orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders").OrderBy(x => x.Key);
-                        UpdateContent(groups8);
-                        break;
-                    case MarketOrderGrouping.OrderTypeDesc:
-                        IOrderedEnumerable<IGrouping<string, MarketOrder>> groups9 =
-                            orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders").OrderByDescending(x => x.Key);
-                        UpdateContent(groups9);
-                        break;
-                }
+                UpdateContentByGroup(orders);
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -439,6 +387,67 @@ namespace EVEMon
             finally
             {
                 lvOrders.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Updates the content by group.
+        /// </summary>
+        /// <param name="orders">The orders.</param>
+        private void UpdateContentByGroup(IEnumerable<MarketOrder> orders)
+        {
+            switch (m_grouping)
+            {
+                case MarketOrderGrouping.State:
+                    IOrderedEnumerable<IGrouping<OrderState, MarketOrder>> groups0 =
+                        orders.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
+                    UpdateContent(groups0);
+                    break;
+                case MarketOrderGrouping.StateDesc:
+                    IOrderedEnumerable<IGrouping<OrderState, MarketOrder>> groups1 =
+                        orders.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
+                    UpdateContent(groups1);
+                    break;
+                case MarketOrderGrouping.Issued:
+                    IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups2 =
+                        orders.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
+                    UpdateContent(groups2);
+                    break;
+                case MarketOrderGrouping.IssuedDesc:
+                    IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups3 =
+                        orders.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
+                    UpdateContent(groups3);
+                    break;
+                case MarketOrderGrouping.ItemType:
+                    IOrderedEnumerable<IGrouping<MarketGroup, MarketOrder>> groups4 =
+                        orders.GroupBy(x => x.Item.MarketGroup).OrderBy(x => x.Key.Name);
+                    UpdateContent(groups4);
+                    break;
+                case MarketOrderGrouping.ItemTypeDesc:
+                    IOrderedEnumerable<IGrouping<MarketGroup, MarketOrder>> groups5 =
+                        orders.GroupBy(x => x.Item.MarketGroup).OrderByDescending(x => x.Key.Name);
+                    UpdateContent(groups5);
+                    break;
+                case MarketOrderGrouping.Location:
+                    IOrderedEnumerable<IGrouping<Station, MarketOrder>> groups6 =
+                        orders.GroupBy(x => x.Station).OrderBy(x => x.Key.Name);
+                    UpdateContent(groups6);
+                    break;
+                case MarketOrderGrouping.LocationDesc:
+                    IOrderedEnumerable<IGrouping<Station, MarketOrder>> groups7 =
+                        orders.GroupBy(x => x.Station).OrderByDescending(x => x.Key.Name);
+                    UpdateContent(groups7);
+                    break;
+                case MarketOrderGrouping.OrderType:
+                    IOrderedEnumerable<IGrouping<string, MarketOrder>> groups8 =
+                        orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders").OrderBy(x => x.Key);
+                    UpdateContent(groups8);
+                    break;
+                case MarketOrderGrouping.OrderTypeDesc:
+                    IOrderedEnumerable<IGrouping<string, MarketOrder>> groups9 =
+                        orders.GroupBy(x => x is BuyOrder ? "Buying Orders" : "Selling Orders").OrderByDescending(x => x.Key);
+                    UpdateContent(groups9);
+                    break;
             }
         }
 

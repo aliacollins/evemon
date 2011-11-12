@@ -365,70 +365,10 @@ namespace EVEMon.SkillPlanner
 
                     // Is it a plain alphabetical presentation ?
                     if (rbShowAlpha.Checked)
-                    {
-                        foreach (Ship ship in enabledObjects.OfType<Ship>().OrderBy(x => x.Name))
-                        {
-                            levelNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_character)));
-                            m_hasShips = true;
-                        }
-
-                        foreach (Blueprint blueprint in enabledObjects.OfType<Blueprint>().OrderBy(x => x.Name))
-                        {
-                            List<BlueprintActivity> listOfActivities = blueprint.Prerequisites.Where(
-                                x => x.Skill == m_skill.StaticData && x.Level == i).Select(
-                                    x => x.Activity).ToList();
-
-                            TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
-                                x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
-
-                            node.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", node.Text,
-                                                      string.Join(", ", listOfActivities.Select(
-                                                          activity => activity.GetDescription()).ToList()));
-                            levelNode.Nodes.Add(node);
-                            m_hasBlueprints = true;
-                        }
-
-                        foreach (Item item in enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)).OrderBy(x => x.Name))
-                        {
-                            levelNode.Nodes.Add(CreateNode(item, item.Prerequisites.ToCharacter(m_character)));
-                            m_hasItems = true;
-                        }
-                    }
+                        GroupByAlphabet(i, levelNode, enabledObjects);
                         // Or do we need to group items by their groups ?
                     else if (rbShowTree.Checked)
-                    {
-                        // Add ships
-                        IGrouping<MarketGroup, Ship>[] shipsToAdd = enabledObjects.OfType<Ship>().GroupBy(
-                            x => x.MarketGroup.ParentGroup).ToArray();
-                        foreach (IGrouping<MarketGroup, Ship> shipGroup in shipsToAdd.OrderBy(x => x.Key.Name))
-                        {
-                            TreeNode groupNode = new TreeNode(shipGroup.Key.Name);
-                            foreach (Ship ship in shipGroup.OrderBy(x => x.Name))
-                            {
-                                groupNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_skill.Character)));
-                            }
-                            levelNode.Nodes.Add(groupNode);
-                            m_hasShips = true;
-                        }
-
-                        // Add blueprints recursively                       
-                        foreach (TreeNode node in StaticBlueprints.BlueprintMarketGroups.SelectMany(
-                            blueprintMarketGroup =>
-                            CreateMarketGroupsNode(blueprintMarketGroup, enabledObjects.OfType<Blueprint>(), i)))
-                        {
-                            levelNode.Nodes.Add(node);
-                            m_hasBlueprints = true;
-                        }
-
-                        // Add items recursively
-                        foreach (TreeNode node in StaticItems.MarketGroups.SelectMany(
-                            marketGroup =>
-                            CreateMarketGroupsNode(marketGroup, enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)))))
-                        {
-                            levelNode.Nodes.Add(node);
-                            m_hasItems = true;
-                        }
-                    }
+                        GroupByMarketGroup(i, levelNode, enabledObjects);
 
                     // Add node
                     levelNode.Expand();
@@ -442,6 +382,84 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvEntity.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Groups the by alphabet.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="levelNode">The level node.</param>
+        /// <param name="enabledObjects">The enabled objects.</param>
+        private void GroupByAlphabet(int i, TreeNode levelNode, IEnumerable<Item> enabledObjects)
+        {
+            foreach (Ship ship in enabledObjects.OfType<Ship>().OrderBy(x => x.Name))
+            {
+                levelNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_character)));
+                m_hasShips = true;
+            }
+
+            foreach (Blueprint blueprint in enabledObjects.OfType<Blueprint>().OrderBy(x => x.Name))
+            {
+                List<BlueprintActivity> listOfActivities = blueprint.Prerequisites.Where(
+                    x => x.Skill == m_skill.StaticData && x.Level == i).Select(
+                        x => x.Activity).ToList();
+
+                TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
+                    x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
+
+                node.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", node.Text,
+                                          string.Join(", ", listOfActivities.Select(
+                                              activity => activity.GetDescription()).ToList()));
+                levelNode.Nodes.Add(node);
+                m_hasBlueprints = true;
+            }
+
+            foreach (Item item in enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)).OrderBy(x => x.Name))
+            {
+                levelNode.Nodes.Add(CreateNode(item, item.Prerequisites.ToCharacter(m_character)));
+                m_hasItems = true;
+            }
+        }
+
+        /// <summary>
+        /// Groups the by market group.
+        /// </summary>
+        /// <param name="levelNode">The level node.</param>
+        /// <param name="i">The i.</param>
+        /// <param name="enabledObjects">The enabled objects.</param>
+        private void GroupByMarketGroup(int i, TreeNode levelNode, IEnumerable<Item> enabledObjects)
+        {
+            // Add ships
+            IGrouping<MarketGroup, Ship>[] shipsToAdd = enabledObjects.OfType<Ship>().GroupBy(
+                x => x.MarketGroup.ParentGroup).ToArray();
+            foreach (IGrouping<MarketGroup, Ship> shipGroup in shipsToAdd.OrderBy(x => x.Key.Name))
+            {
+                TreeNode groupNode = new TreeNode(shipGroup.Key.Name);
+                foreach (Ship ship in shipGroup.OrderBy(x => x.Name))
+                {
+                    groupNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_skill.Character)));
+                }
+                levelNode.Nodes.Add(groupNode);
+                m_hasShips = true;
+            }
+
+            // Add blueprints recursively                       
+            foreach (TreeNode node in StaticBlueprints.BlueprintMarketGroups.SelectMany(
+                blueprintMarketGroup =>
+                CreateMarketGroupsNode(blueprintMarketGroup, enabledObjects.OfType<Blueprint>(), i)))
+            {
+                levelNode.Nodes.Add(node);
+                m_hasBlueprints = true;
+            }
+
+            // Add items recursively
+            foreach (TreeNode node in StaticItems.MarketGroups.SelectMany(
+                marketGroup =>
+                CreateMarketGroupsNode(marketGroup, enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)))))
+            {
+                levelNode.Nodes.Add(node);
+                m_hasItems = true;
             }
         }
 

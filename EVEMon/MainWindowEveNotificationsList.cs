@@ -276,39 +276,7 @@ namespace EVEMon
 
                 UpdateSort();
 
-                switch (m_grouping)
-                {
-                    case EVENotificationsGrouping.Type:
-                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups0 =
-                            eveNotifications.GroupBy(x => x.Type).OrderBy(x => x.Key);
-                        UpdateContent(groups0);
-                        break;
-                    case EVENotificationsGrouping.TypeDesc:
-                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups1 =
-                            eveNotifications.GroupBy(x => x.Type).OrderByDescending(x => x.Key);
-                        UpdateContent(groups1);
-                        break;
-                    case EVENotificationsGrouping.SentDate:
-                        IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups2 =
-                            eveNotifications.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
-                        UpdateContent(groups2);
-                        break;
-                    case EVENotificationsGrouping.SentDateDesc:
-                        IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups3 =
-                            eveNotifications.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
-                        UpdateContent(groups3);
-                        break;
-                    case EVENotificationsGrouping.Sender:
-                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups4 =
-                            eveNotifications.GroupBy(x => x.Sender).OrderBy(x => x.Key);
-                        UpdateContent(groups4);
-                        break;
-                    case EVENotificationsGrouping.SenderDesc:
-                        IOrderedEnumerable<IGrouping<string, EveNotification>> groups5 =
-                            eveNotifications.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
-                        UpdateContent(groups5);
-                        break;
-                }
+                UpdateContentByGroup(eveNotifications);
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -332,6 +300,47 @@ namespace EVEMon
             finally
             {
                 lvNotifications.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Updates the content by group.
+        /// </summary>
+        /// <param name="eveNotifications">The eve notifications.</param>
+        private void UpdateContentByGroup(IEnumerable<EveNotification> eveNotifications)
+        {
+            switch (m_grouping)
+            {
+                case EVENotificationsGrouping.Type:
+                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups0 =
+                        eveNotifications.GroupBy(x => x.Type).OrderBy(x => x.Key);
+                    UpdateContent(groups0);
+                    break;
+                case EVENotificationsGrouping.TypeDesc:
+                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups1 =
+                        eveNotifications.GroupBy(x => x.Type).OrderByDescending(x => x.Key);
+                    UpdateContent(groups1);
+                    break;
+                case EVENotificationsGrouping.SentDate:
+                    IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups2 =
+                        eveNotifications.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
+                    UpdateContent(groups2);
+                    break;
+                case EVENotificationsGrouping.SentDateDesc:
+                    IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups3 =
+                        eveNotifications.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
+                    UpdateContent(groups3);
+                    break;
+                case EVENotificationsGrouping.Sender:
+                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups4 =
+                        eveNotifications.GroupBy(x => x.Sender).OrderBy(x => x.Key);
+                    UpdateContent(groups4);
+                    break;
+                case EVENotificationsGrouping.SenderDesc:
+                    IOrderedEnumerable<IGrouping<string, EveNotification>> groups5 =
+                        eveNotifications.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
+                    UpdateContent(groups5);
+                    break;
             }
         }
 
