@@ -243,6 +243,69 @@ namespace EVEMon
 
 
             // Boxes
+            DrawBoxes(percentCompleted, skill, e);
+
+            // Draw progression bar
+            DrawProgressionBar(percentCompleted, e);
+
+
+            // Draw level and percent texts
+            TextRenderer.DrawText(g, levelText, m_skillsQueueFont,
+                                  new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
+                                      levelTextSize.Width,
+                                      e.Bounds.Top + PadTop,
+                                      levelTextSize.Width + PadRight,
+                                      levelTextSize.Height), Color.Black);
+
+            TextRenderer.DrawText(g, pctText, m_skillsQueueFont,
+                                  new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
+                                      pctTextSize.Width,
+                                      e.Bounds.Top + PadTop + levelTextSize.Height,
+                                      pctTextSize.Width + PadRight,
+                                      pctTextSize.Height), Color.Black);
+
+            // Draw the queue color bar
+            DrawQueueColorBar(skill, e);
+        }
+
+        /// <summary>
+        /// Draws the progression bar.
+        /// </summary>
+        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
+        private static void DrawProgressionBar(double percentCompleted, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            g.DrawRectangle(Pens.Black,
+                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
+                                          e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
+
+            Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2,
+                                                 e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
+                                                 BoxWidth - 3, LowerBoxHeight - 3);
+
+            g.FillRectangle(Brushes.DarkGray, pctBarRect);
+            int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
+            if (fillWidth > 0)
+            {
+                Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
+                g.FillRectangle(Brushes.Black, fillRect);
+            }
+        }
+
+        /// <summary>
+        /// Draws the boxes.
+        /// </summary>
+        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
+        private void DrawBoxes(double percentCompleted, QueuedSkill skill, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
             g.DrawRectangle(Pens.Black,
                             new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth,
                                           BoxHeight));
@@ -287,52 +350,17 @@ namespace EVEMon
                     m_count++;
                 }
             }
-
-            // Draw progression bar
-            g.DrawRectangle(Pens.Black,
-                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
-                                          e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
-
-            Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2,
-                                                 e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
-                                                 BoxWidth - 3, LowerBoxHeight - 3);
-
-            g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
-            if (fillWidth > 0)
-            {
-                Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
-                g.FillRectangle(Brushes.Black, fillRect);
-            }
-
-
-            // Draw level and percent texts
-            TextRenderer.DrawText(g, levelText, m_skillsQueueFont, new Rectangle(
-                                                                       e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                                                                       levelTextSize.Width,
-                                                                       e.Bounds.Top + PadTop,
-                                                                       levelTextSize.Width + PadRight,
-                                                                       levelTextSize.Height), Color.Black);
-
-            TextRenderer.DrawText(g, pctText, m_skillsQueueFont, new Rectangle(
-                                                                     e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                                                                     pctTextSize.Width,
-                                                                     e.Bounds.Top + PadTop + levelTextSize.Height,
-                                                                     pctTextSize.Width + PadRight,
-                                                                     pctTextSize.Height), Color.Black);
-
-            // Draw the queue color bar
-            DrawQueueColorBar(skill, g, e);
         }
 
         /// <summary>
         /// Draws the queue color bar.
         /// </summary>
         /// <param name="skill">The skill.</param>
-        /// <param name="g">The graphic surface.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private void DrawQueueColorBar(QueuedSkill skill, Graphics g, DrawItemEventArgs e)
+        private void DrawQueueColorBar(QueuedSkill skill, DrawItemEventArgs e)
         {
+            Graphics g = e.Graphics;
+
             // Draw skill queue color bar
             Brush brush = (Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue);
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);

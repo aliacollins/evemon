@@ -266,45 +266,14 @@ namespace EVEMon.SkillPlanner
                     SkillLevel skillLevel = new SkillLevel(m_skill, i);
 
                     // Gets the enabled skills and check it's not empty
-                    Skill[] enabledSkills =
-                        m_skill.Character.Skills.Where(
-                            x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToArray();
+                    List<Skill> enabledSkills = m_skill.Character.Skills.Where(
+                        x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToList();
+                    
                     if (enabledSkills.IsEmpty())
                         continue;
 
                     // Add a node for this skill level
-                    TreeNode levelNode = new TreeNode(skillLevel.ToString());
-                    if (m_skill.Level >= i)
-                        levelNode.Text += " (Trained)";
-
-                    levelNode.ForeColor = Color.DarkBlue;
-
-                    // Is it a plain alphabetical presentation ?
-                    if (rbShowAlpha.Checked)
-                    {
-                        foreach (Skill skill in enabledSkills.OrderBy(x => x.Name))
-                        {
-                            levelNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
-                        }
-                    }
-                        // Or do we need to group skills by their groups ?
-                    else if (rbShowTree.Checked)
-                    {
-                        foreach (IGrouping<SkillGroup, Skill> group in enabledSkills
-                            .GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
-                        {
-                            TreeNode groupNode = new TreeNode(group.Key.Name);
-                            foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
-                            {
-                                groupNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
-                            }
-                            levelNode.Nodes.Add(groupNode);
-                        }
-                    }
-
-                    // Add node
-                    levelNode.Expand();
-                    tvSkills.Nodes.Add(levelNode);
+                    AddNode(i, skillLevel, enabledSkills);
                 }
 
                 // No enabled skill found for any level ?
@@ -315,6 +284,48 @@ namespace EVEMon.SkillPlanner
             {
                 tvSkills.EndUpdate();
             }
+        }
+
+        /// <summary>
+        /// Adds the node.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="skillLevel">The skill level.</param>
+        /// <param name="enabledSkills">The enabled skills.</param>
+        private void AddNode(int i, SkillLevel skillLevel, IEnumerable<Skill> enabledSkills)
+        {
+            TreeNode levelNode = new TreeNode(skillLevel.ToString());
+            if (m_skill.Level >= i)
+                levelNode.Text += " (Trained)";
+
+            levelNode.ForeColor = Color.DarkBlue;
+
+            // Is it a plain alphabetical presentation ?
+            if (rbShowAlpha.Checked)
+            {
+                foreach (Skill skill in enabledSkills.OrderBy(x => x.Name))
+                {
+                    levelNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
+                }
+            }
+                // Or do we need to group skills by their groups ?
+            else if (rbShowTree.Checked)
+            {
+                foreach (IGrouping<SkillGroup, Skill> group in enabledSkills
+                    .GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
+                {
+                    TreeNode groupNode = new TreeNode(group.Key.Name);
+                    foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
+                    {
+                        groupNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
+                    }
+                    levelNode.Nodes.Add(groupNode);
+                }
+            }
+
+            // Add node
+            levelNode.Expand();
+            tvSkills.Nodes.Add(levelNode);
         }
 
         /// <summary>

@@ -420,23 +420,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateListViewItems()
         {
-            // When there is a pluggable (implants calculator or attributes optimizer)
-            // This one provides us the scratchpad to update training times
-            m_areRemappingPointsActive = true;
-            if (m_pluggable != null)
-            {
-                bool areRemappingPointsActive;
-                m_pluggable.UpdateStatistics(DisplayPlan, out areRemappingPointsActive);
-                m_areRemappingPointsActive = areRemappingPointsActive;
-            }
-            else
-            {
-                CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
-                if (m_plan.ChosenImplantSet != null)
-                    scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
-
-                DisplayPlan.UpdateStatistics(scratchpad, true, true);
-            }
+            CheckForPluggable();
 
             // Start updating the list
             lvSkills.BeginUpdate();
@@ -455,122 +439,162 @@ namespace EVEMon.SkillPlanner
                     }
 
                     if (entry != null)
-                    {
-                        // Checks if this entry has not prereq-met
-                        if (!entry.CharacterSkill.IsKnown)
-                            lvi.ForeColor = Color.Red;
-
-                        // Checks if this entry is a non-public skill
-                        if (!entry.CharacterSkill.IsPublic)
-                            lvi.ForeColor = Color.DarkRed;
-
-                        // Checks if this entry is not known but has prereq-met
-                        if (!entry.CharacterSkill.IsKnown && entry.CharacterSkill.IsPublic &&
-                            entry.CharacterSkill.ArePrerequisitesMet)
-                            lvi.ForeColor = Color.LightSlateGray;
-
-                        // Checks if this entry is partially trained
-                        bool level = (entry.Level == entry.CharacterSkill.Level + 1);
-                        if (Settings.UI.PlanWindow.HighlightPartialSkills)
-                        {
-                            bool partiallyTrained = (entry.CharacterSkill.FractionCompleted > 0 &&
-                                                     entry.CharacterSkill.FractionCompleted < 1);
-                            if (level && partiallyTrained)
-                                lvi.ForeColor = Color.Green;
-                        }
-
-                        HighlightQueuedSkills(lvi, entry);
-
-                        // Checks if this entry is currently training (even if it's paused)
-                        if (entry.CharacterSkill.IsTraining && level)
-                        {
-                            lvi.BackColor = Color.LightSteelBlue;
-                            lvi.ForeColor = Color.Black;
-                        }
-
-                        // Checks whether this entry will be blocked
-                        string blockingEntry = String.Empty;
-                        if (Settings.UI.PlanWindow.HighlightConflicts)
-                        {
-                            bool isBlocked = Scheduler.SkillIsBlockedAt(entry.EndTime, out blockingEntry);
-                            if (isBlocked)
-                            {
-                                lvi.ForeColor = Color.Red;
-                                lvi.BackColor = Color.LightGray;
-                            }
-                        }
-
-                        // Update every column
-                        lvi.UseItemStyleForSubItems = (m_pluggable == null);
-                        for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
-                        {
-                            // Regular columns (not pluggable-dependent)
-                            if (lvSkills.Columns[columnIndex].Tag != null)
-                            {
-                                PlanColumnSettings columnSettings = (PlanColumnSettings)lvSkills.Columns[columnIndex].Tag;
-
-                                lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
-                                lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
-                                lvi.SubItems[columnIndex].Text = GetColumnTextForItem(entry, columnSettings.Column, blockingEntry);
-                            }
-                                // Training time differences
-                            else
-                            {
-                                TimeSpan timeDifference;
-                                string result = String.Empty;
-                                if (entry.OldTrainingTime < entry.TrainingTime)
-                                {
-                                    result = "+";
-                                    timeDifference = entry.TrainingTime - entry.OldTrainingTime;
-                                    lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
-                                    lvi.SubItems[columnIndex].ForeColor = Color.DarkRed;
-                                }
-                                else if (entry.OldTrainingTime > entry.TrainingTime)
-                                {
-                                    result = "-";
-                                    timeDifference = entry.OldTrainingTime - entry.TrainingTime;
-                                    lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
-                                    lvi.SubItems[columnIndex].ForeColor = Color.DarkGreen;
-                                }
-                                else
-                                {
-                                    timeDifference = TimeSpan.Zero;
-                                    lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
-                                    lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
-                                }
-
-                                result += timeDifference.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-                                lvi.SubItems[columnIndex].Text = result;
-                            }
-                        }
-                    }
+                        FormatEntry(entry, lvi);
                         // The item represents a remapping point
                     else
-                    {
-                        RemappingPoint point = (RemappingPoint)lvi.Tag;
-                        for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
-                        {
-                            PlanColumnSettings columnSettings = (PlanColumnSettings)lvSkills.Columns[columnIndex].Tag;
-
-                            lvi.SubItems[columnIndex].Text = String.Empty;
-                            lvi.SubItems[columnIndex].BackColor = m_remappingBackColor;
-                            lvi.SubItems[columnIndex].ForeColor = m_remappingForeColor;
-
-                            // We display the text in the SkillName column for better visibility
-                            if (columnSettings != null && columnSettings.Column == PlanColumn.SkillName)
-                            {
-                                lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive
-                                                                      ? point.ToString()
-                                                                      : "Remapping (ignored)");
-                            }
-                        }
-                    }
+                        FormatRemappingPoint(lvi);
                 }
             }
             finally
             {
                 lvSkills.EndUpdate();
-                UpdateStatusBar();
+            }
+
+            UpdateStatusBar();
+        }
+
+        /// <summary>
+        /// Formats the entry.
+        /// </summary>
+        /// <param name="entry">The entry.</param>
+        /// <param name="lvi">The lvi.</param>
+        private void FormatEntry(PlanEntry entry, ListViewItem lvi)
+        {
+            // Checks if this entry has not prereq-met
+            if (!entry.CharacterSkill.IsKnown)
+                lvi.ForeColor = Color.Red;
+
+            // Checks if this entry is a non-public skill
+            if (!entry.CharacterSkill.IsPublic)
+                lvi.ForeColor = Color.DarkRed;
+
+            // Checks if this entry is not known but has prereq-met
+            if (!entry.CharacterSkill.IsKnown && entry.CharacterSkill.IsPublic &&
+                entry.CharacterSkill.ArePrerequisitesMet)
+                lvi.ForeColor = Color.LightSlateGray;
+
+            // Checks if this entry is partially trained
+            bool level = (entry.Level == entry.CharacterSkill.Level + 1);
+            if (Settings.UI.PlanWindow.HighlightPartialSkills)
+            {
+                bool partiallyTrained = (entry.CharacterSkill.FractionCompleted > 0 &&
+                                         entry.CharacterSkill.FractionCompleted < 1);
+                if (level && partiallyTrained)
+                    lvi.ForeColor = Color.Green;
+            }
+
+            HighlightQueuedSkills(lvi, entry);
+
+            // Checks if this entry is currently training (even if it's paused)
+            if (entry.CharacterSkill.IsTraining && level)
+            {
+                lvi.BackColor = Color.LightSteelBlue;
+                lvi.ForeColor = Color.Black;
+            }
+
+            // Checks whether this entry will be blocked
+            string blockingEntry = String.Empty;
+            if (Settings.UI.PlanWindow.HighlightConflicts)
+            {
+                bool isBlocked = Scheduler.SkillIsBlockedAt(entry.EndTime, out blockingEntry);
+                if (isBlocked)
+                {
+                    lvi.ForeColor = Color.Red;
+                    lvi.BackColor = Color.LightGray;
+                }
+            }
+
+            // Update every column
+            lvi.UseItemStyleForSubItems = (m_pluggable == null);
+            for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
+            {
+                // Regular columns (not pluggable-dependent)
+                if (lvSkills.Columns[columnIndex].Tag != null)
+                {
+                    PlanColumnSettings columnSettings = (PlanColumnSettings)lvSkills.Columns[columnIndex].Tag;
+
+                    lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
+                    lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
+                    lvi.SubItems[columnIndex].Text = GetColumnTextForItem(entry, columnSettings.Column, blockingEntry);
+                }
+                    // Training time differences
+                else
+                {
+                    TimeSpan timeDifference;
+                    string result = String.Empty;
+                    if (entry.OldTrainingTime < entry.TrainingTime)
+                    {
+                        result = "+";
+                        timeDifference = entry.TrainingTime - entry.OldTrainingTime;
+                        lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
+                        lvi.SubItems[columnIndex].ForeColor = Color.DarkRed;
+                    }
+                    else if (entry.OldTrainingTime > entry.TrainingTime)
+                    {
+                        result = "-";
+                        timeDifference = entry.OldTrainingTime - entry.TrainingTime;
+                        lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
+                        lvi.SubItems[columnIndex].ForeColor = Color.DarkGreen;
+                    }
+                    else
+                    {
+                        timeDifference = TimeSpan.Zero;
+                        lvi.SubItems[columnIndex].BackColor = lvi.BackColor;
+                        lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
+                    }
+
+                    result += timeDifference.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    lvi.SubItems[columnIndex].Text = result;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Formats the remapping point.
+        /// </summary>
+        /// <param name="lvi">The lvi.</param>
+        private void FormatRemappingPoint(ListViewItem lvi)
+        {
+            RemappingPoint point = (RemappingPoint)lvi.Tag;
+            for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
+            {
+                PlanColumnSettings columnSettings = (PlanColumnSettings)lvSkills.Columns[columnIndex].Tag;
+
+                lvi.SubItems[columnIndex].Text = String.Empty;
+                lvi.SubItems[columnIndex].BackColor = m_remappingBackColor;
+                lvi.SubItems[columnIndex].ForeColor = m_remappingForeColor;
+
+                // We display the text in the SkillName column for better visibility
+                if (columnSettings != null && columnSettings.Column == PlanColumn.SkillName)
+                {
+                    lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive
+                                                          ? point.ToString()
+                                                          : "Remapping (ignored)");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks for pluggable.
+        /// </summary>
+        private void CheckForPluggable()
+        {
+            // When there is a pluggable (implants calculator or attributes optimizer)
+            // This one provides us the scratchpad to update training times
+            m_areRemappingPointsActive = true;
+            if (m_pluggable != null)
+            {
+                bool areRemappingPointsActive;
+                m_pluggable.UpdateStatistics(DisplayPlan, out areRemappingPointsActive);
+                m_areRemappingPointsActive = areRemappingPointsActive;
+            }
+            else
+            {
+                CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
+                if (m_plan.ChosenImplantSet != null)
+                    scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
+
+                DisplayPlan.UpdateStatistics(scratchpad, true, true);
             }
         }
 

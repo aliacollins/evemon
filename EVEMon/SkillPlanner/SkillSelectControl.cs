@@ -387,69 +387,7 @@ namespace EVEMon.SkillPlanner
             {
                 tvItems.Nodes.Clear();
 
-                foreach (
-                    IGrouping<SkillGroup, Skill> group in
-                        skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
-                {
-                    int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
-
-                    TreeNode groupNode = new TreeNode
-                                             {
-                                                 Text = group.Key.Name,
-                                                 ImageIndex = index,
-                                                 SelectedImageIndex = index,
-                                                 Tag = group.Key
-                                             };
-
-                    // Add nodes for skills in this group
-                    foreach (Skill skill in group)
-                    {
-                        // Choose image index
-                        int imageIndex;
-                        if (skill.Level != 0)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl" + skill.Level);
-                        else if (skill.IsKnown)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl0");
-                        else if (skill.IsOwned)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("book");
-                        else if (skill.ArePrerequisitesMet)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsMet");
-                        else
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet");
-
-                        // Create node and adds it
-                        TreeNode node = new TreeNode
-                                            {
-                                                Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                                                     skill.Name, skill.Rank),
-                                                ImageIndex = imageIndex,
-                                                SelectedImageIndex = imageIndex,
-                                                Tag = skill
-                                            };
-                        groupNode.Nodes.Add(node);
-
-                        // We color some nodes
-                        if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
-                            node.ForeColor = Color.DarkRed;
-
-                        if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills)
-                            node.ForeColor = Color.Green;
-
-                        if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills)
-                            node.ForeColor = Color.RoyalBlue;
-
-                        if (skill.IsTraining)
-                        {
-                            node.BackColor = Color.LightSteelBlue;
-                            node.ForeColor = Color.Black;
-                        }
-
-                        numberOfItems++;
-                    }
-
-                    // Add group when not empty
-                    tvItems.Nodes.Add(groupNode);
-                }
+                numberOfItems = AddNodes(skills, numberOfItems);
 
                 TreeNode selectedNode = null;
 
@@ -480,6 +418,78 @@ namespace EVEMon.SkillPlanner
                     m_allExpanded = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds the nodes.
+        /// </summary>
+        /// <param name="skills">The skills.</param>
+        /// <param name="numberOfItems">The number of items.</param>
+        /// <returns></returns>
+        private int AddNodes(IEnumerable<Skill> skills, int numberOfItems)
+        {
+            foreach (IGrouping<SkillGroup, Skill> group in skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name))
+            {
+                int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
+
+                TreeNode groupNode = new TreeNode
+                                         {
+                                             Text = group.Key.Name,
+                                             ImageIndex = index,
+                                             SelectedImageIndex = index,
+                                             Tag = group.Key
+                                         };
+
+                // Add nodes for skills in this group
+                foreach (Skill skill in group)
+                {
+                    // Choose image index
+                    int imageIndex;
+                    if (skill.Level != 0)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl" + skill.Level);
+                    else if (skill.IsKnown)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl0");
+                    else if (skill.IsOwned)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("book");
+                    else if (skill.ArePrerequisitesMet)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsMet");
+                    else
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet");
+
+                    // Create node and adds it
+                    TreeNode node = new TreeNode
+                                        {
+                                            Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
+                                                                 skill.Name, skill.Rank),
+                                            ImageIndex = imageIndex,
+                                            SelectedImageIndex = imageIndex,
+                                            Tag = skill
+                                        };
+                    groupNode.Nodes.Add(node);
+
+                    // We color some nodes
+                    if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
+                        node.ForeColor = Color.DarkRed;
+
+                    if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills)
+                        node.ForeColor = Color.Green;
+
+                    if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills)
+                        node.ForeColor = Color.RoyalBlue;
+
+                    if (skill.IsTraining)
+                    {
+                        node.BackColor = Color.LightSteelBlue;
+                        node.ForeColor = Color.Black;
+                    }
+
+                    numberOfItems++;
+                }
+
+                // Add group when not empty
+                tvItems.Nodes.Add(groupNode);
+            }
+            return numberOfItems;
         }
 
         /// <summary>

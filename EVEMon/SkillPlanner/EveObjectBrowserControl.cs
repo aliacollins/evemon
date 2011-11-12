@@ -426,6 +426,20 @@ namespace EVEMon.SkillPlanner
             IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects.Where(
                 x => x.ReprocessingMaterials != null).SelectMany(x => x.ReprocessingMaterials);
 
+            AddItemsAndSubItems(items, group, reprocessingMaterials);
+
+            PropertiesList.Groups.Add(group);
+        }
+
+        /// <summary>
+        /// Adds the items and sub items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="group">The group.</param>
+        /// <param name="reprocessingMaterials">The reprocessing materials.</param>
+        private void AddItemsAndSubItems(ICollection<ListViewItem> items, ListViewGroup group,
+                                         IEnumerable<Material> reprocessingMaterials)
+        {
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
                 if (!reprocessingMaterials.Any(x => x.Item == item))
@@ -466,8 +480,6 @@ namespace EVEMon.SkillPlanner
 
                 AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
             }
-
-            PropertiesList.Groups.Add(group);
         }
 
         /// <summary>

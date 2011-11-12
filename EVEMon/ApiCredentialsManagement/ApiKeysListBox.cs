@@ -16,6 +16,12 @@ namespace EVEMon.ApiCredentialsManagement
     /// </summary>
     public sealed class ApiKeysListBox : NoFlickerListBox
     {
+        private readonly Font m_smallFont;
+        private readonly Font m_smallBoldFont;
+        private readonly Font m_strikeoutFont;
+        private readonly Font m_middleFont;
+        private readonly Font m_boldFont;
+
         private readonly List<APIKey> m_apiKeys = new List<APIKey>();
         private bool m_pendingUpdate;
 
@@ -26,6 +32,12 @@ namespace EVEMon.ApiCredentialsManagement
         {
             DrawMode = DrawMode.OwnerDrawFixed;
             DrawItem += OnDrawItem;
+
+            m_smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f);
+            m_smallBoldFont = FontFactory.GetFont(m_smallFont, FontStyle.Bold);
+            m_strikeoutFont = FontFactory.GetFont(m_smallFont, FontStyle.Strikeout);
+            m_middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f);
+            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
         }
 
         /// <summary>
@@ -98,10 +110,10 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// 
+        /// Draws the API key info.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void OnDrawItem(object sender, DrawItemEventArgs e)
         {
             // Background
@@ -114,7 +126,122 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             APIKey apiKey = (APIKey)Items[e.Index];
+            Image icon = GetIcon(apiKey);
 
+            // Associate account info for corporation type API key
+            // if related info exist in another API key of the binded character
+            AssociateAccountInfo(apiKey);
+
+            Margin = new Padding((ItemHeight - icon.Height) / 2);
+            int left = e.Bounds.Left + Margin.Left;
+            int top = e.Bounds.Top;
+
+            // Draws the checbox
+            CheckBoxRenderer.DrawCheckBox(g, new Point(left, (ItemHeight - CheckBoxSize.Height) / 2),
+                                          apiKey.Monitored ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal);
+            left += CheckBoxSize.Width + Margin.Left * 2;
+
+            // Draws the picture of the API key type
+            g.DrawImage(icon, new Rectangle(left, top + Margin.Top, icon.Width, icon.Height));
+
+            // Texts drawing
+            DrawTexts(top, g, apiKey, left, fontBrush, icon);
+
+            e.DrawFocusRectangle();
+        }
+
+        /// <summary>
+        /// Draws the texts.
+        /// </summary>
+        /// <param name="top">The top.</param>
+        /// <param name="g">The g.</param>
+        /// <param name="apiKey">The API key.</param>
+        /// <param name="left">The left.</param>
+        /// <param name="fontBrush">The font brush.</param>
+        /// <param name="icon">The icon.</param>
+        private void DrawTexts(int top, Graphics g, APIKey apiKey, int left, Brush fontBrush, Image icon)
+        {
+            // Draws the texts on the upper third
+            left += icon.Width + Margin.Left;
+            string apiKeyId = apiKey.ID.ToString(CultureConstants.DefaultCulture);
+            g.DrawString(apiKeyId, m_boldFont, fontBrush, new PointF(left, top));
+            int indentedLeft = left + (int)g.MeasureString(apiKeyId, m_boldFont).Width + Margin.Left;
+
+            g.DrawString(apiKey.VerificationCode, Font, fontBrush, new PointF(indentedLeft, top));
+            indentedLeft += (int)g.MeasureString(apiKey.VerificationCode, Font).Width + Margin.Left * 4;
+
+            string apiKeyExpiration = String.Format(CultureConstants.DefaultCulture, "Expires: {0}",
+                                                    (apiKey.Expiration != DateTime.MinValue
+                                                         ? apiKey.Expiration.ToLocalTime().ToString()
+                                                         : "Never"));
+            g.DrawString(apiKeyExpiration, Font, fontBrush, new PointF(indentedLeft, top));
+
+            // Draw the texts on the middle third
+            top = ItemHeight / 3;
+            string accountCreated = String.Format(CultureConstants.DefaultCulture, "Account Created: {0}",
+                                                  (apiKey.AccountCreated != DateTime.MinValue
+                                                       ? apiKey.AccountCreated.ToLocalTime().ToString()
+                                                       : "-"));
+            g.DrawString(accountCreated, m_middleFont, fontBrush, new PointF(left, top));
+            indentedLeft = left + (int)g.MeasureString(accountCreated, m_middleFont).Width + Margin.Left * 4;
+
+            string accountExpires = String.Format(CultureConstants.DefaultCulture, "Account Paid Until: {0}",
+                                                  (apiKey.AccountExpires != DateTime.MinValue
+                                                       ? apiKey.AccountExpires.ToLocalTime().ToString()
+                                                       : "-"));
+            g.DrawString(accountExpires, m_middleFont, fontBrush, new PointF(indentedLeft, top));
+
+            // Draws the texts on the lower third
+            top *= 2;
+            bool isFirst = true;
+
+            foreach (CharacterIdentity identity in apiKey.CharacterIdentities)
+            {
+                // Draws "; " between ids
+                if (!isFirst)
+                {
+                    g.DrawString("; ", m_smallFont, fontBrush, new PointF(left, top));
+                    left += (int)g.MeasureString("; ", Font).Width;
+                }
+                isFirst = false;
+
+                // Selects font
+                Font font = m_smallFont;
+                CCPCharacter ccpCharacter = identity.CCPCharacter;
+                if (apiKey.IdentityIgnoreList.Contains(identity))
+                    font = m_strikeoutFont;
+                else if (ccpCharacter != null && ccpCharacter.Monitored)
+                    font = m_smallBoldFont;
+
+                // Draws character's name
+                g.DrawString(identity.CharacterName, font, fontBrush, new PointF(left, top));
+                left += (int)g.MeasureString(identity.CharacterName, font).Width;
+            }
+        }
+
+        /// <summary>
+        /// Associates the account info.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        private static void AssociateAccountInfo(APIKey apiKey)
+        {
+            foreach (APIKey apiKeyWithAccountStatusInfo in EveMonClient.CharacterIdentities.Where(
+                id => id.APIKeys.Contains(apiKey)).Select(id => id.APIKeys.FirstOrDefault(
+                    apikey => apikey.AccountCreated != DateTime.MinValue)).Where(
+                        apiKeyWithAccountStatusInfo => apiKeyWithAccountStatusInfo != null))
+            {
+                apiKey.AccountCreated = apiKeyWithAccountStatusInfo.AccountCreated;
+                apiKey.AccountExpires = apiKeyWithAccountStatusInfo.AccountExpires;
+            }
+        }
+
+        /// <summary>
+        /// Gets the icon.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        /// <returns></returns>
+        private static Image GetIcon(APIKey apiKey)
+        {
             Image icon;
             switch (apiKey.Type)
             {
@@ -131,104 +258,7 @@ namespace EVEMon.ApiCredentialsManagement
                     icon = CommonProperties.Resources.AccountWide32;
                     break;
             }
-
-            // Associate account info for corporation type API key
-            // if related info exist in another API key of the binded character
-            foreach (APIKey apiKeyWithAccountStatusInfo in EveMonClient.CharacterIdentities.Where(
-                id => id.APIKeys.Contains(apiKey)).Select(id => id.APIKeys.FirstOrDefault(
-                    apikey => apikey.AccountCreated != DateTime.MinValue)).Where(
-                    apiKeyWithAccountStatusInfo => apiKeyWithAccountStatusInfo != null))
-            {
-                apiKey.AccountCreated = apiKeyWithAccountStatusInfo.AccountCreated;
-                apiKey.AccountExpires = apiKeyWithAccountStatusInfo.AccountExpires;
-            }
-
-            Margin = new Padding((ItemHeight - icon.Height) / 2);
-            int left = e.Bounds.Left + Margin.Left;
-            int top = e.Bounds.Top;
-
-            // Draws the checbox
-            CheckBoxRenderer.DrawCheckBox(g, new Point(left, (ItemHeight - CheckBoxSize.Height) / 2),
-                                          apiKey.Monitored ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal);
-            left += CheckBoxSize.Width + Margin.Left * 2;
-
-            // Draws the picture of the API key type
-            g.DrawImage(icon, new Rectangle(left, top + Margin.Top, icon.Width, icon.Height));
-
-            // Texts drawing
-            using (Font boldFont = FontFactory.GetFont(Font, FontStyle.Bold))
-            {
-                // Draws the texts on the upper third
-                left += icon.Width + Margin.Left;
-                string apiKeyId = apiKey.ID.ToString(CultureConstants.DefaultCulture);
-                g.DrawString(apiKeyId, boldFont, fontBrush, new PointF(left, top));
-                int indentedLeft = left + (int)g.MeasureString(apiKeyId, boldFont).Width + Margin.Left;
-
-                g.DrawString(apiKey.VerificationCode, Font, fontBrush, new PointF(indentedLeft, top));
-                indentedLeft += (int)g.MeasureString(apiKey.VerificationCode, Font).Width + Margin.Left * 4;
-
-                string apiKeyExpiration = String.Format(CultureConstants.DefaultCulture, "Expires: {0}",
-                                                        (apiKey.Expiration != DateTime.MinValue
-                                                             ? apiKey.Expiration.ToLocalTime().ToString()
-                                                             : "Never"));
-                g.DrawString(apiKeyExpiration, Font, fontBrush, new PointF(indentedLeft, top));
-
-                using (Font middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f))
-                {
-                    // Draw the texts on the middle third
-                    top = ItemHeight / 3;
-                    string accountCreated = String.Format(CultureConstants.DefaultCulture, "Account Created: {0}",
-                                                          (apiKey.AccountCreated != DateTime.MinValue
-                                                               ? apiKey.AccountCreated.ToLocalTime().ToString()
-                                                               : "-"));
-                    g.DrawString(accountCreated, middleFont, fontBrush, new PointF(left, top));
-                    indentedLeft = left + (int)g.MeasureString(accountCreated, middleFont).Width + Margin.Left * 4;
-
-                    string accountExpires = String.Format(CultureConstants.DefaultCulture, "Account Paid Until: {0}",
-                                                          (apiKey.AccountExpires != DateTime.MinValue
-                                                               ? apiKey.AccountExpires.ToLocalTime().ToString()
-                                                               : "-"));
-                    g.DrawString(accountExpires, middleFont, fontBrush, new PointF(indentedLeft, top));
-
-                    using (Font smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f))
-                    {
-                        using (Font strikeoutFont = FontFactory.GetFont(smallFont, FontStyle.Strikeout))
-                        {
-                            using (Font smallBoldFont = FontFactory.GetFont(smallFont, FontStyle.Bold))
-                            {
-                                // Draws the texts on the lower third
-                                top *= 2;
-                                bool isFirst = true;
-
-                                foreach (CharacterIdentity identity in apiKey.CharacterIdentities)
-                                {
-                                    // Draws "; " between ids
-                                    if (!isFirst)
-                                    {
-                                        g.DrawString("; ", smallFont, fontBrush, new PointF(left, top));
-                                        left += (int)g.MeasureString("; ", Font).Width;
-                                    }
-                                    isFirst = false;
-
-                                    // Selects font
-                                    Font font = smallFont;
-                                    CCPCharacter ccpCharacter = identity.CCPCharacter;
-                                    if (apiKey.IdentityIgnoreList.Contains(identity))
-                                        font = strikeoutFont;
-                                    else if (ccpCharacter != null && ccpCharacter.Monitored)
-                                        font = smallBoldFont;
-
-                                    // Draws character's name
-                                    g.DrawString(identity.CharacterName, font, fontBrush, new PointF(left, top));
-                                    left += (int)g.MeasureString(identity.CharacterName, font).Width;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            e.DrawFocusRectangle();
+            return icon;
         }
     }
 }

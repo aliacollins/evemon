@@ -142,40 +142,14 @@ namespace EVEMon.SkillPlanner
             m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention)
                              || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention);
 
+            // Hide the tab control if the selected tab is not the first
+            // (avoids tab creation be visible to user)
+            if (tabControl.SelectedIndex != 0)
+                tabControl.Hide();
+
             try
             {
-                // Hide the tab control if the selected tab is not the first
-                // (avoids tab creation be visible to user)
-                if (tabControl.SelectedIndex != 0)
-                    tabControl.Hide();
-
-                // Store the selected tab index for later use
-                int storedTabIndex = tabControl.SelectedIndex;
-
-                tabControl.TabPages.Clear();
-
-                // Add the appropriate tabs
-                tabControl.TabPages.Add(tpManufacturing);
-
-                if (hasCopying)
-                    tabControl.TabPages.Add(tpCopying);
-
-                if (hasResearchingMaterialProductivity)
-                    tabControl.TabPages.Add(tpResearchME);
-
-                if (hasResearchingTimeProductivity)
-                    tabControl.TabPages.Add(tpResearchPE);
-
-                if (!hasCopying && !hasResearchingMaterialProductivity && !hasResearchingTimeProductivity)
-                    tabControl.TabPages.Add(tpResearching);
-
-                if (m_hasInvention)
-                    tabControl.TabPages.Add(tpInvention);
-
-                // Restore the index of the previous selected tab,
-                // if the index doesn't exist it smartly selects
-                // the first one by its own
-                tabControl.SelectedIndex = storedTabIndex;
+                RefreshTabs(hasResearchingTimeProductivity, hasCopying, hasResearchingMaterialProductivity);
             }
             finally
             {
@@ -184,6 +158,43 @@ namespace EVEMon.SkillPlanner
                 // Return focus to selector
                 blueprintSelectControl.tvItems.Focus();
             }
+        }
+
+        /// <summary>
+        /// Refreshes the tabs.
+        /// </summary>
+        /// <param name="hasResearchingTimeProductivity">if set to <c>true</c> [has researching time productivity].</param>
+        /// <param name="hasCopying">if set to <c>true</c> [has copying].</param>
+        /// <param name="hasResearchingMaterialProductivity">if set to <c>true</c> [has researching material productivity].</param>
+        private void RefreshTabs(bool hasResearchingTimeProductivity, bool hasCopying, bool hasResearchingMaterialProductivity)
+        {
+            // Store the selected tab index for later use
+            int storedTabIndex = tabControl.SelectedIndex;
+
+            tabControl.TabPages.Clear();
+
+            // Add the appropriate tabs
+            tabControl.TabPages.Add(tpManufacturing);
+
+            if (hasCopying)
+                tabControl.TabPages.Add(tpCopying);
+
+            if (hasResearchingMaterialProductivity)
+                tabControl.TabPages.Add(tpResearchME);
+
+            if (hasResearchingTimeProductivity)
+                tabControl.TabPages.Add(tpResearchPE);
+
+            if (!hasCopying && !hasResearchingMaterialProductivity && !hasResearchingTimeProductivity)
+                tabControl.TabPages.Add(tpResearching);
+
+            if (m_hasInvention)
+                tabControl.TabPages.Add(tpInvention);
+
+            // Restore the index of the previous selected tab,
+            // if the index doesn't exist it smartly selects
+            // the first one by its own
+            tabControl.SelectedIndex = storedTabIndex;
         }
 
         /// <summary>
