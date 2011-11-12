@@ -1961,7 +1961,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void ExceptionWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new Exception("Test Exception");
+            throw new InvalidOperationException("Test Exception");
         }
 
         /// <summary>
@@ -1971,7 +1971,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exceptionWindowRecursiveExceptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new Exception("Test Exception", new Exception("Inner Exception"));
+            throw new InvalidOperationException("Test Exception", new InvalidOperationException("Inner Exception"));
         }
 
         /// <summary>
