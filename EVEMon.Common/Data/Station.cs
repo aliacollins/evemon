@@ -82,7 +82,7 @@ namespace EVEMon.Common.Data
         public SolarSystem SolarSystem { get; private set; }
 
         /// <summary>
-        /// Gets something like Heimatar > Constellation > Pator > Pator III - Republic Military School.
+        /// Gets something like Region > Constellation > Solar System > Station.
         /// </summary>
         public string FullLocation { get; private set; }
 

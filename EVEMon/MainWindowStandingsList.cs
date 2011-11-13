@@ -216,9 +216,10 @@ namespace EVEMon
             SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
-            string standingText = String.Format("{0}  {1:N2}", standing.EntityName, standing.EffectiveStanding);
-            string standingStatusText = String.Format("({0})", standing.Status);
-            string standingsDetailsText = String.Format("{0} raises your effective standing from {1:N2}",
+            string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
+                                                standing.EffectiveStanding);
+            string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})", standing.Status);
+            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture, "{0} raises your effective standing from {1:N2}",
                                                         (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
                                                         standing.StandingValue);
 
@@ -296,7 +297,8 @@ namespace EVEMon
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Size standingGroupTextSize = TextRenderer.MeasureText(g, group.ToUpper(), m_standingsBoldFont, Size.Empty, Format);
+            Size standingGroupTextSize = TextRenderer.MeasureText(g, group.ToUpper(CultureConstants.DefaultCulture),
+                                                                  m_standingsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                             e.Bounds.Top +
                                                             ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
@@ -304,8 +306,8 @@ namespace EVEMon
                                                             standingGroupTextSize.Height);
 
             // Draws the text header
-            TextRenderer.DrawText(g, group.ToUpper(), m_standingsBoldFont, standingGroupTextRect, Color.White, Color.Transparent,
-                                  Format);
+            TextRenderer.DrawText(g, group.ToUpper(CultureConstants.DefaultCulture), m_standingsBoldFont, standingGroupTextRect,
+                                  Color.White, Color.Transparent, Format);
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);

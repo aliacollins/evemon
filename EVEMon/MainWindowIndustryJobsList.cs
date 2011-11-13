@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -16,7 +17,7 @@ namespace EVEMon
     {
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        private readonly Timer m_timer = new Timer {Interval = 1000};
+        private readonly Timer m_timer = new Timer();
 
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
@@ -54,6 +55,7 @@ namespace EVEMon
             InitializeExpandablePanelControls();
 
             lvJobs.Visible = false;
+            lvJobs.ShowItemToolTips = true;
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
 
@@ -68,6 +70,7 @@ namespace EVEMon
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
 
+            m_timer.Interval = 1000;
             m_timer.Tick += m_timer_Tick;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -323,69 +326,7 @@ namespace EVEMon
 
                 UpdateSort();
 
-                switch (m_grouping)
-                {
-                    case IndustryJobGrouping.State:
-                        IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups0 =
-                            jobs.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
-                        UpdateContent(groups0);
-                        break;
-                    case IndustryJobGrouping.StateDesc:
-                        IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups1 =
-                            jobs.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
-                        UpdateContent(groups1);
-                        break;
-                    case IndustryJobGrouping.EndDate:
-                        IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
-                            jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
-                        UpdateContent(groups2);
-                        break;
-                    case IndustryJobGrouping.EndDateDesc:
-                        IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
-                            jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
-                        UpdateContent(groups3);
-                        break;
-                    case IndustryJobGrouping.InstalledItemType:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups4 =
-                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
-                        UpdateContent(groups4);
-                        break;
-                    case IndustryJobGrouping.InstalledItemTypeDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups5 =
-                            jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
-                        UpdateContent(groups5);
-                        break;
-                    case IndustryJobGrouping.OutputItemType:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups6 =
-                            jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
-                        UpdateContent(groups6);
-                        break;
-                    case IndustryJobGrouping.OutputItemTypeDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups7 =
-                            jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
-                        UpdateContent(groups7);
-                        break;
-                    case IndustryJobGrouping.Activity:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups8 =
-                            jobs.GroupBy(x => x.Activity.GetDescription()).OrderBy(x => x.Key);
-                        UpdateContent(groups8);
-                        break;
-                    case IndustryJobGrouping.ActivityDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups9 =
-                            jobs.GroupBy(x => x.Activity.GetDescription()).OrderByDescending(x => x.Key);
-                        UpdateContent(groups9);
-                        break;
-                    case IndustryJobGrouping.Location:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups10 =
-                            jobs.GroupBy(x => x.Installation).OrderBy(x => x.Key);
-                        UpdateContent(groups10);
-                        break;
-                    case IndustryJobGrouping.LocationDesc:
-                        IOrderedEnumerable<IGrouping<string, IndustryJob>> groups11 =
-                            jobs.GroupBy(x => x.Installation).OrderByDescending(x => x.Key);
-                        UpdateContent(groups11);
-                        break;
-                }
+                UpdateContentByGroup(jobs);
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -414,6 +355,77 @@ namespace EVEMon
             finally
             {
                 lvJobs.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Updates the content by group.
+        /// </summary>
+        /// <param name="jobs">The jobs.</param>
+        private void UpdateContentByGroup(IEnumerable<IndustryJob> jobs)
+        {
+            switch (m_grouping)
+            {
+                case IndustryJobGrouping.State:
+                    IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups0 =
+                        jobs.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
+                    UpdateContent(groups0);
+                    break;
+                case IndustryJobGrouping.StateDesc:
+                    IOrderedEnumerable<IGrouping<JobState, IndustryJob>> groups1 =
+                        jobs.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
+                    UpdateContent(groups1);
+                    break;
+                case IndustryJobGrouping.EndDate:
+                    IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
+                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
+                    UpdateContent(groups2);
+                    break;
+                case IndustryJobGrouping.EndDateDesc:
+                    IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
+                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
+                    UpdateContent(groups3);
+                    break;
+                case IndustryJobGrouping.InstalledItemType:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups4 =
+                        jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
+                    UpdateContent(groups4);
+                    break;
+                case IndustryJobGrouping.InstalledItemTypeDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups5 =
+                        jobs.GroupBy(x => x.InstalledItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
+                    UpdateContent(groups5);
+                    break;
+                case IndustryJobGrouping.OutputItemType:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups6 =
+                        jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderBy(x => x.Key);
+                    UpdateContent(groups6);
+                    break;
+                case IndustryJobGrouping.OutputItemTypeDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups7 =
+                        jobs.GroupBy(x => x.OutputItem.MarketGroup.CategoryPath).OrderByDescending(x => x.Key);
+                    UpdateContent(groups7);
+                    break;
+                case IndustryJobGrouping.Activity:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups8 =
+                        jobs.GroupBy(x => x.Activity.GetDescription()).OrderBy(x => x.Key);
+                    UpdateContent(groups8);
+                    break;
+                case IndustryJobGrouping.ActivityDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups9 =
+                        jobs.GroupBy(x => x.Activity.GetDescription()).OrderByDescending(x => x.Key);
+                    UpdateContent(groups9);
+                    break;
+                case IndustryJobGrouping.Location:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups10 =
+                        jobs.GroupBy(x => x.Installation).OrderBy(x => x.Key);
+                    UpdateContent(groups10);
+                    break;
+                case IndustryJobGrouping.LocationDesc:
+                    IOrderedEnumerable<IGrouping<string, IndustryJob>> groups11 =
+                        jobs.GroupBy(x => x.Installation).OrderByDescending(x => x.Key);
+                    UpdateContent(groups11);
+                    break;
             }
         }
 
@@ -467,6 +479,33 @@ namespace EVEMon
                         IndustryJobColumn column = (IndustryJobColumn)header.Tag;
                         SetColumn(job, item.SubItems[i], column);
                     }
+
+                    // Tooltip
+                    StringBuilder builder = new StringBuilder();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
+                                         job.InstalledTime.ToLocalTime()).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
+                                         job.EndProductionTime.ToLocalTime()).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
+                    if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
+                    {
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
+                                             job.InstalledME).AppendLine();
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
+                                             job.InstalledME + job.Runs).AppendLine();
+                    }
+                    if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
+                    {
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
+                                             job.InstalledPE).AppendLine();
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
+                                             job.InstalledPE + job.Runs).AppendLine();
+                    }
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                         job.SolarSystem.FullLocation).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
+                    item.ToolTipText = builder.ToString();
 
                     lvJobs.Items.Add(item);
                 }
@@ -564,7 +603,7 @@ namespace EVEMon
                     item.Text = job.InstalledItem.MarketGroup.Name;
                     break;
                 case IndustryJobColumn.OutputItem:
-                    item.Text = String.Format("{0} Unit{1} of {2}", GetUnitCount(job),
+                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Unit{1} of {2}", GetUnitCount(job),
                                               (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.Name);
                     break;
                 case IndustryJobColumn.OutputItemType:
@@ -584,22 +623,22 @@ namespace EVEMon
                     break;
                 case IndustryJobColumn.InstalledME:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity
-                                     ? job.InstalledME.ToString()
+                                     ? job.InstalledME.ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.EndME:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity
-                                     ? (job.InstalledME + job.Runs).ToString()
+                                     ? (job.InstalledME + job.Runs).ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.InstalledPE:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity
-                                     ? job.InstalledPE.ToString()
+                                     ? job.InstalledPE.ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.EndPE:
                     item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity
-                                     ? (job.InstalledPE + job.Runs).ToString()
+                                     ? (job.InstalledPE + job.Runs).ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.Location:
@@ -894,7 +933,9 @@ namespace EVEMon
         {
             if (!Visible)
             {
-                m_timer.Enabled = false;
+                if (m_timer.Enabled)
+                    m_timer.Stop();
+
                 return;
             }
 

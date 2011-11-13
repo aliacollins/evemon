@@ -334,6 +334,7 @@ namespace EVEMon.ApiCredentialsManagement
                 // Retrieve current selection and grouping option
                 List<Character> oldSelection =
                     new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag as Character));
+
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();
 
@@ -345,55 +346,7 @@ namespace EVEMon.ApiCredentialsManagement
                 Dictionary<APIKey, ListViewGroup> apiKeyGroups = new Dictionary<APIKey, ListViewGroup>();
 
                 if (isGrouping)
-                {
-                    bool hasNoAPIKey = false;
-                    bool hasFileChars = false;
-                    bool hasUrlChars = false;
-
-                    // Scroll through listview items to gather the groups
-                    foreach (Character character in EveMonClient.Characters)
-                    {
-                        UriCharacter uriCharacter = character as UriCharacter;
-
-                        // Uri character ?
-                        if (uriCharacter != null)
-                        {
-                            if (uriCharacter.Uri.IsFile)
-                                hasFileChars = true;
-                            else
-                                hasUrlChars = true;
-                        }
-                            // CCP character ?
-                        else
-                        {
-                            if (character.Identity.APIKeys.IsEmpty())
-                                hasNoAPIKey = true;
-                            else
-                            {
-                                foreach (APIKey apiKey in character.Identity.APIKeys.Where(
-                                    apiKey => !apiKeyGroups.ContainsKey(apiKey)))
-                                {
-                                    apiKeyGroups.Add(apiKey, new ListViewGroup(String.Format("Key ID #{0}", apiKey.ID)));
-                                }
-                            }
-                        }
-                    }
-
-                    // Add the groups
-                    if (hasNoAPIKey)
-                        charactersListView.Groups.Add(noAPIKeyGroup);
-
-                    foreach (ListViewGroup group in apiKeyGroups.Values)
-                    {
-                        charactersListView.Groups.Add(group);
-                    }
-
-                    if (hasFileChars)
-                        charactersListView.Groups.Add(fileGroup);
-
-                    if (hasUrlChars)
-                        charactersListView.Groups.Add(urlGroup);
-                }
+                    ArrangeByGroup(fileGroup, apiKeyGroups, noAPIKeyGroup, urlGroup);
 
                 // Add items
                 foreach (Character character in EveMonClient.Characters.OrderBy(x => x.Name))
@@ -433,12 +386,15 @@ namespace EVEMon.ApiCredentialsManagement
 
                     // Add the item and its subitems
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, typeText));
-                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.CharacterID.ToString()));
+                    item.SubItems.Add(new ListViewItem.ListViewSubItem(item,
+                                                                       character.CharacterID.ToString(
+                                                                           CultureConstants.DefaultCulture)));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, character.Name));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, apiKeyIDText));
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));
 
                     charactersListView.Items.Add(item);
+
                     if (oldSelection.Contains(character))
                         item.Selected = true;
                 }
@@ -456,6 +412,67 @@ namespace EVEMon.ApiCredentialsManagement
 
             // Forces a refresh of the enabled/disabled items
             UpdateControlsUsability();
+        }
+
+        /// <summary>
+        /// Arranges the by group.
+        /// </summary>
+        /// <param name="fileGroup">The file group.</param>
+        /// <param name="apiKeyGroups">The API key groups.</param>
+        /// <param name="noAPIKeyGroup">The no API key group.</param>
+        /// <param name="urlGroup">The URL group.</param>
+        private void ArrangeByGroup(ListViewGroup fileGroup, Dictionary<APIKey, ListViewGroup> apiKeyGroups,
+                                    ListViewGroup noAPIKeyGroup, ListViewGroup urlGroup)
+        {
+            bool hasNoAPIKey = false;
+            bool hasFileChars = false;
+            bool hasUrlChars = false;
+
+            // Scroll through listview items to gather the groups
+            foreach (Character character in EveMonClient.Characters)
+            {
+                UriCharacter uriCharacter = character as UriCharacter;
+
+                // Uri character ?
+                if (uriCharacter != null)
+                {
+                    if (uriCharacter.Uri.IsFile)
+                        hasFileChars = true;
+                    else
+                        hasUrlChars = true;
+                }
+                    // CCP character ?
+                else
+                {
+                    if (character.Identity.APIKeys.IsEmpty())
+                        hasNoAPIKey = true;
+                    else
+                    {
+                        foreach (APIKey apiKey in character.Identity.APIKeys.Where(
+                            apiKey => !apiKeyGroups.ContainsKey(apiKey)))
+                        {
+                            apiKeyGroups.Add(apiKey,
+                                             new ListViewGroup(String.Format(CultureConstants.DefaultCulture,
+                                                                             "Key ID #{0}", apiKey.ID)));
+                        }
+                    }
+                }
+            }
+
+            // Add the groups
+            if (hasNoAPIKey)
+                charactersListView.Groups.Add(noAPIKeyGroup);
+
+            foreach (ListViewGroup group in apiKeyGroups.Values)
+            {
+                charactersListView.Groups.Add(group);
+            }
+
+            if (hasFileChars)
+                charactersListView.Groups.Add(fileGroup);
+
+            if (hasUrlChars)
+                charactersListView.Groups.Add(urlGroup);
         }
 
         /// <summary>

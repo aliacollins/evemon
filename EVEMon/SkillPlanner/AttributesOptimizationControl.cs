@@ -3,16 +3,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.SkillPlanner
 {
-    /// <summary>
-    /// Represents the method that will handle change of attributes in optimization control.
-    /// </summary>
-    /// <param name="control">Source attribute optimization control</param>
-    /// <param name="remapping">Current remapping in control</param>
-    public delegate void AttributeChangedHandler(AttributesOptimizationControl control, RemappingResult remapping);
-
     /// <summary>
     /// Control that shows attribute remapping and allows to adjust it.
     /// </summary>
@@ -27,7 +21,7 @@ namespace EVEMon.SkillPlanner
         /// Occurs when attributes changes. 
         /// </summary>
         [Category("Behavior")]
-        public event AttributeChangedHandler AttributeChanged;
+        public event EventHandler<AttributeChangedEventArgs> AttributeChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AttributesOptimizationControl"/>.
@@ -94,14 +88,14 @@ namespace EVEMon.SkillPlanner
             if (remapping.BestDuration < remapping.BaseDuration)
             {
                 lbGain.ForeColor = Color.Black;
-                lbGain.Text = String.Format("{0} better than current",
+                lbGain.Text = String.Format(CultureConstants.DefaultCulture, "{0} better than current",
                                             remapping.BaseDuration.Subtract(remapping.BestDuration).ToDescriptiveText(
                                                 DescriptiveTextOptions.IncludeCommas));
             }
             else if (remapping.BaseDuration < remapping.BestDuration)
             {
                 lbGain.ForeColor = Color.DarkRed;
-                lbGain.Text = String.Format("{0} slower than current",
+                lbGain.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current",
                                             remapping.BestDuration.Subtract(remapping.BaseDuration).ToDescriptiveText(
                                                 DescriptiveTextOptions.IncludeCommas));
             }
@@ -132,12 +126,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping">Attribute remapping</param>
         /// <param name="attrib">Attribute that will be used to update controls</param>
-        /// <param name="lb">Label control</param>
+        /// <param name="label">Label control</param>
         /// <param name="pbRemappable">Attribute bar for remappable value</param>
         /// <param name="pbImplants">Attribute bar for implants</param>
         private static void UpdateAttributeControls(RemappingResult remapping,
                                              EveAttribute attrib,
-                                             Label lb,
+                                             Control label,
                                              AttributeBarControl pbRemappable,
                                              AttributeBarControl pbImplants)
         {
@@ -148,8 +142,8 @@ namespace EVEMon.SkillPlanner
             int implantsBonus = remapping.BestScratchpad[attrib].ImplantBonus;
 
             // Update the label
-            lb.Text = String.Format("{0} (new : {1} ; old : {2})", effectiveAttribute, remappableAttribute,
-                                    oldBaseAttribute);
+            label.Text = String.Format(CultureConstants.DefaultCulture, "{0} (new : {1} ; old : {2})",
+                                       effectiveAttribute, remappableAttribute, oldBaseAttribute);
 
             // Update the bars
             pbRemappable.Value = remappableAttribute - EveConstants.CharacterBaseAttributePoints;
@@ -176,7 +170,7 @@ namespace EVEMon.SkillPlanner
 
             // Notify the changes
             if (AttributeChanged != null)
-                AttributeChanged(this, manualRemapping);
+                AttributeChanged(this, new AttributeChangedEventArgs(manualRemapping));
         }
 
 
@@ -185,23 +179,26 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Change of any attribute must be adjusted if there is no enough free points in the pool.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="deltaValue"></param>
-        private void pbRemappable_ValueChanging(AttributeBarControl sender, ref int deltaValue)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="AttributeValueChangingEventArgs"/> instance containing the event data.</param>
+        private void pbRemappable_ValueChanging(object sender, AttributeValueChangingEventArgs e)
         {
+            AttributeBarControl control = (AttributeBarControl)sender;
+
             // Adjust delta if there is no enough free points
-            if (pbUnassigned.Value < deltaValue)
-                deltaValue = pbUnassigned.Value;
+            if (pbUnassigned.Value < e.Value)
+                control.DeltaValue = pbUnassigned.Value;
 
             // Add/remove points from pool
-            pbUnassigned.Value -= deltaValue;
+            pbUnassigned.Value -= control.DeltaValue;
         }
 
         /// <summary>
         /// Recalculate the time after change of an attribute.
         /// </summary>
-        /// <param name="sender"></param>
-        private void pb_ValueChanged(AttributeBarControl sender)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="AttributeValueChangedEventArgs"/> instance containing the event data.</param>
+        private void pb_ValueChanged(object sender, AttributeValueChangedEventArgs e)
         {
             Recalculate();
         }
@@ -209,13 +206,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Correct highlight if selected cell is inaccessable.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="highlightValue"></param>
-        private void pbRemappable_Highlighting(AttributeBarControl sender, ref int highlightValue)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="AttributeHighlightingEventArgs"/> instance containing the event data.</param>
+        private void pbRemappable_Highlighting(object sender, AttributeHighlightingEventArgs e)
         {
+            AttributeBarControl control = (AttributeBarControl)sender;
+            
             // Adjust possible highlight using free points in pool
-            if (highlightValue - sender.Value > pbUnassigned.Value)
-                highlightValue = sender.Value + pbUnassigned.Value;
+            if (e.Value - control.Value > pbUnassigned.Value)
+                control.HighlightedValue = control.Value + pbUnassigned.Value;
         }
 
         /// <summary>
@@ -233,7 +232,7 @@ namespace EVEMon.SkillPlanner
 
             // Fires the event
             if (AttributeChanged != null)
-                AttributeChanged(this, m_remapping);
+                AttributeChanged(this, new AttributeChangedEventArgs(m_remapping));
         }
 
         /// <summary>
@@ -252,7 +251,7 @@ namespace EVEMon.SkillPlanner
 
             // Fires the event
             if (AttributeChanged != null)
-                AttributeChanged(this, zeroRemapping);
+                AttributeChanged(this, new AttributeChangedEventArgs(zeroRemapping));
         }
 
         /// <summary>
@@ -297,6 +296,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="point"></param>
         public void UpdateValuesFrom(RemappingPoint point)
         {
+            if (point == null)
+                throw new ArgumentNullException("point");
+
             // Creates a scratchpad with the base values from the provided point.
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));
             for (int i = 0; i < 5; i++)
@@ -312,7 +314,7 @@ namespace EVEMon.SkillPlanner
 
             // Fires the event
             if (AttributeChanged != null)
-                AttributeChanged(this, remapping);
+                AttributeChanged(this, new AttributeChangedEventArgs(remapping));
         }
 
         #endregion

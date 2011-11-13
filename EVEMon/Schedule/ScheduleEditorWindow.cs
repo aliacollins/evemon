@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Scheduling;
 
 namespace EVEMon.Schedule
@@ -15,7 +16,6 @@ namespace EVEMon.Schedule
         private const int OneDaysSeconds = 86400;
         private const int DaysOfWeek = 7;
 
-        private readonly ToolTip m_tooltip;
         private DateTime m_currentDate = DateTime.Now;
         private List<ScheduleEntry> m_lbEntriesData;
 
@@ -25,19 +25,8 @@ namespace EVEMon.Schedule
         public ScheduleEditorWindow()
         {
             InitializeComponent();
-            calControl.EntryFont = FontFactory.GetFont("Microsoft Sans Serif", 7F);
 
-            // Setup Balloon Tooltip for later use
-            m_tooltip = new ToolTip
-                            {
-                                IsBalloon = true,
-                                UseAnimation = true,
-                                UseFading = true,
-                                AutoPopDelay = 10000,
-                                ReshowDelay = 100,
-                                InitialDelay = 500,
-                                ToolTipIcon = ToolTipIcon.Info
-                            };
+            calControl.EntryFont = FontFactory.GetFont("Microsoft Sans Serif", 7F);
 
             // Load Calendar Colors
             calControl.BlockingColor = (Color)Settings.UI.Scheduler.BlockingColor;
@@ -262,7 +251,7 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         private void calControl_MouseLeave(object sender, EventArgs e)
         {
-            m_tooltip.Active = false;
+            toolTip.Active = false;
         }
 
         /// <summary>
@@ -272,18 +261,17 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         private void calControl_MouseEnter(object sender, EventArgs e)
         {
-            m_tooltip.Active = false;
+            toolTip.Active = false;
         }
 
         /// <summary>
         /// When the user double-clicks a day on the calendar control, we allow him to add a new entry.
         /// </summary>
-        /// <param name="datetime"></param>
-        /// <param name="mouse"></param>
-        /// <param name="loc"></param>
-        private void calControl_DayDoubleClicked(DateTime datetime, MouseEventArgs mouse, Point loc)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
+        private void calControl_DayDoubleClicked(object sender, DaySelectedEventArgs e)
         {
-            using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
+            using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(e.DateTime))
             {
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
@@ -296,18 +284,17 @@ namespace EVEMon.Schedule
         /// <summary>
         /// When the user clicks the calendar controls (main control)
         /// </summary>
-        /// <param name="datetime"></param>
-        /// <param name="mouse"></param>
-        /// <param name="location"></param>
-        private void calControl_DayClicked(DateTime datetime, MouseEventArgs mouse, Point location)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
+        private void calControl_DayClicked(object sender, DaySelectedEventArgs e)
         {
-            switch (mouse.Button)
+            switch (e.Mouse.Button)
             {
                 case MouseButtons.Left:
-                    ShowCalendarTooltip(datetime);
+                    ShowCalendarTooltip(e.DateTime);
                     break;
                 case MouseButtons.Right:
-                    ShowCalendarContextMenu(datetime, location);
+                    ShowCalendarContextMenu(e.DateTime, e.Location);
                     break;
             }
         }
@@ -331,12 +318,24 @@ namespace EVEMon.Schedule
             // Add "Edit" menus for every schedule on this day
             foreach (ScheduleEntry entry in Scheduler.Entries.Where(x => x.IsToday(datetime)))
             {
-                ToolStripItem item = new ToolStripMenuItem();
-                item.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
-                item.Tag = entry;
-                item.Click += editMenuItem_Click;
+                ToolStripItem tempItem = null;
+                try
+                {
+                    tempItem = new ToolStripMenuItem();
+                    tempItem.Click += editMenuItem_Click;
+                    tempItem.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
+                    tempItem.Tag = entry;
 
-                calContext.Items.Add(item);
+                    ToolStripItem item = tempItem;
+                    tempItem = null;
+
+                    calContext.Items.Add(item);
+                }
+                finally
+                {
+                    if (tempItem != null)
+                        tempItem.Dispose();
+                }
             }
 
             // Display the menu
@@ -404,20 +403,23 @@ namespace EVEMon.Schedule
                     // In case local time conversion extends beyond the entry date,
                     // we display also the ending date
                     string toLocalTime = (to.Day == to.ToLocalTime().Day
-                                              ? to.ToLocalTime().ToString("HH:mm")
+                                              ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
                                               : to.ToLocalTime().ToString());
 
-                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
-                    content.AppendFormat(" [ Local Time: {0} - {1} ] ", from.ToLocalTime().ToString("HH:mm"), toLocalTime);
+                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
+                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
+                    content.AppendFormat(" [ Local Time: {0} - {1} ] ",
+                                         from.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture), toLocalTime);
                 }
                 else
-                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
+                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
+                                         to.ToString("HH:mm", CultureConstants.DefaultCulture));
                 content.AppendLine();
             }
 
-            m_tooltip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0}", datetime.ToString("d"));
-            m_tooltip.SetToolTip(calControl, content.ToString());
-            m_tooltip.Active = true;
+            toolTip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0:d}", datetime);
+            toolTip.SetToolTip(calControl, content.ToString());
+            toolTip.Active = true;
         }
 
         /// <summary>

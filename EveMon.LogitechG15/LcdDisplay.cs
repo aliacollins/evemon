@@ -25,6 +25,7 @@ namespace EVEMon.LogitechG15
         private readonly Graphics m_lcdCanvas;
         private readonly Graphics m_lcdOverlay;
         private readonly List<LineProcess> m_lcdLines = new List<LineProcess>();
+        private readonly Object m_lock = new Object();
 
         private CCPCharacter m_currentCharacter;
         private CCPCharacter m_refreshCharacter;
@@ -687,7 +688,7 @@ namespace EVEMon.LogitechG15
         private unsafe void UpdateLcdDisplay(uint priority = NativeMethods.LGLcdPriorityNormal)
         {
             // Locking should not be necessary but i'll keep it here
-            lock (new Object())
+            lock (m_lock)
             {
                 int width = m_bmpLCD.Width;
                 int height = m_bmpLCD.Height;
@@ -902,15 +903,6 @@ namespace EVEMon.LogitechG15
             }
 
             SwitchState(LcdState.CharacterList);
-        }
-
-        /// <summary>
-        /// On skill completion, switch to the display of the proper message.
-        /// </summary>
-        public void SkillCompleted(Character character)
-        {
-            CurrentCharacter = character as CCPCharacter;
-            SwitchState(LcdState.SkillComplete);
         }
 
         /// <summary>

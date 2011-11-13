@@ -20,6 +20,7 @@ namespace EVEMon.ApiErrorHandling
     {
         private APIErrorNotificationEventArgs m_notification;
         private ApiErrorTroubleshooter m_troubleshooter;
+        private HttpTimeoutTroubleshooter m_httpTimeoutTroubleshooter = new HttpTimeoutTroubleshooter();
         private bool m_troubleshooterUsed;
 
         /// <summary>
@@ -39,6 +40,9 @@ namespace EVEMon.ApiErrorHandling
             get { return m_notification; }
             set
             {
+                if (value == null)
+                    return;
+
                 m_notification = value;
                 ErrorLabel.Text = GetErrorLabelText(value);
                 DetailsTextBox.Text = GetXmlData(value.Result);
@@ -71,7 +75,7 @@ namespace EVEMon.ApiErrorHandling
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns>A troubleshooter for the error message.</returns>
-        private static ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
+        private ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
         {
             if (exception == null)
                 return null;
@@ -81,7 +85,7 @@ namespace EVEMon.ApiErrorHandling
             if (httpException == null)
                 return null;
 
-            return httpException.Status == HttpWebServiceExceptionStatus.Timeout ? new HttpTimeoutTroubleshooter() : null;
+            return httpException.Status == HttpWebServiceExceptionStatus.Timeout ? m_httpTimeoutTroubleshooter : null;
         }
 
         /// <summary>
@@ -139,8 +143,10 @@ namespace EVEMon.ApiErrorHandling
                 return "No error selected.";
 
             return value.Result == null
-                       ? String.Format("{0}{1}No details were provided.", value, Environment.NewLine)
-                       : String.Format("{0}{1}{2}", value, Environment.NewLine, GetErrorLabelTextDetail(value.Result));
+                       ? String.Format(CultureConstants.DefaultCulture, "{0}{1}No details were provided.", value,
+                                       Environment.NewLine)
+                       : String.Format(CultureConstants.DefaultCulture, "{0}{1}{2}", value, Environment.NewLine,
+                                       GetErrorLabelTextDetail(value.Result));
         }
 
         /// <summary>

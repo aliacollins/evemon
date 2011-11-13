@@ -72,7 +72,7 @@ namespace EVEMon.Common.Data
         public Constellation Constellation { get; private set; }
 
         /// <summary>
-        /// Gets something like Heimatar > Constellation > Pator.
+        /// Gets something like Region > Constellation > Solar System.
         /// </summary>
         public string FullLocation { get; private set; }
 

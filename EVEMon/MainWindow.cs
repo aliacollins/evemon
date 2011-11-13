@@ -64,7 +64,7 @@ namespace EVEMon
             tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
             overview.CharacterClicked += overview_CharacterClicked;
             tcCharacterTabs.TabPages.Remove(tpOverview);
-            lblServerStatus.Text = String.Format("// {0}", EveMonClient.EVEServer.StatusText);
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -314,6 +314,21 @@ namespace EVEMon
             }
 
             // Updates the pages
+            PerformLayout(pages);
+
+            // Reselect
+            if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
+                tcCharacterTabs.SelectedTab = selectedTab;
+
+            UpdateControlsOnTabSelectionChange();
+        }
+
+        /// <summary>
+        /// Performs the layout.
+        /// </summary>
+        /// <param name="pages">The pages.</param>
+        private void PerformLayout(Dictionary<Character, TabPage> pages)
+        {
             tcCharacterTabs.SuspendLayout();
             try
             {
@@ -336,21 +351,11 @@ namespace EVEMon
                     // Does the page match with the character ?
                     if (currentTag != character)
                     {
-                        // Retrieve the page when it was previously created
-                        TabPage page;
-                        // Is the character later in the collection ?
-                        if (pages.TryGetValue(character, out page))
-                        {
-                            // Remove the page from old location
-                            tcCharacterTabs.TabPages.Remove(page);
-                        }
-                            // So we need to inserts it now
-                        else
-                        {
-                            // Creates a new page
-                            page = CreateTab(character);
-                        }
-                        // Inserts the page
+                        // Get the existing page and remove it from the old location
+                        // or create a new one
+                        TabPage page = GetPage(pages, character);
+
+                        // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
                     }
 
@@ -361,29 +366,7 @@ namespace EVEMon
                 }
 
                 // Ensures the overview has been added when necessary
-                if (Settings.UI.MainWindow.ShowOverview)
-                {
-                    if (tpOverview != null && !tcCharacterTabs.TabPages.Contains(tpOverview))
-                    {
-                        // Trim the overview page index
-                        int overviewIndex = Settings.UI.MainWindow.OverviewIndex;
-                        overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, overviewIndex));
-
-                        // Inserts it
-                        tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
-
-                        // Select the Overview tab if it's the first tab
-                        if (overviewIndex == 0)
-                            tcCharacterTabs.SelectedTab = tpOverview;
-                    }
-                }
-                    // Or remove it when it should not be here anymore
-                else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
-                    tcCharacterTabs.TabPages.Remove(tpOverview);
-
-                // Reselect
-                if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
-                    tcCharacterTabs.SelectedTab = selectedTab;
+                AddOverviewTab();
 
                 // Dispose the removed tabs
                 foreach (TabPage page in pages.Values)
@@ -394,8 +377,70 @@ namespace EVEMon
             finally
             {
                 tcCharacterTabs.ResumeLayout();
-                UpdateControlsOnTabSelectionChange();
             }
+        }
+
+        /// <summary>
+        /// Gets the page.
+        /// </summary>
+        /// <param name="pages">The pages.</param>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        private TabPage GetPage(IDictionary<Character, TabPage> pages, Character character)
+        {
+            TabPage page;
+            TabPage tempPage = null;
+            try
+            {
+                // Retrieve the page when it was previously created
+                // Is the character later in the collection ?
+                if (pages.TryGetValue(character, out tempPage))
+                {
+                    // Remove the page from old location
+                    tcCharacterTabs.TabPages.Remove(tempPage);
+                }
+                else
+                {
+                    // Creates a new page
+                    tempPage = CreateTab(character);
+                }
+
+                page = tempPage;
+                tempPage = null;
+            }
+            finally
+            {
+                if(tempPage!=null)
+                    tempPage.Dispose();
+            }
+
+            return page;
+        }
+
+        /// <summary>
+        /// Adds the overview tab.
+        /// </summary>
+        private void AddOverviewTab()
+        {
+            if (Settings.UI.MainWindow.ShowOverview)
+            {
+                if (tpOverview != null && !tcCharacterTabs.TabPages.Contains(tpOverview))
+                {
+                    // Trim the overview page index
+                    int overviewIndex = Settings.UI.MainWindow.OverviewIndex;
+                    overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, overviewIndex));
+
+                    // Inserts it
+                    tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
+
+                    // Select the Overview tab if it's the first tab
+                    if (overviewIndex == 0)
+                        tcCharacterTabs.SelectedTab = tpOverview;
+                }
+            }
+                // Or remove it when it should not be here anymore
+            else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
+                tcCharacterTabs.TabPages.Remove(tpOverview);
         }
 
         /// <summary>
@@ -405,17 +450,54 @@ namespace EVEMon
         private static TabPage CreateTab(Character character)
         {
             // Create the tab
-            TabPage page = new TabPage(character.Name)
-                               {
-                                   UseVisualStyleBackColor = true,
-                                   Padding = new Padding(5),
-                                   Tag = character
-                               };
+            TabPage page;
+            TabPage tempPage = null;
+            try
+            {
+                tempPage = new TabPage(character.Name);
+                tempPage.UseVisualStyleBackColor = true;
+                tempPage.Padding = new Padding(5);
+                tempPage.Tag = character;
 
-            // Create the character monitor
-            new CharacterMonitor((Character)page.Tag) { Parent = page, Dock = DockStyle.Fill };
+                // Create the character monitor
+                CreateCharacterMonitor(character, tempPage);
+
+                page = tempPage;
+                tempPage = null;
+            }
+            finally
+            {
+                if (tempPage != null)
+                    tempPage.Dispose();
+            }
 
             return page;
+        }
+
+        /// <summary>
+        /// Creates the character monitor.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="tempPage">The temp page.</param>
+        private static void CreateCharacterMonitor(Character character, Control tempPage)
+        {
+            CharacterMonitor tempMonitor = null;
+            try
+            {
+                tempMonitor = new CharacterMonitor(character);
+                tempMonitor.Parent = tempPage;
+                tempMonitor.Dock = DockStyle.Fill;
+
+                CharacterMonitor monitor = tempMonitor;
+                tempMonitor = null;
+
+                tempPage.Controls.Add(monitor);
+            }
+            finally
+            {
+                if(tempMonitor != null)
+                    tempMonitor.Dispose();
+            }
         }
 
         /// <summary>
@@ -519,7 +601,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = String.Format("// {0}", e.Server.StatusText);
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", e.Server.StatusText);
         }
 
         /// <summary>
@@ -726,6 +808,27 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Checks whether a sound must be played on skill training.
+        /// </summary>
+        /// <returns></returns>
+        private static void TryPlaySkillCompletionSound()
+        {
+            // Returns if the user disabled the option
+            if (!Settings.Notifications.PlaySoundOnSkillCompletion)
+                return;
+
+            // Checks the schedule 
+            if (Scheduler.SilentMode)
+                return;
+
+            // Play the sound
+            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
+            {
+                sp.Play();
+            }
+        }
+
+        /// <summary>
         /// Occurs when the alerts ballon icon is clicked.
         /// </summary>
         /// <param name="sender"></param>
@@ -764,27 +867,6 @@ namespace EVEMon
         {
             // Play a sound
             TryPlaySkillCompletionSound();
-        }
-
-        /// <summary>
-        /// Checks whether a sound must be played on skill training.
-        /// </summary>
-        /// <returns></returns>
-        private static void TryPlaySkillCompletionSound()
-        {
-            // Returns if the user disabled the option
-            if (!Settings.Notifications.PlaySoundOnSkillCompletion)
-                return;
-
-            // Checks the schedule 
-            if (Scheduler.SilentMode)
-                return;
-
-            // Play the sound
-            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
-            {
-                sp.Play();
-            }
         }
 
         #endregion
@@ -1096,8 +1178,9 @@ namespace EVEMon
                                                  UseShellExecute = false
                                              };
 
-            using (Process evemonProc = new Process { StartInfo = startInfo })
+            using (Process evemonProc = new Process())
             {
+                evemonProc.StartInfo = startInfo;
                 evemonProc.Start();
             }
         }
@@ -1603,16 +1686,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Help > EVE Online Q&A
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void stackExchangeMenu_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(NetworkConstants.StackExchangeEveOnlineURL);
-        }
-
-        /// <summary>
         /// Help > Forums.
         /// </summary>
         /// <param name="sender"></param>
@@ -1953,7 +2026,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void ExceptionWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new Exception("Test Exception");
+            throw new InvalidOperationException("Test Exception");
         }
 
         /// <summary>
@@ -1963,7 +2036,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exceptionWindowRecursiveExceptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new Exception("Test Exception", new Exception("Inner Exception"));
+            throw new InvalidOperationException("Test Exception", new InvalidOperationException("Inner Exception"));
         }
 
         /// <summary>
@@ -2000,7 +2073,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void testTimeoutOneSecToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(String.Format("Timeout Was: {0}, now 1", Settings.Updates.HttpTimeout));
+            MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Timeout was: {0}, now 1", Settings.Updates.HttpTimeout));
             Settings.Updates.HttpTimeout = 1;
         }
 

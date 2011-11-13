@@ -13,11 +13,6 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler SelectionChanged;
 
-        protected Func<Item, Boolean> UsabilityPredicate;
-        protected ObjectActivityFilter ActivityFilter;
-        protected BlueprintActivity Activity;
-        protected bool AllExpanded;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -29,7 +24,32 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan { get; set; }
+
+        /// <summary>
+        /// Gets or sets the usability predicate.
+        /// </summary>
+        /// <value>The usability predicate.</value>
+        protected Func<Item, Boolean> UsabilityPredicate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity filter.
+        /// </summary>
+        /// <value>The activity filter.</value>
+        protected ObjectActivityFilter ActivityFilter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity.
+        /// </summary>
+        /// <value>The activity.</value>
+        protected BlueprintActivity Activity { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [all expanded].
+        /// </summary>
+        /// <value><c>true</c> if [all expanded]; otherwise, <c>false</c>.</value>
+        protected bool AllExpanded { get; set; }
 
         /// <summary>
         /// Occurs when the control is loaded.
@@ -218,7 +238,7 @@ namespace EVEMon.SkillPlanner
         /// All the selected objects (through multi-select).
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), DefaultValue(null), Browsable(false)]
-        public List<Item> SelectedObjects { get; private set; }
+        public IEnumerable<Item> SelectedObjects { get; private set; }
 
         /// <summary>
         /// The primary selected object.
@@ -228,10 +248,10 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (SelectedObjects == null || SelectedObjects.Count == 0)
+                if (SelectedObjects == null || SelectedObjects.Count() == 0)
                     return null;
 
-                return SelectedObjects[0];
+                return SelectedObjects.First();
             }
             set
             {
@@ -253,10 +273,10 @@ namespace EVEMon.SkillPlanner
             SelectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
 
             // Selects the proper nodes
-            if (SelectedObjects.Count == 1)
+            if (SelectedObjects.Count() == 1)
             {
                 // If the object is not already selected
-                Item obj = SelectedObjects[0];
+                Item obj = SelectedObjects.First();
                 tvItems.SelectNodeWithTag(obj);
             }
 
@@ -371,10 +391,12 @@ namespace EVEMon.SkillPlanner
             cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
 
             cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                                          ? String.Format("Expand \"{0}\"", node.Text.Replace("&", "&&"))
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"",
+                                                          node.Text.Replace("&", "&&"))
                                           : String.Empty);
             cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                                            ? String.Format("Collapse \"{0}\"", node.Text.Replace("&", "&&"))
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"",
+                                                            node.Text.Replace("&", "&&"))
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menu
@@ -390,9 +412,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Filter for all items.
         /// </summary>
-        /// <param name="eo"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        protected bool SelectAll(Item eo)
+        protected bool SelectAll(Item item)
         {
             return true;
         }
@@ -400,19 +422,22 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Filter for items which can be used (prereqs met).
         /// </summary>
-        /// <param name="eo"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        protected bool CanUse(Item eo)
+        protected bool CanUse(Item item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             IEnumerable<StaticSkillLevel> prerequisites =
-                eo.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+                item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
             bool bpBrowserControl = this is BlueprintSelectControl;
 
             // Is item a blueprint and supports the selected activity ?  
             if (bpBrowserControl)
             {
                 bool hasSelectedActivity = prerequisites.Any(x => x.Activity == Activity)
-                                           || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity == Activity);
+                                           || ((Blueprint)item).MaterialRequirements.Any(x => x.Activity == Activity);
 
                 // Can not be used when item doesn't support the selected activity
                 if ((ActivityFilter == ObjectActivityFilter.Manufacturing || ActivityFilter == ObjectActivityFilter.Invention)
@@ -475,11 +500,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Filter for items which can not be used (prereqs not met).
         /// </summary>
-        /// <param name="eo"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        protected bool CannotUse(Item eo)
+        protected bool CannotUse(Item item)
         {
-            return !CanUse(eo);
+            return !CanUse(item);
         }
 
         #endregion

@@ -116,7 +116,7 @@ namespace EVEMon.SettingsUI
                     {
                         // Transforms x64 to 64 by 64
                         string size = x.ToString().Substring(1);
-                        return String.Format("{0} by {0}", size);
+                        return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
                     }).ToArray());
 
             // Expands the left panel and selects the first page and node
@@ -139,79 +139,37 @@ namespace EVEMon.SettingsUI
                     cbSkillIconSet.Items.Add(iconSettingsProperty.DefaultValue.ToString());
             }
 
-            // Window settings
-            rbSystemTrayOptionsNever.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled);
-            rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
-            rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
-
-            switch (m_settings.UI.MainWindowCloseBehaviour)
-            {
-                case CloseBehaviour.MinimizeToTaskbar:
-                    rbMinToTaskBar.Checked = true;
-                    break;
-                case CloseBehaviour.MinimizeToTray:
-                    rbMinToTray.Checked = true;
-                    break;
-                default:
-                    rbExitEVEMon.Checked = true;
-                    break;
-            }
+            // Tray icon settings
+            SetTrayIconSettings();
 
             // G15
-            g15CheckBox.Checked = m_settings.G15.Enabled;
-            cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
-            ACycleInterval.Value = m_settings.G15.CharactersCycleInterval;
-            cbG15CycleTimes.Checked = m_settings.G15.UseTimeFormatsCycle;
-            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval, ACycleTimesInterval.Maximum);
-            cbG15ShowTime.Checked = m_settings.G15.ShowSystemTime;
-            cbG15ShowEVETime.Checked = m_settings.G15.ShowEVETime;
+            SetG15Settings();
 
             // Skills display on the main window
             cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
             cbShowNonPublicSkills.Checked = m_settings.UI.MainWindow.ShowNonPublicSkills;
 
             // Main window
-            cbTitleToTime.Checked = m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar;
-            cbWindowsTitleList.SelectedIndex = (int)m_settings.UI.MainWindow.TitleFormat - 1;
-            cbSkillInTitle.Checked = m_settings.UI.MainWindow.ShowSkillNameInWindowTitle;
-            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
-            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
-            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
-            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+            SetMainWindowSettings();
 
             // Main Window - Overview
-            cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
-            cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
-            overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
-            overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
-            overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
-            overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
-            overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+            SetOverviewSettings();
 
             // IGB Server
             igbCheckBox.Checked = m_settings.IGB.IGBServerEnabled;
             cbIGBPublic.Checked = m_settings.IGB.IGBServerPublic;
-            igbPortTextBox.Text = m_settings.IGB.IGBServerPort.ToString();
+            igbPortTextBox.Text = m_settings.IGB.IGBServerPort.ToString(CultureConstants.DefaultCulture);
 
             // Notifications
             notificationsControl.Settings = m_settings.Notifications;
             cbPlaySoundOnSkillComplete.Checked = m_settings.Notifications.PlaySoundOnSkillCompletion;
 
             // Email Notifications
-            mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
-            tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
-            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString();
-            cbEmailServerRequireSsl.Checked = m_settings.Notifications.EmailServerRequiresSSL;
-            cbEmailUseShortFormat.Checked = m_settings.Notifications.UseEmailShortFormat;
-            cbEmailAuthRequired.Checked = m_settings.Notifications.EmailAuthenticationRequired;
-            tbEmailUsername.Text = m_settings.Notifications.EmailAuthenticationUserName;
-            tbEmailPassword.Text = m_settings.Notifications.EmailAuthenticationPassword;
-            tbFromAddress.Text = m_settings.Notifications.EmailFromAddress;
-            tbToAddress.Text = m_settings.Notifications.EmailToAddress;
+            SetEmailerSettings();
 
             // Proxy settings
             customProxyCheckBox.Checked = m_settings.Proxy.Enabled;
-            proxyPortTextBox.Text = m_settings.Proxy.Port.ToString();
+            proxyPortTextBox.Text = m_settings.Proxy.Port.ToString(CultureConstants.DefaultCulture);
             proxyHttpHostTextBox.Text = m_settings.Proxy.Host;
             proxyAuthenticationButton.Tag = m_settings.Proxy;
 
@@ -221,13 +179,7 @@ namespace EVEMon.SettingsUI
             updateSettingsControl.Settings = m_settings.Updates;
 
             // Skill Planner
-            cbHighlightPlannedSkills.Checked = m_settings.UI.PlanWindow.HighlightPlannedSkills;
-            cbHighlightPrerequisites.Checked = m_settings.UI.PlanWindow.HighlightPrerequisites;
-            cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
-            cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
-            cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
-            cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
-            cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
+            SetSkillPlannerSettings();
 
             // Obsolete plan entry removal behaviour
             alwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
@@ -249,17 +201,139 @@ namespace EVEMon.SettingsUI
             trayPopupDisabledRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled);
 
             // Calendar
+            SetCalendarSettings();
+
+            // Google calendar reminder method
+            InitilizeGoogleCalendarReminderDropDown();
+
+            // External calendar
+            SetExternalCalendarSettings();
+
+            // Run at system startup
+            SetStartUpSettings();
+
+            // API providers
+            InitialiseAPIProvidersDropDown();
+
+            // Enables / disables controls
+            m_isLoading = false;
+            UpdateDisables();
+        }
+
+        /// <summary>
+        /// Sets the tray icon settings.
+        /// </summary>
+        private void SetTrayIconSettings()
+        {
+            rbSystemTrayOptionsNever.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled);
+            rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+            rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
+
+            switch (m_settings.UI.MainWindowCloseBehaviour)
+            {
+                case CloseBehaviour.MinimizeToTaskbar:
+                    rbMinToTaskBar.Checked = true;
+                    break;
+                case CloseBehaviour.MinimizeToTray:
+                    rbMinToTray.Checked = true;
+                    break;
+                default:
+                    rbExitEVEMon.Checked = true;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Sets the G15 settings.
+        /// </summary>
+        private void SetG15Settings()
+        {
+            g15CheckBox.Checked = m_settings.G15.Enabled;
+            cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
+            ACycleInterval.Value = m_settings.G15.CharactersCycleInterval;
+            cbG15CycleTimes.Checked = m_settings.G15.UseTimeFormatsCycle;
+            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval, ACycleTimesInterval.Maximum);
+            cbG15ShowTime.Checked = m_settings.G15.ShowSystemTime;
+            cbG15ShowEVETime.Checked = m_settings.G15.ShowEVETime;
+        }
+
+        /// <summary>
+        /// Sets the main window settings.
+        /// </summary>
+        private void SetMainWindowSettings()
+        {
+            cbTitleToTime.Checked = m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar;
+            cbWindowsTitleList.SelectedIndex = (int)m_settings.UI.MainWindow.TitleFormat - 1;
+            cbSkillInTitle.Checked = m_settings.UI.MainWindow.ShowSkillNameInWindowTitle;
+            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
+            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
+            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
+            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+        }
+
+        /// <summary>
+        /// Sets the overview settings.
+        /// </summary>
+        private void SetOverviewSettings()
+        {
+            cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
+            cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
+            overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
+            overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
+            overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
+            overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
+            overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+        }
+
+        /// <summary>
+        /// Sets the emailer settings.
+        /// </summary>
+        private void SetEmailerSettings()
+        {
+            mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
+            tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
+            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString(CultureConstants.DefaultCulture);
+            cbEmailServerRequireSsl.Checked = m_settings.Notifications.EmailServerRequiresSSL;
+            cbEmailUseShortFormat.Checked = m_settings.Notifications.UseEmailShortFormat;
+            cbEmailAuthRequired.Checked = m_settings.Notifications.EmailAuthenticationRequired;
+            tbEmailUsername.Text = m_settings.Notifications.EmailAuthenticationUserName;
+            tbEmailPassword.Text = m_settings.Notifications.EmailAuthenticationPassword;
+            tbFromAddress.Text = m_settings.Notifications.EmailFromAddress;
+            tbToAddress.Text = m_settings.Notifications.EmailToAddress;
+        }
+
+        /// <summary>
+        /// Sets the skill planner settings.
+        /// </summary>
+        private void SetSkillPlannerSettings()
+        {
+            cbHighlightPlannedSkills.Checked = m_settings.UI.PlanWindow.HighlightPlannedSkills;
+            cbHighlightPrerequisites.Checked = m_settings.UI.PlanWindow.HighlightPrerequisites;
+            cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
+            cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
+            cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
+            cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
+            cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
+        }
+
+        /// <summary>
+        /// Sets the calendar settings.
+        /// </summary>
+        private void SetCalendarSettings()
+        {
             panelColorBlocking.BackColor = (Color)m_settings.UI.Scheduler.BlockingColor;
             panelColorRecurring1.BackColor = (Color)m_settings.UI.Scheduler.RecurringEventGradientStart;
             panelColorRecurring2.BackColor = (Color)m_settings.UI.Scheduler.RecurringEventGradientEnd;
             panelColorSingle1.BackColor = (Color)m_settings.UI.Scheduler.SimpleEventGradientStart;
             panelColorSingle2.BackColor = (Color)m_settings.UI.Scheduler.SimpleEventGradientEnd;
             panelColorText.BackColor = (Color)m_settings.UI.Scheduler.TextColor;
+        }
 
-            // Google calendar reminder method
-            InitilizeGoogleCalendarReminderDropDown();
-
-            // External calendar
+        /// <summary>
+        /// Sets the external calendar settings.
+        /// </summary>
+        private void SetExternalCalendarSettings()
+        {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
             rbMSOutlook.Checked = m_settings.Calendar.Provider == CalendarProvider.Outlook;
@@ -270,13 +344,18 @@ namespace EVEMon.SettingsUI
             tbGoogleURI.Text = m_settings.Calendar.GoogleURL;
             cbGoogleReminder.SelectedIndex = (int)m_settings.Calendar.GoogleReminder;
             cbSetReminder.Checked = m_settings.Calendar.UseReminding;
-            tbReminder.Text = m_settings.Calendar.RemindingInterval.ToString();
+            tbReminder.Text = m_settings.Calendar.RemindingInterval.ToString(CultureConstants.DefaultCulture);
             cbUseAlterateReminder.Checked = m_settings.Calendar.UseRemindingRange;
             dtpEarlyReminder.Value = m_settings.Calendar.EarlyReminding;
             dtpLateReminder.Value = m_settings.Calendar.LateReminding;
             cbLastQueuedSkillOnly.Checked = m_settings.Calendar.LastQueuedSkillOnly;
+        }
 
-            // Run at system startup
+        /// <summary>
+        /// Sets the start up settings.
+        /// </summary>
+        private void SetStartUpSettings()
+        {
             RegistryKey rk = null;
             try
             {
@@ -302,13 +381,6 @@ namespace EVEMon.SettingsUI
                 // Run at startup ?
                 runAtStartupComboBox.Checked = (rk.GetValue("EVEMon") != null);
             }
-
-            // API providers
-            InitialiseAPIProvidersDropDown();
-
-            // Enables / disables controls
-            m_isLoading = false;
-            UpdateDisables();
         }
 
         /// <summary>
@@ -386,8 +458,8 @@ namespace EVEMon.SettingsUI
             m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
             m_settings.IGB.IGBServerPublic = cbIGBPublic.Checked;
             int igbServerPort;
-            Int32.TryParse(igbPortTextBox.Text, out igbServerPort);
-            m_settings.IGB.IGBServerPort = igbServerPort;
+            if (Int32.TryParse(igbPortTextBox.Text, out igbServerPort))
+                m_settings.IGB.IGBServerPort = igbServerPort;
 
 
             // Main window - Overview
@@ -410,8 +482,8 @@ namespace EVEMon.SettingsUI
             // Proxy
             m_settings.Proxy.Enabled = customProxyCheckBox.Checked;
             int proxyPort;
-            Int32.TryParse(proxyPortTextBox.Text, out proxyPort);
-            m_settings.Proxy.Port = proxyPort;
+            if (Int32.TryParse(proxyPortTextBox.Text, out proxyPort))
+                m_settings.Proxy.Port = proxyPort;
             m_settings.Proxy.Host = proxyHttpHostTextBox.Text;
 
             // Updates
@@ -438,7 +510,7 @@ namespace EVEMon.SettingsUI
                                                      : GoogleCalendarReminder.None;
 
             m_settings.Calendar.UseReminding = cbSetReminder.Checked;
-            m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text);
+            m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text, CultureConstants.DefaultCulture);
             m_settings.Calendar.UseRemindingRange = cbUseAlterateReminder.Checked;
             m_settings.Calendar.EarlyReminding = dtpEarlyReminder.Value;
             m_settings.Calendar.LateReminding = dtpLateReminder.Value;
@@ -525,7 +597,7 @@ namespace EVEMon.SettingsUI
             cbGoogleReminder.Items.Clear();
             foreach (string text in GoogleAppointmentFilter.ReminderMethods.Cast<Enum>().Select(item => item.ToString()))
             {
-                cbGoogleReminder.Items.Add(char.ToUpper(text[0]) + text.Substring(1));
+                cbGoogleReminder.Items.Add(char.ToUpper(text[0], CultureConstants.DefaultCulture) + text.Substring(1));
             }
         }
 
@@ -581,7 +653,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void igbPortTextBox_TextChanged(object sender, EventArgs e)
         {
-            igbUrlTextBox.Text = String.Format("http://localhost:{0}/", igbPortTextBox.Text);
+            igbUrlTextBox.Text = String.Format(CultureConstants.DefaultCulture, "http://localhost:{0}/", igbPortTextBox.Text);
         }
 
         /// <summary>
@@ -593,16 +665,18 @@ namespace EVEMon.SettingsUI
         private static bool IsValidPort(string str, string portName)
         {
             int port;
-            Int32.TryParse(str, out port);
+            if (!Int32.TryParse(str, out port))
+                return false;
 
             if ((port < IPEndPoint.MinPort) || (port > IPEndPoint.MaxPort))
             {
                 ShowErrorMessage("Invalid port",
-                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName,
-                                               IPEndPoint.MinPort, IPEndPoint.MaxPort));
+                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}",
+                                               portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
 
                 return false;
             }
+
             return true;
         }
 
@@ -887,15 +961,13 @@ namespace EVEMon.SettingsUI
         #region Other handlers
 
         /// <summary>
-        /// Skill Planner > Skill browser icon set > Icons set combo.
-        /// Updates the sample below the combo box.
+        /// Gets the custom icon set.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void skillIconSetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        /// <returns></returns>
+        private ImageList GetCustomIconSet()
         {
-            ImageList def = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
-            string groupname = null;
+            string groupname = String.Empty;
+
             if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < IconSettings.Default.Properties.Count - 1)
             {
                 SettingsProperty iconSettingsProperty =
@@ -904,48 +976,102 @@ namespace EVEMon.SettingsUI
                     groupname = iconSettingsProperty.DefaultValue.ToString();
             }
 
-            if ((groupname != null
-                 && !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                               Path.DirectorySeparatorChar,
-                                               AppDomain.CurrentDomain.BaseDirectory,
-                                               (cbSkillIconSet.SelectedIndex + 1),
-                                               groupname)))
-                || !File.Exists(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                              Path.DirectorySeparatorChar,
-                                              AppDomain.CurrentDomain.BaseDirectory)))
-                groupname = null;
+            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                                                                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                                Path.DirectorySeparatorChar,
+                                                                                AppDomain.CurrentDomain.BaseDirectory,
+                                                                                (cbSkillIconSet.SelectedIndex + 1),
+                                                                                groupname)))
+                ||
+                !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                           "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                           Path.DirectorySeparatorChar,
+                                           AppDomain.CurrentDomain.BaseDirectory)))
+                groupname = String.Empty;
 
-            if (groupname != null)
+            if (String.IsNullOrEmpty(groupname))
+                return null;
+
+            ImageList customIconSet;
+            ImageList tempImageList = null;
+            try
             {
-                IResourceReader basic =
-                    new ResourceReader(String.Format("{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                                     Path.DirectorySeparatorChar,
-                                                     AppDomain.CurrentDomain.BaseDirectory));
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
+                tempImageList = new ImageList();
+                IDictionaryEnumerator basicx;
+                IResourceReader defaultGroupReader = null;
+                tempImageList.ColorDepth = ColorDepth.Depth32Bit;
+                try
                 {
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
-                }
-                basic.Close();
-                basic =
-                    new ResourceReader(String.Format("{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                     Path.DirectorySeparatorChar,
-                                                     AppDomain.CurrentDomain.BaseDirectory,
-                                                     (cbSkillIconSet.SelectedIndex + 1),
-                                                     groupname));
-                basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
-                {
-                    if (def.Images.ContainsKey(basicx.Key.ToString()))
-                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                                                          Path.DirectorySeparatorChar,
+                                                                          AppDomain.CurrentDomain.BaseDirectory));
 
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    basicx = defaultGroupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
                 }
-                basic.Close();
+                finally
+                {
+                    if (defaultGroupReader != null)
+                        defaultGroupReader.Close();
+                }
+
+                IResourceReader groupReader = null;
+                try
+                {
+                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                   Path.DirectorySeparatorChar,
+                                                                   AppDomain.CurrentDomain.BaseDirectory,
+                                                                   (cbSkillIconSet.SelectedIndex + 1),
+                                                                   groupname));
+
+                    basicx = groupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        if (tempImageList.Images.ContainsKey(basicx.Key.ToString()))
+                            tempImageList.Images.RemoveByKey(basicx.Key.ToString());
+
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
+                }
+                finally
+                {
+                    if (groupReader != null)
+                        groupReader.Close();
+                }
+
+                customIconSet = tempImageList;
+                tempImageList = null;
             }
+            finally
+            {
+                if (tempImageList != null)
+                    tempImageList.Dispose();
+            }
+
+            return customIconSet;
+        }
+
+        /// <summary>
+        /// Skill Planner > Skill browser icon set > Icons set combo.
+        /// Updates the sample below the combo box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void skillIconSetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
             tvlist.Nodes.Clear();
-            tvlist.ImageList = def;
-            tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            tvlist.ImageList = GetCustomIconSet();
+
+            if(tvlist.ImageList == null)
+                return;
+            
             TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"),
                                         tvlist.ImageList.Images.IndexOfKey("book"));
             gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"),

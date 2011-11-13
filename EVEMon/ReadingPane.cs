@@ -141,12 +141,13 @@ namespace EVEMon
                     url = matchValue;
                 else if (showInfoMatch.Success)
                 {
-                    long typeID = Convert.ToInt64(showInfoMatch.Groups[1].Value);
+                    long typeID = Convert.ToInt64(showInfoMatch.Groups[1].Value, CultureConstants.InvariantCulture);
 
                     if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
                     {
-                        url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                            String.Format(NetworkConstants.EVEGateCharacterProfile,
+                        url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                            String.Format(CultureConstants.InvariantCulture,
+                                                          NetworkConstants.EVEGateCharacterProfile,
                                                           Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                     }
                     else
@@ -154,13 +155,15 @@ namespace EVEMon
                         switch (typeID)
                         {
                             case DBConstants.AllianceID:
-                                url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                                    String.Format(NetworkConstants.EVEGateAllianceProfile,
+                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                                    String.Format(CultureConstants.InvariantCulture,
+                                                                  NetworkConstants.EVEGateAllianceProfile,
                                                                   Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                                 break;
                             case DBConstants.CorporationID:
-                                url = String.Format("{0}{1}", NetworkConstants.EVEGate,
-                                                    String.Format(NetworkConstants.EVEGateCorporationProfile,
+                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                                    String.Format(CultureConstants.InvariantCulture,
+                                                                  NetworkConstants.EVEGateCorporationProfile,
                                                                   Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                                 break;
                             default:
@@ -175,13 +178,13 @@ namespace EVEMon
                 if (!igbOnly)
                 {
                     replacements[match.ToString()] =
-                        String.Format("<a href=\"{0}\" title=\"{0}{2}Click to follow the link\">{1}</a>",
+                        String.Format(CultureConstants.InvariantCulture, "<a href=\"{0}\" title=\"{0}{2}Click to follow the link\">{1}</a>",
                                       url, matchText, Environment.NewLine);
                 }
                 else
                 {
                     replacements[match.ToString()] =
-                        String.Format(
+                        String.Format(CultureConstants.InvariantCulture,
                             "<span style=\"text-decoration: underline; cursor: pointer;\" title=\"{0}{2}Link works only in IGB\">{1}</span>",
                             matchValue, matchText, Environment.NewLine);
                 }
@@ -200,7 +203,8 @@ namespace EVEMon
             Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.IgnoreCase);
             foreach (Match match in regexColor.Matches(m_selectedObject.Text))
             {
-                replacements[match.ToString()] = String.Format("color=\"#{0}\"", CheckTextColorNotMatchBackColor(backColor, match));
+                replacements[match.ToString()] = String.Format(CultureConstants.InvariantCulture, "color=\"#{0}\"",
+                                                               CheckTextColorNotMatchBackColor(backColor, match));
             }
         }
 
@@ -213,7 +217,7 @@ namespace EVEMon
         private static string CheckTextColorNotMatchBackColor(Color backColor, Match match)
         {
             string color = match.Groups[1].Value;
-            Color textColor = ColorTranslator.FromHtml(String.Format("#{0}", color));
+            Color textColor = ColorTranslator.FromHtml(String.Format(CultureConstants.InvariantCulture, "#{0}", color));
             bool textColorIsShadeOfWhite = (textColor.R == textColor.G && textColor.G == textColor.B);
             bool backColorIsShadeOfWhite = (backColor.R == backColor.G && backColor.G == backColor.B);
             if (textColorIsShadeOfWhite && backColorIsShadeOfWhite)
@@ -221,7 +225,10 @@ namespace EVEMon
                 const int ContrastDiff = 64;
                 int colorValue = (textColor.R <= backColor.R - ContrastDiff) ? textColor.R : 0;
                 string colorElement = Convert.ToString(colorValue, 16);
-                color = String.Format("{0}{0}{0}", (colorElement.Length == 1 ? String.Format("0{0}", colorElement) : colorElement));
+                color = String.Format(CultureConstants.InvariantCulture, "{0}{0}{0}",
+                                      (colorElement.Length == 1
+                                           ? String.Format(CultureConstants.InvariantCulture, "0{0}", colorElement)
+                                           : colorElement));
             }
             return color;
         }
@@ -235,8 +242,8 @@ namespace EVEMon
             Regex regexFontSize = new Regex(@"size(?:=""|:\s*)([0-9]+)(?:;|"")", RegexOptions.IgnoreCase);
             foreach (Match match in regexFontSize.Matches(m_selectedObject.Text))
             {
-                int newFontSize = Convert.ToByte(match.Groups[1].Value) / 4;
-                replacements[match.ToString()] = String.Format("size=\"{0}\"", newFontSize);
+                int newFontSize = Convert.ToByte(match.Groups[1].Value, CultureConstants.InvariantCulture) / 4;
+                replacements[match.ToString()] = String.Format(CultureConstants.InvariantCulture, "size=\"{0}\"", newFontSize);
             }
         }
 
@@ -258,8 +265,10 @@ namespace EVEMon
             // Draw a line at the bottom of the panel
             using (Graphics g = flPanelHeader.CreateGraphics())
             {
-                Pen blackPen = new Pen(Color.Black);
-                g.DrawLine(blackPen, 5, flPanelHeader.Height - 1, flPanelHeader.Width - 5, flPanelHeader.Height - 1);
+                using (Pen blackPen = new Pen(Color.Black))
+                {
+                    g.DrawLine(blackPen, 5, flPanelHeader.Height - 1, flPanelHeader.Width - 5, flPanelHeader.Height - 1);
+                }
             }
         }
 
@@ -276,7 +285,7 @@ namespace EVEMon
                 return;
 
             // If the link complies with HTTP or HTTPS, open the link on the system's default browser
-            if (e.Url.AbsoluteUri.StartsWith("http://") || e.Url.AbsoluteUri.StartsWith("https://"))
+            if (e.Url.Scheme == Uri.UriSchemeHttp || e.Url.Scheme == Uri.UriSchemeHttps)
                 Util.OpenURL(e.Url.AbsoluteUri);
 
             // Prevents the browser to navigate past the shown page

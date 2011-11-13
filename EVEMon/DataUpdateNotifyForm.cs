@@ -113,7 +113,7 @@ namespace EVEMon
                 }
 
                 // Show the download dialog, which will download the file
-                using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))
+                using (UpdateDownloadForm form = new UpdateDownloadForm(new Uri(url), newFilename))
                 {
                     if (form.ShowDialog() != DialogResult.OK)
                         continue;
@@ -148,8 +148,8 @@ namespace EVEMon
         {
             try
             {
-                File.Delete(String.Format("{0}.bak", oldFilename));
-                File.Copy(oldFilename, String.Format("{0}.bak", oldFilename));
+                File.Delete(String.Format(CultureConstants.DefaultCulture, "{0}.bak", oldFilename));
+                File.Copy(oldFilename, String.Format(CultureConstants.DefaultCulture, "{0}.bak", oldFilename));
                 File.Delete(oldFilename);
                 File.Move(newFilename, oldFilename);
             }

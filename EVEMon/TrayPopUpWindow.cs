@@ -23,8 +23,8 @@ namespace EVEMon
     {
         private readonly int[] m_portraitSize = { 16, 24, 32, 40, 48, 56, 64 };
 
-        private Label m_eveTimeLabel;
-        private Label m_serverStatusLabel;
+        private Label m_eveTimeLabel = new Label();
+        private Label m_serverStatusLabel = new Label();
         private bool m_updatePending;
 
         /// <summary>
@@ -125,33 +125,36 @@ namespace EVEMon
             Size cornerSize = new Size(Radius * 2, Radius * 2);
 
             // Construct a GraphicsPath for the outline
-            GraphicsPath path = new GraphicsPath();
-            path.StartFigure();
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.StartFigure();
 
-            // Top left
-            path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
+                // Top left
+                path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
 
-            // Top Right
-            path.AddArc(new Rectangle(e.ClipRectangle.Width - 1 - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height), 270,
-                        90);
+                // Top Right
+                path.AddArc(new Rectangle(e.ClipRectangle.Width - 1 - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height),
+                            270, 90);
 
-            // Bottom right
-            path.AddArc(
-                new Rectangle(e.ClipRectangle.Width - 1 - cornerSize.Width, e.ClipRectangle.Height - 1 - cornerSize.Height,
-                              cornerSize.Width, cornerSize.Height), 0, 90);
+                // Bottom right
+                path.AddArc(new Rectangle(e.ClipRectangle.Width - 1 - cornerSize.Width,
+                                          e.ClipRectangle.Height - 1 - cornerSize.Height, cornerSize.Width, cornerSize.Height),
+                            0, 90);
 
-            // Bottom Left
-            path.AddArc(new Rectangle(0, e.ClipRectangle.Height - 1 - cornerSize.Height, cornerSize.Width, cornerSize.Height), 90,
-                        90);
-            path.CloseFigure();
+                // Bottom Left
+                path.AddArc(new Rectangle(0, e.ClipRectangle.Height - 1 - cornerSize.Height,
+                                          cornerSize.Width, cornerSize.Height), 90, 90);
+                path.CloseFigure();
 
-            // Draw the background
-            Brush fillBrush = new SolidBrush(SystemColors.ControlLightLight);
-            g.FillPath(fillBrush, path);
+                // Draw the background
+                using (Brush fillBrush = new SolidBrush(SystemColors.ControlLightLight))
+                {
+                    g.FillPath(fillBrush, path);
+                }
 
-            // Now the border
-            Pen borderPen = SystemPens.WindowFrame;
-            g.DrawPath(borderPen, path);
+                // Now the border
+                g.DrawPath(SystemPens.WindowFrame, path);
+            }
         }
 
         #endregion
@@ -304,17 +307,28 @@ namespace EVEMon
                     }
                     else
                     {
-                        FlowLayoutPanel accountGroupPanel = new FlowLayoutPanel
-                                                                {
-                                                                    AutoSize = true,
-                                                                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                                                                    FlowDirection = FlowDirection.TopDown,
-                                                                    Padding = new Padding(10, 0, 0, 0)
-                                                                };
+                        FlowLayoutPanel tempAccountGroupPanel = null;
+                        try
+                        {
+                            tempAccountGroupPanel = new FlowLayoutPanel();
+                            OverviewItem charPanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
+                            tempAccountGroupPanel.AutoSize = true;
+                            tempAccountGroupPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                            tempAccountGroupPanel.FlowDirection = FlowDirection.TopDown;
+                            tempAccountGroupPanel.Padding = new Padding(10, 0, 0, 0);
+                            tempAccountGroupPanel.Controls.Add(charPanel);
+                            
+                            FlowLayoutPanel accountGroupPanel = tempAccountGroupPanel;
+                            tempAccountGroupPanel = null;
 
-                        OverviewItem charPanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
-                        accountGroupPanel.Controls.Add(charPanel);
-                        mainPanel.Controls.Add(accountGroupPanel);
+                            mainPanel.Controls.Add(accountGroupPanel);
+                        }
+                        finally
+                        {
+                            if(tempAccountGroupPanel != null)
+                                tempAccountGroupPanel.Dispose();
+                        }
+
                         prevAPIKeys = character.Identity.APIKeys;
                     }
                 }
@@ -337,7 +351,7 @@ namespace EVEMon
             // Server Status
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
             {
-                m_serverStatusLabel = new Label { AutoSize = true };
+                m_serverStatusLabel.AutoSize = true;
                 mainPanel.Controls.Add(m_serverStatusLabel);
                 UpdateServerStatusLabel();
             }
@@ -345,7 +359,7 @@ namespace EVEMon
             // EVE Time
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
             {
-                m_eveTimeLabel = new Label { AutoSize = true };
+                m_eveTimeLabel.AutoSize = true;
                 mainPanel.Controls.Add(m_eveTimeLabel);
                 UpdateEveTimeLabel();
             }
@@ -362,30 +376,67 @@ namespace EVEMon
         private FlowLayoutPanel CreateAccountsNotTrainingPanel(string warningMessage)
         {
             // Create a flowlayout to hold the content
-            FlowLayoutPanel warningPanel = new FlowLayoutPanel
-                                               {
-                                                   AutoSize = true,
-                                                   AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                                                   Margin = new Padding(0, 0, 0, 2)
-                                               };
-
-            // Add a picture on the left with a warning icon
-            if (!Settings.UI.SafeForWork)
+            FlowLayoutPanel warningPanel;
+            FlowLayoutPanel tempWarningPanel = null;
+            try
             {
-                PictureBox pbWarning = new PictureBox
-                                           {
-                                               Image = SystemIcons.Warning.ToBitmap(),
-                                               SizeMode = PictureBoxSizeMode.StretchImage,
-                                               Size = new Size(m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize],
-                                                               m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize]),
-                                               Margin = new Padding(2)
-                                           };
-                warningPanel.Controls.Add(pbWarning);
-            }
+                tempWarningPanel = new FlowLayoutPanel();
+                tempWarningPanel.AutoSize = true;
+                tempWarningPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                tempWarningPanel.Margin = new Padding(0, 0, 0, 2);
 
-            // Adds a label to hold the message
-            Label lblMessage = new Label { AutoSize = true, Text = warningMessage };
-            warningPanel.Controls.Add(lblMessage);
+                // Add a picture on the left with a warning icon
+                if (!Settings.UI.SafeForWork)
+                {
+                    PictureBox tempPictureBoxWarning = null;
+                    try
+                    {
+                        tempPictureBoxWarning = new PictureBox();
+                        tempPictureBoxWarning.Image = SystemIcons.Warning.ToBitmap();
+                        tempPictureBoxWarning.SizeMode = PictureBoxSizeMode.StretchImage;
+                        tempPictureBoxWarning.Size = new Size(m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize],
+                                                              m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize]);
+                        tempPictureBoxWarning.Margin = new Padding(2);
+
+                        PictureBox pbWarning = tempPictureBoxWarning;
+                        tempPictureBoxWarning = null;
+
+                        tempWarningPanel.Controls.Add(pbWarning);
+                    }
+                    finally
+                    {
+                        if (tempPictureBoxWarning != null)
+                            tempPictureBoxWarning.Dispose();
+                    }
+                }
+
+                // Adds a label to hold the message
+                Label tempLabelMessage = null;
+                try
+                {
+                    tempLabelMessage = new Label();
+                    tempLabelMessage.AutoSize = true;
+                    tempLabelMessage.Text = warningMessage;
+
+                    Label lblMessage = tempLabelMessage;
+                    tempLabelMessage = null;
+
+                    tempWarningPanel.Controls.Add(lblMessage);
+                }
+                finally
+                {
+                    if (tempLabelMessage != null)
+                        tempLabelMessage.Dispose();
+                }
+
+                warningPanel = tempWarningPanel;
+                tempWarningPanel = null;
+            }
+            finally
+            {
+                if (tempWarningPanel != null)
+                    tempWarningPanel.Dispose();
+            }
             return warningPanel;
         }
 

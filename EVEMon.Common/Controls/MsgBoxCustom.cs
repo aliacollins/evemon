@@ -7,9 +7,12 @@ namespace EVEMon.Common.Controls
     /// <summary>
     /// Class for a message box with integrated checkbox.
     /// </summary>
-    public partial class MessageBoxCustom : Form
+    public sealed partial class MessageBoxCustom : Form
     {
         private DialogResult m_dialogResult;
+
+
+        #region Constructor
 
         /// <summary>
         /// Creates a new instance of <see cref="MessageBoxCustom"/>.
@@ -24,7 +27,93 @@ namespace EVEMon.Common.Controls
             button2.Font = FontFactory.GetFont("Segoe UI", 9f);
             button3.Font = FontFactory.GetFont("Segoe UI", 9f);
         }
-        
+
+        #endregion
+
+
+        #region Static Public Methods & Properties
+
+        /// <summary>
+        /// Displays a message box.
+        /// </summary>
+        /// <param name="owner">The owner.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="cbText">The cb text.</param>
+        /// <param name="buttons">The buttons.</param>
+        /// <param name="icon">The icon.</param>
+        /// <returns></returns>
+        public static DialogResult Show(IWin32Window owner, string text, string caption, string cbText,
+                                        MessageBoxButtons buttons = MessageBoxButtons.OK,
+                                        MessageBoxIcon icon = MessageBoxIcon.None)
+        {
+            using (MessageBoxCustom form = new MessageBoxCustom())
+            {
+                return form.ShowDialog(owner, text, caption, cbText, buttons, icon);
+            }
+        }
+
+        /// <summary>
+        /// Displays a message box.
+        /// </summary>
+        /// <param name="owner">Owner window.</param>
+        /// <param name="text">Text to display.</param>
+        /// <param name="caption">Text to display in the title bar.</param>
+        /// <returns>One of the <see cref="DialogResult"/> values.</returns>
+        public static DialogResult Show(IWin32Window owner, string text, string caption)
+        {
+            return Show(owner, text, caption, String.Empty);
+        }
+
+        /// <summary>
+        /// Displays a message box.
+        /// </summary>
+        /// <param name="owner">Owner window.</param>
+        /// <param name="text">Text to display.</param>
+        /// <returns>One of the <see cref="DialogResult"/> values.</returns>
+        public static DialogResult Show(IWin32Window owner, string text)
+        {
+            return Show(owner, text, String.Empty, String.Empty);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the checkbox is checked.
+        /// </summary>
+        /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
+        public static bool CheckBoxChecked { get; private set; }
+
+        #endregion
+
+
+        # region Event Handlers
+
+        /// <summary>
+        /// Called when a button is clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnButtonClick(object sender, EventArgs e)
+        {
+            string buttonText = ((ButtonBase)sender).Text;
+            m_dialogResult = GetDialogResult(buttonText);
+            Close();
+        }
+
+        /// <summary>
+        /// Handles the CheckedChanged event of the cbOption control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void cbOption_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBoxChecked = !cbOption.Checked;
+        }
+
+        # endregion
+
+
+        # region Help Methods
+
         /// <summary>
         /// Displays a message box.
         /// </summary>
@@ -35,8 +124,9 @@ namespace EVEMon.Common.Controls
         /// <param name="buttons">Buttons to display in the message box.</param>
         /// <param name="icon">Icon to display in the mesage box.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public DialogResult Show(IWin32Window owner, string text, string caption, string cbText,
-                                 MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None)
+        private DialogResult ShowDialog(IWin32Window owner, string text, string caption, string cbText,
+                                        MessageBoxButtons buttons = MessageBoxButtons.OK,
+                                        MessageBoxIcon icon = MessageBoxIcon.None)
         {
             button1.Click += OnButtonClick;
             button2.Click += OnButtonClick;
@@ -64,65 +154,6 @@ namespace EVEMon.Common.Controls
 
             return m_dialogResult;
         }
-
-        /// <summary>
-        /// Displays a message box.
-        /// </summary>
-        /// <param name="owner">Owner window.</param>
-        /// <param name="text">Text to display.</param>
-        /// <param name="caption">Text to display in the title bar.</param>
-        /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public DialogResult Show(IWin32Window owner, string text, string caption)
-        {
-            return Show(owner, text, caption, String.Empty);
-        }
-
-        /// <summary>
-        /// Displays a message box.
-        /// </summary>
-        /// <param name="owner">Owner window.</param>
-        /// <param name="text">Text to display.</param>
-        /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public DialogResult Show(IWin32Window owner, string text)
-        {
-            return Show(owner, text, String.Empty, String.Empty);
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the checkbox is checked.
-        /// </summary>
-        /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
-        public bool CheckBoxChecked { get; private set; }
-
-
-        # region EventHandlers
-
-        /// <summary>
-        /// Called when [button click].
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OnButtonClick(object sender, EventArgs e)
-        {
-            string buttonText = ((ButtonBase)sender).Text;
-            m_dialogResult = GetDialogResult(buttonText);
-            Close();
-        }
-
-        /// <summary>
-        /// Handles the CheckedChanged event of the cbOption control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void cbOption_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxChecked = !cbOption.Checked;
-        }
-
-        # endregion
-
-
-        # region Help Methods
 
         /// <summary>
         /// Sets buttons for the message box.

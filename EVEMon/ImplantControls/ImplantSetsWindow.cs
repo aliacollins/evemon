@@ -42,6 +42,9 @@ namespace EVEMon.ImplantControls
         public ImplantSetsWindow(Character character)
             : this()
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             m_character = character;
             m_sets = character.ImplantSets.Export();
             m_maxJumpClones = character.Skills[DBConstants.InfomorphPsychologySkillID].Level;
@@ -62,31 +65,7 @@ namespace EVEMon.ImplantControls
             // Populate implants combo boxes
             foreach (Control control in Controls)
             {
-                DropDownMouseMoveComboBox combo = control as DropDownMouseMoveComboBox;
-                if (combo == null)
-                    continue;
-
-                int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", String.Empty)) - 1;
-                ImplantSlots slot = (ImplantSlots)slotIndex;
-
-                combo.Tag = slot;
-                combo.MouseMove += combo_MouseMove;
-                combo.DropDownClosed += combo_DropDownClosed;
-                combo.DropDownMouseMove += combo_DropDownMouseMove;
-                foreach (Implant implant in StaticItems.GetImplants(slot))
-                {
-                    combo.Items.Add(implant);
-                }
-
-                Label label = new Label
-                                  {
-                                      AutoSize = false,
-                                      Anchor = combo.Anchor,
-                                      Bounds = combo.Bounds,
-                                      TextAlign = ContentAlignment.MiddleLeft
-                                  };
-                label.MouseMove += label_MouseMove;
-                m_labels[(int)slot] = label;
+                AddComboBoxAndLabel(control);
             }
 
             // Adds the labels
@@ -147,14 +126,72 @@ namespace EVEMon.ImplantControls
         }
 
         /// <summary>
+        /// Adds the combo box and label.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        private void AddComboBoxAndLabel(IDisposable control)
+        {
+            DropDownMouseMoveComboBox combo = control as DropDownMouseMoveComboBox;
+            if (combo == null)
+                return;
+
+            int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", String.Empty), CultureConstants.InvariantCulture) - 1;
+            ImplantSlots slot = (ImplantSlots)slotIndex;
+
+            combo.Tag = slot;
+            combo.MouseMove += combo_MouseMove;
+            combo.DropDownClosed += combo_DropDownClosed;
+            combo.DropDownMouseMove += combo_DropDownMouseMove;
+            foreach (Implant implant in StaticItems.GetImplants(slot))
+            {
+                combo.Items.Add(implant);
+            }
+
+            Label tempLabel = null;
+            try
+            {
+                tempLabel = new Label();
+                tempLabel.MouseMove += label_MouseMove;
+                tempLabel.AutoSize = false;
+                tempLabel.Anchor = combo.Anchor;
+                tempLabel.Bounds = combo.Bounds;
+                tempLabel.TextAlign = ContentAlignment.MiddleLeft;
+
+                Label label = tempLabel;
+                tempLabel = null;
+
+                m_labels[(int)slot] = label;
+            }
+            finally
+            {
+                if (tempLabel != null)
+                    tempLabel.Dispose();
+            }
+        }
+
+        /// <summary>
         /// Adds the row for the given set.
         /// </summary>
         /// <param name="set"></param>
         private void AddRow(SerializableSettingsImplantSet set)
         {
-            DataGridViewRow row = new DataGridViewRow { Tag = set };
-            row.CreateCells(setsGrid, set.Name);
-            setsGrid.Rows.Add(row);
+            DataGridViewRow tempRow = null;
+            try
+            {
+                tempRow = new DataGridViewRow();
+                tempRow.CreateCells(setsGrid, set.Name);
+                tempRow.Tag = set;
+
+                DataGridViewRow row = tempRow;
+                tempRow = null;
+
+                setsGrid.Rows.Add(row);
+            }
+            finally
+            {
+                if (tempRow != null)
+                    tempRow.Dispose();
+            }
         }
 
         /// <summary>

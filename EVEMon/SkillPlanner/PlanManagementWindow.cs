@@ -130,7 +130,7 @@ namespace EVEMon.SkillPlanner
                     ListViewItem lvi = new ListViewItem(plan.Name) { Tag = plan };
                     lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
                         DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
-                    lvi.SubItems.Add(plan.UniqueSkillsCount.ToString());
+                    lvi.SubItems.Add(plan.UniqueSkillsCount.ToString(CultureConstants.DefaultCulture));
                     lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.DescriptionNL) ? "(None)" : plan.DescriptionNL);
                     lbPlanList.Items.Add(lvi);
 

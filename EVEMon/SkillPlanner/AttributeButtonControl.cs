@@ -134,27 +134,29 @@ namespace EVEMon.SkillPlanner
         /// <returns>Created path</returns>
         private GraphicsPath CreateBorderPath()
         {
-            GraphicsPath borderPath = new GraphicsPath();
+            using (GraphicsPath borderPath = new GraphicsPath())
+            {
+                const int Radius = 3;
+                const int HorizontalPad = 1;
+                const int VerticalPad = 1;
+                int width = Width - VerticalPad * 2;
+                int height = Height - HorizontalPad * 2;
+                borderPath.AddLine(HorizontalPad + Radius, VerticalPad, HorizontalPad + width - (Radius * 2), VerticalPad);
+                borderPath.AddArc(HorizontalPad + width - (Radius * 2), VerticalPad, Radius * 2, Radius * 2, 270, 90);
+                borderPath.AddLine(HorizontalPad + width, VerticalPad + Radius, HorizontalPad + width,
+                                   VerticalPad + height - (Radius * 2));
+                borderPath.AddArc(HorizontalPad + width - (Radius * 2), VerticalPad + height - (Radius * 2), Radius * 2,
+                                  Radius * 2, 0,
+                                  90);
+                borderPath.AddLine(HorizontalPad + width - (Radius * 2), VerticalPad + height, HorizontalPad + Radius,
+                                   VerticalPad + height);
+                borderPath.AddArc(HorizontalPad, VerticalPad + height - (Radius * 2), Radius * 2, Radius * 2, 90, 90);
+                borderPath.AddLine(HorizontalPad, VerticalPad + height - (Radius * 2), HorizontalPad, VerticalPad + Radius);
+                borderPath.AddArc(HorizontalPad, VerticalPad, Radius * 2, Radius * 2, 180, 90);
+                borderPath.CloseFigure();
 
-            const int Radius = 3;
-            const int HorizontalPad = 1;
-            const int VerticalPad = 1;
-            int width = Width - VerticalPad * 2;
-            int height = Height - HorizontalPad * 2;
-            borderPath.AddLine(HorizontalPad + Radius, VerticalPad, HorizontalPad + width - (Radius * 2), VerticalPad);
-            borderPath.AddArc(HorizontalPad + width - (Radius * 2), VerticalPad, Radius * 2, Radius * 2, 270, 90);
-            borderPath.AddLine(HorizontalPad + width, VerticalPad + Radius, HorizontalPad + width,
-                               VerticalPad + height - (Radius * 2));
-            borderPath.AddArc(HorizontalPad + width - (Radius * 2), VerticalPad + height - (Radius * 2), Radius * 2, Radius * 2, 0,
-                              90);
-            borderPath.AddLine(HorizontalPad + width - (Radius * 2), VerticalPad + height, HorizontalPad + Radius,
-                               VerticalPad + height);
-            borderPath.AddArc(HorizontalPad, VerticalPad + height - (Radius * 2), Radius * 2, Radius * 2, 90, 90);
-            borderPath.AddLine(HorizontalPad, VerticalPad + height - (Radius * 2), HorizontalPad, VerticalPad + Radius);
-            borderPath.AddArc(HorizontalPad, VerticalPad, Radius * 2, Radius * 2, 180, 90);
-            borderPath.CloseFigure();
-
-            return borderPath;
+                return (GraphicsPath)borderPath.Clone();
+            }
         }
 
         /// <summary>

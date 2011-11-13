@@ -21,10 +21,13 @@ namespace EVEMon.SkillPlanner
         private const int SkillIcon = 5;
         private const int Planned = 6;
 
+        // Blank image list for 'Safe for work' setting
+        private readonly ImageList m_emptyImageList = new ImageList();
+
         private Plan m_plan;
         private Character m_character;
         private CertificateClass m_class;
-        private readonly Font m_boldFont;
+        private Font m_boldFont;
 
         private bool m_allExpanded;
 
@@ -47,22 +50,10 @@ namespace EVEMon.SkillPlanner
             UpdateStyles();
 
             InitializeComponent();
-
-            treeView.DrawNode += treeView_DrawNode;
-            treeView.MouseDown += treeView_MouseDown;
-
-            cmListSkills.Opening += cmListSkills_Opening;
-            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
-            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
-
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
-            Disposed += OnDisposed;
         }
 
         #endregion
+
 
 
         #region Public Properties
@@ -156,6 +147,33 @@ namespace EVEMon.SkillPlanner
 
 
         #region Event Handlers
+
+        /// <summary>
+        /// On load, complete the initialization.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            treeView.DrawNode += treeView_DrawNode;
+            treeView.MouseDown += treeView_MouseDown;
+
+            cmListSkills.Opening += cmListSkills_Opening;
+            
+            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
+            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
+
+            m_emptyImageList.ImageSize = new Size(24, 24);
+            m_emptyImageList.Images.Add(new Bitmap(24, 24));
+
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -272,11 +290,7 @@ namespace EVEMon.SkillPlanner
             Certificate oldSelection = SelectedCertificate;
             TreeNode newSelection = null;
 
-            // Blank image list for 'Safe for work' setting
-            ImageList newImageList = new ImageList { ImageSize = new Size(24, 24) };
-            newImageList.Images.Add(new Bitmap(24, 24));
-
-            treeView.ImageList = (Settings.UI.SafeForWork ? newImageList : imageList);
+            treeView.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : imageList);
 
             treeView.BeginUpdate();
             try
@@ -560,7 +574,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-                    tsmAddToPlan.Text = String.Format("Plan \"{0}\"", cert);
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", cert);
 
                     // Update "browser" menu
                     showInBrowserMenu.Enabled = m_class != cert.Class;
@@ -576,7 +590,8 @@ namespace EVEMon.SkillPlanner
                     SkillLevel prereq = (SkillLevel)node.Tag;
                     Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = String.Format("Plan \"{0} {1}\"", skill, Skill.GetRomanFromInt(prereq.Level));
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill,
+                                                      Skill.GetRomanFromInt(prereq.Level));
 
                     // Update "show in skill browser" menu
                     showInBrowserMenu.Enabled = true;
@@ -594,10 +609,10 @@ namespace EVEMon.SkillPlanner
             tsmExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
 
             tsmExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                                          ? String.Format("Expand {0}", node.Text)
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand {0}", node.Text)
                                           : String.Empty);
             tsmCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                                            ? String.Format("Collapse {0}", node.Text)
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse {0}", node.Text)
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menus

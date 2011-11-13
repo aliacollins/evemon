@@ -1,3 +1,5 @@
+using EVEMon.Common.CustomEventArgs;
+
 namespace EVEMon.Schedule
 {
     partial class ScheduleEditorWindow
@@ -51,6 +53,7 @@ namespace EVEMon.Schedule
             this.calContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newScheduleEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -194,8 +197,8 @@ namespace EVEMon.Schedule
             this.calControl.Size = new System.Drawing.Size(533, 421);
             this.calControl.TabIndex = 0;
             this.calControl.TextColor = System.Drawing.Color.White;
-            this.calControl.DayClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayClicked);
-            this.calControl.DayDoubleClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayDoubleClicked);
+            this.calControl.DayClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.DaySelectedEventArgs>(this.calControl_DayClicked);
+            this.calControl.DayDoubleClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.DaySelectedEventArgs>(this.calControl_DayDoubleClicked);
             this.calControl.MouseEnter += new System.EventHandler(this.calControl_MouseEnter);
             this.calControl.MouseLeave += new System.EventHandler(this.calControl_MouseLeave);
             // 
@@ -326,6 +329,14 @@ namespace EVEMon.Schedule
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(192, 6);
             // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 10000;
+            this.toolTip.InitialDelay = 500;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 100;
+            this.toolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            // 
             // ScheduleEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -384,5 +395,6 @@ namespace EVEMon.Schedule
         private System.Windows.Forms.ContextMenuStrip calContext;
         private System.Windows.Forms.ToolStripMenuItem newScheduleEntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

@@ -635,14 +635,5 @@ namespace EVEMon.Common {
                 return ResourceManager.GetString("PostDataWithCharIDAndIDS", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://area51.stackexchange.com/proposals/3371/eve-online?referrer=YrSyuyuqKBzSZ2Kzwn8oXQ2.
-        /// </summary>
-        public static string StackExchangeEveOnlineURL {
-            get {
-                return ResourceManager.GetString("StackExchangeEveOnlineURL", resourceCulture);
-            }
-        }
     }
 }

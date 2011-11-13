@@ -14,12 +14,23 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="apiKey"></param>
-        public ApiKeyDeletionWindow(APIKey apiKey)
+        private ApiKeyDeletionWindow()
         {
             InitializeComponent();
-            deletionLabel.Text = String.Format(deletionLabel.Text, apiKey.ID);
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="apiKey"></param>
+        public ApiKeyDeletionWindow(APIKey apiKey)
+            : this()
+        {
+            if (apiKey == null)
+                throw new ArgumentNullException("apiKey", "API key can't be null");
+
             m_apiKey = apiKey;
+            deletionLabel.Text = String.Format(CultureConstants.DefaultCulture, deletionLabel.Text, apiKey.ID);
 
             charactersListView.ItemCheck += charactersListView_ItemCheck;
 
@@ -31,7 +42,7 @@ namespace EVEMon.ApiCredentialsManagement
                           {
                               Tag = id.CCPCharacter,
                               Checked = id.CCPCharacter != null &&
-                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != m_apiKey),
+                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != apiKey),
                           }))
             {
                 // Gray out a character with another associated API key

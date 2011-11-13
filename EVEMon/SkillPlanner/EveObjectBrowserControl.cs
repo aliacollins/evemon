@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add the value for every selected item
-            for (int index = 0; index < SelectControl.SelectedObjects.Count; index++)
+            for (int index = 0; index < SelectControl.SelectedObjects.Count(); index++)
             {
                 // Create the subitem and choose its forecolor
                 ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
@@ -374,7 +374,7 @@ namespace EVEMon.SkillPlanner
 
                     item.UseItemStyleForSubItems = false;
                 }
-                else if (SelectControl.SelectedObjects.Count > 1)
+                else if (SelectControl.SelectedObjects.Count() > 1)
                 {
                     subItem.ForeColor = Color.DarkGray;
                     item.UseItemStyleForSubItems = false;
@@ -426,6 +426,20 @@ namespace EVEMon.SkillPlanner
             IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects.Where(
                 x => x.ReprocessingMaterials != null).SelectMany(x => x.ReprocessingMaterials);
 
+            AddItemsAndSubItems(items, group, reprocessingMaterials);
+
+            PropertiesList.Groups.Add(group);
+        }
+
+        /// <summary>
+        /// Adds the items and sub items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="group">The group.</param>
+        /// <param name="reprocessingMaterials">The reprocessing materials.</param>
+        private void AddItemsAndSubItems(ICollection<ListViewItem> items, ListViewGroup group,
+                                         IEnumerable<Material> reprocessingMaterials)
+        {
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
                 if (!reprocessingMaterials.Any(x => x.Item == item))
@@ -456,7 +470,7 @@ namespace EVEMon.SkillPlanner
                         values.Add(0f);
                         continue;
                     }
-                    labels.Add(material.Quantity.ToString("N0"));
+                    labels.Add(material.Quantity.ToString("N0", CultureConstants.DefaultCulture));
                     values.Add(material.Quantity);
                 }
 
@@ -466,8 +480,6 @@ namespace EVEMon.SkillPlanner
 
                 AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
             }
-
-            PropertiesList.Groups.Add(group);
         }
 
         /// <summary>

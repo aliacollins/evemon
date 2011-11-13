@@ -319,10 +319,10 @@ namespace EVEMon.SkillPlanner
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
-                            fillBrush = new LinearGradientBrush(rect, Color.LightPink, Color.DarkRed, 90.0F);
+                            fillBrush = GetLinearGradientBrush(rect, Color.LightPink, Color.DarkRed, 90.0F);
                         else
                         {
-                            fillBrush = new LinearGradientBrush(rect, Color.Red, Color.Black, 90.0F);
+                            fillBrush = GetLinearGradientBrush(rect, Color.Red, Color.Black, 90.0F);
                             stdTextColor = !Settings.UI.SafeForWork ? Color.White : SystemColors.ControlText;
                         }
                     }
@@ -330,16 +330,16 @@ namespace EVEMon.SkillPlanner
                     else
                     {
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Black : SystemColors.ControlText;
-                        fillBrush = new LinearGradientBrush(rect, Color.LightSeaGreen, Color.DarkGreen, 90.0F);
+                        fillBrush = GetLinearGradientBrush(rect, Color.LightSeaGreen, Color.DarkGreen, 90.0F);
                     }
                 }
                     // Skill at level 0, prerequisites met
                 else if (cell.Skill.ArePrerequisitesMet)
-                    fillBrush = new LinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
+                    fillBrush = GetLinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
                     // Skill unknown, not trainable
                 else
                 {
-                    fillBrush = new LinearGradientBrush(rect, Color.Blue, Color.Black, 90.0F);
+                    fillBrush = GetLinearGradientBrush(rect, Color.Blue, Color.Black, 90.0F);
                     stdTextColor = !Settings.UI.SafeForWork ? Color.White : SystemColors.ControlText;
                 }
 
@@ -351,15 +351,11 @@ namespace EVEMon.SkillPlanner
                                                pts.ToDescriptiveText(TimeFormat));
                 }
 
-
                 // Fill the background
                 if (Settings.UI.SafeForWork)
-                {
-                    fillBrush.Dispose();
                     fillBrush = new SolidBrush(SystemColors.Control);
-                }
-                g.FillRectangle(fillBrush, rect);
 
+                g.FillRectangle(fillBrush, rect);
 
                 // Draw text (two to five lines)
                 Point drawPoint = new Point(rect.Left + 5, rect.Top + 5);
@@ -393,6 +389,33 @@ namespace EVEMon.SkillPlanner
                 if (fillBrush != null)
                     fillBrush.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Gets the linear gradient brush.
+        /// </summary>
+        /// <param name="rect">The rect.</param>
+        /// <param name="color1">The color1.</param>
+        /// <param name="color2">The color2.</param>
+        /// <param name="angle">The angle.</param>
+        /// <returns></returns>
+        private static Brush GetLinearGradientBrush(Rectangle rect, Color color1, Color color2, float angle)
+        {
+            Brush brush;
+            Brush tempBrush = null;
+            try
+            {
+                tempBrush = new LinearGradientBrush(rect, color1, color2, angle);
+
+                brush = tempBrush;
+                tempBrush = null;
+            }
+            finally
+            {
+                if (tempBrush != null)
+                    tempBrush.Dispose();
+            }
+            return brush;
         }
 
         /// <summary>
@@ -579,9 +602,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private sealed class Cell
         {
-            private readonly SkillTreeDisplayControl m_std = new SkillTreeDisplayControl();
-
-
             #region Constructor
 
             /// <summary>
@@ -692,18 +712,21 @@ namespace EVEMon.SkillPlanner
             /// <returns></returns>
             private void FirstPassLayout(int left, int top)
             {
-                // Layout this cell
-                Rectangle = new Rectangle(left, top, m_std.CellWidth, m_std.CellHeight);
-
-                // Layout the children
-                int childrenTop = top + m_std.CellHeight + SkillboxMarginUd;
-                int childrenWidth = Cells.Count * m_std.CellWidth + (Cells.Count - 1) * SkillboxMarginLr;
-
-                left += (m_std.CellWidth - childrenWidth) / 2;
-                foreach (Cell cell in Cells)
+                using (SkillTreeDisplayControl stdc = new SkillTreeDisplayControl())
                 {
-                    cell.FirstPassLayout(left, childrenTop);
-                    left += m_std.CellWidth + SkillboxMarginLr;
+                    // Layout this cell
+                    Rectangle = new Rectangle(left, top, stdc.CellWidth, stdc.CellHeight);
+
+                    // Layout the children
+                    int childrenTop = top + stdc.CellHeight + SkillboxMarginUd;
+                    int childrenWidth = Cells.Count * stdc.CellWidth + (Cells.Count - 1) * SkillboxMarginLr;
+
+                    left += (stdc.CellWidth - childrenWidth) / 2;
+                    foreach (Cell cell in Cells)
+                    {
+                        cell.FirstPassLayout(left, childrenTop);
+                        left += stdc.CellWidth + SkillboxMarginLr;
+                    }
                 }
             }
 

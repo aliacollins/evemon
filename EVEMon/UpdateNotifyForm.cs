@@ -94,7 +94,7 @@ namespace EVEMon
             if (File.Exists(localFilename))
                 UpdateManager.DeleteInstallationFiles();
 
-            using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
+            using (UpdateDownloadForm form = new UpdateDownloadForm(new Uri(m_args.InstallerUrl), localFilename))
             {
                 form.ShowDialog();
 
@@ -118,25 +118,31 @@ namespace EVEMon
         /// <param name="args"></param>
         private void ExecutePatcher(string filename, string args)
         {
+            if (!File.Exists(filename))
+            {
+                MessageBox.Show(this, "The installer file could not be found. EVEMon will continue without updating.",
+                                "File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try
             {
                 Process.Start(filename, args);
             }
-            catch (Exception e)
+            catch (InvalidOperationException e)
             {
-                ExceptionHandler.LogRethrowException(e);
+                ExceptionHandler.LogException(e, true);
                 if (File.Exists(filename))
                 {
                     try
                     {
                         File.Delete(filename);
                     }
-                    catch
+                    catch (UnauthorizedAccessException ex)
                     {
-                        ExceptionHandler.LogException(e, false);
+                        ExceptionHandler.LogException(ex, false);
                     }
                 }
-                throw;
             }
             DialogResult = DialogResult.OK;
             Close();

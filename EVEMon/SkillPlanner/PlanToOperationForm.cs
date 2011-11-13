@@ -30,6 +30,9 @@ namespace EVEMon.SkillPlanner
         public PlanToOperationForm(IPlanOperation operation)
             : this()
         {
+            if (operation == null)
+                throw new ArgumentNullException("operation");
+
             if (operation.Type == PlanOperations.None)
                 throw new ArgumentException("This window doesn't support empty operations.", "operation");
 
@@ -68,7 +71,7 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     priorityNumericBox.Minimum = m_operation.HighestPriorityForAddition;
-                    priorityLabel.Text = String.Format("The highest priority you can set is {0}",
+                    priorityLabel.Text = String.Format(CultureConstants.DefaultCulture, "The highest priority you can set is {0}",
                                                        m_operation.HighestPriorityForAddition);
                 }
             }

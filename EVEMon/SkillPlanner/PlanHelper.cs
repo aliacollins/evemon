@@ -19,7 +19,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="level"></param>
         public static bool UpdatesRegularPlanToMenu(ToolStripItem menu, Plan plan, Skill skill, int level)
         {
-            menu.Text = level == 0 ? "Remove" : String.Format("Level {0}", level);
+            if (menu == null)
+                throw new ArgumentNullException("menu");
+
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
+            menu.Text = level == 0 ? "Remove" : String.Format(CultureConstants.DefaultCulture, "Level {0}", level);
 
             menu.Enabled = EnablePlanTo(plan, skill, level);
             if (menu.Enabled)
@@ -112,6 +118,9 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public static void Perform(IPlanOperation operation)
         {
+            if (operation == null)
+                throw new ArgumentNullException("operation");
+
             PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
             Perform(window, operation);
         }
@@ -138,6 +147,9 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public static void SelectPerform(IPlanOperation operation)
         {
+            if (operation == null)
+                throw new ArgumentNullException("operation");
+
             if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
                 Perform(operation);
 

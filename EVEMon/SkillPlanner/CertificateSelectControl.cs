@@ -15,8 +15,11 @@ namespace EVEMon.SkillPlanner
     {
         private readonly char[] m_upperCertificatesLetters = new[] { 'B', 'S', 'I', 'E' };
 
-        private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4' };
         // Stupid insensitive images keys' comparison, we cannot use bsie
+        private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4' };
+
+        // Blank image list for 'Safe for work' setting
+        private readonly ImageList m_emptyImageList = new ImageList();
 
         private Plan m_plan;
         private Character m_character;
@@ -82,6 +85,9 @@ namespace EVEMon.SkillPlanner
             cmListSkills.Opening += cmListSkills_Opening;
             Disposed += OnDisposed;
 
+            m_emptyImageList.ImageSize = new Size(24, 24);
+            m_emptyImageList.Images.Add(new Bitmap(24, 24));
+
             m_iconsFont = FontFactory.GetFont("Tahoma", 8.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 
             // Read the settings
@@ -140,7 +146,7 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set
             {
-                if (m_plan == value)
+                if (value == null || m_plan == value)
                     return;
 
                 m_plan = value;
@@ -374,11 +380,7 @@ namespace EVEMon.SkillPlanner
             tvItems.BeginUpdate();
             try
             {
-                // Blank image list for 'Safe for work' setting
-                ImageList newImageList = new ImageList { ImageSize = new Size(24, 24) };
-                newImageList.Images.Add(new Bitmap(24, 24));
-
-                tvItems.ImageList = (Settings.UI.SafeForWork ? newImageList : ilCertIcons);
+                tvItems.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : ilCertIcons);
 
                 // Clear the existing nodes
                 tvItems.Nodes.Clear();
@@ -522,9 +524,8 @@ namespace EVEMon.SkillPlanner
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-                chName.Width = Math.Max(0,
-                                        Math.Max(lvSortedList.ClientSize.Width / 2,
-                                                 lvSortedList.ClientSize.Width - (chSortKey.Width + 16)));
+                chName.Width = Math.Max(0, Math.Max(lvSortedList.ClientSize.Width / 2,
+                                                    lvSortedList.ClientSize.Width - (chSortKey.Width + 16)));
                 chSortKey.Text = column;
             }
             finally
@@ -686,7 +687,12 @@ namespace EVEMon.SkillPlanner
             // Create the image if it does not exist yet
             const int ImageSize = 24;
             const int MaxLetterWidth = 6;
-            Bitmap bmp = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb);
+
+            Bitmap bmp;
+            using(Bitmap tempBitmap = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb))
+            {
+                bmp = (Bitmap)tempBitmap.Clone();
+            }
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
@@ -840,11 +846,11 @@ namespace EVEMon.SkillPlanner
 
             tsmExpandSelected.Text = (certClass == null && node != null &&
                                       !node.IsExpanded
-                                          ? String.Format("Expand \"{0}\"", node.Text)
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
                                           : String.Empty);
             tsmCollapseSelected.Text = (certClass == null && node != null &&
                                         node.IsExpanded
-                                            ? String.Format("Collapse \"{0}\"", node.Text)
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menu

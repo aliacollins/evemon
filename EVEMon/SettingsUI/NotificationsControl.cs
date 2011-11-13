@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
+using CheckBox = System.Windows.Forms.CheckBox;
+using Label = System.Windows.Forms.Label;
 
 namespace EVEMon.SettingsUI
 {
@@ -26,59 +28,7 @@ namespace EVEMon.SettingsUI
         {
             InitializeComponent();
 
-            // Add the controls for every member of the enumeration
-            int height = RowHeight;
-            IEnumerable<NotificationCategory> categories = Enum.GetValues(typeof(NotificationCategory))
-                .Cast<NotificationCategory>()
-                .Where(x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication)
-                .Where(x => x.HasHeader());
-
-            foreach (NotificationCategory cat in categories)
-            {
-                // Add the label
-                Label label = new Label
-                                  {
-                                      AutoSize = false,
-                                      Text = cat.GetHeader(),
-                                      TextAlign = ContentAlignment.MiddleLeft,
-                                      Location = new Point(labelNotification.Location.X, height),
-                                      Width = labelBehaviour.Location.X - 3,
-                                      Height = RowHeight
-                                  };
-                Controls.Add(label);
-
-                // Add the "system tray tooltip" combo box
-                ComboBox combo = new ComboBox { Tag = cat };
-                combo.Items.AddRange(new[] { "Never", "Once", "Repeat until clicked" });
-                combo.SelectedIndex = 0;
-                combo.Margin = new Padding(3);
-                combo.Height = RowHeight - 4;
-                combo.Width = labelBehaviour.Width;
-                combo.DropDownStyle = ComboBoxStyle.DropDownList;
-                combo.Location = new Point(labelBehaviour.Location.X, height + 2);
-                combo.SelectedIndexChanged += combo_SelectedIndexChanged;
-                Controls.Add(combo);
-                m_combos.Add(combo);
-
-                // Add the "main window" checkbox
-                CheckBox checkbox = new CheckBox
-                                        {
-                                            Tag = cat,
-                                            Text = "Show",
-                                            Margin = new Padding(3),
-                                            Height = RowHeight - 4,
-                                            Width = labelMainWindow.Width,
-                                            Location = new Point(labelMainWindow.Location.X + 15, height + 2)
-                                        };
-                checkbox.CheckedChanged += checkbox_CheckedChanged;
-                Controls.Add(checkbox);
-                m_checkboxes.Add(checkbox);
-
-                // Updates the row ordinate
-                height += RowHeight;
-            }
-
-            Height = height;
+            PopulateControl();
         }
 
         /// <summary>
@@ -115,6 +65,22 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
+        /// Gets the categories.
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<NotificationCategory> Categories
+        {
+            get
+            {
+                IEnumerable<NotificationCategory> categories = Enum.GetValues(typeof(NotificationCategory))
+                    .Cast<NotificationCategory>()
+                    .Where(x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication)
+                    .Where(x => x.HasHeader());
+                return categories;
+            }
+        }
+
+        /// <summary>
         /// When the selected index changes, we update the settings.
         /// </summary>
         /// <param name="sender"></param>
@@ -136,6 +102,128 @@ namespace EVEMon.SettingsUI
             CheckBox checkbox = (CheckBox)sender;
             NotificationCategory cat = (NotificationCategory)checkbox.Tag;
             m_settings.Categories[cat].ShowOnMainWindow = checkbox.Checked;
+        }
+
+        /// <summary>
+        /// Populates the control.
+        /// </summary>
+        private void PopulateControl()
+        {
+            int height = RowHeight;
+
+            // Add the controls for every member of the enumeration
+            foreach (NotificationCategory cat in Categories)
+            {
+                // Add the label
+                AddLabel(height, cat);
+
+                // Add the "system tray tooltip" combo box
+                AddComboBox(height, cat);
+
+                // Add the "main window" checkbox
+                AddCheckBox(height, cat);
+
+                // Updates the row ordinate
+                height += RowHeight;
+            }
+
+            Height = height;
+        }
+
+        /// <summary>
+        /// Adds the check box.
+        /// </summary>
+        /// <param name="height">The height.</param>
+        /// <param name="cat">The cat.</param>
+        private void AddCheckBox(int height, NotificationCategory cat)
+        {
+            CheckBox tempCheckbox = null;
+            try
+            {
+                tempCheckbox = new CheckBox();
+                tempCheckbox.CheckedChanged += checkbox_CheckedChanged;
+                tempCheckbox.Tag = cat;
+                tempCheckbox.Text = "Show";
+                tempCheckbox.Margin = new Padding(3);
+                tempCheckbox.Height = RowHeight - 4;
+                tempCheckbox.Width = labelMainWindow.Width;
+                tempCheckbox.Location = new Point(labelMainWindow.Location.X + 15, height + 2);
+
+                CheckBox checkbox = tempCheckbox;
+                tempCheckbox = null;
+
+                Controls.Add(checkbox);
+                m_checkboxes.Add(checkbox);
+            }
+            finally
+            {
+                if (tempCheckbox != null)
+                    tempCheckbox.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Adds the combo box.
+        /// </summary>
+        /// <param name="height">The height.</param>
+        /// <param name="cat">The cat.</param>
+        private void AddComboBox(int height, NotificationCategory cat)
+        {
+            ComboBox tempCombo = null;
+            try
+            {
+                tempCombo = new ComboBox();
+                tempCombo.Items.AddRange(new[] { "Never", "Once", "Repeat until clicked" });
+                tempCombo.Tag = cat;
+                tempCombo.SelectedIndex = 0;
+                tempCombo.Margin = new Padding(3);
+                tempCombo.Height = RowHeight - 4;
+                tempCombo.Width = labelBehaviour.Width;
+                tempCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+                tempCombo.Location = new Point(labelBehaviour.Location.X, height + 2);
+                tempCombo.SelectedIndexChanged += combo_SelectedIndexChanged;
+
+                ComboBox combo = tempCombo;
+                tempCombo = null;
+
+                Controls.Add(combo);
+                m_combos.Add(combo);
+            }
+            finally
+            {
+                if (tempCombo != null)
+                    tempCombo.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Adds the label.
+        /// </summary>
+        /// <param name="height">The height.</param>
+        /// <param name="cat">The cat.</param>
+        private void AddLabel(int height, NotificationCategory cat)
+        {
+            Label tempLabel = null;
+            try
+            {
+                tempLabel = new Label();
+                tempLabel.AutoSize = false;
+                tempLabel.Text = cat.GetHeader();
+                tempLabel.TextAlign = ContentAlignment.MiddleLeft;
+                tempLabel.Location = new Point(labelNotification.Location.X, height);
+                tempLabel.Width = labelBehaviour.Location.X - 3;
+                tempLabel.Height = RowHeight;
+
+                Label label = tempLabel;
+                tempLabel = null;
+
+                Controls.Add(label);
+            }
+            finally
+            {
+                if (tempLabel != null)
+                    tempLabel.Dispose();
+            }
         }
     }
 }

@@ -52,12 +52,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void TipWindow_Load(object sender, EventArgs e)
         {
-            Bitmap b = new Bitmap(32, 32);
-            using (Graphics g = Graphics.FromImage(b))
-            {
-                g.DrawIcon(SystemIcons.Information, 0, 0);
-            }
-            pictureBox1.Image = b;
+            pictureBox.Image = SystemIcons.Information.ToBitmap();
         }
 
         /// <summary>
@@ -69,6 +64,9 @@ namespace EVEMon
         /// <param name="tiptext">The text of the tip window.</param>
         public static void ShowTip(Form form, string key, string title, string tiptext)
         {
+            if (form == null)
+                throw new ArgumentNullException("form");
+
             lock (s_lockObject)
             {
                 if (Settings.UI.ConfirmedTips.Contains(key))

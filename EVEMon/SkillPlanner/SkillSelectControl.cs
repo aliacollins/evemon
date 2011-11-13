@@ -115,7 +115,7 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set
             {
-                if (m_plan == value)
+                if (value == null || m_plan == value)
                     return;
 
                 m_plan = value;
@@ -176,67 +176,104 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static ImageList GetIconSet(int index, ImageList defaultList)
         {
-            ImageList def = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
-            string groupname = null;
+            string groupname = String.Empty;
 
             if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
             {
-                SettingsProperty settingsProperty = CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index];
+                SettingsProperty settingsProperty =
+                    CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index];
                 if (settingsProperty != null)
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
-            if ((groupname != null && !File.Exists(String.Format(
-                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                Path.DirectorySeparatorChar,
-                AppDomain.CurrentDomain.BaseDirectory,
-                index,
-                groupname)) ||
-                 !File.Exists(String.Format(
-                     "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                     Path.DirectorySeparatorChar,
-                     AppDomain.CurrentDomain.BaseDirectory))))
-                groupname = null;
+            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                                                 "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                 Path.DirectorySeparatorChar,
+                                                                 AppDomain.CurrentDomain.BaseDirectory,
+                                                                 index,
+                                                                 groupname)) ||
+                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                            "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                            Path.DirectorySeparatorChar,
+                                            AppDomain.CurrentDomain.BaseDirectory))))
+                groupname = String.Empty;
 
-            if (groupname != null)
+            return String.IsNullOrEmpty(groupname) ? defaultList : GetCustomIconSet(index, groupname);
+        }
+
+        /// <summary>
+        /// Gets the custom icon set.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="groupname">The groupname.</param>
+        /// <returns></returns>
+        private static ImageList GetCustomIconSet(int index, string groupname)
+        {
+            ImageList imageList;
+            ImageList tempImageList = null;
+            try
             {
-                IResourceReader basic = new ResourceReader(String.Format(
-                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                    Path.DirectorySeparatorChar,
-                    AppDomain.CurrentDomain.BaseDirectory));
+                tempImageList = new ImageList();
+                IDictionaryEnumerator basicx;
+                IResourceReader defaultGroupReader = null;
+                tempImageList.ColorDepth = ColorDepth.Depth32Bit;
 
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-
-                while (basicx.MoveNext())
+                try
                 {
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                                                          Path.DirectorySeparatorChar,
+                                                                          AppDomain.CurrentDomain.BaseDirectory));
+
+                    basicx = defaultGroupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
+                }
+                finally
+                {
+                    if (defaultGroupReader != null)
+                        defaultGroupReader.Close();
                 }
 
-                basic.Close();
-
-                basic = new ResourceReader(String.Format(
-                    "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                    Path.DirectorySeparatorChar,
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    index,
-                    groupname));
-
-                basicx = basic.GetEnumerator();
-
-                while (basicx.MoveNext())
+                IResourceReader groupReader = null;
+                try
                 {
-                    if (def.Images.ContainsKey(basicx.Key.ToString()))
-                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                   Path.DirectorySeparatorChar,
+                                                                   AppDomain.CurrentDomain.BaseDirectory,
+                                                                   index,
+                                                                   groupname));
 
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    basicx = groupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        if (tempImageList.Images.ContainsKey(basicx.Key.ToString()))
+                            tempImageList.Images.RemoveByKey(basicx.Key.ToString());
+
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
+                }
+                finally
+                {
+                    if (groupReader != null)
+                        groupReader.Close();
                 }
 
-                basic.Close();
-
-                return def;
+                imageList = tempImageList;
+                tempImageList = null;
+            }
+            finally
+            {
+                if (tempImageList != null)
+                    tempImageList.Dispose();
             }
 
-            return defaultList;
+            return imageList;
         }
 
         #endregion
@@ -387,68 +424,7 @@ namespace EVEMon.SkillPlanner
             {
                 tvItems.Nodes.Clear();
 
-                foreach (
-                    IGrouping<SkillGroup, Skill> group in
-                        skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
-                {
-                    int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
-
-                    TreeNode groupNode = new TreeNode
-                                             {
-                                                 Text = group.Key.Name,
-                                                 ImageIndex = index,
-                                                 SelectedImageIndex = index,
-                                                 Tag = group.Key
-                                             };
-
-                    // Add nodes for skills in this group
-                    foreach (Skill skill in group)
-                    {
-                        // Choose image index
-                        int imageIndex;
-                        if (skill.Level != 0)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl" + skill.Level);
-                        else if (skill.IsKnown)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl0");
-                        else if (skill.IsOwned)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("book");
-                        else if (skill.ArePrerequisitesMet)
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsMet");
-                        else
-                            imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet");
-
-                        // Create node and adds it
-                        TreeNode node = new TreeNode
-                                            {
-                                                Text = String.Format("{0} ({1})", skill.Name, skill.Rank),
-                                                ImageIndex = imageIndex,
-                                                SelectedImageIndex = imageIndex,
-                                                Tag = skill
-                                            };
-                        groupNode.Nodes.Add(node);
-
-                        // We color some nodes
-                        if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
-                            node.ForeColor = Color.DarkRed;
-
-                        if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills)
-                            node.ForeColor = Color.Green;
-
-                        if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills)
-                            node.ForeColor = Color.RoyalBlue;
-
-                        if (skill.IsTraining)
-                        {
-                            node.BackColor = Color.LightSteelBlue;
-                            node.ForeColor = Color.Black;
-                        }
-
-                        numberOfItems++;
-                    }
-
-                    // Add group when not empty
-                    tvItems.Nodes.Add(groupNode);
-                }
+                numberOfItems = AddNodes(skills, numberOfItems);
 
                 TreeNode selectedNode = null;
 
@@ -479,6 +455,78 @@ namespace EVEMon.SkillPlanner
                     m_allExpanded = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds the nodes.
+        /// </summary>
+        /// <param name="skills">The skills.</param>
+        /// <param name="numberOfItems">The number of items.</param>
+        /// <returns></returns>
+        private int AddNodes(IEnumerable<Skill> skills, int numberOfItems)
+        {
+            foreach (IGrouping<SkillGroup, Skill> group in skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name))
+            {
+                int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
+
+                TreeNode groupNode = new TreeNode
+                                         {
+                                             Text = group.Key.Name,
+                                             ImageIndex = index,
+                                             SelectedImageIndex = index,
+                                             Tag = group.Key
+                                         };
+
+                // Add nodes for skills in this group
+                foreach (Skill skill in group)
+                {
+                    // Choose image index
+                    int imageIndex;
+                    if (skill.Level != 0)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl" + skill.Level);
+                    else if (skill.IsKnown)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("lvl0");
+                    else if (skill.IsOwned)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("book");
+                    else if (skill.ArePrerequisitesMet)
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsMet");
+                    else
+                        imageIndex = tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet");
+
+                    // Create node and adds it
+                    TreeNode node = new TreeNode
+                                        {
+                                            Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
+                                                                 skill.Name, skill.Rank),
+                                            ImageIndex = imageIndex,
+                                            SelectedImageIndex = imageIndex,
+                                            Tag = skill
+                                        };
+                    groupNode.Nodes.Add(node);
+
+                    // We color some nodes
+                    if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
+                        node.ForeColor = Color.DarkRed;
+
+                    if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills)
+                        node.ForeColor = Color.Green;
+
+                    if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills)
+                        node.ForeColor = Color.RoyalBlue;
+
+                    if (skill.IsTraining)
+                    {
+                        node.BackColor = Color.LightSteelBlue;
+                        node.ForeColor = Color.Black;
+                    }
+
+                    numberOfItems++;
+                }
+
+                // Add group when not empty
+                tvItems.Nodes.Add(groupNode);
+            }
+            return numberOfItems;
         }
 
         /// <summary>
@@ -639,13 +687,13 @@ namespace EVEMon.SkillPlanner
                     // Skill rank
                 case SkillSort.Rank:
                     skills = skills.ToArray().OrderBy(x => x.Rank);
-                    labels = skills.Select(x => x.Rank.ToString());
+                    labels = skills.Select(x => x.Rank.ToString(CultureConstants.DefaultCulture));
                     return "Rank";
 
                     // Skill SP/hour
                 case SkillSort.SPPerHour:
                     skills = skills.ToArray().OrderBy(x => x.SkillPointsPerHour).Reverse();
-                    labels = skills.Select(x => x.SkillPointsPerHour.ToString());
+                    labels = skills.Select(x => x.SkillPointsPerHour.ToString(CultureConstants.DefaultCulture));
                     return "SP/hour";
             }
         }
@@ -868,11 +916,11 @@ namespace EVEMon.SkillPlanner
 
             cmiExpandSelected.Text = (SelectedSkill == null && node != null &&
                                       !node.IsExpanded
-                                          ? String.Format("Expand \"{0}\"", node.Text)
+                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
                                           : String.Empty);
             cmiCollapseSelected.Text = (SelectedSkill == null && node != null &&
                                         node.IsExpanded
-                                            ? String.Format("Collapse \"{0}\"", node.Text)
+                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
             // "Expand All" and "Collapse All" menus

@@ -142,40 +142,14 @@ namespace EVEMon.SkillPlanner
             m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention)
                              || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention);
 
+            // Hide the tab control if the selected tab is not the first
+            // (avoids tab creation be visible to user)
+            if (tabControl.SelectedIndex != 0)
+                tabControl.Hide();
+
             try
             {
-                // Hide the tab control if the selected tab is not the first
-                // (avoids tab creation be visible to user)
-                if (tabControl.SelectedIndex != 0)
-                    tabControl.Hide();
-
-                // Store the selected tab index for later use
-                int storedTabIndex = tabControl.SelectedIndex;
-
-                tabControl.TabPages.Clear();
-
-                // Add the appropriate tabs
-                tabControl.TabPages.Add(tpManufacturing);
-
-                if (hasCopying)
-                    tabControl.TabPages.Add(tpCopying);
-
-                if (hasResearchingMaterialProductivity)
-                    tabControl.TabPages.Add(tpResearchME);
-
-                if (hasResearchingTimeProductivity)
-                    tabControl.TabPages.Add(tpResearchPE);
-
-                if (!hasCopying && !hasResearchingMaterialProductivity && !hasResearchingTimeProductivity)
-                    tabControl.TabPages.Add(tpResearching);
-
-                if (m_hasInvention)
-                    tabControl.TabPages.Add(tpInvention);
-
-                // Restore the index of the previous selected tab,
-                // if the index doesn't exist it smartly selects
-                // the first one by its own
-                tabControl.SelectedIndex = storedTabIndex;
+                RefreshTabs(hasResearchingTimeProductivity, hasCopying, hasResearchingMaterialProductivity);
             }
             finally
             {
@@ -184,6 +158,43 @@ namespace EVEMon.SkillPlanner
                 // Return focus to selector
                 blueprintSelectControl.tvItems.Focus();
             }
+        }
+
+        /// <summary>
+        /// Refreshes the tabs.
+        /// </summary>
+        /// <param name="hasResearchingTimeProductivity">if set to <c>true</c> [has researching time productivity].</param>
+        /// <param name="hasCopying">if set to <c>true</c> [has copying].</param>
+        /// <param name="hasResearchingMaterialProductivity">if set to <c>true</c> [has researching material productivity].</param>
+        private void RefreshTabs(bool hasResearchingTimeProductivity, bool hasCopying, bool hasResearchingMaterialProductivity)
+        {
+            // Store the selected tab index for later use
+            int storedTabIndex = tabControl.SelectedIndex;
+
+            tabControl.TabPages.Clear();
+
+            // Add the appropriate tabs
+            tabControl.TabPages.Add(tpManufacturing);
+
+            if (hasCopying)
+                tabControl.TabPages.Add(tpCopying);
+
+            if (hasResearchingMaterialProductivity)
+                tabControl.TabPages.Add(tpResearchME);
+
+            if (hasResearchingTimeProductivity)
+                tabControl.TabPages.Add(tpResearchPE);
+
+            if (!hasCopying && !hasResearchingMaterialProductivity && !hasResearchingTimeProductivity)
+                tabControl.TabPages.Add(tpResearching);
+
+            if (m_hasInvention)
+                tabControl.TabPages.Add(tpInvention);
+
+            // Restore the index of the previous selected tab,
+            // if the index doesn't exist it smartly selects
+            // the first one by its own
+            tabControl.SelectedIndex = storedTabIndex;
         }
 
         /// <summary>
@@ -207,12 +218,12 @@ namespace EVEMon.SkillPlanner
             }
 
             // Runs per copy
-            lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString();
+            lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString(CultureConstants.DefaultCulture);
 
             // Wastage factor
             m_waste = ((double)m_blueprint.WasteFactor / 100) *
                       (double)(nudME.Value >= 0 ? 1 / (nudME.Value + 1) : (1 - nudME.Value));
-            lblWaste.Text = m_waste.ToString("0.0#%");
+            lblWaste.Text = m_waste.ToString("0.0#%", CultureConstants.DefaultCulture);
 
             // Multipliers
             double materialMultiplier;
@@ -353,7 +364,7 @@ namespace EVEMon.SkillPlanner
 
                         // Add the quantity for every item
                         ListViewItem.ListViewSubItem subItemYou =
-                            new ListViewItem.ListViewSubItem(item, youQuantity.ToString());
+                            new ListViewItem.ListViewSubItem(item, youQuantity.ToString(CultureConstants.DefaultCulture));
                         item.SubItems.Add(subItemYou);
 
                         // Has perfect values ?
@@ -361,7 +372,7 @@ namespace EVEMon.SkillPlanner
 
                         // Add the perfect quantity for every item
                         ListViewItem.ListViewSubItem subItemPerfect =
-                            new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString());
+                            new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString(CultureConstants.DefaultCulture));
                         item.SubItems.Add(subItemPerfect);
 
                         // Has damage per run ?
@@ -369,7 +380,7 @@ namespace EVEMon.SkillPlanner
 
                         // Add the damage per run for every item (empty string if it's 1)
                         string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
-                                                   ? String.Format("{0:P1}", material.DamagePerJob)
+                                                   ? String.Format(CultureConstants.DefaultCulture, "{0:P1}", material.DamagePerJob)
                                                    : String.Empty);
                         ListViewItem.ListViewSubItem subItemDamagePerRun =
                             new ListViewItem.ListViewSubItem(item, damagePerRun);
@@ -394,7 +405,7 @@ namespace EVEMon.SkillPlanner
 
                 // Display the Perfect ME
                 if (tabControl.SelectedTab == tpManufacturing)
-                    lblPerfectMEValue.Text = perfectME.ToString("N0");
+                    lblPerfectMEValue.Text = perfectME.ToString("N0", CultureConstants.DefaultCulture);
 
                 // Show/Hide the "no item required" label and autoresize the columns 
                 PropertiesList.Visible = PropertiesList.Items.Count > 0;
@@ -532,7 +543,7 @@ namespace EVEMon.SkillPlanner
             double activityTimeModifier = (1 - (factor * skillLevel));
             TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
             bool includeSeconds = (time.Hours == 0 && time.Minutes < 10);
-            return String.Format("{0} (You{1})", TimeSpanToText(time, includeSeconds),
+            return String.Format(CultureConstants.DefaultCulture, "{0} (You{1})", TimeSpanToText(time, includeSeconds),
                                  (copyActivity ? " Per Single Copy" : String.Empty));
         }
 
@@ -611,16 +622,18 @@ namespace EVEMon.SkillPlanner
             if (m_activity != BlueprintActivity.Manufacturing)
                 return 1.0d;
 
-            if (text.StartsWith("Rapid"))
+            if (text.StartsWith("Rapid", StringComparison.CurrentCulture))
             {
                 m_timeMultiplier = 0.65d;
                 materialMultiplier = 1.2d;
             }
 
-            if (text.StartsWith("Subsystem") || text.StartsWith("Capital") || text.StartsWith("NPC"))
+            if (text.StartsWith("Subsystem", StringComparison.CurrentCulture) ||
+                text.StartsWith("Capital", StringComparison.CurrentCulture) ||
+                text.StartsWith("NPC", StringComparison.CurrentCulture))
                 m_timeMultiplier = 1.0d;
 
-            if (text.StartsWith("Advanced"))
+            if (text.StartsWith("Advanced", StringComparison.CurrentCulture))
                 materialMultiplier = 1.1d;
 
             return m_timeMultiplier;
@@ -635,7 +648,7 @@ namespace EVEMon.SkillPlanner
         {
             string text = cbFacility.Text;
 
-            if (text.StartsWith("Mobile"))
+            if (text.StartsWith("Mobile", StringComparison.CurrentCulture))
             {
                 switch (activity)
                 {
@@ -646,7 +659,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            if (text.StartsWith("Advance Mobile"))
+            if (text.StartsWith("Advance Mobile", StringComparison.CurrentCulture))
             {
                 switch (activity)
                 {
@@ -670,7 +683,7 @@ namespace EVEMon.SkillPlanner
         private double GetImplantMultiplier(string implantType)
         {
             ImplantSet implantSet = (ImplantSet)cbImplantSet.Tag;
-            string implantSubname = String.Format("Zainou 'Beancounter' {0}", implantType);
+            string implantSubname = String.Format(CultureConstants.DefaultCulture, "Zainou 'Beancounter' {0}", implantType);
 
             Implant implant = implantSet.FirstOrDefault(x => x.Name.Contains(implantSubname));
 

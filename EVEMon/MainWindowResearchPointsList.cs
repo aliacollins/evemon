@@ -380,7 +380,7 @@ namespace EVEMon
                     item.Text = researchPoint.AgentName;
                     break;
                 case ResearchColumn.Level:
-                    item.Text = researchPoint.AgentLevel.ToString();
+                    item.Text = researchPoint.AgentLevel.ToString(CultureConstants.DefaultCulture);
                     break;
                 case ResearchColumn.Field:
                     item.Text = researchPoint.Field;

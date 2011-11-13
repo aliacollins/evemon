@@ -114,9 +114,8 @@ namespace EVEMon.BlankCharacter
                 fileDialog.Filter = "Blank Character CCPXML (*.xml) | *.xml";
                 fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.xml", serial.Name);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                DialogResult saveFile = fileDialog.ShowDialog();
 
-                if (saveFile == DialogResult.OK)
+                if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
                     // Disabling control edit ability
                     blankCharacterControl.Enabled = false;
@@ -126,12 +125,10 @@ namespace EVEMon.BlankCharacter
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                                                       fs =>
                                                           {
-                                                              using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                                                              {
-                                                                  writer.Write(content);
-                                                                  writer.Flush();
-                                                                  writer.Close();
-                                                              }
+                                                              StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
+                                                              writer.Write(content);
+                                                              writer.Flush();
+                                                              writer.Close();
                                                               return true;
                                                           });
 

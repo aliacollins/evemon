@@ -266,45 +266,14 @@ namespace EVEMon.SkillPlanner
                     SkillLevel skillLevel = new SkillLevel(m_skill, i);
 
                     // Gets the enabled skills and check it's not empty
-                    Skill[] enabledSkills =
-                        m_skill.Character.Skills.Where(
-                            x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToArray();
+                    List<Skill> enabledSkills = m_skill.Character.Skills.Where(
+                        x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToList();
+                    
                     if (enabledSkills.IsEmpty())
                         continue;
 
                     // Add a node for this skill level
-                    TreeNode levelNode = new TreeNode(skillLevel.ToString());
-                    if (m_skill.Level >= i)
-                        levelNode.Text += " (Trained)";
-
-                    levelNode.ForeColor = Color.DarkBlue;
-
-                    // Is it a plain alphabetical presentation ?
-                    if (rbShowAlpha.Checked)
-                    {
-                        foreach (Skill skill in enabledSkills.OrderBy(x => x.Name))
-                        {
-                            levelNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
-                        }
-                    }
-                        // Or do we need to group skills by their groups ?
-                    else if (rbShowTree.Checked)
-                    {
-                        foreach (IGrouping<SkillGroup, Skill> group in enabledSkills
-                            .GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
-                        {
-                            TreeNode groupNode = new TreeNode(group.Key.Name);
-                            foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
-                            {
-                                groupNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
-                            }
-                            levelNode.Nodes.Add(groupNode);
-                        }
-                    }
-
-                    // Add node
-                    levelNode.Expand();
-                    tvSkills.Nodes.Add(levelNode);
+                    AddNode(i, skillLevel, enabledSkills);
                 }
 
                 // No enabled skill found for any level ?
@@ -315,6 +284,48 @@ namespace EVEMon.SkillPlanner
             {
                 tvSkills.EndUpdate();
             }
+        }
+
+        /// <summary>
+        /// Adds the node.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="skillLevel">The skill level.</param>
+        /// <param name="enabledSkills">The enabled skills.</param>
+        private void AddNode(int i, SkillLevel skillLevel, IEnumerable<Skill> enabledSkills)
+        {
+            TreeNode levelNode = new TreeNode(skillLevel.ToString());
+            if (m_skill.Level >= i)
+                levelNode.Text += " (Trained)";
+
+            levelNode.ForeColor = Color.DarkBlue;
+
+            // Is it a plain alphabetical presentation ?
+            if (rbShowAlpha.Checked)
+            {
+                foreach (Skill skill in enabledSkills.OrderBy(x => x.Name))
+                {
+                    levelNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
+                }
+            }
+                // Or do we need to group skills by their groups ?
+            else if (rbShowTree.Checked)
+            {
+                foreach (IGrouping<SkillGroup, Skill> group in enabledSkills
+                    .GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
+                {
+                    TreeNode groupNode = new TreeNode(group.Key.Name);
+                    foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
+                    {
+                        groupNode.Nodes.Add(CreateNode(skill, skill.Prerequisites));
+                    }
+                    levelNode.Nodes.Add(groupNode);
+                }
+            }
+
+            // Add node
+            levelNode.Expand();
+            tvSkills.Nodes.Add(levelNode);
         }
 
         /// <summary>
@@ -365,71 +376,10 @@ namespace EVEMon.SkillPlanner
 
                     // Is it a plain alphabetical presentation ?
                     if (rbShowAlpha.Checked)
-                    {
-                        foreach (Item ship in enabledObjects.Where(x => x is Ship).ToArray().OrderBy(x => x.Name))
-                        {
-                            levelNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_character)));
-                            m_hasShips = true;
-                        }
-
-                        foreach (Item blueprint in enabledObjects.Where(x => x is Blueprint).ToArray().OrderBy(x => x.Name))
-                        {
-                            List<string> listOfActivities =
-                                blueprint.Prerequisites.Where(x => x.Skill == m_skill.StaticData && x.Level == i)
-                                    .Select(x => x.Activity.GetDescription()).ToList();
-                            TreeNode node = CreateNode(blueprint, blueprint.Prerequisites
-                                                                      .Where(
-                                                                          x =>
-                                                                          listOfActivities.Contains(x.Activity.GetDescription())).
-                                                                      ToCharacter(m_character));
-                            node.Text = String.Format("{0} ({1})", node.Text, string.Join(", ", listOfActivities));
-                            levelNode.Nodes.Add(node);
-                            m_hasBlueprints = true;
-                        }
-
-                        foreach (
-                            Item item in
-                                enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)).ToArray().OrderBy(x => x.Name))
-                        {
-                            levelNode.Nodes.Add(CreateNode(item, item.Prerequisites.ToCharacter(m_character)));
-                            m_hasItems = true;
-                        }
-                    }
+                        GroupByAlphabet(i, levelNode, enabledObjects);
                         // Or do we need to group items by their groups ?
                     else if (rbShowTree.Checked)
-                    {
-                        // Add ships
-                        IGrouping<MarketGroup, Item>[] shipsToAdd =
-                            enabledObjects.Where(x => x is Ship).GroupBy(x => x.MarketGroup.ParentGroup).ToArray();
-                        foreach (IGrouping<MarketGroup, Item> shipGroup in shipsToAdd.OrderBy(x => x.Key.Name))
-                        {
-                            TreeNode groupNode = new TreeNode(shipGroup.Key.Name);
-                            foreach (Item ship in shipGroup.ToArray().OrderBy(x => x.Name))
-                            {
-                                groupNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_skill.Character)));
-                            }
-                            levelNode.Nodes.Add(groupNode);
-                            m_hasShips = true;
-                        }
-
-                        // Add blueprints recursively                       
-                        foreach (TreeNode node in StaticBlueprints.BlueprintMarketGroups.SelectMany(
-                            blueprintMarketGroup =>
-                            CreateMarketGroupsNode(blueprintMarketGroup, enabledObjects.Where(x => x is Blueprint), i)))
-                        {
-                            levelNode.Nodes.Add(node);
-                            m_hasBlueprints = true;
-                        }
-
-                        // Add items recursively
-                        foreach (TreeNode node in StaticItems.MarketGroups.SelectMany(
-                            marketGroup =>
-                            CreateMarketGroupsNode(marketGroup, enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)))))
-                        {
-                            levelNode.Nodes.Add(node);
-                            m_hasItems = true;
-                        }
-                    }
+                        GroupByMarketGroup(i, levelNode, enabledObjects);
 
                     // Add node
                     levelNode.Expand();
@@ -443,6 +393,84 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvEntity.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Groups the by alphabet.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="levelNode">The level node.</param>
+        /// <param name="enabledObjects">The enabled objects.</param>
+        private void GroupByAlphabet(int i, TreeNode levelNode, IEnumerable<Item> enabledObjects)
+        {
+            foreach (Ship ship in enabledObjects.OfType<Ship>().OrderBy(x => x.Name))
+            {
+                levelNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_character)));
+                m_hasShips = true;
+            }
+
+            foreach (Blueprint blueprint in enabledObjects.OfType<Blueprint>().OrderBy(x => x.Name))
+            {
+                List<BlueprintActivity> listOfActivities = blueprint.Prerequisites.Where(
+                    x => x.Skill == m_skill.StaticData && x.Level == i).Select(
+                        x => x.Activity).ToList();
+
+                TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
+                    x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
+
+                node.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", node.Text,
+                                          string.Join(", ", listOfActivities.Select(
+                                              activity => activity.GetDescription()).ToList()));
+                levelNode.Nodes.Add(node);
+                m_hasBlueprints = true;
+            }
+
+            foreach (Item item in enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)).OrderBy(x => x.Name))
+            {
+                levelNode.Nodes.Add(CreateNode(item, item.Prerequisites.ToCharacter(m_character)));
+                m_hasItems = true;
+            }
+        }
+
+        /// <summary>
+        /// Groups the by market group.
+        /// </summary>
+        /// <param name="levelNode">The level node.</param>
+        /// <param name="i">The i.</param>
+        /// <param name="enabledObjects">The enabled objects.</param>
+        private void GroupByMarketGroup(int i, TreeNode levelNode, IEnumerable<Item> enabledObjects)
+        {
+            // Add ships
+            IGrouping<MarketGroup, Ship>[] shipsToAdd = enabledObjects.OfType<Ship>().GroupBy(
+                x => x.MarketGroup.ParentGroup).ToArray();
+            foreach (IGrouping<MarketGroup, Ship> shipGroup in shipsToAdd.OrderBy(x => x.Key.Name))
+            {
+                TreeNode groupNode = new TreeNode(shipGroup.Key.Name);
+                foreach (Ship ship in shipGroup.OrderBy(x => x.Name))
+                {
+                    groupNode.Nodes.Add(CreateNode(ship, ship.Prerequisites.ToCharacter(m_skill.Character)));
+                }
+                levelNode.Nodes.Add(groupNode);
+                m_hasShips = true;
+            }
+
+            // Add blueprints recursively                       
+            foreach (TreeNode node in StaticBlueprints.BlueprintMarketGroups.SelectMany(
+                blueprintMarketGroup =>
+                CreateMarketGroupsNode(blueprintMarketGroup, enabledObjects.OfType<Blueprint>(), i)))
+            {
+                levelNode.Nodes.Add(node);
+                m_hasBlueprints = true;
+            }
+
+            // Add items recursively
+            foreach (TreeNode node in StaticItems.MarketGroups.SelectMany(
+                marketGroup =>
+                CreateMarketGroupsNode(marketGroup, enabledObjects.Where(x => !(x is Ship) && !(x is Blueprint)))))
+            {
+                levelNode.Nodes.Add(node);
+                m_hasItems = true;
             }
         }
 
@@ -472,14 +500,15 @@ namespace EVEMon.SkillPlanner
             // Add blueprints
             foreach (Item blueprint in blueprints.Where(x => x.MarketGroup == blueprintMarketGroup))
             {
-                List<string> listOfActivities = blueprint.Prerequisites
-                    .Where(x => x.Skill == m_skill.StaticData && x.Level == level)
-                    .Select(x => x.Activity.GetDescription()).ToList();
+                List<BlueprintActivity> listOfActivities = blueprint.Prerequisites.Where(
+                    x => x.Skill == m_skill.StaticData && x.Level == level).Select(
+                        x => x.Activity).ToList();
 
-                TreeNode node = CreateNode(blueprint, blueprint.Prerequisites
-                                                          .Where(x => listOfActivities.Contains(x.Activity.GetDescription())).
-                                                          ToCharacter(m_character));
-                node.Text = String.Format("{0} ({1})", node.Text, string.Join(", ", listOfActivities));
+                TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.Where(
+                    x => listOfActivities.Contains(x.Activity)).ToCharacter(m_character));
+
+                node.Text = String.Format("{0} ({1})", node.Text, string.Join(", ", listOfActivities.Select(
+                    activity => activity.GetDescription().ToList())));
                 yield return node;
             }
         }
@@ -536,7 +565,7 @@ namespace EVEMon.SkillPlanner
 
             // Then we need to list the other prerequisites
             StringBuilder sb = new StringBuilder("Also Need To Train:");
-            foreach (SkillLevel prereq in CreatePrereqList(prerequisites).Where(x => x.Skill != m_skill && !x.IsTrained))
+            foreach (SkillLevel prereq in CreatePrereqList(prerequisites.Where(x => x.Skill != m_skill && !x.IsTrained)))
             {
                 sb.AppendLine().Append(prereq.ToString());
             }
@@ -553,7 +582,7 @@ namespace EVEMon.SkillPlanner
         private static IEnumerable<SkillLevel> CreatePrereqList(IEnumerable<SkillLevel> prerequisites)
         {
             List<SkillLevel> prereqList = new List<SkillLevel>();
-            foreach (SkillLevel prereq in prerequisites.Where(prereq => !prereqList.Contains(prereq)))
+            foreach (SkillLevel prereq in prerequisites.Where(prereq => !prereqList.Any(x => x.ToString() == prereq.ToString())))
             {
                 prereqList.Add(prereq);
             }
@@ -780,7 +809,7 @@ namespace EVEMon.SkillPlanner
             List<string> list =
                 tvEntity.SelectedNode.Text.Replace(entity.Name, String.Empty).Trim().Trim("()".ToCharArray()).Split(',').ToList();
 
-            if (list[0].Length == 0)
+            if (list.First().Length == 0)
                 list[0] = (BlueprintActivity.None.GetDescription());
 
             return list;
@@ -811,9 +840,9 @@ namespace EVEMon.SkillPlanner
             // "Add to plan" is enabled if we don't know all the prereqs 
             // and we're not already planning at least one of the unknown prereqs
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            bool canPlan =
-                entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character).
-                    Any(x => !x.IsTrained && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
+            bool canPlan = entity.Prerequisites.Where(
+                x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character).Any(
+                    x => !x.IsTrained && !m_planWindow.Plan.IsPlanned(x.Skill, x.Level));
             tsShowObjectPrereqs.Enabled = canPlan;
             tsAddObjectToPlan.Enabled = canPlan;
 
@@ -857,11 +886,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             List<string> listOfActivities = GetSelectedItemActivities(entity);
-            IEnumerable<SkillLevel> prereqList = CreatePrereqList(entity.Prerequisites
-                                                                      .Where(
-                                                                          x =>
-                                                                          listOfActivities.Contains(x.Activity.GetDescription()))
-                                                                      .ToCharacter(m_character));
+            IEnumerable<SkillLevel> prereqList = CreatePrereqList(entity.Prerequisites.Where(
+                x => listOfActivities.Contains(x.Activity.GetDescription())).ToCharacter(m_character));
 
             int index = 0;
             StringBuilder sb = new StringBuilder();

@@ -141,7 +141,8 @@ namespace EVEMon.SettingsUI
                 return;
 
             ShowValidationError(txtConfigurationName,
-                                String.Format("There is already a provider named {0}.", configName));
+                                String.Format(CultureConstants.DefaultCulture,
+                                              "There is already a provider named {0}.", configName));
             e.Cancel = true;
         }
 

@@ -164,32 +164,59 @@ namespace EVEMon.SkillPlanner
                 if (ships.Count == 0)
                     continue;
 
-                Label tsl = new Label
-                                {
-                                    AutoSize = true,
-                                    Dock = DockStyle.Top,
-                                    Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade),
-                                    Padding = new Padding(5)
-                                };
+                Label tempLabel = null;
+                try
+                {
+                    tempLabel = new Label();
+                    tempLabel.Font = new Font(tempLabel.Font, FontStyle.Bold);
+                    tempLabel.AutoSize = true;
+                    tempLabel.Dock = DockStyle.Top;
+                    tempLabel.Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade);
+                    tempLabel.Padding = new Padding(5);
 
-                tsl.Font = new Font(tsl.Font, FontStyle.Bold);
-                newItems.Add(tsl);
+                    Label tsl = tempLabel;
+                    tempLabel = null;
 
-                Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
-                int panelMinSize = rSplCont.Panel2MinSize;
-                rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
-                                              ? panelMinSize
-                                              : tslTextSize.Width + HPad);
-                rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
+                    newItems.Add(tsl);
 
-                foreach (LinkLabel linkLabel in ships.Values.Select(ship => new LinkLabel
-                                                                                {
-                                                                                    LinkBehavior = LinkBehavior.HoverUnderline,
-                                                                                    Padding = new Padding(16, 0, 0, 0),
-                                                                                    Dock = DockStyle.Top,
-                                                                                    Text = ship.Name,
-                                                                                    Tag = ship,
-                                                                                }))
+                    Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
+                    int panelMinSize = rSplCont.Panel2MinSize;
+                    rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
+                                                  ? panelMinSize
+                                                  : tslTextSize.Width + HPad);
+                    rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
+                }
+                finally
+                {
+                    if (tempLabel != null)
+                        tempLabel.Dispose();
+                }
+
+                foreach (LinkLabel linkLabel in ships.Values.Select(
+                    ship =>
+                        {
+                            LinkLabel linkLabel;
+                            LinkLabel tempLinkLabel = null;
+                            try
+                            {
+                                tempLinkLabel = new LinkLabel();
+                                tempLinkLabel.LinkBehavior = LinkBehavior.HoverUnderline;
+                                tempLinkLabel.Padding = new Padding(16, 0, 0, 0);
+                                tempLinkLabel.Dock = DockStyle.Top;
+                                tempLinkLabel.Text = ship.Name;
+                                tempLinkLabel.Tag = ship;
+
+                                linkLabel = tempLinkLabel;
+                                tempLinkLabel = null;
+                            }
+                            finally
+                            {
+                                if (tempLinkLabel != null)
+                                    tempLinkLabel.Dispose();
+                            }
+
+                            return linkLabel;
+                        }))
                 {
                     linkLabel.MouseClick += recommendations_MenuItem;
                     newItems.Add(linkLabel);
@@ -218,7 +245,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="newItems">The new items list.</param>
         /// <param name="rSplCont">The right splitter container.</param>
-        private void UpdateRecommendations(List<Control> newItems, PersistentSplitContainer rSplCont)
+        private void UpdateRecommendations(List<Control> newItems, SplitContainer rSplCont)
         {
             rightSplitContainer.Panel2.Controls.Clear();
 
@@ -229,18 +256,29 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                Label tsl = new Label
-                                {
-                                    Dock = DockStyle.Fill,
-                                    Text = "No Recommendations",
-                                    Enabled = false,
-                                    TextAlign = ContentAlignment.MiddleCenter
-                                };
-                rSplCont.Panel2.Controls.Add(tsl);
+                Label tempLabel = null;
+                try
+                {
+                    tempLabel = new Label();
+                    tempLabel.Text = "No Recommendations";
+                    tempLabel.Enabled = false;
+                    tempLabel.Dock = DockStyle.Fill;
+                    tempLabel.TextAlign = ContentAlignment.MiddleCenter;
 
-                Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
-                rSplCont.Panel2MinSize = tslTextSize.Width + HPad;
-                rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
+                    Label tsl = tempLabel;
+                    tempLabel = null;
+
+                    rSplCont.Panel2.Controls.Add(tsl);
+
+                    Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
+                    rSplCont.Panel2MinSize = tslTextSize.Width + HPad;
+                    rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
+                }
+                finally
+                {
+                    if (tempLabel != null)
+                        tempLabel.Dispose();
+                }
             }
         }
 
@@ -272,9 +310,8 @@ namespace EVEMon.SkillPlanner
                     tslbEligible.Text += " (improved from \"none\")";
                 else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                 {
-                    tslbEligible.Text += String.Format(" (improved from \"{0}\")",
-                                                       highestClaimedCertificate.Grade.ToString().ToLower(
-                                                           CultureConstants.DefaultCulture));
+                    tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
+                                                       highestClaimedCertificate.Grade);
                 }
                 else
                     tslbEligible.Text += " (no change)";
@@ -293,7 +330,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="certClass">The selected certificate class</param>
         /// <param name="grade">The grade represent by this menu</param>
         /// <param name="lastEligibleCert">The highest eligible certificate after this plan</param>
-        private static void UpdatePlanningMenuStatus(ToolStripMenuItem menu, CertificateClass certClass,
+        private static void UpdatePlanningMenuStatus(ToolStripItem menu, CertificateClass certClass,
                                               CertificateGrade grade, Certificate lastEligibleCert)
         {
             Certificate cert = certClass[grade];
@@ -354,14 +391,14 @@ namespace EVEMon.SkillPlanner
             {
                 Certificate firstCert = certClass.LowestGradeCertificate;
                 textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
-                lblName.Text = String.Format("{0} {1}", certClass.Name,
+                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name,
                                              (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             }
                 // So, one of our cert class's grades has been selected, we use its description
             else
             {
                 textboxDescription.Text = cert.Description;
-                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade);
+                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name, cert.Grade);
             }
         }
 
@@ -450,6 +487,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public void SelectedCertificate(Certificate certificate)
         {
+            if (certificate == null)
+                throw new ArgumentNullException("certificate");
+
             if (SelectedCertificateClass == certificate.Class && certDisplayCtl.SelectedCertificate == certificate)
                 return;
 

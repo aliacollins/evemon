@@ -197,9 +197,15 @@ namespace EVEMon.BlankCharacter
             pbAncestry1.Image = ilAncestry.Images[index];
             pbAncestry2.Image = ilAncestry.Images[index + 1];
             pbAncestry3.Image = ilAncestry.Images[index + 2];
-            lblAncestry1.Text = ((Ancestry)Enum.ToObject(typeof(Ancestry), index)).ToString().ToUpper().Replace("_", " ");
-            lblAncestry2.Text = ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 1)).ToString().ToUpper().Replace("_", " ");
-            lblAncestry3.Text = ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 2)).ToString().ToUpper().Replace("_", " ");
+            lblAncestry1.Text =
+                ((Ancestry)Enum.ToObject(typeof(Ancestry), index)).ToString().ToUpper(CultureConstants.DefaultCulture).Replace(
+                    "_", " ");
+            lblAncestry2.Text =
+                ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 1)).ToString().ToUpper(CultureConstants.DefaultCulture).Replace
+                    ("_", " ");
+            lblAncestry3.Text =
+                ((Ancestry)Enum.ToObject(typeof(Ancestry), index + 2)).ToString().ToUpper(CultureConstants.DefaultCulture).Replace
+                    ("_", " ");
             lblAncestry1.Tag = (Ancestry)Enum.ToObject(typeof(Ancestry), index);
             lblAncestry2.Tag = (Ancestry)Enum.ToObject(typeof(Ancestry), index + 1);
             lblAncestry3.Tag = (Ancestry)Enum.ToObject(typeof(Ancestry), index + 2);
@@ -398,23 +404,7 @@ namespace EVEMon.BlankCharacter
         /// <returns></returns>
         private List<SerializableCharacterSkill> GetSkillsForRace()
         {
-            Dictionary<int, int> startingSkills = new Dictionary<int, int>();
-
-            switch (m_race)
-            {
-                case Race.Amarr:
-                    startingSkills = m_allRaceSkills.Concat(m_amarrRaceSkills).ToDictionary(x => x.Key, x => x.Value);
-                    break;
-                case Race.Caldari:
-                    startingSkills = m_allRaceSkills.Concat(m_caldariRaceSkills).ToDictionary(x => x.Key, x => x.Value);
-                    break;
-                case Race.Gallente:
-                    startingSkills = m_allRaceSkills.Concat(m_gallenteRaceSkills).ToDictionary(x => x.Key, x => x.Value);
-                    break;
-                case Race.Minmatar:
-                    startingSkills = m_allRaceSkills.Concat(m_minmatarRaceSkills).ToDictionary(x => x.Key, x => x.Value);
-                    break;
-            }
+            Dictionary<int, int> startingSkills = GetStartingSkills();
 
             return (startingSkills.Select(
                 raceSkill => new
@@ -433,6 +423,32 @@ namespace EVEMon.BlankCharacter
                                                       IsKnown = true,
                                                       OwnsBook = false,
                                                   })).ToList();
+        }
+
+        /// <summary>
+        /// Gets the starting skills.
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<int, int> GetStartingSkills()
+        {
+            Dictionary<int, int> startingSkills = new Dictionary<int, int>();
+
+            switch (m_race)
+            {
+                case Race.Amarr:
+                    startingSkills = m_allRaceSkills.Concat(m_amarrRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    break;
+                case Race.Caldari:
+                    startingSkills = m_allRaceSkills.Concat(m_caldariRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    break;
+                case Race.Gallente:
+                    startingSkills = m_allRaceSkills.Concat(m_gallenteRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    break;
+                case Race.Minmatar:
+                    startingSkills = m_allRaceSkills.Concat(m_minmatarRaceSkills).ToDictionary(x => x.Key, x => x.Value);
+                    break;
+            }
+            return startingSkills;
         }
 
         #endregion

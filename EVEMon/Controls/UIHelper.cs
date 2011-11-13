@@ -29,16 +29,14 @@ namespace EVEMon.Controls
             Character character = (Character)plans.First().Character;
 
             // Prompt the user to pick a file name
-            using (SaveFileDialog sfdSave = new SaveFileDialog
-                                                {
-                                                    FileName = String.Format("{0} - Plans Backup", character.Name),
-                                                    Title = "Save to File",
-                                                    Filter = "EVEMon Plans Backup Format (*.epb)|*.epb",
-                                                    FilterIndex = (int)PlanFormat.Emp
-                                                })
+            using (SaveFileDialog sfdSave = new SaveFileDialog())
             {
-                DialogResult dr = sfdSave.ShowDialog();
-                if (dr == DialogResult.Cancel)
+                sfdSave.FileName = String.Format(CultureConstants.DefaultCulture, "{0} - Plans Backup", character.Name);
+                sfdSave.Title = "Save to File";
+                sfdSave.Filter = "EVEMon Plans Backup Format (*.epb)|*.epb";
+                sfdSave.FilterIndex = (int)PlanFormat.Emp;
+
+                if (sfdSave.ShowDialog() == DialogResult.Cancel)
                     return;
 
                 try
@@ -51,28 +49,23 @@ namespace EVEMon.Controls
                         fs =>
                             {
                                 // Emp is actually compressed xml
-                                using (Stream stream = new GZipStream(fs, CompressionMode.Compress))
-                                {
-                                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
-                                    {
-                                        writer.Write(content);
-                                        writer.Flush();
-                                        stream.Flush();
-                                        fs.Flush();
-                                    }
-                                }
+                                Stream stream = new GZipStream(fs, CompressionMode.Compress);
+                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+                                writer.Write(content);
+                                writer.Flush();
+                                stream.Flush();
+                                fs.Flush();
                                 return true;
                             });
                 }
                 catch (IOException err)
                 {
-                    ExceptionHandler.LogException(err, true);
+                    ExceptionHandler.LogException(err, false);
                     MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
                                     "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
 
         /// <summary>
         /// Displays the plan exportation window and then exports it.
@@ -80,10 +73,13 @@ namespace EVEMon.Controls
         /// <param name="plan"></param>
         public static void ExportPlan(Plan plan)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             Character character = (Character)plan.Character;
 
             // Assemble an initial filename and remove prohibited characters
-            string planSaveName = String.Format("{0} - {1}", character.Name, plan.Name);
+            string planSaveName = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", character.Name, plan.Name);
             char[] invalidFileChars = Path.GetInvalidFileNameChars();
             int fileInd = planSaveName.IndexOfAny(invalidFileChars);
             while (fileInd != -1)
@@ -93,17 +89,15 @@ namespace EVEMon.Controls
             }
 
             // Prompt the user to pick a file name
-            using (SaveFileDialog sfdSave = new SaveFileDialog
-                                         {
-                                             FileName = planSaveName,
-                                             Title = "Save to File",
-                                             Filter =
-                                                 "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt",
-                                             FilterIndex = (int)PlanFormat.Emp
-                                         })
+            using (SaveFileDialog sfdSave = new SaveFileDialog())
             {
-                DialogResult dr = sfdSave.ShowDialog();
-                if (dr == DialogResult.Cancel)
+                sfdSave.FileName = planSaveName;
+                sfdSave.Title = "Save to File";
+                sfdSave.Filter =
+                    "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+                sfdSave.FilterIndex = (int)PlanFormat.Emp;
+
+                if (sfdSave.ShowDialog() == DialogResult.Cancel)
                     return;
 
                 // Serialize
@@ -140,16 +134,11 @@ namespace EVEMon.Controls
                                 if (format == PlanFormat.Emp)
                                     stream = new GZipStream(fs, CompressionMode.Compress);
 
-                                using (stream)
-                                {
-                                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
-                                    {
-                                        writer.Write(content);
-                                        writer.Flush();
-                                        stream.Flush();
-                                        fs.Flush();
-                                    }
-                                }
+                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+                                writer.Write(content);
+                                writer.Flush();
+                                stream.Flush();
+                                fs.Flush();
                                 return true;
                             });
                 }
@@ -196,6 +185,12 @@ namespace EVEMon.Controls
         /// <param name="plan">The plan.</param>
         public static void ExportAfterPlanCharacter(Character character, Plan plan)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             // Open the dialog box
             using (SaveFileDialog characterSaveDialog = new SaveFileDialog())
             {
@@ -206,8 +201,7 @@ namespace EVEMon.Controls
                                                              character.Name, plan.Name);
                 characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.EVEMonXML;
 
-                DialogResult result = characterSaveDialog.ShowDialog();
-                if (result == DialogResult.Cancel)
+                if (characterSaveDialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
                 // Serialize
@@ -216,17 +210,16 @@ namespace EVEMon.Controls
                     // Save character to string with the chosen format
                     CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
                     string content = CharacterExporter.Export(format, character, plan);
+
                     // Save character with the chosen format to our file
                     FileHelper.OverwriteOrWarnTheUser(
                         characterSaveDialog.FileName,
                         fs =>
                             {
-                                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                                {
-                                    sw.Write(content);
-                                    sw.Flush();
-                                    sw.Close();
-                                }
+                                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                                sw.Write(content);
+                                sw.Flush();
+                                sw.Close();
                                 return true;
                             });
                 }
@@ -254,8 +247,7 @@ namespace EVEMon.Controls
                 characterSaveDialog.FileName = character.Name;
                 characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.CCPXML;
 
-                DialogResult result = characterSaveDialog.ShowDialog();
-                if (result == DialogResult.Cancel)
+                if (characterSaveDialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
                 // Serialize
@@ -284,12 +276,10 @@ namespace EVEMon.Controls
                                     return false;
                                 }
 
-                                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                                {
-                                    sw.Write(content);
-                                    sw.Flush();
-                                    sw.Close();
-                                }
+                                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                                sw.Write(content);
+                                sw.Flush();
+                                sw.Close();
                                 return true;
                             });
                 }
@@ -303,7 +293,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Adds the plans as tool strip items to the list.
+        /// Adds the plans as toolstrip items to the list.
         /// </summary>
         /// <param name="plans">The plans.</param>
         /// <param name="list">The list.</param>
@@ -311,12 +301,25 @@ namespace EVEMon.Controls
         public static void AddTo(this IEnumerable<Plan> plans, ToolStripItemCollection list,
                                  Action<ToolStripMenuItem, Plan> initialize)
         {
+            if (plans == null)
+                throw new ArgumentNullException("plans");
+
+            if (list == null)
+                throw new ArgumentNullException("list");
+
+            if (initialize == null)
+                throw new ArgumentNullException("initialize");
+
             //Scroll through plans
             foreach (Plan plan in plans)
             {
-                ToolStripMenuItem planItem = new ToolStripMenuItem(plan.Name);
-                initialize(planItem, plan);
-                list.Add(planItem);
+                ToolStripMenuItem item;
+                using (ToolStripMenuItem planItem = new ToolStripMenuItem(plan.Name))
+                {
+                    initialize(planItem, plan);
+                    item = planItem;
+                }
+                list.Add(item);
             }
         }
     }

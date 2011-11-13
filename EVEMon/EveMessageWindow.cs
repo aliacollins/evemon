@@ -10,7 +10,7 @@ namespace EVEMon
 {
     public sealed partial class EveMessageWindow : EVEMonForm
     {
-        private Timer m_timer;
+        private Timer m_timer = new Timer();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.
@@ -29,13 +29,16 @@ namespace EVEMon
         public EveMessageWindow(IEveMessage message)
             : this()
         {
+            if (message == null)
+                throw new ArgumentNullException("message");
+
             EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
             EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             Disposed += OnDisposed;
 
             Tag = message;
-            Text = String.Format("{0} - EVE Message", message.Title);
+            Text = String.Format(CultureConstants.DefaultCulture, "{0} - EVE Message", message.Title);
             readingPane.SelectedObject = message;
         }
 
@@ -48,14 +51,11 @@ namespace EVEMon
             base.OnLoad(e);
             throbber.State = ThrobberState.Rotating;
 
-            // Adding a timer to close the form on queries timeout
-            m_timer = new Timer
-                          {
-                              Enabled = true,
-                              Interval = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds
-                          };
-            m_timer.Tick += timer_Tick;
+            // Configure the timer to close the form on queries timeout
             m_timer.Start();
+            m_timer.Interval = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
+
+            m_timer.Tick += timer_Tick;
         }
 
         /// <summary>
@@ -79,7 +79,6 @@ namespace EVEMon
         private void timer_Tick(object sender, EventArgs e)
         {
             m_timer.Stop();
-            m_timer.Enabled = false;
 
             // Close the form when there is nothing to show after query timeout
             if (!readingPane.Visible)

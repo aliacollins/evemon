@@ -252,8 +252,7 @@ namespace EVEMon
                                      ? "???"
                                      : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
                                                      training.Skill.SkillPointsPerHour));
-            lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                                                completionTime.ToString("ddd"), completionTime.ToString("G"));
+            lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0:ddd} {1:G}", completionTime, completionTime);
 
             // Dipslay a warning if anything scheduled is blocking us
             string conflictMessage;
@@ -791,10 +790,11 @@ namespace EVEMon
                     monitors.Add(((CCPCharacter)Character).QueryMonitors[method]);
             }
 
-            if (Enum.IsDefined(typeof(APICorporationMethods), String.Format("Corporation{0}", page.Tag)))
+            if (Enum.IsDefined(typeof(APICorporationMethods), String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
             {
                 APICorporationMethods method =
-                    (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), String.Format("Corporation{0}", page.Tag));
+                    (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
+                                                      String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag));
                 if (((CCPCharacter)Character).QueryMonitors[method] != null)
                     monitors.Add(((CCPCharacter)Character).QueryMonitors[method]);
             }
@@ -828,8 +828,12 @@ namespace EVEMon
             skillsList.Height = preferredHeight;
             skillsList.Update();
 
-            Bitmap bitmap = new Bitmap(skillsList.Width, preferredHeight);
-            skillsList.DrawToBitmap(bitmap, new Rectangle(0, 0, skillsList.Width, preferredHeight));
+            Bitmap bitmap;
+            using (Bitmap tempBitmap = new Bitmap(skillsList.Width, preferredHeight))
+            {
+                skillsList.DrawToBitmap(tempBitmap, new Rectangle(0, 0, skillsList.Width, preferredHeight));
+                bitmap = (Bitmap)tempBitmap.Clone();
+            }
 
             skillsList.Dock = DockStyle.Fill;
             skillsList.Height = cachedHeight;
@@ -856,12 +860,27 @@ namespace EVEMon
             // Create the menu items
             foreach (ToolStripMenuItem item in m_advancedFeatures.Select(
                 button => new { button, monitor = ButtonToMonitors(button) }).Where(
-                    item => item.monitor != null).Select(item => new ToolStripMenuItem
-                                                                     {
-                                                                         Text = item.button.Text,
-                                                                         Checked = IsEnabledFeature(item.button.Text),
-                                                                         Enabled = item.monitor.Any(monitor => monitor.HasAccess)
-                                                                     }))
+                    item => item.monitor != null).Select(
+                        item =>
+                            {
+                                ToolStripMenuItem tsi;
+                                ToolStripMenuItem tempToolStripItem = null;
+                                try
+                                {
+                                    tempToolStripItem = new ToolStripMenuItem(item.button.Text);
+                                    tempToolStripItem.Checked = IsEnabledFeature(item.button.Text);
+                                    tempToolStripItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
+
+                                    tsi = tempToolStripItem;
+                                    tempToolStripItem = null;
+                                }
+                                finally
+                                {
+                                    if (tempToolStripItem != null)
+                                        tempToolStripItem.Dispose();
+                                }
+                                return tsi;
+                            }))
             {
                 featuresMenu.DropDownItems.Add(item);
             }
@@ -1328,11 +1347,26 @@ namespace EVEMon
             foreach (ToolStripButton menu in EnumExtensions.GetValues<T>().Select(
                 grouping => new { grouping, group = grouping as Enum }).Where(
                     menu => menu.group != null).Select(
-                        menu => new ToolStripButton(menu.group.GetHeader())
-                                    {
-                                        Checked = (list.Grouping.CompareTo(menu.group) == 0),
-                                        Tag = menu.grouping
-                                    }))
+                        menu =>
+                            {
+                                ToolStripButton tsb;
+                                ToolStripButton tempToolStripButton = null;
+                                try
+                                {
+                                    tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
+                                    tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
+                                    tempToolStripButton.Tag = menu.grouping;
+
+                                    tsb = tempToolStripButton;
+                                    tempToolStripButton = null;
+                                }
+                                finally
+                                {
+                                    if (tempToolStripButton != null)
+                                        tempToolStripButton.Dispose();
+                                }
+                                return tsb;
+                            }))
             {
                 groupMenu.DropDownItems.Add(menu);
             }

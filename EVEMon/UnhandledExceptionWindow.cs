@@ -17,16 +17,22 @@ namespace EVEMon
     {
         private readonly Exception m_exception;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnhandledExceptionWindow"/> class.
+        /// </summary>
         private UnhandledExceptionWindow()
         {
             InitializeComponent();
-            WhatCanYouDoLabel.Font = FontFactory.GetFont("Tahoma", 10F);
         }
 
-        public UnhandledExceptionWindow(Exception err)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnhandledExceptionWindow"/> class.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        public UnhandledExceptionWindow(Exception exception)
             : this()
         {
-            m_exception = err;
+            m_exception = exception;
         }
 
         /// <summary>
@@ -36,46 +42,57 @@ namespace EVEMon
         /// <param name="e"></param>
         private void UnhandledExceptionWindow_Load(object sender, EventArgs e)
         {
+            WhatCanYouDoLabel.Font = FontFactory.GetFont("Tahoma", 10F);
+
             try
             {
-                Bitmap i = CommonProperties.Resources.Bug;
+                Bitmap bug = CommonProperties.Resources.Bug;
 
-                int oHeight = i.Height;
-                int oWidth = i.Width;
-                if (i.Height > BugPictureBox.ClientSize.Height)
+                int oHeight = bug.Height;
+                int oWidth = bug.Width;
+                if (bug.Height > BugPictureBox.ClientSize.Height)
                 {
-                    double scale = (double)(BugPictureBox.ClientSize.Height) / i.Height;
+                    double scale = (double)(BugPictureBox.ClientSize.Height) / bug.Height;
                     oHeight = (int)(oHeight * scale);
                     oWidth = (int)(oWidth * scale);
-                    Bitmap b = new Bitmap(i, new Size(oWidth, oHeight));
-
+                    BugPictureBox.Image = new Bitmap(bug, new Size(oWidth, oHeight));
                     BugPictureBox.ClientSize = new Size(oWidth, oHeight);
-                    BugPictureBox.Image = b;
                 }
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex, false);
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
             }
 
             string trace;
             EveMonClient.StopTraceLogging();
 
+            FileStream traceStream = null;
             try
             {
-                using (FileStream traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read)
-                    )
+                traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read);
+
+                using (StreamReader traceReader = new StreamReader(traceStream))
                 {
-                    using (StreamReader traceReader = new StreamReader(traceStream))
-                    {
-                        trace = traceReader.ReadToEnd();
-                    }
+                    traceStream = null;
+                    trace = traceReader.ReadToEnd();
                 }
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                ExceptionHandler.LogException(ex, false);
+                ExceptionHandler.LogException(ex, true);
                 trace = "Unable to load trace file for inclusion in report";
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                trace = "Unable to load trace file for inclusion in report";
+            }
+            finally
+            {
+                if (traceStream != null)
+                    traceStream.Dispose();
             }
 
             try
@@ -101,7 +118,7 @@ namespace EVEMon
 
                 TechnicalDetailsTextBox.Text = exceptionReport.ToString();
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 ExceptionHandler.LogException(ex, true);
                 TechnicalDetailsTextBox.Text = "Error retrieving error data. Wow, things are *really* screwed up!";
@@ -133,8 +150,9 @@ namespace EVEMon
                                                     info.Length / 1024, file.MD5Sum, Environment.NewLine);
                     }
                 }
-                catch
+                catch (UnauthorizedAccessException ex)
                 {
+                    ExceptionHandler.LogException(ex, true);
                     datafileReport.Append("Unable to create datafile report").AppendLine();
                 }
                 return datafileReport.ToString();

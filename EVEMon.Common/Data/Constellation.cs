@@ -51,7 +51,7 @@ namespace EVEMon.Common.Data
         public Region Region { get; private set; }
 
         /// <summary>
-        /// Gets something like Heimatar > Constellation.
+        /// Gets something like Region > Constellation.
         /// </summary>
         public string FullLocation { get; private set; }
 

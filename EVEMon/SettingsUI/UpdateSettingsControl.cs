@@ -19,106 +19,14 @@ namespace EVEMon.SettingsUI
 
         private UpdateSettings m_settings;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateSettingsControl"/> class.
+        /// </summary>
         public UpdateSettingsControl()
         {
             InitializeComponent();
 
-            int height = RowHeight;
-            
-            // Gets the API methods
-            IEnumerable<Enum> apiMethods = APIMethods.Methods.Where(x => x.HasHeader());
-            
-            // Group the methods by usage
-            List<Enum> methods = apiMethods.Where(method => method is APIGenericMethods).ToList();
-
-            methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
-                method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
-
-            methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
-                method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().OrderBy(
-                    method => method.GetHeader()));
-
-            // Uncomment upon implementing an exclicit corporation monitor feature
-            //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
-            //    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
-            //        method => method.GetHeader()));
-
-            // Add the controls for every member of the enumeration
-            foreach (Enum method in methods)
-            {
-                // Add the icon
-                Bitmap icon = CommonProperties.Resources.KeyGrey16;
-                string iconToolTip = "This is a basic feature query.";
-                if (method is APICharacterMethods)
-                {
-                    APICharacterMethods apiMethod = (APICharacterMethods)method;
-                    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCharacterFeatures))
-                    {
-                        icon = CommonProperties.Resources.KeyGold16;
-                        iconToolTip = "This is an advanced feature query.";
-                    }
-                }
-
-                // Uncomment upon implementing an exclicit corporation monitor feature
-                //if (method is APICorporationMethods)
-                //{
-                //    APICorporationMethods apiMethod = (APICorporationMethods)method;
-                //    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCorporationFeatures))
-                //    {
-                //        icon = CommonProperties.Resources.KeyGold16;
-                //        iconToolTip = "This is an advanced feature query.";
-                //    }
-                //}
-
-                PictureBox picture = new PictureBox
-                                         {
-                                             Image = icon,
-                                             Size = icon.Size,
-                                             Location = new Point(0, height + (RowHeight - icon.Size.Height) / 2)
-                                         };
-                toolTip.SetToolTip(picture, iconToolTip);
-                Controls.Add(picture);
-
-                // Add the label
-                Label label = new Label
-                                  {
-                                      AutoSize = false,
-                                      Text = method.GetHeader(),
-                                      TextAlign = ContentAlignment.MiddleLeft,
-                                      Location = new Point(labelMethod.Location.X, height),
-                                      Width = labelMethod.Width,
-                                      Height = RowHeight
-                                  };
-                toolTip.SetToolTip(label, method.GetDescription());
-                Controls.Add(label);
-
-                // Add the "system tray tooltip" combo box
-                ComboBox combo = new ComboBox { Tag = method };
-
-                foreach (UpdatePeriod period in GetUpdatePeriods(method))
-                {
-                    string header = period.GetHeader();
-                    if (period == UpdatePeriod.Never && method.HasForcedOnStartup())
-                        header = "On Startup";
-
-                    combo.Items.Add(header);
-                }
-
-                combo.SelectedIndex = 0;
-                combo.Margin = new Padding(3);
-                combo.Height = RowHeight - 4;
-                combo.Width = labelPeriod.Width;
-                combo.DropDownStyle = ComboBoxStyle.DropDownList;
-                combo.Location = new Point(labelPeriod.Location.X, height + 2);
-                combo.SelectedIndexChanged += combo_SelectedIndexChanged;
-                Controls.Add(combo);
-                m_combos.Add(combo);
-
-                // Updates the row ordinate
-                height += RowHeight;
-            }
-
-            Height = height;
+            PopulateControl();
         }
 
         /// <summary>
@@ -140,6 +48,36 @@ namespace EVEMon.SettingsUI
                     List<UpdatePeriod> periods = GetUpdatePeriods(method);
                     combo.SelectedIndex = Math.Max(0, periods.IndexOf(m_settings.Periods[method.ToString()]));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the methods.
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<Enum> Methods
+        {
+            get
+            {
+                IEnumerable<Enum> apiMethods = APIMethods.Methods.Where(x => x.HasHeader());
+
+                // Group the methods by usage
+                List<Enum> methods = apiMethods.Where(method => method is APIGenericMethods).ToList();
+
+                methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
+                    method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
+
+                methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
+                    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().
+                                     OrderBy(
+                                         method => method.GetHeader()));
+
+                // Uncomment upon implementing an exclicit corporation monitor feature
+                //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
+                //    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
+                //        method => method.GetHeader()));
+
+                return methods;
             }
         }
 
@@ -167,6 +105,155 @@ namespace EVEMon.SettingsUI
                 m_settings.Periods[APIGenericMethods.APIKeyInfo.ToString()] = periods[combo.SelectedIndex];
 
             m_settings.Periods[method.ToString()] = periods[combo.SelectedIndex];
+        }
+
+        /// <summary>
+        /// Populates the control.
+        /// </summary>
+        private void PopulateControl()
+        {
+            int height = RowHeight;
+
+            // Add the controls for every member of the enumeration
+            foreach (Enum method in Methods)
+            {
+                // Add the icon
+                AddIcon(method, height);
+
+                // Add the label
+                AddLabel(method, height);
+
+                // Add the "system tray tooltip" combo box
+                AddComboBox(method, height);
+
+                // Updates the row ordinate
+                height += RowHeight*2;
+            }
+
+            Height = height;
+        }
+
+        /// <summary>
+        /// Adds the combo box.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="height">The height.</param>
+        private void AddComboBox(Enum method, int height)
+        {
+            ComboBox tempCombo = null;
+            try
+            {
+                tempCombo = new ComboBox();
+                foreach (UpdatePeriod period in GetUpdatePeriods(method))
+                {
+                    string header = period.GetHeader();
+                    if (period == UpdatePeriod.Never && method.HasForcedOnStartup())
+                        header = "On Startup";
+
+                    tempCombo.Items.Add(header);
+                }
+                tempCombo.Tag = method;
+                tempCombo.SelectedIndex = 0;
+                tempCombo.Margin = new Padding(3);
+                tempCombo.Height = RowHeight - 4;
+                tempCombo.Width = labelPeriod.Width;
+                tempCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+                tempCombo.Location = new Point(labelPeriod.Location.X, height + 2);
+                tempCombo.SelectedIndexChanged += combo_SelectedIndexChanged;
+
+                ComboBox combo = tempCombo;
+                tempCombo = null;
+
+                Controls.Add(combo);
+                m_combos.Add(combo);
+            }
+            finally
+            {
+                if (tempCombo != null)
+                    tempCombo.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Adds the label.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="height">The height.</param>
+        private void AddLabel(Enum method, int height)
+        {
+            Label tempLabel = null;
+            try
+            {
+                tempLabel = new Label();
+                toolTip.SetToolTip(tempLabel, method.GetDescription());
+                tempLabel.AutoSize = false;
+                tempLabel.Text = method.GetHeader();
+                tempLabel.TextAlign = ContentAlignment.MiddleLeft;
+                tempLabel.Location = new Point(labelMethod.Location.X, height);
+                tempLabel.Width = labelMethod.Width;
+                tempLabel.Height = RowHeight;
+
+                Label label = tempLabel;
+                tempLabel = null;
+
+                Controls.Add(label);
+            }
+            finally
+            {
+                if (tempLabel != null)
+                    tempLabel.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Adds the icon.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="height">The height.</param>
+        private void AddIcon(Enum method, int height)
+        {
+            Bitmap icon = CommonProperties.Resources.KeyGrey16;
+            string iconToolTip = "This is a basic feature query.";
+            if (method is APICharacterMethods)
+            {
+                APICharacterMethods apiMethod = (APICharacterMethods)method;
+                if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCharacterFeatures))
+                {
+                    icon = CommonProperties.Resources.KeyGold16;
+                    iconToolTip = "This is an advanced feature query.";
+                }
+            }
+
+            // Uncomment upon implementing an exclicit corporation monitor feature
+            //if (method is APICorporationMethods)
+            //{
+            //    APICorporationMethods apiMethod = (APICorporationMethods)method;
+            //    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCorporationFeatures))
+            //    {
+            //        icon = CommonProperties.Resources.KeyGold16;
+            //        iconToolTip = "This is an advanced feature query.";
+            //    }
+            //}
+
+            PictureBox tempPicture = null;
+            try
+            {
+                tempPicture = new PictureBox();
+                toolTip.SetToolTip(tempPicture, iconToolTip);
+                tempPicture.Location = new Point(0, height + (RowHeight - icon.Size.Height) / 2);
+                tempPicture.Image = icon;
+                tempPicture.Size = icon.Size;
+
+                PictureBox picture = tempPicture;
+                tempPicture = null;
+
+                Controls.Add(picture);
+            }
+            finally
+            {
+                if (tempPicture != null)
+                    tempPicture.Dispose();
+            }
         }
 
         /// <summary>

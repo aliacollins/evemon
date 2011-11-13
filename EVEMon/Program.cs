@@ -119,10 +119,10 @@ namespace EVEMon
 
                 Windows7.SetProcessAppId(appId);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                // On some systems, a crash may occur here because of some skinning programs or others.
-                ExceptionHandler.LogException(ex, true);
+                // On some systems, a crash may occur here because of some skinning programs or others
+                ExceptionHandler.LogException(ex, false);
             }
         }
 
@@ -200,6 +200,7 @@ namespace EVEMon
                 messageBuilder.AppendLine();
                 messageBuilder.AppendLine("Please report this on the EVEMon forums.");
                 MessageBox.Show(messageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
             }
 
             Environment.Exit(1);

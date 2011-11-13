@@ -172,10 +172,7 @@ namespace EVEMon.LogitechG15
             if (!s_running)
                 return;
 
-            if (e.CompletedSkills.Count == 1)
-                s_lcd.SkillCompleted(e.Character);
-            else
-                s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
+            s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
         }
 
         /// <summary>

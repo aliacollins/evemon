@@ -24,7 +24,8 @@ namespace EVEMon.ApiCredentialsManagement
             apiKeyslistView.Items.Clear();
 
             // Replaces end of text with character's name
-            characterToRemoveLabel.Text = String.Format(characterToRemoveLabel.Text, m_character.Name);
+            characterToRemoveLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                                                        characterToRemoveLabel.Text, m_character.Name);
 
             // Find the API keys bind only to this character
             m_apiKeys = EveMonClient.APIKeys.Select(
@@ -32,12 +33,15 @@ namespace EVEMon.ApiCredentialsManagement
                     apiKey => apiKey.identities.Count() == 1 && apiKey.identities.Contains(character.Identity)).Select(
                         apiKey => apiKey.apiKey).ToList();
 
-            apiKeyslistView.Items.AddRange(m_apiKeys.Select(apiKey => new ListViewItem(apiKey.ID.ToString())).ToArray());
+            apiKeyslistView.Items.AddRange(m_apiKeys.Select(
+                apiKey => new ListViewItem(apiKey.ID.ToString(CultureConstants.DefaultCulture))).ToArray());
 
             // Checks whether there will be no characters left after this deletion and hide/display the relevant labels
             bool noCharactersLeft = (!m_apiKeys.IsEmpty() && m_character is CCPCharacter);
-            deleteAPIKeyCheckBox.Text = String.Format(deleteAPIKeyCheckBox.Text, m_apiKeys.Count > 1 ? "s" : String.Empty);
-            noCharactersLabel.Text = String.Format(noCharactersLabel.Text, m_apiKeys.Count > 1 ? "s" : String.Empty);
+            deleteAPIKeyCheckBox.Text = String.Format(CultureConstants.DefaultCulture, deleteAPIKeyCheckBox.Text,
+                                                      m_apiKeys.Count > 1 ? "s" : String.Empty);
+            noCharactersLabel.Text = String.Format(CultureConstants.DefaultCulture, noCharactersLabel.Text,
+                                                   m_apiKeys.Count > 1 ? "s" : String.Empty);
 
             deleteAPIKeyCheckBox.Visible = noCharactersLeft;
             noCharactersLabel.Visible = noCharactersLeft;

@@ -34,7 +34,6 @@ namespace EVEMon
         private CCPCharacter m_ccpCharacter;
 
         private int m_count;
-        private QueuedSkill m_item;
         private Object m_lastTooltipItem;
         private DateTime m_nextRepainting = DateTime.MinValue;
 
@@ -168,8 +167,8 @@ namespace EVEMon
             if (e.Index < 0)
                 return;
 
-            m_item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
-            DrawItem(m_item, e);
+            QueuedSkill item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
+            DrawItem(item, e);
         }
 
         /// <summary>
@@ -244,6 +243,69 @@ namespace EVEMon
 
 
             // Boxes
+            DrawBoxes(percentCompleted, skill, e);
+
+            // Draw progression bar
+            DrawProgressionBar(percentCompleted, e);
+
+
+            // Draw level and percent texts
+            TextRenderer.DrawText(g, levelText, m_skillsQueueFont,
+                                  new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
+                                      levelTextSize.Width,
+                                      e.Bounds.Top + PadTop,
+                                      levelTextSize.Width + PadRight,
+                                      levelTextSize.Height), Color.Black);
+
+            TextRenderer.DrawText(g, pctText, m_skillsQueueFont,
+                                  new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
+                                      pctTextSize.Width,
+                                      e.Bounds.Top + PadTop + levelTextSize.Height,
+                                      pctTextSize.Width + PadRight,
+                                      pctTextSize.Height), Color.Black);
+
+            // Draw the queue color bar
+            DrawQueueColorBar(skill, e);
+        }
+
+        /// <summary>
+        /// Draws the progression bar.
+        /// </summary>
+        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
+        private static void DrawProgressionBar(double percentCompleted, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            g.DrawRectangle(Pens.Black,
+                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
+                                          e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
+
+            Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2,
+                                                 e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
+                                                 BoxWidth - 3, LowerBoxHeight - 3);
+
+            g.FillRectangle(Brushes.DarkGray, pctBarRect);
+            int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
+            if (fillWidth > 0)
+            {
+                Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
+                g.FillRectangle(Brushes.Black, fillRect);
+            }
+        }
+
+        /// <summary>
+        /// Draws the boxes.
+        /// </summary>
+        /// <param name="percentCompleted">The percent completed.</param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
+        private void DrawBoxes(double percentCompleted, QueuedSkill skill, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
             g.DrawRectangle(Pens.Black,
                             new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth,
                                           BoxHeight));
@@ -288,56 +350,22 @@ namespace EVEMon
                     m_count++;
                 }
             }
-
-            // Draw progression bar
-            g.DrawRectangle(Pens.Black,
-                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
-                                          e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
-
-            Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2,
-                                                 e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
-                                                 BoxWidth - 3, LowerBoxHeight - 3);
-
-            g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
-            if (fillWidth > 0)
-            {
-                Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
-                g.FillRectangle(Brushes.Black, fillRect);
-            }
-
-
-            // Draw level and percent texts
-            TextRenderer.DrawText(g, levelText, m_skillsQueueFont, new Rectangle(
-                                                                       e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                                                                       levelTextSize.Width,
-                                                                       e.Bounds.Top + PadTop,
-                                                                       levelTextSize.Width + PadRight,
-                                                                       levelTextSize.Height), Color.Black);
-
-            TextRenderer.DrawText(g, pctText, m_skillsQueueFont, new Rectangle(
-                                                                     e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                                                                     pctTextSize.Width,
-                                                                     e.Bounds.Top + PadTop + levelTextSize.Height,
-                                                                     pctTextSize.Width + PadRight,
-                                                                     pctTextSize.Height), Color.Black);
-
-            // Draw the queue color bar
-            DrawQueueColorBar(g, e);
         }
 
         /// <summary>
         /// Draws the queue color bar.
         /// </summary>
-        /// <param name="g">The graphic surface.</param>
+        /// <param name="skill">The skill.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private void DrawQueueColorBar(Graphics g, DrawItemEventArgs e)
+        private void DrawQueueColorBar(QueuedSkill skill, DrawItemEventArgs e)
         {
+            Graphics g = e.Graphics;
+
             // Draw skill queue color bar
             Brush brush = (Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue);
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
-            Rectangle skillRect = SkillQueueControl.GetSkillRect(m_item, qBarRect.Width, LowerBoxHeight - 1);
+            Rectangle skillRect = SkillQueueControl.GetSkillRect(skill, qBarRect.Width, LowerBoxHeight - 1);
             g.FillRectangle(brush,
                             new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
 
@@ -427,54 +455,18 @@ namespace EVEMon
             }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels
-            m_item = lbSkillsQueue.Items[index] as QueuedSkill;
+            QueuedSkill item = lbSkillsQueue.Items[index] as QueuedSkill;
 
-            if (m_item == null)
+            if (item == null)
                 return;
 
-            Skill skill = m_item.Skill;
+            Skill skill = item.Skill;
             if (skill != null)
             {
                 if (e.Button == MouseButtons.Right)
                 {
-                    // "Show in Skill Explorer" menu item
-                    ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer",
-                                                                              CommonProperties.Resources.LeadsTo);
-                    tmSkillExplorer.Click += tmSkillExplorer_Click;
-                    tmSkillExplorer.Tag = skill;
-
-                    // Add to the context menu
-                    contextMenuStripPlanPopup.Items.Clear();
-                    contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
-
-                    if (skill.Level < 5)
-                    {
-                        // Reset the menu.
-                        ToolStripMenuItem tm =
-                            new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
-
-                        // Build the level options
-                        int nextLevel = Math.Min(5, skill.Level + 1);
-                        for (int level = nextLevel; level < 6; level++)
-                        {
-                            ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture,
-                                                                                              "Level {0} to",
-                                                                                              Skill.GetRomanFromInt(level)));
-                            tm.DropDownItems.Add(menuLevel);
-
-                            int level1 = level;
-                            Character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
-                                                                               {
-                                                                                   menuPlanItem.Click += menuPlanItem_Click;
-                                                                                   menuPlanItem.Tag = new Pair<Plan, SkillLevel>(
-                                                                                       plan, new SkillLevel(skill, level1));
-                                                                               });
-                        }
-
-                        // Add to the context menu
-                        contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
-                        contextMenuStripPlanPopup.Items.Add(tm);
-                    }
+                    // Build the context menu
+                    BuildContextMenu(skill);
 
                     // Display the context menu
                     contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
@@ -483,7 +475,7 @@ namespace EVEMon
             }
 
             // Non-right click or already lv5, display the tooltip
-            DisplayTooltip(m_item);
+            DisplayTooltip(item);
         }
 
         /// <summary>
@@ -501,14 +493,98 @@ namespace EVEMon
                     continue;
 
                 // Updates the tooltip
-                m_item = lbSkillsQueue.Items[i] as QueuedSkill;
-                DisplayTooltip(m_item);
+                QueuedSkill item = lbSkillsQueue.Items[i] as QueuedSkill;
+                DisplayTooltip(item);
                 return;
             }
 
             // If we went so far, we're not over anything
             m_lastTooltipItem = null;
             ttToolTip.Active = false;
+        }
+
+        /// <summary>
+        /// Builds the context menu.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        private void BuildContextMenu(Skill skill)
+        {
+            contextMenuStripPlanPopup.Items.Clear();
+
+            // "Show in Skill Explorer" menu item
+            ToolStripMenuItem tmSkillExplorerTemp = null;
+            try
+            {
+                tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill Explorer", CommonProperties.Resources.LeadsTo);
+                tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
+                tmSkillExplorerTemp.Tag = skill;
+
+                ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
+                tmSkillExplorerTemp = null;
+
+                // Add to the context menu
+                contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
+            }
+            finally
+            {
+                if (tmSkillExplorerTemp != null)
+                    tmSkillExplorerTemp.Dispose();
+            }
+
+            // Quit here if skill is fully trained
+            if (skill.Level == 5)
+                return;
+
+            // Add a separator
+            contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
+
+            ToolStripMenuItem tempMenuItem = null;
+            try
+            {
+                // Reset the menu
+                tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
+
+                // Build the level options
+                int nextLevel = Math.Min(5, skill.Level + 1);
+                for (int level = nextLevel; level < 6; level++)
+                {
+                    ToolStripMenuItem tempMenuLevel = null;
+                    try
+                    {
+                        tempMenuLevel = new ToolStripMenuItem(
+                            String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
+
+                        Character.Plans.AddTo(tempMenuLevel.DropDownItems,
+                                              (menuPlanItem, plan) =>
+                                              {
+                                                  menuPlanItem.Click += menuPlanItem_Click;
+                                                  menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan,
+                                                                                                new SkillLevel(skill, level));
+                                              });
+
+                        ToolStripMenuItem menuLevel = tempMenuLevel;
+                        tempMenuLevel = null;
+
+                        tempMenuItem.DropDownItems.Add(menuLevel);
+                    }
+                    finally
+                    {
+                        if (tempMenuLevel != null)
+                            tempMenuLevel.Dispose();
+                    }
+                }
+
+                ToolStripMenuItem menuItem = tempMenuItem;
+                tempMenuItem = null;
+
+                // Add to the context menu
+                contextMenuStripPlanPopup.Items.Add(menuItem);
+            }
+            finally
+            {
+                if (tempMenuItem != null)
+                    tempMenuItem.Dispose();
+            }
         }
 
         /// <summary>
