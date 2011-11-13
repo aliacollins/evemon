@@ -1602,16 +1602,15 @@ namespace EVEMon.SkillPlanner
                 const string CbOptionText = "Do not show this dialog again";
 
                 // Shows the custom dialog box
-                MessageBoxCustom msgBoxCustom = new MessageBoxCustom();
-                DialogResult drb = msgBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo,
+                DialogResult dialogResult = MessageBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo,
                                                      MessageBoxIcon.Exclamation);
-                Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = !msgBoxCustom.CheckBoxChecked;
+                Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = !MessageBoxCustom.CheckBoxChecked;
 
                 // When the checkbox is checked we store the dialog result
-                if (msgBoxCustom.CheckBoxChecked)
-                    Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
+                if (MessageBoxCustom.CheckBoxChecked)
+                    Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = dialogResult;
 
-                if (drb == DialogResult.Yes)
+                if (dialogResult == DialogResult.Yes)
                     m_plan.SetPriority(DisplayPlan, entries, form.Priority);
             }
                 // User wishes the dialog not to be displayed and has set the dialog result to "Yes"
