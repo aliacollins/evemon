@@ -44,24 +44,16 @@ namespace EVEMon.SkillPlanner
             if (!plan.ContainsObsoleteEntries)
                 return ObsoleteEntriesAction.None;
 
-            ObsoleteEntriesForm form = new ObsoleteEntriesForm(plan);
-            return form.ShowObsoleteEntriesDialog();
+            using (ObsoleteEntriesForm form = new ObsoleteEntriesForm(plan))
+            {
+                return form.ShowObsoleteEntriesDialog();
+            }
         }
 
         #endregion
 
 
         #region Constructors
-
-        /// <summary>
-        /// Displays the dialog and returns the Action Result.
-        /// </summary>
-        /// <returns></returns>
-        private ObsoleteEntriesAction ShowObsoleteEntriesDialog()
-        {
-            ShowDialog();
-            return m_result;
-        }
 
         /// <summary>
         /// Constructor
@@ -87,6 +79,16 @@ namespace EVEMon.SkillPlanner
 
 
         #region Private Helper Methods
+
+        /// <summary>
+        /// Displays the dialog and returns the Action Result.
+        /// </summary>
+        /// <returns></returns>
+        private ObsoleteEntriesAction ShowObsoleteEntriesDialog()
+        {
+            ShowDialog();
+            return m_result;
+        }
 
         /// <summary>
         /// Update the list view with items from the plan, colour if required.

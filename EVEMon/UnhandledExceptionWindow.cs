@@ -55,10 +55,8 @@ namespace EVEMon
                     double scale = (double)(BugPictureBox.ClientSize.Height) / bug.Height;
                     oHeight = (int)(oHeight * scale);
                     oWidth = (int)(oWidth * scale);
-                    Bitmap b = new Bitmap(bug, new Size(oWidth, oHeight));
-
+                    BugPictureBox.Image = new Bitmap(bug, new Size(oWidth, oHeight));
                     BugPictureBox.ClientSize = new Size(oWidth, oHeight);
-                    BugPictureBox.Image = b;
                 }
             }
             catch (Exception ex)

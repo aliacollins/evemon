@@ -176,67 +176,105 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static ImageList GetIconSet(int index, ImageList defaultList)
         {
-            ImageList def = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
             string groupname = null;
+
 
             if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
             {
-                SettingsProperty settingsProperty = CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index];
+                SettingsProperty settingsProperty =
+                    CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index];
                 if (settingsProperty != null)
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
             if ((groupname != null && !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                Path.DirectorySeparatorChar,
-                AppDomain.CurrentDomain.BaseDirectory,
-                index,
-                groupname)) ||
+                                                                 "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                 Path.DirectorySeparatorChar,
+                                                                 AppDomain.CurrentDomain.BaseDirectory,
+                                                                 index,
+                                                                 groupname)) ||
                  !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                     "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                     Path.DirectorySeparatorChar,
-                     AppDomain.CurrentDomain.BaseDirectory))))
+                                            "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                            Path.DirectorySeparatorChar,
+                                            AppDomain.CurrentDomain.BaseDirectory))))
                 groupname = null;
 
-            if (groupname != null)
+            return groupname != null ? GetCustomIconSet(index, groupname) : defaultList;
+        }
+
+        /// <summary>
+        /// Gets the custom icon set.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="groupname">The groupname.</param>
+        /// <returns></returns>
+        private static ImageList GetCustomIconSet(int index, string groupname)
+        {
+            ImageList imageList;
+            ImageList tempImageList = null;
+            try
             {
-                IResourceReader basic = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                    Path.DirectorySeparatorChar,
-                    AppDomain.CurrentDomain.BaseDirectory));
+                tempImageList = new ImageList();
+                IDictionaryEnumerator basicx;
+                IResourceReader defaultGroupReader = null;
+                tempImageList.ColorDepth = ColorDepth.Depth32Bit;
 
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-
-                while (basicx.MoveNext())
+                try
                 {
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                                                          Path.DirectorySeparatorChar,
+                                                                          AppDomain.CurrentDomain.BaseDirectory));
+
+                    basicx = defaultGroupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
+                }
+                finally
+                {
+                    if (defaultGroupReader != null)
+                        defaultGroupReader.Close();
                 }
 
-                basic.Close();
-
-                basic = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                    "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                    Path.DirectorySeparatorChar,
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    index,
-                    groupname));
-
-                basicx = basic.GetEnumerator();
-
-                while (basicx.MoveNext())
+                IResourceReader groupReader = null;
+                try
                 {
-                    if (def.Images.ContainsKey(basicx.Key.ToString()))
-                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                   Path.DirectorySeparatorChar,
+                                                                   AppDomain.CurrentDomain.BaseDirectory,
+                                                                   index,
+                                                                   groupname));
 
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    basicx = groupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        if (tempImageList.Images.ContainsKey(basicx.Key.ToString()))
+                            tempImageList.Images.RemoveByKey(basicx.Key.ToString());
+
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
+                }
+                finally
+                {
+                    if (groupReader != null)
+                        groupReader.Close();
                 }
 
-                basic.Close();
-
-                return def;
+                imageList = tempImageList;
+                tempImageList = null;
+            }
+            finally
+            {
+                if (tempImageList != null)
+                    tempImageList.Dispose();
             }
 
-            return defaultList;
+            return imageList;
         }
 
         #endregion

@@ -52,12 +52,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void TipWindow_Load(object sender, EventArgs e)
         {
-            Bitmap b = new Bitmap(32, 32);
-            using (Graphics g = Graphics.FromImage(b))
-            {
-                g.DrawIcon(SystemIcons.Information, 0, 0);
-            }
-            pictureBox1.Image = b;
+            pictureBox.Image = SystemIcons.Information.ToBitmap();
         }
 
         /// <summary>
