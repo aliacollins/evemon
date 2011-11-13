@@ -176,8 +176,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static ImageList GetIconSet(int index, ImageList defaultList)
         {
-            string groupname = null;
-
+            string groupname = String.Empty;
 
             if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
             {
@@ -187,7 +186,7 @@ namespace EVEMon.SkillPlanner
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
-            if ((groupname != null && !File.Exists(String.Format(CultureConstants.InvariantCulture,
+            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
                                                                  "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                                                                  Path.DirectorySeparatorChar,
                                                                  AppDomain.CurrentDomain.BaseDirectory,
@@ -197,9 +196,9 @@ namespace EVEMon.SkillPlanner
                                             "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                                             Path.DirectorySeparatorChar,
                                             AppDomain.CurrentDomain.BaseDirectory))))
-                groupname = null;
+                groupname = String.Empty;
 
-            return groupname != null ? GetCustomIconSet(index, groupname) : defaultList;
+            return String.IsNullOrEmpty(groupname) ? defaultList : GetCustomIconSet(index, groupname);
         }
 
         /// <summary>

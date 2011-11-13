@@ -1418,10 +1418,23 @@ namespace EVEMon.SkillPlanner
                     miPlanGroups.DropDownItems.Clear();
                     foreach (string pg in planGroups)
                     {
-                        ToolStripButton tsb = new ToolStripButton(pg);
-                        tsb.Click += planGroupMenu_Click;
-                        tsb.Width = TextRenderer.MeasureText(pg, tsb.Font).Width;
-                        miPlanGroups.DropDownItems.Add(tsb);
+                        ToolStripButton tempToolStripButton = null;
+                        try
+                        {
+                            tempToolStripButton = new ToolStripButton(pg);
+                            tempToolStripButton.Click += planGroupMenu_Click;
+                            tempToolStripButton.Width = TextRenderer.MeasureText(pg, tempToolStripButton.Font).Width;
+
+                            ToolStripButton tsb = tempToolStripButton;
+                            tempToolStripButton = null;
+
+                            miPlanGroups.DropDownItems.Add(tsb);
+                        }
+                        finally
+                        {
+                            if (tempToolStripButton != null)
+                                tempToolStripButton.Dispose();
+                        }
                     }
                 }
             }
@@ -1894,33 +1907,52 @@ namespace EVEMon.SkillPlanner
             // When the first entry is a skill, shows it in the skill browser.
             if (GetFirstSelectedEntry() != null)
                 miShowInSkillBrowser_Click(sender, e);
-                // When it is a remapping point, edit it
+            // When it is a remapping point, edit it
             else
+                ShowUniqueAttributeOptimizationForm();
+        }
+
+        /// <summary>
+        /// Shows a unique attribute optimization form.
+        /// </summary>
+        private void ShowUniqueAttributeOptimizationForm()
+        {
+            // Retrieves the point
+            ListViewItem nextItem = lvSkills.Items[lvSkills.SelectedIndices[0] + 1];
+            PlanEntry entry = GetPlanEntry(nextItem);
+            RemappingPoint point = entry.Remapping;
+
+            // Display the attributes optimization form
+            // if it's not already shown
+            if (point == m_formTag)
+                return;
+
+            // When we click on another point the previous form closes
+            if (m_oldForm != null)
+                m_oldForm.Close();
+
+            // Creates the form and displays it
+            AttributesOptimizationForm form;
+            AttributesOptimizationForm tempForm = null;
+            try
             {
-                // Retrieves the point
-                ListViewItem nextItem = lvSkills.Items[lvSkills.SelectedIndices[0] + 1];
-                PlanEntry entry = GetPlanEntry(nextItem);
-                RemappingPoint point = entry.Remapping;
+                tempForm = new AttributesOptimizationForm(m_character, m_plan, point);
+                tempForm.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
+                tempForm.PlanEditor = this;
+                tempForm.Show(this);
 
-                // Display the attributes optimization form
-                // if it's not already shown
-                if (point != m_formTag)
-                {
-                    // When we click on another point the previous form closes
-                    if (m_oldForm != null)
-                        m_oldForm.Close();
-
-                    // Creates the form and displays it
-                    AttributesOptimizationForm form = new AttributesOptimizationForm(m_character, m_plan, point);
-                    form.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
-                    form.PlanEditor = this;
-                    form.Show(this);
-
-                    // Update variables for forms display control
-                    m_formTag = point;
-                    m_oldForm = form;
-                }
+                form = tempForm;
+                tempForm = null;
             }
+            finally
+            {
+                if (tempForm != null)
+                    tempForm.Dispose();
+            }
+
+            // Update variables for forms display control
+            m_formTag = point;
+            m_oldForm = form;
         }
 
         /// <summary>

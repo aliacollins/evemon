@@ -16,7 +16,6 @@ namespace EVEMon.Schedule
         private const int OneDaysSeconds = 86400;
         private const int DaysOfWeek = 7;
 
-        private readonly ToolTip m_tooltip;
         private DateTime m_currentDate = DateTime.Now;
         private List<ScheduleEntry> m_lbEntriesData;
 
@@ -26,19 +25,8 @@ namespace EVEMon.Schedule
         public ScheduleEditorWindow()
         {
             InitializeComponent();
-            calControl.EntryFont = FontFactory.GetFont("Microsoft Sans Serif", 7F);
 
-            // Setup Balloon Tooltip for later use
-            m_tooltip = new ToolTip
-                            {
-                                IsBalloon = true,
-                                UseAnimation = true,
-                                UseFading = true,
-                                AutoPopDelay = 10000,
-                                ReshowDelay = 100,
-                                InitialDelay = 500,
-                                ToolTipIcon = ToolTipIcon.Info
-                            };
+            calControl.EntryFont = FontFactory.GetFont("Microsoft Sans Serif", 7F);
 
             // Load Calendar Colors
             calControl.BlockingColor = (Color)Settings.UI.Scheduler.BlockingColor;
@@ -263,7 +251,7 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         private void calControl_MouseLeave(object sender, EventArgs e)
         {
-            m_tooltip.Active = false;
+            toolTip.Active = false;
         }
 
         /// <summary>
@@ -273,7 +261,7 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         private void calControl_MouseEnter(object sender, EventArgs e)
         {
-            m_tooltip.Active = false;
+            toolTip.Active = false;
         }
 
         /// <summary>
@@ -281,7 +269,7 @@ namespace EVEMon.Schedule
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
-        private static void calControl_DayDoubleClicked(object sender, DaySelectedEventArgs e)
+        private void calControl_DayDoubleClicked(object sender, DaySelectedEventArgs e)
         {
             using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(e.DateTime))
             {
@@ -330,12 +318,24 @@ namespace EVEMon.Schedule
             // Add "Edit" menus for every schedule on this day
             foreach (ScheduleEntry entry in Scheduler.Entries.Where(x => x.IsToday(datetime)))
             {
-                ToolStripItem item = new ToolStripMenuItem();
-                item.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
-                item.Tag = entry;
-                item.Click += editMenuItem_Click;
+                ToolStripItem tempItem = null;
+                try
+                {
+                    tempItem = new ToolStripMenuItem();
+                    tempItem.Click += editMenuItem_Click;
+                    tempItem.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
+                    tempItem.Tag = entry;
 
-                calContext.Items.Add(item);
+                    ToolStripItem item = tempItem;
+                    tempItem = null;
+
+                    calContext.Items.Add(item);
+                }
+                finally
+                {
+                    if (tempItem != null)
+                        tempItem.Dispose();
+                }
             }
 
             // Display the menu
@@ -417,9 +417,9 @@ namespace EVEMon.Schedule
                 content.AppendLine();
             }
 
-            m_tooltip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0:d}", datetime);
-            m_tooltip.SetToolTip(calControl, content.ToString());
-            m_tooltip.Active = true;
+            toolTip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0:d}", datetime);
+            toolTip.SetToolTip(calControl, content.ToString());
+            toolTip.Active = true;
         }
 
         /// <summary>

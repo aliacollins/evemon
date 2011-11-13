@@ -889,15 +889,13 @@ namespace EVEMon.SettingsUI
         #region Other handlers
 
         /// <summary>
-        /// Skill Planner > Skill browser icon set > Icons set combo.
-        /// Updates the sample below the combo box.
+        /// Gets the custom icon set.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void skillIconSetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        /// <returns></returns>
+        private ImageList GetCustomIconSet()
         {
-            ImageList def = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
-            string groupname = null;
+            string groupname = String.Empty;
+
             if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < IconSettings.Default.Properties.Count - 1)
             {
                 SettingsProperty iconSettingsProperty =
@@ -906,54 +904,102 @@ namespace EVEMon.SettingsUI
                     groupname = iconSettingsProperty.DefaultValue.ToString();
             }
 
-            if ((groupname != null
-                 &&
-                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                            "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                            Path.DirectorySeparatorChar,
-                                            AppDomain.CurrentDomain.BaseDirectory,
-                                            (cbSkillIconSet.SelectedIndex + 1),
-                                            groupname)))
+            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                                                                                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                                Path.DirectorySeparatorChar,
+                                                                                AppDomain.CurrentDomain.BaseDirectory,
+                                                                                (cbSkillIconSet.SelectedIndex + 1),
+                                                                                groupname)))
                 ||
                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
                                            "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                                            Path.DirectorySeparatorChar,
                                            AppDomain.CurrentDomain.BaseDirectory)))
-                groupname = null;
+                groupname = String.Empty;
 
-            if (groupname != null)
+            if (String.IsNullOrEmpty(groupname))
+                return null;
+
+            ImageList customIconSet;
+            ImageList tempImageList = null;
+            try
             {
-                IResourceReader basic =
-                    new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                     "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                                     Path.DirectorySeparatorChar,
-                                                     AppDomain.CurrentDomain.BaseDirectory));
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
+                tempImageList = new ImageList();
+                IDictionaryEnumerator basicx;
+                IResourceReader defaultGroupReader = null;
+                tempImageList.ColorDepth = ColorDepth.Depth32Bit;
+                try
                 {
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
-                }
-                basic.Close();
-                basic =
-                    new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                     "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                     Path.DirectorySeparatorChar,
-                                                     AppDomain.CurrentDomain.BaseDirectory,
-                                                     (cbSkillIconSet.SelectedIndex + 1),
-                                                     groupname));
-                basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
-                {
-                    if (def.Images.ContainsKey(basicx.Key.ToString()))
-                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                                                                          Path.DirectorySeparatorChar,
+                                                                          AppDomain.CurrentDomain.BaseDirectory));
 
-                    def.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    basicx = defaultGroupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
                 }
-                basic.Close();
+                finally
+                {
+                    if (defaultGroupReader != null)
+                        defaultGroupReader.Close();
+                }
+
+                IResourceReader groupReader = null;
+                try
+                {
+                    groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
+                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                                                                   Path.DirectorySeparatorChar,
+                                                                   AppDomain.CurrentDomain.BaseDirectory,
+                                                                   (cbSkillIconSet.SelectedIndex + 1),
+                                                                   groupname));
+
+                    basicx = groupReader.GetEnumerator();
+
+                    while (basicx.MoveNext())
+                    {
+                        if (tempImageList.Images.ContainsKey(basicx.Key.ToString()))
+                            tempImageList.Images.RemoveByKey(basicx.Key.ToString());
+
+                        tempImageList.Images.Add(basicx.Key.ToString(), (Icon)basicx.Value);
+                    }
+                }
+                finally
+                {
+                    if (groupReader != null)
+                        groupReader.Close();
+                }
+
+                customIconSet = tempImageList;
+                tempImageList = null;
             }
+            finally
+            {
+                if (tempImageList != null)
+                    tempImageList.Dispose();
+            }
+
+            return customIconSet;
+        }
+
+        /// <summary>
+        /// Skill Planner > Skill browser icon set > Icons set combo.
+        /// Updates the sample below the combo box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void skillIconSetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
             tvlist.Nodes.Clear();
-            tvlist.ImageList = def;
-            tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            tvlist.ImageList = GetCustomIconSet();
+
+            if(tvlist.ImageList == null)
+                return;
+            
             TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"),
                                         tvlist.ImageList.Images.IndexOfKey("book"));
             gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"),
