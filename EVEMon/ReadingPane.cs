@@ -281,13 +281,12 @@ namespace EVEMon
         {
             // We assure that the internal browser will initialize and
             // any other attempt to navigate to a non valid link will fail
-            if (e.Url.ToString() == "about:blank" && wbMailBody.DocumentText != m_selectedObject.Text)
+            if (e.Url.AbsoluteUri == "about:blank" && wbMailBody.DocumentText != m_selectedObject.Text)
                 return;
 
             // If the link complies with HTTP or HTTPS, open the link on the system's default browser
-            if (e.Url.ToString().StartsWith("http://", StringComparison.CurrentCulture) ||
-                e.Url.ToString().StartsWith("https://", StringComparison.CurrentCulture))
-                Util.OpenURL(e.Url.ToString());
+            if (e.Url.Scheme == Uri.UriSchemeHttp || e.Url.Scheme == Uri.UriSchemeHttps)
+                Util.OpenURL(e.Url.AbsoluteUri);
 
             // Prevents the browser to navigate past the shown page
             e.Cancel = true;
