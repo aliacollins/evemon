@@ -412,7 +412,7 @@ namespace EVEMon
             // No details ?
             if (!notification.HasDetails)
             {
-                toolTip.Active = false;
+                SetToolTip(false);
                 return;
             }
 
@@ -420,8 +420,7 @@ namespace EVEMon
             APIErrorNotificationEventArgs errorNotification = notification as APIErrorNotificationEventArgs;
             if (errorNotification != null)
             {
-                toolTip.SetToolTip(listBox, errorNotification.Result.ErrorMessage);
-                toolTip.Active = true;
+                SetToolTip(true, errorNotification.Result.ErrorMessage);
                 return;
             }
 
@@ -429,15 +428,7 @@ namespace EVEMon
             SkillCompletionNotificationEventArgs skillNotifications = notification as SkillCompletionNotificationEventArgs;
             if (skillNotifications != null)
             {
-                StringBuilder builder = new StringBuilder();
-                foreach (QueuedSkill skill in skillNotifications.Skills)
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture,
-                                         "{0} {1} completed.", skill.SkillName, Skill.GetRomanFromInt(skill.Level)).AppendLine
-                        ();
-                }
-                toolTip.SetToolTip(listBox, builder.ToString());
-                toolTip.Active = true;
+                SetToolTip(true, SkillCompletionMessage(skillNotifications));
                 return;
             }
 
@@ -446,14 +437,7 @@ namespace EVEMon
                 notification as ClaimableCertificateNotificationEventArgs;
             if (certNotifications != null)
             {
-                StringBuilder builder = new StringBuilder();
-                foreach (Certificate cert in certNotifications.Certificates)
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture,
-                                         "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
-                }
-                toolTip.SetToolTip(listBox, builder.ToString());
-                toolTip.Active = true;
+                SetToolTip(true, CertificateClaimableMessage(certNotifications));
                 return;
             }
 
@@ -461,29 +445,7 @@ namespace EVEMon
             MarketOrdersNotificationEventArgs ordersNotification = notification as MarketOrdersNotificationEventArgs;
             if (ordersNotification != null)
             {
-                StringBuilder builder = new StringBuilder();
-                foreach (IGrouping<OrderState, MarketOrder> orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
-                {
-                    if (builder.Length != 0)
-                        builder.AppendLine();
-                    builder.AppendLine(orderGroup.Key.GetHeader());
-
-                    foreach (MarketOrder order in orderGroup.Where(order => order.Item != null))
-                    {
-                        const AbbreviationFormat Format = AbbreviationFormat.AbbreviationSymbols;
-
-                        // Expired :    12k/15k invulnerability fields at Pator V - Tech School
-                        // Fulfilled :  15k invulnerability fields at Pator V - Tech School
-                        if (order.State == OrderState.Expired)
-                            builder.Append(MarketOrder.Format(order.RemainingVolume, Format)).Append("/");
-
-                        builder.Append(MarketOrder.Format(order.InitialVolume, Format)).Append(" ");
-                        builder.Append(order.Item.Name).Append(" at ");
-                        builder.AppendLine(order.Station.Name);
-                    }
-                }
-                toolTip.SetToolTip(listBox, builder.ToString());
-                toolTip.Active = true;
+                SetToolTip(true, MarketOrdersEndedMessage(ordersNotification));
                 return;
             }
 
@@ -491,18 +453,102 @@ namespace EVEMon
             IndustryJobsNotificationEventArgs jobsNotification = notification as IndustryJobsNotificationEventArgs;
             if (jobsNotification != null)
             {
-
-                StringBuilder builder = new StringBuilder();
-                foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
-                {
-                    builder.Append(job.InstalledItem.Name).Append(" at ");
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}", job.SolarSystem.Name, job.Installation).
-                        AppendLine();
-                }
-                toolTip.SetToolTip(listBox, builder.ToString());
-                toolTip.Active = true;
+                SetToolTip(true, IndustryJobsCompletedMessage(jobsNotification));
                 return;
             }
+        }
+
+        /// <summary>
+        /// Builds the completed industry jobs message.
+        /// </summary>
+        /// <param name="jobsNotification">The <see cref="EVEMon.Common.Notifications.IndustryJobsNotificationEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private static String IndustryJobsCompletedMessage(IndustryJobsNotificationEventArgs jobsNotification)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
+            {
+                builder.Append(job.InstalledItem.Name).Append(" at ");
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
+                    job.SolarSystem.Name, job.Installation).AppendLine();
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Builds the ended markets orders message.
+        /// </summary>
+        /// <param name="ordersNotification">The <see cref="EVEMon.Common.Notifications.MarketOrdersNotificationEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private static String MarketOrdersEndedMessage(MarketOrdersNotificationEventArgs ordersNotification)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (IGrouping<OrderState, MarketOrder> orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
+            {
+                if (builder.Length != 0)
+                    builder.AppendLine();
+                builder.AppendLine(orderGroup.Key.GetHeader());
+
+                foreach (MarketOrder order in orderGroup.Where(order => order.Item != null))
+                {
+                    const AbbreviationFormat Format = AbbreviationFormat.AbbreviationSymbols;
+
+                    // Expired :    12k/15k invulnerability fields at Pator V - Tech School
+                    // Fulfilled :  15k invulnerability fields at Pator V - Tech School
+                    if (order.State == OrderState.Expired)
+                        builder.Append(MarketOrder.Format(order.RemainingVolume, Format)).Append("/");
+
+                    builder.Append(MarketOrder.Format(order.InitialVolume, Format)).Append(" ");
+                    builder.Append(order.Item.Name).Append(" at ");
+                    builder.AppendLine(order.Station.Name);
+                }
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Builds the claimable certificates message.
+        /// </summary>
+        /// <param name="certNotifications">The <see cref="EVEMon.Common.Notifications.ClaimableCertificateNotificationEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private static String CertificateClaimableMessage(ClaimableCertificateNotificationEventArgs certNotifications)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (Certificate cert in certNotifications.Certificates)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture,
+                                     "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Builds the skill completion message.
+        /// </summary>
+        /// <param name="skillNotifications">The <see cref="EVEMon.Common.Notifications.SkillCompletionNotificationEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private static String SkillCompletionMessage(SkillCompletionNotificationEventArgs skillNotifications)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (QueuedSkill skill in skillNotifications.Skills)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.SkillName,
+                                     Skill.GetRomanFromInt(skill.Level)).AppendLine();
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Sets the tool tip.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="active">if set to <c>true</c> [active].</param>
+        private void SetToolTip(bool active, string message = null)
+        {
+            toolTip.Active = active;
+            
+            if (active)
+                toolTip.SetToolTip(listBox, message);
         }
 
         /// <summary>

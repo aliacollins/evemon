@@ -139,54 +139,21 @@ namespace EVEMon.SettingsUI
                     cbSkillIconSet.Items.Add(iconSettingsProperty.DefaultValue.ToString());
             }
 
-            // Window settings
-            rbSystemTrayOptionsNever.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled);
-            rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
-            rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
-
-            switch (m_settings.UI.MainWindowCloseBehaviour)
-            {
-                case CloseBehaviour.MinimizeToTaskbar:
-                    rbMinToTaskBar.Checked = true;
-                    break;
-                case CloseBehaviour.MinimizeToTray:
-                    rbMinToTray.Checked = true;
-                    break;
-                default:
-                    rbExitEVEMon.Checked = true;
-                    break;
-            }
+            // Tray icon settings
+            SetTrayIconSettings();
 
             // G15
-            g15CheckBox.Checked = m_settings.G15.Enabled;
-            cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
-            ACycleInterval.Value = m_settings.G15.CharactersCycleInterval;
-            cbG15CycleTimes.Checked = m_settings.G15.UseTimeFormatsCycle;
-            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval, ACycleTimesInterval.Maximum);
-            cbG15ShowTime.Checked = m_settings.G15.ShowSystemTime;
-            cbG15ShowEVETime.Checked = m_settings.G15.ShowEVETime;
+            SetG15Settings();
 
             // Skills display on the main window
             cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
             cbShowNonPublicSkills.Checked = m_settings.UI.MainWindow.ShowNonPublicSkills;
 
             // Main window
-            cbTitleToTime.Checked = m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar;
-            cbWindowsTitleList.SelectedIndex = (int)m_settings.UI.MainWindow.TitleFormat - 1;
-            cbSkillInTitle.Checked = m_settings.UI.MainWindow.ShowSkillNameInWindowTitle;
-            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
-            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
-            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
-            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+            SetMainWindowSettings();
 
             // Main Window - Overview
-            cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
-            cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
-            overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
-            overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
-            overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
-            overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
-            overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+            SetOverviewSettings();
 
             // IGB Server
             igbCheckBox.Checked = m_settings.IGB.IGBServerEnabled;
@@ -198,16 +165,7 @@ namespace EVEMon.SettingsUI
             cbPlaySoundOnSkillComplete.Checked = m_settings.Notifications.PlaySoundOnSkillCompletion;
 
             // Email Notifications
-            mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
-            tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
-            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString(CultureConstants.DefaultCulture);
-            cbEmailServerRequireSsl.Checked = m_settings.Notifications.EmailServerRequiresSSL;
-            cbEmailUseShortFormat.Checked = m_settings.Notifications.UseEmailShortFormat;
-            cbEmailAuthRequired.Checked = m_settings.Notifications.EmailAuthenticationRequired;
-            tbEmailUsername.Text = m_settings.Notifications.EmailAuthenticationUserName;
-            tbEmailPassword.Text = m_settings.Notifications.EmailAuthenticationPassword;
-            tbFromAddress.Text = m_settings.Notifications.EmailFromAddress;
-            tbToAddress.Text = m_settings.Notifications.EmailToAddress;
+            SetEmailerSettings();
 
             // Proxy settings
             customProxyCheckBox.Checked = m_settings.Proxy.Enabled;
@@ -221,13 +179,7 @@ namespace EVEMon.SettingsUI
             updateSettingsControl.Settings = m_settings.Updates;
 
             // Skill Planner
-            cbHighlightPlannedSkills.Checked = m_settings.UI.PlanWindow.HighlightPlannedSkills;
-            cbHighlightPrerequisites.Checked = m_settings.UI.PlanWindow.HighlightPrerequisites;
-            cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
-            cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
-            cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
-            cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
-            cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
+            SetSkillPlannerSettings();
 
             // Obsolete plan entry removal behaviour
             alwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
@@ -249,17 +201,139 @@ namespace EVEMon.SettingsUI
             trayPopupDisabledRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled);
 
             // Calendar
+            SetCalendarSettings();
+
+            // Google calendar reminder method
+            InitilizeGoogleCalendarReminderDropDown();
+
+            // External calendar
+            SetExternalCalendarSettings();
+
+            // Run at system startup
+            SetStartUpSettings();
+
+            // API providers
+            InitialiseAPIProvidersDropDown();
+
+            // Enables / disables controls
+            m_isLoading = false;
+            UpdateDisables();
+        }
+
+        /// <summary>
+        /// Sets the tray icon settings.
+        /// </summary>
+        private void SetTrayIconSettings()
+        {
+            rbSystemTrayOptionsNever.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled);
+            rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+            rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
+
+            switch (m_settings.UI.MainWindowCloseBehaviour)
+            {
+                case CloseBehaviour.MinimizeToTaskbar:
+                    rbMinToTaskBar.Checked = true;
+                    break;
+                case CloseBehaviour.MinimizeToTray:
+                    rbMinToTray.Checked = true;
+                    break;
+                default:
+                    rbExitEVEMon.Checked = true;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Sets the G15 settings.
+        /// </summary>
+        private void SetG15Settings()
+        {
+            g15CheckBox.Checked = m_settings.G15.Enabled;
+            cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
+            ACycleInterval.Value = m_settings.G15.CharactersCycleInterval;
+            cbG15CycleTimes.Checked = m_settings.G15.UseTimeFormatsCycle;
+            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval, ACycleTimesInterval.Maximum);
+            cbG15ShowTime.Checked = m_settings.G15.ShowSystemTime;
+            cbG15ShowEVETime.Checked = m_settings.G15.ShowEVETime;
+        }
+
+        /// <summary>
+        /// Sets the main window settings.
+        /// </summary>
+        private void SetMainWindowSettings()
+        {
+            cbTitleToTime.Checked = m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar;
+            cbWindowsTitleList.SelectedIndex = (int)m_settings.UI.MainWindow.TitleFormat - 1;
+            cbSkillInTitle.Checked = m_settings.UI.MainWindow.ShowSkillNameInWindowTitle;
+            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
+            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
+            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
+            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+        }
+
+        /// <summary>
+        /// Sets the overview settings.
+        /// </summary>
+        private void SetOverviewSettings()
+        {
+            cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
+            cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
+            overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
+            overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
+            overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
+            overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
+            overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+        }
+
+        /// <summary>
+        /// Sets the emailer settings.
+        /// </summary>
+        private void SetEmailerSettings()
+        {
+            mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
+            tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
+            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString(CultureConstants.DefaultCulture);
+            cbEmailServerRequireSsl.Checked = m_settings.Notifications.EmailServerRequiresSSL;
+            cbEmailUseShortFormat.Checked = m_settings.Notifications.UseEmailShortFormat;
+            cbEmailAuthRequired.Checked = m_settings.Notifications.EmailAuthenticationRequired;
+            tbEmailUsername.Text = m_settings.Notifications.EmailAuthenticationUserName;
+            tbEmailPassword.Text = m_settings.Notifications.EmailAuthenticationPassword;
+            tbFromAddress.Text = m_settings.Notifications.EmailFromAddress;
+            tbToAddress.Text = m_settings.Notifications.EmailToAddress;
+        }
+
+        /// <summary>
+        /// Sets the skill planner settings.
+        /// </summary>
+        private void SetSkillPlannerSettings()
+        {
+            cbHighlightPlannedSkills.Checked = m_settings.UI.PlanWindow.HighlightPlannedSkills;
+            cbHighlightPrerequisites.Checked = m_settings.UI.PlanWindow.HighlightPrerequisites;
+            cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
+            cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
+            cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
+            cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
+            cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
+        }
+
+        /// <summary>
+        /// Sets the calendar settings.
+        /// </summary>
+        private void SetCalendarSettings()
+        {
             panelColorBlocking.BackColor = (Color)m_settings.UI.Scheduler.BlockingColor;
             panelColorRecurring1.BackColor = (Color)m_settings.UI.Scheduler.RecurringEventGradientStart;
             panelColorRecurring2.BackColor = (Color)m_settings.UI.Scheduler.RecurringEventGradientEnd;
             panelColorSingle1.BackColor = (Color)m_settings.UI.Scheduler.SimpleEventGradientStart;
             panelColorSingle2.BackColor = (Color)m_settings.UI.Scheduler.SimpleEventGradientEnd;
             panelColorText.BackColor = (Color)m_settings.UI.Scheduler.TextColor;
+        }
 
-            // Google calendar reminder method
-            InitilizeGoogleCalendarReminderDropDown();
-
-            // External calendar
+        /// <summary>
+        /// Sets the external calendar settings.
+        /// </summary>
+        private void SetExternalCalendarSettings()
+        {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
             rbMSOutlook.Checked = m_settings.Calendar.Provider == CalendarProvider.Outlook;
@@ -275,8 +349,13 @@ namespace EVEMon.SettingsUI
             dtpEarlyReminder.Value = m_settings.Calendar.EarlyReminding;
             dtpLateReminder.Value = m_settings.Calendar.LateReminding;
             cbLastQueuedSkillOnly.Checked = m_settings.Calendar.LastQueuedSkillOnly;
+        }
 
-            // Run at system startup
+        /// <summary>
+        /// Sets the start up settings.
+        /// </summary>
+        private void SetStartUpSettings()
+        {
             RegistryKey rk = null;
             try
             {
@@ -302,13 +381,6 @@ namespace EVEMon.SettingsUI
                 // Run at startup ?
                 runAtStartupComboBox.Checked = (rk.GetValue("EVEMon") != null);
             }
-
-            // API providers
-            InitialiseAPIProvidersDropDown();
-
-            // Enables / disables controls
-            m_isLoading = false;
-            UpdateDisables();
         }
 
         /// <summary>
