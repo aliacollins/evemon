@@ -127,7 +127,7 @@ namespace EVEMon.SettingsUI
                 AddComboBox(method, height);
 
                 // Updates the row ordinate
-                height += RowHeight*2;
+                height += RowHeight;
             }
 
             Height = height;
