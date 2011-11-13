@@ -350,19 +350,9 @@ namespace EVEMon
                     // Does the page match with the character ?
                     if (currentTag != character)
                     {
-                        TabPage page;
-                        // Retrieve the page when it was previously created
-                        // Is the character later in the collection ?
-                        if (pages.TryGetValue(character, out page))
-                        {
-                            // Remove the page from old location
-                            tcCharacterTabs.TabPages.Remove(page);
-                        }
-                        else
-                        {
-                            // Creates a new page
-                            page = CreateTab(character);
-                        }
+                        // Get the existing page and remove it from the old location
+                        // or create a new one
+                        TabPage page = GetPage(pages, character);
 
                         // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
@@ -387,6 +377,43 @@ namespace EVEMon
             {
                 tcCharacterTabs.ResumeLayout();
             }
+        }
+
+        /// <summary>
+        /// Gets the page.
+        /// </summary>
+        /// <param name="pages">The pages.</param>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        private TabPage GetPage(IDictionary<Character, TabPage> pages, Character character)
+        {
+            TabPage page;
+            TabPage tempPage = null;
+            try
+            {
+                // Retrieve the page when it was previously created
+                // Is the character later in the collection ?
+                if (pages.TryGetValue(character, out tempPage))
+                {
+                    // Remove the page from old location
+                    tcCharacterTabs.TabPages.Remove(tempPage);
+                }
+                else
+                {
+                    // Creates a new page
+                    tempPage = CreateTab(character);
+                }
+
+                page = tempPage;
+                tempPage = null;
+            }
+            finally
+            {
+                if(tempPage!=null)
+                    tempPage.Dispose();
+            }
+
+            return page;
         }
 
         /// <summary>
@@ -432,7 +459,7 @@ namespace EVEMon
                 tempPage.Tag = character;
 
                 // Create the character monitor
-                new CharacterMonitor((Character)tempPage.Tag) { Parent = tempPage, Dock = DockStyle.Fill };
+                CreateCharacterMonitor(character, tempPage);
 
                 page = tempPage;
                 tempPage = null;
@@ -444,6 +471,32 @@ namespace EVEMon
             }
 
             return page;
+        }
+
+        /// <summary>
+        /// Creates the character monitor.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="tempPage">The temp page.</param>
+        private static void CreateCharacterMonitor(Character character, Control tempPage)
+        {
+            CharacterMonitor tempMonitor = null;
+            try
+            {
+                tempMonitor = new CharacterMonitor(character);
+                tempMonitor.Parent = tempPage;
+                tempMonitor.Dock = DockStyle.Fill;
+
+                CharacterMonitor monitor = tempMonitor;
+                tempMonitor = null;
+
+                tempPage.Controls.Add(monitor);
+            }
+            finally
+            {
+                if(tempMonitor != null)
+                    tempMonitor.Dispose();
+            }
         }
 
         /// <summary>

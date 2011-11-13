@@ -319,10 +319,10 @@ namespace EVEMon.SkillPlanner
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
-                            fillBrush = new LinearGradientBrush(rect, Color.LightPink, Color.DarkRed, 90.0F);
+                            fillBrush = GetLinearGradientBrush(rect, Color.LightPink, Color.DarkRed, 90.0F);
                         else
                         {
-                            fillBrush = new LinearGradientBrush(rect, Color.Red, Color.Black, 90.0F);
+                            fillBrush = GetLinearGradientBrush(rect, Color.Red, Color.Black, 90.0F);
                             stdTextColor = !Settings.UI.SafeForWork ? Color.White : SystemColors.ControlText;
                         }
                     }
@@ -330,16 +330,16 @@ namespace EVEMon.SkillPlanner
                     else
                     {
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Black : SystemColors.ControlText;
-                        fillBrush = new LinearGradientBrush(rect, Color.LightSeaGreen, Color.DarkGreen, 90.0F);
+                        fillBrush = GetLinearGradientBrush(rect, Color.LightSeaGreen, Color.DarkGreen, 90.0F);
                     }
                 }
                     // Skill at level 0, prerequisites met
                 else if (cell.Skill.ArePrerequisitesMet)
-                    fillBrush = new LinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
+                    fillBrush = GetLinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
                     // Skill unknown, not trainable
                 else
                 {
-                    fillBrush = new LinearGradientBrush(rect, Color.Blue, Color.Black, 90.0F);
+                    fillBrush = GetLinearGradientBrush(rect, Color.Blue, Color.Black, 90.0F);
                     stdTextColor = !Settings.UI.SafeForWork ? Color.White : SystemColors.ControlText;
                 }
 
@@ -350,7 +350,6 @@ namespace EVEMon.SkillPlanner
                     prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}",
                                                pts.ToDescriptiveText(TimeFormat));
                 }
-
 
                 // Fill the background
                 if (Settings.UI.SafeForWork)
@@ -390,6 +389,33 @@ namespace EVEMon.SkillPlanner
                 if (fillBrush != null)
                     fillBrush.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Gets the linear gradient brush.
+        /// </summary>
+        /// <param name="rect">The rect.</param>
+        /// <param name="color1">The color1.</param>
+        /// <param name="color2">The color2.</param>
+        /// <param name="angle">The angle.</param>
+        /// <returns></returns>
+        private static Brush GetLinearGradientBrush(Rectangle rect, Color color1, Color color2, float angle)
+        {
+            Brush brush;
+            Brush tempBrush = null;
+            try
+            {
+                tempBrush = new LinearGradientBrush(rect, color1, color2, angle);
+
+                brush = tempBrush;
+                tempBrush = null;
+            }
+            finally
+            {
+                if (tempBrush != null)
+                    tempBrush.Dispose();
+            }
+            return brush;
         }
 
         /// <summary>
