@@ -507,13 +507,13 @@ namespace EVEMon
 
                     // Tooltip
                     StringBuilder builder = new StringBuilder();
-                    builder.Append("Issued For: ").AppendLine(order.IssuedFor.ToString());
-                    builder.Append("Issued: ").AppendLine(order.Issued.ToLocalTime().ToString());
+                    builder.AppendFormat(CultureConstants.DefaultCulture,"Issued For: {0}", order.IssuedFor).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
-                                         (order.Duration > 1 ? "s" : String.Empty));
-                    builder.AppendLine();
-                    builder.Append("Solar System: ").AppendLine(order.Station.SolarSystem.FullLocation);
-                    builder.Append("Station: ").AppendLine(order.Station.Name);
+                                         (order.Duration > 1 ? "s" : String.Empty)).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                         order.Station.SolarSystem.FullLocation).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
                     item.ToolTipText = builder.ToString();
 
                     lvOrders.Items.Add(item);

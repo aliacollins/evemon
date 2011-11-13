@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -54,6 +55,7 @@ namespace EVEMon
             InitializeExpandablePanelControls();
 
             lvJobs.Visible = false;
+            lvJobs.ShowItemToolTips = true;
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
 
@@ -477,6 +479,33 @@ namespace EVEMon
                         IndustryJobColumn column = (IndustryJobColumn)header.Tag;
                         SetColumn(job, item.SubItems[i], column);
                     }
+
+                    // Tooltip
+                    StringBuilder builder = new StringBuilder();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
+                                         job.InstalledTime.ToLocalTime()).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
+                                         job.EndProductionTime.ToLocalTime()).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
+                    if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
+                    {
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
+                                             job.InstalledME).AppendLine();
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
+                                             job.InstalledME + job.Runs).AppendLine();
+                    }
+                    if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
+                    {
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
+                                             job.InstalledPE).AppendLine();
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
+                                             job.InstalledPE + job.Runs).AppendLine();
+                    }
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                         job.SolarSystem.FullLocation).AppendLine();
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
+                    item.ToolTipText = builder.ToString();
 
                     lvJobs.Items.Add(item);
                 }
