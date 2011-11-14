@@ -59,9 +59,9 @@ namespace EVEMon.Common.Controls
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.tbPreview);
             this.groupBox1.Location = new System.Drawing.Point(12, 292);
             this.groupBox1.Name = "groupBox1";
@@ -72,9 +72,9 @@ namespace EVEMon.Common.Controls
             // 
             // tbPreview
             // 
-            this.tbPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbPreview.Location = new System.Drawing.Point(6, 20);
             this.tbPreview.Multiline = true;
             this.tbPreview.Name = "tbPreview";
@@ -109,8 +109,8 @@ namespace EVEMon.Common.Controls
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.cbIncludeHeader);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
@@ -131,8 +131,8 @@ namespace EVEMon.Common.Controls
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.cbEntryCost);
             this.groupBox3.Controls.Add(this.cbEntryFinishDate);
             this.groupBox3.Controls.Add(this.cbEntryStartDate);
@@ -197,8 +197,8 @@ namespace EVEMon.Common.Controls
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.cbFooterCost);
             this.groupBox4.Controls.Add(this.cbFooterDate);
             this.groupBox4.Controls.Add(this.cbFooterTotalTime);
@@ -256,7 +256,7 @@ namespace EVEMon.Common.Controls
             this.cbRememberOptions.AutoSize = true;
             this.cbRememberOptions.Location = new System.Drawing.Point(18, 458);
             this.cbRememberOptions.Name = "cbRememberOptions";
-            this.cbRememberOptions.Size = new System.Drawing.Size(139, 17);
+            this.cbRememberOptions.Size = new System.Drawing.Size(137, 17);
             this.cbRememberOptions.TabIndex = 3;
             this.cbRememberOptions.Text = "Save options as default";
             this.cbRememberOptions.UseVisualStyleBackColor = true;
@@ -308,7 +308,7 @@ namespace EVEMon.Common.Controls
             this.label1.Location = new System.Drawing.Point(6, 18);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.Size = new System.Drawing.Size(59, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Formatting:";
             // 

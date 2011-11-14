@@ -52,7 +52,7 @@ namespace EVEMon.Common.Controls
             this.FilenameTextBox.Location = new System.Drawing.Point(43, 60);
             this.FilenameTextBox.Name = "FilenameTextBox";
             this.FilenameTextBox.ReadOnly = true;
-            this.FilenameTextBox.Size = new System.Drawing.Size(219, 21);
+            this.FilenameTextBox.Size = new System.Drawing.Size(219, 20);
             this.FilenameTextBox.TabIndex = 4;
             // 
             // OpenDirFolderBrowserDialog
@@ -88,7 +88,7 @@ namespace EVEMon.Common.Controls
             this.DefaultFolderRadioButton.Checked = true;
             this.DefaultFolderRadioButton.Location = new System.Drawing.Point(13, 13);
             this.DefaultFolderRadioButton.Name = "DefaultFolderRadioButton";
-            this.DefaultFolderRadioButton.Size = new System.Drawing.Size(130, 17);
+            this.DefaultFolderRadioButton.Size = new System.Drawing.Size(126, 17);
             this.DefaultFolderRadioButton.TabIndex = 9;
             this.DefaultFolderRadioButton.TabStop = true;
             this.DefaultFolderRadioButton.Text = "&Use the default folder";
@@ -100,13 +100,13 @@ namespace EVEMon.Common.Controls
             this.SpecifyFolderRadioButton.AutoSize = true;
             this.SpecifyFolderRadioButton.Location = new System.Drawing.Point(13, 37);
             this.SpecifyFolderRadioButton.Name = "SpecifyFolderRadioButton";
-            this.SpecifyFolderRadioButton.Size = new System.Drawing.Size(100, 17);
+            this.SpecifyFolderRadioButton.Size = new System.Drawing.Size(98, 17);
             this.SpecifyFolderRadioButton.TabIndex = 10;
             this.SpecifyFolderRadioButton.Text = "&Specify a folder";
             this.SpecifyFolderRadioButton.UseVisualStyleBackColor = true;
             this.SpecifyFolderRadioButton.CheckedChanged += new System.EventHandler(this.SpecifyFolderRadioButton_CheckedChanged);
             // 
-            // EVEFolderWindow
+            // EveFolderWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -120,7 +120,7 @@ namespace EVEMon.Common.Controls
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "EVEFolderWindow";
+            this.Name = "EveFolderWindow";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EVE Portraits Folder";
