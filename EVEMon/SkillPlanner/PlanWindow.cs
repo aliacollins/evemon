@@ -378,7 +378,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         internal void UpdatePlanEditorSkillSelection()
         {
-            planEditor.SkillSelectControl.UpdateContent();
+            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
+            skillSelectControl.UpdateContent();
         }
 
         /// <summary>

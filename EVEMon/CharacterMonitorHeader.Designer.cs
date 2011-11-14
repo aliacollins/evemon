@@ -467,12 +467,13 @@
             this.SkillSummaryLabel.AutoSize = true;
             this.SkillSummaryLabel.BackColor = System.Drawing.Color.Transparent;
             this.SkillSummaryLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.SkillSummaryLabel.Location = new System.Drawing.Point(192, 5);
+            this.SkillSummaryLabel.Location = new System.Drawing.Point(183, 5);
             this.SkillSummaryLabel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryLabel.Name = "SkillSummaryLabel";
-            this.SkillSummaryLabel.Size = new System.Drawing.Size(106, 65);
+            this.SkillSummaryLabel.Size = new System.Drawing.Size(115, 65);
             this.SkillSummaryLabel.TabIndex = 1;
-            this.SkillSummaryLabel.Text = "Known Skills: 0\r\nSkills at Level V: 0\r\nTotal SP: 0\r\nClone Limit: 0\r\nClone Grade Unknown";
+            this.SkillSummaryLabel.Text = "Known Skills: 0\r\nSkills at Level V: 0\r\nTotal SP: 0\r\nClone Limit: 0\r\nClone Grade U" +
+    "nknown";
             this.SkillSummaryLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.SkillSummaryLabel.MouseHover += new System.EventHandler(this.SkillSummaryLabel_MouseHover);
             // 

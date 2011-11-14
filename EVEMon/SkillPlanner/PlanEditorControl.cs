@@ -126,6 +126,11 @@ namespace EVEMon.SkillPlanner
             base.OnLoad(e);
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the plan represented by this editor.
         /// </summary>
@@ -143,7 +148,7 @@ namespace EVEMon.SkillPlanner
                 m_lastImplantSetIndex = -1;
 
                 // Children controls
-                SkillSelectControl.Plan = m_plan;
+                skillSelectControl.Plan = m_plan;
 
                 // Build the plan
                 UpdateDisplayPlan();
@@ -156,11 +161,6 @@ namespace EVEMon.SkillPlanner
                 UpdateListColumns();
             }
         }
-
-        #endregion
-
-
-        #region Public Properties
 
         /// <summary>
         /// Gets the version of the plan as it is currently displayed.
@@ -211,7 +211,10 @@ namespace EVEMon.SkillPlanner
         /// Gets the skill select control.
         /// </summary>
         /// <value>The skill select control.</value>
-        public SkillSelectControl SkillSelectControl { get; private set; }
+        public Control SkillSelectControl
+        {
+            get { return skillSelectControl; }
+        }
 
         #endregion
 
@@ -1711,7 +1714,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // We update the skill tree
-            SkillSelectControl.UpdateContent();
+            skillSelectControl.UpdateContent();
 
             // Update also the skill browser
             PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);

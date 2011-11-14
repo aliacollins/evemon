@@ -132,7 +132,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.charactersListLabel.Size = new System.Drawing.Size(806, 363);
             this.charactersListLabel.TabIndex = 10;
             this.charactersListLabel.Text = "First add your API key at API Keys section, characters will then appear in this l" +
-                "ist.\r\nYou can also import XML character sheets from files or URLs.";
+    "ist.\r\nYou can also import XML character sheets from files or URLs.";
             this.charactersListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // closeButton
@@ -149,9 +149,9 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.charactersTabPage);
             this.tabControl.Controls.Add(this.apiKeysTabPage);
             this.tabControl.Location = new System.Drawing.Point(12, 12);

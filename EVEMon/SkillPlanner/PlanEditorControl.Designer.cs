@@ -90,7 +90,7 @@ namespace EVEMon.SkillPlanner
             this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoSizeColumnsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SkillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
+            this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.cmsContextMenu.SuspendLayout();
             this.tsPlan.SuspendLayout();
             this.pFooter.SuspendLayout();
@@ -580,7 +580,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pscPlan.Panel2
             // 
-            this.pscPlan.Panel2.Controls.Add(this.SkillSelectControl);
+            this.pscPlan.Panel2.Controls.Add(this.skillSelectControl);
             this.pscPlan.Panel2Collapsed = true;
             this.pscPlan.RememberDistanceKey = null;
             this.pscPlan.Size = new System.Drawing.Size(719, 520);
@@ -706,15 +706,15 @@ namespace EVEMon.SkillPlanner
             // 
             // skillSelectControl
             // 
-            this.SkillSelectControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.SkillSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillSelectControl.Location = new System.Drawing.Point(0, 0);
-            this.SkillSelectControl.Margin = new System.Windows.Forms.Padding(2);
-            this.SkillSelectControl.Name = "SkillSelectControl";
-            this.SkillSelectControl.Plan = null;
-            this.SkillSelectControl.SelectedSkill = null;
-            this.SkillSelectControl.Size = new System.Drawing.Size(96, 100);
-            this.SkillSelectControl.TabIndex = 12;
+            this.skillSelectControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.skillSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
+            this.skillSelectControl.Margin = new System.Windows.Forms.Padding(2);
+            this.skillSelectControl.Name = "SkillSelectControl";
+            this.skillSelectControl.Plan = null;
+            this.skillSelectControl.SelectedSkill = null;
+            this.skillSelectControl.Size = new System.Drawing.Size(96, 100);
+            this.skillSelectControl.TabIndex = 12;
             // 
             // PlanEditorControl
             // 
@@ -808,5 +808,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem columnSettingsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoSizeColumnsMenuItem;
         private System.Windows.Forms.TableLayoutPanel tlpHeader;
+        private SkillSelectControl skillSelectControl;
     }
 }
