@@ -100,8 +100,6 @@ namespace EVEMon.SkillPlanner
             Disposed -= OnDisposed;
         }
 
-
-
         /// <summary>
         /// On load, updates the controls.
         /// </summary>
@@ -145,7 +143,7 @@ namespace EVEMon.SkillPlanner
                 m_lastImplantSetIndex = -1;
 
                 // Children controls
-                skillSelectControl.Plan = m_plan;
+                SkillSelectControl.Plan = m_plan;
 
                 // Build the plan
                 UpdateDisplayPlan();
@@ -208,6 +206,12 @@ namespace EVEMon.SkillPlanner
         {
             get { return SelectedEntries.GetNotKnownSkillBooksCost(); }
         }
+
+        /// <summary>
+        /// Gets the skill select control.
+        /// </summary>
+        /// <value>The skill select control.</value>
+        public SkillSelectControl SkillSelectControl { get; private set; }
 
         #endregion
 
@@ -1707,7 +1711,11 @@ namespace EVEMon.SkillPlanner
             }
 
             // We update the skill tree
-            skillSelectControl.UpdateContent();
+            SkillSelectControl.UpdateContent();
+
+            // Update also the skill browser
+            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            pw.UpdateSkillBrowser();
         }
 
         /// <summary>

@@ -152,6 +152,11 @@ namespace EVEMon.SkillPlanner
             base.OnFormClosing(e);
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets the current character.
         /// </summary>
@@ -366,6 +371,22 @@ namespace EVEMon.SkillPlanner
                     m_plan.AcknoledgeInvalidEntries();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Updates the plan editor's skill selection control.
+        /// </summary>
+        internal void UpdatePlanEditorSkillSelection()
+        {
+            planEditor.SkillSelectControl.UpdateContent();
+        }
+
+        /// <summary>
+        /// Updates the skill browser.
+        /// </summary>
+        internal void UpdateSkillBrowser()
+        {
+            skillBrowser.UpdateContent();
         }
 
         #endregion
