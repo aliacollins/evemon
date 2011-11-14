@@ -12,7 +12,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Serialization.BattleClinic;
 
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     public partial class PatchXmlCreatorWindow : EVEMonForm
     {

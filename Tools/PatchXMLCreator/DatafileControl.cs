@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     public partial class DatafileControl : UserControl
     {

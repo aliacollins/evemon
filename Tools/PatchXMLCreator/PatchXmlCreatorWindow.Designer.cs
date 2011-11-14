@@ -1,4 +1,4 @@
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     partial class PatchXmlCreatorWindow
     {
@@ -58,7 +58,7 @@ namespace PatchXmlCreator
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
-            this.datafileControl = new PatchXmlCreator.DatafileControl();
+            this.datafileControl = new DatafileControl();
             this.gbRelease.SuspendLayout();
             this.gbDatafiles.SuspendLayout();
             this.pnlButtons.SuspendLayout();

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     internal static class Program
     {
