@@ -24,7 +24,8 @@ namespace PatchXmlCreator
             if (s_exitRequested)
                 return;
 
-            Application.Run(new PatchXmlCreatorWindow());
+            bool newRelease = SelectAction();
+            Application.Run(new PatchXmlCreatorWindow(newRelease));
         }
 
         /// <summary>
@@ -67,6 +68,18 @@ namespace PatchXmlCreator
         {
             MessageBox.Show(text, PatchXmlCreatorWindow.Caption, MessageBoxButtons.OK, MessageBoxIcon.Stop);
             s_exitRequested = true;
+        }
+
+        /// <summary>
+        /// Selects the action.
+        /// </summary>
+        /// <returns></returns>
+        private static bool SelectAction()
+        {
+            DialogResult dialogResult = MessageBox.Show(
+                "Create patch file for a new EVEMon release ?\r\n\r\nSelect 'No' if you are creating a patch file for new data files.",
+                PatchXmlCreatorWindow.Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            return dialogResult == DialogResult.Yes;
         }
     }
 }
