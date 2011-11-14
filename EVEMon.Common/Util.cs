@@ -463,7 +463,7 @@ namespace EVEMon.Common
                                     result = (T)xs.Deserialize(reader);
                                 }
                             }
-                            // An error occurred during the deserialization
+                                // An error occurred during the deserialization
                             catch (InvalidOperationException exc)
                             {
                                 ExceptionHandler.LogException(exc, true);
