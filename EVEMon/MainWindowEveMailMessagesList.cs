@@ -461,8 +461,8 @@ namespace EVEMon
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (ilIcons.ImageSize.Width > 0)
-                    columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+                if (column.ImageIndex > -1)
+                    columnHeaderWidth += lvMailMessages.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
                 int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
