@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -76,6 +77,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan this control is bound to.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -91,6 +93,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the selected skills.
         /// </summary>
+        [Browsable(false)]
         public Skill SelectedSkill
         {
             get { return m_selectedSkill; }

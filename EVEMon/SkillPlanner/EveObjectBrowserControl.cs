@@ -103,6 +103,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the current plan for this planner window.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }

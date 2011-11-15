@@ -134,6 +134,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the plan represented by this editor.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -165,11 +166,13 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the version of the plan as it is currently displayed.
         /// </summary>
+        [Browsable(false)]
         public PlanScratchpad DisplayPlan { get; private set; }
 
         /// <summary>
         /// Gets the character this control is bound to.
         /// </summary>
+        [Browsable(false)]
         public Character Character
         {
             get { return (Character)m_plan.Character; }
@@ -178,6 +181,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the number of unique skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
+        [Browsable(false)]
         public int UniqueSkillsCount
         {
             get { return SelectedEntries.GetUniqueSkillsCount(); }
@@ -186,6 +190,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
+        [Browsable(false)]
         public int NotKnownSkillsCount
         {
             get { return SelectedEntries.GetNotKnownSkillsCount(); }
@@ -194,6 +199,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the cost of known skills selected.
         /// </summary>
+        [Browsable(false)]
         public long SkillBooksCost
         {
             get { return SelectedEntries.GetTotalBooksCost(); }
@@ -202,6 +208,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the cost of not known skills selected.
         /// </summary>
+        [Browsable(false)]
         public long NotKnownSkillBooksCost
         {
             get { return SelectedEntries.GetNotKnownSkillBooksCost(); }
@@ -211,6 +218,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the skill select control.
         /// </summary>
         /// <value>The skill select control.</value>
+        [Browsable(false)]
         public Control SkillSelectControl
         {
             get { return skillSelectControl; }
