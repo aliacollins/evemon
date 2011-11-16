@@ -136,7 +136,7 @@ namespace EVEMon.SkillPlanner
             this.planToMenu.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(194, 22);
-            this.planToMenu.Text = "&Plan to";
+            this.planToMenu.Text = "&Plan to...";
             // 
             // level0ToolStripMenuItem
             // 
@@ -189,7 +189,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
             this.showInSkillBrowserMenu.Size = new System.Drawing.Size(194, 22);
-            this.showInSkillBrowserMenu.Text = "Show in Skill &Browser...";
+            this.showInSkillBrowserMenu.Text = "Show in Skill &Browser";
             this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
             // 
             // showInSkillExplorerMenu

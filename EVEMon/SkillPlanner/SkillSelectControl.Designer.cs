@@ -227,7 +227,7 @@ namespace EVEMon.SkillPlanner
             this.showInSkillExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showInSkillExplorerMenu.Image")));
             this.showInSkillExplorerMenu.Name = "showInSkillExplorerMenu";
             this.showInSkillExplorerMenu.Size = new System.Drawing.Size(185, 22);
-            this.showInSkillExplorerMenu.Text = "Show in Skill &Explorer";
+            this.showInSkillExplorerMenu.Text = "Show in Skill &Explorer...";
             this.showInSkillExplorerMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
             // 
             // cmiExpandSelected

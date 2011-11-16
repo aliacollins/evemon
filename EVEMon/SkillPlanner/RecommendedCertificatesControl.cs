@@ -505,10 +505,10 @@ namespace EVEMon.SkillPlanner
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", cert);
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "&Plan \"{0}\"", cert);
 
                     // Update "show in..." menu
-                    showInBrowserMenu.Text = "Show in Certificates";
+                    showInBrowserMenu.Text = "Show in &Certificates";
 
                     // Update "show in skill explorer"
                     showInExplorerMenu.Visible = false;
@@ -525,7 +525,7 @@ namespace EVEMon.SkillPlanner
 
                     // Update "show in..." menu
                     showInBrowserMenu.Enabled = true;
-                    showInBrowserMenu.Text = "Show in Skill &Browser...";
+                    showInBrowserMenu.Text = "Show in Skill &Browser";
 
                     // Update "show in skill explorer"
                     showInExplorerMenu.Visible = true;
