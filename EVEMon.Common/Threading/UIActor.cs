@@ -95,7 +95,7 @@ namespace EVEMon.Common.Threading
         /// <summary>
         /// Asserts the calling thread is this actor's underlying thread or throws an exception.
         /// </summary>
-        /// <exception cref="AccessViolationException">The calling thread is different from the underlying thread</exception>
+        /// <exception cref="ThreadStateException">The calling thread is different from the underlying thread</exception>
         public void AssertAccess()
         {
             try
@@ -116,7 +116,7 @@ namespace EVEMon.Common.Threading
                 return;
             }
 
-            throw new AccessViolationException("The calling thread is different from the underlying thread");
+            throw new ThreadStateException("The calling thread is different from the underlying thread");
         }
 
         /// <summary>
