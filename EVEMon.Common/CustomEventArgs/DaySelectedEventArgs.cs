@@ -11,12 +11,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="datetime">The datetime.</param>
         /// <param name="mouse">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        /// <param name="loc">The loc.</param>
-        public DaySelectedEventArgs(DateTime datetime, MouseEventArgs mouse, Point loc)
+        /// <param name="location">The location.</param>
+        public DaySelectedEventArgs(DateTime datetime, MouseEventArgs mouse, Point location)
         {
             DateTime = datetime;
             Mouse = mouse;
-            Location = loc;
+            Location = location;
         }
 
         /// <summary>
