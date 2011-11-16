@@ -1,6 +1,7 @@
 using System;
+using EVEMon.Common.Controls;
 
-namespace EVEMon.Common.Controls
+namespace EVEMon.Common.CustomEventArgs
 {
     /// <summary>
     /// Provides event arguments for API Error troubleshooters to notify their parents.

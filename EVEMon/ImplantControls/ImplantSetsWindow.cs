@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Settings;
 
@@ -510,18 +511,16 @@ namespace EVEMon.ImplantControls
         /// <summary>
         /// When the mouse moves over one of the items of the combobox dropdown, we display a tooltip on the right of the dropdown.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="item"></param>
-        /// <param name="point"></param>
-        private void combo_DropDownMouseMove(object sender, object item, Point point)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DropDownMouseMoveEventArgs"/> instance containing the event data.</param>
+        private void combo_DropDownMouseMove(object sender, DropDownMouseMoveEventArgs e)
         {
-            Implant implant = item as Implant;
+            Implant implant = e.Item as Implant;
             if (implant == null)
                 return;
 
             Control control = (Control)sender;
-            point.X = control.ClientRectangle.Right + 20;
-            point.Y = control.ClientRectangle.Top;
+            Point point = new Point(control.ClientRectangle.Right + 20, control.ClientRectangle.Top);
 
             m_fakeToolTip.Location = control.PointToScreen(point);
             m_fakeToolTip.Implant = implant;

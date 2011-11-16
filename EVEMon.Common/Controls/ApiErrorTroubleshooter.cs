@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Common.Controls
 {
