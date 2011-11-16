@@ -119,6 +119,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {

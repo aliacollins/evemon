@@ -265,6 +265,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnMouseMove(e);
 
             if (!Enabled)
@@ -333,6 +336,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnPaint(e);
 
             using (Graphics g = e.Graphics)

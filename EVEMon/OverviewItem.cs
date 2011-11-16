@@ -103,8 +103,11 @@ namespace EVEMon
         /// <param name="character"></param>
         /// <param name="settings"></param>
         public OverviewItem(Character character, TrayPopupSettings settings)
-            : this(character, settings.PortraitSize)
+            : this(character, settings != null ? settings.PortraitSize : PortraitSizes.x16)
         {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
             m_showConflicts = settings.HighlightConflicts;
             m_showCompletionTime = settings.ShowCompletionTime;
             m_showRemainingTime = settings.ShowRemainingTime;
@@ -131,8 +134,11 @@ namespace EVEMon
         /// <param name="character"></param>
         /// <param name="settings"></param>
         public OverviewItem(Character character, MainWindowSettings settings)
-            : this(character, settings.OverviewItemSize)
+            : this(character, settings != null ? settings.OverviewItemSize : PortraitSizes.x16 )
         {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
             m_showWalletBalance = settings.ShowOverviewWallet;
             m_showPortrait = settings.ShowOverviewPortrait;
             m_showSkillQueueTrainingTime = settings.ShowOverviewSkillQueueTrainingTime;
@@ -480,6 +486,9 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             if (!m_hovered)
                 return;
 

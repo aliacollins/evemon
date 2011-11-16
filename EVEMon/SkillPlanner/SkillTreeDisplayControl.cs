@@ -200,6 +200,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Graphics g = e.Graphics;
 
             // Draws the background (solid or gradient, depending on safe mode or not)
@@ -470,6 +473,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnMouseClick(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnMouseClick(e);
 
             // Computes the offsets caused by scrollers

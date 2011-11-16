@@ -93,6 +93,9 @@ namespace EVEMon.Schedule
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             using (Brush b = new LinearGradientBrush(ClientRectangle, Color.LightBlue, Color.DarkBlue, 90.0F))
             {
                 e.Graphics.FillRectangle(b, e.ClipRectangle);

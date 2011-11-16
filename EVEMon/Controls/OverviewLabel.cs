@@ -41,6 +41,9 @@ namespace EVEMon.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             using (StringFormat format = new StringFormat())
             {
                 if (AutoEllipsis)

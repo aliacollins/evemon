@@ -92,6 +92,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnMouseDown(e);
 
             if (e.Button == MouseButtons.Left)
@@ -106,6 +109,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnMouseUp(e);
 
             if (e.Button == MouseButtons.Left)
@@ -165,6 +171,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnPaint(e);
 
             using (Graphics g = e.Graphics)

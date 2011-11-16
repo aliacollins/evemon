@@ -69,6 +69,9 @@ namespace EVEMon.ImplantControls
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             // Background
             using (SolidBrush brush = new SolidBrush(BackColor))
             {
