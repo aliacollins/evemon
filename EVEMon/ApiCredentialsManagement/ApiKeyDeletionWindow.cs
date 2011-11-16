@@ -30,19 +30,30 @@ namespace EVEMon.ApiCredentialsManagement
                 throw new ArgumentNullException("apiKey", "API key can't be null");
 
             m_apiKey = apiKey;
-            deletionLabel.Text = String.Format(CultureConstants.DefaultCulture, deletionLabel.Text, apiKey.ID);
+        }
+
+        /// <summary>
+        /// Occurs when the control loads.
+        /// </summary>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode)
+                return;
 
             charactersListView.ItemCheck += charactersListView_ItemCheck;
+            deletionLabel.Text = String.Format(CultureConstants.DefaultCulture, deletionLabel.Text, m_apiKey.ID);
 
             // Add characters
             charactersListView.Items.Clear();
 
-            foreach (ListViewItem item in apiKey.CharacterIdentities.Select(
+            foreach (ListViewItem item in m_apiKey.CharacterIdentities.Select(
                 id => new ListViewItem(id.CharacterName)
                           {
                               Tag = id.CCPCharacter,
                               Checked = id.CCPCharacter != null &&
-                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != apiKey),
+                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != m_apiKey),
                           }))
             {
                 // Gray out a character with another associated API key
@@ -76,7 +87,7 @@ namespace EVEMon.ApiCredentialsManagement
         private void charactersListView_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             CCPCharacter ccpCharacter = charactersListView.Items[e.Index].Tag as CCPCharacter;
-            if(ccpCharacter == null)
+            if (ccpCharacter == null)
                 e.NewValue = CheckState.Checked;
 
             if (ccpCharacter != null && ccpCharacter.Identity.APIKeys.Any(key => key != m_apiKey))
@@ -96,8 +107,8 @@ namespace EVEMon.ApiCredentialsManagement
             // Remove the characters from the collection
             foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
                 item => item.Checked).Select(item => item.Tag as CCPCharacter).Where(
-                ccpCharacter => ccpCharacter != null).Where(
-                    ccpCharacter => ccpCharacter.Identity.APIKeys.IsEmpty()))
+                    ccpCharacter => ccpCharacter != null).Where(
+                        ccpCharacter => ccpCharacter.Identity.APIKeys.IsEmpty()))
             {
                 EveMonClient.Characters.Remove(ccpCharacter);
             }

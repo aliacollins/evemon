@@ -14,6 +14,7 @@ namespace EVEMon.ApiCredentialsManagement
         // When multiple downloads are fired, we only want to react to the latest one, this is done through versioning.
         private int m_version;
         private UriCharacterEventArgs m_args;
+        private UriCharacter m_uriCharacter;
 
         /// <summary>
         /// Constructor for a new character creation.
@@ -29,26 +30,11 @@ namespace EVEMon.ApiCredentialsManagement
         /// <summary>
         /// Constructor to update a character.
         /// </summary>
-        public CharacterImportationWindow(UriCharacter character)
+        public CharacterImportationWindow(UriCharacter uriCharacter)
             : this()
         {
-            Character = character;
-            if (Character.Uri.IsFile)
-            {
-                fileTextBox.Text = Character.Uri.ToString();
-                fileRadio.Checked = true;
-            }
-            else
-            {
-                urlTextBox.Text = Character.Uri.ToString();
-                urlRadio.Checked = true;
-            }
+            m_uriCharacter = uriCharacter;
         }
-
-        /// <summary>
-        /// Gets the generated character after the form closing, or null if the operation was cancel or couldn't success.
-        /// </summary>
-        public UriCharacter Character { get; private set; }
 
         /// <summary>
         /// On load, subscribe events.
@@ -57,7 +43,22 @@ namespace EVEMon.ApiCredentialsManagement
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             urlTextBox.TextChanged += urlTextBox_TextChanged;
+
+            if (m_uriCharacter == null)
+                return;
+
+            if (m_uriCharacter.Uri.IsFile)
+            {
+                fileTextBox.Text = m_uriCharacter.Uri.ToString();
+                fileRadio.Checked = true;
+            }
+            else
+            {
+                urlTextBox.Text = m_uriCharacter.Uri.ToString();
+                urlRadio.Checked = true;
+            }
         }
 
         /// <summary>
@@ -175,12 +176,12 @@ namespace EVEMon.ApiCredentialsManagement
             }
 
             // Generates or updates the character
-            if (Character == null)
-                Character = m_args.CreateCharacter();
+            if (m_uriCharacter == null)
+                m_uriCharacter = m_args.CreateCharacter();
             else
-                m_args.UpdateCharacter(Character);
+                m_args.UpdateCharacter(m_uriCharacter);
 
-            Character.Name = nameTextBox.Text;
+            m_uriCharacter.Name = nameTextBox.Text;
 
             DialogResult = DialogResult.OK;
         }
