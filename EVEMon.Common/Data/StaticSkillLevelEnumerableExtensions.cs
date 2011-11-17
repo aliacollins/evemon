@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<SkillLevel> ToCharacter(this IEnumerable<StaticSkillLevel> src, Character character)
         {
-            return src.Select(item => new SkillLevel(character.Skills[item.Skill], item.Level));
+            return src.Select(item => new SkillLevel(character.Skills[item.Skill.ID], item.Level));
         }
 
         /// <summary>

@@ -303,7 +303,7 @@ namespace EVEMon.Common
             foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
             {
                 Enum method = APIMethods.Methods.First(x => x.ToString() == lastUpdate.Method);
-                IQueryMonitorEx monitor = QueryMonitors[method] as IQueryMonitorEx;
+                IQueryMonitorEx monitor = QueryMonitors[method.ToString()] as IQueryMonitorEx;
                 if (monitor != null)
                     monitor.Reset(lastUpdate.Time);
             }
@@ -343,7 +343,7 @@ namespace EVEMon.Common
         /// <param name="queryMonitor">The query monitor.</param>
         public void ForceUpdate(IQueryMonitor queryMonitor)
         {
-            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method] as IQueryMonitorEx;
+            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method.ToString()] as IQueryMonitorEx;
             if (monitor != null)
                 monitor.ForceUpdate(false);
         }

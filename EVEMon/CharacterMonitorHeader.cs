@@ -170,7 +170,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()];
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 BalanceLabel.ForeColor = Color.Orange;
@@ -341,10 +341,10 @@ namespace EVEMon
                 monitor => monitor.HasAccess).Where(
                     monitor =>
                     !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders] == null).Where(
+                    ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
                         monitor =>
                         !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs] == null))
+                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -693,10 +693,10 @@ namespace EVEMon
             foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
                 monitor =>
                 !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
-                ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders] == null).Where(
+                ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
                     monitor =>
                     !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs] == null).Select(
+                    ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null).Select(
                         CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menu);

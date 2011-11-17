@@ -61,15 +61,15 @@ namespace EVEMon.Common
             get { return GetByKey(id); }
         }
 
-        /// <summary>
-        /// Gets the skill representing the given static skill.
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <returns></returns>
-        public Skill this[StaticSkill skill]
-        {
-            get { return GetByArrayIndex(skill.ArrayIndex); }
-        }
+        ///// <summary>
+        ///// Gets the skill representing the given static skill.
+        ///// </summary>
+        ///// <param name="skill"></param>
+        ///// <returns></returns>
+        //public Skill this[StaticSkill skill]
+        //{
+        //    get { return GetByArrayIndex(skill.ArrayIndex); }
+        //}
 
         /// <summary>
         /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>).

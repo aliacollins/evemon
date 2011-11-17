@@ -173,7 +173,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                EvePropertyValue? property = Properties[StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID)];
+                EvePropertyValue? property = Properties[DBConstants.ReprocessingSkillPropertyID];
 
                 // Returns scrap metal processing by default
                 if (property == null)

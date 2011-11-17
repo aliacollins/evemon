@@ -331,7 +331,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Are all the prerequisites planned ?
-            if (m_plan.AreSkillsPlanned(m_prerequisites.Where(x => m_character.Skills[x.Skill].Level < x.Level)))
+            if (m_plan.AreSkillsPlanned(m_prerequisites.Where(x => m_character.Skills[x.Skill.ID].Level < x.Level)))
             {
                 btnPlan.Enabled = false;
                 lblPlanned.Visible = true;

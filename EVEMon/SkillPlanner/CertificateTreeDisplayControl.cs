@@ -421,7 +421,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 SkillLevel skillPrereq = (SkillLevel)node.Tag;
-                Skill skill = m_character.Skills[skillPrereq.Skill];
+                Skill skill = m_character.Skills[skillPrereq.Skill.ID];
 
                 if (skillPrereq.IsTrained)
                     node.ImageIndex = GrantedIcon;

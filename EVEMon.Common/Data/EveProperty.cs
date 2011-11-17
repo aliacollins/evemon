@@ -119,7 +119,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public string GetLabelOrDefault(Item obj)
         {
-            EvePropertyValue? value = obj.Properties[this];
+            EvePropertyValue? value = obj.Properties[ID];
             if (value == null)
                 return Format(DefaultValue);
 
@@ -230,7 +230,7 @@ namespace EVEMon.Common.Data
         public float GetNumericValue(Item obj)
         {
             // Retrieve the string for the number
-            EvePropertyValue? value = obj.Properties[this];
+            EvePropertyValue? value = obj.Properties[ID];
             string number = (value == null ? DefaultValue : value.Value.Value);
 
             // Try to parse it as a float

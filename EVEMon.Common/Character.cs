@@ -322,7 +322,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillLevel(StaticSkill skill)
         {
-            return Skills[skill].Level;
+            return Skills[skill.ID].Level;
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillPoints(StaticSkill skill)
         {
-            return Skills[skill].SkillPoints;
+            return Skills[skill.ID].SkillPoints;
         }
 
         #endregion

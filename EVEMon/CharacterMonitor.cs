@@ -786,8 +786,8 @@ namespace EVEMon
             if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
             {
                 APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
-                if (((CCPCharacter)Character).QueryMonitors[method] != null)
-                    monitors.Add(((CCPCharacter)Character).QueryMonitors[method]);
+                if (((CCPCharacter)Character).QueryMonitors[method.ToString()] != null)
+                    monitors.Add(((CCPCharacter)Character).QueryMonitors[method.ToString()]);
             }
 
             if (Enum.IsDefined(typeof(APICorporationMethods), String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
@@ -795,8 +795,8 @@ namespace EVEMon
                 APICorporationMethods method =
                     (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
                                                       String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag));
-                if (((CCPCharacter)Character).QueryMonitors[method] != null)
-                    monitors.Add(((CCPCharacter)Character).QueryMonitors[method]);
+                if (((CCPCharacter)Character).QueryMonitors[method.ToString()] != null)
+                    monitors.Add(((CCPCharacter)Character).QueryMonitors[method.ToString()]);
             }
 
             return monitors;

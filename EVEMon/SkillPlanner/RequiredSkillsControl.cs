@@ -174,7 +174,7 @@ namespace EVEMon.SkillPlanner
         private TreeNode GetSkillNode(StaticSkillLevel prereq, ref bool allSkillsKnown, ref bool skillsUnplanned)
         {
             Character character = (Character)m_plan.Character;
-            Skill skill = character.Skills[prereq.Skill];
+            Skill skill = character.Skills[prereq.Skill.ID];
 
             TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 

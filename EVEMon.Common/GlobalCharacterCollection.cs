@@ -26,9 +26,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public Character this[Guid guid]
+        public Character this[string guid]
         {
-            get { return Items.FirstOrDefault(character => character.Guid == guid); }
+            get { return Items.FirstOrDefault(character => character.Guid.ToString() == guid); }
         }
 
         /// <summary>

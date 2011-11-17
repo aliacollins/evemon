@@ -289,7 +289,7 @@ namespace EVEMon.SkillPlanner
 
                     // Or we check whether any object has this property
                     if (!visibleProperty)
-                        visibleProperty = SelectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
+                        visibleProperty = SelectControl.SelectedObjects.Any(x => x.Properties[prop.ID].HasValue);
 
                     // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
                     if (prop.HideIfDefault)
@@ -297,7 +297,7 @@ namespace EVEMon.SkillPlanner
                         visibleProperty = SelectControl.SelectedObjects
                             .Any(x =>
                                      {
-                                         EvePropertyValue? eveProperty = x.Properties[prop];
+                                         EvePropertyValue? eveProperty = x.Properties[prop.ID];
                                          return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
                                      });
                     }

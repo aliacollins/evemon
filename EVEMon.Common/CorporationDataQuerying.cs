@@ -64,7 +64,7 @@ namespace EVEMon.Common
                 // or corporation market orders monitor is not enabled
                 // we switch the flag
                 IQueryMonitor corpMarketOrdersMonitor =
-                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders];
+                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders.ToString()];
                 return m_corpMarketOrdersQueried |= corpMarketOrdersMonitor == null || !corpMarketOrdersMonitor.Enabled;
             }
             set { m_corpMarketOrdersQueried = value; }
@@ -84,7 +84,7 @@ namespace EVEMon.Common
                 // or corporation industry jobs monitor is not enabled
                 // we switch the flag
                 IQueryMonitor corpIndustryJobsMonitor =
-                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
+                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs.ToString()];
                 return m_corpIndustryJobsQueried |= corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled;
             }
             set { m_corpIndustryJobsQueried = value; }

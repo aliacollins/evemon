@@ -216,7 +216,7 @@ namespace EVEMon.SkillPlanner
         private TreeNode GetSkillNode(StaticSkillLevel prereq)
         {
             Character character = (Character)m_plan.Character;
-            Skill skill = character.Skills[prereq.Skill];
+            Skill skill = character.Skills[prereq.Skill.ID];
 
             TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 
@@ -265,7 +265,7 @@ namespace EVEMon.SkillPlanner
             {
                 SkillLevel skillPrereq = (SkillLevel)node.Tag;
                 Character character = (Character)m_plan.Character;
-                Skill skill = character.Skills[skillPrereq.Skill];
+                Skill skill = character.Skills[skillPrereq.Skill.ID];
 
                 // Skill requirement met
                 if (skillPrereq.IsTrained)

@@ -90,9 +90,10 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (MonitoredCharacterSettings characterSettings in monitoredCharacters)
             {
-                Character character = EveMonClient.Characters[characterSettings.CharacterGuid];
+                Character character = EveMonClient.Characters[characterSettings.CharacterGuid.ToString()];
                 if (character == null)
                     continue;
+
                 Items.Add(character);
                 character.Monitored = true;
                 character.UISettings = characterSettings.Settings;

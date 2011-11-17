@@ -13,7 +13,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<Skill> ToCharacter(this IEnumerable<StaticSkill> src, Character character)
         {
-            return src.Select(skill => character.Skills[skill]);
+            return src.Select(skill => character.Skills[skill.ID]);
         }
 
         /// <summary>

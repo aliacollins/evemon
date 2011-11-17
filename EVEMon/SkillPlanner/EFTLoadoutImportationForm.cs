@@ -401,7 +401,7 @@ namespace EVEMon.SkillPlanner
             Character character = (Character)m_character;
             foreach (Item obj in m_objects)
             {
-                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill].Level < x.Level));
+                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill.ID].Level < x.Level));
             }
             m_skillsToAdd.AddRange(scratchpad.TrainedSkills);
 
