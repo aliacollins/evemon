@@ -63,7 +63,7 @@ namespace EVEMon.Common.Controls
 
         // All definitions taken from http://pinvoke.net
         [DllImport("shell32.dll")]
-        public static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
+        internal static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -71,7 +71,7 @@ namespace EVEMon.Common.Controls
         public const string TaskbarClass = "Shell_TrayWnd";
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct AppBarData
+        internal struct AppBarData
         {
             private int cbSize;
             private readonly IntPtr hWnd;
@@ -106,7 +106,7 @@ namespace EVEMon.Common.Controls
         public const int ABE_BOTTOM = 3;
 
         [Serializable, StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        internal struct RECT
         {
             private RECT(int left, int top, int right, int bottom)
                 : this()
