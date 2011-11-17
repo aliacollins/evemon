@@ -476,11 +476,21 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
+        /// Occurs on a mouse click.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        public void OnMouseClick(object sender, MouseEventArgs e)
+        {
+            expandablePanelControl_MouseClick(sender, e);
+        }
+
+        /// <summary>
         /// Occurs on a mouse click in the main Panel.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void expandablePanelControl_MouseClick(object sender, MouseEventArgs e)
+        private void expandablePanelControl_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {

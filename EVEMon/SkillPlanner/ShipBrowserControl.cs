@@ -50,11 +50,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Occurs when the settings changed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        protected override void OnSettingsChanged()
         {
-            base.EveMonClient_SettingsChanged(sender, e);
+            base.OnSettingsChanged();
             UpdateControlVisibility();
         }
 
@@ -64,6 +62,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            // Return on design mode
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             base.OnLoad(e);
 
             UpdateControlVisibility();
@@ -72,11 +74,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void OnSelectionChanged(object sender, EventArgs e)
+        protected override void OnSelectionChanged()
         {
-            base.OnSelectionChanged(sender, e);
+            base.OnSelectionChanged();
             if (SelectedObject == null)
                 return;
 

@@ -51,12 +51,13 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Occurs when the control is loaded.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveObjectBrowserControl_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            base.OnLoad(e);
 
             ListViewHelper.EnableDoubleBuffer(PropertiesList);
 
@@ -78,21 +79,6 @@ namespace EVEMon.SkillPlanner
 
             // Force a refresh
             UpdateContent();
-        }
-
-        #endregion
-
-
-        #region Event Handlers
-
-        /// <summary>
-        /// Occurs when the settings changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void EveMonClient_SettingsChanged(object sender, EventArgs e)
-        {
-            UpdateControlsVisibility();
         }
 
         #endregion
@@ -164,11 +150,42 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void OnSelectionChanged(object sender, EventArgs e)
+        protected virtual void OnSelectionChanged()
         {
             UpdateContent();
+        }
+
+        /// <summary>
+        /// Occurs when the settings changed.
+        /// </summary>
+        protected virtual void OnSettingsChanged()
+        {
+            UpdateControlsVisibility();
+        }
+
+        #endregion
+
+        
+        #region Event Handlers
+
+        /// <summary>
+        /// Occurs when the settings changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            OnSettingsChanged();
+        }
+
+        /// <summary>
+        /// Occurs when the selection changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnSelectionChanged(object sender, EventArgs e)
+        {
+            OnSelectionChanged();
         }
 
         #endregion

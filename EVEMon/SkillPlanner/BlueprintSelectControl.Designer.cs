@@ -50,7 +50,6 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.Location = new System.Drawing.Point(45, 148);
             this.tbSearchText.Size = new System.Drawing.Size(179, 20);
             this.tbSearchText.TabIndex = 3;
-            this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
             // 
             // lbNoMatches
             // 

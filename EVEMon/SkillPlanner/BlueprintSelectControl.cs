@@ -22,16 +22,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// On load, we read the settings.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             // Call the base method
-            base.EveObjectSelectControl_Load(sender, e);
+            base.OnLoad(e);
 
             // Initialize the "filter" combo box
             cbUsabilityFilter.Items[0] = "All Blueprints";
@@ -187,14 +186,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the search text changed, we store the next settings and update the list view and the list/tree visibilities.
+        /// When the search text changed, we store the next settings
+        /// and update the list view and the list/tree visibilities.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void tbSearchText_TextChanged(object sender, EventArgs e)
+        protected override void OnSearchTextChanged(string searchText)
         {
-            Settings.UI.BlueprintBrowser.TextSearch = tbSearchText.Text;
-            base.tbSearchText_TextChanged(sender, e);
+            Settings.UI.BlueprintBrowser.TextSearch = searchText;
+            base.OnSearchTextChanged(searchText);
         }
 
         #endregion

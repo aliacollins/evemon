@@ -1230,10 +1230,20 @@ namespace EVEMon
             // Subscribe events
             foreach (Label label in marketExpPanelControl.Controls.OfType<Label>())
             {
-                label.MouseClick += marketExpPanelControl.expandablePanelControl_MouseClick;
+                label.MouseClick += OnExpandablePanelMouseClick;
             }
 
             marketExpPanelControl.ResumeLayout();
+        }
+
+        /// <summary>
+        /// Called when the expandable panel gets mouse clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void OnExpandablePanelMouseClick(object sender, MouseEventArgs e)
+        {
+            marketExpPanelControl.OnMouseClick(sender, e);
         }
 
         #endregion
