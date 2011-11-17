@@ -105,6 +105,9 @@ namespace EVEMon.PieChart
         /// </param>
         public void Draw(Graphics graphics, Pen pen, Brush brush)
         {
+            if (graphics == null)
+                throw new ArgumentNullException("graphics");
+
             graphics.FillPath(brush, m_path);
             graphics.DrawPath(pen, m_path);
         }
@@ -142,6 +145,9 @@ namespace EVEMon.PieChart
         /// </returns>
         public static bool Contains(PointF point, PointF[] cornerPoints)
         {
+            if (cornerPoints == null)
+                throw new ArgumentNullException("cornerPoints");
+
             int intersections = 0;
             for (int i = 1; i < cornerPoints.Length; ++i)
             {
