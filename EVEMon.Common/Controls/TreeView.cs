@@ -153,11 +153,11 @@ namespace EVEMon.Common.Controls
 
         protected void OnSelectionsChanged()
         {
-            if (m_blnSelectionChanged)
-            {
-                if (SelectionsChanged != null)
-                    SelectionsChanged(this, new EventArgs());
-            }
+            if (!m_blnSelectionChanged)
+                return;
+
+            if (SelectionsChanged != null)
+                SelectionsChanged(this, new EventArgs());
         }
 
 
@@ -1558,7 +1558,7 @@ namespace EVEMon.Common.Controls
     /// <summary>
     /// Collection of selected nodes.
     /// </summary>
-    public class NodesCollection : CollectionBase
+    public class NodesCollection : CollectionBase, IList<TreeNode>
     {
         #region Events
 
@@ -1592,7 +1592,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public TreeNode this[int index]
         {
-            get { return ((TreeNode)List[index]); }
+            get { return (TreeNode)List[index]; }
         }
 
         /// <summary>
@@ -1653,6 +1653,69 @@ namespace EVEMon.Common.Controls
             return List.IndexOf(treeNode);
         }
 
+        /// <summary>
+        /// Copies the tree node array to.
+        /// </summary>
+        /// <param name="array">The array.</param>
+        /// <param name="arrayIndex">Index of the array.</param>
+        public void CopyTo(TreeNode[] array, int arrayIndex)
+        {
+            List.CopyTo(array, arrayIndex);
+        }
+
+        #endregion
+
+
+        #region IList<T> members
+
+        void ICollection<TreeNode>.Add(TreeNode treeNode)
+        {
+        }
+
+        bool ICollection<TreeNode>.Contains(TreeNode treeNode)
+        {
+            return true;
+        }
+
+        void ICollection<TreeNode>.CopyTo(TreeNode[] array, int arrayIndex)
+        {
+        }
+
+        bool ICollection<TreeNode>.IsReadOnly
+        {
+            get { return false; }
+        }
+
+        bool ICollection<TreeNode>.Remove(TreeNode treeNode)
+        {
+            if (List.Contains(treeNode))
+            {
+                List.Remove(treeNode);
+                return true;
+            }
+            return false;
+        }
+
+        int IList<TreeNode>.IndexOf(TreeNode treeNode)
+        {
+            return List.IndexOf(treeNode);
+        }
+
+        void IList<TreeNode>.Insert(int index, TreeNode treeNode)
+        {
+        }
+
+        TreeNode IList<TreeNode>.this[int index]
+        {
+            get { return (TreeNode)List[index]; }
+            set { }
+        }
+
+        IEnumerator<TreeNode> IEnumerable<TreeNode>.GetEnumerator()
+        {
+            return new NodesCollectionEnumerator(InnerList.GetEnumerator());
+        }
+
         #endregion
 
 
@@ -1667,6 +1730,45 @@ namespace EVEMon.Common.Controls
                 SelectedNodesCleared(this, EventArgs.Empty);
 
             base.OnClear();
+        }
+
+        #endregion
+
+
+        #region IEnumerator Implementation
+
+        private class NodesCollectionEnumerator : IEnumerator<TreeNode>
+        {
+            private readonly IEnumerator m_enumerator;
+
+            public NodesCollectionEnumerator(IEnumerator enumerator)
+            {
+                m_enumerator = enumerator;
+            }
+
+            public TreeNode Current
+            {
+                get { return (TreeNode)m_enumerator.Current; }
+            }
+
+            object IEnumerator.Current
+            {
+                get { return m_enumerator.Current; }
+            }
+
+            public bool MoveNext()
+            {
+                return m_enumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                m_enumerator.Reset();
+            }
+
+            public void Dispose()
+            {
+            }
         }
 
         #endregion
