@@ -340,7 +340,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void ApiCredentialsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.APICredentials);
+            Util.OpenURL(new Uri(NetworkConstants.APICredentials));
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void ActiveLinksLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.APICredentialsInstallLinks);
+            Util.OpenURL(new Uri(NetworkConstants.APICredentialsInstallLinks));
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void LoginDeniedLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.CCPAccountManage);
+            Util.OpenURL(new Uri(NetworkConstants.CCPAccountManage));
         }
 
         /// <summary>
@@ -370,7 +370,9 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void APIKeyExpiredLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsUpdate, IDTextBox.Text));
+            Util.OpenURL(new Uri(
+                             String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsUpdate,
+                                           IDTextBox.Text)));
         }
 
         /// <summary>

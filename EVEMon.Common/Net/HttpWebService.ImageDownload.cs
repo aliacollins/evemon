@@ -18,7 +18,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public Image DownloadImage(string url)
+        public Image DownloadImage(Uri url)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -44,7 +44,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public void DownloadImageAsync(string url, DownloadImageCompletedCallback callback, object userState)
+        public void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))

@@ -8,6 +8,6 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableUriCharacter : SerializableSettingsCharacter
     {
         [XmlElement("uri")]
-        public string Uri { get; set; }
+        public string Address { get; set; }
     }
 }

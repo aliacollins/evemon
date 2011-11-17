@@ -275,7 +275,7 @@ namespace EVEMon.Sales
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tslCourtesy_Click(object sender, EventArgs e)
         {
-            Util.OpenURL(m_courtesyUrl);
+            Util.OpenURL(new Uri(m_courtesyUrl));
         }
 
         /// <summary>

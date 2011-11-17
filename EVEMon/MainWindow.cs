@@ -1660,7 +1660,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void knownProblemsMenu_Click(object sender, EventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonKnownProblems);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonKnownProblems));
         }
 
         /// <summary>
@@ -1670,7 +1670,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void userVoiceMenuItem_Click(object sender, EventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonUserVoice);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonUserVoice));
         }
 
         /// <summary>
@@ -1680,7 +1680,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void forumsMenu_Click(object sender, EventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonForums);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonForums));
         }
 
         /// <summary>

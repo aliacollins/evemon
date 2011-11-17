@@ -15,7 +15,7 @@ namespace EVEMon.Common.Net
         /// <param name="url"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public FileInfo DownloadFile(string url, string filePath)
+        public FileInfo DownloadFile(Uri url, string filePath)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -51,7 +51,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="progressCallback"></param>
         /// <returns></returns>
-        public object DownloadFileAsync(string url, string filePath, DownloadFileCompletedCallback callback,
+        public object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
                                         DownloadProgressChangedCallback progressCallback)
         {
             string urlValidationError;

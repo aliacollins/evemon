@@ -84,7 +84,7 @@ namespace EVEMon.Common
             SerializableUriCharacter serial = new SerializableUriCharacter();
             Export(serial);
 
-            serial.Uri = m_uri.ToString();
+            serial.Address = m_uri.AbsoluteUri;
             return serial;
         }
 
@@ -96,7 +96,7 @@ namespace EVEMon.Common
         {
             Import((SerializableSettingsCharacter)serial);
 
-            m_uri = new Uri(serial.Uri);
+            m_uri = new Uri(serial.Address);
 
             EveMonClient.OnCharacterUpdated(this);
         }

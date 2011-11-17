@@ -18,7 +18,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public String DownloadString(string url)
+        public String DownloadString(Uri url)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -53,7 +53,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public void DownloadStringAsync(string url, DownloadStringCompletedCallback callback, object userState)
+        public void DownloadStringAsync(Uri url, DownloadStringCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))

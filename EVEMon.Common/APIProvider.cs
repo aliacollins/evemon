@@ -33,7 +33,7 @@ namespace EVEMon.Common
         internal APIProvider()
         {
             m_methods = new List<APIMethod>(APIMethod.CreateDefaultSet());
-            Url = "http://your-custom-API-provider.com";
+            Url = new Uri("http://your-custom-API-provider.com");
             Name = "your provider's name";
         }
 
@@ -48,7 +48,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Returns the server host for this APIConfiguration.
         /// </summary>
-        public string Url { get; set; }
+        public Uri Url { get; set; }
 
         /// <summary>
         /// Returns a list of APIMethods supported by this APIConfiguration.
@@ -90,22 +90,22 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="requestMethod">An APIMethods enumeration member specifying the method for which the URL is required.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        private string GetMethodUrl(Enum requestMethod)
+        private Uri GetMethodUrl(Enum requestMethod)
         {
             // Gets the proper data
-            string url = Url;
+            Uri url = Url;
             string path = GetMethod(requestMethod).Path;
-            if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(url))
+            if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(url.AbsoluteUri))
             {
                 url = s_ccpProvider.Url;
                 path = s_ccpProvider.GetMethod(requestMethod).Path;
             }
 
             // Build the uri
-            Uri baseUri = new Uri(url);
+            Uri baseUri = url;
             UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
-            return uriBuilder.Uri.ToString();
+            return uriBuilder.Uri;
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace EVEMon.Common
                 if (s_ccpProvider != null)
                     return s_ccpProvider;
 
-                s_ccpProvider = new APIProvider { Url = NetworkConstants.APIBase, Name = "CCP" };
+                s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" };
 
                 return s_ccpProvider;
             }
@@ -134,7 +134,7 @@ namespace EVEMon.Common
                 if (s_ccpTestProvider != null)
                     return s_ccpTestProvider;
 
-                s_ccpTestProvider = new APIProvider { Url = NetworkConstants.APITestBase, Name = "CCP Test API" };
+                s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" };
 
                 return s_ccpTestProvider;
             }
@@ -241,7 +241,7 @@ namespace EVEMon.Common
         private APIResult<T> QueryMethod<T>(Enum method, HttpPostData postData, XslCompiledTransform transform)
         {
             // Download
-            string url = GetMethodUrl(method);
+            Uri url = GetMethodUrl(method);
             APIResult<T> result = Util.DownloadAPIResult<T>(url, postData, transform);
 
             // On failure with a custom method, fallback to CCP
@@ -281,7 +281,7 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             // Lazy download
-            string url = GetMethodUrl(method);
+            Uri url = GetMethodUrl(method);
             Util.DownloadAPIResultAsync<T>(
                 url, postData, transform,
                 result =>

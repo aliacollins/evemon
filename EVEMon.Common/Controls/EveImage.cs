@@ -258,7 +258,7 @@ namespace EVEMon.Common.Controls
                 drawOverlayIcon = true;
             }
 
-            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize);
+            Uri imageURL = new Uri(String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize));
 
             ImageService.GetImageAsync(imageURL, true, img =>
                                                            {
@@ -304,7 +304,7 @@ namespace EVEMon.Common.Controls
             // Result should be like :
             // http://eve.no-ip.de/icons/32_32/icon22_08.png
             // http://eve.no-ip.de/icons/32_32/7538.png
-            string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName);
+            Uri imageURL = new Uri(String.Format(NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName));
 
             ImageService.GetImageAsync(imageURL, true, img => GotImage(m_item.ID, img, true));
         }

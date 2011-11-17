@@ -113,7 +113,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void bcAPILinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.BCAPIAccountCredentials);
+            Util.OpenURL(new Uri(NetworkConstants.BCAPIAccountCredentials));
         }
 
         /// <summary>

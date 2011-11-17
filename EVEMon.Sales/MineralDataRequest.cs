@@ -92,7 +92,7 @@ namespace EVEMon.Sales
         /// <returns></returns>
         private static IEnumerable<MineralPrice> GetPrices(IMineralParser parser)
         {
-            string content = EveMonClient.HttpWebService.DownloadString(parser.URL.AbsoluteUri);
+            string content = EveMonClient.HttpWebService.DownloadString(parser.URL);
 
             // Scan for prices
             MatchCollection mc = parser.Tokenizer.Matches(content);

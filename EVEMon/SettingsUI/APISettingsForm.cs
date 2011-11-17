@@ -44,7 +44,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             txtConfigurationName.Text = m_provider.Name;
-            txtAPIHost.Text = m_provider.Url;
+            txtAPIHost.Text = m_provider.Address;
             InitializeDataGrid();
         }
 
@@ -102,7 +102,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             m_provider.Name = txtConfigurationName.Text;
-            m_provider.Url = txtAPIHost.Text;
+            m_provider.Address = txtAPIHost.Text;
 
             foreach (DataGridViewRow row in dgMethods.Rows)
             {

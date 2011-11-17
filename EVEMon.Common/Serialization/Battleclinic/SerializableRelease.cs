@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -15,10 +16,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public string MD5Sum { get; set; }
 
         [XmlElement("url")]
-        public string TopicUrl { get; set; }
+        public Uri TopicUrl { get; set; }
 
         [XmlElement("autopatchurl")]
-        public string Url { get; set; }
+        public Uri Url { get; set; }
 
         [XmlElement("autopatchargs")]
         public string InstallerArgs { get; set; }

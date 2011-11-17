@@ -36,7 +36,7 @@ namespace EVEMon.Common.Net
         /// <param name="status">The status.</param>
         /// <param name="url">The URL.</param>
         /// <param name="message">The message.</param>
-        private HttpWebServiceException(HttpWebServiceExceptionStatus status, string url, string message)
+        private HttpWebServiceException(HttpWebServiceExceptionStatus status, Uri url, string message)
             : base(message)
         {
             Status = status;
@@ -50,7 +50,7 @@ namespace EVEMon.Common.Net
         /// <param name="ex">The ex.</param>
         /// <param name="url">The URL.</param>
         /// <param name="message">The message.</param>
-        private HttpWebServiceException(HttpWebServiceExceptionStatus status, Exception ex, string url, string message)
+        private HttpWebServiceException(HttpWebServiceExceptionStatus status, Exception ex, Uri url, string message)
             : base(message, ex)
         {
             Status = status;
@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
         /// Gets or sets the URL.
         /// </summary>
         /// <value>The URL.</value>
-        public string Url { get; private set; }
+        public Uri Url { get; private set; }
 
         /// <summary>
         /// Gets the name of the host.
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Net
         /// <value>The name of the host.</value>
         public string HostName
         {
-            get { return new Uri(Url).Host; }
+            get { return Url.Host; }
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException Exception(string url, Exception ex)
+        public static HttpWebServiceException Exception(Uri url, Exception ex)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.Exception, ex, url, "An Exception occurred.");
         }
@@ -94,10 +94,10 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
         /// <returns></returns>
-        public static HttpWebServiceException RedirectsExceededException(string url)
+        public static HttpWebServiceException RedirectsExceededException(Uri url)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.RedirectsExceeded, url,
-                                               String.Format(ExceptionMessages.RedirectsExceeded, GetHostName(url)));
+                                               String.Format(ExceptionMessages.RedirectsExceeded, url.Host));
         }
 
         /// <summary>
@@ -105,10 +105,10 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
         /// <returns></returns>
-        public static HttpWebServiceException RequestsDisabledException(string url)
+        public static HttpWebServiceException RequestsDisabledException(Uri url)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.RequestsDisabled, url,
-                                               String.Format(ExceptionMessages.RequestsDisabled, GetHostName(url)));
+                                               String.Format(ExceptionMessages.RequestsDisabled, url.Host));
         }
 
         /// <summary>
@@ -120,11 +120,11 @@ namespace EVEMon.Common.Net
         /// <param name="webServiceState">The EVEMonWebClientState instance of the request</param>
         /// <param name="ex">The WebException that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException WebException(string url, HttpWebServiceState webServiceState, WebException ex)
+        public static HttpWebServiceException WebException(Uri url, HttpWebServiceState webServiceState, WebException ex)
         {
             string proxyHost = webServiceState.Proxy.Enabled
                                    ? webServiceState.Proxy.Host
-                                   : WebRequest.DefaultWebProxy.GetProxy(new Uri(url)).Host;
+                                   : WebRequest.DefaultWebProxy.GetProxy(url).Host;
 
             HttpWebServiceExceptionStatus status;
 
@@ -140,7 +140,7 @@ namespace EVEMon.Common.Net
         /// <param name="proxyHost"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        private static string ParseWebException(WebException ex, string url, string proxyHost,
+        private static string ParseWebException(WebException ex, Uri url, string proxyHost,
                                                 out HttpWebServiceExceptionStatus status)
         {
             StringBuilder messageBuilder = new StringBuilder();
@@ -153,14 +153,12 @@ namespace EVEMon.Common.Net
                         case HttpStatusCode.ProxyAuthenticationRequired:
                             status = HttpWebServiceExceptionStatus.ProxyError;
                             messageBuilder.AppendFormat(
-                                ExceptionMessages.ProxyAuthenticationFailure,
-                                proxyHost, GetHostName(url));
+                                ExceptionMessages.ProxyAuthenticationFailure, proxyHost, url.Host);
                             break;
 
                         default:
                             status = HttpWebServiceExceptionStatus.ServerError;
-                            messageBuilder.AppendFormat(ExceptionMessages.ServerError,
-                                                        GetHostName(url));
+                            messageBuilder.AppendFormat(ExceptionMessages.ServerError, url.Host);
                             messageBuilder.AppendLine(response.StatusDescription);
                             break;
                     }
@@ -172,8 +170,7 @@ namespace EVEMon.Common.Net
                     break;
                 case WebExceptionStatus.RequestProhibitedByProxy:
                     status = HttpWebServiceExceptionStatus.ProxyError;
-                    messageBuilder.AppendFormat(ExceptionMessages.RequestProhibitedByProxy,
-                                                GetHostName(url), proxyHost);
+                    messageBuilder.AppendFormat(ExceptionMessages.RequestProhibitedByProxy, url.Host, proxyHost);
                     break;
                 case WebExceptionStatus.NameResolutionFailure:
                     status = HttpWebServiceExceptionStatus.NameResolutionFailure;
@@ -182,16 +179,15 @@ namespace EVEMon.Common.Net
                     break;
                 case WebExceptionStatus.ConnectFailure:
                     status = HttpWebServiceExceptionStatus.ConnectFailure;
-                    messageBuilder.AppendFormat(ExceptionMessages.ConnectFailure, GetHostName(url));
+                    messageBuilder.AppendFormat(ExceptionMessages.ConnectFailure, url.Host);
                     break;
                 case WebExceptionStatus.Timeout:
                     status = HttpWebServiceExceptionStatus.Timeout;
-                    messageBuilder.AppendFormat(ExceptionMessages.Timeout, GetHostName(url));
+                    messageBuilder.AppendFormat(ExceptionMessages.Timeout, url.Host);
                     break;
                 default:
                     status = HttpWebServiceExceptionStatus.WebException;
-                    messageBuilder.AppendFormat(ExceptionMessages.UnknownWebException,
-                                                GetHostName(url), ex.Status);
+                    messageBuilder.AppendFormat(ExceptionMessages.UnknownWebException, url.Host, ex.Status);
                     break;
             }
 
@@ -204,10 +200,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The XmlException that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException XmlException(string url, Exception ex)
+        public static HttpWebServiceException XmlException(Uri url, Exception ex)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.XmlException, ex, url,
-                                               String.Format(ExceptionMessages.XmlException, GetHostName(url)));
+                                               String.Format(ExceptionMessages.XmlException, url.Host));
         }
 
         /// <summary>
@@ -216,10 +212,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown loading the image</param>
         /// <returns></returns>
-        public static HttpWebServiceException ImageException(string url, Exception ex)
+        public static HttpWebServiceException ImageException(Uri url, Exception ex)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.ImageException, ex, url,
-                                               String.Format(ExceptionMessages.ImageException, GetHostName(url)));
+                                               String.Format(ExceptionMessages.ImageException, url.Host));
         }
 
         /// <summary>
@@ -228,20 +224,10 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown creating the file</param>
         /// <returns></returns>
-        public static HttpWebServiceException FileError(string url, Exception ex)
+        public static HttpWebServiceException FileError(Uri url, Exception ex)
         {
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.FileError, ex, url,
-                                               String.Format(ExceptionMessages.FileException, GetHostName(url)));
-        }
-
-        /// <summary>
-        /// Helper method to return the host name of a url
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        private static string GetHostName(string url)
-        {
-            return new Uri(url).Host;
+                                               String.Format(ExceptionMessages.FileException, url.Host));
         }
     }
 }

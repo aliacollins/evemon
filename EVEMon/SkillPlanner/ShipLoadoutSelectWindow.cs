@@ -95,8 +95,8 @@ namespace EVEMon.SkillPlanner
             eveImage.EveItem = m_ship;
 
             // Download the loadouts feed
-            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
-                                       m_ship.ID);
+            Uri url = new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
+                                       m_ship.ID));
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded);
 
             // Set labels while the user wait
@@ -250,8 +250,8 @@ namespace EVEMon.SkillPlanner
             lblSubmitDate.Text = m_selectedLoadout.SubmissionDate.ToString();
 
             // Download the loadout details
-            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
-                                       m_selectedLoadout.LoadoutID);
+            Uri url = new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
+                                       m_selectedLoadout.LoadoutID));
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded);
         }
 
@@ -494,8 +494,8 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic,
-                                           m_selectedLoadout.Topic));
+                Util.OpenURL(new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic,
+                                           m_selectedLoadout.Topic)));
             }
             else
             {

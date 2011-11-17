@@ -466,8 +466,8 @@ namespace EVEMon.PatchXmlCreator
         {
             serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
             serialRelease.Version = lblEVEMonVersion.Text;
-            serialRelease.TopicUrl = rtbTopicUrl.Text;
-            serialRelease.Url = String.Concat(rtbReleaseUrl.Text, String.Format(InstallerFilename, lblEVEMonVersion.Text));
+            serialRelease.TopicUrl = new Uri(rtbTopicUrl.Text);
+            serialRelease.Url = new Uri(String.Concat(rtbReleaseUrl.Text, String.Format(InstallerFilename, lblEVEMonVersion.Text)));
             serialRelease.MD5Sum = lblMD5Sum.Text;
             serialRelease.InstallerArgs = InstallerArgs;
             serialRelease.AdditionalArgs = AdditionalArgs;
@@ -495,7 +495,7 @@ namespace EVEMon.PatchXmlCreator
                     serialDatafile.Name = dfControl.gbDatafile.Text;
                     serialDatafile.Date = dfControl.dtpDatafiles.Value.ToString(DateTimeFormat, s_enUsCulture);
                     serialDatafile.MD5Sum = dfControl.lblMD5Sum.Text;
-                    serialDatafile.Url = url;
+                    serialDatafile.Url = new Uri(url);
                     serialDatafile.Message = dfControl.rtbDatafileMessage.Text;
                 }
             }
@@ -543,10 +543,10 @@ namespace EVEMon.PatchXmlCreator
                 dtpRelease.Value = date;
 
             lblEVEMonVersion.Text = patch.Release.Version;
-            rtbTopicUrl.Text = patch.Release.TopicUrl;
-            rtbReleaseUrl.Text = patch.Release.Url.Remove(
-                patch.Release.Url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1,
-                patch.Release.Url.Length - (patch.Release.Url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
+            rtbTopicUrl.Text = patch.Release.TopicUrl.AbsoluteUri;
+            rtbReleaseUrl.Text = patch.Release.Url.AbsoluteUri.Remove(
+                patch.Release.Url.AbsoluteUri.LastIndexOf(Path.AltDirectorySeparatorChar) + 1,
+                patch.Release.Url.AbsoluteUri.Length - (patch.Release.Url.AbsoluteUri.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
             lblMD5Sum.Text = patch.Release.MD5Sum;
             rtbReleaseMessage.Text = patch.Release.Message;
         }
@@ -616,7 +616,7 @@ namespace EVEMon.PatchXmlCreator
             if (patch == null)
                 return;
 
-            string url = patch.Datafiles[0].Url;
+            string url = patch.Datafiles[0].Url.AbsoluteUri;
             string revision = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
             string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));

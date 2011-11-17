@@ -113,7 +113,7 @@ namespace EVEMon.Common
             // Providers
             foreach (SerializableAPIProvider sProvider in serial.CustomProviders)
             {
-                APIProvider provider = new APIProvider { Name = sProvider.Name, Url = sProvider.Url };
+                APIProvider provider = new APIProvider { Name = sProvider.Name, Url = new Uri(sProvider.Address) };
 
                 // Providers' methods
                 foreach (SerializableAPIMethod sMethod in sProvider.Methods)
@@ -152,7 +152,8 @@ namespace EVEMon.Common
             // Providers
             foreach (APIProvider provider in CustomProviders)
             {
-                SerializableAPIProvider serialProvider = new SerializableAPIProvider { Name = provider.Name, Url = provider.Url };
+                SerializableAPIProvider serialProvider = new SerializableAPIProvider
+                                                             { Name = provider.Name, Address = provider.Url.AbsoluteUri };
                 serial.CustomProviders.Add(serialProvider);
 
                 // Methods

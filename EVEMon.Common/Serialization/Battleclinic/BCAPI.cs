@@ -118,7 +118,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="requestMethod">A BCAPIMethods enumeration member specfying the method for which the URL is required.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        private static string GetMethodUrl(BCAPIMethods requestMethod)
+        private static Uri GetMethodUrl(BCAPIMethods requestMethod)
         {
             // Gets the proper data
             string url = NetworkConstants.BCAPIBase;
@@ -128,7 +128,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             Uri baseUri = new Uri(url);
             UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
-            return uriBuilder.Uri.ToString();
+            return uriBuilder.Uri;
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="postData">The post data.</param>
         private static XmlDocument QueryMethod(BCAPIMethods method, HttpPostData postData)
         {
-            string url = GetMethodUrl(method);
+            Uri url = GetMethodUrl(method);
             return EveMonClient.HttpWebService.DownloadXml(url, postData);
         }
 
@@ -277,7 +277,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (callback == null)
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
-            string url = GetMethodUrl(method);
+            Uri url = GetMethodUrl(method);
             Util.DownloadBCAPIResultAsync(url, callback, postData);
         }
 

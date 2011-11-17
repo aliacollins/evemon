@@ -11,7 +11,7 @@ namespace EVEMon.Common.Serialization.Settings
         public SerializableAPIProvider()
         {
             Name = "New provider";
-            Url = NetworkConstants.APIBase;
+            Address = NetworkConstants.APIBase;
             Methods = new List<SerializableAPIMethod>();
         }
 
@@ -19,7 +19,7 @@ namespace EVEMon.Common.Serialization.Settings
         public string Name { get; set; }
 
         [XmlElement("url")]
-        public string Url { get; set; }
+        public string Address { get; set; }
 
         [XmlArray("methods")]
         [XmlArrayItem("method")]

@@ -341,7 +341,7 @@ namespace EVEMon.SettingsUI
 
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
             tbGooglePassword.Text = m_settings.Calendar.GooglePassword;
-            tbGoogleURI.Text = m_settings.Calendar.GoogleURL;
+            tbGoogleURI.Text = m_settings.Calendar.GoogleAddress;
             cbGoogleReminder.SelectedIndex = (int)m_settings.Calendar.GoogleReminder;
             cbSetReminder.Checked = m_settings.Calendar.UseReminding;
             tbReminder.Text = m_settings.Calendar.RemindingInterval.ToString(CultureConstants.DefaultCulture);
@@ -504,7 +504,7 @@ namespace EVEMon.SettingsUI
 
             m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text;
             m_settings.Calendar.GooglePassword = tbGooglePassword.Text;
-            m_settings.Calendar.GoogleURL = tbGoogleURI.Text;
+            m_settings.Calendar.GoogleAddress = tbGoogleURI.Text;
             m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1
                                                      ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex
                                                      : GoogleCalendarReminder.None;
@@ -952,7 +952,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnEVEMonDataDir_Click(object sender, EventArgs e)
         {
-            Util.OpenURL(EveMonClient.EVEMonDataDir);
+            Util.OpenURL(new Uri(EveMonClient.EVEMonDataDir));
         }
 
         #endregion
@@ -1137,7 +1137,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void BattleClinicLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.BattleClinicBase);
+            Util.OpenURL(new Uri(NetworkConstants.BattleClinicBase));
         }
 
         #endregion

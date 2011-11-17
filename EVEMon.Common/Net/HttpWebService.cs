@@ -32,15 +32,15 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">A url <see cref="string"/> for the request. The string must specify HTTP as its scheme.</param>
         /// <param name="errorMsg">Is url is invalid, contains a descriptive message of the reason</param>
-        private static bool IsValidURL(string url, out string errorMsg)
+        private static bool IsValidURL(Uri url, out string errorMsg)
         {
-            if (String.IsNullOrEmpty(url))
+            if (String.IsNullOrEmpty(url.AbsoluteUri))
             {
                 errorMsg = "Url may not be null or an empty string.";
                 return false;
             }
 
-            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            if (!Uri.IsWellFormedUriString(url.AbsoluteUri, UriKind.Absolute))
             {
                 errorMsg = String.Format(CultureConstants.DefaultCulture, "\"{0}\" is not a well-formed URL.", url);
                 return false;
@@ -48,17 +48,16 @@ namespace EVEMon.Common.Net
 
             try
             {
-                Uri tempUri = new Uri(url);
-                if (tempUri.Scheme != Uri.UriSchemeHttp && tempUri.Scheme != Uri.UriSchemeHttps)
+                if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
                 {
                     errorMsg = String.Format(CultureConstants.DefaultCulture, "The specified scheme ({0}) is not supported.",
-                                             tempUri.Scheme);
+                                             url.Scheme);
                     return false;
                 }
             }
             catch (UriFormatException)
             {
-                errorMsg = String.Format(CultureConstants.DefaultCulture, "\"{0}\" is not a valid URL for an HTTP request.", url);
+                errorMsg = String.Format(CultureConstants.DefaultCulture, "\"{0}\" is not a valid URL for an HTTP or HTTPS request.", url);
                 return false;
             }
 

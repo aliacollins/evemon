@@ -257,7 +257,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonBugReport);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonBugReport));
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonKnownProblems);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonKnownProblems));
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonMainPage);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
         }
     }
 }

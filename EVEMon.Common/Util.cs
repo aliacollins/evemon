@@ -33,11 +33,11 @@ namespace EVEMon.Common
         /// Opens the provided url in a new process.
         /// </summary>
         /// <param name="url"></param>
-        public static void OpenURL(string url)
+        public static void OpenURL(Uri url)
         {
             try
             {
-                Process.Start(url);
+                Process.Start(url.AbsoluteUri);
             }
             catch (FileNotFoundException ex)
             {
@@ -216,7 +216,7 @@ namespace EVEMon.Common
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
-        internal static void DownloadAPIResultAsync<T>(string url, HttpPostData postData, XslCompiledTransform transform,
+        internal static void DownloadAPIResultAsync<T>(Uri url, HttpPostData postData, XslCompiledTransform transform,
                                                        QueryCallback<T> callback)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
@@ -241,7 +241,7 @@ namespace EVEMon.Common
         /// <param name="url">The url to query</param>
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData,
+        internal static APIResult<T> DownloadAPIResult<T>(Uri url, HttpPostData postData,
                                                           XslCompiledTransform transform)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
@@ -360,7 +360,7 @@ namespace EVEMon.Common
         /// <param name="url">The url to query</param>
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
-        internal static void DownloadBCAPIResultAsync<T>(string url, Serialization.BattleClinic.QueryCallback<T> callback,
+        internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
                                                        HttpPostData postData = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
@@ -437,7 +437,7 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <returns></returns>
-        public static void DownloadXMLAsync<T>(string url, DownloadCallback<T> callback, HttpPostData postData = null)
+        public static void DownloadXMLAsync<T>(Uri url, DownloadCallback<T> callback, HttpPostData postData = null)
             where T : class
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(

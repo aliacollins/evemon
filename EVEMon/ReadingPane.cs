@@ -286,7 +286,7 @@ namespace EVEMon
 
             // If the link complies with HTTP or HTTPS, open the link on the system's default browser
             if (e.Url.Scheme == Uri.UriSchemeHttp || e.Url.Scheme == Uri.UriSchemeHttps)
-                Util.OpenURL(e.Url.AbsoluteUri);
+                Util.OpenURL(e.Url);
 
             // Prevents the browser to navigate past the shown page
             e.Cancel = true;
