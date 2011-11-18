@@ -1059,12 +1059,6 @@ namespace EVEMon.Common.Controls
         public void ProcessNodeRange(TreeNode startNode, TreeNode endNode, MouseEventArgs e, Keys keys, TreeViewAction tva,
                                      bool allowStartEdit)
         {
-            if (startNode == null)
-                throw new ArgumentNullException("startNode");
-
-            if (endNode == null)
-                throw new ArgumentNullException("endNode");
-
             if (e == null)
                 throw new ArgumentNullException("e");
 
@@ -1185,7 +1179,7 @@ namespace EVEMon.Common.Controls
             TreeNode tnTemp;
             int intNodeLevelStart;
 
-// SHIFT pressed
+            // SHIFT pressed
             if (m_tnSelectionMirrorPoint == null)
                 m_tnSelectionMirrorPoint = startNode;
 
