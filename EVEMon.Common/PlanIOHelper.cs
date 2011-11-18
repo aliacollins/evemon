@@ -36,8 +36,6 @@ namespace EVEMon.Common
             plan.UpdateStatistics();
 
             StringBuilder builder = new StringBuilder();
-            const DescriptiveTextOptions TimeFormat =
-                DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText;
             Character character = (Character)plan.Character;
 
             // Initialize constants
@@ -79,17 +77,17 @@ namespace EVEMon.Common
             DateTime endTime = DateTime.Now;
             foreach (PlanEntry entry in plan)
             {
+                // Skip is we're only build a shopping list
+                bool shoppingListCandidate = !(entry.CharacterSkill.IsKnown || entry.Level != 1 || entry.CharacterSkill.IsOwned);
+                if (settings.ShoppingList && !shoppingListCandidate)
+                    continue;
+
                 // Remapping point
                 if (!settings.ShoppingList && entry.Remapping != null)
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture, "***{0}***", entry.Remapping);
                     builder.Append(lineFeed);
                 }
-
-                // Skip is we're only build a shopping list
-                bool shoppingListCandidate = !(entry.CharacterSkill.IsKnown || entry.Level != 1 || entry.CharacterSkill.IsOwned);
-                if (settings.ShoppingList && !shoppingListCandidate)
-                    continue;
 
                 // Entry's index
                 index++;
@@ -98,71 +96,11 @@ namespace EVEMon.Common
 
                 // Name
                 builder.Append(boldStart);
-
-                if (settings.Markup.Equals(MarkupType.Html))
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture,
-                                         !settings.ShoppingList
-                                             ? "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">"
-                                             : "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
-                }
-                builder.Append(entry.Skill.Name);
-
-                if (settings.Markup == MarkupType.Html)
-                    builder.Append("</a>");
-
-                if (!settings.ShoppingList)
-                    builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanFromInt(entry.Level));
-
+                AddName(settings, entry, builder);
                 builder.Append(boldEnd);
 
                 // Training time
-                if (settings.EntryTrainingTimes || settings.EntryStartDate || settings.EntryFinishDate ||
-                    (settings.EntryCost && shoppingListCandidate))
-                {
-                    builder.Append(" (");
-                    bool needComma = false;
-
-                    // Training time
-                    if (settings.EntryTrainingTimes)
-                    {
-                        needComma = true;
-                        builder.Append(entry.TrainingTime.ToDescriptiveText(TimeFormat));
-                    }
-
-                    // Training start date
-                    if (settings.EntryStartDate)
-                    {
-                        if (needComma)
-                            builder.Append("; ");
-
-                        needComma = true;
-
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Start: {0}", entry.StartTime);
-                    }
-
-                    // Training end date
-                    if (settings.EntryFinishDate)
-                    {
-                        if (needComma)
-                            builder.Append("; ");
-
-                        needComma = true;
-
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Finish: {0}", entry.EndTime);
-                    }
-
-                    // Skill cost
-                    if (settings.EntryCost && shoppingListCandidate)
-                    {
-                        if (needComma)
-                            builder.Append("; ");
-
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ISK", entry.Skill.FormattedCost);
-                    }
-
-                    builder.Append(')');
-                }
+                AddTrainingTime(settings, shoppingListCandidate, entry, builder);
 
                 if (exportActions != null)
                     exportActions(builder, entry, settings);
@@ -174,63 +112,169 @@ namespace EVEMon.Common
             }
 
             // Footer
-            if (settings.FooterCount || settings.FooterTotalTime || settings.FooterDate || settings.FooterCost)
-            {
-                builder.AppendLine(lineFeed);
-                bool needComma = false;
-
-                // Skills count
-                if (settings.FooterCount)
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} unique skill{3}, ",
-                                         boldStart, plan.GetUniqueSkillsCount(), boldEnd,
-                                         (plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s"));
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} skill level{3}", boldStart, index, boldEnd,
-                                         (index == 1 ? String.Empty : "s"));
-                    needComma = true;
-                }
-
-                // Plan's training duration
-                if (settings.FooterTotalTime)
-                {
-                    if (needComma)
-                        builder.Append("; ");
-
-                    needComma = true;
-
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Total time: {0}{1}{2}",
-                                         boldStart, plan.GetTotalTime(null, true).ToDescriptiveText(TimeFormat), boldEnd);
-                }
-
-                // End training date
-                if (settings.FooterDate)
-                {
-                    if (needComma)
-                        builder.Append("; ");
-
-                    needComma = true;
-
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Completion: {0}{1}{2}", boldStart, endTime, boldEnd);
-                }
-
-                // Total books cost
-                if (settings.FooterCost)
-                {
-                    if (needComma)
-                        builder.Append("; ");
-
-                    string formattedIsk = String.Format(CultureConstants.DefaultCulture, "{0:N0}", plan.NotKnownSkillBooksCost);
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
-                }
-
-                // Warning about skill costs
-                builder.Append(lineFeed);
-                if (settings.FooterCost || settings.EntryCost)
-                    builder.Append("N.B. Skill costs are based on CCP's database and are indicative only");
-            }
+            AddFooter(settings, boldEnd, index, endTime, builder, lineFeed, plan, boldStart);
 
             // Returns the text representation.
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Adds the name.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <param name="entry">The entry.</param>
+        /// <param name="builder">The builder.</param>
+        private static void AddName(PlanExportSettings settings, ISkillLevel entry, StringBuilder builder)
+        {
+            if (settings.Markup.Equals(MarkupType.Html))
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture,
+                                     !settings.ShoppingList
+                                         ? "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">"
+                                         : "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
+            }
+            builder.Append(entry.Skill.Name);
+
+            if (settings.Markup == MarkupType.Html)
+                builder.Append("</a>");
+
+            if (!settings.ShoppingList)
+                builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanFromInt(entry.Level));
+
+        }
+
+        /// <summary>
+        /// Adds the training time.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <param name="shoppingListCandidate">if set to <c>true</c> [shopping list candidate].</param>
+        /// <param name="entry">The entry.</param>
+        /// <param name="builder">The builder.</param>
+        private static void AddTrainingTime(PlanExportSettings settings, bool shoppingListCandidate, PlanEntry entry, StringBuilder builder)
+        {
+            if (!settings.EntryTrainingTimes && !settings.EntryStartDate && !settings.EntryFinishDate &&
+                (!settings.EntryCost || !shoppingListCandidate))
+                return;
+
+            const DescriptiveTextOptions TimeFormat = DescriptiveTextOptions.FullText
+                                                      | DescriptiveTextOptions.IncludeCommas
+                                                      | DescriptiveTextOptions.SpaceText;
+
+            builder.Append(" (");
+            bool needComma = false;
+
+            // Training time
+            if (settings.EntryTrainingTimes)
+            {
+                needComma = true;
+                builder.Append(entry.TrainingTime.ToDescriptiveText(TimeFormat));
+            }
+
+            // Training start date
+            if (settings.EntryStartDate)
+            {
+                if (needComma)
+                    builder.Append("; ");
+
+                needComma = true;
+
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Start: {0}", entry.StartTime);
+            }
+
+            // Training end date
+            if (settings.EntryFinishDate)
+            {
+                if (needComma)
+                    builder.Append("; ");
+
+                needComma = true;
+
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Finish: {0}", entry.EndTime);
+            }
+
+            // Skill cost
+            if (settings.EntryCost && shoppingListCandidate)
+            {
+                if (needComma)
+                    builder.Append("; ");
+
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ISK", entry.Skill.FormattedCost);
+            }
+
+            builder.Append(')');
+        }
+
+        /// <summary>
+        /// Adds the footer.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <param name="boldEnd">The bold end.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="endTime">The end time.</param>
+        /// <param name="builder">The builder.</param>
+        /// <param name="lineFeed">The line feed.</param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="boldStart">The bold start.</param>
+        private static void AddFooter(PlanExportSettings settings, string boldEnd, int index, DateTime endTime, StringBuilder builder,
+                                      string lineFeed, BasePlan plan, string boldStart)
+        {
+            if (!settings.FooterCount && !settings.FooterTotalTime && !settings.FooterDate && !settings.FooterCost)
+                return;
+
+            builder.AppendLine(lineFeed);
+            bool needComma = false;
+
+            // Skills count
+            if (settings.FooterCount)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} unique skill{3}, ",
+                                     boldStart, plan.GetUniqueSkillsCount(), boldEnd,
+                                     (plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s"));
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} skill level{3}", boldStart, index, boldEnd,
+                                     (index == 1 ? String.Empty : "s"));
+                needComma = true;
+            }
+
+            // Plan's training duration
+            if (settings.FooterTotalTime)
+            {
+                const DescriptiveTextOptions TimeFormat =
+                    DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText;
+
+                if (needComma)
+                    builder.Append("; ");
+
+                needComma = true;
+
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Total time: {0}{1}{2}",
+                                     boldStart, plan.GetTotalTime(null, true).ToDescriptiveText(TimeFormat), boldEnd);
+            }
+
+            // End training date
+            if (settings.FooterDate)
+            {
+                if (needComma)
+                    builder.Append("; ");
+
+                needComma = true;
+
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Completion: {0}{1}{2}", boldStart, endTime, boldEnd);
+            }
+
+            // Total books cost
+            if (settings.FooterCost)
+            {
+                if (needComma)
+                    builder.Append("; ");
+
+                string formattedIsk = String.Format(CultureConstants.DefaultCulture, "{0:N0}", plan.NotKnownSkillBooksCost);
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
+            }
+
+            // Warning about skill costs
+            builder.Append(lineFeed);
+            if (settings.FooterCost || settings.EntryCost)
+                builder.Append("N.B. Skill costs are based on CCP's database and are indicative only");
         }
 
         /// <summary>

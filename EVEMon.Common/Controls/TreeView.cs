@@ -1076,9 +1076,6 @@ namespace EVEMon.Common.Controls
                     {
                         m_blnWasDoubleClick = (m_intMouseClicks == 2);
 
-                        TreeNode tnTemp;
-                        int intNodeLevelStart;
-
                         if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) == 0))
                         {
                             // CTRL and SHIFT not held down							
@@ -1114,249 +1111,11 @@ namespace EVEMon.Common.Controls
                             }
                         }
                         else if (((keys & Keys.Control) != 0) && ((keys & Keys.Shift) == 0))
-                        {
-                            // CTRL held down
-                            m_tnSelectionMirrorPoint = null;
-
-                            if (!IsNodeSelected(endNode))
-                            {
-                                switch (m_selectionMode)
-                                {
-                                    case TreeViewSelectionMode.SingleSelect:
-                                        UnselectAllNodesExceptNode(endNode, tva);
-                                        break;
-
-                                    case TreeViewSelectionMode.MultiSelectSameRootBranch:
-                                        TreeNode tnAbsoluteParent2 = GetRootParent(endNode);
-                                        UnselectAllNodesNotBelongingToParent(tnAbsoluteParent2, tva);
-                                        break;
-
-                                    case TreeViewSelectionMode.MultiSelectSameLevel:
-                                        UnselectAllNodesNotBelongingToLevel(GetNodeLevel(endNode), tva);
-                                        break;
-
-                                    case TreeViewSelectionMode.MultiSelectSameLevelAndRootBranch:
-                                        TreeNode tnAbsoluteParent = GetRootParent(endNode);
-                                        UnselectAllNodesNotBelongingToParent(tnAbsoluteParent, tva);
-                                        UnselectAllNodesNotBelongingToLevel(GetNodeLevel(endNode), tva);
-                                        break;
-
-                                    case TreeViewSelectionMode.MultiSelectSameParent:
-                                        TreeNode tnParent = endNode.Parent;
-                                        UnselectAllNodesNotBelongingDirectlyToParent(tnParent, tva);
-                                        break;
-                                }
-
-                                SelectNode(endNode, true, tva);
-                            }
-                            else
-                                SelectNode(endNode, false, tva);
-                        }
+                            HandleControlHeldDown(endNode, tva);
                         else if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) != 0))
-                        {
-                            // SHIFT pressed
-                            if (m_tnSelectionMirrorPoint == null)
-                                m_tnSelectionMirrorPoint = startNode;
-
-                            switch (m_selectionMode)
-                            {
-                                case TreeViewSelectionMode.SingleSelect:
-                                    UnselectAllNodesExceptNode(endNode, tva);
-                                    SelectNode(endNode, true, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameRootBranch:
-                                    TreeNode tnAbsoluteParentStartNode = GetRootParent(startNode);
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
-                                        if (tnAbsoluteParent == tnAbsoluteParentStartNode)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStartNode, tva);
-                                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameLevel:
-                                    intNodeLevelStart = GetNodeLevel(startNode);
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        int intNodeLevel = GetNodeLevel(tnTemp);
-                                        if (intNodeLevel == intNodeLevelStart)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
-                                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameLevelAndRootBranch:
-                                    TreeNode tnAbsoluteParentStart = GetRootParent(startNode);
-                                    intNodeLevelStart = GetNodeLevel(startNode);
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        int intNodeLevel = GetNodeLevel(tnTemp);
-                                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
-                                        if ((intNodeLevel == intNodeLevelStart) && (tnAbsoluteParent == tnAbsoluteParentStart))
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStart, tva);
-                                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
-                                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelect:
-                                    SelectNodesInsideRange(m_tnSelectionMirrorPoint, endNode, tva);
-                                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameParent:
-                                    TreeNode tnParentStartNode = startNode.Parent;
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        TreeNode tnParent = tnTemp.Parent;
-                                        if (tnParent == tnParentStartNode)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingDirectlyToParent(tnParentStartNode, tva);
-                                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
-                                    break;
-                            }
-                        }
+                            HandleShiftPressed(startNode, endNode, tva);
                         else if (((keys & Keys.Control) != 0) && ((keys & Keys.Shift) != 0))
-                        {
-                            // SHIFT AND CTRL pressed
-                            switch (m_selectionMode)
-                            {
-                                case TreeViewSelectionMode.SingleSelect:
-                                    UnselectAllNodesExceptNode(endNode, tva);
-                                    SelectNode(endNode, true, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameRootBranch:
-                                    TreeNode tnAbsoluteParentStartNode = GetRootParent(startNode);
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
-                                        if (tnAbsoluteParent == tnAbsoluteParentStartNode)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStartNode, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameLevel:
-                                    intNodeLevelStart = GetNodeLevel(startNode);
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        int intNodeLevel = GetNodeLevel(tnTemp);
-                                        if (intNodeLevel == intNodeLevelStart)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameLevelAndRootBranch:
-                                    TreeNode tnAbsoluteParentStart = GetRootParent(startNode);
-                                    intNodeLevelStart = GetNodeLevel(startNode);
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        int intNodeLevel = GetNodeLevel(tnTemp);
-                                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
-                                        if ((intNodeLevel == intNodeLevelStart) && (tnAbsoluteParent == tnAbsoluteParentStart))
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStart, tva);
-                                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelect:
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp != null)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    break;
-
-                                case TreeViewSelectionMode.MultiSelectSameParent:
-                                    TreeNode tnParentStartNode = startNode.Parent;
-                                    tnTemp = startNode;
-                                    // Check each visible node from startNode to endNode and select it if needed
-                                    while ((tnTemp != null) && (tnTemp != endNode))
-                                    {
-                                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
-                                                     ? tnTemp.PrevVisibleNode
-                                                     : tnTemp.NextVisibleNode;
-                                        if (tnTemp == null)
-                                            continue;
-
-                                        TreeNode tnParent = tnTemp.Parent;
-                                        if (tnParent == tnParentStartNode)
-                                            SelectNode(tnTemp, true, tva);
-                                    }
-                                    UnselectAllNodesNotBelongingDirectlyToParent(tnParentStartNode, tva);
-                                    break;
-                            }
-                        }
+                            HandleShiftAndControlPressed(startNode, endNode, tva);
                     }
                     break;
                 case MouseButtons.Right:
@@ -1368,6 +1127,276 @@ namespace EVEMon.Common.Controls
                     break;
             }
             OnSelectionsChanged();
+        }
+
+        /// <summary>
+        /// Handles the control key held down.
+        /// </summary>
+        /// <param name="endNode">The end node.</param>
+        /// <param name="tva">The tva.</param>
+        private void HandleControlHeldDown(TreeNode endNode, TreeViewAction tva)
+        {
+            // CTRL held down
+            m_tnSelectionMirrorPoint = null;
+
+            if (!IsNodeSelected(endNode))
+            {
+                switch (m_selectionMode)
+                {
+                    case TreeViewSelectionMode.SingleSelect:
+                        UnselectAllNodesExceptNode(endNode, tva);
+                        break;
+
+                    case TreeViewSelectionMode.MultiSelectSameRootBranch:
+                        TreeNode tnAbsoluteParent2 = GetRootParent(endNode);
+                        UnselectAllNodesNotBelongingToParent(tnAbsoluteParent2, tva);
+                        break;
+
+                    case TreeViewSelectionMode.MultiSelectSameLevel:
+                        UnselectAllNodesNotBelongingToLevel(GetNodeLevel(endNode), tva);
+                        break;
+
+                    case TreeViewSelectionMode.MultiSelectSameLevelAndRootBranch:
+                        TreeNode tnAbsoluteParent = GetRootParent(endNode);
+                        UnselectAllNodesNotBelongingToParent(tnAbsoluteParent, tva);
+                        UnselectAllNodesNotBelongingToLevel(GetNodeLevel(endNode), tva);
+                        break;
+
+                    case TreeViewSelectionMode.MultiSelectSameParent:
+                        TreeNode tnParent = endNode.Parent;
+                        UnselectAllNodesNotBelongingDirectlyToParent(tnParent, tva);
+                        break;
+                }
+
+                SelectNode(endNode, true, tva);
+            }
+            else
+                SelectNode(endNode, false, tva);
+        }
+
+        /// <summary>
+        /// Handles the shift key pressed.
+        /// </summary>
+        /// <param name="startNode">The start node.</param>
+        /// <param name="endNode">The end node.</param>
+        /// <param name="tva">The tva.</param>
+        private void HandleShiftPressed(TreeNode startNode, TreeNode endNode, TreeViewAction tva)
+        {
+            TreeNode tnTemp;
+            int intNodeLevelStart;
+
+// SHIFT pressed
+            if (m_tnSelectionMirrorPoint == null)
+                m_tnSelectionMirrorPoint = startNode;
+
+            switch (m_selectionMode)
+            {
+                case TreeViewSelectionMode.SingleSelect:
+                    UnselectAllNodesExceptNode(endNode, tva);
+                    SelectNode(endNode, true, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameRootBranch:
+                    TreeNode tnAbsoluteParentStartNode = GetRootParent(startNode);
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
+                        if (tnAbsoluteParent == tnAbsoluteParentStartNode)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStartNode, tva);
+                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameLevel:
+                    intNodeLevelStart = GetNodeLevel(startNode);
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        int intNodeLevel = GetNodeLevel(tnTemp);
+                        if (intNodeLevel == intNodeLevelStart)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
+                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameLevelAndRootBranch:
+                    TreeNode tnAbsoluteParentStart = GetRootParent(startNode);
+                    intNodeLevelStart = GetNodeLevel(startNode);
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        int intNodeLevel = GetNodeLevel(tnTemp);
+                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
+                        if ((intNodeLevel == intNodeLevelStart) && (tnAbsoluteParent == tnAbsoluteParentStart))
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStart, tva);
+                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
+                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelect:
+                    SelectNodesInsideRange(m_tnSelectionMirrorPoint, endNode, tva);
+                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameParent:
+                    TreeNode tnParentStartNode = startNode.Parent;
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        TreeNode tnParent = tnTemp.Parent;
+                        if (tnParent == tnParentStartNode)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingDirectlyToParent(tnParentStartNode, tva);
+                    UnselectNodesOutsideRange(m_tnSelectionMirrorPoint, endNode, tva);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Handles the shift and control keys pressed.
+        /// </summary>
+        /// <param name="startNode">The start node.</param>
+        /// <param name="endNode">The end node.</param>
+        /// <param name="tva">The tva.</param>
+        private void HandleShiftAndControlPressed(TreeNode startNode, TreeNode endNode, TreeViewAction tva)
+        {
+            TreeNode tnTemp;
+            int intNodeLevelStart;
+
+            // SHIFT AND CTRL pressed
+            switch (m_selectionMode)
+            {
+                case TreeViewSelectionMode.SingleSelect:
+                    UnselectAllNodesExceptNode(endNode, tva);
+                    SelectNode(endNode, true, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameRootBranch:
+                    TreeNode tnAbsoluteParentStartNode = GetRootParent(startNode);
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
+                        if (tnAbsoluteParent == tnAbsoluteParentStartNode)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStartNode, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameLevel:
+                    intNodeLevelStart = GetNodeLevel(startNode);
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        int intNodeLevel = GetNodeLevel(tnTemp);
+                        if (intNodeLevel == intNodeLevelStart)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameLevelAndRootBranch:
+                    TreeNode tnAbsoluteParentStart = GetRootParent(startNode);
+                    intNodeLevelStart = GetNodeLevel(startNode);
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        int intNodeLevel = GetNodeLevel(tnTemp);
+                        TreeNode tnAbsoluteParent = GetRootParent(tnTemp);
+                        if ((intNodeLevel == intNodeLevelStart) && (tnAbsoluteParent == tnAbsoluteParentStart))
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingToParent(tnAbsoluteParentStart, tva);
+                    UnselectAllNodesNotBelongingToLevel(intNodeLevelStart, tva);
+                    break;
+
+                case TreeViewSelectionMode.MultiSelect:
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp != null)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    break;
+
+                case TreeViewSelectionMode.MultiSelectSameParent:
+                    TreeNode tnParentStartNode = startNode.Parent;
+                    tnTemp = startNode;
+                    // Check each visible node from startNode to endNode and select it if needed
+                    while ((tnTemp != null) && (tnTemp != endNode))
+                    {
+                        tnTemp = startNode.Bounds.Y > endNode.Bounds.Y
+                                     ? tnTemp.PrevVisibleNode
+                                     : tnTemp.NextVisibleNode;
+                        if (tnTemp == null)
+                            continue;
+
+                        TreeNode tnParent = tnTemp.Parent;
+                        if (tnParent == tnParentStartNode)
+                            SelectNode(tnTemp, true, tva);
+                    }
+                    UnselectAllNodesNotBelongingDirectlyToParent(tnParentStartNode, tva);
+                    break;
+            }
         }
 
         #endregion

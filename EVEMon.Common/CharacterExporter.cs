@@ -76,45 +76,69 @@ namespace EVEMon.Common
             builder.AppendLine(Separator);
             foreach (SkillGroup skillGroup in character.SkillGroups)
             {
-                int count =
-                    skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                        x => GetMergedSkill(plan, x)).Count();
-                int skillGroupTotalSP =
-                    skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                        x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
-
-                // Skill Group
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}, {1} Skill{2}, {3:N0} Points{4}",
-                                     skillGroup.Name, count, count > 1 ? "s" : String.Empty,
-                                     skillGroupTotalSP, Environment.NewLine);
-
-                // Skills
-                foreach (Skill skill in skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))))
-                {
-                    SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
-
-                    string skillDesc = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", skill, skill.Rank);
-                    builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2:N0}/{3:N0} Points{4}",
-                                         skillDesc.PadRight(45), mergedSkill.Level.ToString(CultureConstants.DefaultCulture).PadRight(5),
-                                         mergedSkill.Skillpoints,
-                                         skill.StaticData.GetPointsRequiredForLevel(5),
-                                         Environment.NewLine);
-
-                    // If the skill is in training...
-                    if (!skill.IsTraining)
-                        continue;
-
-                    DateTime adjustedEndTime = character.CurrentlyTrainingSkill.EndTime.ToLocalTime();
-                    builder.AppendFormat(CultureConstants.DefaultCulture,
-                                         ":  (Currently training to level {0}, completes {1}){2}",
-                                         Skill.GetRomanFromInt(character.CurrentlyTrainingSkill.Level), adjustedEndTime,
-                                         Environment.NewLine);
-                }
+                AddSkillGroups(character, plan, builder, skillGroup);
 
                 builder.AppendLine(SubSeparator);
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Adds the skill groups.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="builder">The builder.</param>
+        /// <param name="skillGroup">The skill group.</param>
+        private static void AddSkillGroups(Character character, Plan plan, StringBuilder builder, SkillGroup skillGroup)
+        {
+            int count =
+                skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
+                    x => GetMergedSkill(plan, x)).Count();
+            int skillGroupTotalSP =
+                skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
+                    x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
+
+            // Skill Group
+            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}, {1} Skill{2}, {3:N0} Points{4}",
+                                 skillGroup.Name, count, count > 1 ? "s" : String.Empty,
+                                 skillGroupTotalSP, Environment.NewLine);
+
+            // Skills
+            foreach (Skill skill in skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))))
+            {
+                AddSkills(character, plan, builder, skill);
+            }
+        }
+
+        /// <summary>
+        /// Adds the skills.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="builder">The builder.</param>
+        /// <param name="skill">The skill.</param>
+        private static void AddSkills(Character character, Plan plan, StringBuilder builder, Skill skill)
+        {
+            SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
+
+            string skillDesc = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", skill, skill.Rank);
+            builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2:N0}/{3:N0} Points{4}",
+                                 skillDesc.PadRight(45), mergedSkill.Level.ToString(CultureConstants.DefaultCulture).PadRight(5),
+                                 mergedSkill.Skillpoints,
+                                 skill.StaticData.GetPointsRequiredForLevel(5),
+                                 Environment.NewLine);
+
+            // If the skill is in training...
+            if (!skill.IsTraining)
+                return;
+
+            DateTime adjustedEndTime = character.CurrentlyTrainingSkill.EndTime.ToLocalTime();
+            builder.AppendFormat(CultureConstants.DefaultCulture,
+                                 ":  (Currently training to level {0}, completes {1}){2}",
+                                 Skill.GetRomanFromInt(character.CurrentlyTrainingSkill.Level), adjustedEndTime,
+                                 Environment.NewLine);
         }
 
         /// <summary>
@@ -173,6 +197,26 @@ namespace EVEMon.Common
                                              Memory = character.Memory.EffectiveValue
                                          };
 
+            CompleteSerialization(character, plan, serial);
+
+            // Serializes to XML and apply a XSLT to generate the HTML doc
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputCharacter), serial);
+
+            XslCompiledTransform xslt = Util.LoadXSLT(Properties.Resources.XmlToHtmlXslt);
+            XmlDocument htmlDoc = (XmlDocument)Util.Transform(doc, xslt);
+
+            // Returns the string representation of the generated doc
+            return Util.GetXMLStringRepresentation(htmlDoc);
+        }
+
+        /// <summary>
+        /// Completes the serialization.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="serial">The serial.</param>
+        private static void CompleteSerialization(Character character, Plan plan, OutputCharacter serial)
+        {
             // Attributes enhancers
             foreach (Implant implant in character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5))
             {
@@ -193,47 +237,59 @@ namespace EVEMon.Common
             // Skills (grouped by skill groups)
             foreach (SkillGroup skillGroup in character.SkillGroups)
             {
-                int count =
-                    skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                        x => GetMergedSkill(plan, x)).Count();
-                int skillGroupTotalSP =
-                    skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
-                        x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
-
-                OutputSkillGroup outGroup = new OutputSkillGroup
-                                                {
-                                                    Name = skillGroup.Name,
-                                                    SkillsCount = count,
-                                                    TotalSP = skillGroupTotalSP
-                                                };
+                OutputSkillGroup outGroup = AddSkillGroup(plan, skillGroup);
 
                 foreach (Skill skill in skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))))
                 {
-                    SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
-
-                    outGroup.Skills.Add(new OutputSkill
-                                            {
-                                                Name = mergedSkill.Name,
-                                                Rank = skill.Rank,
-                                                Level = mergedSkill.Level,
-                                                SkillPoints = mergedSkill.Skillpoints,
-                                                RomanLevel = Skill.GetRomanFromInt(mergedSkill.Level),
-                                                MaxSkillPoints = skill.StaticData.GetPointsRequiredForLevel(5)
-                                            });
+                    AddSkill(plan, outGroup, skill);
                 }
 
                 if (outGroup.Skills.Count != 0)
                     serial.SkillGroups.Add(outGroup);
             }
+        }
 
-            // Serializes to XML and apply a XSLT to generate the HTML doc
-            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputCharacter), serial);
+        /// <summary>
+        /// Adds the skill group.
+        /// </summary>
+        /// <param name="plan">The plan.</param>
+        /// <param name="skillGroup">The skill group.</param>
+        /// <returns></returns>
+        private static OutputSkillGroup AddSkillGroup(Plan plan, SkillGroup skillGroup)
+        {
+            int count = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
+                x => GetMergedSkill(plan, x)).Count();
+            int skillGroupTotalSP = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
+                x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
 
-            XslCompiledTransform xslt = Util.LoadXSLT(Properties.Resources.XmlToHtmlXslt);
-            XmlDocument htmlDoc = (XmlDocument)Util.Transform(doc, xslt);
+            OutputSkillGroup outGroup = new OutputSkillGroup
+                                            {
+                                                Name = skillGroup.Name,
+                                                SkillsCount = count,
+                                                TotalSP = skillGroupTotalSP
+                                            };
+            return outGroup;
+        }
 
-            // Returns the string representation of the generated doc
-            return Util.GetXMLStringRepresentation(htmlDoc);
+        /// <summary>
+        /// Adds the skill.
+        /// </summary>
+        /// <param name="plan">The plan.</param>
+        /// <param name="outGroup">The out group.</param>
+        /// <param name="skill">The skill.</param>
+        private static void AddSkill(Plan plan, OutputSkillGroup outGroup, Skill skill)
+        {
+            SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
+
+            outGroup.Skills.Add(new OutputSkill
+                                    {
+                                        Name = mergedSkill.Name,
+                                        Rank = skill.Rank,
+                                        Level = mergedSkill.Level,
+                                        SkillPoints = mergedSkill.Skillpoints,
+                                        RomanLevel = Skill.GetRomanFromInt(mergedSkill.Level),
+                                        MaxSkillPoints = skill.StaticData.GetPointsRequiredForLevel(5)
+                                    });
         }
 
         /// <summary>
