@@ -389,7 +389,7 @@ namespace EVEMon.Common
                     if (recover)
                     {
                         // Prompts the user to use the backup
-                        String fileDate = String.Format("{0} at {1}",
+                        String fileDate = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
                                                         backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
                                                         backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
                         DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
@@ -510,8 +510,7 @@ namespace EVEMon.Common
             {
                 fileDialog.Title = "Settings file backup";
                 fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak",
-                                                    revision.ToString());
+                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 DialogResult saveFile = fileDialog.ShowDialog();
                 if (saveFile != DialogResult.OK)

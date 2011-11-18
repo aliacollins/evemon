@@ -38,14 +38,18 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static IEnumerable<BCAPIMethod> CreateDefaultSet()
         {
             return Enum.GetNames(typeof(BCAPIMethods)).Select(
-                methodName => new { methodName, methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName) }).
-                Select(method => new
-                                     {
-                                         method,
-                                         methodURL = NetworkConstants.ResourceManager.GetString(
-                                             String.Format("BCAPI{0}", method.methodName))
-                                     }).Select(
-                                         bcAPIMethod => new BCAPIMethod(bcAPIMethod.method.methodEnum, bcAPIMethod.methodURL));
+                methodName =>
+                new
+                    {
+                        methodName,
+                        methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName)
+                    }).Select(method =>
+                              new
+                                  {
+                                      method,
+                                      methodURL = NetworkConstants.ResourceManager.GetString(
+                                          String.Format(CultureConstants.InvariantCulture, "BCAPI{0}", method.methodName))
+                                  }).Select(bcAPIMethod => new BCAPIMethod(bcAPIMethod.method.methodEnum, bcAPIMethod.methodURL));
         }
     }
 }

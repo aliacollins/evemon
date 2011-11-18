@@ -54,7 +54,7 @@ namespace EVEMon.Common
         /// </summary>
         public override string AdornedName
         {
-            get { return String.Format("{0} {1}", Name, (m_uri.IsFile ? "(file)" : "(url)")); }
+            get { return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Name, (m_uri.IsFile ? "(file)" : "(url)")); }
         }
 
         /// <summary>

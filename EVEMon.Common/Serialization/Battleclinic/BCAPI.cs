@@ -185,7 +185,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileSave()
         {
             HttpPostData postData =
-                new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                               "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
                                                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                BCAPISettings.Default.BCApplicationKey,
                                                EveMonClient.SettingsFileName, SettingsFileContent));
@@ -198,7 +199,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         public static IXPathNavigable FileGetByName()
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                                                                    BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                                    BCAPISettings.Default.BCApplicationKey,
                                                                    EveMonClient.SettingsFileName));
@@ -214,7 +216,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void CheckAPICredentialsAsync(uint userID, string apiKey, QueryCallback<SerializableBCAPICredentials> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}",
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}",
                                                                    userID, apiKey, BCAPISettings.Default.BCApplicationKey));
 
             QueryMethodAsync(BCAPIMethods.CheckCredentials, postData, callback);
@@ -227,7 +230,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileSaveAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
             HttpPostData postData =
-                new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                               "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
                                                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                BCAPISettings.Default.BCApplicationKey,
                                                EveMonClient.SettingsFileName, SettingsFileContent));
@@ -241,7 +245,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void FileGetByNameAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                                                                    BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                                    BCAPISettings.Default.BCApplicationKey,
                                                                    EveMonClient.SettingsFileName));
@@ -356,7 +361,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 string currentDirectory = Directory.GetCurrentDirectory();
 
                 // Prompts the user for a location
-                saveFileDialog.FileName = String.Format("{0}.bak", settingsFile.FileName);
+                saveFileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.bak", settingsFile.FileName);
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 DialogResult result = saveFileDialog.ShowDialog();
 

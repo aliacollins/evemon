@@ -16,7 +16,7 @@ namespace EVEMon.Common.Net
         }
 
         public HttpWebServiceException(string message)
-            :base(message)
+            : base(message)
         {
         }
 
@@ -103,7 +103,8 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException("url");
 
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.RedirectsExceeded, url,
-                                               String.Format(ExceptionMessages.RedirectsExceeded, url.Host));
+                                               String.Format(CultureConstants.DefaultCulture,
+                                                             ExceptionMessages.RedirectsExceeded, url.Host));
         }
 
         /// <summary>
@@ -117,7 +118,8 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException("url");
 
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.RequestsDisabled, url,
-                                               String.Format(ExceptionMessages.RequestsDisabled, url.Host));
+                                               String.Format(CultureConstants.DefaultCulture,
+                                                             ExceptionMessages.RequestsDisabled, url.Host));
         }
 
         /// <summary>
@@ -218,7 +220,8 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException("url");
 
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.XmlException, ex, url,
-                                               String.Format(ExceptionMessages.XmlException, url.Host));
+                                               String.Format(CultureConstants.DefaultCulture,
+                                                             ExceptionMessages.XmlException, url.Host));
         }
 
         /// <summary>
@@ -233,7 +236,8 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException("url");
 
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.ImageException, ex, url,
-                                               String.Format(ExceptionMessages.ImageException, url.Host));
+                                               String.Format(CultureConstants.DefaultCulture,
+                                                             ExceptionMessages.ImageException, url.Host));
         }
 
         /// <summary>
@@ -248,7 +252,8 @@ namespace EVEMon.Common.Net
                 throw new ArgumentNullException("url");
 
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.FileError, ex, url,
-                                               String.Format(ExceptionMessages.FileException, url.Host));
+                                               String.Format(CultureConstants.DefaultCulture,
+                                                             ExceptionMessages.FileException, url.Host));
         }
     }
 }

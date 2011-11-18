@@ -61,7 +61,7 @@ namespace EVEMon.Common
         private static string NewLinesToBreakLines(string text)
         {
             StringReader sr = new StringReader(text);
-            StringWriter sw = new StringWriter();
+            StringWriter sw = new StringWriter(CultureConstants.InvariantCulture);
 
             //Loop while next character exists
             while (sr.Peek() > -1)
@@ -83,7 +83,10 @@ namespace EVEMon.Common
         private static string DecodeUnicodeCharacters(string text)
         {
             return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
-                                 m => ((char)int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber)).ToString());
+                                 m =>
+                                 ((char)
+                                  int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber, CultureConstants.InvariantCulture)).
+                                     ToString(CultureConstants.DefaultCulture));
         }
 
         #endregion

@@ -25,7 +25,7 @@ namespace EVEMon.Common.Data
             ID = src.ID;
             Name = src.Name;
             Region = region;
-            FullLocation = String.Format("{0} > {1}", Region.Name, Name);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", Region.Name, Name);
 
             foreach (SerializableSolarSystem srcSystem in src.Systems)
             {

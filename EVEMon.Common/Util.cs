@@ -249,7 +249,7 @@ namespace EVEMon.Common
                                                           XslCompiledTransform transform)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
-                                                   String.Format("Time out on querying {0}", url));
+                                                   String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
 
             // Query async and wait
             using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
@@ -659,7 +659,7 @@ namespace EVEMon.Common
         public static string CreateMD5From(string filename)
         {
             if (!File.Exists(filename))
-                throw new FileNotFoundException(String.Format("{0} not found!", filename));
+                throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", filename));
 
             MD5 md5 = MD5.Create();
             StringBuilder builder = new StringBuilder();
@@ -671,7 +671,7 @@ namespace EVEMon.Common
                     byte[] hash = md5.ComputeHash(bufferedStream);
                     foreach (byte b in hash)
                     {
-                        builder.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
+                        builder.Append(b.ToString("x2", CultureConstants.InvariantCulture).ToLower(CultureConstants.DefaultCulture));
                     }
                 }
             }

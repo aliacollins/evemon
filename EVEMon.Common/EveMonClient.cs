@@ -230,7 +230,8 @@ namespace EVEMon.Common
                     }
                     catch (UnauthorizedAccessException exc)
                     {
-                        string msg = String.Format("An error occurred while EVEMon was looking for its data directory. " +
+                        string msg = String.Format(CultureConstants.DefaultCulture,
+                                                   "An error occurred while EVEMon was looking for its data directory. " +
                                                    "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
                                                    Environment.NewLine, exc.Message);
 
@@ -1125,7 +1126,7 @@ namespace EVEMon.Common
         /// <param name="args"></param>
         public static void Trace(string format, params object[] args)
         {
-            Trace(String.Format(format, args));
+            Trace(String.Format(CultureConstants.DefaultCulture, format, args));
         }
 
         /// <summary>
@@ -1177,7 +1178,8 @@ namespace EVEMon.Common
             }
             catch (IOException e)
             {
-                string text = String.Format("EVEMon has encountered an error and needs to terminate.{0}" +
+                string text = String.Format(CultureConstants.DefaultCulture,
+                                            "EVEMon has encountered an error and needs to terminate.{0}" +
                                             "The error message is:{0}{0}\"{1}\"",
                                             Environment.NewLine, e.Message);
                 MessageBox.Show(text, "EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

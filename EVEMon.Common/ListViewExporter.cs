@@ -87,7 +87,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static String MakeCSVString(bool ignoreComma, string text)
         {
-            return MakeCSVNumber(ignoreComma, String.Format("\"{0}\"", text));
+            return MakeCSVNumber(ignoreComma, String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static String MakeCSVNumber(bool ignoreComma, string text)
         {
-            return String.Format("{0}{1}", ignoreComma ? String.Empty : ",", text);
+            return String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreComma ? String.Empty : ",", text);
         }
     }
 }

@@ -183,9 +183,10 @@ namespace EVEMon.Common
         private Uri GetImageUrl()
         {
             if (Group == "Agents")
-                return new Uri(String.Format(NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32));
+                return new Uri(String.Format(CultureConstants.InvariantCulture,
+                                             NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32));
 
-            return new Uri(String.Format(NetworkConstants.CCPIconsFromImageServer,
+            return new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                                  (Group == "Factions" ? "alliance" : "corporation"),
                                  EntityID, (int)EveImageSize.x32));
         }

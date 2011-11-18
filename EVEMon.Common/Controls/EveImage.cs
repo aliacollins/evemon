@@ -258,7 +258,8 @@ namespace EVEMon.Common.Controls
                 drawOverlayIcon = true;
             }
 
-            Uri imageURL = new Uri(String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize));
+            Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
+                                                 NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize));
 
             ImageService.GetImageAsync(imageURL, true, img =>
                                                            {
@@ -276,24 +277,24 @@ namespace EVEMon.Common.Controls
         private void GetImageFromAlternativeSource(ImageTypeData typeData)
         {
             // Set file & pathname variables
-            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int)m_imageSize);
+            string eveSize = String.Format(CultureConstants.InvariantCulture, "{0}_{0}", (int)m_imageSize);
 
             string imageWebName;
             string imageResourceName;
 
             if (typeData.NameFrom == ImageNameFrom.TypeID)
             {
-                imageWebName = m_item.ID.ToString();
-                imageResourceName = String.Format("_{0}", imageWebName);
+                imageWebName = m_item.ID.ToString(CultureConstants.InvariantCulture);
+                imageResourceName = String.Format(CultureConstants.InvariantCulture, "_{0}", imageWebName);
             }
             else
             {
-                imageWebName = String.Format("icon{0}", m_item.Icon);
+                imageWebName = String.Format(CultureConstants.InvariantCulture, "icon{0}", m_item.Icon);
                 imageResourceName = imageWebName;
             }
 
             // Try and get image from a local optional resources file (probably don't used anymore, not sure)
-            string localResources = String.Format("{1}Resources{0}Optional{0}{2}{3}.resources",
+            string localResources = String.Format(CultureConstants.InvariantCulture, "{1}Resources{0}Optional{0}{2}{3}.resources",
                                                   Path.DirectorySeparatorChar, AppDomain.CurrentDomain.BaseDirectory,
                                                   typeData.LocalComponent, eveSize);
 
@@ -304,7 +305,8 @@ namespace EVEMon.Common.Controls
             // Result should be like :
             // http://eve.no-ip.de/icons/32_32/icon22_08.png
             // http://eve.no-ip.de/icons/32_32/7538.png
-            Uri imageURL = new Uri(String.Format(NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName));
+            Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
+                                                 NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName));
 
             ImageService.GetImageAsync(imageURL, true, img => GotImage(m_item.ID, img, true));
         }

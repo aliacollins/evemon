@@ -204,7 +204,8 @@ namespace EVEMon.Common.Data
                 case 5:
                     return 256000 * Rank;
                 default:
-                    throw new NotImplementedException(String.Format("One of our devs messed up. Skill level was {0} ?!", level));
+                    throw new NotImplementedException(String.Format(CultureConstants.DefaultCulture,
+                                                                    "One of our devs messed up. Skill level was {0} ?!", level));
             }
         }
 
@@ -290,7 +291,8 @@ namespace EVEMon.Common.Data
             lines.CopyTo(textLinesStr, 0);
 
             return textLinesStr.Aggregate(String.Empty,
-                                          (current, line) => String.Format("{0}{1}{2}", current, line, Environment.NewLine));
+                                          (current, line) => String.Format(CultureConstants.DefaultCulture,
+                                                                           "{0}{1}{2}", current, line, Environment.NewLine));
         }
 
         #endregion

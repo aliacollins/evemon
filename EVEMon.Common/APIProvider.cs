@@ -161,7 +161,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public APIResult<SerializableAPICharacterName> QueryCharacterName(string ids)
         {
-            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataIDsOnly, ids));
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   NetworkConstants.PostDataIDsOnly, ids));
             return QueryMethod<SerializableAPICharacterName>(APIGenericMethods.CharacterName, postData, RowsetsTransform);
         }
 
@@ -186,7 +187,8 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(NetworkConstants.PostDataBase, id, verificationCode));
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   NetworkConstants.PostDataBase, id, verificationCode));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -202,8 +204,9 @@ namespace EVEMon.Common
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID,
                                         QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(
-                NetworkConstants.PostDataWithCharID, id, verificationCode, characterID));
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   NetworkConstants.PostDataWithCharID, id, verificationCode,
+                                                                   characterID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 
@@ -220,8 +223,9 @@ namespace EVEMon.Common
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, long messageID,
                                         QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(
-                String.Format(NetworkConstants.PostDataWithCharIDAndIDS, id, verificationCode, characterID, messageID));
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   NetworkConstants.PostDataWithCharIDAndIDS, id, verificationCode,
+                                                                   characterID, messageID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 

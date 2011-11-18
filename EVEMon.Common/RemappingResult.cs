@@ -121,11 +121,11 @@ namespace EVEMon.Common
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder().
-                Append("i").Append(BestScratchpad.Intelligence.Base.ToString()).
-                Append(" p").Append(BestScratchpad.Perception.Base.ToString()).
-                Append(" c").Append(BestScratchpad.Charisma.Base.ToString()).
-                Append(" w").Append(BestScratchpad.Willpower.Base.ToString()).
-                Append(" m").Append(BestScratchpad.Memory.Base.ToString());
+                Append("i").Append(BestScratchpad.Intelligence.Base.ToString(CultureConstants.DefaultCulture)).
+                Append(" p").Append(BestScratchpad.Perception.Base.ToString(CultureConstants.DefaultCulture)).
+                Append(" c").Append(BestScratchpad.Charisma.Base.ToString(CultureConstants.DefaultCulture)).
+                Append(" w").Append(BestScratchpad.Willpower.Base.ToString(CultureConstants.DefaultCulture)).
+                Append(" m").Append(BestScratchpad.Memory.Base.ToString(CultureConstants.DefaultCulture));
 
             return builder.ToString();
         }

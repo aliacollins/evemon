@@ -50,18 +50,19 @@ namespace EVEMon.Common
                                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
 
             // Look in the %APPDATA% folder
-            string filepath = String.Format("{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
+            string filepath = String.Format(CultureConstants.InvariantCulture,
+                                            "{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
 
             if (File.Exists(filepath))
                 return filepath;
 
             // File isn't in the current folder, look in installation directory ("resources" subdirectory)
-            string baseFile = String.Format("{1}Resources{0}{2}", Path.DirectorySeparatorChar,
+            string baseFile = String.Format(CultureConstants.InvariantCulture, "{1}Resources{0}{2}", Path.DirectorySeparatorChar,
                                             AppDomain.CurrentDomain.BaseDirectory, filename);
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
-                throw new FileNotFoundException(String.Format("{0} not found!", baseFile));
+                throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", baseFile));
 
             // The file was in the installation directory, let's copy it to %APPDATA%
             FileHelper.OverwriteOrWarnTheUser(baseFile, filepath);

@@ -429,13 +429,13 @@ namespace EVEMon.Common
 
             decimal abs = Math.Abs(value);
             if (abs < 1.0M)
-                return (((int)value * 100) / 100.0M).ToString("0.##") + suffix;
+                return (((int)value * 100) / 100.0M).ToString("0.##", CultureConstants.DefaultCulture) + suffix;
             if (abs < 10.0M)
-                return (((int)value * 1000) / 1000.0M).ToString("#.##") + suffix;
+                return (((int)value * 1000) / 1000.0M).ToString("#.##", CultureConstants.DefaultCulture) + suffix;
             if (abs < 100.0M)
-                return (((int)value * 1000) / 1000.0M).ToString("##.#") + suffix;
+                return (((int)value * 1000) / 1000.0M).ToString("##.#", CultureConstants.DefaultCulture) + suffix;
 
-            return (((int)value * 1000) / 1000.0M).ToString("###") + suffix;
+            return (((int)value * 1000) / 1000.0M).ToString("###", CultureConstants.DefaultCulture) + suffix;
         }
 
         #endregion

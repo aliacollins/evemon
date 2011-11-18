@@ -91,7 +91,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("{0} {1}", Skill.Name, Skill.GetRomanFromInt(Level));
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Skill.GetRomanFromInt(Level));
         }
     }
 }

@@ -115,7 +115,8 @@ namespace EVEMon.Common
             // Otherwise, query for the patch file
             // First look up for an emergency patch
             Util.DownloadXMLAsync<SerializablePatch>(
-                new Uri(String.Format("{0}-emergency.xml", Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))),
+                new Uri(String.Format(CultureConstants.DefaultCulture,
+                                      "{0}-emergency.xml", Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))),
                 (result, errorMessage) =>
                     {
                         // If no emergency patch found proceed with the regular

@@ -207,7 +207,7 @@ namespace EVEMon.Common
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                     {
-                        Description = String.Format(
+                        Description = String.Format(CultureConstants.DefaultCulture,
                             "An error occurred while querying the character list for API key {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Error
@@ -239,7 +239,7 @@ namespace EVEMon.Common
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                     {
-                        Description = String.Format(
+                        Description = String.Format(CultureConstants.DefaultCulture,
                             "An error occurred while querying the account status for API key {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Error
@@ -541,9 +541,9 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
                     {
-                        Description = String.Format(
-                            "This API key expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
-                            apiKey),
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "This API key expires in {0}: {1}.",
+                                                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = priority
                     };
@@ -575,9 +575,9 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                     {
-                        Description = String.Format(
-                            "This account expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
-                            apiKey),
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "This account expires in {0}: {1}.",
+                                                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = priority
                     };
@@ -607,7 +607,8 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)
                     {
-                        Description = String.Format("This account has no characters in training: {0}.", apiKey),
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "This account has no characters in training: {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Warning
                     };
@@ -779,10 +780,10 @@ namespace EVEMon.Common
             switch (status)
             {
                 case ServerStatus.Offline:
-                    text = String.Format("{0} is offline.", serverName);
+                    text = String.Format(CultureConstants.DefaultCulture, "{0} is offline.", serverName);
                     break;
                 case ServerStatus.Online:
-                    text = String.Format("{0} is online.", serverName);
+                    text = String.Format(CultureConstants.DefaultCulture, "{0} is online.", serverName);
                     break;
                 case ServerStatus.CheckDisabled:
                 case ServerStatus.Unknown:

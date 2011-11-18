@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
             CorporationID = src.CorporationID;
             CorporationName = src.CorporationName;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
-            FullLocation = String.Format("{0} > {1}", SolarSystem.FullLocation, src.StationName);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, src.StationName);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace EVEMon.Common.Data
             SolarSystem = owner;
             ReprocessingStationsTake = src.ReprocessingStationsTake;
             ReprocessingEfficiency = src.ReprocessingEfficiency;
-            FullLocation = String.Format("{0} > {1}", owner.FullLocation, src.Name);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", owner.FullLocation, src.Name);
             if (src.Agents == null)
                 return;
 

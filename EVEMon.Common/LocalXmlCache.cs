@@ -23,7 +23,8 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
-                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", filename)));
+                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                                 String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename)));
             }
         }
 
@@ -38,7 +39,8 @@ namespace EVEMon.Common
             {
                 XmlDocument doc = new XmlDocument();
                 EveMonClient.EnsureCacheDirInit();
-                doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", charName)));
+                doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                      String.Format(CultureConstants.DefaultCulture, "{0}.xml", charName)));
                 return doc;
             }
         }
@@ -61,7 +63,8 @@ namespace EVEMon.Common
 
                 // Writes in the target file
                 EveMonClient.EnsureCacheDirInit();
-                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
+                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                               String.Format(CultureConstants.DefaultCulture, "{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName,
                                                   fs =>
@@ -87,7 +90,9 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
-                return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", characterName)));
+                return
+                    new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                         String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
             }
         }
 

@@ -25,9 +25,9 @@ namespace EVEMon.Common
                          ? EVEMailState.Inbox
                          : EVEMailState.SentItem);
             MessageID = src.MessageID;
-            Sender = src.ToListID.Any(x => x == src.SenderID.ToString())
-                         ? GetMailingListIDToName(src.SenderID.ToString())
-                         : EveIDToName.GetIDToName(src.SenderID.ToString());
+            Sender = src.ToListID.Any(x => x == src.SenderID.ToString(CultureConstants.InvariantCulture))
+                         ? GetMailingListIDToName(src.SenderID.ToString(CultureConstants.InvariantCulture))
+                         : EveIDToName.GetIDToName(src.SenderID.ToString(CultureConstants.InvariantCulture));
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
             ToCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
@@ -139,7 +139,7 @@ namespace EVEMon.Common
 
             foreach (string id in src)
             {
-                if (id == m_ccpCharacter.CharacterID.ToString())
+                if (id == m_ccpCharacter.CharacterID.ToString(CultureConstants.InvariantCulture))
                     listOfNames.Add(m_ccpCharacter.Name);
                 else
                     listOfIDsToQuery.Add(id);
@@ -187,7 +187,8 @@ namespace EVEMon.Common
             }
 
             List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
-                x => x.ID.ToString() == listID)).Select(mailingList => mailingList != null ? mailingList.Name : "Unknown").ToList();
+                x => x.ID.ToString(CultureConstants.InvariantCulture) == listID)).Select(
+                    mailingList => mailingList != null ? mailingList.Name : "Unknown").ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (listOfNames.Count == 0)
@@ -277,7 +278,7 @@ namespace EVEMon.Common
                 result.Result.Bodies.Add(
                     new SerializableMailBodiesListItem
                         {
-                            MessageID = long.Parse(result.Result.MissingMessageIDs),
+                            MessageID = long.Parse(result.Result.MissingMessageIDs, CultureConstants.InvariantCulture),
                             MessageText = "The text for this message was reported missing."
                         });
             }

@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
             Constellation = owner;
             Name = src.Name;
             SecurityLevel = src.SecurityLevel;
-            FullLocation = String.Format("{0} > {1}", owner.FullLocation, src.Name);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", owner.FullLocation, src.Name);
             m_jumps = new FastList<SolarSystem>(0);
 
             m_x = src.X;

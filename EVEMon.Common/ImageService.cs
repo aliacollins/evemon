@@ -23,7 +23,8 @@ namespace EVEMon.Common
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
         public static void GetCharacterImageAsync(long charId, GetImageCallback callback)
         {
-            GetImageAsync(new Uri(String.Format(NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128)), false, callback);
+            GetImageAsync(new Uri(String.Format(CultureConstants.InvariantCulture,
+                                                NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128)), false, callback);
         }
 
         /// <summary>

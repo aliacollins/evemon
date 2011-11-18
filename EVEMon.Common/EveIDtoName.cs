@@ -45,7 +45,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal static string GetIDToName(long id)
         {
-            return GetIDToName(id.ToString());
+            return GetIDToName(id.ToString(CultureConstants.InvariantCulture));
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace EVEMon.Common
         {
             foreach (string id in s_listOfIDs)
             {
-                string name = s_cacheList.FirstOrDefault(x => x.Key.ToString() == id).Value;
+                string name = s_cacheList.FirstOrDefault(x => x.Key.ToString(CultureConstants.InvariantCulture) == id).Value;
 
                 if (name == null)
                     s_listOfIDsToQuery.Add(id);

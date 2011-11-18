@@ -159,7 +159,8 @@ namespace EVEMon.Common.IgbService
             Dictionary<string, string> headers = new Dictionary<string, string>();
 
             string request = String.Empty;
-            string requestUrl = ExtractHeaders(buffer, headers, ref request);
+            string url = ExtractHeaders(buffer, headers, ref request);
+            Uri requestUrl = new Uri(url);
 
             SendOutputToClient(client, headers, request, requestUrl);
             client.Close();
@@ -172,7 +173,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="headers">dictionary of headers</param>
         /// <param name="request">the requested method</param>
         /// <param name="requestUrl">url to respond to</param>
-        private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string request, string requestUrl)
+        private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string request, Uri requestUrl)
         {
             using (MemoryStream ms = new MemoryStream())
             {
@@ -301,14 +302,13 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestUrl">URL of the request</param>
         /// <param name="headers">dictionary of headers</param>
         /// <param name="sw">stream writer to output to</param>
-        private void ProcessRequest(string request, string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
+        private void ProcessRequest(string request, Uri requestUrl, IDictionary<string, string> headers, StreamWriter sw)
         {
             if (!request.Equals("GET"))
             {
-                sw.WriteLine(
-                    String.Format(
-                        "<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
-                        request));
+                sw.WriteLine(String.Format(CultureConstants.DefaultCulture,
+                                           "<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
+                                           request));
                 return;
             }
 
@@ -341,14 +341,14 @@ namespace EVEMon.Common.IgbService
             string characterName = headerCharacterName;
             Regex contextRegex = new Regex(@"(?'context'\/characters(\/(?'charName'[^\/]*))?)?(?'request'.*)",
                                            RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            Match match = contextRegex.Match(requestUrl);
+            Match match = contextRegex.Match(requestUrl.AbsoluteUri);
             if (match.Success)
             {
                 Group contextGroup = match.Groups["context"];
                 if (contextGroup.Success)
                     characterName = HttpUtility.UrlDecode(match.Groups["charName"].Value);
 
-                requestUrl = match.Groups["request"].Value;
+                requestUrl = new Uri(match.Groups["request"].Value);
             }
             Character character = !string.IsNullOrEmpty(characterName)
                                       ? EveMonClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName)
@@ -362,9 +362,9 @@ namespace EVEMon.Common.IgbService
             string context = String.Format(CultureConstants.DefaultCulture, "/characters/{0}",
                                            HttpUtility.UrlEncode(character.Name));
 
-            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))
+            if (requestUrl.AbsoluteUri.StartsWith("/plan/") || requestUrl.AbsoluteUri.StartsWith("/shopping/") || requestUrl.AbsoluteUri.StartsWith("/owned/"))
                 GeneratePlanOrShoppingOutput(context, requestUrl, sw, character);
-            else if (requestUrl.StartsWith("/skills/bytime"))
+            else if (requestUrl.AbsoluteUri.StartsWith("/skills/bytime"))
                 GenerateSkillsByTimeOutput(context, sw, character);
             else
                 GeneratePlanListOutput(context, sw, character);
@@ -515,7 +515,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestUrl">url of the request</param>
         /// <param name="sw">stream writer to output to</param>
         /// <param name="character">character to use</param>
-        private static void GeneratePlanOrShoppingOutput(string context, string requestUrl, StreamWriter sw, Character character)
+        private static void GeneratePlanOrShoppingOutput(string context, Uri requestUrl, StreamWriter sw, Character character)
         {
             WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
@@ -526,7 +526,7 @@ namespace EVEMon.Common.IgbService
                 new Regex(
                     @"\/(owned\/(?'skillId'[^\/]+)\/(?'markOwned'[^\/]+)\/)?(?'requestType'shopping|plan)\/(?'planName'[^\/]+)(.*)",
                     RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            Match match = regex.Match(requestUrl);
+            Match match = regex.Match(requestUrl.AbsoluteUri);
 
             if (match.Success)
             {

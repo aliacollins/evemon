@@ -170,7 +170,7 @@ namespace EVEMon.Common
                 result.Result.Texts.Add(
                     new SerializableNotificationTextsListItem
                     {
-                        NotificationID = long.Parse(result.Result.MissingMessageIDs),
+                        NotificationID = long.Parse(result.Result.MissingMessageIDs, CultureConstants.InvariantCulture),
                         NotificationText = "The text for this notification was reported missing."
                     });
             }

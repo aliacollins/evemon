@@ -96,7 +96,7 @@ namespace EVEMon.Common
                 return (Identity.APIKeys.IsEmpty() ||
                         (m_characterDataQuerying.CharacterSheetMonitor.LastResult != null &&
                          m_characterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
-                           ? String.Format("{0} (cached)", Name)
+                           ? String.Format(CultureConstants.DefaultCulture, "{0} (cached)", Name)
                            : Name;
             }
         }

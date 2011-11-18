@@ -162,7 +162,7 @@ namespace EVEMon.Common
             // Print entry index
             if (m_settings.EntryNumber)
             {
-                size = Print(g, String.Format("{0}: ", index));
+                size = Print(g, String.Format(CultureConstants.DefaultCulture, "{0}: ", index));
                 m_point.X += (int)size.Width;
             }
 
@@ -268,7 +268,7 @@ namespace EVEMon.Common
             // Total number of entries on this page
             if (m_settings.FooterCount)
             {
-                size = Print(g, index.ToString());
+                size = Print(g, index.ToString(CultureConstants.DefaultCulture));
                 m_point.X += (int)size.Width;
 
                 size = Print(g, index > 1 ? " skill levels" : " skill level");

@@ -663,7 +663,7 @@ namespace EVEMon.Common
         {
             // If no characters on this API key, return only the API key ID
             if (CharacterIdentities.Count() == 0)
-                return ID.ToString();
+                return ID.ToString(CultureConstants.DefaultCulture);
 
             // Otherwise, return the chars' names into parenthesis
             StringBuilder names = new StringBuilder();
@@ -673,7 +673,7 @@ namespace EVEMon.Common
                 if (id != CharacterIdentities.Last())
                     names.Append(", ");
             }
-            return String.Format("{0} ({1})", ID, names);
+            return String.Format(CultureConstants.DefaultCulture, "{0} ({1})", ID, names);
         }
 
         #endregion

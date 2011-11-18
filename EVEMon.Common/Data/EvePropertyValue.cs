@@ -45,7 +45,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public int IntValue
         {
-            get { return Int32.Parse(Value); }
+            get { return Int32.Parse(Value, CultureConstants.InvariantCulture); }
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public float FloatValue
         {
-            get { return Single.Parse(Value); }
+            get { return Single.Parse(Value, CultureConstants.InvariantCulture); }
         }
 
         #endregion
