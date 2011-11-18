@@ -15,23 +15,23 @@ namespace EVEMon.Common.Controls
 
         private const uint SRCCOPY = 0x00CC0020;
 
-        [DllImport("kernel32.dll")]
+        [DllImport("psapi.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
+        internal static extern bool EmptyWorkingSet(IntPtr proc);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static extern int SendMessage(IntPtr handle, int messg, int wparam, int lparam);
+        internal static extern IntPtr SendMessage(IntPtr handle, uint messg, IntPtr wparam, IntPtr lparam);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
                                                Int32 cx, Int32 cy, uint uFlags);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        [DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
                                           int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
@@ -78,7 +78,7 @@ namespace EVEMon.Common.Controls
         #region Tray Icon
 
         // All definitions taken from http://pinvoke.net
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         internal static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
