@@ -540,12 +540,12 @@ namespace EVEMon.Common
         /// Applies a XSLT to a <see cref="XmlDocument"/> and returns another <see cref="XmlDocument"/>.
         /// </summary>
         /// <param name="doc">The source <see cref="XmlDocument"/></param>
-        /// <param name="transform">The XSLT to apply.</param>
+        /// <param name="xslt">The XSLT to apply.</param>
         /// <returns>The transformed <see cref="XmlDocument"/>.</returns>
-        public static IXPathNavigable Transform(IXPathNavigable doc, XslCompiledTransform transform)
+        public static IXPathNavigable Transform(IXPathNavigable doc, XslCompiledTransform xslt)
         {
-            if (transform == null)
-                throw new ArgumentNullException("transform");
+            if (xslt == null)
+                throw new ArgumentNullException("xslt");
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -553,7 +553,7 @@ namespace EVEMon.Common
                 {
                     // Apply the XSL transform
                     writer.Formatting = Formatting.Indented;
-                    transform.Transform(doc, writer);
+                    xslt.Transform(doc, writer);
                     writer.Flush();
 
                     // Reads the XML document from the given stream.
