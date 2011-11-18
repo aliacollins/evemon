@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common.Net
 {
@@ -20,7 +21,7 @@ namespace EVEMon.Common.Net
         /// <param name="url"></param>
         /// <param name="postData"></param>
         /// <returns></returns>
-        public XmlDocument DownloadXml(Uri url, HttpPostData postData = null)
+        public IXPathNavigable DownloadXml(Uri url, HttpPostData postData = null)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))

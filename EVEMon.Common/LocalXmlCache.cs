@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common
 {
@@ -31,7 +32,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="charName"></param>
         /// <returns></returns>
-        public static XmlDocument GetCharacterXml(string charName)
+        public static IXPathNavigable GetCharacterXml(string charName)
         {
             lock (s_syncLock)
             {
@@ -47,14 +48,15 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="xdoc">The xml to save.</param>
-        public static void Save(string key, XmlDocument xdoc)
+        public static void Save(string key, IXPathNavigable xdoc)
         {
             if (xdoc == null)
                 throw new ArgumentNullException("xdoc");
 
             lock (s_syncLock)
             {
-                XmlNode characterNode = xdoc.SelectSingleNode("//name");
+                XmlDocument xmlDoc = (XmlDocument)xdoc;
+                XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
                 string name = (characterNode == null ? key : characterNode.InnerText);
 
                 // Writes in the target file

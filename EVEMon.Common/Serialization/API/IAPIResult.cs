@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -48,6 +48,6 @@ namespace EVEMon.Common.Serialization.API
         /// Gets the returned XML document.
         /// </summary>
         /// <value>The XML document.</value>
-        XmlDocument XmlDocument { get; set; }
+        IXPathNavigable XmlDocument { get; set; }
     }
 }

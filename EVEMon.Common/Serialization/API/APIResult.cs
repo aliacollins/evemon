@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common.Net;
 
@@ -173,7 +174,7 @@ namespace EVEMon.Common.Serialization.API
         /// Gets / sets the XML document when there's no HTTP error.
         /// </summary>
         [XmlIgnore]
-        public XmlDocument XmlDocument { get; set; }
+        public IXPathNavigable XmlDocument { get; set; }
 
         /// <summary>
         /// Gets the time left before a new version is available.

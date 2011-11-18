@@ -1,4 +1,4 @@
-using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common.Net
 {
@@ -12,7 +12,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="xdoc">The xdoc.</param>
         /// <param name="error">The error.</param>
-        public DownloadXmlAsyncResult(XmlDocument xdoc, HttpWebServiceException error)
+        public DownloadXmlAsyncResult(IXPathNavigable xdoc, HttpWebServiceException error)
         {
             Error = error;
             Result = xdoc;
@@ -22,7 +22,7 @@ namespace EVEMon.Common.Net
         /// Gets or sets the result.
         /// </summary>
         /// <value>The result.</value>
-        public XmlDocument Result { get; private set; }
+        public IXPathNavigable Result { get; private set; }
 
         /// <summary>
         /// Gets or sets the error.

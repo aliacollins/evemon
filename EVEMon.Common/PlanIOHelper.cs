@@ -249,7 +249,7 @@ namespace EVEMon.Common
             output.Entries.AddRange(serial.Entries);
 
             // Serializes to XML document and gets a string representation
-            XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlan), output);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlan), output);
             return Util.GetXMLStringRepresentation(doc);
         }
 
@@ -264,7 +264,7 @@ namespace EVEMon.Common
             output.Plans.AddRange(plans.Select(plan => plan.Export()));
 
             // Serializes to XML document and gets a string representation
-            XmlDocument doc = Util.SerializeToXmlDocument(typeof(OutputPlans), output);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlans), output);
             return Util.GetXMLStringRepresentation(doc);
         }
 

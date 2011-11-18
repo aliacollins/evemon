@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
@@ -293,14 +294,14 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static APIResult<T> DeserializeAPIResultCore<T>(XmlDocument doc, XslCompiledTransform transform)
+        private static APIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform)
         {
             APIResult<T> result;
 
             try
             {
                 // Deserialization with a transform
-                using (XmlNodeReader reader = new XmlNodeReader(doc))
+                using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
                     if (transform != null)
                     {
@@ -392,14 +393,14 @@ namespace EVEMon.Common
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static BCAPIResult<T> DeserializeBCAPIResultCore<T>(XmlNode doc)
+        private static BCAPIResult<T> DeserializeBCAPIResultCore<T>(IXPathNavigable doc)
         {
             BCAPIResult<T> result;
 
             try
             {
                 // Deserialization with a transform
-                using (XmlNodeReader reader = new XmlNodeReader(doc))
+                using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(BCAPIResult<T>));
                     result = (BCAPIResult<T>)xs.Deserialize(reader);
@@ -460,7 +461,7 @@ namespace EVEMon.Common
                             try
                             {
                                 // Deserialize
-                                using (XmlNodeReader reader = new XmlNodeReader(asyncResult.Result))
+                                using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)asyncResult.Result))
                                 {
                                     XmlSerializer xs = new XmlSerializer(typeof(T));
                                     result = (T)xs.Deserialize(reader);
@@ -494,7 +495,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GetXMLStringRepresentation(XmlDocument doc)
+        public static string GetXMLStringRepresentation(IXPathNavigable doc)
         {
             if (doc == null)
                 throw new ArgumentNullException("doc");
@@ -505,7 +506,8 @@ namespace EVEMon.Common
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();
             XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
-            doc.WriteContentTo(xmlWriter);
+            XmlDocument xmlDoc = (XmlDocument)doc;
+            xmlDoc.WriteContentTo(xmlWriter);
             xmlWriter.Flush();
 
             return xmlBuilder.ToString();
@@ -517,7 +519,7 @@ namespace EVEMon.Common
         /// <param name="serializationType">The type to pass to the <see cref="XmlSerializer"/></param>
         /// <param name="data">The object to serialize.</param>
         /// <returns>The Xml document representing the given object.</returns>
-        public static XmlDocument SerializeToXmlDocument(Type serializationType, object data)
+        public static IXPathNavigable SerializeToXmlDocument(Type serializationType, object data)
         {
             using (MemoryStream memStream = new MemoryStream())
             {
@@ -540,7 +542,7 @@ namespace EVEMon.Common
         /// <param name="doc">The source <see cref="XmlDocument"/></param>
         /// <param name="transform">The XSLT to apply.</param>
         /// <returns>The transformed <see cref="XmlDocument"/>.</returns>
-        public static XmlDocument Transform(XmlDocument doc, XslCompiledTransform transform)
+        public static IXPathNavigable Transform(IXPathNavigable doc, XslCompiledTransform transform)
         {
             if (transform == null)
                 throw new ArgumentNullException("transform");
