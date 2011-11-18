@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EVEMon.Common.SettingsObjects;
 
@@ -63,10 +64,10 @@ namespace EVEMon.Common
             switch (m_column)
             {
                 case ResearchColumn.Agent:
-                    return x.AgentName.CompareTo(y.AgentName);
+                    return String.Compare(x.AgentName, y.AgentName, StringComparison.CurrentCulture);
 
                 case ResearchColumn.Field:
-                    return x.Field.CompareTo(y.Field);
+                    return String.Compare(x.Field, y.Field, StringComparison.CurrentCulture);
 
                 case ResearchColumn.Level:
                     return x.AgentLevel.CompareTo(y.AgentLevel);

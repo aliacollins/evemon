@@ -282,7 +282,7 @@ namespace EVEMon.Common
             try
             {
                 // Is the format compressed ? 
-                if (filename.EndsWith(".emp"))
+                if (filename.EndsWith(".emp", StringComparison.OrdinalIgnoreCase))
                 {
                     string tempFile = Util.UncompressToTempFile(filename);
                     try
@@ -335,7 +335,7 @@ namespace EVEMon.Common
             try
             {
                 // Is the format compressed ? 
-                if (filename.EndsWith(".epb"))
+                if (filename.EndsWith(".epb", StringComparison.OrdinalIgnoreCase))
                 {
                     string tempFile = Util.UncompressToTempFile(filename);
                     try

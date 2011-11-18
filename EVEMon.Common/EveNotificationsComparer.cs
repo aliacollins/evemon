@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -63,10 +64,10 @@ namespace EVEMon.Common
             switch (m_column)
             {
                 case EveNotificationsColumn.SenderName:
-                    return x.Sender.CompareTo(y.Sender);
+                    return String.Compare(x.Sender, y.Sender, StringComparison.CurrentCulture);
 
                 case EveNotificationsColumn.Type:
-                    return x.Type.CompareTo(y.Type);
+                    return String.Compare(x.Type, y.Type, StringComparison.CurrentCulture);
 
                 case EveNotificationsColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);

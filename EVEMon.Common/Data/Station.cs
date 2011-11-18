@@ -120,7 +120,9 @@ namespace EVEMon.Common.Data
             if (other == null)
                 throw new ArgumentNullException("other");
 
-            return (SolarSystem != other.SolarSystem ? SolarSystem.CompareTo(other.SolarSystem) : Name.CompareTo(other.Name));
+            return SolarSystem != other.SolarSystem
+                       ? SolarSystem.CompareTo(other.SolarSystem)
+                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

@@ -73,7 +73,9 @@ namespace EVEMon.Common.Data
             if (other == null)
                 throw new ArgumentNullException("other");
 
-            return Region != other.Region ? Region.CompareTo(other.Region) : Name.CompareTo(other.Name);
+            return Region != other.Region
+                       ? Region.CompareTo(other.Region)
+                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

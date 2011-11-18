@@ -21,7 +21,7 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("filename");
 
             string normalizedFilename = filename;
-            if (filename.StartsWith("file:///"))
+            if (filename.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
                 normalizedFilename = filename.Remove(0, 8);
 
             if (!File.Exists(normalizedFilename))

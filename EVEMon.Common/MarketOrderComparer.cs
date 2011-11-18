@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -81,10 +82,10 @@ namespace EVEMon.Common
                     return x.IssuedFor.CompareTo(y.IssuedFor);
 
                 case MarketOrderColumn.Item:
-                    return x.Item.Name.CompareTo(y.Item.Name);
+                    return String.Compare(x.Item.Name, y.Item.Name, StringComparison.CurrentCulture);
 
                 case MarketOrderColumn.ItemType:
-                    return x.Item.MarketGroup.Name.CompareTo(y.Item.MarketGroup.Name);
+                    return String.Compare(x.Item.MarketGroup.Name, y.Item.MarketGroup.Name, StringComparison.CurrentCulture);
 
                 case MarketOrderColumn.Location:
                     return x.Station.CompareTo(y.Station);

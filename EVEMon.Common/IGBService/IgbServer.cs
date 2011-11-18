@@ -362,9 +362,11 @@ namespace EVEMon.Common.IgbService
             string context = String.Format(CultureConstants.DefaultCulture, "/characters/{0}",
                                            HttpUtility.UrlEncode(character.Name));
 
-            if (requestUrl.AbsoluteUri.StartsWith("/plan/") || requestUrl.AbsoluteUri.StartsWith("/shopping/") || requestUrl.AbsoluteUri.StartsWith("/owned/"))
+            if (requestUrl.AbsoluteUri.StartsWith("/plan/", StringComparison.OrdinalIgnoreCase)
+                || requestUrl.AbsoluteUri.StartsWith("/shopping/", StringComparison.OrdinalIgnoreCase)
+                || requestUrl.AbsoluteUri.StartsWith("/owned/", StringComparison.OrdinalIgnoreCase))
                 GeneratePlanOrShoppingOutput(context, requestUrl, sw, character);
-            else if (requestUrl.AbsoluteUri.StartsWith("/skills/bytime"))
+            else if (requestUrl.AbsoluteUri.StartsWith("/skills/bytime", StringComparison.OrdinalIgnoreCase))
                 GenerateSkillsByTimeOutput(context, sw, character);
             else
                 GeneratePlanListOutput(context, sw, character);

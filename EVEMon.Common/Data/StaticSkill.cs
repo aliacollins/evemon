@@ -260,12 +260,12 @@ namespace EVEMon.Common.Data
                 if (inTag)
                 {
                     //Handle filenames inside html tags
-                    if (currentLine.EndsWith("."))
+                    if (currentLine.EndsWith(".", StringComparison.CurrentCulture))
                         currentLine += currentWord;
                     else
                         currentLine += " " + currentWord;
 
-                    if (currentWord.IndexOf(">") > -1)
+                    if (currentWord.IndexOf(">", StringComparison.CurrentCulture) > -1)
                         inTag = false;
                 }
                 else

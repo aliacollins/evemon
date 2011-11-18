@@ -126,7 +126,7 @@ namespace EVEMon.Common
             QueuedSkill skillX = x.CurrentlyTrainingSkill;
             QueuedSkill skillY = y.CurrentlyTrainingSkill;
             if (skillX == null && skillY == null)
-                return String.Compare(x.Name, y.Name);
+                return String.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
             if (skillX == null || skillY == null)
                 return -1;
 
@@ -147,7 +147,7 @@ namespace EVEMon.Common
             if (y == null)
                 throw new ArgumentNullException("y");
 
-            return String.Compare(x.Name, y.Name);
+            return String.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

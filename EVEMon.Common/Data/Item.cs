@@ -278,7 +278,9 @@ namespace EVEMon.Common.Data
             if (tail == null)
                 return stripMe;
 
-            return stripMe.EndsWith(tail) ? stripMe.Remove(stripMe.Length - tail.Length) : stripMe;
+            return stripMe.EndsWith(tail, StringComparison.CurrentCulture)
+                       ? stripMe.Remove(stripMe.Length - tail.Length)
+                       : stripMe;
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace EVEMon.Common.Data
             if (other == null)
                 throw new ArgumentNullException("other");
 
-            return Name.CompareTo(other.Name);
+            return String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion
