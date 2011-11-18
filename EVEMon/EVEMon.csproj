@@ -153,6 +153,7 @@
     <Compile Include="ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>

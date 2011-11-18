@@ -16,20 +16,17 @@ namespace EVEMon.Common.Controls
         private const uint SRCCOPY = 0x00CC0020;
 
         [DllImport("kernel32.dll")]
-        public static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
+        internal static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int SendMessage(IntPtr handle, int messg, int wparam, int lparam);
+        internal static extern int SendMessage(IntPtr handle, int messg, int wparam, int lparam);
 
         [DllImport("user32.dll")]
-        public static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
+        private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
                                                Int32 cx, Int32 cy, uint uFlags);
 
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
-        public static extern int SetTextCharacterExtra(IntPtr hdc, int nCharExtra);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("gdi32.dll")]
         private static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
@@ -81,7 +78,7 @@ namespace EVEMon.Common.Controls
         internal static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         public const string TaskbarClass = "Shell_TrayWnd";
 
@@ -206,10 +203,10 @@ namespace EVEMon.Common.Controls
         public const int MF_ENABLED = 0x0;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+        internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
+        internal static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
 
         #endregion
     }
