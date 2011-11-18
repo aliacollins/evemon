@@ -316,7 +316,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Set the network availability.
         /// </summary>
-        private bool SetNetworkStatus { get; set; }
+        protected bool SetNetworkStatus { get; set; }
 
 
         #region Overriden Methods
