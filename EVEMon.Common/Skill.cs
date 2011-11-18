@@ -494,6 +494,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return character.Skills[StaticData.ArrayIndex];
         }
 
@@ -572,11 +575,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Returns the static skill the provided skill is based on.
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="skill"></param>
         /// <returns></returns>
-        public static implicit operator StaticSkill(Skill s)
+        public static implicit operator StaticSkill(Skill skill)
         {
-            return s.StaticData;
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
+            return skill.StaticData;
         }
 
         #endregion

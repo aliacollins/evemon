@@ -67,6 +67,9 @@ namespace EVEMon.Common
         public static TAttribute GetAttribute<TAttribute>(this Enum item)
             where TAttribute : Attribute
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             MemberInfo[] members = item.GetType().GetMember(item.ToString());
             if (members.Length > 0)
             {

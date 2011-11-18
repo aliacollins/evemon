@@ -15,6 +15,9 @@ namespace EVEMon.Common.Controls
 
         public static void SetExtendedStyle(Control control, ListViewExtendedStyles exStyle)
         {
+            if (control == null)
+                throw new ArgumentNullException("control");
+
             ListViewExtendedStyles styles =
                 (ListViewExtendedStyles)SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
             styles |= exStyle;
@@ -23,6 +26,9 @@ namespace EVEMon.Common.Controls
 
         public static void EnableDoubleBuffer(Control control)
         {
+            if (control == null)
+                throw new ArgumentNullException("control");
+
             // read current style
             ListViewExtendedStyles styles =
                 (ListViewExtendedStyles)SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
@@ -34,6 +40,9 @@ namespace EVEMon.Common.Controls
 
         public static void DisableDoubleBuffer(Control control)
         {
+            if (control == null)
+                throw new ArgumentNullException("control");
+
             // read current style
             ListViewExtendedStyles styles =
                 (ListViewExtendedStyles)SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);

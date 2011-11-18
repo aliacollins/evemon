@@ -268,6 +268,9 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public static string ExportAsBBCode(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             StringBuilder result = new StringBuilder();
 
             result.AppendFormat(CultureConstants.DefaultCulture, "[b]{0}[/b]{1}", character.Name, Environment.NewLine);

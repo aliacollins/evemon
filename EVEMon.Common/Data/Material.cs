@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Serialization.Datafiles;
+﻿using System;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -15,6 +16,9 @@ namespace EVEMon.Common.Data
         /// <param name="src">The source.</param>
         public Material(SerializableMaterialQuantity src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             Item = StaticItems.GetItemByID(src.ID);
             Quantity = src.Quantity;
         }

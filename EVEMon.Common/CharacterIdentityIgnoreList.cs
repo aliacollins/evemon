@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
@@ -25,6 +26,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return Contains(character.Identity);
         }
 
@@ -37,6 +41,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public void Remove(CharacterIdentity id)
         {
+            if (id == null)
+                throw new ArgumentNullException("id");
+
             // If the id was not in list, returns the existing character or null if it does not exist
             if (!Items.Remove(id))
                 return;
@@ -56,6 +63,9 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public void Add(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             CharacterIdentity id = character.Identity;
             if (Items.Contains(id))
                 return;

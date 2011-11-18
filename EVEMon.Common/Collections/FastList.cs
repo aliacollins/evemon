@@ -177,6 +177,9 @@ namespace EVEMon.Common.Collections
         /// <param name="enumerable">The enumeration containing the items to add</param>
         public void AddRange(IEnumerable<T> enumerable)
         {
+            if (enumerable == null)
+                throw new ArgumentNullException("enumerable");
+
             // Scroll through the items to add
             foreach (T item in enumerable)
             {

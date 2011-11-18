@@ -37,6 +37,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static void SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
         {
+            if (queueList == null)
+                throw new ArgumentNullException("queueList");
+
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.

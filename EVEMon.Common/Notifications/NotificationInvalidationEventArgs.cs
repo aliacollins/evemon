@@ -23,6 +23,9 @@ namespace EVEMon.Common.Notifications
         /// <param name="notification">The notification.</param>
         public NotificationInvalidationEventArgs(NotificationEventArgs notification)
         {
+            if (notification == null)
+                throw new ArgumentNullException("notification");
+
             Key = notification.InvalidationKey;
         }
 

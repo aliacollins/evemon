@@ -29,6 +29,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         protected MarketOrder(SerializableOrderListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             m_state = GetState(src);
             OwnerID = src.OwnerID;
             ID = src.OrderID;
@@ -51,6 +54,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         protected MarketOrder(SerializableOrderBase src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             Ignored = src.Ignored;
             ID = src.OrderID;
             m_state = src.State;
@@ -206,6 +212,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         protected SerializableOrderBase Export(SerializableOrderBase src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             src.Ignored = Ignored;
             src.OrderID = ID;
             src.State = m_state;

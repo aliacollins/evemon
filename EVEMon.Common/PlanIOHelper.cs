@@ -25,6 +25,12 @@ namespace EVEMon.Common
         public static string ExportAsText(Plan planToExport, PlanExportSettings settings,
                                           Action<StringBuilder, PlanEntry, PlanExportSettings> exportActions = null)
         {
+            if (planToExport == null)
+                throw new ArgumentNullException("planToExport");
+
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
             PlanScratchpad plan = new PlanScratchpad(planToExport.Character, planToExport);
             plan.Sort(planToExport.SortingPreferences);
             plan.UpdateStatistics();
@@ -234,6 +240,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string ExportAsXML(Plan plan)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             // Generates a settings plan and transforms it to an output plan
             SerializablePlan serial = plan.Export();
             OutputPlan output = new OutputPlan { Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision };
@@ -266,6 +275,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static SerializablePlan ImportFromXML(String filename)
         {
+            if (filename == null)
+                throw new ArgumentNullException("filename");
+
             SerializablePlan result = null;
             try
             {
@@ -316,6 +328,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static IEnumerable<SerializablePlan> ImportPlansFromXML(String filename)
         {
+            if (filename == null)
+                throw new ArgumentNullException("filename");
+
             OutputPlans result = null;
             try
             {

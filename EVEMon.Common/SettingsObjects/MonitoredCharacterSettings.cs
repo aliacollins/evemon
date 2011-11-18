@@ -18,6 +18,9 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public MonitoredCharacterSettings(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             CharacterGuid = character.Guid;
             Name = character.Name;
             Settings = character.UISettings;

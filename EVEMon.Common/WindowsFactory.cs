@@ -94,6 +94,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static TForm ShowUnique(Func<TForm> creation)
         {
+            if (creation == null)
+                throw new ArgumentNullException("creation");
+
             lock (s_syncLock)
             {
                 try
@@ -192,6 +195,9 @@ namespace EVEMon.Common
         public static TForm ShowByTag<TTag>(TTag tag, Func<TTag, TForm> creation)
             where TTag : class
         {
+            if (creation == null)
+                throw new ArgumentNullException("creation");
+
             Object otag = tag;
 
             lock (s_syncLock)

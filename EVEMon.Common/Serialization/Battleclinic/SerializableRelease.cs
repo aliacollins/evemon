@@ -31,7 +31,13 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public XmlCDataSection MessageXml
         {
             get { return new XmlDocument().CreateCDataSection(Message); }
-            set { Message = value.Data; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+                
+                Message = value.Data;
+            }
         }
 
         [XmlIgnore]

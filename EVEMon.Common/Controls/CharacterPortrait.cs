@@ -84,6 +84,9 @@ namespace EVEMon.Common.Controls
             get { return m_character; }
             set
             {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
                 if (m_character == value)
                     return;
 

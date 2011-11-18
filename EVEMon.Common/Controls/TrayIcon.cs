@@ -242,6 +242,9 @@ namespace EVEMon.Common.Controls
         /// <param name="tooltipForm">The tooltip form.</param>
         public static void SetToolTipLocation(Form tooltipForm)
         {
+            if (tooltipForm == null)
+                throw new ArgumentNullException("tooltipForm");
+
             Point mp = Control.MousePosition;
             NativeMethods.AppBarData appBarData = NativeMethods.AppBarData.Create();
             NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);

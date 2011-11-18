@@ -265,6 +265,9 @@ namespace EVEMon.Common.Controls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             if (e.KeyCode == Keys.Down)
             {
                 // Signal that the dropdown is "down". This is required so that the behaviour of the dropdown is the same
@@ -274,7 +277,7 @@ namespace EVEMon.Common.Controls
                 OnDropDown(null);
             }
             // Make sure that certain keys or combinations are not blocked.
-            e.Handled = !e.Alt && !(e.KeyCode == Keys.Tab) &&
+            e.Handled = !e.Alt && e.KeyCode != Keys.Tab &&
                         !((e.KeyCode == Keys.Left) || (e.KeyCode == Keys.Right) || (e.KeyCode == Keys.Home) ||
                           (e.KeyCode == Keys.End));
 
@@ -283,6 +286,9 @@ namespace EVEMon.Common.Controls
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             e.Handled = true;
             base.OnKeyPress(e);
         }

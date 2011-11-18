@@ -14,6 +14,9 @@ namespace EVEMon.Common.Notifications
         public SkillCompletionNotificationEventArgs(Object sender, IEnumerable<QueuedSkill> skills)
             : base(sender, NotificationCategory.SkillCompletion)
         {
+            if (skills == null)
+                throw new ArgumentNullException("skills");
+
             Skills = new List<QueuedSkill>();
             foreach (QueuedSkill skill in skills)
             {

@@ -24,8 +24,14 @@ namespace EVEMon.Common.Data
         /// Constructor.
         /// </summary>
         public SolarSystem(Constellation owner, SerializableSolarSystem src)
-            : base(src.Stations == null ? 0 : src.Stations.Count)
+            : base(src != null && src.Stations != null ? src.Stations.Count : 0)
         {
+            if (owner == null)
+                throw new ArgumentNullException("owner");
+
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             Constellation = owner;
             Name = src.Name;
@@ -88,6 +94,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int GetSquareDistanceWith(SolarSystem other)
         {
+            if (other == null)
+                throw new ArgumentNullException("other");
+
             int dx = m_x - other.m_x;
             int dy = m_y - other.m_y;
             int dz = m_z - other.m_z;
@@ -182,6 +191,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(SolarSystem other)
         {
+            if (other == null)
+                throw new ArgumentNullException("other");
+
             return Constellation != other.Constellation
                        ? Constellation.CompareTo(other.Constellation)
                        : Name.CompareTo(other.Name);

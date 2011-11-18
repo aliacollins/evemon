@@ -234,6 +234,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static string WordWrap(string text, int maxLength)
         {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
             text = text.Replace("\n", " ");
             text = text.Replace("\r", " ");
             text = text.Replace(".", ". ");
@@ -302,6 +305,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return character.Skills.GetByArrayIndex(ArrayIndex);
         }
 

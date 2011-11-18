@@ -20,6 +20,9 @@ namespace EVEMon.Common.Threading
         /// <param name="mainApplicationForm">The application's main form</param>
         public UIActor(Form mainApplicationForm)
         {
+            if (mainApplicationForm == null)
+                throw new ArgumentNullException("mainApplicationForm");
+
             m_applicationForm = mainApplicationForm;
 
             m_applicationForm.Invoke((Action)(() =>

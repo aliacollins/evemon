@@ -13,6 +13,9 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="character">The character.</param>
         public static void UpdateCalendar(CCPCharacter character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             SkillQueue skillQueue = character.SkillQueue;
 
             int queuePosition = 0;

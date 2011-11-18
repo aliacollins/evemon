@@ -174,6 +174,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Graphics gr = e.Graphics;
             gr.SmoothingMode = SmoothingMode.AntiAlias;
             using (Pen pen = new Pen(SystemBrushes.ControlDark, 1))

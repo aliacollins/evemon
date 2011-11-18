@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EVEMon.Common.Serialization.Datafiles;
@@ -41,6 +42,9 @@ namespace EVEMon.Common.Data
         /// <param name="src"></param>
         protected MarketGroup(SerializableBlueprintMarketGroup src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             Name = src.Name;
         }

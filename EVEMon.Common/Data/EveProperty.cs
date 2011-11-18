@@ -119,11 +119,11 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public string GetLabelOrDefault(Item obj)
         {
-            EvePropertyValue? value = obj.Properties[ID];
-            if (value == null)
-                return Format(DefaultValue);
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-            return Format(value.Value.Value);
+            EvePropertyValue? value = obj.Properties[ID];
+            return Format(value == null ? DefaultValue : value.Value.Value);
         }
 
         /// <summary>
@@ -229,6 +229,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public float GetNumericValue(Item obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
             // Retrieve the string for the number
             EvePropertyValue? value = obj.Properties[ID];
             string number = (value == null ? DefaultValue : value.Value.Value);

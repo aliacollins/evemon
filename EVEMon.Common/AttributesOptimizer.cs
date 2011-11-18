@@ -120,6 +120,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static List<RemappingResult> GetResultsFromRemappingPoints(BasePlan plan)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             CharacterScratchpad scratchpad = new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet));
             List<RemappingResult> remappingList = new List<RemappingResult>();
             List<ISkillLevel> list = new List<ISkillLevel>();
@@ -152,6 +155,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static RemappingResult OptimizeFromFirstYearOfPlan(BasePlan plan)
         {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             RemappingResult remapping = new RemappingResult(new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet)));
 
             // Scroll through the entries and split it into remappings
@@ -173,6 +179,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static RemappingResult OptimizeFromCharacter(Character character, BasePlan plan)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            if (plan == null)
+                throw new ArgumentNullException("plan");
+
             // Create a character without any skill
             CharacterScratchpad scratchpad = new CharacterScratchpad(character.After(plan.ChosenImplantSet));
             scratchpad.ClearSkills();

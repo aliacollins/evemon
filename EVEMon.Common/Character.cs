@@ -35,6 +35,9 @@ namespace EVEMon.Common
         /// <param name="guid"></param>
         protected Character(CharacterIdentity identity, Guid guid)
         {
+            if (identity == null)
+                throw new ArgumentNullException("identity");
+
             CharacterID = identity.CharacterID;
             m_name = identity.CharacterName;
             CorporationID = identity.CorporationID;
@@ -322,6 +325,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillLevel(StaticSkill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             return Skills[skill.ID].Level;
         }
 
@@ -332,6 +338,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillPoints(StaticSkill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             return Skills[skill.ID].SkillPoints;
         }
 
@@ -403,6 +412,9 @@ namespace EVEMon.Common
         /// <param name="serial">The serial.</param>
         protected void Export(SerializableSettingsCharacter serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             serial.Guid = Guid;
             serial.ID = Identity.CharacterID;
             serial.Name = m_name;
@@ -461,6 +473,9 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         protected void Import(SerializableSettingsCharacter serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             Import((SerializableCharacterSheetBase)serial);
 
             // Implants

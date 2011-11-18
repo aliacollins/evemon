@@ -98,6 +98,9 @@ namespace EVEMon.Common
         /// <param name="method"></param>
         public void Query(Enum method)
         {
+            if (method == null)
+                throw new ArgumentNullException("method");
+
             IQueryMonitorEx monitor = this[method.ToString()] as IQueryMonitorEx;
             if (monitor != null)
                 monitor.ForceUpdate(false);

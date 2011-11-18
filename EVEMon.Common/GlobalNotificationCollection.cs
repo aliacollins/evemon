@@ -33,6 +33,9 @@ namespace EVEMon.Common
         /// <param name="notification"></param>
         public void Notify(NotificationEventArgs notification)
         {
+            if (notification == null)
+                throw new ArgumentNullException("notification");
+
             switch (notification.Behaviour)
             {
                 case NotificationBehaviour.Cohabitate:
@@ -65,11 +68,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notifications with the given key and notify an event.
         /// </summary>
-        /// <param name="args"></param>
-        public void Invalidate(NotificationInvalidationEventArgs args)
+        /// <param name="e"></param>
+        public void Invalidate(NotificationInvalidationEventArgs e)
         {
-            if (InvalidateCore(args.Key))
-                EveMonClient.OnNotificationInvalidated(args);
+            if (e == null)
+                throw new ArgumentNullException("e");
+
+            if (InvalidateCore(e.Key))
+                EveMonClient.OnNotificationInvalidated(e);
         }
 
         /// <summary>

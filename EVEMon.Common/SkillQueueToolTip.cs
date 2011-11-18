@@ -54,6 +54,9 @@ namespace EVEMon.Common
         /// <param name="pt">The pt.</param>
         public void Display(QueuedSkill skill, Point pt)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             const string Format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.SkillName;
             string skillLevel = Skill.GetRomanFromInt(skill.Level);

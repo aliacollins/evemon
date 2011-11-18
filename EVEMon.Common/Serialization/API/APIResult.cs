@@ -72,6 +72,9 @@ namespace EVEMon.Common.Serialization.API
         /// <param name="exc">The exception.</param>
         public APIResult(InvalidOperationException exc)
         {
+            if (exc == null)
+                throw new ArgumentNullException("exc");
+
             m_error = APIError.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
             m_exception = exc;

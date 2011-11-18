@@ -76,6 +76,9 @@ namespace EVEMon.Common
         /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
         public static void TryAddOrUpdateFromUriAsync(Uri uri, EventHandler<UriCharacterEventArgs> callback)
         {
+            if (uri == null)
+                throw new ArgumentNullException("uri");
+
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
             {

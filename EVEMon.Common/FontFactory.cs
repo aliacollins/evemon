@@ -86,6 +86,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(Font prototype, FontStyle style = FontStyle.Regular)
         {
+            if (prototype == null)
+                throw new ArgumentNullException("prototype");
+
             return GetFont(prototype.FontFamily.Name, prototype.Size, style, prototype.Unit);
         }
 
@@ -100,6 +103,9 @@ namespace EVEMon.Common
         public static Font GetFont(FontFamily family, float emSize, FontStyle style = FontStyle.Regular,
                                    GraphicsUnit unit = GraphicsUnit.Point)
         {
+            if (family == null)
+                throw new ArgumentNullException("family");
+
             return GetFont(family.Name, emSize, style, unit);
         }
 

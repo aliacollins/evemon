@@ -487,6 +487,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">TreeViewCancelEventArgs.</param>
         protected override void OnBeforeSelect(TreeViewCancelEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             // We don't want the base TreeView to handle the selection, because it can only handle single selection. 
             // Instead, we'll handle the selection ourselves by keeping track of the selected nodes and drawing the 
             // selection ourselves.
@@ -889,6 +892,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
 #if DEBUG
             try
             {
@@ -943,6 +949,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             m_tnKeysStartNode = null;
 
             // Store number of mouse clicks in OnMouseDown event, because here we also get e.Clicks = 2 when an item was doubleclicked
@@ -1050,6 +1059,15 @@ namespace EVEMon.Common.Controls
         public void ProcessNodeRange(TreeNode startNode, TreeNode endNode, MouseEventArgs e, Keys keys, TreeViewAction tva,
                                      bool allowStartEdit)
         {
+            if (startNode == null)
+                throw new ArgumentNullException("startNode");
+
+            if (endNode == null)
+                throw new ArgumentNullException("endNode");
+
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             m_blnSelectionChanged = false; // prepare for OnSelectionsChanged
 
             switch (e.Button)
@@ -1363,6 +1381,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnBeforeLabelEdit(NodeLabelEditEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             m_blnSelectionChanged = false; // prepare for OnSelectionsChanged
 
             // Make sure that it's the only selected node
@@ -1385,6 +1406,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Keys kMod = Keys.None;
             switch (e.Modifiers)
             {
@@ -1512,6 +1536,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnAfterCollapse(TreeViewEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             m_blnSelectionChanged = false;
 
             // All child nodes should be deselected

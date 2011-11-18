@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using EVEMon.Common.Serialization.API;
@@ -13,6 +14,9 @@ namespace EVEMon.Common
         /// <param name="src">The source.</param>
         public EveNotificationText(SerializableNotificationTextsListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             NotificationID = src.NotificationID;
             NotificationText = FormatText(src.NotificationText);
         }

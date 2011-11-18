@@ -207,6 +207,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public Certificate ToCharacter(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return character.Certificates[ID];
         }
     }

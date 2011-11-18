@@ -343,6 +343,9 @@ namespace EVEMon.Common
         /// <param name="queryMonitor">The query monitor.</param>
         public void ForceUpdate(IQueryMonitor queryMonitor)
         {
+            if (queryMonitor == null)
+                throw new ArgumentNullException("queryMonitor");
+
             IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method.ToString()] as IQueryMonitorEx;
             if (monitor != null)
                 monitor.ForceUpdate(false);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
@@ -99,6 +100,9 @@ namespace EVEMon.Common.Data
         /// </remarks>
         public static StaticSkill GetSkill(this SerializableSkillPrerequisite src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             return GetSkillByID(src.ID) ?? GetSkillByName(src.Name);
         }
 

@@ -341,6 +341,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="settingsFile">The settings file.</param>
         public static void SaveSettingsFile(SerializableFilesListItem settingsFile)
         {
+            if (settingsFile == null)
+                throw new ArgumentNullException("settingsFile");
+
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Title = "EVEMon Settings Backup File Save";

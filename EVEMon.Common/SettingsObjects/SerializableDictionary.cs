@@ -60,6 +60,9 @@ namespace EVEMon.Common.SettingsObjects
         /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public void ReadXml(XmlReader reader)
         {
+            if (reader == null)
+                throw new ArgumentNullException("reader");
+
             XmlSerializer keySer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSer = new XmlSerializer(typeof(TValue));
 
@@ -94,6 +97,9 @@ namespace EVEMon.Common.SettingsObjects
         /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
         public void WriteXml(XmlWriter writer)
         {
+            if (writer == null)
+                throw new ArgumentNullException("writer");
+
             XmlSerializer keySer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSer = new XmlSerializer(typeof(TValue));
 

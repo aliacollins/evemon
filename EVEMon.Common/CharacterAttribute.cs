@@ -58,6 +58,9 @@ namespace EVEMon.Common
         /// <returns>The formatted string.</returns>
         public string ToString(string format)
         {
+            if (format == null)
+                throw new ArgumentNullException("format");
+
             format = format.Replace("%n", m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
             format = format.Replace("%N", m_attrib.ToString());
             format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString());

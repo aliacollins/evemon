@@ -86,6 +86,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException Exception(Uri url, Exception ex)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.Exception, ex, url, "An Exception occurred.");
         }
 
@@ -96,6 +99,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException RedirectsExceededException(Uri url)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.RedirectsExceeded, url,
                                                String.Format(ExceptionMessages.RedirectsExceeded, url.Host));
         }
@@ -107,6 +113,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException RequestsDisabledException(Uri url)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.RequestsDisabled, url,
                                                String.Format(ExceptionMessages.RequestsDisabled, url.Host));
         }
@@ -122,6 +131,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException WebException(Uri url, HttpWebServiceState webServiceState, WebException ex)
         {
+            if (webServiceState == null)
+                throw new ArgumentNullException("webServiceState");
+
             string proxyHost = webServiceState.Proxy.Enabled
                                    ? webServiceState.Proxy.Host
                                    : WebRequest.DefaultWebProxy.GetProxy(url).Host;
@@ -202,6 +214,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException XmlException(Uri url, Exception ex)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.XmlException, ex, url,
                                                String.Format(ExceptionMessages.XmlException, url.Host));
         }
@@ -214,6 +229,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException ImageException(Uri url, Exception ex)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.ImageException, ex, url,
                                                String.Format(ExceptionMessages.ImageException, url.Host));
         }
@@ -226,6 +244,9 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException FileError(Uri url, Exception ex)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             return new HttpWebServiceException(HttpWebServiceExceptionStatus.FileError, ex, url,
                                                String.Format(ExceptionMessages.FileException, url.Host));
         }

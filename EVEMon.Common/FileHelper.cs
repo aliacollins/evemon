@@ -17,6 +17,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Stream OpenRead(string filename, bool allowIgnore)
         {
+            if (filename == null)
+                throw new ArgumentNullException("filename");
+
             string normalizedFilename = filename;
             if (filename.StartsWith("file:///"))
                 normalizedFilename = filename.Remove(0, 8);
@@ -74,6 +77,9 @@ namespace EVEMon.Common
         /// true otherwise.</returns>
         public static void OverwriteOrWarnTheUser(string destFileName, Func<Stream, bool> writeContentFunc)
         {
+            if (writeContentFunc == null)
+                throw new ArgumentNullException("writeContentFunc");
+
             string tempFileName = Path.GetTempFileName();
             try
             {

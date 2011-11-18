@@ -94,6 +94,9 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// </param>
         protected override void OnPaintAdornments(PaintEventArgs pea)
         {
+            if (pea == null)
+                throw new ArgumentNullException("pea");
+
             base.OnPaintAdornments(pea);
 
             // My thanks to bschurter (Bruce), CodeProject member #1255339 for this!
@@ -124,6 +127,9 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <param name="properties">The original properties dictionary.</param>
         protected override void PreFilterProperties(IDictionary properties)
         {
+            if (properties == null)
+                throw new ArgumentNullException("properties");
+
             base.PreFilterProperties(properties);
             properties["Text"] = TypeDescriptor.CreateProperty(typeof(MultiPanelPageDesigner),
                                                                (PropertyDescriptor)properties["Text"], new Attribute[0]);

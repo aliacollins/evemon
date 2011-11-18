@@ -35,6 +35,9 @@ namespace EVEMon.Common
         /// <param name="url"></param>
         public static void OpenURL(Uri url)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             try
             {
                 Process.Start(url.AbsoluteUri);
@@ -493,6 +496,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string GetXMLStringRepresentation(XmlDocument doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException("doc");
+
             // Creates the settings for the text writer
             XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
 
@@ -536,6 +542,9 @@ namespace EVEMon.Common
         /// <returns>The transformed <see cref="XmlDocument"/>.</returns>
         public static XmlDocument Transform(XmlDocument doc, XslCompiledTransform transform)
         {
+            if (transform == null)
+                throw new ArgumentNullException("transform");
+
             using (MemoryStream stream = new MemoryStream())
             {
                 using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))

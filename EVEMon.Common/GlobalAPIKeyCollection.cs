@@ -33,6 +33,9 @@ namespace EVEMon.Common
         /// <exception cref="InvalidOperationException">The API key does not exist in the list.</exception>
         public void Remove(APIKey apiKey)
         {
+            if (apiKey == null)
+                throw new ArgumentNullException("apiKey");
+
             // Removes the API key on the owned identities
             foreach (CharacterIdentity identity in apiKey.CharacterIdentities.Where(x => x.APIKeys.Contains(apiKey)))
             {

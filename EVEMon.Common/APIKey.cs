@@ -603,6 +603,9 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="APIKeyCreationEventArgs"/> instance containing the event data.</param>
         public void Update(APIKeyCreationEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             VerificationCode = e.VerificationCode;
             AccessMask = e.AccessMask;
             Type = e.Type;

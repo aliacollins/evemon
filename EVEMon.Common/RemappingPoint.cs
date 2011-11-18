@@ -27,6 +27,9 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public RemappingPoint(SerializableRemappingPoint serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             Guid = Guid.NewGuid();
             m_attributes[(int)EveAttribute.Intelligence] = serial.Intelligence;
             m_attributes[(int)EveAttribute.Perception] = serial.Perception;
@@ -155,6 +158,12 @@ namespace EVEMon.Common
         public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad,
                                                    CharacterScratchpad newScratchpad)
         {
+            if (oldScratchpad == null)
+                throw new ArgumentNullException("oldScratchpad");
+
+            if (newScratchpad == null)
+                throw new ArgumentNullException("newScratchpad");
+
             int bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
 
             if (bonusDifference == 0)

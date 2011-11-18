@@ -35,6 +35,9 @@ namespace EVEMon.Common.Controls
         /// <param name="frm"></param>
         public static void ShowInactiveTopmost(this Control frm)
         {
+            if (frm == null)
+                throw new ArgumentNullException("frm");
+
             // We store the 'left' and 'top' position because for some reason
             // on first execution of 'ShowWindow' the form position gets reset
             int left = frm.Left;
@@ -54,6 +57,12 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         public static void CopyGraphics(Graphics dest, Rectangle destClip, Graphics src, Point bltFrom)
         {
+            if (dest == null)
+                throw new ArgumentNullException("dest");
+
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
                    src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }

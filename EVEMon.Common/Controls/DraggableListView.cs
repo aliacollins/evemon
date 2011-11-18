@@ -80,6 +80,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragDrop(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
@@ -152,6 +155,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragOver(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
@@ -210,6 +216,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragEnter(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {

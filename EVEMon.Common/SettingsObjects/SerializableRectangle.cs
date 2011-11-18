@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -28,6 +29,9 @@ namespace EVEMon.Common.SettingsObjects
         /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
         public static explicit operator Rectangle(SerializableRectangle rect)
         {
+            if (rect == null)
+                throw new ArgumentNullException("rect");
+
             return new Rectangle(rect.Left, rect.Top, rect.Width, rect.Height);
         }
 

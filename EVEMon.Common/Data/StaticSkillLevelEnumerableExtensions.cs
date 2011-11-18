@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EVEMon.Common.Data
@@ -30,6 +31,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<StaticSkillLevel> GetAllDependencies(this IEnumerable<StaticSkillLevel> src, bool includeRoots)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
             List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 

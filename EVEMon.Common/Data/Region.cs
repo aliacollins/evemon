@@ -54,6 +54,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Region other)
         {
+            if (other == null)
+                throw new ArgumentNullException("other");
+
             return Name.CompareTo(other.Name);
         }
 

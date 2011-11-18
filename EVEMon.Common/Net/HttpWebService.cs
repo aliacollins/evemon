@@ -70,6 +70,9 @@ namespace EVEMon.Common.Net
         /// </summary>
         public static void CancelRequest(object request)
         {
+            if (request == null)
+                throw new ArgumentNullException("request");
+
             if (request.GetType() == typeof(HttpWebServiceRequest))
                 ((HttpWebServiceRequest)request).Cancelled = true;
         }

@@ -128,6 +128,9 @@ namespace EVEMon.Common.Controls
         /// <param name="pe"></param>
         protected override void OnPaint(PaintEventArgs pe)
         {
+            if (pe == null)
+                throw new ArgumentNullException("pe");
+
             Image frame = s_strobeFrame;
 
             // Select the frame to display

@@ -49,6 +49,9 @@ namespace EVEMon.Common
         /// <param name="xdoc">The xml to save.</param>
         public static void Save(string key, XmlDocument xdoc)
         {
+            if (xdoc == null)
+                throw new ArgumentNullException("xdoc");
+
             lock (s_syncLock)
             {
                 XmlNode characterNode = xdoc.SelectSingleNode("//name");

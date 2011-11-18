@@ -21,6 +21,9 @@ namespace EVEMon.Common
         /// <returns>A CSV text file.</returns>
         public static void CreateCSV(ListView listViewToExport)
         {
+            if (listViewToExport == null)
+                throw new ArgumentNullException("listViewToExport");
+
             s_saveFileDialog.Filter = "Comma Delimited Files (*.csv)|*.csv";
             if (s_saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;

@@ -43,6 +43,9 @@ namespace EVEMon.Common.Controls
             /// <param name="e">The Key event arguments</param>
             protected override void OnKeyDown(KeyEventArgs e)
             {
+                if (e == null)
+                    throw new ArgumentNullException("e");
+
                 if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
                 {
                     // Enact selection.
@@ -59,6 +62,9 @@ namespace EVEMon.Common.Controls
             /// <param name="e"></param>
             protected override void OnMouseMove(MouseEventArgs e)
             {
+                if (e == null)
+                    throw new ArgumentNullException("e");
+
                 base.OnMouseMove(e);
                 int index = IndexFromPoint(e.Location);
                 if (index < 0)

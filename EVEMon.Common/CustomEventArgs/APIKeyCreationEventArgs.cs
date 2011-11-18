@@ -17,6 +17,9 @@ namespace EVEMon.Common.CustomEventArgs
         public APIKeyCreationEventArgs(long id, string verificationCode,
                                        APIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {
+            if (apiKeyInfo == null)
+                throw new ArgumentNullException("apiKeyInfo");
+
             ID = id;
             VerificationCode = verificationCode;
             KeyTestError = String.Empty;

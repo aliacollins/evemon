@@ -13,6 +13,9 @@ namespace EVEMon.Common.Notifications
         public ClaimableCertificateNotificationEventArgs(Object sender, IEnumerable<Certificate> certificates)
             : base(sender, NotificationCategory.ClaimableCertificate)
         {
+            if (certificates == null)
+                throw new ArgumentNullException("certificates");
+
             Certificates = new List<Certificate>();
             foreach (Certificate cert in certificates)
             {

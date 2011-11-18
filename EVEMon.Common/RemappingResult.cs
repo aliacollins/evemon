@@ -15,6 +15,9 @@ namespace EVEMon.Common
         /// <param name="baseScratchpad"></param>
         public RemappingResult(CharacterScratchpad baseScratchpad)
         {
+            if (baseScratchpad == null)
+                throw new ArgumentNullException("baseScratchpad");
+
             Skills = new List<ISkillLevel>();
             BaseScratchpad = baseScratchpad;
             StartTime = BaseScratchpad.TrainingTime;
@@ -28,6 +31,9 @@ namespace EVEMon.Common
         public RemappingResult(RemappingPoint point, CharacterScratchpad baseScratchpad)
             : this(baseScratchpad)
         {
+            if (point == null)
+                throw new ArgumentNullException("point");
+
             Point = point;
         }
 
@@ -37,8 +43,11 @@ namespace EVEMon.Common
         /// <param name="result">Associated remapping point, may be null.</param>
         /// <param name="bestScratchpad"></param>
         public RemappingResult(RemappingResult result, CharacterScratchpad bestScratchpad)
-            : this(result.Point, result.BaseScratchpad)
+            : this(result != null ? result.Point : null, result != null ? result.BaseScratchpad : null)
         {
+            if (result == null)
+                throw new ArgumentNullException("result");
+
             Skills.AddRange(result.Skills);
             BestScratchpad = bestScratchpad;
         }

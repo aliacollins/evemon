@@ -17,6 +17,12 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <param name="provider"></param>
         protected override void FillTreeWithData(Selector selection, ITypeDescriptorContext context, IServiceProvider provider)
         {
+            if (selection == null)
+                throw new ArgumentNullException("selection");
+
+            if (context == null)
+                throw new ArgumentNullException("context");
+
             // Base method, clear the selection
             base.FillTreeWithData(selection, context, provider);
 

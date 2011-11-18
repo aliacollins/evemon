@@ -35,6 +35,9 @@ namespace EVEMon.Common
         /// <returns>An object implementing IDisposable</returns>
         public static IDisposable Begin(Action push, Action pop)
         {
+            if (push == null)
+                throw new ArgumentNullException("push");
+
             push();
             return new DisposableWithCallback(pop);
         }
