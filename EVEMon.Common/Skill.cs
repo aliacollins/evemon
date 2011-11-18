@@ -579,10 +579,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticSkill(Skill skill)
         {
-            if (skill == null)
-                throw new ArgumentNullException("skill");
-
-            return skill.StaticData;
+            return skill == null ? null : skill.StaticData;
         }
 
         #endregion

@@ -116,7 +116,7 @@ namespace EVEMon.Common
                 case RemappingPointStatus.UpToDate:
                     return String.Format("Remapping (active) : {0}", ToShortString());
                 default:
-                    throw new NotImplementedException();
+                    return String.Empty;
             }
         }
 

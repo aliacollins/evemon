@@ -376,10 +376,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(PlanEntry entry)
         {
-            if (entry == null)
-                throw new ArgumentNullException("entry");
-
-            return new StaticSkillLevel(entry.Skill, entry.Level);
+            return entry == null ? null : new StaticSkillLevel(entry.Skill, entry.Level);
         }
     }
 }

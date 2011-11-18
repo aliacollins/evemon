@@ -68,14 +68,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public StaticCertificate LowestGradeCertificate
         {
-            get
-            {
-                foreach (StaticCertificate cert in m_certificates.Where(cert => cert != null))
-                {
-                    return cert;
-                }
-                throw new NotImplementedException();
-            }
+            get { return m_certificates.Where(cert => cert != null).FirstOrDefault(); }
         }
 
         /// <summary>
@@ -83,16 +76,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public StaticCertificate HighestGradeCertificate
         {
-            get
-            {
-                // Look for the next grade
-                StaticCertificate lastCert = null;
-                foreach (StaticCertificate cert in m_certificates.Where(cert => cert != null))
-                {
-                    lastCert = cert;
-                }
-                return lastCert;
-            }
+            get { return m_certificates.Where(cert => cert != null).FirstOrDefault(); }
         }
 
         #endregion

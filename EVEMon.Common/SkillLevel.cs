@@ -82,10 +82,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(SkillLevel training)
         {
-            if (training == null)
-                throw new ArgumentNullException("training");
-
-            return new StaticSkillLevel(training.Skill.StaticData, training.Level);
+            return training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
         }
 
         /// <summary>
