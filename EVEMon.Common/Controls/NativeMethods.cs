@@ -7,9 +7,9 @@ namespace EVEMon.Common.Controls
 {
     public static class NativeMethods
     {
-        public const int SWP_NOSIZE = 0x0001;
-        public const int SWP_NOMOVE = 0x0002;
-        public const int SW_SHOWNOACTIVATE = 4;
+        public const uint SWP_NOSIZE = 0x0001;
+        public const uint SWP_NOMOVE = 0x0002;
+        public const uint SW_SHOWNOACTIVATE = 0x0004;
         public const int HWND_TOPMOST = -1;
         public const uint SWP_NOACTIVATE = 0x0010;
 
@@ -40,7 +40,8 @@ namespace EVEMon.Common.Controls
         /// Show the given form on topmost without activating it.
         /// </summary>
         /// <param name="frm"></param>
-        public static void ShowInactiveTopmost(this Control frm)
+        /// <param name="flags"></param>
+        public static void ShowInactiveTopmost(this Control frm, uint flags = 0)
         {
             if (frm == null)
                 throw new ArgumentNullException("frm");
@@ -50,7 +51,7 @@ namespace EVEMon.Common.Controls
             int left = frm.Left;
             int top = frm.Top;
 
-            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE | flags);
             ShowWindow(frm.Handle, SW_SHOWNOACTIVATE);
         }
 
