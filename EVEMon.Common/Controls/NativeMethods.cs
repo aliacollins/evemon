@@ -15,6 +15,12 @@ namespace EVEMon.Common.Controls
 
         private const uint SRCCOPY = 0x00CC0020;
 
+        [DllImport("kernel32.dll")]
+        public static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int SendMessage(IntPtr handle, int messg, int wparam, int lparam);
+
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
                                                Int32 cx, Int32 cy, uint uFlags);

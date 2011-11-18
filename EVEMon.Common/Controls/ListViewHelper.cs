@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
@@ -10,18 +9,15 @@ namespace EVEMon.Common.Controls
     /// </summary>
     public static class ListViewHelper
     {
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int SendMessage(IntPtr handle, int messg, int wparam, int lparam);
-
         public static void SetExtendedStyle(Control control, ListViewExtendedStyles exStyle)
         {
             if (control == null)
                 throw new ArgumentNullException("control");
 
             ListViewExtendedStyles styles =
-                (ListViewExtendedStyles)SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
+                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
             styles |= exStyle;
-            SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, 0, (int)styles);
+            NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, 0, (int)styles);
         }
 
         public static void EnableDoubleBuffer(Control control)
@@ -31,11 +27,11 @@ namespace EVEMon.Common.Controls
 
             // read current style
             ListViewExtendedStyles styles =
-                (ListViewExtendedStyles)SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
+                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
             // enable double buffer and border select
             styles |= ListViewExtendedStyles.DoubleBuffer | ListViewExtendedStyles.BorderSelect;
             // write new style
-            SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, 0, (int)styles);
+            NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, 0, (int)styles);
         }
 
         public static void DisableDoubleBuffer(Control control)
@@ -45,12 +41,12 @@ namespace EVEMon.Common.Controls
 
             // read current style
             ListViewExtendedStyles styles =
-                (ListViewExtendedStyles)SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
+                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle, 0, 0);
             // disable double buffer and border select
             styles -= styles & ListViewExtendedStyles.DoubleBuffer;
             styles -= styles & ListViewExtendedStyles.BorderSelect;
             // write new style
-            SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, 0, (int)styles);
+            NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, 0, (int)styles);
         }
 
         private enum ListViewMessages
