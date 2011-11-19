@@ -15,10 +15,10 @@ namespace EVEMon.Common.Controls
                 throw new ArgumentNullException("control");
 
             ListViewExtendedStyles styles =
-                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (uint)ListViewMessages.GetExtendedStyle,
+                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle,
                                                                   IntPtr.Zero, IntPtr.Zero);
             styles |= exStyle;
-            NativeMethods.SendMessage(control.Handle, (uint)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
+            NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
         }
 
         public static void EnableDoubleBuffer(Control control)
@@ -28,13 +28,13 @@ namespace EVEMon.Common.Controls
 
             // read current style
             ListViewExtendedStyles styles =
-                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (uint)ListViewMessages.GetExtendedStyle,
+                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle,
                                                                   IntPtr.Zero, IntPtr.Zero);
 
             // enable double buffer and border select
             styles |= ListViewExtendedStyles.DoubleBuffer | ListViewExtendedStyles.BorderSelect;
             // write new style
-            NativeMethods.SendMessage(control.Handle, (uint)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
+            NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
         }
 
         public static void DisableDoubleBuffer(Control control)
@@ -44,13 +44,13 @@ namespace EVEMon.Common.Controls
 
             // read current style
             ListViewExtendedStyles styles =
-                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (uint)ListViewMessages.GetExtendedStyle,
+                (ListViewExtendedStyles)NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.GetExtendedStyle,
                                                                   IntPtr.Zero, IntPtr.Zero);
             // disable double buffer and border select
             styles -= styles & ListViewExtendedStyles.DoubleBuffer;
             styles -= styles & ListViewExtendedStyles.BorderSelect;
             // write new style
-            NativeMethods.SendMessage(control.Handle, (uint)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
+            NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
         }
 
         private enum ListViewMessages

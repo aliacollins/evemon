@@ -20,7 +20,7 @@ namespace EVEMon.Common.Controls
         internal static extern bool EmptyWorkingSet(IntPtr proc);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static extern IntPtr SendMessage(IntPtr handle, uint messg, IntPtr wparam, IntPtr lparam);
+        internal static extern IntPtr SendMessage(IntPtr handle, Int32 messg, IntPtr wparam, IntPtr lparam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Controls
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -39,20 +39,20 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Show the given form on topmost without activating it.
         /// </summary>
-        /// <param name="frm"></param>
-        /// <param name="flags"></param>
-        public static void ShowInactiveTopmost(this Control frm, uint flags = 0)
+        /// <param name="form"></param>
+        /// <param name="uFlags"></param>
+        public static void ShowInactiveTopmost(this Control form, uint uFlags = 0)
         {
-            if (frm == null)
-                throw new ArgumentNullException("frm");
+            if (form == null)
+                throw new ArgumentNullException("form");
 
             // We store the 'left' and 'top' position because for some reason
             // on first execution of 'ShowWindow' the form position gets reset
-            int left = frm.Left;
-            int top = frm.Top;
+            int left = form.Left;
+            int top = form.Top;
 
-            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE | flags);
-            ShowWindow(frm.Handle, SW_SHOWNOACTIVATE);
+            SetWindowPos(form.Handle, HWND_TOPMOST, left, top, form.Width, form.Height, SWP_NOACTIVATE | uFlags);
+            ShowWindow(form.Handle, SW_SHOWNOACTIVATE);
         }
 
         /// <summary>
