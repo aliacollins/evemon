@@ -411,7 +411,7 @@ namespace EVEMon.LogitechG15
         private void RenderWalletBalance()
         {
             decimal balance = CurrentCharacter.Balance;
-            string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0} ISK", balance.ToString("N2"));
+            string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", balance);
             SizeF size = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             SizeF charNameSize = m_lcdCanvas.MeasureString(CurrentCharacter.AdornedName, m_defaultFont);
             float availableWidth = (G15Width - charNameSize.Width);
@@ -470,7 +470,7 @@ namespace EVEMon.LogitechG15
             if (!ShowEVETime)
                 return;
 
-            string curEVETime = DateTime.UtcNow.ToString("HH:mm");
+            string curEVETime = DateTime.UtcNow.ToString("HH:mm", CultureConstants.DefaultCulture);
             SizeF size = m_lcdCanvas.MeasureString(curEVETime, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(0f, 0f), size);
             timeLine.Offset(0f, 32f);
@@ -765,13 +765,13 @@ namespace EVEMon.LogitechG15
                 switch (suffixIndex)
                 {
                     case 1:
-                        balance = String.Format(CultureConstants.DefaultCulture, "{0} K ISK", value.ToString("#,###.#0"));
+                        balance = String.Format(CultureConstants.DefaultCulture, "{0:N2} K ISK", value);
                         break;
                     case 2:
-                        balance = String.Format(CultureConstants.DefaultCulture, "{0} M ISK", value.ToString("#,###.#0"));
+                        balance = String.Format(CultureConstants.DefaultCulture, "{0:N2} M ISK", value);
                         break;
                     case 3:
-                        balance = String.Format(CultureConstants.DefaultCulture, "{0} B ISK", value.ToString("#,###.#0"));
+                        balance = String.Format(CultureConstants.DefaultCulture, "{0:N2} B ISK", value);
                         break;
                         // We have no room to show the wallet balance
                     default:

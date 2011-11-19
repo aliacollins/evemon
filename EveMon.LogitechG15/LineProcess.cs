@@ -93,7 +93,7 @@ namespace EVEMon.LogitechG15
         /// <param name="offset">The offset.</param>
         private void RenderProgressLine(Graphics canvas, Graphics overlay, float offset)
         {
-            string text = m_percentage.ToString("P2");
+            string text = m_percentage.ToString("P2", CultureConstants.DefaultCulture);
             SizeF textSize = canvas.MeasureString(text, m_font);
             int left = 0;
             int size = LcdDisplay.G15Width;
@@ -101,7 +101,7 @@ namespace EVEMon.LogitechG15
 
             if (Settings.G15.ShowEVETime)
             {
-                string eveTime = DateTime.UtcNow.ToString("HH:mm");
+                string eveTime = DateTime.UtcNow.ToString("HH:mm", CultureConstants.DefaultCulture);
                 SizeF eveTimeSize = canvas.MeasureString(eveTime, m_font);
                 left = (int)eveTimeSize.Width + Pad;
                 size = LcdDisplay.G15Width - left - Pad;
