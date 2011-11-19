@@ -29,7 +29,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public string AdditionalArgs { get; set; }
 
         [XmlElement("message")]
-        public IXPathNavigable MessageXml
+        public XmlCDataSection MessageXml
         {
             get { return new XmlDocument().CreateCDataSection(Message); }
             set
@@ -37,7 +37,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 if (value == null)
                     throw new ArgumentNullException("value");
 
-                Message = ((XmlCDataSection)value).Data;
+                Message = value.Data;
             }
         }
 
