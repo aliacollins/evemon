@@ -7,7 +7,6 @@ using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Common.Controls
 {
-
     /// <summary>
     /// A combobox which notified subscribers about which items are under the mouse and when this changes.
     /// </summary>
@@ -103,10 +102,6 @@ namespace EVEMon.Common.Controls
             DropDownStyle = ComboBoxStyle.DropDownList;
             DrawMode = DrawMode.OwnerDrawFixed;
             DrawItem += ToolTipComboBox_DrawItem;
-
-            // CheckOnClick style for the dropdown (NOTE: must be set after dropdown is created).
-            m_listBox.DropDownMouseMove += listBox_DropDownMouseMove;
-            m_listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
         }
 
         /// <summary>
@@ -115,16 +110,28 @@ namespace EVEMon.Common.Controls
         /// <returns>The control to add to the popup</returns>
         protected override Control CreateContent()
         {
-            m_listBox = new CustomListBox
-                            {
-                                BorderStyle = BorderStyle.None,
-                                Dock = DockStyle.Fill,
-                                FormattingEnabled = true,
-                                Location = new Point(0, 0),
-                                Name = "m_listBox",
-                                Size = new Size(47, 15),
-                                TabIndex = 0
-                            };
+            CustomListBox tempListBox = null;
+            try
+            {
+                tempListBox = new CustomListBox();
+                tempListBox.DropDownMouseMove += listBox_DropDownMouseMove;
+                tempListBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
+                tempListBox.BorderStyle = BorderStyle.None;
+                tempListBox.Dock = DockStyle.Fill;
+                tempListBox.FormattingEnabled = true;
+                tempListBox.Location = new Point(0, 0);
+                tempListBox.Name = "listBox";
+                tempListBox.Size = new Size(47, 15);
+                tempListBox.TabIndex = 0;
+
+                m_listBox = tempListBox;
+                tempListBox = null;
+            }
+            finally
+            {
+                if (tempListBox != null)
+                    tempListBox.Dispose();
+            }
             return m_listBox;
         }
 

@@ -270,10 +270,12 @@ namespace EVEMon.Common.Controls
                                                   fs =>
                                                       {
                                                           // We need to create a copy of the image because GDI+ is locking it
-                                                          Image image = new Bitmap(newImage);
-                                                          image.Save(fs, ImageFormat.Png);
-                                                          fs.Flush();
-                                                          fs.Close();
+                                                          using (Image image = new Bitmap(newImage))
+                                                          {
+                                                              image.Save(fs, ImageFormat.Png);
+                                                              fs.Flush();
+                                                              fs.Close();
+                                                          }
                                                           return true;
                                                       });
 

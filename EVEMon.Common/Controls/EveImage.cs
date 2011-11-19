@@ -203,12 +203,26 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void ShowBlankImage()
         {
-            Bitmap b = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height);
-            using (Graphics g = Graphics.FromImage(b))
+            Bitmap tempBitmap = null;
+            try
             {
-                g.FillRectangle(new SolidBrush(BackColor), new Rectangle(0, 0, b.Width, b.Height));
+                tempBitmap = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height);
+                using (Graphics g = Graphics.FromImage(tempBitmap))
+                {
+                    using (SolidBrush brush = new SolidBrush(BackColor))
+                        g.FillRectangle(brush, new Rectangle(0, 0, tempBitmap.Width, tempBitmap.Height));
+                }
+
+                Bitmap b = tempBitmap;
+                tempBitmap = null;
+
+                pbImage.Image = b;
             }
-            pbImage.Image = b;
+            finally
+            {
+                if (tempBitmap != null)
+                    tempBitmap.Dispose();
+            }
         }
 
         /// <summary>
@@ -324,15 +338,17 @@ namespace EVEMon.Common.Controls
 
             try
             {
-                IResourceReader basic = new ResourceReader(localResources);
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
+                using (IResourceReader basic = new ResourceReader(localResources))
                 {
-                    if (basicx.Key.ToString() != imageResourceName)
-                        continue;
+                    IDictionaryEnumerator basicx = basic.GetEnumerator();
+                    while (basicx.MoveNext())
+                    {
+                        if (basicx.Key.ToString() != imageResourceName)
+                            continue;
 
-                    pbImage.Image = (Image)basicx.Value;
-                    return true;
+                        pbImage.Image = (Image)basicx.Value;
+                        return true;
+                    }
                 }
             }
             catch (InvalidOperationException ex)
@@ -368,32 +384,43 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void DrawOverlayIcon()
         {
-            Bitmap overlayIcon = new Bitmap(16, 16);
-            switch (m_item.MetaGroup)
+            Bitmap overlayIcon = null;
+            try
             {
-                case ItemMetaGroup.T2:
-                    overlayIcon = Properties.Resources.T2;
-                    break;
-                case ItemMetaGroup.T3:
-                    overlayIcon = Properties.Resources.T3;
-                    break;
-                case ItemMetaGroup.Storyline:
-                    overlayIcon = Properties.Resources.Storyline;
-                    break;
-                case ItemMetaGroup.Deadspace:
-                    overlayIcon = Properties.Resources.Deadspace;
-                    break;
-                case ItemMetaGroup.Officer:
-                    overlayIcon = Properties.Resources.Officer;
-                    break;
-                case ItemMetaGroup.Faction:
-                    overlayIcon = Properties.Resources.Faction;
-                    break;
-            }
+                switch (m_item.MetaGroup)
+                {
+                    case ItemMetaGroup.T2:
+                        overlayIcon = Properties.Resources.T2;
+                        break;
+                    case ItemMetaGroup.T3:
+                        overlayIcon = Properties.Resources.T3;
+                        break;
+                    case ItemMetaGroup.Storyline:
+                        overlayIcon = Properties.Resources.Storyline;
+                        break;
+                    case ItemMetaGroup.Deadspace:
+                        overlayIcon = Properties.Resources.Deadspace;
+                        break;
+                    case ItemMetaGroup.Officer:
+                        overlayIcon = Properties.Resources.Officer;
+                        break;
+                    case ItemMetaGroup.Faction:
+                        overlayIcon = Properties.Resources.Faction;
+                        break;
+                    default:
+                        overlayIcon = new Bitmap(16, 16);
+                        break;
+                }
 
-            using (Graphics graph = Graphics.FromImage(pbImage.Image))
+                using (Graphics graph = Graphics.FromImage(pbImage.Image))
+                {
+                    graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
+                }
+            }
+            finally
             {
-                graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
+                if (overlayIcon != null)
+                    overlayIcon.Dispose();
             }
         }
 

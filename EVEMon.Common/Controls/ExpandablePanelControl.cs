@@ -27,7 +27,6 @@ namespace EVEMon.Common.Controls
         private ToolStripMenuItem m_tsmiLowAnim;
 
         // Graphics variables
-        private StringFormat m_hCenteredStringFormat;
         private Bitmap m_headerImage;
         private Bitmap m_expandImage;
         private Bitmap m_collapseImage;
@@ -106,8 +105,24 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void CreateHeader()
         {
-            Header = new NoFlickerPanel { Width = Width, Height = 30, BackColor = Color.Transparent };
-            Controls.Add(Header);
+            NoFlickerPanel tempHeader = null;
+            try
+            {
+                tempHeader = new NoFlickerPanel();
+                tempHeader.Width = Width;
+                tempHeader.Height = 30;
+                tempHeader.BackColor = Color.Transparent;
+
+                Header = tempHeader;
+                tempHeader = null;
+
+                Controls.Add(Header);
+            }
+            finally
+            {
+                if (tempHeader != null)
+                    tempHeader.Dispose();
+            }
         }
 
         /// <summary>
@@ -203,8 +218,6 @@ namespace EVEMon.Common.Controls
             Graphics gr = e.Graphics;
             gr.SmoothingMode = SmoothingMode.AntiAlias;
 
-            m_hCenteredStringFormat = new StringFormat { LineAlignment = StringAlignment.Center };
-
             Header.Width = Width;
             m_headerImage = (IsExpanded ? m_collapseImage : m_expandImage);
 
@@ -216,8 +229,13 @@ namespace EVEMon.Common.Controls
                                            m_headerImage.Height));
             }
 
-            gr.DrawString(HeaderText, Font, Brushes.Black,
-                          new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), m_hCenteredStringFormat);
+            using (StringFormat hCenteredStringFormat = new StringFormat())
+            {
+                hCenteredStringFormat.LineAlignment = StringAlignment.Center;
+
+                gr.DrawString(HeaderText, Font, Brushes.Black,
+                              new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), hCenteredStringFormat);
+            }
         }
 
         #endregion
