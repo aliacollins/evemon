@@ -52,14 +52,16 @@ namespace EVEMon.Common.Net
         private static bool IsNetworkAvailableManual()
         {
             // Send a ping to www.google.com
-            Ping pingSender = new Ping();
-            PingOptions options = new PingOptions(50, false);
-            byte[] buffer = Encoding.ASCII.GetBytes("EVEMon Network Status Ping");
-            const int Timeout = 120;
-            const string Host = "www.google.com";
-            PingReply reply = pingSender.Send(Host, Timeout, buffer, options);
+            using (Ping pingSender = new Ping())
+            {
+                PingOptions options = new PingOptions(50, false);
+                byte[] buffer = Encoding.ASCII.GetBytes("EVEMon Network Status Ping");
+                const int Timeout = 120;
+                const string Host = "www.google.com";
+                PingReply reply = pingSender.Send(Host, Timeout, buffer, options);
 
-            return reply != null && (reply.Status == IPStatus.Success);
+                return reply != null && (reply.Status == IPStatus.Success);
+            }
         }
 
         /// <summary>

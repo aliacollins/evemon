@@ -203,26 +203,20 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void ShowBlankImage()
         {
-            Bitmap tempBitmap = null;
-            try
+            Bitmap bmp;
+            using (Bitmap tempBitmap = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height))
             {
-                tempBitmap = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height);
-                using (Graphics g = Graphics.FromImage(tempBitmap))
-                {
-                    using (SolidBrush brush = new SolidBrush(BackColor))
-                        g.FillRectangle(brush, new Rectangle(0, 0, tempBitmap.Width, tempBitmap.Height));
-                }
-
-                Bitmap b = tempBitmap;
-                tempBitmap = null;
-
-                pbImage.Image = b;
+                bmp = (Bitmap)tempBitmap.Clone();
             }
-            finally
+
+            using (Graphics g = Graphics.FromImage(bmp))
             {
-                if (tempBitmap != null)
-                    tempBitmap.Dispose();
+                using (SolidBrush brush = new SolidBrush(BackColor))
+                    g.FillRectangle(brush, new Rectangle(0, 0, bmp.Width, bmp.Height));
             }
+
+
+            pbImage.Image = bmp;
         }
 
         /// <summary>

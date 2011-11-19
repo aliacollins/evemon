@@ -273,9 +273,9 @@ namespace EVEMon.Common.Controls
                                                           using (Image image = new Bitmap(newImage))
                                                           {
                                                               image.Save(fs, ImageFormat.Png);
-                                                              fs.Flush();
-                                                              fs.Close();
                                                           }
+                                                          fs.Flush();
+                                                          fs.Close();
                                                           return true;
                                                       });
 

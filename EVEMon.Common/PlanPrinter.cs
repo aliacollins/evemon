@@ -54,26 +54,26 @@ namespace EVEMon.Common
         /// </summary>
         private void PrintPlan()
         {
-            PrintDocument doc = new PrintDocument
-                                    {
-                                        DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})",
-                                                                     m_character.Name, m_plan.Name)
-                                    };
-            doc.PrintPage += doc_PrintPage;
-
-            //Display the options
-            using (PrintOptionsDialog prdlg = new PrintOptionsDialog(m_settings, doc))
+            using (PrintDocument doc = new PrintDocument())
             {
-                if (prdlg.ShowDialog() != DialogResult.OK)
-                    return;
+                doc.DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})",
+                                                 m_character.Name, m_plan.Name);
+                doc.PrintPage += doc_PrintPage;
 
-                doc.PrinterSettings.PrinterName = prdlg.PrinterName;
-
-                // Display the preview
-                using (PrintPreviewDialog pd = new PrintPreviewDialog())
+                //Display the options
+                using (PrintOptionsDialog prdlg = new PrintOptionsDialog(m_settings, doc))
                 {
-                    pd.Document = doc;
-                    pd.ShowDialog();
+                    if (prdlg.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    doc.PrinterSettings.PrinterName = prdlg.PrinterName;
+
+                    // Display the preview
+                    using (PrintPreviewDialog pd = new PrintPreviewDialog())
+                    {
+                        pd.Document = doc;
+                        pd.ShowDialog();
+                    }
                 }
             }
         }

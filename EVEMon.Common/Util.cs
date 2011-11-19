@@ -505,11 +505,12 @@ namespace EVEMon.Common
 
             // Writes to a string builder
             StringBuilder xmlBuilder = new StringBuilder();
-            XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
-            XmlDocument xmlDoc = (XmlDocument)doc;
-            xmlDoc.WriteContentTo(xmlWriter);
-            xmlWriter.Flush();
-
+            using (XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings))
+            {
+                XmlDocument xmlDoc = (XmlDocument)doc;
+                xmlDoc.WriteContentTo(xmlWriter);
+                xmlWriter.Flush();
+            }
             return xmlBuilder.ToString();
         }
 
@@ -640,12 +641,14 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 throw new FileNotFoundException("Document not found", filename);
 
-            XmlTextReader reader = new XmlTextReader(filename) { XmlResolver = null };
-
-            while (reader.Read())
+            using (XmlTextReader reader = new XmlTextReader(filename))
             {
-                if (reader.NodeType == XmlNodeType.Element)
-                    return reader.Name;
+                reader.XmlResolver = null;
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
+                        return reader.Name;
+                }
             }
 
             return null;
@@ -661,17 +664,18 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", filename));
 
-            MD5 md5 = MD5.Create();
             StringBuilder builder = new StringBuilder();
 
             using (Stream fileStream = new FileStream(filename, FileMode.Open))
+            using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
             {
-                using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
+                using (MD5 md5 = MD5.Create())
                 {
                     byte[] hash = md5.ComputeHash(bufferedStream);
                     foreach (byte b in hash)
                     {
-                        builder.Append(b.ToString("x2", CultureConstants.InvariantCulture).ToLower(CultureConstants.DefaultCulture));
+                        builder.Append(
+                            b.ToString("x2", CultureConstants.InvariantCulture).ToLower(CultureConstants.DefaultCulture));
                     }
                 }
             }

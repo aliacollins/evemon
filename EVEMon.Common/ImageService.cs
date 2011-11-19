@@ -105,8 +105,10 @@ namespace EVEMon.Common
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
                                                                          {
                                                                              // We need to create a copy of the image because GDI+ is locking it
-                                                                             Image newImage = new Bitmap(image);
-                                                                             newImage.Save(fs, ImageFormat.Png);
+                                                                             using (Image newImage = new Bitmap(image))
+                                                                             {
+                                                                                 newImage.Save(fs, ImageFormat.Png);
+                                                                             }
                                                                              fs.Flush();
                                                                              return true;
                                                                          });
@@ -131,13 +133,17 @@ namespace EVEMon.Common
             if (extensionMatch.Success)
                 ext = "." + extensionMatch.Groups[1];
 
-            byte[] hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(url.AbsoluteUri));
             StringBuilder sb = new StringBuilder();
-            foreach (byte bit in hash)
+            using (MD5 md5 = MD5.Create())
             {
-                sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", bit));
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(url.AbsoluteUri));
+                foreach (byte bit in hash)
+                {
+                    sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", bit));
+                }
             }
             sb.Append(ext);
+
             return sb.ToString();
         }
 

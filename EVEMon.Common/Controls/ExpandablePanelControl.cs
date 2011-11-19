@@ -43,6 +43,7 @@ namespace EVEMon.Common.Controls
         {
             HeaderText = "Header Text";
             ExpandDirection = Direction.Up;
+
             // Header
             CreateHeader();
 
