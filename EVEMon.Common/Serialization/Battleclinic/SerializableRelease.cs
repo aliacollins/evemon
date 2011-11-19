@@ -17,10 +17,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public string MD5Sum { get; set; }
 
         [XmlElement("url")]
-        public Uri TopicUrl { get; set; }
+        public string TopicUrl { get; set; }
 
         [XmlElement("autopatchurl")]
-        public Uri Url { get; set; }
+        public string Url { get; set; }
 
         [XmlElement("autopatchargs")]
         public string InstallerArgs { get; set; }

@@ -17,7 +17,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public string MD5Sum { get; set; }
 
         [XmlElement("url")]
-        public Uri Url { get; set; }
+        public string Url { get; set; }
 
         [XmlElement("message")]
         public IXPathNavigable MessageXml

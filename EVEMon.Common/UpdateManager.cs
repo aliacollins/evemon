@@ -186,8 +186,8 @@ namespace EVEMon.Common
             // Is the program out of date ?
             if (newestVersion > currentVersion)
             {
-                Uri forumUrl = result.Release.TopicUrl;
-                Uri installerUrl = result.Release.Url;
+                Uri forumUrl = new Uri(result.Release.TopicUrl);
+                Uri installerUrl = new Uri(result.Release.Url);
                 string updateMessage = result.Release.Message;
                 string installArgs = result.Release.InstallerArgs;
                 string md5Sum = result.Release.MD5Sum;
