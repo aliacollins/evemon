@@ -30,7 +30,8 @@ namespace EVEMon.Common.Net
             HttpWebServiceRequest request = GetRequest();
             try
             {
-                request.GetResponse(url, new MemoryStream(), XML_ACCEPT, postData);
+                MemoryStream responseStream = GetStream();
+                request.GetResponse(url, responseStream, XML_ACCEPT, postData);
                 XmlDocument result = new XmlDocument();
                 if (request.ResponseStream != null)
                 {
@@ -62,7 +63,8 @@ namespace EVEMon.Common.Net
 
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new MemoryStream(), XML_ACCEPT, postData, state);
+            MemoryStream responseStream = GetStream();
+            request.GetResponseAsync(url, responseStream, XML_ACCEPT, postData, state);
         }
 
         /// <summary>

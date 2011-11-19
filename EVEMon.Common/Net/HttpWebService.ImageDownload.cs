@@ -27,7 +27,8 @@ namespace EVEMon.Common.Net
             HttpWebServiceRequest request = GetRequest();
             try
             {
-                request.GetResponse(url, new MemoryStream(), IMAGE_ACCEPT);
+                MemoryStream responseStream = GetStream();
+                request.GetResponse(url, responseStream, IMAGE_ACCEPT);
                 return GetImage(request);
             }
             finally
@@ -52,7 +53,8 @@ namespace EVEMon.Common.Net
 
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new MemoryStream(), IMAGE_ACCEPT, null, state);
+            MemoryStream responseStream = GetStream();
+            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
         }
 
         /// <summary>
@@ -96,6 +98,29 @@ namespace EVEMon.Common.Net
             {
                 throw HttpWebServiceException.ImageException(request.BaseUrl, ex);
             }
+        }
+
+        /// <summary>
+        /// Gets the stream.
+        /// </summary>
+        /// <returns></returns>
+        private static MemoryStream GetStream()
+        {
+            MemoryStream stream;
+            MemoryStream tempStream = null;
+            try
+            {
+                tempStream = new MemoryStream();
+
+                stream = tempStream;
+                tempStream = null;
+            }
+            finally
+            {
+                if (tempStream != null)
+                    tempStream.Dispose();
+            }
+            return stream;
         }
 
         /// <summary>

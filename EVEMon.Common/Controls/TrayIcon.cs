@@ -421,17 +421,61 @@ namespace EVEMon.Common.Controls
                 switch (state)
                 {
                     case States.MouseOut:
-                        TrayIcon.m_mouseState = new MouseStateOut(TrayIcon);
                         // Restore the default icon text
                         TrayIcon.notifyIcon.Text = TrayIcon.m_iconText;
+                        TrayIcon.m_mouseState = new MouseStateOut(TrayIcon);
                         break;
                     case States.MouseOver:
-                        TrayIcon.m_mouseState = new MouseStateOver(TrayIcon, MousePosition);
+                        TrayIcon.m_mouseState = GetMouseStateOver();
                         break;
                     case States.MouseHovering:
-                        TrayIcon.m_mouseState = new MouseStateHovering(TrayIcon, MousePosition);
+                        TrayIcon.m_mouseState = GetMouseStateHovering();
                         break;
                 }
+            }
+
+            /// <summary>
+            /// Gets the mouse state over.
+            /// </summary>
+            /// <returns></returns>
+            private MouseStateOver GetMouseStateOver()
+            {
+                MouseStateOver mouseState;
+                MouseStateOver tempMouseState = null;
+                try
+                {
+                    tempMouseState = new MouseStateOver(TrayIcon, MousePosition);
+                    mouseState = tempMouseState;
+                    tempMouseState = null;
+                }
+                finally
+                {
+                    if(tempMouseState!=null)
+                        tempMouseState.Dispose();
+                }
+                return mouseState;
+            }
+
+            /// <summary>
+            /// Gets the mouse state hovering.
+            /// </summary>
+            /// <returns></returns>
+            private MouseStateHovering GetMouseStateHovering()
+            {
+                MouseStateHovering mouseState;
+                MouseStateHovering tempMouseState = null;
+                try
+                {
+                    tempMouseState = new MouseStateHovering(TrayIcon, MousePosition);
+                    mouseState = tempMouseState;
+                    tempMouseState = null;
+                }
+                finally
+                {
+                    if (tempMouseState != null)
+                        tempMouseState.Dispose();
+                }
+                return mouseState;
             }
         }
 

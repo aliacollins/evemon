@@ -27,7 +27,7 @@ namespace EVEMon.Common.Net
                 FileStream responseStream;
                 try
                 {
-                    responseStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    responseStream = GetStream(filePath);
                 }
                 catch (Exception ex)
                 {
@@ -61,8 +61,8 @@ namespace EVEMon.Common.Net
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
                                                                     DownloadFileAsyncCompleted);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None),
-                                     IMAGE_ACCEPT, null, state);
+            FileStream responseStream = GetStream(filePath);
+            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
             return request;
         }
 
@@ -90,6 +90,30 @@ namespace EVEMon.Common.Net
 
             requestState.DownloadFileCompleted(new DownloadFileAsyncResult(fileResult, requestState.Error,
                                                                            requestState.Request.Cancelled));
+        }
+
+        /// <summary>
+        /// Gets the stream.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <returns></returns>
+        private static FileStream GetStream(string filePath)
+        {
+            FileStream stream;
+            FileStream tempStream = null;
+            try
+            {
+                tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                stream = tempStream;
+                tempStream = null;
+            }
+            finally
+            {
+                if (tempStream != null)
+                    tempStream.Dispose();
+            }
+            return stream;
         }
 
         /// <summary>

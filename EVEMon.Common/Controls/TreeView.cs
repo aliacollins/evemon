@@ -833,15 +833,24 @@ namespace EVEMon.Common.Controls
                 Invalidate(rect, false);
                 Update();
                 if (tn.BackColor != SelectionBackColor)
-                    g.DrawRectangle(new Pen(new SolidBrush(SelectionBackColor), 1), rect);
+                {
+                    using(SolidBrush brush = new SolidBrush(SelectionBackColor))
+                    using (Pen pen = new Pen(brush, 1))
+                    {
+                        g.DrawRectangle(pen, rect);
+                    }
+                }
             }
             else
             {
                 if (tn.BackColor != SelectionBackColor)
                 {
-                    g.DrawRectangle(new Pen(new SolidBrush(BackColor), 1), m_tnMostRecentSelectedNode.Bounds.X,
-                                    m_tnMostRecentSelectedNode.Bounds.Y, m_tnMostRecentSelectedNode.Bounds.Width,
-                                    m_tnMostRecentSelectedNode.Bounds.Height);
+                    using (SolidBrush brush = new SolidBrush(BackColor))
+                    using (Pen pen = new Pen(brush, 1))
+                    {
+                        g.DrawRectangle(pen, m_tnMostRecentSelectedNode.Bounds.X, m_tnMostRecentSelectedNode.Bounds.Y,
+                                        m_tnMostRecentSelectedNode.Bounds.Width, m_tnMostRecentSelectedNode.Bounds.Height);
+                    }
                 }
 
                 Invalidate(rect, false);
