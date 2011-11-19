@@ -1,7 +1,6 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Xml.XPath;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
@@ -17,10 +16,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public string MD5Sum { get; set; }
 
         [XmlElement("url")]
-        public string TopicUrl { get; set; }
+        public string TopicAddress { get; set; }
 
         [XmlElement("autopatchurl")]
-        public string Url { get; set; }
+        public string PatchAddress { get; set; }
 
         [XmlElement("autopatchargs")]
         public string InstallerArgs { get; set; }

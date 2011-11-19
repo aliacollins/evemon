@@ -44,7 +44,7 @@ namespace EVEMon
             {
                 changedFiles.AppendFormat(CultureConstants.DefaultCulture,
                                           "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
-                                          versionDatafile.Name, versionDatafile.Date, versionDatafile.Url, Environment.NewLine);
+                                          versionDatafile.Name, versionDatafile.Date, versionDatafile.Address, Environment.NewLine);
                 notes.AppendLine(versionDatafile.Message);
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
@@ -95,7 +95,7 @@ namespace EVEMon
             foreach (SerializableDatafile versionDatafile in datafiles)
             {
                 // Work out the new names of the files
-                string url = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", versionDatafile.Url, versionDatafile.Name);
+                string url = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", versionDatafile.Address, versionDatafile.Name);
                 string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, versionDatafile.Name);
                 string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
 
