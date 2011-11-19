@@ -31,25 +31,25 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node0");
             this.grpPlanName = new System.Windows.Forms.GroupBox();
             this.lblSkillInfo = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new PersistentSplitContainer();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lowerPanel = new System.Windows.Forms.Panel();
+            this.lblRedFont = new System.Windows.Forms.Label();
+            this.lblDimmedFont = new System.Windows.Forms.Label();
+            this.lblRedFontInfo = new System.Windows.Forms.Label();
+            this.lblDimmedFontInfo = new System.Windows.Forms.Label();
+            this.lblNormalFont = new System.Windows.Forms.Label();
+            this.middlePanel = new System.Windows.Forms.Panel();
+            this.splitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
             this.tvSkills = new System.Windows.Forms.TreeView();
+            this.pnlSkillHeader = new System.Windows.Forms.Panel();
+            this.lblSkills = new System.Windows.Forms.Label();
+            this.tvEntity = new System.Windows.Forms.TreeView();
             this.pnlItemHeader = new System.Windows.Forms.Panel();
             this.lblItems = new System.Windows.Forms.Label();
-            this.tvEntity = new System.Windows.Forms.TreeView();
             this.cmSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsAddPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddL1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,13 +72,13 @@ namespace EVEMon.SkillPlanner
             this.tmrAutoUpdate = new System.Windows.Forms.Timer(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.grpPlanName.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.lowerPanel.SuspendLayout();
+            this.middlePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            this.splitContainer.Panel1.SuspendLayout();
+            this.splitContainer.Panel2.SuspendLayout();
+            this.splitContainer.SuspendLayout();
+            this.pnlSkillHeader.SuspendLayout();
             this.pnlItemHeader.SuspendLayout();
             this.cmSkills.SuspendLayout();
             this.cmEntity.SuspendLayout();
@@ -87,8 +87,8 @@ namespace EVEMon.SkillPlanner
             // 
             // grpPlanName
             // 
-            this.grpPlanName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpPlanName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpPlanName.Controls.Add(this.lblSkillInfo);
             this.grpPlanName.Location = new System.Drawing.Point(12, 12);
             this.grpPlanName.Name = "grpPlanName";
@@ -118,149 +118,160 @@ namespace EVEMon.SkillPlanner
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // panel1
+            // lowerPanel
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.label9);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.btnClose);
-            this.panel1.Location = new System.Drawing.Point(12, 423);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(550, 40);
-            this.panel1.TabIndex = 4;
+            this.lowerPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lowerPanel.Controls.Add(this.lblRedFont);
+            this.lowerPanel.Controls.Add(this.lblDimmedFont);
+            this.lowerPanel.Controls.Add(this.lblRedFontInfo);
+            this.lowerPanel.Controls.Add(this.lblDimmedFontInfo);
+            this.lowerPanel.Controls.Add(this.lblNormalFont);
+            this.lowerPanel.Controls.Add(this.btnClose);
+            this.lowerPanel.Location = new System.Drawing.Point(12, 423);
+            this.lowerPanel.Name = "lowerPanel";
+            this.lowerPanel.Size = new System.Drawing.Size(550, 40);
+            this.lowerPanel.TabIndex = 4;
             // 
-            // label8
+            // lblRedFont
             // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(6, 22);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(23, 13);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "red";
+            this.lblRedFont.AutoSize = true;
+            this.lblRedFont.ForeColor = System.Drawing.Color.Red;
+            this.lblRedFont.Location = new System.Drawing.Point(6, 22);
+            this.lblRedFont.Name = "lblRedFont";
+            this.lblRedFont.Size = new System.Drawing.Size(22, 13);
+            this.lblRedFont.TabIndex = 8;
+            this.lblRedFont.Text = "red";
             // 
-            // label6
+            // lblDimmedFont
             // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.DimGray;
-            this.label6.Location = new System.Drawing.Point(164, 9);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 13);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "dimmed";
+            this.lblDimmedFont.AutoSize = true;
+            this.lblDimmedFont.ForeColor = System.Drawing.Color.DimGray;
+            this.lblDimmedFont.Location = new System.Drawing.Point(164, 9);
+            this.lblDimmedFont.Name = "lblDimmedFont";
+            this.lblDimmedFont.Size = new System.Drawing.Size(43, 13);
+            this.lblDimmedFont.TabIndex = 6;
+            this.lblDimmedFont.Text = "dimmed";
             // 
-            // label9
+            // lblRedFontInfo
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(26, 22);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(160, 13);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "= other untrained skills needed.";
+            this.lblRedFontInfo.AutoSize = true;
+            this.lblRedFontInfo.Location = new System.Drawing.Point(26, 22);
+            this.lblRedFontInfo.Name = "lblRedFontInfo";
+            this.lblRedFontInfo.Size = new System.Drawing.Size(154, 13);
+            this.lblRedFontInfo.TabIndex = 9;
+            this.lblRedFontInfo.Text = "= other untrained skills needed.";
             // 
-            // label7
+            // lblDimmedFontInfo
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(204, 9);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(143, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "= unlocked by this skill level,";
+            this.lblDimmedFontInfo.AutoSize = true;
+            this.lblDimmedFontInfo.Location = new System.Drawing.Point(204, 9);
+            this.lblDimmedFontInfo.Name = "lblDimmedFontInfo";
+            this.lblDimmedFontInfo.Size = new System.Drawing.Size(141, 13);
+            this.lblDimmedFontInfo.TabIndex = 7;
+            this.lblDimmedFontInfo.Text = "= unlocked by this skill level,";
             // 
-            // label5
+            // lblNormalFont
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(154, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Normal font = already trained,";
+            this.lblNormalFont.AutoSize = true;
+            this.lblNormalFont.Location = new System.Drawing.Point(6, 9);
+            this.lblNormalFont.Name = "lblNormalFont";
+            this.lblNormalFont.Size = new System.Drawing.Size(145, 13);
+            this.lblNormalFont.TabIndex = 5;
+            this.lblNormalFont.Text = "Normal font = already trained,";
             // 
-            // panel2
+            // middlePanel
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.Controls.Add(this.splitContainer1);
-            this.panel2.Location = new System.Drawing.Point(12, 115);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(553, 302);
-            this.panel2.TabIndex = 5;
+            this.middlePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.middlePanel.Controls.Add(this.splitContainer);
+            this.middlePanel.Location = new System.Drawing.Point(12, 115);
+            this.middlePanel.Name = "middlePanel";
+            this.middlePanel.Size = new System.Drawing.Size(553, 302);
+            this.middlePanel.TabIndex = 5;
             // 
-            // splitContainer1
+            // splitContainer
             // 
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer.Name = "splitContainer";
             // 
-            // splitContainer1.Panel1
+            // splitContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel3);
-            this.splitContainer1.Panel1.Controls.Add(this.tvSkills);
+            this.splitContainer.Panel1.Controls.Add(this.tvSkills);
+            this.splitContainer.Panel1.Controls.Add(this.pnlSkillHeader);
             // 
-            // splitContainer1.Panel2
+            // splitContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.pnlItemHeader);
-            this.splitContainer1.Panel2.Controls.Add(this.tvEntity);
-            this.splitContainer1.RememberDistanceKey = null;
-            this.splitContainer1.Size = new System.Drawing.Size(553, 302);
-            this.splitContainer1.SplitterDistance = 207;
-            this.splitContainer1.SplitterWidth = 3;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // panel3
-            // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.BackColor = System.Drawing.Color.Cornsilk;
-            this.panel3.Controls.Add(this.label2);
-            this.panel3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.panel3.Location = new System.Drawing.Point(-1, -1);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(206, 18);
-            this.panel3.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1, 2);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Enabled Skills";
+            this.splitContainer.Panel2.Controls.Add(this.tvEntity);
+            this.splitContainer.Panel2.Controls.Add(this.pnlItemHeader);
+            this.splitContainer.RememberDistanceKey = null;
+            this.splitContainer.Size = new System.Drawing.Size(553, 302);
+            this.splitContainer.SplitterDistance = 207;
+            this.splitContainer.SplitterWidth = 3;
+            this.splitContainer.TabIndex = 0;
             // 
             // tvSkills
             // 
-            this.tvSkills.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvSkills.Location = new System.Drawing.Point(-1, 17);
+            this.tvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvSkills.Location = new System.Drawing.Point(0, 18);
             this.tvSkills.Name = "tvSkills";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "Node0";
+            treeNode3.Name = "Node0";
+            treeNode3.Text = "Node0";
             this.tvSkills.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode3});
             this.tvSkills.ShowNodeToolTips = true;
-            this.tvSkills.Size = new System.Drawing.Size(206, 283);
+            this.tvSkills.Size = new System.Drawing.Size(203, 280);
             this.tvSkills.TabIndex = 0;
             this.tvSkills.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSkills_NodeMouseClick);
             this.tvSkills.DoubleClick += new System.EventHandler(this.tvSkills_DoubleClick);
             // 
+            // pnlSkillHeader
+            // 
+            this.pnlSkillHeader.BackColor = System.Drawing.Color.Cornsilk;
+            this.pnlSkillHeader.Controls.Add(this.lblSkills);
+            this.pnlSkillHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSkillHeader.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.pnlSkillHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlSkillHeader.Name = "pnlSkillHeader";
+            this.pnlSkillHeader.Size = new System.Drawing.Size(203, 18);
+            this.pnlSkillHeader.TabIndex = 1;
+            // 
+            // lblSkills
+            // 
+            this.lblSkills.AutoSize = true;
+            this.lblSkills.Location = new System.Drawing.Point(1, 2);
+            this.lblSkills.Name = "lblSkills";
+            this.lblSkills.Size = new System.Drawing.Size(73, 13);
+            this.lblSkills.TabIndex = 0;
+            this.lblSkills.Text = "Enabled Skills";
+            // 
+            // tvEntity
+            // 
+            this.tvEntity.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvEntity.Location = new System.Drawing.Point(0, 18);
+            this.tvEntity.Name = "tvEntity";
+            treeNode4.Name = "Node0";
+            treeNode4.Text = "Node0";
+            this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode4});
+            this.tvEntity.ShowNodeToolTips = true;
+            this.tvEntity.Size = new System.Drawing.Size(339, 280);
+            this.tvEntity.TabIndex = 0;
+            this.tvEntity.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvEntity_NodeMouseClick);
+            this.tvEntity.DoubleClick += new System.EventHandler(this.tvEntity_DoubleClick);
+            // 
             // pnlItemHeader
             // 
-            this.pnlItemHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlItemHeader.BackColor = System.Drawing.Color.LightCyan;
             this.pnlItemHeader.Controls.Add(this.lblItems);
-            this.pnlItemHeader.Location = new System.Drawing.Point(-1, -1);
+            this.pnlItemHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlItemHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlItemHeader.Name = "pnlItemHeader";
-            this.pnlItemHeader.Size = new System.Drawing.Size(341, 18);
+            this.pnlItemHeader.Size = new System.Drawing.Size(339, 18);
             this.pnlItemHeader.TabIndex = 0;
             // 
             // lblItems
@@ -268,26 +279,9 @@ namespace EVEMon.SkillPlanner
             this.lblItems.AutoSize = true;
             this.lblItems.Location = new System.Drawing.Point(1, 2);
             this.lblItems.Name = "lblItems";
-            this.lblItems.Size = new System.Drawing.Size(75, 13);
+            this.lblItems.Size = new System.Drawing.Size(74, 13);
             this.lblItems.TabIndex = 0;
             this.lblItems.Text = "Enabled Items";
-            // 
-            // tvEntity
-            // 
-            this.tvEntity.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvEntity.Location = new System.Drawing.Point(-1, 17);
-            this.tvEntity.Name = "tvEntity";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "Node0";
-            this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
-            this.tvEntity.ShowNodeToolTips = true;
-            this.tvEntity.Size = new System.Drawing.Size(342, 282);
-            this.tvEntity.TabIndex = 0;
-            this.tvEntity.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvEntity_NodeMouseClick);
-            this.tvEntity.DoubleClick += new System.EventHandler(this.tvEntity_DoubleClick);
             // 
             // cmSkills
             // 
@@ -399,8 +393,8 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.cbHistory);
             this.groupBox2.Controls.Add(this.cbShowBaseOnly);
             this.groupBox2.Controls.Add(this.rbShowAlpha);
@@ -473,8 +467,8 @@ namespace EVEMon.SkillPlanner
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(577, 475);
             this.Controls.Add(this.grpPlanName);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.middlePanel);
+            this.Controls.Add(this.lowerPanel);
             this.Controls.Add(this.groupBox2);
             this.MinimumSize = new System.Drawing.Size(585, 480);
             this.Name = "SkillExplorerWindow";
@@ -482,15 +476,15 @@ namespace EVEMon.SkillPlanner
             this.Text = "Skill Explorer - What Is This Skill Used For?";
             this.grpPlanName.ResumeLayout(false);
             this.grpPlanName.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.lowerPanel.ResumeLayout(false);
+            this.lowerPanel.PerformLayout();
+            this.middlePanel.ResumeLayout(false);
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            this.splitContainer.ResumeLayout(false);
+            this.pnlSkillHeader.ResumeLayout(false);
+            this.pnlSkillHeader.PerformLayout();
             this.pnlItemHeader.ResumeLayout(false);
             this.pnlItemHeader.PerformLayout();
             this.cmSkills.ResumeLayout(false);
@@ -504,9 +498,9 @@ namespace EVEMon.SkillPlanner
 
         private System.Windows.Forms.GroupBox grpPlanName;
         private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private PersistentSplitContainer splitContainer1;
+        private System.Windows.Forms.Panel lowerPanel;
+        private System.Windows.Forms.Panel middlePanel;
+        private PersistentSplitContainer splitContainer;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox cbShowBaseOnly;
         private System.Windows.Forms.RadioButton rbShowAlpha;
@@ -523,8 +517,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem tsAddL3;
         private System.Windows.Forms.ToolStripMenuItem tsAddL4;
         private System.Windows.Forms.ToolStripMenuItem tsAddL5;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel pnlSkillHeader;
+        private System.Windows.Forms.Label lblSkills;
         private System.Windows.Forms.TreeView tvEntity;
         private System.Windows.Forms.Panel pnlItemHeader;
         private System.Windows.Forms.Label lblItems;
@@ -532,11 +526,11 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem tsAddObjectToPlan;
         private System.Windows.Forms.ToolStripMenuItem tsShowObjectPrereqs;
         private System.Windows.Forms.ToolStripMenuItem tsShowObjectInBrowser;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblDimmedFont;
+        private System.Windows.Forms.Label lblNormalFont;
+        private System.Windows.Forms.Label lblRedFontInfo;
+        private System.Windows.Forms.Label lblRedFont;
+        private System.Windows.Forms.Label lblDimmedFontInfo;
         private System.Windows.Forms.Timer tmrAutoUpdate;
         private System.Windows.Forms.ComboBox cbHistory;
         private System.Windows.Forms.ToolTip toolTip;
