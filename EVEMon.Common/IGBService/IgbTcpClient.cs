@@ -154,9 +154,11 @@ namespace EVEMon.Common.IgbService
         /// <summary>
         /// Writes the specified string.
         /// </summary>
-        /// <param name="str">The string.</param>
-        public void Write(string str)
+        /// <param name="format">The format.</param>
+        /// <param name="args">The args.</param>
+        public void Write(string format, params object[] args)
         {
+            string str = String.Format(CultureConstants.DefaultCulture, format, args);
             byte[] outbuf = Encoding.UTF8.GetBytes(str);
             m_stream.Write(outbuf, 0, outbuf.Length);
         }

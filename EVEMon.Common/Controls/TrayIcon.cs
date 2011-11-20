@@ -440,20 +440,7 @@ namespace EVEMon.Common.Controls
             /// <returns></returns>
             private MouseStateOver GetMouseStateOver()
             {
-                MouseStateOver mouseState;
-                MouseStateOver tempMouseState = null;
-                try
-                {
-                    tempMouseState = new MouseStateOver(TrayIcon, MousePosition);
-                    mouseState = tempMouseState;
-                    tempMouseState = null;
-                }
-                finally
-                {
-                    if(tempMouseState!=null)
-                        tempMouseState.Dispose();
-                }
-                return mouseState;
+                return new MouseStateOver(TrayIcon, MousePosition);
             }
 
             /// <summary>
@@ -462,20 +449,7 @@ namespace EVEMon.Common.Controls
             /// <returns></returns>
             private MouseStateHovering GetMouseStateHovering()
             {
-                MouseStateHovering mouseState;
-                MouseStateHovering tempMouseState = null;
-                try
-                {
-                    tempMouseState = new MouseStateHovering(TrayIcon, MousePosition);
-                    mouseState = tempMouseState;
-                    tempMouseState = null;
-                }
-                finally
-                {
-                    if (tempMouseState != null)
-                        tempMouseState.Dispose();
-                }
-                return mouseState;
+                return new MouseStateHovering(TrayIcon, MousePosition);
             }
         }
 

@@ -83,7 +83,7 @@ namespace EVEMon.Common
             string tempFileName = Path.GetTempFileName();
             try
             {
-                using (FileStream fs = new FileStream(tempFileName, FileMode.Open))
+                using (FileStream fs = Util.GetFileStream(tempFileName, FileMode.Open))
                 {
                     if (!writeContentFunc(fs))
                         return;

@@ -57,14 +57,21 @@ namespace EVEMon.Common
         public static XslCompiledTransform LoadXSLT(string content)
         {
             XslCompiledTransform xslt = new XslCompiledTransform();
-            using (StringReader stringReader = new StringReader(content))
+            StringReader stringReader = null;
+            try
             {
+                stringReader = new StringReader(content);
                 using (XmlTextReader reader = new XmlTextReader(stringReader))
                 {
+                    stringReader = null;
                     xslt.Load(reader);
                 }
             }
-
+            finally
+            {
+                if (stringReader != null)
+                    stringReader.Dispose();
+            }
             return xslt;
         }
 
@@ -82,20 +89,18 @@ namespace EVEMon.Common
             {
                 if (transform != null)
                 {
-                    using (MemoryStream stream = new MemoryStream())
+                    MemoryStream stream = GetMemoryStream();
+                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                     {
-                        using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                        {
-                            // Apply the XSL transform
-                            writer.Formatting = Formatting.Indented;
-                            transform.Transform(filename, writer);
-                            writer.Flush();
+                        // Apply the XSL transform
+                        writer.Formatting = Formatting.Indented;
+                        transform.Transform(filename, writer);
+                        writer.Flush();
 
-                            // Deserialize from the given stream
-                            stream.Seek(0, SeekOrigin.Begin);
-                            XmlSerializer xs = new XmlSerializer(typeof(T));
-                            return (T)xs.Deserialize(stream);
-                        }
+                        // Deserialize from the given stream
+                        stream.Seek(0, SeekOrigin.Begin);
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        return (T)xs.Deserialize(stream);
                     }
                 }
 
@@ -136,41 +141,37 @@ namespace EVEMon.Common
         {
             // Gets the full path
             string path = Datafile.GetFullPath(filename);
-
+            Stream stream = null;
             try
             {
-                using (Stream s = FileHelper.OpenRead(path, false))
+                stream = FileHelper.OpenRead(path, false);
+                GZipStream gZipStream = new GZipStream(stream, CompressionMode.Decompress);
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+
+                // Deserialization with transform
+                if (transform != null)
                 {
-                    using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
+                    using (XmlTextReader reader = new XmlTextReader(gZipStream))
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        stream = null;
 
-                        // Deserialization with transform
-                        if (transform != null)
+                        MemoryStream memoryStream = GetMemoryStream();
+                        using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.UTF8))
                         {
-                            using (XmlTextReader reader = new XmlTextReader(zs))
-                            {
-                                using (MemoryStream stream = new MemoryStream())
-                                {
-                                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                                    {
-                                        // Apply the XSL transform
-                                        writer.Formatting = Formatting.Indented;
-                                        transform.Transform(reader, writer);
-                                        writer.Flush();
+                            // Apply the XSL transform
+                            writer.Formatting = Formatting.Indented;
+                            transform.Transform(reader, writer);
+                            writer.Flush();
 
-                                        // Deserialize from the given stream
-                                        stream.Seek(0, SeekOrigin.Begin);
-                                        return (T)xs.Deserialize(stream);
-                                    }
-                                }
-                            }
+                            // Deserialize from the given stream
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            return (T)xs.Deserialize(memoryStream);
                         }
-
-                        // Deserialization without transform
-                        return (T)xs.Deserialize(zs);
                     }
                 }
+
+                // Deserialization without transform
+                return (T)xs.Deserialize(gZipStream);
             }
             catch (InvalidOperationException ex)
             {
@@ -187,6 +188,11 @@ namespace EVEMon.Common
                                                + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
                                                ex.Message, ex.Source);
                 throw new XmlException(message, ex);
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
         }
 
@@ -300,33 +306,29 @@ namespace EVEMon.Common
 
             try
             {
+                XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
+
                 // Deserialization with a transform
                 using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
                     if (transform != null)
                     {
-                        using (MemoryStream stream = new MemoryStream())
+                        MemoryStream stream = GetMemoryStream();
+                        using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                         {
-                            using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                            {
-                                // Apply the XSL transform
-                                writer.Formatting = Formatting.Indented;
-                                transform.Transform(reader, writer);
-                                writer.Flush();
+                            // Apply the XSL transform
+                            writer.Formatting = Formatting.Indented;
+                            transform.Transform(reader, writer);
+                            writer.Flush();
 
-                                // Deserialize from the given stream
-                                stream.Seek(0, SeekOrigin.Begin);
-                                XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
-                                result = (APIResult<T>)xs.Deserialize(stream);
-                            }
+                            // Deserialize from the given stream
+                            stream.Seek(0, SeekOrigin.Begin);
+                            result = (APIResult<T>)xs.Deserialize(stream);
                         }
                     }
                         // Deserialization without transform
                     else
-                    {
-                        XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
                         result = (APIResult<T>)xs.Deserialize(reader);
-                    }
                 }
 
                 // Fix times
@@ -365,7 +367,7 @@ namespace EVEMon.Common
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
         internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
-                                                       HttpPostData postData = null)
+                                                         HttpPostData postData = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
                 url, postData,
@@ -548,21 +550,19 @@ namespace EVEMon.Common
             if (xslt == null)
                 throw new ArgumentNullException("xslt");
 
-            using (MemoryStream stream = new MemoryStream())
+            MemoryStream stream = GetMemoryStream();
+            using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
             {
-                using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                {
-                    // Apply the XSL transform
-                    writer.Formatting = Formatting.Indented;
-                    xslt.Transform(doc, writer);
-                    writer.Flush();
+                // Apply the XSL transform
+                writer.Formatting = Formatting.Indented;
+                xslt.Transform(doc, writer);
+                writer.Flush();
 
-                    // Reads the XML document from the given stream.
-                    stream.Seek(0, SeekOrigin.Begin);
-                    XmlDocument outDoc = new XmlDocument();
-                    outDoc.Load(stream);
-                    return outDoc;
-                }
+                // Reads the XML document from the given stream.
+                stream.Seek(0, SeekOrigin.Begin);
+                XmlDocument outDoc = new XmlDocument();
+                outDoc.Load(stream);
+                return outDoc;
             }
         }
 
@@ -598,30 +598,35 @@ namespace EVEMon.Common
             string tempFile = Path.GetTempFileName();
 
             // We decompress the gzipped stream and writes it to a temporary file
-            using (FileStream stream = File.OpenRead(filename))
+            FileStream stream = null;
+            try
             {
-                using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress))
+                stream = File.OpenRead(filename);
+                GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress);
+
+                using (FileStream outStream = File.OpenWrite(tempFile))
                 {
-                    using (FileStream outStream = File.OpenWrite(tempFile))
+                    byte[] bytes = new byte[4096];
+
+                    // Since we're reading a compressed stream, the total number of bytes to decompress cannot be foreseen
+                    // So we just continue reading while there are bytes to decompress
+                    while (true)
                     {
-                        byte[] bytes = new byte[4096];
+                        int count = gzipStream.Read(bytes, 0, bytes.Length);
+                        if (count == 0)
+                            break;
 
-                        // Since we're reading a compressed stream, the total number of bytes to decompress cannot be foreseen
-                        // So we just continue reading until there were bytes to decompress
-                        while (true)
-                        {
-                            int count = gzipStream.Read(bytes, 0, bytes.Length);
-                            if (count == 0)
-                                break;
-
-                            outStream.Write(bytes, 0, count);
-                        }
-
-                        // Done, we flush and recall this method with the temp file name
-                        outStream.Flush();
-                        outStream.Close();
+                        outStream.Write(bytes, 0, count);
                     }
+
+                    // Done, we flush and recall this method with the temp file name
+                    outStream.Flush();
                 }
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
             return tempFile;
         }
@@ -666,7 +671,7 @@ namespace EVEMon.Common
 
             StringBuilder builder = new StringBuilder();
 
-            using (Stream fileStream = new FileStream(filename, FileMode.Open))
+            Stream fileStream = GetFileStream(filename, FileMode.Open);
             using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
             {
                 using (MD5 md5 = MD5.Create())
@@ -681,6 +686,29 @@ namespace EVEMon.Common
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Gets a memory stream.
+        /// </summary>
+        /// <returns>A new memory stream</returns>
+        internal static MemoryStream GetMemoryStream()
+        {
+            return new MemoryStream();
+        }
+
+        /// <summary>
+        /// Gets a file stream.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="access">The access.</param>
+        /// <param name="share">The share.</param>
+        /// <returns>A new file stream</returns>
+        public static FileStream GetFileStream(string filePath, FileMode mode = FileMode.OpenOrCreate,
+                                                 FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
+        {
+            return new FileStream(filePath, mode, access, share);
         }
     }
 }

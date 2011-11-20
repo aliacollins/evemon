@@ -69,12 +69,10 @@ namespace EVEMon.Common
                 FileHelper.OverwriteOrWarnTheUser(fileName,
                                                   fs =>
                                                       {
-                                                          using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                                                          {
-                                                              writer.Write(content);
-                                                              writer.Flush();
-                                                              writer.Close();
-                                                          }
+                                                          StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
+                                                          writer.Write(content);
+                                                          writer.Flush();
+                                                          writer.Close();
                                                           return true;
                                                       });
             }

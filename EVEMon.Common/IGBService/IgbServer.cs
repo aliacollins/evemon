@@ -173,35 +173,35 @@ namespace EVEMon.Common.IgbService
         /// <param name="headers">dictionary of headers</param>
         /// <param name="request">the requested method</param>
         /// <param name="requestUrl">url to respond to</param>
-        private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string request, Uri requestUrl)
+        private void SendOutputToClient(IgbTcpClient client, IDictionary<string, string> headers, string request, Uri requestUrl)
         {
-            using (MemoryStream ms = new MemoryStream())
+            MemoryStream stream = Util.GetMemoryStream();
+            using (StreamWriter sw = new StreamWriter(stream))
             {
-                using (StreamWriter sw = new StreamWriter(ms))
+                ProcessRequest(request, requestUrl, headers, sw);
+
+                sw.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+
+                // We should support only the "GET" method
+                client.Write("HTTP/1.1 {0}\n", request.Equals("GET") ? "200 OK" : "501 Not Implemented");
+                client.Write("Server: EVEMon/1.0\n");
+                client.Write("Content-Type: text/html; charset=utf-8\n");
+                if (headers.ContainsKey("eve_trusted") &&
+                    headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
                 {
-                    ProcessRequest(request, requestUrl, headers, sw);
-
-                    sw.Flush();
-                    ms.Seek(0, SeekOrigin.Begin);
-
-                    // We should support only the "GET" method
-                    client.Write(request.Equals("GET") ? "HTTP/1.1 200 OK\n" : "HTTP/1.1 501 Not Implemented\n");
-                    client.Write("Server: EVEMon/1.0\n");
-                    client.Write("Content-Type: text/html; charset=utf-8\n");
-                    if (headers.ContainsKey("eve_trusted") &&
-                        headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
-                    {
-                        client.Write("eve.trustme: http://" + BuildHostAndPort(headers["host"]) +
-                                     "/::EVEMon needs your pilot information.\n");
-                    }
-
-                    client.Write("Connection: close\n");
-                    client.Write("Content-Length: " + ms.Length + "\n\n");
-                    using (StreamReader sr = new StreamReader(ms))
-                    {
-                        client.Write(sr.ReadToEnd());
-                    }
+                    client.Write("eve.trustme: http://{0}/::EVEMon needs your pilot information.\n",
+                                 BuildHostAndPort(headers["host"]));
                 }
+
+                client.Write("Connection: close\n");
+                client.Write("Content-Length: {0}\n\n", stream.Length);
+            }
+
+            MemoryStream mStream = Util.GetMemoryStream();
+            using (StreamReader sr = new StreamReader(mStream))
+            {
+                client.Write(sr.ReadToEnd());
             }
         }
 

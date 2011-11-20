@@ -71,7 +71,7 @@ namespace EVEMon
             FileStream traceStream = null;
             try
             {
-                traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read);
+                traceStream = Util.GetFileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read);
 
                 using (StreamReader traceReader = new StreamReader(traceStream))
                 {

@@ -27,7 +27,7 @@ namespace EVEMon.Common.Net
             HttpWebServiceRequest request = GetRequest();
             try
             {
-                MemoryStream responseStream = GetStream();
+                MemoryStream responseStream = Util.GetMemoryStream();
                 request.GetResponse(url, responseStream, STRING_ACCEPT);
                 string result = String.Empty;
                 if (request.ResponseStream != null)
@@ -62,7 +62,7 @@ namespace EVEMon.Common.Net
 
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            MemoryStream responseStream = GetStream();
+            MemoryStream responseStream = Util.GetMemoryStream();
             request.GetResponseAsync(url, responseStream, STRING_ACCEPT, null, state);
         }
 
