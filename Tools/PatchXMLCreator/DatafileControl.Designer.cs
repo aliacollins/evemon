@@ -1,4 +1,4 @@
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     partial class DatafileControl
     {

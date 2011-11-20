@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,17 +10,37 @@ namespace EVEMon.ApiCredentialsManagement
 {
     public partial class CharacterDeletionWindow : EVEMonForm
     {
-        private readonly List<APIKey> m_apiKeys;
         private readonly Character m_character;
+        private List<APIKey> m_apiKeys;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        private CharacterDeletionWindow()
+        {
+            InitializeComponent();
+        }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         public CharacterDeletionWindow(Character character)
+            : this()
         {
-            InitializeComponent();
             m_character = character;
+        }
+
+        /// <summary>
+        /// Occurs when the control loads.
+        /// </summary>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode)
+                return;
+
             apiKeyslistView.Items.Clear();
 
             // Replaces end of text with character's name
@@ -30,7 +50,7 @@ namespace EVEMon.ApiCredentialsManagement
             // Find the API keys bind only to this character
             m_apiKeys = EveMonClient.APIKeys.Select(
                 apiKey => new { apiKey, identities = apiKey.CharacterIdentities }).Where(
-                    apiKey => apiKey.identities.Count() == 1 && apiKey.identities.Contains(character.Identity)).Select(
+                    apiKey => apiKey.identities.Count() == 1 && apiKey.identities.Contains(m_character.Identity)).Select(
                         apiKey => apiKey.apiKey).ToList();
 
             apiKeyslistView.Items.AddRange(m_apiKeys.Select(
@@ -49,6 +69,7 @@ namespace EVEMon.ApiCredentialsManagement
             // Resize window if there is no API key to remove
             if (!noCharactersLeft)
                 Size = new Size(Size.Width, Size.Height - (apiKeyslistView.Height / 2));
+
         }
 
         /// <summary>

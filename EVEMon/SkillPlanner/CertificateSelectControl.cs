@@ -44,6 +44,66 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the current plan.
+        /// </summary>
+        [Browsable(false)]
+        public Plan Plan
+        {
+            get { return m_plan; }
+            set
+            {
+                if (value == null || m_plan == value)
+                    return;
+
+                m_plan = value;
+                m_character = (Character)m_plan.Character;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected certificate class.
+        /// </summary>
+        [Browsable(false)]
+        public CertificateClass SelectedCertificateClass
+        {
+            get { return m_selectedCertificateClass; }
+            set
+            {
+                if (m_selectedCertificateClass == value)
+                    return;
+
+                m_selectedCertificateClass = value;
+
+                // Updates the selection for the three controls
+                m_blockSelectionReentrancy = true;
+                try
+                {
+                    tvItems.SelectNodeWithTag(value);
+
+                    lvSortedList.SelectedItems.Clear();
+                    foreach (ListViewItem item in lvSortedList.Items.Cast<ListViewItem>().Where(item => item.Tag == value))
+                    {
+                        item.Selected = true;
+                    }
+
+                    lbSearchList.SelectedItem = value;
+                }
+                finally
+                {
+                    m_blockSelectionReentrancy = false;
+                }
+
+                // Fires event for subscribers
+                OnSelectionChanged();
+            }
+        }
+
+        #endregion
+
+
         #region Events
 
         /// <summary>
@@ -131,64 +191,6 @@ namespace EVEMon.SkillPlanner
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
             UpdateContent();
-        }
-
-        #endregion
-
-
-        #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the current plan.
-        /// </summary>
-        public Plan Plan
-        {
-            get { return m_plan; }
-            set
-            {
-                if (value == null || m_plan == value)
-                    return;
-
-                m_plan = value;
-                m_character = (Character)m_plan.Character;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the selected certificate class.
-        /// </summary>
-        public CertificateClass SelectedCertificateClass
-        {
-            get { return m_selectedCertificateClass; }
-            set
-            {
-                if (m_selectedCertificateClass == value)
-                    return;
-
-                m_selectedCertificateClass = value;
-
-                // Updates the selection for the three controls
-                m_blockSelectionReentrancy = true;
-                try
-                {
-                    tvItems.SelectNodeWithTag(value);
-
-                    lvSortedList.SelectedItems.Clear();
-                    foreach (ListViewItem item in lvSortedList.Items.Cast<ListViewItem>().Where(item => item.Tag == value))
-                    {
-                        item.Selected = true;
-                    }
-
-                    lbSearchList.SelectedItem = value;
-                }
-                finally
-                {
-                    m_blockSelectionReentrancy = false;
-                }
-
-                // Fires event for subscribers
-                OnSelectionChanged();
-            }
         }
 
         #endregion

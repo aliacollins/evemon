@@ -462,7 +462,7 @@ namespace EVEMon.Common
                                     result = (T)xs.Deserialize(reader);
                                 }
                             }
-                            // An error occurred during the deserialization
+                                // An error occurred during the deserialization
                             catch (InvalidOperationException exc)
                             {
                                 ExceptionHandler.LogException(exc, true);
@@ -647,7 +647,7 @@ namespace EVEMon.Common
         public static string CreateMD5From(string filename)
         {
             if (!File.Exists(filename))
-                throw new Exception(String.Format("{0} not found!", filename));
+                throw new FileNotFoundException(String.Format("{0} not found!", filename));
 
             MD5 md5 = MD5.Create();
             StringBuilder builder = new StringBuilder();

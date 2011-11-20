@@ -321,9 +321,6 @@ namespace EVEMon.Common.Controls
             m_panelState = PanelState.Expanded;
 
             Refresh();
-
-            // Clear memory
-            GC.Collect();
         }
 
         /// <summary>
@@ -342,9 +339,6 @@ namespace EVEMon.Common.Controls
             m_panelState = PanelState.Collapsed;
 
             Refresh();
-
-            // Clear memory
-            GC.Collect();
         }
 
         /// <summary>

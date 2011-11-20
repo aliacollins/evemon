@@ -100,8 +100,6 @@ namespace EVEMon.SkillPlanner
             Disposed -= OnDisposed;
         }
 
-
-
         /// <summary>
         /// On load, updates the controls.
         /// </summary>
@@ -128,9 +126,15 @@ namespace EVEMon.SkillPlanner
             base.OnLoad(e);
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the plan represented by this editor.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -159,19 +163,16 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        #endregion
-
-
-        #region Public Properties
-
         /// <summary>
         /// Gets the version of the plan as it is currently displayed.
         /// </summary>
+        [Browsable(false)]
         public PlanScratchpad DisplayPlan { get; private set; }
 
         /// <summary>
         /// Gets the character this control is bound to.
         /// </summary>
+        [Browsable(false)]
         public Character Character
         {
             get { return (Character)m_plan.Character; }
@@ -180,6 +181,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the number of unique skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
+        [Browsable(false)]
         public int UniqueSkillsCount
         {
             get { return SelectedEntries.GetUniqueSkillsCount(); }
@@ -188,6 +190,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
+        [Browsable(false)]
         public int NotKnownSkillsCount
         {
             get { return SelectedEntries.GetNotKnownSkillsCount(); }
@@ -196,6 +199,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the cost of known skills selected.
         /// </summary>
+        [Browsable(false)]
         public long SkillBooksCost
         {
             get { return SelectedEntries.GetTotalBooksCost(); }
@@ -204,9 +208,20 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the cost of not known skills selected.
         /// </summary>
+        [Browsable(false)]
         public long NotKnownSkillBooksCost
         {
             get { return SelectedEntries.GetNotKnownSkillBooksCost(); }
+        }
+
+        /// <summary>
+        /// Gets the skill select control.
+        /// </summary>
+        /// <value>The skill select control.</value>
+        [Browsable(false)]
+        public Control SkillSelectControl
+        {
+            get { return skillSelectControl; }
         }
 
         #endregion
@@ -1335,8 +1350,8 @@ namespace EVEMon.SkillPlanner
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (ilIcons.ImageSize.Width > 0)
-                    columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
+                if (column.ImageIndex > -1)
+                    columnHeaderWidth += lvSkills.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
                 int columnMaxWidth = lvSkills.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
@@ -1705,6 +1720,10 @@ namespace EVEMon.SkillPlanner
 
             // We update the skill tree
             skillSelectControl.UpdateContent();
+
+            // Update also the skill browser
+            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            pw.UpdateSkillBrowser();
         }
 
         /// <summary>

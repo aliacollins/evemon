@@ -997,7 +997,7 @@ namespace EVEMon.XmlGenerator
             else if (s_typeEffects.Contains(srcItem.ID, DBConstants.HiSlotEffectID))
                 item.Slot = ItemSlot.High;
             else
-                item.Slot = ItemSlot.NoSlot;
+                item.Slot = ItemSlot.None; // Replace with 'ItemSlot.NoSlot' after 2013
 
             // Add this item
             groupItems.Add(item);
@@ -1007,9 +1007,9 @@ namespace EVEMon.XmlGenerator
                 return;
 
             // Look for variations which are not in any market group
-            foreach (InvType srcVariationItem in s_metaTypes.Where(x => x.ParentItemID == srcItem.ID)
-                .Select(variation => s_types[variation.ItemID])
-                .Where(srcVariationItem => srcVariationItem.Published && srcVariationItem.MarketGroupID == null))
+            foreach (InvType srcVariationItem in s_metaTypes.Where(x => x.ParentItemID == srcItem.ID).Select(
+                variation => s_types[variation.ItemID]).Where(
+                    srcVariationItem => srcVariationItem.Published && srcVariationItem.MarketGroupID == null))
             {
                 srcVariationItem.RaceID = (int)Race.Faction;
                 CreateItem(srcVariationItem, groupItems);

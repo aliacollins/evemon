@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class SkillBrowser
+    partial class SkillBrowserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -31,7 +31,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillBrowser));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillBrowserControl));
             this.cmsSkillContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miPlanTo0 = new System.Windows.Forms.ToolStripMenuItem();
             this.miPlanTo1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
             this.miPlanTo4 = new System.Windows.Forms.ToolStripMenuItem();
             this.miPlanTo5 = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrTrainingSkillTick = new System.Windows.Forms.Timer(this.components);
-            this.verticalSplitContainer = new PersistentSplitContainer();
+            this.verticalSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.rightPanel = new System.Windows.Forms.Panel();
             this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplayControl();
@@ -244,16 +244,14 @@ namespace EVEMon.SkillPlanner
             // ownsBookMenu
             // 
             this.ownsBookMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ownsBookMenu.Checked = true;
             this.ownsBookMenu.CheckOnClick = true;
-            this.ownsBookMenu.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ownsBookMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.ownsBookMenu.Image = ((System.Drawing.Image)(resources.GetObject("ownsBookMenu.Image")));
             this.ownsBookMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ownsBookMenu.Name = "ownsBookMenu";
             this.ownsBookMenu.Size = new System.Drawing.Size(71, 22);
             this.ownsBookMenu.Text = "&Owns book";
-            this.ownsBookMenu.Click += new System.EventHandler(this.ownsBookMenu_Click);
+            this.ownsBookMenu.CheckedChanged += new System.EventHandler(this.ownsBookMenu_CheckedChanged);
             // 
             // planToMenu
             // 
@@ -273,42 +271,42 @@ namespace EVEMon.SkillPlanner
             // planTo0Menu
             // 
             this.planTo0Menu.Name = "planTo0Menu";
-            this.planTo0Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo0Menu.Size = new System.Drawing.Size(117, 22);
             this.planTo0Menu.Text = "&Remove";
             this.planTo0Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // planTo1Menu
             // 
             this.planTo1Menu.Name = "planTo1Menu";
-            this.planTo1Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo1Menu.Size = new System.Drawing.Size(117, 22);
             this.planTo1Menu.Text = "Level &1";
             this.planTo1Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // planTo2Menu
             // 
             this.planTo2Menu.Name = "planTo2Menu";
-            this.planTo2Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo2Menu.Size = new System.Drawing.Size(117, 22);
             this.planTo2Menu.Text = "Level &2";
             this.planTo2Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // planTo3Menu
             // 
             this.planTo3Menu.Name = "planTo3Menu";
-            this.planTo3Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo3Menu.Size = new System.Drawing.Size(117, 22);
             this.planTo3Menu.Text = "Level &3";
             this.planTo3Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // planTo4Menu
             // 
             this.planTo4Menu.Name = "planTo4Menu";
-            this.planTo4Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo4Menu.Size = new System.Drawing.Size(117, 22);
             this.planTo4Menu.Text = "Level &4";
             this.planTo4Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // planTo5Menu
             // 
             this.planTo5Menu.Name = "planTo5Menu";
-            this.planTo5Menu.Size = new System.Drawing.Size(152, 22);
+            this.planTo5Menu.Size = new System.Drawing.Size(117, 22);
             this.planTo5Menu.Text = "Level &5";
             this.planTo5Menu.Click += new System.EventHandler(this.planToMenu_Click);
             // 
@@ -372,9 +370,9 @@ namespace EVEMon.SkillPlanner
             // 
             // descriptionTextBox
             // 
-            this.descriptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.descriptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.descriptionTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.descriptionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descriptionTextBox.Location = new System.Drawing.Point(334, 19);
@@ -450,12 +448,12 @@ namespace EVEMon.SkillPlanner
             this.lblHelp.TabIndex = 30;
             this.lblHelp.Text = "Use the tree on the left to select skill to view.";
             // 
-            // SkillBrowser
+            // SkillBrowserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.verticalSplitContainer);
-            this.Name = "SkillBrowser";
+            this.Name = "SkillBrowserControl";
             this.Size = new System.Drawing.Size(840, 513);
             this.cmsSkillContext.ResumeLayout(false);
             this.verticalSplitContainer.Panel1.ResumeLayout(false);

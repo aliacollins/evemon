@@ -158,7 +158,7 @@ namespace EVEMon.Common
             // Backwards compatibility for older versions
             name = name.Replace("<", String.Empty).Replace(">", String.Empty);
 
-            m_values[(int)slot] = StaticItems.GetImplants(slot)[name];
+            m_values[(int)slot] = StaticItems.GetImplants(slot)[name] ?? Implant.None;
         }
 
         /// <summary>

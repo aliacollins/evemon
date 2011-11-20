@@ -167,7 +167,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public SerializableImplantSetCollection Export()
         {
-            SerializableImplantSetCollection serial = new SerializableImplantSetCollection { API = API.Export(), OldAPI = OldAPI.Export() };
+            SerializableImplantSetCollection serial = new SerializableImplantSetCollection
+                                                          { API = API.Export(), OldAPI = OldAPI.Export() };
             serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
             serial.SelectedIndex = Enumerate().IndexOf(m_current);
             return serial;

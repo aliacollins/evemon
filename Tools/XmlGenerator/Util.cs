@@ -166,7 +166,7 @@ namespace EVEMon.XmlGenerator
             {
                 FileInfo datafile = new FileInfo(file);
                 if (!datafile.Exists)
-                    throw new Exception(file + " not found!");
+                    throw new Exception(String.Format("{0} not found!", file));
 
                 string line = String.Format("{0} *{1}", Common.Util.CreateMD5From(file), datafile.Name);
                 md5SumsFile.WriteLine(line);
@@ -197,7 +197,7 @@ namespace EVEMon.XmlGenerator
                                                         fi.Directory.Parent.Name, fi.Directory.Name));
                     }
                     else
-                        Trace.WriteLine("{0} doesn't exist, copy failed", fi.Directory.FullName);
+                        Trace.WriteLine(String.Format("{0} doesn't exist, copy failed", fi.Directory.FullName));
                 }
             }
             catch (Exception exc)

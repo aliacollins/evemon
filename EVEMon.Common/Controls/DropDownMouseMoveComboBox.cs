@@ -3,10 +3,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Common.Controls
 {
-    public delegate void DropDownMouseMoveHandler(Object sender, object item, Point point);
 
     /// <summary>
     /// A combobox which notified subscribers about which items are under the mouse and when this changes.
@@ -25,7 +25,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private sealed class CustomListBox : ListBox
         {
-            public event DropDownMouseMoveHandler DropDownMouseMove;
+            public event EventHandler<DropDownMouseMoveEventArgs> DropDownMouseMove;
 
             /// <summary>
             /// Constructor.
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Controls
                     return;
 
                 if (DropDownMouseMove != null)
-                    DropDownMouseMove(this, Items[index], e.Location);
+                    DropDownMouseMove(this, new DropDownMouseMoveEventArgs(Items[index], e.Location));
             }
 
             /// <summary>
@@ -83,7 +83,7 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        public event DropDownMouseMoveHandler DropDownMouseMove;
+        public event EventHandler<DropDownMouseMoveEventArgs> DropDownMouseMove;
         private CustomListBox m_listBox;
         private string m_displayText;
 
@@ -194,13 +194,12 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// When the mouse moves over a drop down item, we fire the event.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="item"></param>
-        /// <param name="point"></param>
-        private void listBox_DropDownMouseMove(object sender, object item, Point point)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DropDownMouseMoveEventArgs"/> instance containing the event data.</param>
+        private void listBox_DropDownMouseMove(object sender, DropDownMouseMoveEventArgs e)
         {
             if (DropDownMouseMove != null)
-                DropDownMouseMove(sender, item, point);
+                DropDownMouseMove(sender, e);
         }
 
         /// <summary>

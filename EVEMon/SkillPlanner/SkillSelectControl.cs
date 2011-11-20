@@ -91,25 +91,12 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Helper Methods
-
-        /// <summary>
-        /// Updates the control visibility.
-        /// </summary>
-        private void UpdateControlVisibility()
-        {
-            pbSearchImage.Visible = !Settings.UI.SafeForWork;
-            UpdateContent();
-        }
-
-        #endregion
-
-
         #region Public Properties
 
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -126,6 +113,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the selected skill.
         /// </summary>
+        [Browsable(false)]
         public Skill SelectedSkill
         {
             get { return m_selectedSkill; }
@@ -152,6 +140,20 @@ namespace EVEMon.SkillPlanner
          Description("When true, the \"Show in Skill Browser\" context menus won't be displayed."),
          DefaultValue(false)]
         public bool HostedInSkillBrowser { get; set; }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates the control visibility.
+        /// </summary>
+        private void UpdateControlVisibility()
+        {
+            pbSearchImage.Visible = !Settings.UI.SafeForWork;
+            UpdateContent();
+        }
 
         #endregion
 
@@ -198,16 +200,16 @@ namespace EVEMon.SkillPlanner
                                             AppDomain.CurrentDomain.BaseDirectory))))
                 groupname = String.Empty;
 
-            return String.IsNullOrEmpty(groupname) ? defaultList : GetCustomIconSet(index, groupname);
+            return String.IsNullOrEmpty(groupname) ? defaultList : GetIconSet(index, groupname);
         }
 
         /// <summary>
-        /// Gets the custom icon set.
+        /// Gets the icon set for the given index, using the given list for missing icons.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="groupname">The groupname.</param>
         /// <returns></returns>
-        private static ImageList GetCustomIconSet(int index, string groupname)
+        private static ImageList GetIconSet(int index, string groupname)
         {
             ImageList imageList;
             ImageList tempImageList = null;
@@ -284,7 +286,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the skills list content.
         /// </summary>
-        public void UpdateContent()
+        internal void UpdateContent()
         {
             if (m_plan == null)
                 return;

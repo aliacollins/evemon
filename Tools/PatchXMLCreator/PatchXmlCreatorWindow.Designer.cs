@@ -1,4 +1,4 @@
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     partial class PatchXmlCreatorWindow
     {
@@ -58,7 +58,7 @@ namespace PatchXmlCreator
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
-            this.datafileControl = new PatchXmlCreator.DatafileControl();
+            this.datafileControl = new DatafileControl();
             this.gbRelease.SuspendLayout();
             this.gbDatafiles.SuspendLayout();
             this.pnlButtons.SuspendLayout();
@@ -243,7 +243,7 @@ namespace PatchXmlCreator
             this.rtbReleaseUrl.Name = "rtbReleaseUrl";
             this.rtbReleaseUrl.Size = new System.Drawing.Size(352, 21);
             this.rtbReleaseUrl.TabIndex = 10;
-            this.rtbReleaseUrl.Text = "http://evemon.static.battleclinic.com/builds/installers/";
+            this.rtbReleaseUrl.Text = "https://bitbucket.org/BattleClinic/evemon/downloads/";
             this.rtbReleaseUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
             this.rtbReleaseUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbReleaseUrl.Leave += new System.EventHandler(this.Control_Leave);
@@ -416,7 +416,7 @@ namespace PatchXmlCreator
             this.rtbDatafileUrl.Name = "rtbDatafileUrl";
             this.rtbDatafileUrl.Size = new System.Drawing.Size(390, 21);
             this.rtbDatafileUrl.TabIndex = 15;
-            this.rtbDatafileUrl.Text = "http://evemon.static.battleclinic.com/builds/updates/";
+            this.rtbDatafileUrl.Text = "https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/";
             this.rtbDatafileUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
             this.rtbDatafileUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbDatafileUrl.Leave += new System.EventHandler(this.Control_Leave);

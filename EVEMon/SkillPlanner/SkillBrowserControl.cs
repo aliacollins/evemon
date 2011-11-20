@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -7,19 +8,28 @@ using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class SkillBrowser : UserControl
+    public partial class SkillBrowserControl : UserControl
     {
         private Skill m_selectedSkill;
         private Plan m_plan;
 
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SkillBrowser()
+        public SkillBrowserControl()
         {
             InitializeComponent();
             verticalSplitContainer.RememberDistanceKey = "SkillBrowser_Vertical";
         }
+
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load.
@@ -59,9 +69,15 @@ namespace EVEMon.SkillPlanner
             Disposed -= OnDisposed;
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the plan this control is bound to.
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -77,6 +93,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the selected skills.
         /// </summary>
+        [Browsable(false)]
         public Skill SelectedSkill
         {
             get { return m_selectedSkill; }
@@ -103,6 +120,8 @@ namespace EVEMon.SkillPlanner
                 planWindow, window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
         }
+
+        #endregion
 
 
         #region Content update
@@ -175,7 +194,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the browser's content.
         /// </summary>
-        private void UpdateContent()
+        internal void UpdateContent()
         {
             if (m_selectedSkill == null)
             {
@@ -204,8 +223,8 @@ namespace EVEMon.SkillPlanner
 
             lblAttributes.Text = String.Format(CultureConstants.DefaultCulture,
                                                "Primary: {0}, Secondary: {1} (SP/Hour: {2:N0})",
-                                               m_selectedSkill.PrimaryAttribute.ToString(),
-                                               m_selectedSkill.SecondaryAttribute.ToString(),
+                                               m_selectedSkill.PrimaryAttribute,
+                                               m_selectedSkill.SecondaryAttribute,
                                                m_selectedSkill.SkillPointsPerHour);
             // Training time per level
             UpdateLevelLabel(lblLevel1Time, 1);
@@ -238,7 +257,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="label"></param>
         /// <param name="level"></param>
-        private void UpdateLevelLabel(Label label, int level)
+        private void UpdateLevelLabel(Control label, int level)
         {
             // "Level III :"
             StringBuilder sb = new StringBuilder();
@@ -307,10 +326,14 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ownsBookMenu_Click(object sender, EventArgs e)
+        private void ownsBookMenu_CheckedChanged(object sender, EventArgs e)
         {
             m_selectedSkill.IsOwned = ownsBookMenu.Checked;
             skillSelectControl.UpdateContent();
+
+            // Update also the skill selector of the Plan Editor
+            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            pw.UpdatePlanEditorSkillSelection();
         }
 
         /// <summary>

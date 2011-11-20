@@ -57,7 +57,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.labelName.AutoSize = true;
             this.labelName.Location = new System.Drawing.Point(5, 7);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(34, 13);
+            this.labelName.Size = new System.Drawing.Size(35, 13);
             this.labelName.TabIndex = 0;
             this.labelName.Text = "Name";
             // 
@@ -67,7 +67,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.labelErrorHeader.ForeColor = System.Drawing.Color.DarkRed;
             this.labelErrorHeader.Location = new System.Drawing.Point(3, 0);
             this.labelErrorHeader.Name = "labelErrorHeader";
-            this.labelErrorHeader.Size = new System.Drawing.Size(272, 13);
+            this.labelErrorHeader.Size = new System.Drawing.Size(260, 13);
             this.labelErrorHeader.TabIndex = 8;
             this.labelErrorHeader.Text = "An error occurred while trying to import this character :";
             // 
@@ -77,7 +77,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.urlRadio.Checked = true;
             this.urlRadio.Location = new System.Drawing.Point(13, 13);
             this.urlRadio.Name = "urlRadio";
-            this.urlRadio.Size = new System.Drawing.Size(65, 17);
+            this.urlRadio.Size = new System.Drawing.Size(69, 17);
             this.urlRadio.TabIndex = 0;
             this.urlRadio.TabStop = true;
             this.urlRadio.Text = "Use URL";
@@ -86,11 +86,11 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // urlTextBox
             // 
-            this.urlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.urlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.urlTextBox.Location = new System.Drawing.Point(85, 13);
             this.urlTextBox.Name = "urlTextBox";
-            this.urlTextBox.Size = new System.Drawing.Size(457, 21);
+            this.urlTextBox.Size = new System.Drawing.Size(457, 20);
             this.urlTextBox.TabIndex = 1;
             // 
             // fileRadio
@@ -98,7 +98,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.fileRadio.AutoSize = true;
             this.fileRadio.Location = new System.Drawing.Point(13, 49);
             this.fileRadio.Name = "fileRadio";
-            this.fileRadio.Size = new System.Drawing.Size(62, 17);
+            this.fileRadio.Size = new System.Drawing.Size(63, 17);
             this.fileRadio.TabIndex = 2;
             this.fileRadio.TabStop = true;
             this.fileRadio.Text = "Use File";
@@ -107,12 +107,12 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // fileTextBox
             // 
-            this.fileTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.fileTextBox.Location = new System.Drawing.Point(85, 49);
             this.fileTextBox.Name = "fileTextBox";
             this.fileTextBox.ReadOnly = true;
-            this.fileTextBox.Size = new System.Drawing.Size(457, 21);
+            this.fileTextBox.Size = new System.Drawing.Size(457, 20);
             this.fileTextBox.TabIndex = 3;
             // 
             // fileButton
@@ -140,8 +140,8 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // namePanel
             // 
-            this.namePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.namePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.namePanel.Controls.Add(this.nameTextBox);
             this.namePanel.Controls.Add(this.labelName);
             this.namePanel.Location = new System.Drawing.Point(85, 87);
@@ -151,18 +151,18 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // nameTextBox
             // 
-            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.nameTextBox.Location = new System.Drawing.Point(45, 4);
             this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(232, 21);
+            this.nameTextBox.Size = new System.Drawing.Size(232, 20);
             this.nameTextBox.TabIndex = 1;
             // 
             // errorPanel
             // 
-            this.errorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.errorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.errorPanel.Controls.Add(this.labelErrorHeader);
             this.errorPanel.Controls.Add(this.labelError);
             this.errorPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;

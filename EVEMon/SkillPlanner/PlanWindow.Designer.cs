@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
             this.tpPlanQueue = new System.Windows.Forms.TabPage();
             this.planEditor = new EVEMon.SkillPlanner.PlanEditorControl();
             this.tpSkillBrowser = new System.Windows.Forms.TabPage();
-            this.skillBrowser = new EVEMon.SkillPlanner.SkillBrowser();
+            this.skillBrowser = new EVEMon.SkillPlanner.SkillBrowserControl();
             this.tpCertificateBrowser = new System.Windows.Forms.TabPage();
             this.certBrowser = new EVEMon.SkillPlanner.CertificateBrowserControl();
             this.tpShipBrowser = new System.Windows.Forms.TabPage();
@@ -467,7 +467,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TabPage tpShipBrowser;
         private ShipBrowserControl shipBrowser;
         private System.Windows.Forms.TabPage tpSkillBrowser;
-        private SkillBrowser skillBrowser;
+        private SkillBrowserControl skillBrowser;
         private System.Windows.Forms.ToolStripDropDownButton tsddbPlans;
         private System.Windows.Forms.ToolStripButton tsbPrintPlan;
         private System.Windows.Forms.ToolStripDropDownButton tsddbSave;

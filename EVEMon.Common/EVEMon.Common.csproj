@@ -165,6 +165,7 @@
     <Compile Include="Corporation.cs" />
     <Compile Include="CorporationDataQuerying.cs" />
     <Compile Include="CorporationQueryMonitor.cs" />
+    <Compile Include="CustomEventArgs\ApiErrorTroubleshooterEventArgs.cs" />
     <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />
     <Compile Include="CustomEventArgs\APIKeyInfoChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeChangedEventArgs.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\DataUpdateAvailableEventArgs.cs" />
     <Compile Include="CustomEventArgs\DaySelectedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\DropDownMouseMoveEventArgs.cs" />
     <Compile Include="CustomEventArgs\EveServerEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeHighlightingEventArgs.cs" />
     <Compile Include="CustomEventArgs\IndustryJobsEventArgs.cs" />
@@ -513,7 +515,6 @@
     <Compile Include="Controls\ApiErrorTroubleshooter.Designer.cs">
       <DependentUpon>ApiErrorTroubleshooter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ApiErrorTroubleshooterEventArgs.cs" />
     <Compile Include="Controls\MsgBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>

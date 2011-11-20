@@ -173,8 +173,8 @@ namespace EVEMon
             // 
             // flpStatusLabels
             // 
-            this.flpStatusLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpStatusLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.flpStatusLabels.AutoSize = true;
             this.flpStatusLabels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpStatusLabels.Controls.Add(this.lblCurrentlyTraining);
@@ -549,6 +549,7 @@ namespace EVEMon
             // 
             this.researchList.Character = null;
             this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.researchList.Grouping = null;
             this.researchList.Location = new System.Drawing.Point(0, 0);
             this.researchList.Name = "researchList";
             this.researchList.Size = new System.Drawing.Size(568, 74);

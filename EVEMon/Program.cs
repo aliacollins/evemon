@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Threading;
 using EVEMon.WindowsApi;
 
 namespace EVEMon
@@ -180,15 +181,21 @@ namespace EVEMon
 
             s_showNotWindowOnError = true;
 
-            // Shutdown EveMonClient timer in case that was causing the crash
-            // so we don't get multiple crashes
             try
             {
+                // Shutdown EveMonClient timer in case that was causing the crash
+                // so we don't get multiple crashes
                 EveMonClient.Shutdown();
-                using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(ex))
-                {
-                    f.ShowDialog(MainWindow);
-                }
+
+                // Some exceptions may be thrown on a worker thread so we need to invoke them to the UI thread,
+                // if we are already on the UI thread nothing changes
+                Dispatcher.Invoke(() =>
+                                      {
+                                          using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
+                                          {
+                                              form.ShowDialog(MainWindow);
+                                          }
+                                      });
             }
             catch
             {

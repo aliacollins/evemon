@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace PatchXmlCreator
+namespace EVEMon.PatchXmlCreator
 {
     internal static class Program
     {
@@ -17,14 +17,17 @@ namespace PatchXmlCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            bool newRelease = SelectAction();
+
             // Ensure that the applications prerequisites are met
-            EnsurePrerequisites();
+            if (newRelease)
+                EnsurePrerequisites();
 
             // When prerequisites are not met we exit before Run()
             if (s_exitRequested)
                 return;
 
-            Application.Run(new PatchXmlCreatorWindow());
+            Application.Run(new PatchXmlCreatorWindow(newRelease));
         }
 
         /// <summary>
@@ -67,6 +70,18 @@ namespace PatchXmlCreator
         {
             MessageBox.Show(text, PatchXmlCreatorWindow.Caption, MessageBoxButtons.OK, MessageBoxIcon.Stop);
             s_exitRequested = true;
+        }
+
+        /// <summary>
+        /// Selects the action.
+        /// </summary>
+        /// <returns></returns>
+        private static bool SelectAction()
+        {
+            DialogResult dialogResult = MessageBox.Show(
+                "Create patch file for a new EVEMon release ?\r\n\r\nSelect 'No' if you are creating a patch file for new data files.",
+                PatchXmlCreatorWindow.Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            return dialogResult == DialogResult.Yes;
         }
     }
 }

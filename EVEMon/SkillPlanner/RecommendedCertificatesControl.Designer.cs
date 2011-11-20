@@ -112,7 +112,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.showInBrowserMenu.Name = "showInBrowserMenu";
             this.showInBrowserMenu.Size = new System.Drawing.Size(194, 22);
-            this.showInBrowserMenu.Text = "Show in Skill &Browser...";
+            this.showInBrowserMenu.Text = "Show in Skill &Browser";
             this.showInBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
             // 
             // tsSeparator

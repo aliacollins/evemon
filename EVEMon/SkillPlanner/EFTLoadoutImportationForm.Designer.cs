@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
             this.TrainingTimeLabel = new System.Windows.Forms.Label();
             this.CloseButton = new System.Windows.Forms.Button();
             this.splitContainerPanel = new System.Windows.Forms.Panel();
-            this.topSplitContainer = new PersistentSplitContainer();
+            this.topSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
             this.PasteTextBox = new System.Windows.Forms.RichTextBox();
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.ResultsTreeView = new System.Windows.Forms.TreeView();
@@ -86,7 +86,7 @@ namespace EVEMon.SkillPlanner
             this.TrainTimeLabel.AutoSize = true;
             this.TrainTimeLabel.Location = new System.Drawing.Point(191, 14);
             this.TrainTimeLabel.Name = "TrainTimeLabel";
-            this.TrainTimeLabel.Size = new System.Drawing.Size(25, 13);
+            this.TrainTimeLabel.Size = new System.Drawing.Size(27, 13);
             this.TrainTimeLabel.TabIndex = 32;
             this.TrainTimeLabel.Text = "N/A";
             // 
@@ -117,7 +117,7 @@ namespace EVEMon.SkillPlanner
             this.TrainingTimeLabel.AutoSize = true;
             this.TrainingTimeLabel.Location = new System.Drawing.Point(12, 14);
             this.TrainingTimeLabel.Name = "TrainingTimeLabel";
-            this.TrainingTimeLabel.Size = new System.Drawing.Size(176, 13);
+            this.TrainingTimeLabel.Size = new System.Drawing.Size(173, 13);
             this.TrainingTimeLabel.TabIndex = 31;
             this.TrainingTimeLabel.Text = "Training Time for selected loadout: ";
             // 
@@ -183,7 +183,7 @@ namespace EVEMon.SkillPlanner
             this.ExplanationLabel.Location = new System.Drawing.Point(0, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Padding = new System.Windows.Forms.Padding(2, 5, 2, 5);
-            this.ExplanationLabel.Size = new System.Drawing.Size(248, 23);
+            this.ExplanationLabel.Size = new System.Drawing.Size(242, 23);
             this.ExplanationLabel.TabIndex = 1;
             this.ExplanationLabel.Text = "Copy an EFT formated loadout into the clipboard.";
             // 

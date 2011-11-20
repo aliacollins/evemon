@@ -65,7 +65,7 @@ namespace EVEMon.Common.Controls
         [DllImport("shell32.dll")]
         public static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         public const string TaskbarClass = "Shell_TrayWnd";

@@ -119,6 +119,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {
@@ -151,6 +154,11 @@ namespace EVEMon.SkillPlanner
 
             base.OnFormClosing(e);
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the current character.
@@ -366,6 +374,23 @@ namespace EVEMon.SkillPlanner
                     m_plan.AcknoledgeInvalidEntries();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Updates the plan editor's skill selection control.
+        /// </summary>
+        internal void UpdatePlanEditorSkillSelection()
+        {
+            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
+            skillSelectControl.UpdateContent();
+        }
+
+        /// <summary>
+        /// Updates the skill browser.
+        /// </summary>
+        internal void UpdateSkillBrowser()
+        {
+            skillBrowser.UpdateContent();
         }
 
         #endregion

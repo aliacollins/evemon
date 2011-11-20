@@ -8,8 +8,8 @@
     <ProjectGuid>{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PatchXmlCreator</RootNamespace>
-    <AssemblyName>PatchXMLCreator</AssemblyName>
+    <RootNamespace>EVEMon.PatchXmlCreator</RootNamespace>
+    <AssemblyName>EVEMon.PatchXMLCreator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>
@@ -87,7 +87,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rd /s /q "$(TargetDir)\Resources"
-del "$(TargetDir)Google*.*"</PostBuildEvent>
+del "$(TargetDir)Google*.dll"
+del "$(TargetDir)*office*.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

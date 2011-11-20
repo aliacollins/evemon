@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
         public SkillExplorerWindow()
         {
             InitializeComponent();
-            splitContainer1.RememberDistanceKey = "SkillExplorer";
+            splitContainer.RememberDistanceKey = "SkillExplorer";
 
             toolTip.SetToolTip(cbHistory, "A history of the skills that you have been looking at");
         }

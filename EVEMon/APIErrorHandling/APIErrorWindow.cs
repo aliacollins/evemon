@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
@@ -18,9 +19,10 @@ namespace EVEMon.ApiErrorHandling
     /// </summary>
     public partial class ApiErrorWindow : EVEMonForm
     {
+        private readonly HttpTimeoutTroubleshooter m_httpTimeoutTroubleshooter = new HttpTimeoutTroubleshooter();
+
         private APIErrorNotificationEventArgs m_notification;
         private ApiErrorTroubleshooter m_troubleshooter;
-        private HttpTimeoutTroubleshooter m_httpTimeoutTroubleshooter = new HttpTimeoutTroubleshooter();
         private bool m_troubleshooterUsed;
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace EVEMon.ApiErrorHandling
         /// Handles the ErrorResolved event when a http timeout is displayed of the troubleshooter control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.Controls.ApiErrorTroubleshooterEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ApiErrorTroubleshooterEventArgs"/> instance containing the event data.</param>
         private void troubleshooter_ErrorResolved(object sender, ApiErrorTroubleshooterEventArgs e)
         {
             m_troubleshooterUsed = true;

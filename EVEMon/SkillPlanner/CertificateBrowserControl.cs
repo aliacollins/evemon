@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -77,6 +78,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the character this control is bound to.
         /// </summary>
+        [Browsable(false)]
         public Character Character
         {
             get { return m_plan.Character as Character; }
@@ -85,6 +87,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets the current plan
         /// </summary>
+        [Browsable(false)]
         public Plan Plan
         {
             get { return m_plan; }
@@ -101,6 +104,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// This is the way to get and set the selected certificate class.
         /// </summary>
+        [Browsable(false)]
         public CertificateClass SelectedCertificateClass
         {
             get { return certSelectCtl.SelectedCertificateClass; }

@@ -595,7 +595,7 @@ namespace EVEMon.SkillPlanner
 
                     // Update "show in skill browser" menu
                     showInBrowserMenu.Enabled = true;
-                    showInBrowserMenu.Text = "Show in Skill Browser...";
+                    showInBrowserMenu.Text = "Show in Skill Browser";
 
                     // Update "show in skill explorer" menu
                     showInExplorerMenu.Visible = true;
