@@ -1115,7 +1115,7 @@ namespace EVEMon.Common
             TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
             string timeStr = String.Format(CultureConstants.DefaultCulture,
                                            "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
-            System.Diagnostics.Trace.WriteLine(timeStr + message);
+            System.Diagnostics.Trace.WriteLine(String.Format("{0}{1}", timeStr, message));
         }
 
         /// <summary>

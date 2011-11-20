@@ -96,6 +96,7 @@ namespace EVEMon
                                    { "Jeff Zellner", "05" },
                                    { "jthiesen", "05" },
                                    { "justinian", "05" },
+                                   { "Kelos Pelmand", "05" },
                                    { "Kingdud", "05" },
                                    { "Kw4h", "05" },
                                    { "lerthe61", "05" },
