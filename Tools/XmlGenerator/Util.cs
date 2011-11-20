@@ -197,7 +197,7 @@ namespace EVEMon.XmlGenerator
                                                         fi.Directory.Parent.Name, fi.Directory.Name));
                     }
                     else
-                        Trace.WriteLine("{0} doesn't exist, copy failed", fi.Directory.FullName);
+                        Trace.WriteLine(String.Format("{0} doesn't exist, copy failed", fi.Directory.FullName));
                 }
             }
             catch (Exception exc)
