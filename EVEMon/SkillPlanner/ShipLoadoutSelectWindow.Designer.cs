@@ -76,7 +76,7 @@ namespace EVEMon.SkillPlanner
             // lblLoadouts
             // 
             this.lblLoadouts.AutoSize = true;
-            this.lblLoadouts.Location = new System.Drawing.Point(104, 82);
+            this.lblLoadouts.Location = new System.Drawing.Point(114, 82);
             this.lblLoadouts.Name = "lblLoadouts";
             this.lblLoadouts.Size = new System.Drawing.Size(101, 13);
             this.lblLoadouts.TabIndex = 1;
@@ -216,7 +216,7 @@ namespace EVEMon.SkillPlanner
             // lblSubmitDate
             // 
             this.lblSubmitDate.AutoSize = true;
-            this.lblSubmitDate.Location = new System.Drawing.Point(194, 51);
+            this.lblSubmitDate.Location = new System.Drawing.Point(204, 51);
             this.lblSubmitDate.Name = "lblSubmitDate";
             this.lblSubmitDate.Size = new System.Drawing.Size(62, 13);
             this.lblSubmitDate.TabIndex = 25;
@@ -225,7 +225,7 @@ namespace EVEMon.SkillPlanner
             // SubDateLabel
             // 
             this.SubDateLabel.AutoSize = true;
-            this.SubDateLabel.Location = new System.Drawing.Point(104, 51);
+            this.SubDateLabel.Location = new System.Drawing.Point(114, 51);
             this.SubDateLabel.Name = "SubDateLabel";
             this.SubDateLabel.Size = new System.Drawing.Size(89, 13);
             this.SubDateLabel.TabIndex = 24;
@@ -235,7 +235,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lblForum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblForum.AutoSize = true;
-            this.lblForum.Location = new System.Drawing.Point(615, 96);
+            this.lblForum.Location = new System.Drawing.Point(6, 100);
             this.lblForum.Name = "lblForum";
             this.lblForum.Size = new System.Drawing.Size(101, 13);
             this.lblForum.TabIndex = 23;
@@ -246,7 +246,7 @@ namespace EVEMon.SkillPlanner
             // AuthorLabel
             // 
             this.AuthorLabel.AutoSize = true;
-            this.AuthorLabel.Location = new System.Drawing.Point(104, 38);
+            this.AuthorLabel.Location = new System.Drawing.Point(114, 38);
             this.AuthorLabel.Name = "AuthorLabel";
             this.AuthorLabel.Size = new System.Drawing.Size(41, 13);
             this.AuthorLabel.TabIndex = 22;
@@ -255,7 +255,7 @@ namespace EVEMon.SkillPlanner
             // LoadoutNameLabel
             // 
             this.LoadoutNameLabel.AutoSize = true;
-            this.LoadoutNameLabel.Location = new System.Drawing.Point(104, 25);
+            this.LoadoutNameLabel.Location = new System.Drawing.Point(114, 25);
             this.LoadoutNameLabel.Name = "LoadoutNameLabel";
             this.LoadoutNameLabel.Size = new System.Drawing.Size(80, 13);
             this.LoadoutNameLabel.TabIndex = 21;
@@ -264,7 +264,7 @@ namespace EVEMon.SkillPlanner
             // ShipLabel
             // 
             this.ShipLabel.AutoSize = true;
-            this.ShipLabel.Location = new System.Drawing.Point(104, 12);
+            this.ShipLabel.Location = new System.Drawing.Point(114, 12);
             this.ShipLabel.Name = "ShipLabel";
             this.ShipLabel.Size = new System.Drawing.Size(31, 13);
             this.ShipLabel.TabIndex = 20;
@@ -273,7 +273,7 @@ namespace EVEMon.SkillPlanner
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Location = new System.Drawing.Point(194, 38);
+            this.lblAuthor.Location = new System.Drawing.Point(204, 38);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(66, 13);
             this.lblAuthor.TabIndex = 19;
@@ -282,7 +282,7 @@ namespace EVEMon.SkillPlanner
             // lblLoadoutName
             // 
             this.lblLoadoutName.AutoSize = true;
-            this.lblLoadoutName.Location = new System.Drawing.Point(194, 25);
+            this.lblLoadoutName.Location = new System.Drawing.Point(204, 25);
             this.lblLoadoutName.Name = "lblLoadoutName";
             this.lblLoadoutName.Size = new System.Drawing.Size(74, 13);
             this.lblLoadoutName.TabIndex = 18;
@@ -291,7 +291,7 @@ namespace EVEMon.SkillPlanner
             // lblShipName
             // 
             this.lblShipName.AutoSize = true;
-            this.lblShipName.Location = new System.Drawing.Point(194, 12);
+            this.lblShipName.Location = new System.Drawing.Point(204, 12);
             this.lblShipName.Name = "lblShipName";
             this.lblShipName.Size = new System.Drawing.Size(56, 13);
             this.lblShipName.TabIndex = 17;
@@ -382,10 +382,10 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.TrainingTimeLabel);
             this.Controls.Add(this.SubDateLabel);
             this.Controls.Add(this.lblTrainTime);
-            this.Controls.Add(this.lblForum);
             this.Controls.Add(this.AuthorLabel);
             this.Controls.Add(this.LoadoutNameLabel);
             this.Controls.Add(this.ShipLabel);
+            this.Controls.Add(this.lblForum);
             this.Controls.Add(this.lblAuthor);
             this.Controls.Add(this.lblLoadoutName);
             this.Controls.Add(this.lblShipName);
