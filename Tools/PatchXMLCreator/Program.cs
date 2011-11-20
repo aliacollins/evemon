@@ -17,14 +17,16 @@ namespace EVEMon.PatchXmlCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            bool newRelease = SelectAction();
+
             // Ensure that the applications prerequisites are met
-            EnsurePrerequisites();
+            if (newRelease)
+                EnsurePrerequisites();
 
             // When prerequisites are not met we exit before Run()
             if (s_exitRequested)
                 return;
 
-            bool newRelease = SelectAction();
             Application.Run(new PatchXmlCreatorWindow(newRelease));
         }
 
