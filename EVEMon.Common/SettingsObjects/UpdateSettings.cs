@@ -10,6 +10,8 @@ namespace EVEMon.Common.SettingsObjects
     [EnforceUIThreadAffinity]
     public sealed class UpdateSettings
     {
+        private readonly SerializableDictionary<String, UpdatePeriod> m_periods;
+
         private string m_updatesUrl;
         private int m_updateFrequency;
 
@@ -21,7 +23,7 @@ namespace EVEMon.Common.SettingsObjects
             CheckTimeOnStartup = true;
             CheckEVEMonVersion = true;
             HttpTimeout = 20;
-            Periods = new SerializableDictionary<String, UpdatePeriod>();
+            m_periods = new SerializableDictionary<String, UpdatePeriod>();
             IgnoreNetworkStatus = false;
             UpdateFrequency = 240;
             UseCustomUpdatesUrl = false;
@@ -93,7 +95,10 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The periods.</value>
         [XmlElement("periods")]
-        public SerializableDictionary<String, UpdatePeriod> Periods { get; set; }
+        public SerializableDictionary<String, UpdatePeriod> Periods
+        {
+            get { return m_periods; }
+        }
 
         /// <summary>
         /// Gets or sets the HTTP timeout.

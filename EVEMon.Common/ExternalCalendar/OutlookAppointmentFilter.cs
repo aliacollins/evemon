@@ -128,7 +128,8 @@ namespace EVEMon.Common.ExternalCalendar
         {
             // Appointment Filter class that will handle any data attached
             // to the appointment with which we are currently dealing
-            AppointmentArray = RecurringItems();
+            AppointmentArray.Clear();
+            AppointmentArray.AddRange(RecurringItems());
         }
 
         /// <summary>
