@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Windows.Forms;
-using System.Xml;
 using System.Xml.XPath;
 using EVEMon.Common.Net;
 
