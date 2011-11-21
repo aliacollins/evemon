@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableStation
     {
-        private Collection<SerializableAgent> m_agents;
+        private readonly Collection<SerializableAgent> m_agents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableStation"/> class.
@@ -80,9 +81,10 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified agents.
         /// </summary>
         /// <param name="agents">The agents.</param>
-        public void Add(List<SerializableAgent> agents)
+        public void AddRange(IEnumerable<SerializableAgent> agents)
         {
-            m_agents = new Collection<SerializableAgent>(agents);
+            m_agents.Clear();
+            agents.ToList().ForEach(agent => m_agents.Add(agent));
         }
     }
 }

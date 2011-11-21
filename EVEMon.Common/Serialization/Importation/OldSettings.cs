@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Importation
@@ -14,18 +14,27 @@ namespace EVEMon.Common.Serialization.Importation
     [XmlRoot("OldSettings")]
     public sealed class OldSettings
     {
+        private readonly Collection<OldSettingsCharacter> m_characters;
+        private readonly Collection<OldSettingsPlan> m_plans;
+
         public OldSettings()
         {
-            Characters = new List<OldSettingsCharacter>();
-            Plans = new List<OldSettingsPlan>();
+            m_characters = new Collection<OldSettingsCharacter>();
+            m_plans = new Collection<OldSettingsPlan>();
         }
 
         [XmlArray("characters")]
         [XmlArrayItem("character")]
-        public List<OldSettingsCharacter> Characters { get; set; }
+        public Collection<OldSettingsCharacter> Characters
+        {
+            get { return m_characters; }
+        }
 
         [XmlArray("plans")]
         [XmlArrayItem("plan")]
-        public List<OldSettingsPlan> Plans { get; set; }
+        public Collection<OldSettingsPlan> Plans
+        {
+            get { return m_plans; }
+        }
     }
 }

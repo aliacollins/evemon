@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -10,7 +11,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializablePropertyCategory
     {
-        private Collection<SerializableProperty> m_properties;
+        private readonly Collection<SerializableProperty> m_properties;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializablePropertyCategory"/> class.
@@ -49,9 +50,10 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified properties.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public void Add(List<SerializableProperty> properties)
+        public void AddRange(IEnumerable<SerializableProperty> properties)
         {
-            m_properties = new Collection<SerializableProperty>(properties);
+            m_properties.Clear();
+            properties.ToList().ForEach(property => m_properties.Add(property));
         }
     }
 }

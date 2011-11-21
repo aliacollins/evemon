@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableConstellation
     {
-        private Collection<SerializableSolarSystem> m_systems;
+        private readonly Collection<SerializableSolarSystem> m_systems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableConstellation"/> class.
@@ -51,9 +52,10 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified systems.
         /// </summary>
         /// <param name="systems">The systems.</param>
-        public void Add(List<SerializableSolarSystem> systems)
+        public void AddRange(IEnumerable<SerializableSolarSystem> systems)
         {
-            m_systems = new Collection<SerializableSolarSystem>(systems);
+            m_systems.Clear();
+            systems.ToList().ForEach(system => m_systems.Add(system));
         }
     }
 }

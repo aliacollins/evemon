@@ -159,11 +159,11 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// <summary>
         /// Adds the specified invent type ID.
         /// </summary>
-        /// <param name="inventTypeID">The invent type ID.</param>
-        public void AddRange(IEnumerable<int> inventTypeID)
+        /// <param name="inventTypeId">The invent type ID.</param>
+        public void AddRange(IEnumerable<int> inventTypeId)
         {
             m_inventTypeID.Clear();
-            inventTypeID.ToList().ForEach(inventType => m_inventTypeID.Add(inventType));
+            inventTypeId.ToList().ForEach(inventType => m_inventTypeID.Add(inventType));
         }
 
         /// <summary>

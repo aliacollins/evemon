@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,8 +14,8 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableCertificate
     {
-        private Collection<SerializableCertificatePrerequisite> m_prerequisites;
-        private Collection<SerializableCertificateRecommendation> m_recommendations;
+        private readonly Collection<SerializableCertificatePrerequisite> m_prerequisites;
+        private readonly Collection<SerializableCertificateRecommendation> m_recommendations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableCertificate"/> class.
@@ -70,18 +71,20 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified prerequisites.
         /// </summary>
         /// <param name="prerequisites">The prerequisites.</param>
-        public void Add(List<SerializableCertificatePrerequisite> prerequisites)
+        public void AddRange(IEnumerable<SerializableCertificatePrerequisite> prerequisites)
         {
-            m_prerequisites = new Collection<SerializableCertificatePrerequisite>(prerequisites);
+            m_prerequisites.Clear();
+            prerequisites.ToList().ForEach(prerequisite => m_prerequisites.Add(prerequisite));
         }
 
         /// <summary>
         /// Adds the specified recommendations.
         /// </summary>
         /// <param name="recommendations">The recommendations.</param>
-        public void Add(List<SerializableCertificateRecommendation> recommendations)
+        public void AddRange(IEnumerable<SerializableCertificateRecommendation> recommendations)
         {
-            m_recommendations = new Collection<SerializableCertificateRecommendation>(recommendations);
+            m_recommendations.Clear();
+            recommendations.ToList().ForEach(recommendation => m_recommendations.Add(recommendation));
         }
     }
 }

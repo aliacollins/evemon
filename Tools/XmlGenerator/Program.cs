@@ -429,7 +429,7 @@ namespace EVEMon.XmlGenerator
                     properties.Insert(4, pvProp);
                 }
 
-                category.Add(properties);
+                category.AddRange(properties);
             }
 
             // Set packaged volume property ID
@@ -450,8 +450,8 @@ namespace EVEMon.XmlGenerator
             gProperties.Insert(0, bpProp);
 
             // Add properties to custom categories
-            general.Add(gProperties);
-            propulsion.Add(pProperties);
+            general.AddRange(gProperties);
+            propulsion.AddRange(pProperties);
 
             // Sort groups
             string[] orderedGroupNames = new[]
@@ -531,7 +531,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Store the items
-                group.Add(items.OrderBy(x => x.Name).ToList());
+                group.AddRange(items.OrderBy(x => x.Name));
             }
 
             // Create the parent-children groups relations
@@ -541,7 +541,7 @@ namespace EVEMon.XmlGenerator
                     s_marketGroups.Concat(s_injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID)
                         .Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
-                group.Add(children.ToList());
+                group.AddRange(children);
             }
 
             // Pick the family
@@ -921,7 +921,7 @@ namespace EVEMon.XmlGenerator
             props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
 
             // Add properties info to item
-            item.Add(props);
+            item.AddRange(props);
 
             // Prerequisites completion
             List<SerializablePrerequisiteSkill> prereqs = new List<SerializablePrerequisiteSkill>();
@@ -932,7 +932,7 @@ namespace EVEMon.XmlGenerator
             }
 
             // Add prerequisite skills info to item
-            item.Add(prereqs);
+            item.AddRange(prereqs);
 
             // Metagroup
             foreach (InvMetaType relation in s_metaTypes
@@ -1187,14 +1187,14 @@ namespace EVEMon.XmlGenerator
                     }
 
                     // Add prerequesites to skill
-                    singleSkill.Add(listOfPrerequisites);
+                    singleSkill.AddRange(listOfPrerequisites);
 
                     // Add skill
                     listOfSkillsInGroup.Add(singleSkill);
                 }
 
                 // Add skills in skill group
-                skillGroup.Add(listOfSkillsInGroup.OrderBy(x => x.Name).ToList());
+                skillGroup.AddRange(listOfSkillsInGroup.OrderBy(x => x.Name));
 
                 // Add skill group
                 listOfSkillGroups.Add(skillGroup);
@@ -1205,7 +1205,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
-            datafile.Add(listOfSkillGroups);
+            datafile.AddRange(listOfSkillGroups);
 
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
@@ -1329,7 +1329,7 @@ namespace EVEMon.XmlGenerator
                         }
 
                         //Add prerequisites to certificate
-                        crtCertificates.Add(listOfPrereq);
+                        crtCertificates.AddRange(listOfPrereq);
 
                         // Add recommendations to certificate
                         List<SerializableCertificateRecommendation> listOfRecommendations =
@@ -1348,7 +1348,7 @@ namespace EVEMon.XmlGenerator
                                                                  })
                             ).ToList();
 
-                        crtCertificates.Add(listOfRecommendations);
+                        crtCertificates.AddRange(listOfRecommendations);
 
                         // Add certificate
                         listOfCertificates.Add(crtCertificates);
@@ -1362,14 +1362,14 @@ namespace EVEMon.XmlGenerator
                         continue;
 
                     // Add certificates to classes
-                    crtClasses.Add(listOfCertificates.OrderBy(x => x.Grade).ToList());
+                    crtClasses.AddRange(listOfCertificates.OrderBy(x => x.Grade).ToList());
 
                     // Add certificate class
                     listOfCertClasses.Add(crtClasses);
                 }
 
                 // Add classes to categories
-                crtCategory.Add(listOfCertClasses);
+                crtCategory.AddRange(listOfCertClasses);
 
                 // Add category
                 listOfCertCategories.Add(crtCategory);
@@ -1449,7 +1449,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Store the items
-                group.Add(blueprints.OrderBy(x => x.Name).ToList());
+                group.AddRange(blueprints.OrderBy(x => x.Name).ToList());
             }
 
             // Create the parent-children groups relations
@@ -1459,7 +1459,7 @@ namespace EVEMon.XmlGenerator
                     s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(
                         x => groups[x.ID]).OrderBy(x => x.Name).ToList();
 
-                group.Add(children);
+                group.AddRange(children);
             }
 
             // Sort groups
@@ -2019,15 +2019,15 @@ namespace EVEMon.XmlGenerator
                                                               agent.agentConfig.Key.Contains(
                                                                   "agent.LocateCharacterService.enabled"))
                                                      })).ToList();
-                            station.Add(agents);
+                            station.AddRange(agents);
 
                             stations.Add(station);
                         }
-                        system.Add(stations.OrderBy(x => x.Name).ToList());
+                        system.AddRange(stations.OrderBy(x => x.Name));
                     }
-                    constellation.Add(systems.OrderBy(x => x.Name).ToList());
+                    constellation.AddRange(systems.OrderBy(x => x.Name));
                 }
-                region.Add(constellations.OrderBy(x => x.Name).ToList());
+                region.AddRange(constellations.OrderBy(x => x.Name));
             }
 
             // Jumps

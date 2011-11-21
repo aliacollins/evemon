@@ -305,7 +305,7 @@ namespace EVEMon.Common
         public static string ExportAsXML(IEnumerable<Plan> plans)
         {
             OutputPlans output = new OutputPlans { Revision = Settings.Revision };
-            output.Plans.AddRange(plans.Select(plan => plan.Export()));
+            plans.Select(plan => plan.Export()).ToList().ForEach(plan => output.Plans.Add(plan));
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlans), output);

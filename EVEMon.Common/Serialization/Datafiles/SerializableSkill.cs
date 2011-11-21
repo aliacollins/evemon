@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableSkill
     {
-        private Collection<SerializableSkillPrerequisite> m_skillPrereqs;
+        private readonly Collection<SerializableSkillPrerequisite> m_skillPrereqs;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableSkill"/> class.
@@ -102,9 +103,10 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified skill prerequisites.
         /// </summary>
         /// <param name="skillPrereqs">The skill prereqs.</param>
-        public void Add(List<SerializableSkillPrerequisite> skillPrereqs)
+        public void AddRange(IEnumerable<SerializableSkillPrerequisite> skillPrereqs)
         {
-            m_skillPrereqs = new Collection<SerializableSkillPrerequisite>(skillPrereqs);
+            m_skillPrereqs.Clear();
+            skillPrereqs.ToList().ForEach(skillPrereq => m_skillPrereqs.Add(skillPrereq));
         }
     }
 }

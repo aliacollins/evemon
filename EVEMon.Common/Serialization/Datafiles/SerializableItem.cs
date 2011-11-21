@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,8 +14,8 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableItem
     {
-        private Collection<SerializablePrerequisiteSkill> m_prerequisiteSkills;
-        private Collection<SerializablePropertyValue> m_properties;
+        private readonly Collection<SerializablePrerequisiteSkill> m_prerequisiteSkills;
+        private readonly Collection<SerializablePropertyValue> m_properties;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableItem"/> class.
@@ -119,18 +120,20 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified prerequisite skills.
         /// </summary>
         /// <param name="prerequisiteSkills">The prerequisite skills.</param>
-        public void Add(List<SerializablePrerequisiteSkill> prerequisiteSkills)
+        public void AddRange(IEnumerable<SerializablePrerequisiteSkill> prerequisiteSkills)
         {
-            m_prerequisiteSkills = new Collection<SerializablePrerequisiteSkill>(prerequisiteSkills);
+            m_prerequisiteSkills.Clear();
+            prerequisiteSkills.ToList().ForEach(prerequisiteSkill => m_prerequisiteSkills.Add(prerequisiteSkill));
         }
 
         /// <summary>
         /// Adds the specified properties.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public void Add(List<SerializablePropertyValue> properties)
+        public void AddRange(IEnumerable<SerializablePropertyValue> properties)
         {
-            m_properties = new Collection<SerializablePropertyValue>(properties);
+            m_properties.Clear();
+            properties.ToList().ForEach(property => m_properties.Add(property));
         }
     }
 }

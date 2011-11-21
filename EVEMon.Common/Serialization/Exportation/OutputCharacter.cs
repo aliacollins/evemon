@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Exportation
@@ -10,11 +10,15 @@ namespace EVEMon.Common.Serialization.Exportation
     [XmlRoot("outputCharacter")]
     public sealed class OutputCharacter
     {
+        private readonly Collection<OutputAttributeEnhancer> m_attributeEnhancers;
+        private readonly Collection<OutputSkillGroup> m_skillGroups;
+        private readonly Collection<OutputCertificate> m_certificates;
+
         public OutputCharacter()
         {
-            SkillGroups = new List<OutputSkillGroup>();
-            Certificates = new List<OutputCertificate>();
-            AttributeEnhancers = new List<OutputAttributeEnhancer>();
+            m_attributeEnhancers = new Collection<OutputAttributeEnhancer>();
+            m_skillGroups = new Collection<OutputSkillGroup>();
+            m_certificates = new Collection<OutputCertificate>();
         }
 
         [XmlAttribute("name")]
@@ -55,14 +59,23 @@ namespace EVEMon.Common.Serialization.Exportation
 
         [XmlArray("attributeEnhancers")]
         [XmlArrayItem("implant")]
-        public List<OutputAttributeEnhancer> AttributeEnhancers { get; set; }
+        public Collection<OutputAttributeEnhancer> AttributeEnhancers
+        {
+            get { return m_attributeEnhancers; }
+        }
 
         [XmlArray("skills")]
         [XmlArrayItem("skillGroup")]
-        public List<OutputSkillGroup> SkillGroups { get; set; }
+        public Collection<OutputSkillGroup> SkillGroups
+        {
+            get { return m_skillGroups; }
+        }
 
         [XmlArray("certificates")]
         [XmlArrayItem("certificate")]
-        public List<OutputCertificate> Certificates { get; set; }
+        public Collection<OutputCertificate> Certificates
+        {
+            get { return m_certificates; }
+        }
     }
 }

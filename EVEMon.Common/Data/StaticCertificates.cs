@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -24,7 +25,7 @@ namespace EVEMon.Common.Data
         internal static void Load()
         {
             CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
-            Categories = new List<StaticCertificateCategory>();
+            Categories = new Collection<StaticCertificateCategory>();
 
             foreach (SerializableCertificateCategory srcCat in datafile.Categories)
             {
@@ -32,7 +33,7 @@ namespace EVEMon.Common.Data
             }
 
             // Sort categories by name
-            Categories.Sort((c1, c2) => String.CompareOrdinal(c1.Name, c2.Name));
+            Categories.ToList().Sort((c1, c2) => String.CompareOrdinal(c1.Name, c2.Name));
 
             // Build inner collections
             foreach (StaticCertificateClass certClass in Categories.SelectMany(certCategory => certCategory))
@@ -66,7 +67,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the categories, sorted by name.
         /// </summary>
-        public static List<StaticCertificateCategory> Categories { get; private set; }
+        public static Collection<StaticCertificateCategory> Categories { get; private set; }
 
         /// <summary>
         /// Gets the certificate classes, hierarchically sorted (category's name, class's name).

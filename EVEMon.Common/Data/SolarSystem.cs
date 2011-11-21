@@ -109,7 +109,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="maxInclusiveNumberOfJumps">The maximum, inclusive, number of jumps from this system.</param>
         /// <returns></returns>
-        public List<SolarSystemRange> GetSystemsWithinRange(int maxInclusiveNumberOfJumps)
+        public IEnumerable<SolarSystemRange> GetSystemsWithinRange(int maxInclusiveNumberOfJumps)
         {
             return SolarSystemRange.GetSystemRangesFrom(this, maxInclusiveNumberOfJumps);
         }
@@ -120,7 +120,7 @@ namespace EVEMon.Common.Data
         /// <param name="target">The target system.</param>
         /// <param name="minSecurityLevel">The mininmum, inclusive, real security level. Systems have levels between -1 and +1.</param>
         /// <returns>The list of systems, beginning with this one and ending with the provided target.</returns>
-        public List<SolarSystem> GetFastestPathTo(SolarSystem target, float minSecurityLevel)
+        public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, float minSecurityLevel)
         {
             return PathFinder.FindBestPath(this, target, minSecurityLevel);
         }
