@@ -856,8 +856,11 @@ namespace EVEMon.SettingsUI
         private void btnAddAPIServer_Click(object sender, EventArgs e)
         {
             SerializableAPIProvider newProvider = new SerializableAPIProvider();
-            newProvider.Methods.AddRange(APIMethod.CreateDefaultSet().Select(
-                apiMethod => new SerializableAPIMethod { Method = apiMethod.Method.ToString(), Path = apiMethod.Path }));
+            APIMethod.CreateDefaultSet().Select(
+                apiMethod => new SerializableAPIMethod
+                                 {
+                                     Method = apiMethod.Method.ToString(), Path = apiMethod.Path
+                                 }).ToList().ForEach(method => newProvider.Methods.Add(method));
 
             using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, newProvider))
             {

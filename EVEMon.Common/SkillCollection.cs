@@ -85,9 +85,9 @@ namespace EVEMon.Common
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableCharacterSkill> Export()
+        internal IEnumerable<SerializableCharacterSkill> Export()
         {
-            return Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export()).ToList();
+            return Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export());
         }
 
         /// Imports data from a serialization object.

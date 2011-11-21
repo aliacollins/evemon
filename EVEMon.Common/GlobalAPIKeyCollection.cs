@@ -95,9 +95,9 @@ namespace EVEMon.Common
         /// Exports the data to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableAPIKey> Export()
+        internal IEnumerable<SerializableAPIKey> Export()
         {
-            return Items.Values.Select(apikey => apikey.Export()).ToList();
+            return Items.Values.Select(apikey => apikey.Export());
         }
 
         #endregion

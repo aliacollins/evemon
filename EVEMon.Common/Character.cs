@@ -438,7 +438,7 @@ namespace EVEMon.Common
             serial.Info.LastKnownLocation = LastKnownLocation;
 
             // Employment History
-            serial.EmploymentHistory = EmploymentHistory.Export();
+            EmploymentHistory.Export().ToList().ForEach(employmentHistory => serial.EmploymentHistory.Add(employmentHistory));
 
             // Attributes
             serial.Attributes.Intelligence = Intelligence.Base;
@@ -451,10 +451,10 @@ namespace EVEMon.Common
             serial.ImplantSets = ImplantSets.Export();
 
             // Skills
-            serial.Skills = Skills.Export();
+            Skills.Export().ToList().ForEach(skill => serial.Skills.Add(skill));
 
             // Certificates
-            serial.Certificates = Certificates.Export();
+            Certificates.Export().ToList().ForEach(certificate => serial.Certificates.Add(certificate));
         }
 
         /// <summary>

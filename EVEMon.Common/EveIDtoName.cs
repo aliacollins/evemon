@@ -259,14 +259,13 @@ namespace EVEMon.Common
         private static SerializableEveIDToName Export()
         {
             SerializableEveIDToName serial = new SerializableEveIDToName();
-            List<SerializableEveIDToNameListItem> entitiesList =
-                s_cacheList.Select(item => new SerializableEveIDToNameListItem
-                                               {
-                                                   ID = item.Key,
-                                                   Name = item.Value,
-                                               }).ToList();
-
-            serial.Entities.AddRange(entitiesList);
+            IEnumerable<SerializableEveIDToNameListItem> entitiesList = s_cacheList.Select(
+                item => new SerializableEveIDToNameListItem
+                            {
+                                ID = item.Key,
+                                Name = item.Value,
+                            });
+            entitiesList.ToList().ForEach(entity => serial.Entities.Add(entity));
 
             return serial;
         }

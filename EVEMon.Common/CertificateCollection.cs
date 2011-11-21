@@ -64,10 +64,10 @@ namespace EVEMon.Common
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableCharacterCertificate> Export()
+        internal IEnumerable<SerializableCharacterCertificate> Export()
         {
             return Items.Values.Where(x => x.IsGranted).Select(
-                cert => new SerializableCharacterCertificate { CertificateID = cert.ID }).ToList();
+                cert => new SerializableCharacterCertificate { CertificateID = cert.ID });
         }
 
         /// <summary>

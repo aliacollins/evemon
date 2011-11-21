@@ -10,7 +10,7 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents the global collection of characters
+    /// Represents the global collection of characters.
     /// </summary>
     public sealed class GlobalCharacterCollection : ReadonlyCollection<Character>
     {
@@ -176,16 +176,16 @@ namespace EVEMon.Common
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableSettingsCharacter> Export()
+        internal IEnumerable<SerializableSettingsCharacter> Export()
         {
-            return Items.Select(character => character.Export()).ToList();
+            return Items.Select(character => character.Export());
         }
 
         /// <summary>
-        /// imports the plans from serialization objects
+        /// imports the plans from serialization objects.
         /// </summary>
         /// <param name="serial"></param>
-        internal void ImportPlans(List<SerializablePlan> serial)
+        internal void ImportPlans(ICollection<SerializablePlan> serial)
         {
             foreach (Character character in Items)
             {
@@ -194,10 +194,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports the plans as serialization objects
+        /// Exports the plans as serialization objects.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializablePlan> ExportPlans()
+        internal IEnumerable<SerializablePlan> ExportPlans()
         {
             List<SerializablePlan> serial = new List<SerializablePlan>();
             foreach (Character character in Items)

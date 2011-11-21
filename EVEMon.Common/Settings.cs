@@ -254,25 +254,29 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static SerializableSettings Export()
         {
-            return new SerializableSettings
-                       {
-                           Revision = Revision,
-                           Compatibility = Compatibility,
-                           Characters = EveMonClient.Characters.Export(),
-                           APIKeys =  EveMonClient.APIKeys.Export(),
-                           Plans = EveMonClient.Characters.ExportPlans(),
-                           MonitoredCharacters = EveMonClient.MonitoredCharacters.Export(),
-                           APIProviders = EveMonClient.APIProviders.Export(),
-                           Scheduler = Scheduler.Export(),
-                           Calendar = Calendar,
-                           Notifications = Notifications,
-                           Exportation = Exportation,
-                           Updates = Updates,
-                           Proxy = Proxy,
-                           IGB = IGB,
-                           G15 = G15,
-                           UI = UI
-                       };
+            SerializableSettings serial = new SerializableSettings
+                                              {
+                                                  Revision = Revision,
+                                                  Compatibility = Compatibility,
+                                                  APIProviders = EveMonClient.APIProviders.Export(),
+                                                  Scheduler = Scheduler.Export(),
+                                                  Calendar = Calendar,
+                                                  Notifications = Notifications,
+                                                  Exportation = Exportation,
+                                                  Updates = Updates,
+                                                  Proxy = Proxy,
+                                                  IGB = IGB,
+                                                  G15 = G15,
+                                                  UI = UI
+                                              };
+
+            EveMonClient.Characters.Export().ToList().ForEach(character => serial.Characters.Add(character));
+            EveMonClient.APIKeys.Export().ToList().ForEach(apiKey => serial.APIKeys.Add(apiKey));
+            EveMonClient.Characters.ExportPlans().ToList().ForEach(plan => serial.Plans.Add(plan));
+            EveMonClient.MonitoredCharacters.Export().ToList().ForEach(
+                monitoredCharcter => serial.MonitoredCharacters.Add(monitoredCharcter));
+
+            return serial;
         }
 
         #endregion
@@ -478,7 +482,7 @@ namespace EVEMon.Common
                                                 Name = oldPlan.Name,
                                                 Description = String.Empty,
                                             };
-                plan.Entries.AddRange(oldPlan.Entries);
+                oldPlan.Entries.ToList().ForEach(oldPlanEntry => plan.Entries.Add(oldPlanEntry));
                 serial.Plans.Add(plan);
             }
 

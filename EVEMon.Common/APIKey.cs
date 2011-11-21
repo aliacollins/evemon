@@ -568,17 +568,18 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableAPIKey Export()
         {
-            return new SerializableAPIKey
-                       {
-                           ID = ID,
-                           VerificationCode = VerificationCode,
-                           Type = Type,
-                           AccessMask = AccessMask,
-                           Expiration = Expiration,
-                           Monitored = Monitored,
-                           LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
-                           IgnoreList = IdentityIgnoreList.Export()
-                       };
+            SerializableAPIKey serial = new SerializableAPIKey
+                                            {
+                                                ID = ID,
+                                                VerificationCode = VerificationCode,
+                                                Type = Type,
+                                                AccessMask = AccessMask,
+                                                Expiration = Expiration,
+                                                Monitored = Monitored,
+                                                LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
+                                            };
+            IdentityIgnoreList.Export().ToList().ForEach(ignoredIdentity => serial.IgnoreList.Add(ignoredIdentity));
+            return serial;
         }
 
         #endregion

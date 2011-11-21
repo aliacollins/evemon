@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization
@@ -6,13 +6,19 @@ namespace EVEMon.Common.Serialization
     [XmlRoot("NotificationRefTypeIDs")]
     public sealed class SerializableNotificationRefTypeIDs
     {
+        private readonly Collection<SerializableNotificationRefTypeIDsListItem> m_types;
+
         public SerializableNotificationRefTypeIDs()
         {
-            Types = new List<SerializableNotificationRefTypeIDsListItem>();
+            m_types = new Collection<SerializableNotificationRefTypeIDsListItem>();
         }
 
         [XmlArray("refTypes")]
         [XmlArrayItem("refType")]
-        public List<SerializableNotificationRefTypeIDsListItem> Types { get; set; }
+        public Collection<SerializableNotificationRefTypeIDsListItem> Types
+        {
+            get { return m_types; }
+        }
+
     }
 }

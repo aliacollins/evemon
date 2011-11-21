@@ -169,7 +169,7 @@ namespace EVEMon.Common
         {
             SerializableImplantSetCollection serial = new SerializableImplantSetCollection
                                                           { API = API.Export(), OldAPI = OldAPI.Export() };
-            serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
+            m_customSets.Select(x => x.Export()).ToList().ForEach(customSet => serial.CustomSets.Add(customSet));
             serial.SelectedIndex = Enumerate().IndexOf(m_current);
             return serial;
         }

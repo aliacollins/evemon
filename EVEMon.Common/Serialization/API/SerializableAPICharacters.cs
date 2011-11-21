@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,8 +8,18 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public class SerializableAPICharacters
     {
+        private readonly Collection<SerializableCharacterListItem> m_characters;
+
+        public SerializableAPICharacters()
+        {
+            m_characters = new Collection<SerializableCharacterListItem>();
+        }
+
         [XmlArray("characters")]
         [XmlArrayItem("character")]
-        public List<SerializableCharacterListItem> Characters { get; set; }
+        public Collection<SerializableCharacterListItem> Characters
+        {
+            get { return m_characters; }
+        }
     }
 }

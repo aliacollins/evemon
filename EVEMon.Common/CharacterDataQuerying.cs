@@ -327,7 +327,7 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            result.Result.Orders.ForEach(order => order.IssuedFor = IssuedFor.Character);
+            result.Result.Orders.ToList().ForEach(order => order.IssuedFor = IssuedFor.Character);
 
             // Import the data
             List<MarketOrder> endedOrders = new List<MarketOrder>();
@@ -354,7 +354,7 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            result.Result.Jobs.ForEach(x => x.IssuedFor = IssuedFor.Character);
+            result.Result.Jobs.ToList().ForEach(x => x.IssuedFor = IssuedFor.Character);
 
             // Import the data
             m_ccpCharacter.CharacterIndustryJobs.Import(result.Result.Jobs);

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -44,16 +42,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableProperty> Properties
         {
             get { return m_properties; }
-        }
-
-        /// <summary>
-        /// Adds the specified properties.
-        /// </summary>
-        /// <param name="properties">The properties.</param>
-        public void AddRange(IEnumerable<SerializableProperty> properties)
-        {
-            m_properties.Clear();
-            properties.ToList().ForEach(property => m_properties.Add(property));
         }
     }
 }

@@ -224,16 +224,16 @@ namespace EVEMon.Common
             Export(serial);
 
             // Skill queue
-            serial.SkillQueue = SkillQueue.Export();
+            SkillQueue.Export().ToList().ForEach(skill => serial.SkillQueue.Add(skill));
 
             // Standings
-            serial.Standings = Standings.Export();
+            Standings.Export().ToList().ForEach(standing => serial.Standings.Add(standing));
 
             // Market orders
-            serial.MarketOrders = MarketOrdersExport();
+            MarketOrdersExport().ToList().ForEach(order => serial.MarketOrders.Add(order));
 
             // Industry jobs
-            serial.IndustryJobs = IndustryJobsExport();
+            IndustryJobsExport().ToList().ForEach(job => serial.IndustryJobs.Add(job));
 
             // Eve mail messages IDs
             serial.EveMailMessagesIDs = EVEMailMessages.Export();
@@ -259,18 +259,18 @@ namespace EVEMon.Common
         /// Exports the market orders.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableOrderBase> MarketOrdersExport()
+        private IEnumerable<SerializableOrderBase> MarketOrdersExport()
         {
-            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter()).ToList();
+            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter());
         }
 
         /// <summary>
         /// Exports the industry jobs.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableJob> IndustryJobsExport()
+        private IEnumerable<SerializableJob> IndustryJobsExport()
         {
-            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter()).ToList();
+            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter());
         }
 
         /// <summary>

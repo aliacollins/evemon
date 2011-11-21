@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,8 +8,18 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPIMarketOrders
     {
+        private readonly Collection<SerializableOrderListItem> m_orders;
+
+        public SerializableAPIMarketOrders()
+        {
+            m_orders = new Collection<SerializableOrderListItem>();
+        }
+
         [XmlArray("orders")]
         [XmlArrayItem("order")]
-        public List<SerializableOrderListItem> Orders { get; set; }
+        public Collection<SerializableOrderListItem> Orders
+        {
+            get { return m_orders; }
+        }
     }
 }

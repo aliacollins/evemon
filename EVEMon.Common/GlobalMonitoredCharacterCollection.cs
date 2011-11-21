@@ -105,9 +105,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Updates the settings from <see cref="Settings"/>. Adds and removes group as needed.
         /// </summary>
-        internal List<MonitoredCharacterSettings> Export()
+        internal IEnumerable<MonitoredCharacterSettings> Export()
         {
-            return Items.Select(character => new MonitoredCharacterSettings(character)).ToList();
+            return Items.Select(character => new MonitoredCharacterSettings(character));
         }
     }
 }

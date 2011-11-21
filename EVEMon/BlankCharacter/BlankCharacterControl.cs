@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -359,38 +360,47 @@ namespace EVEMon.BlankCharacter
 
         internal SerializableCCPCharacter CreateCharacter()
         {
-            return new SerializableCCPCharacter
-                       {
-                           ID = UriCharacter.BlankCharacterID,
-                           Name = tbCharacterName.Text,
-                           Birthday = DateTime.UtcNow,
-                           Race = m_race.ToString(),
-                           BloodLine = m_bloodline.ToString().Replace("_", "-"),
-                           Ancestry = m_ancestry.ToString().Replace("_", " "),
-                           Gender = m_gender.ToString(),
-                           CorporationName = "Blank Character's Corp",
-                           CorporationID = 9999999,
-                           CloneName = "Clone Grade Alpha",
-                           CloneSkillPoints = 900000,
-                           Balance = 0,
-                           Attributes = new SerializableCharacterAttributes
-                                            {
-                                                Intelligence = EveConstants.CharacterBaseAttributePoints + 3,
-                                                Memory = EveConstants.CharacterBaseAttributePoints + 3,
-                                                Perception = EveConstants.CharacterBaseAttributePoints + 3,
-                                                Willpower = EveConstants.CharacterBaseAttributePoints + 3,
-                                                Charisma = EveConstants.CharacterBaseAttributePoints + 2
-                                            },
-                           ImplantSets = new SerializableImplantSetCollection
-                                             {
-                                                 API = new SerializableSettingsImplantSet { Name = "Implants from API" },
-                                                 OldAPI =
-                                                     new SerializableSettingsImplantSet
-                                                         { Name = "Previous implants from the API" },
-                                             },
-                           Skills = GetSkillsForRace(),
-                           Certificates = new List<SerializableCharacterCertificate>(),
-                       };
+            SerializableCCPCharacter serial = new SerializableCCPCharacter
+                                                  {
+                                                      ID = UriCharacter.BlankCharacterID,
+                                                      Name = tbCharacterName.Text,
+                                                      Birthday = DateTime.UtcNow,
+                                                      Race = m_race.ToString(),
+                                                      BloodLine = m_bloodline.ToString().Replace("_", "-"),
+                                                      Ancestry = m_ancestry.ToString().Replace("_", " "),
+                                                      Gender = m_gender.ToString(),
+                                                      CorporationName = "Blank Character's Corp",
+                                                      CorporationID = 9999999,
+                                                      CloneName = "Clone Grade Alpha",
+                                                      CloneSkillPoints = 900000,
+                                                      Balance = 0,
+                                                      Attributes = new SerializableCharacterAttributes
+                                                                       {
+                                                                           Intelligence =
+                                                                               EveConstants.CharacterBaseAttributePoints + 3,
+                                                                           Memory = EveConstants.CharacterBaseAttributePoints + 3,
+                                                                           Perception =
+                                                                               EveConstants.CharacterBaseAttributePoints + 3,
+                                                                           Willpower =
+                                                                               EveConstants.CharacterBaseAttributePoints + 3,
+                                                                           Charisma =
+                                                                               EveConstants.CharacterBaseAttributePoints + 2
+                                                                       },
+                                                      ImplantSets = new SerializableImplantSetCollection
+                                                                        {
+                                                                            API =
+                                                                                new SerializableSettingsImplantSet
+                                                                                    { Name = "Implants from API" },
+                                                                            OldAPI = new SerializableSettingsImplantSet
+                                                                                         {
+                                                                                             Name =
+                                                                                                 "Previous implants from the API"
+                                                                                         },
+                                                                        },
+                                                  };
+            GetSkillsForRace().ToList().ForEach(skill => serial.Skills.Add(skill));
+
+            return serial;
         }
 
         #endregion
@@ -402,7 +412,7 @@ namespace EVEMon.BlankCharacter
         /// Gets the skills for each race.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableCharacterSkill> GetSkillsForRace()
+        private IEnumerable<SerializableCharacterSkill> GetSkillsForRace()
         {
             Dictionary<int, int> startingSkills = GetStartingSkills();
 
@@ -422,7 +432,7 @@ namespace EVEMon.BlankCharacter
                                                           (skill.raceSkill.Value),
                                                       IsKnown = true,
                                                       OwnsBook = false,
-                                                  })).ToList();
+                                                  }));
         }
 
         /// <summary>

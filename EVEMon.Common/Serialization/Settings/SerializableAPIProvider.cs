@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -8,11 +8,13 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializableAPIProvider
     {
+        private readonly Collection<SerializableAPIMethod> m_methods;
+
         public SerializableAPIProvider()
         {
             Name = "New provider";
             Address = NetworkConstants.APIBase;
-            Methods = new List<SerializableAPIMethod>();
+            m_methods = new Collection<SerializableAPIMethod>();
         }
 
         [XmlElement("name")]
@@ -23,6 +25,9 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("methods")]
         [XmlArrayItem("method")]
-        public List<SerializableAPIMethod> Methods { get; set; }
+        public Collection<SerializableAPIMethod> Methods
+        {
+            get { return m_methods; }
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,8 +8,18 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPIResearch
     {
+        private readonly Collection<SerializableResearchListItem> m_researchPoints;
+
+        public SerializableAPIResearch()
+        {
+            m_researchPoints = new Collection<SerializableResearchListItem>();
+        }
+
         [XmlArray("research")]
         [XmlArrayItem("points")]
-        public List<SerializableResearchListItem> ResearchPoints { get; set; }
+        public Collection<SerializableResearchListItem> ResearchPoints
+        {
+            get { return m_researchPoints; }
+        }
     }
 }

@@ -97,7 +97,7 @@ namespace EVEMon.Common
         /// Create serialization objects.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableCharacterIdentity> Export()
+        internal IEnumerable<SerializableCharacterIdentity> Export()
         {
             return Items.Select(id => new SerializableCharacterIdentity
                                           {
@@ -105,7 +105,7 @@ namespace EVEMon.Common
                                               Name = id.CharacterName,
                                               CorporationID = id.CorporationID,
                                               CorporationName = id.CorporationName
-                                          }).ToList();
+                                          });
         }
     }
 }

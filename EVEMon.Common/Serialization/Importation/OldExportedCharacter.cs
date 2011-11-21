@@ -80,30 +80,33 @@ namespace EVEMon.Common.Serialization.Importation
         /// <returns></returns>
         public SerializableCCPCharacter ToSerializableCCPCharacter()
         {
-            return new SerializableCCPCharacter
-                       {
-                           Name = Name,
-                           ID = CharacterId,
-                           Race = Race,
-                           BloodLine = BloodLine,
-                           Gender = Gender,
-                           CorporationName = CorpName,
-                           CorporationID = 0,
-                           CloneName = CloneName,
-                           CloneSkillPoints = CloneSkillPoints,
-                           Balance = Balance,
-                           Attributes = Attributes.ToSerializableAttributes(),
-                           ImplantSets = { API = OldExportedAttributeEnhancers.ToSerializableImplantSet() },
-                           Skills = CreateSerializableCharacterSkillList(),
-                           Certificates = CreateSerializableCharacterCertificateList()
-                       };
+            SerializableCCPCharacter serial = new SerializableCCPCharacter
+                                                  {
+                                                      Name = Name,
+                                                      ID = CharacterId,
+                                                      Race = Race,
+                                                      BloodLine = BloodLine,
+                                                      Gender = Gender,
+                                                      CorporationName = CorpName,
+                                                      CorporationID = 0,
+                                                      CloneName = CloneName,
+                                                      CloneSkillPoints = CloneSkillPoints,
+                                                      Balance = Balance,
+                                                      Attributes = Attributes.ToSerializableAttributes(),
+                                                      ImplantSets = new SerializableImplantSetCollection
+                                                          { API = OldExportedAttributeEnhancers.ToSerializableImplantSet() },
+                                                  };
+            CreateSerializableCharacterSkillList().ToList().ForEach(skill => serial.Skills.Add(skill));
+            CreateSerializableCharacterCertificateList().ToList().ForEach(certificate => serial.Certificates.Add(certificate));
+
+            return serial;
         }
 
         /// <summary>
         /// Creates the serializable character skill list.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableCharacterSkill> CreateSerializableCharacterSkillList()
+        private IEnumerable<SerializableCharacterSkill> CreateSerializableCharacterSkillList()
         {
             return (SkillGroups.SelectMany(group => group.Skills,
                                            (group, skill) => new SerializableCharacterSkill
@@ -113,20 +116,20 @@ namespace EVEMon.Common.Serialization.Importation
                                                                      Level = skill.Level,
                                                                      OwnsBook = true,
                                                                      Skillpoints = skill.SkillPoints
-                                                                 })).ToList();
+                                                                 }));
         }
 
         /// <summary>
         /// Creates the serializable character certificate list.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableCharacterCertificate> CreateSerializableCharacterCertificateList()
+        private IEnumerable<SerializableCharacterCertificate> CreateSerializableCharacterCertificateList()
         {
             return Certificates.Select(
                 certificate => new SerializableCharacterCertificate
                                    {
                                        CertificateID = certificate.CertificateID
-                                   }).ToList();
+                                   });
         }
     }
 }

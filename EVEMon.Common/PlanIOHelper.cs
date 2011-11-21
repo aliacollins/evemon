@@ -290,7 +290,7 @@ namespace EVEMon.Common
             // Generates a settings plan and transforms it to an output plan
             SerializablePlan serial = plan.Export();
             OutputPlan output = new OutputPlan { Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision };
-            output.Entries.AddRange(serial.Entries);
+            serial.Entries.ToList().ForEach(entry => output.Entries.Add(entry));
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlan), output);

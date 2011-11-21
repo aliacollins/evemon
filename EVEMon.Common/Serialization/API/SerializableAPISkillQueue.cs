@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -9,10 +9,19 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPISkillQueue : ISynchronizableWithLocalClock
     {
+        private readonly Collection<SerializableQueuedSkill> m_queue;
+
+        public SerializableAPISkillQueue()
+        {
+            m_queue = new Collection<SerializableQueuedSkill>();
+        }
+
         [XmlArray("queue")]
         [XmlArrayItem("skill")]
-        public List<SerializableQueuedSkill> Queue { get; set; }
-
+        public Collection<SerializableQueuedSkill> Queue
+        {
+            get { return m_queue; }
+        }
 
         #region ISynchronizableWithLocalClock Members
 

@@ -429,7 +429,7 @@ namespace EVEMon.XmlGenerator
                     properties.Insert(4, pvProp);
                 }
 
-                category.AddRange(properties);
+                properties.ToList().ForEach(property => category.Properties.Add(property));
             }
 
             // Set packaged volume property ID
@@ -450,8 +450,8 @@ namespace EVEMon.XmlGenerator
             gProperties.Insert(0, bpProp);
 
             // Add properties to custom categories
-            general.AddRange(gProperties);
-            propulsion.AddRange(pProperties);
+            gProperties.ToList().ForEach(property => general.Properties.Add(property));
+            pProperties.ToList().ForEach(property => propulsion.Properties.Add(property));
 
             // Sort groups
             string[] orderedGroupNames = new[]
@@ -465,7 +465,8 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
-            datafile.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))));
+            categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))).ToList().ForEach(
+                category => datafile.Categories.Add(category));
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
@@ -2087,8 +2088,7 @@ namespace EVEMon.XmlGenerator
                     continue;
 
                 SerializableItemMaterials itemMaterials = new SerializableItemMaterials { ID = typeID };
-                itemMaterials.Add(materials.OrderBy(x => x.ID).ToList());
-
+                materials.OrderBy(x => x.ID).ToList().ForEach(material => itemMaterials.Materials.Add(material));
                 types.Add(itemMaterials);
             }
 
