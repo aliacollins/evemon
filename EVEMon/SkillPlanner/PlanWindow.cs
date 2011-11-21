@@ -141,7 +141,8 @@ namespace EVEMon.SkillPlanner
                 e.CloseReason != CloseReason.WindowsShutDown) // and Windows is not shutting down
             {
                 // Tell the skill explorer we're closing down
-                WindowsFactory.CloseByTag<SkillExplorerWindow, PlanWindow>(this);
+                SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
+                WindowsFactory.CloseByTag(skillExplorerWindow, this);
 
                 // Tell the attributes optimization window we're closing down
                 if (m_attributesOptimizerWindow != null)
@@ -549,7 +550,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Close the skill explorer
-            WindowsFactory.CloseByTag<SkillExplorerWindow, PlanWindow>(this);
+            SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
+            WindowsFactory.CloseByTag(skillExplorerWindow, this);
 
             // Remove the plan
             int index = Character.Plans.IndexOf(m_plan);

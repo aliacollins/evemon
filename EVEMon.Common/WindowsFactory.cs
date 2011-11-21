@@ -18,18 +18,16 @@ namespace EVEMon.Common
         /// <summary>
         /// Close the unique window.
         /// </summary>
-        public static void CloseUnique<TForm>()
+        public static void CloseUnique<TForm>(TForm form)
             where TForm : Form
         {
             lock (s_syncLock)
             {
                 try
                 {
-                    TForm uniqueWindow = (TForm)s_uniqueWindow;
-
                     // Does it already exist ?
-                    if (uniqueWindow != null && !uniqueWindow.IsDisposed)
-                        uniqueWindow.Close();
+                    if (form != null && !form.IsDisposed)
+                        form.Close();
                 }
                     // Catch exception when the window is being disposed
                 catch (ObjectDisposedException ex)
@@ -50,7 +48,7 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    TForm uniqueWindow = (TForm)s_uniqueWindow;
+                    TForm uniqueWindow = s_uniqueWindow as TForm;
 
                     // Does it already exist ?
                     if (uniqueWindow != null && !uniqueWindow.IsDisposed)
@@ -298,9 +296,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
         /// <typeparam name="TTag"></typeparam>
+        /// <param name="form"></param>
         /// <param name="tag"></param>
-        public static void CloseByTag<TForm, TTag>(TTag tag)
+        public static void CloseByTag<TForm, TTag>(TForm form, TTag tag)
             where TForm : Form
+            where TTag : class
         {
             Object otag = tag;
 
@@ -312,7 +312,7 @@ namespace EVEMon.Common
                     // Search all the disposed windows or windows with the same tag
                     bool isDisposed = false;
                     TForm formToRemove = null;
-                    foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>())
+                    foreach (TForm existingWindow in s_taggedWindows.Where(taggedWindow => taggedWindow == form))
                     {
                         try
                         {
