@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace EVEMon.Common.Notifications
@@ -17,7 +18,7 @@ namespace EVEMon.Common.Notifications
             if (skills == null)
                 throw new ArgumentNullException("skills");
 
-            Skills = new List<QueuedSkill>();
+            Skills = new Collection<QueuedSkill>();
             foreach (QueuedSkill skill in skills)
             {
                 Skills.Add(skill);
@@ -28,7 +29,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public List<QueuedSkill> Skills { get; private set; }
+        public Collection<QueuedSkill> Skills { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.
@@ -44,7 +45,7 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            List<QueuedSkill> skills = ((SkillCompletionNotificationEventArgs)other).Skills;
+            List<QueuedSkill> skills = ((SkillCompletionNotificationEventArgs)other).Skills.ToList();
             foreach (QueuedSkill skill in skills.Where(skill => !Skills.Contains(skill)))
             {
                 Skills.Add(skill);

@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class PlanWindowSettings
     {
-        private Collection<PlanColumnSettings> m_columns;
+        private readonly Collection<PlanColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlanWindowSettings"/> class.
@@ -161,9 +161,10 @@ namespace EVEMon.Common.SettingsObjects
         /// Adds the specified columns.
         /// </summary>
         /// <param name="columns">The columns.</param>
-        public void Add(List<PlanColumnSettings> columns)
+        public void AddRange(IEnumerable<PlanColumnSettings> columns)
         {
-            m_columns = new Collection<PlanColumnSettings>(columns);
+            m_columns.Clear();
+            columns.ToList().ForEach(column => m_columns.Add(column));
         }
     }
 }

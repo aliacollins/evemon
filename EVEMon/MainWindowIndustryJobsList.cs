@@ -950,7 +950,7 @@ namespace EVEMon
             if (!m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.IndustryJobs.Add(Columns.Cast<IndustryJobColumnSettings>().ToList());
+            Settings.UI.MainWindow.IndustryJobs.AddRange(Columns.Cast<IndustryJobColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;

@@ -1742,11 +1742,10 @@ namespace EVEMon.XmlGenerator
                                                 relationItemID =>
                                                 s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID).Select(
                                                     x => x.ID),
-                                                (relationItemID, variationItemID) => s_types[variationItemID].ID))
-                    .ToList();
+                                                (relationItemID, variationItemID) => s_types[variationItemID].ID)).ToList();
 
             // Add invention blueprints to item
-            blueprint.Add(listOfInventionTypeID);
+            blueprint.AddRange(listOfInventionTypeID);
 
             // Add this item
             blueprintsGroup.Add(blueprint);
@@ -1769,10 +1768,10 @@ namespace EVEMon.XmlGenerator
             AddRequiredExtraMaterials(srcBlueprint.ID, prerequisiteSkills, requiredMaterials);
 
             // Add prerequisite skills to item
-            blueprint.Add(prerequisiteSkills.OrderBy(x => x.Activity).ToList());
+            blueprint.AddRange(prerequisiteSkills.OrderBy(x => x.Activity).ToList());
 
             // Add required materials to item
-            blueprint.Add(requiredMaterials.OrderBy(x => x.Activity).ToList());
+            blueprint.AddRange(requiredMaterials.OrderBy(x => x.Activity).ToList());
         }
 
         /// <summary>

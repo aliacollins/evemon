@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,9 +14,9 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableBlueprint
     {
-        private Collection<int> m_inventTypeID;
-        private Collection<SerializablePrereqSkill> m_prereqSkills;
-        private Collection<SerializableRequiredMaterial> m_requiredMaterials;
+        private readonly Collection<int> m_inventTypeID;
+        private readonly Collection<SerializablePrereqSkill> m_prereqSkills;
+        private readonly Collection<SerializableRequiredMaterial> m_requiredMaterials;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableBlueprint"/> class.
@@ -159,27 +160,30 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Adds the specified invent type ID.
         /// </summary>
         /// <param name="inventTypeID">The invent type ID.</param>
-        public void Add(List<int> inventTypeID)
+        public void AddRange(IEnumerable<int> inventTypeID)
         {
-            m_inventTypeID = new Collection<int>(inventTypeID);
+            m_inventTypeID.Clear();
+            inventTypeID.ToList().ForEach(inventType => m_inventTypeID.Add(inventType));
         }
 
         /// <summary>
         /// Adds the specified prereq skills.
         /// </summary>
         /// <param name="prereqSkills">The prereq skills.</param>
-        public void Add(List<SerializablePrereqSkill> prereqSkills)
+        public void AddRange(IEnumerable<SerializablePrereqSkill> prereqSkills)
         {
-            m_prereqSkills = new Collection<SerializablePrereqSkill>(prereqSkills);
+            m_prereqSkills.Clear();
+            prereqSkills.ToList().ForEach(prereqSkill => m_prereqSkills.Add(prereqSkill));
         }
 
         /// <summary>
         /// Adds the specified required materials.
         /// </summary>
         /// <param name="requiredMaterials">The required materials.</param>
-        public void Add(List<SerializableRequiredMaterial> requiredMaterials)
+        public void AddRange(IEnumerable<SerializableRequiredMaterial> requiredMaterials)
         {
-            m_requiredMaterials = new Collection<SerializableRequiredMaterial>(requiredMaterials);
+            m_requiredMaterials.Clear();
+            requiredMaterials.ToList().ForEach(requiredMaterial => m_requiredMaterials.Add(requiredMaterial));
         }
     }
 }

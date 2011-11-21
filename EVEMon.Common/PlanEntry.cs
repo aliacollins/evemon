@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
@@ -15,7 +16,7 @@ namespace EVEMon.Common
     {
         public const int DefaultPriority = 3;
 
-        private readonly List<string> m_planGroups = new List<string>();
+        private readonly Collection<string> m_planGroups = new Collection<string>();
         private readonly StaticSkill m_skill;
         private readonly BasePlan m_owner;
         private readonly int m_level;
@@ -70,7 +71,7 @@ namespace EVEMon.Common
             m_notes = serial.Notes;
             m_priority = serial.Priority;
 
-            serial.PlanGroups.ForEach(x => m_planGroups.Add(x));
+            serial.PlanGroups.ToList().ForEach(x => m_planGroups.Add(x));
 
             if (serial.Remapping != null)
                 m_remapping = new RemappingPoint(serial.Remapping);
@@ -169,7 +170,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the names of the plans this entry was taken from when those plans were merged.
         /// </summary>
-        public List<string> PlanGroups
+        public Collection<string> PlanGroups
         {
             get { return m_planGroups; }
         }
@@ -365,7 +366,8 @@ namespace EVEMon.Common
                                       OldTrainingTime = OldTrainingTime,
                                       TrainingTime = TrainingTime
                                   };
-            clone.m_planGroups.AddRange(m_planGroups);
+            
+            m_planGroups.ToList().ForEach(planGroup => clone.m_planGroups.Add(planGroup));
             return clone;
         }
 

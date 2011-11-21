@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -9,6 +9,8 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class UISettings
     {
+        private readonly Collection<String> m_confirmedTips;
+ 
         /// <summary>
         /// Initializes a new instance of the <see cref="UISettings"/> class.
         /// </summary>
@@ -30,7 +32,7 @@ namespace EVEMon.Common.SettingsObjects
             MainWindow = new MainWindowSettings();
             PlanWindow = new PlanWindowSettings();
             Scheduler = new SchedulerUISettings();
-            ConfirmedTips = new List<String>();
+            m_confirmedTips = new Collection<String>();
 
             UseStoredSearchFilters = true;
             ShowTextInToolStrip = true;
@@ -171,6 +173,9 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The confirmed tips.</value>
         [XmlArray("confirmedTips")]
         [XmlArrayItem("tip")]
-        public List<String> ConfirmedTips { get; set; }
+        public Collection<String> ConfirmedTips
+        {
+            get { return m_confirmedTips; }
+        }
     }
 }

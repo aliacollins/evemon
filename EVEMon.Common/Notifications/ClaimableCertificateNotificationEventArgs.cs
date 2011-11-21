@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace EVEMon.Common.Notifications
 {
@@ -16,7 +17,7 @@ namespace EVEMon.Common.Notifications
             if (certificates == null)
                 throw new ArgumentNullException("certificates");
 
-            Certificates = new List<Certificate>();
+            Certificates = new Collection<Certificate>();
             foreach (Certificate cert in certificates)
             {
                 Certificates.Add(cert);
@@ -28,7 +29,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public List<Certificate> Certificates { get; private set; }
+        public Collection<Certificate> Certificates { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.

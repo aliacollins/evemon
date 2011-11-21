@@ -173,7 +173,7 @@ namespace EVEMon.SkillPlanner
                         // Then we update the entry's groups
                         PlanEntry newEntry = result.GetEntry(entry.Skill, entry.Level);
 
-                        // The entry may be null if the character already knows it.
+                        // The entry may be null if the character already knows it
                         if (newEntry != null)
                             newEntry.PlanGroups.Add(plan.Name);
                     }

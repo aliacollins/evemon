@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class ResearchSettings
     {
-        private Collection<ResearchColumnSettings> m_columns;
+        private readonly Collection<ResearchColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResearchSettings"/> class.
@@ -70,9 +70,10 @@ namespace EVEMon.Common.SettingsObjects
         /// Adds the specified columns.
         /// </summary>
         /// <param name="columns">The columns.</param>
-        public void Add(List<ResearchColumnSettings> columns)
+        public void AddRange(IEnumerable<ResearchColumnSettings> columns)
         {
-            m_columns = new Collection<ResearchColumnSettings>(columns);
+            m_columns.Clear();
+            columns.ToList().ForEach(column => m_columns.Add(column));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class EveMailMessagesSettings
     {
-        private Collection<EveMailMessagesColumnSettings> m_columns;
+        private readonly Collection<EveMailMessagesColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMailMessagesSettings"/> class.
@@ -78,9 +78,10 @@ namespace EVEMon.Common.SettingsObjects
         /// Adds the specified columns.
         /// </summary>
         /// <param name="columns">The columns.</param>
-        public void Add(List<EveMailMessagesColumnSettings> columns)
+        public void AddRange(IEnumerable<EveMailMessagesColumnSettings> columns)
         {
-            m_columns = new Collection<EveMailMessagesColumnSettings>(columns);
+            m_columns.Clear();
+            columns.ToList().ForEach(column => m_columns.Add(column));
         }
     }
 }

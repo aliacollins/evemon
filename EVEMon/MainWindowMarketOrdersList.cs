@@ -840,7 +840,7 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.MarketOrders.Add(Columns.Cast<MarketOrderColumnSettings>().ToList());
+            Settings.UI.MainWindow.MarketOrders.AddRange(Columns.Cast<MarketOrderColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;

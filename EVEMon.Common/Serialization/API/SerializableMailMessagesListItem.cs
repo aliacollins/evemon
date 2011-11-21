@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -7,10 +7,13 @@ namespace EVEMon.Common.Serialization.API
 {
     public sealed class SerializableMailMessagesListItem
     {
+        private readonly Collection<string> m_toCharacterIDs;
+        private readonly Collection<string> m_toListID;
+
         public SerializableMailMessagesListItem()
         {
-            ToCharacterIDs = new List<string>();
-            ToListID = new List<string>();
+            m_toCharacterIDs = new Collection<string>();
+            m_toListID = new Collection<string>();
         }
 
         [XmlAttribute("messageID")]
@@ -39,22 +42,22 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("toCharacterIDs")]
         public string ToCharacterIDsXml
         {
-            get { return string.Join(",", ToCharacterIDs); }
+            get { return string.Join(",", m_toCharacterIDs); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    ToCharacterIDs = value.Split(',').ToList();
+                    value.Split(',').ToList().ForEach(element => m_toCharacterIDs.Add(element));
             }
         }
 
         [XmlAttribute("toListID")]
         public string ToListIDXml
         {
-            get { return string.Join(",", ToListID); }
+            get { return string.Join(",", m_toListID); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    ToListID = value.Split(',').ToList();
+                    value.Split(',').ToList().ForEach(element => m_toListID.Add(element));
             }
         }
 
@@ -62,9 +65,15 @@ namespace EVEMon.Common.Serialization.API
         public DateTime SentDate { get; set; }
 
         [XmlIgnore]
-        public List<string> ToCharacterIDs { get; set; }
+        public Collection<string> ToCharacterIDs
+        {
+            get { return m_toCharacterIDs; }
+        }
 
         [XmlIgnore]
-        public List<string> ToListID { get; set; }
+        public Collection<string> ToListID
+        {
+            get { return m_toListID; }
+        }
     }
 }

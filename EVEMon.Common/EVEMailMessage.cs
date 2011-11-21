@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.API;
 
@@ -86,13 +87,13 @@ namespace EVEMon.Common
         /// Gets or sets the EVE mail recipient(s) (characters).
         /// </summary>
         /// <value>To characters.</value>
-        public List<string> ToCharacters { get; private set; }
+        public Collection<string> ToCharacters { get; private set; }
 
         /// <summary>
         /// Gets or sets the EVE mail recipient (mailing lists).
         /// </summary>
         /// <value>To mailing lists.</value>
-        public List<string> ToMailingLists { get; private set; }
+        public Collection<string> ToMailingLists { get; private set; }
 
         /// <summary>
         /// Gets or sets the recipients.
@@ -125,7 +126,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">A list of character IDs.</param>
         /// <returns>A list of character names</returns>
-        private List<string> GetIDsToNames(List<string> src)
+        private Collection<string> GetIDsToNames(Collection<string> src)
         {
             // If there are no IDs to query return a list with an empty entry
             if (src.Count == 0)
@@ -149,7 +150,7 @@ namespace EVEMon.Common
             if (listOfIDsToQuery.Count > 0)
                 listOfNames.AddRange(EveIDToName.GetIDsToNames(listOfIDsToQuery));
 
-            return listOfNames;
+            return new Collection<string>(listOfNames);
         }
 
         /// <summary>
@@ -167,8 +168,8 @@ namespace EVEMon.Common
             if (mailingListID == "0")
                 return "Unknown";
 
-            List<string> list = new List<string> { mailingListID };
-            List<string> name = GetMailingListIDsToNames(list);
+            Collection<string> list = new Collection<string> { mailingListID };
+            Collection<string> name = GetMailingListIDsToNames(list);
             return name[0];
         }
 
@@ -177,7 +178,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="mailingListIDs">The mailing list IDs.</param>
         /// <returns></returns>
-        private List<string> GetMailingListIDsToNames(List<string> mailingListIDs)
+        private Collection<string> GetMailingListIDsToNames(Collection<string> mailingListIDs)
         {
             // If there are no IDs to query return a list with an empty entry
             if (mailingListIDs.Count == 0)
@@ -194,7 +195,7 @@ namespace EVEMon.Common
             if (listOfNames.Count == 0)
                 listOfNames.Add("Unknown");
 
-            return listOfNames;
+            return new Collection<string>(listOfNames);
         }
 
         /// <summary>

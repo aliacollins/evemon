@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class EveNotificationsSettings
     {
-        private Collection<EveNotificationsColumnSettings> m_columns;
+        private readonly Collection<EveNotificationsColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveNotificationsSettings"/> class.
@@ -77,9 +77,10 @@ namespace EVEMon.Common.SettingsObjects
         /// Adds the specified columns.
         /// </summary>
         /// <param name="columns">The columns.</param>
-        public void Add(List<EveNotificationsColumnSettings> columns)
+        public void AddRange(IEnumerable<EveNotificationsColumnSettings> columns)
         {
-            m_columns = new Collection<EveNotificationsColumnSettings>(columns);
+            m_columns.Clear();
+            columns.ToList().ForEach(column => m_columns.Add(column));
         }
     }
 }

@@ -825,7 +825,7 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.EVEMailMessages.Add(Columns.Cast<EveMailMessagesColumnSettings>().ToList());
+            Settings.UI.MainWindow.EVEMailMessages.AddRange(Columns.Cast<EveMailMessagesColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;

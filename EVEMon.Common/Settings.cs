@@ -221,22 +221,22 @@ namespace EVEMon.Common
             }
 
             // Initializes the plan columns or adds missing ones
-            UI.PlanWindow.Add(UI.PlanWindow.DefaultColumns.ToList());
+            UI.PlanWindow.AddRange(UI.PlanWindow.DefaultColumns);
 
             // Initializes the market order columns or adds missing ones
-            UI.MainWindow.MarketOrders.Add(UI.MainWindow.MarketOrders.DefaultColumns.ToList());
+            UI.MainWindow.MarketOrders.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
 
             // Initializes the industry jobs columns or adds missing ones
-            UI.MainWindow.IndustryJobs.Add(UI.MainWindow.IndustryJobs.DefaultColumns.ToList());
+            UI.MainWindow.IndustryJobs.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
 
             // Initializes the research points columns or adds missing ones
-            UI.MainWindow.Research.Add(UI.MainWindow.Research.DefaultColumns.ToList());
+            UI.MainWindow.Research.AddRange(UI.MainWindow.Research.DefaultColumns);
 
             // Initializes the EVE mail messages columns or adds missing ones
-            UI.MainWindow.EVEMailMessages.Add(UI.MainWindow.EVEMailMessages.DefaultColumns.ToList());
+            UI.MainWindow.EVEMailMessages.AddRange(UI.MainWindow.EVEMailMessages.DefaultColumns);
 
             // Initializes the EVE notifications columns or adds missing ones
-            UI.MainWindow.EVENotifications.Add(UI.MainWindow.EVENotifications.DefaultColumns.ToList());
+            UI.MainWindow.EVENotifications.AddRange(UI.MainWindow.EVENotifications.DefaultColumns);
 
             // Removes reduntant windows locations
             List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();

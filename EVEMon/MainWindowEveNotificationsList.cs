@@ -661,7 +661,7 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.EVENotifications.Add(Columns.Cast<EveNotificationsColumnSettings>().ToList());
+            Settings.UI.MainWindow.EVENotifications.AddRange(Columns.Cast<EveNotificationsColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;

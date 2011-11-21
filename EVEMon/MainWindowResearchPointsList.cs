@@ -500,7 +500,7 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.Research.Add(Columns.Cast<ResearchColumnSettings>().ToList());
+            Settings.UI.MainWindow.Research.AddRange(Columns.Cast<ResearchColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.Research.Columns;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -501,7 +502,7 @@ namespace EVEMon
                     menuItem => menuItem.Checked).Select(menuItem => menuItem.Text)).ToList();
 
             Character.UISettings.AdvancedFeaturesEnabledPages.Clear();
-            Character.UISettings.AdvancedFeaturesEnabledPages.AddRange(enabledAdvancedFeaturesPages);
+            enabledAdvancedFeaturesPages.ForEach(page => Character.UISettings.AdvancedFeaturesEnabledPages.Add(page));
         }
 
         /// <summary>
@@ -1050,7 +1051,7 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         ordersList.Columns = f.Columns;
-                        Settings.UI.MainWindow.MarketOrders.Add(ordersList.Columns.Cast<MarketOrderColumnSettings>().ToList());
+                        Settings.UI.MainWindow.MarketOrders.AddRange(ordersList.Columns.Cast<MarketOrderColumnSettings>());
                     }
                 }
             }
@@ -1064,7 +1065,7 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         jobsList.Columns = f.Columns;
-                        Settings.UI.MainWindow.IndustryJobs.Add(jobsList.Columns.Cast<IndustryJobColumnSettings>().ToList());
+                        Settings.UI.MainWindow.IndustryJobs.AddRange(jobsList.Columns.Cast<IndustryJobColumnSettings>());
                     }
                 }
             }
@@ -1078,7 +1079,7 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         researchList.Columns = f.Columns;
-                        Settings.UI.MainWindow.Research.Add(researchList.Columns.Cast<ResearchColumnSettings>().ToList());
+                        Settings.UI.MainWindow.Research.AddRange(researchList.Columns.Cast<ResearchColumnSettings>());
                     }
                 }
             }
@@ -1092,8 +1093,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         mailMessagesList.Columns = f.Columns;
-                        Settings.UI.MainWindow.EVEMailMessages.Add(
-                            mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>().ToList());
+                        Settings.UI.MainWindow.EVEMailMessages.AddRange(
+                            mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>());
                     }
                 }
             }
@@ -1107,8 +1108,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         eveNotificationsList.Columns = f.Columns;
-                        Settings.UI.MainWindow.EVENotifications.Add(
-                            eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>().ToList());
+                        Settings.UI.MainWindow.EVENotifications.AddRange(
+                            eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>());
                     }
                 }
             }

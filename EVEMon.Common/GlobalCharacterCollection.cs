@@ -43,7 +43,7 @@ namespace EVEMon.Common
 
             // For CCP characters, also remove it from the API key's ignore list
             if (character is CCPCharacter)
-                character.Identity.APIKeys.ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
+                character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -63,7 +63,7 @@ namespace EVEMon.Common
 
             // For CCP characters, also add it on the API key's ignore list
             if (character is CCPCharacter)
-                character.Identity.APIKeys.ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
+                character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();

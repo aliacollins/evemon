@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class MarketOrderSettings
     {
-        private Collection<MarketOrderColumnSettings> m_columns;
+        private readonly Collection<MarketOrderColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketOrderSettings"/> class.
@@ -85,9 +85,10 @@ namespace EVEMon.Common.SettingsObjects
         /// Adds the specified columns.
         /// </summary>
         /// <param name="columns">The columns.</param>
-        public void Add(List<MarketOrderColumnSettings> columns)
+        public void AddRange(IEnumerable<MarketOrderColumnSettings> columns)
         {
-            m_columns = new Collection<MarketOrderColumnSettings>(columns);
+            m_columns.Clear();
+            columns.ToList().ForEach(column => m_columns.Add(column));
         }
     }
 }

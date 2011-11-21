@@ -852,7 +852,7 @@ namespace EVEMon
         private void ChangeAPIKeyInfoMenuItem_Click(object sender, EventArgs e)
         {
             // This menu should be enabled only for CCP characters
-            WindowsFactory.ShowByTag<ApiKeyUpdateOrAdditionWindow, List<APIKey>>(m_character.Identity.APIKeys);
+            WindowsFactory.ShowByTag<ApiKeyUpdateOrAdditionWindow, IEnumerable<APIKey>>(m_character.Identity.APIKeys);
         }
 
         #endregion
