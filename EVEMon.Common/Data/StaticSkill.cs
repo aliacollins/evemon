@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -32,7 +33,7 @@ namespace EVEMon.Common.Data
             IsTrainableOnTrialAccount = src.CanTrainOnTrial;
             ArrayIndex = arrayIndex;
             Group = group;
-            Prerequisites = new List<StaticSkillLevel>();
+            Prerequisites = new Collection<StaticSkillLevel>();
             FormattedCost = String.Format(CultureConstants.DefaultCulture, "{0:N0}", Cost);
         }
 
@@ -50,7 +51,8 @@ namespace EVEMon.Common.Data
                 return;
 
             // Create the prerequisites list
-            Prerequisites.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
+            prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)).ToList().ForEach(
+                staticSkillLevel => Prerequisites.Add(staticSkillLevel));
 
             if (!IsTrainableOnTrialAccount)
                 return;
@@ -132,7 +134,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the prerequisites a character must satisfy before it can be trained.
         /// </summary>
-        public List<StaticSkillLevel> Prerequisites { get; private set; }
+        public Collection<StaticSkillLevel> Prerequisites { get; private set; }
 
         /// <summary>
         /// Gets a formatted representation of the price.

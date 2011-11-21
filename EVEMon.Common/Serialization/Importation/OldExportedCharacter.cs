@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.Serialization.API;
@@ -18,6 +19,15 @@ namespace EVEMon.Common.Serialization.Importation
     [XmlRoot("character")]
     public sealed class OldExportedCharacter
     {
+        private readonly Collection<OldExportedSkillGroup> m_skillgroups;
+        private readonly Collection<OldExportedCertificate> m_certificates;
+
+        public OldExportedCharacter()
+        {
+            m_skillgroups = new Collection<OldExportedSkillGroup>();
+            m_certificates = new Collection<OldExportedCertificate>();
+        }
+
         [XmlAttribute("name")]
         public string Name { get; set; }
 
@@ -53,10 +63,16 @@ namespace EVEMon.Common.Serialization.Importation
 
         [XmlArray("skills")]
         [XmlArrayItem("skillGroup")]
-        public List<OldExportedSkillGroup> SkillGroups { get; set; }
+        public Collection<OldExportedSkillGroup> SkillGroups
+        {
+            get { return m_skillgroups; }
+        }
 
         [XmlArray("certificates")]
-        public List<OldExportedCertificate> Certificates { get; set; }
+        public Collection<OldExportedCertificate> Certificates
+        {
+            get { return m_certificates; }
+        }
 
         /// <summary>
         /// Toes the serializable CCP character.
@@ -106,9 +122,11 @@ namespace EVEMon.Common.Serialization.Importation
         /// <returns></returns>
         private List<SerializableCharacterCertificate> CreateSerializableCharacterCertificateList()
         {
-            return
-                Certificates.Select(
-                    certificate => new SerializableCharacterCertificate { CertificateID = certificate.CertificateID }).ToList();
+            return Certificates.Select(
+                certificate => new SerializableCharacterCertificate
+                                   {
+                                       CertificateID = certificate.CertificateID
+                                   }).ToList();
         }
     }
 }

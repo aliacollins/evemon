@@ -465,7 +465,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
-            datafile.Add(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))).ToList());
+            datafile.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))));
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
@@ -561,7 +561,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             ItemsDatafile datafile = new ItemsDatafile();
-            datafile.Add(rootGroups);
+            datafile.AddRange(rootGroups);
 
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
@@ -1380,7 +1380,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
-            datafile.Add(listOfCertCategories);
+            datafile.AddRange(listOfCertCategories);
 
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
@@ -1472,7 +1472,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
-            datafile.Add(blueprintGroups);
+            datafile.AddRange(blueprintGroups);
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
@@ -2046,8 +2046,8 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             GeoDatafile datafile = new GeoDatafile();
-            datafile.Add(regions.OrderBy(x => x.Name).ToList());
-            datafile.Add(jumps);
+            datafile.AddRange(regions.OrderBy(x => x.Name));
+            datafile.AddRange(jumps);
 
             Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
         }
@@ -2097,7 +2097,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();
-            datafile.Add(types);
+            datafile.AddRange(types);
             Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }
 

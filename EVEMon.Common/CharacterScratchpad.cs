@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Data;
 
@@ -20,7 +21,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public CharacterScratchpad(BaseCharacter character)
         {
-            TrainedSkills = new List<StaticSkillLevel>();
+            TrainedSkills = new Collection<StaticSkillLevel>();
             TrainingTime = TimeSpan.Zero;
             Character = character;
             m_skillSP = new int[StaticSkills.ArrayIndicesCount];
@@ -192,7 +193,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the list of skills trained so far (by the <see cref="Train&lt;T&gt;"/> or <see cref="SetSkillLevel"/> methods).
         /// </summary>
-        public List<StaticSkillLevel> TrainedSkills { get; private set; }
+        public Collection<StaticSkillLevel> TrainedSkills { get; private set; }
 
         /// <summary>
         /// Clears the training time and trained skills only. 
@@ -385,7 +386,7 @@ namespace EVEMon.Common
             TrainingTime = scratchpad.TrainingTime;
 
             TrainedSkills.Clear();
-            TrainedSkills.AddRange(scratchpad.TrainedSkills);
+            scratchpad.TrainedSkills.ToList().ForEach(trainedSkill => TrainedSkills.Add(trainedSkill));
 
             for (int i = 0; i < m_attributes.Length; i++)
             {

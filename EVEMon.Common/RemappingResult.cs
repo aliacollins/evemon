@@ -1,16 +1,17 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents the result of a remapping
+    /// Represents the result of a remapping.
     /// </summary>
     public sealed class RemappingResult
     {
         /// <summary>
-        /// Constructor without any remapping point associated 
+        /// Constructor without any remapping point associated.
         /// </summary>
         /// <param name="baseScratchpad"></param>
         public RemappingResult(CharacterScratchpad baseScratchpad)
@@ -18,13 +19,13 @@ namespace EVEMon.Common
             if (baseScratchpad == null)
                 throw new ArgumentNullException("baseScratchpad");
 
-            Skills = new List<ISkillLevel>();
+            Skills = new Collection<ISkillLevel>();
             BaseScratchpad = baseScratchpad;
             StartTime = BaseScratchpad.TrainingTime;
         }
 
         /// <summary>
-        /// Constructor for a result bound to a remapping point
+        /// Constructor for a result bound to a remapping point.
         /// </summary>
         /// <param name="point">Associated remapping point, may be null.</param>
         /// <param name="baseScratchpad"></param>
@@ -48,14 +49,14 @@ namespace EVEMon.Common
             if (result == null)
                 throw new ArgumentNullException("result");
 
-            Skills.AddRange(result.Skills);
+            result.Skills.ToList().ForEach(skillLevel => Skills.Add(skillLevel));
             BestScratchpad = bestScratchpad;
         }
 
         /// <summary>
-        /// Gets the optimized plan
+        /// Gets the optimized plan.
         /// </summary>
-        public List<ISkillLevel> Skills { get; private set; }
+        public Collection<ISkillLevel> Skills { get; private set; }
 
         /// <summary>
         /// Gets the remapping point associated with that remapping.
@@ -64,27 +65,27 @@ namespace EVEMon.Common
         public RemappingPoint Point { get; private set; }
 
         /// <summary>
-        /// Gets the best scratchpad after the remapping
+        /// Gets the best scratchpad after the remapping.
         /// </summary>
         public CharacterScratchpad BaseScratchpad { get; private set; }
 
         /// <summary>
-        /// Gets the best scratchpad after the remapping
+        /// Gets the best scratchpad after the remapping.
         /// </summary>
         public CharacterScratchpad BestScratchpad { get; private set; }
 
         /// <summary>
-        /// Gets the training duration with the best remapping
+        /// Gets the training duration with the best remapping.
         /// </summary>
         public TimeSpan BestDuration { get; private set; }
 
         /// <summary>
-        /// Gets the base training duration before the remapping
+        /// Gets the base training duration before the remapping.
         /// </summary>
         public TimeSpan BaseDuration { get; private set; }
 
         /// <summary>
-        /// Gets the time when this remapping was done
+        /// Gets the time when this remapping was done.
         /// </summary>
         public TimeSpan StartTime { get; private set; }
 

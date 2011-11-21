@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace EVEMon.Common
 {
@@ -103,9 +104,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
-        public static List<RemappingResult> OptimizeFromPlanAndRemappingPoints(BasePlan plan)
+        public static ICollection<RemappingResult> OptimizeFromPlanAndRemappingPoints(BasePlan plan)
         {
-            List<RemappingResult> results = GetResultsFromRemappingPoints(plan);
+            Collection<RemappingResult> results = GetResultsFromRemappingPoints(plan);
             foreach (RemappingResult result in results)
             {
                 result.Optimize(TimeSpan.MaxValue);
@@ -118,14 +119,14 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
-        public static List<RemappingResult> GetResultsFromRemappingPoints(BasePlan plan)
+        public static Collection<RemappingResult> GetResultsFromRemappingPoints(BasePlan plan)
         {
             if (plan == null)
                 throw new ArgumentNullException("plan");
 
             CharacterScratchpad scratchpad = new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet));
-            List<RemappingResult> remappingList = new List<RemappingResult>();
-            List<ISkillLevel> list = new List<ISkillLevel>();
+            Collection<RemappingResult> remappingList = new Collection<RemappingResult>();
+            Collection<ISkillLevel> list = new Collection<ISkillLevel>();
 
             // Scroll through the entries and split it into remappings
             foreach (PlanEntry entry in plan)

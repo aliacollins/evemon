@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
@@ -587,7 +588,7 @@ namespace EVEMon.Common
 
         #region IStaticSkill Members
 
-        List<StaticSkillLevel> IStaticSkill.Prerequisites
+        Collection<StaticSkillLevel> IStaticSkill.Prerequisites
         {
             get { return StaticData.Prerequisites; }
         }
