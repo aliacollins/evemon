@@ -790,7 +790,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrAutoRefresh_Tick(object sender, EventArgs e)
         {
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
             if (window == null)
                 return;
 
@@ -813,7 +813,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateStatusBar()
         {
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
 
             if (window == null)
                 return;
@@ -1530,7 +1530,7 @@ namespace EVEMon.SkillPlanner
             if (entry == null)
                 return;
 
-            WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInBrowser(entry.CharacterSkill);
+            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).ShowSkillInBrowser(entry.CharacterSkill);
         }
 
         /// <summary>
@@ -1546,7 +1546,7 @@ namespace EVEMon.SkillPlanner
             if (entry == null)
                 return;
 
-            WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInExplorer(entry.CharacterSkill);
+            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).ShowSkillInExplorer(entry.CharacterSkill);
         }
 
         /// <summary>
@@ -1725,8 +1725,7 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill browser
-            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            pw.UpdateSkillBrowser();
+            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).UpdateSkillBrowser();
         }
 
         /// <summary>

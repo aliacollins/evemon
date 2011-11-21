@@ -1196,7 +1196,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void addAPIKeyMenu_Click(object sender, EventArgs e)
         {
-           WindowsFactory<ApiKeyUpdateOrAdditionWindow>.ShowUnique();
+            using (ApiKeyUpdateOrAdditionWindow window = new ApiKeyUpdateOrAdditionWindow())
+            {
+                window.ShowDialog(this);
+            }
         }
 
         /// <summary>
@@ -1207,7 +1210,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void manageAPIKeysMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<ApiKeysManagementWindow>.ShowUnique();
+            using (ApiKeysManagementWindow window = new ApiKeysManagementWindow())
+            {
+                window.ShowDialog(this);
+            }
         }
 
         /// <summary>
@@ -1238,7 +1244,10 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<CharacterDeletionWindow>.ShowByTag(character);
+            using (CharacterDeletionWindow window = new CharacterDeletionWindow(character))
+            {
+                window.ShowDialog(this);
+            }
         }
 
         /// <summary>
@@ -1449,7 +1458,7 @@ namespace EVEMon
             character.Plans.Add(newPlan);
 
             // Show the editor for this plan
-            WindowsFactory<PlanWindow>.ShowByTag(newPlan);
+            WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
         }
 
         /// <summary>
@@ -1502,7 +1511,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<PlanManagementWindow>.ShowByTag(character);
+            WindowsFactory.ShowByTag<PlanManagementWindow, Character>(character);
         }
 
         /// <summary>
@@ -1529,7 +1538,7 @@ namespace EVEMon
             Plan plan = (Plan)menuItem.Tag;
 
             // Show or bring to front if a window with the same plan as tag already exists
-            WindowsFactory<PlanWindow>.ShowByTag(plan);
+            WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
         }
 
         /// <summary>
@@ -1540,7 +1549,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<MineralWorksheet>.ShowUnique();
+            WindowsFactory.ShowUnique<MineralWorksheet>();
         }
 
         /// <summary>
@@ -1557,7 +1566,7 @@ namespace EVEMon
                 return;
 
             // Create the window
-            WindowsFactory<SkillsPieChart>.ShowByTag(character);
+            WindowsFactory.ShowByTag<SkillsPieChart, Character>(character);
         }
 
         /// <summary>
@@ -1568,7 +1577,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<ScheduleEditorWindow>.ShowUnique();
+            WindowsFactory.ShowUnique<ScheduleEditorWindow>();
         }
 
         /// <summary>
@@ -1579,7 +1588,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void blankCharacterMenu_Click(object sender, EventArgs e)
         {
-            WindowsFactory<BlankCharacterWindow>.ShowUnique();
+            WindowsFactory.ShowUnique<BlankCharacterWindow>();
         }
 
         /// <summary>
@@ -1593,7 +1602,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
-            WindowsFactory<ImplantSetsWindow>.ShowByTag(character);
+            WindowsFactory.ShowByTag<ImplantSetsWindow, Character>(character);
         }
 
         /// <summary>
@@ -1691,7 +1700,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory<AboutWindow>.ShowUnique();
+            WindowsFactory.ShowUnique<AboutWindow>();
         }
 
         /// <summary>

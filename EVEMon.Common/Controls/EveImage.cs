@@ -434,7 +434,7 @@ namespace EVEMon.Common.Controls
             if (!m_popUpActive)
                 return;
 
-            WindowsFactory<EveImagePopUp>.ShowUnique(() => new EveImagePopUp(m_item));
+            WindowsFactory.ShowUnique(() => new EveImagePopUp(m_item));
         }
 
         #endregion

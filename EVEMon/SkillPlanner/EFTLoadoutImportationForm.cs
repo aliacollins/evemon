@@ -254,7 +254,7 @@ namespace EVEMon.SkillPlanner
             if (item == null)
                 return;
 
-            PlanWindow opener = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow opener = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
             opener.ShowItemInBrowser(item);
         }
 

@@ -81,7 +81,7 @@ namespace EVEMon.SkillPlanner
 
             // Or are we just opening a plan ?
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-            WindowsFactory<PlanWindow>.ShowByTag(plan);
+            WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
             Close();
         }
 
@@ -291,7 +291,7 @@ namespace EVEMon.SkillPlanner
                 m_character.Plans.Add(plan);
 
                 // Open a window for this plan
-                WindowsFactory<PlanWindow>.ShowByTag(plan);
+                WindowsFactory.ShowByTag<PlanWindow, Plan>(plan);
             }
 
             Close();

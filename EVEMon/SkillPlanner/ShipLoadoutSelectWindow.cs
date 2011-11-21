@@ -561,7 +561,7 @@ namespace EVEMon.SkillPlanner
             if (item == null)
                 return;
 
-            PlanWindow window = WindowsFactory<PlanWindow>.ShowByTag(m_plan);
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(m_plan);
             window.ShowItemInBrowser(item);
         }
 

@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ShipLoadoutSelectWindow window = WindowsFactory<ShipLoadoutSelectWindow>.ShowByTag(Plan);
+            ShipLoadoutSelectWindow window = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
             window.Ship = SelectedObject;
         }
 
@@ -89,7 +89,7 @@ namespace EVEMon.SkillPlanner
             // Required Skills
             requiredSkillsControl.Object = SelectedObject;
 
-            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetByTag(Plan);
+            ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
             if (loadoutSelect != null)
                 loadoutSelect.Ship = shipSelectControl.SelectedObject;
         }
