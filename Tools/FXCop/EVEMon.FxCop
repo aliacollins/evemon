@@ -21,7 +21,7 @@
   <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
  </ProjectOptions>
  <Targets>
-  <Target Name="$(ProjectDir)/../../EVEMon/bin/x86/Debug/EVEMon.Common.dll" Analyze="False" AnalyzeAllChildren="False" />
+  <Target Name="$(ProjectDir)/../../EVEMon/bin/x86/Debug/EVEMon.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/../../EVEMon/bin/x86/Debug/EVEMon.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/../../EVEMon/bin/x86/Debug/EVEMon.LogitechG15.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/../../EVEMon/bin/x86/Debug/EVEMon.PieChart.dll" Analyze="True" AnalyzeAllChildren="True" />
