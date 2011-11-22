@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,6 +27,7 @@ namespace InstallBuilder
         /// </summary>
         /// <param name="args">The args.</param>
         /// <returns></returns>
+        [STAThread]
         public static int Main(string[] args)
         {
             CheckIsDebug();
@@ -93,7 +95,7 @@ namespace InstallBuilder
         {
             string[] locations = new string[3];
 
-            locations[0] = String.Format("{0}\\NSIS\\makensis.exe", s_programFilesDir);
+            locations[0] = String.Format(CultureInfo.InvariantCulture, "{0}\\NSIS\\makensis.exe", s_programFilesDir);
             locations[1] = @"D:\Program Files\NSIS\makensis.exe"; // Possible location in TeamCity server
             locations[2] = @"D:\Program Files (x86)\NSIS\makensis.exe"; // Possible location in TeamCity server
 
@@ -116,8 +118,7 @@ namespace InstallBuilder
 
             try
             {
-                Assembly exeAsm = Assembly.LoadFrom(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe");
-                s_version = exeAsm.GetName().Version.ToString();
+                s_version = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version.ToString();
             }
             catch (Exception)
             {
@@ -136,8 +137,9 @@ namespace InstallBuilder
             Console.WriteLine();
 
             s_nsisExe = FindMakeNsisExe();
-            Console.WriteLine("NSIS : {0}",
-                              String.IsNullOrEmpty(s_nsisExe) ? "Not Found - Installer will not be created." : s_nsisExe);
+            Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
+                                                ? "Not Found - Installer will not be created."
+                                                : s_nsisExe);
             Console.WriteLine();
 
             return true;
@@ -148,7 +150,7 @@ namespace InstallBuilder
         /// </summary>
         private static void BuildZip()
         {
-            string zipFileName = String.Format("EVEMon-binaries-{0}.zip", s_version);
+            string zipFileName = String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version);
             zipFileName = Path.Combine(s_binariesDir, zipFileName);
 
             string[] filenames = Directory.GetFiles(s_sourceFilesDir, "*", SearchOption.AllDirectories);
@@ -157,36 +159,48 @@ namespace InstallBuilder
             if (zipFile.Exists)
                 zipFile.Delete();
 
-            using (ZipOutputStream zipStream = new ZipOutputStream(File.Create(zipFileName)))
+            Stream stream = null;
+            try
             {
-                zipStream.SetLevel(9);
-                zipStream.UseZip64 = UseZip64.Off;
+                stream = File.Create(zipFileName);
 
-                byte[] buffer = new byte[4096];
-
-                foreach (string file in filenames)
+                using (ZipOutputStream zipStream = new ZipOutputStream(stream))
                 {
-                    if (file.Contains("vshost") || file.Contains(".config"))
-                        continue;
+                    stream = null;
+                    zipStream.SetLevel(9);
+                    zipStream.UseZip64 = UseZip64.Off;
 
-                    string entryName = String.Format("EVEMon{0}", file.Remove(0, s_sourceFilesDir.Length));
-                    Console.WriteLine("Zipping {0}", entryName);
-                    ZipEntry entry = new ZipEntry(entryName) { DateTime = DateTime.Now };
+                    byte[] buffer = new byte[4096];
 
-                    zipStream.PutNextEntry(entry);
-
-                    using (FileStream fs = File.OpenRead(file))
+                    foreach (string file in filenames)
                     {
-                        int sourceBytes;
-                        do
+                        if (file.Contains("vshost") || file.Contains(".config"))
+                            continue;
+
+                        string entryName = String.Format(CultureInfo.InvariantCulture, "EVEMon{0}",
+                                                         file.Remove(0, s_sourceFilesDir.Length));
+                        Console.WriteLine("Zipping {0}", entryName);
+                        ZipEntry entry = new ZipEntry(entryName) { DateTime = DateTime.Now };
+
+                        zipStream.PutNextEntry(entry);
+
+                        using (FileStream fs = File.OpenRead(file))
                         {
-                            sourceBytes = fs.Read(buffer, 0, buffer.Length);
-                            zipStream.Write(buffer, 0, sourceBytes);
-                        } while (sourceBytes > 0);
+                            int sourceBytes;
+                            do
+                            {
+                                sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                zipStream.Write(buffer, 0, sourceBytes);
+                            } while (sourceBytes > 0);
+                        }
                     }
+                    zipStream.Finish();
                 }
-                zipStream.Finish();
-                zipStream.Close();
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
         }
 
@@ -203,7 +217,7 @@ namespace InstallBuilder
                                                      : "bin\\x86\\Release\\EVEMonInstallerScript.nsi");
 
                 string param =
-                    String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_installerDir, nsisScript);
+                    String.Format(CultureInfo.InvariantCulture, "/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_installerDir, nsisScript);
 
                 Console.WriteLine("NSIS script : {0}", nsisScript);
                 Console.WriteLine("Output directory : {0}", s_installerDir);
