@@ -112,17 +112,16 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    FileInfo destFile = new FileInfo(destFileName);
-
                     // We need to make sure this file is not read-only
                     // If it is, this method will request the user the permission to automatically remove the readonly attributes
-                    if (!EnsureWritable(destFile))
+                    if (!EnsureWritable(destFileName))
                         return;
 
                     // Overwrite the file
                     File.Copy(srcFileName, destFileName, true);
 
                     // Ensures we didn't copied a read-only attribute, no permission required since the file has been overwritten
+                    FileInfo destFile = new FileInfo(destFileName);
                     destFile.Refresh();
                     if (destFile.IsReadOnly)
                         destFile.IsReadOnly = false;
