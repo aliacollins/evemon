@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Exportation
@@ -32,6 +31,9 @@ namespace EVEMon.Common.Serialization.Exportation
 
         [XmlElement("bloodLine")]
         public string BloodLine { get; set; }
+        
+        [XmlElement("ancestry")]
+        public string Ancestry { get; set; }
 
         [XmlElement("gender")]
         public string Gender { get; set; }
@@ -40,7 +42,10 @@ namespace EVEMon.Common.Serialization.Exportation
         public string CorporationName { get; set; }
 
         [XmlElement("balance")]
-        public Decimal Balance { get; set; }
+        public string Balance { get; set; }
+
+        [XmlElement("birthday")]
+        public string Birthday { get; set; }
 
         [XmlElement("intelligence")]
         public float Intelligence { get; set; }

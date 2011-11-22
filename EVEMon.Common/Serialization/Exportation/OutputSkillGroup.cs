@@ -22,7 +22,7 @@ namespace EVEMon.Common.Serialization.Exportation
         public int SkillsCount { get; set; }
 
         [XmlAttribute("totalSP")]
-        public int TotalSP { get; set; }
+        public string TotalSP { get; set; }
 
         [XmlElement("skill")]
         public Collection<OutputSkill> Skills

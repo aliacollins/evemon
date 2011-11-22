@@ -31,30 +31,29 @@ namespace EVEMon.Common
             builder.AppendLine(Separator);
             builder.AppendFormat(CultureConstants.DefaultCulture, "     Name: {0}{1}", character.Name,
                                  Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "  Balance: {0:N2} ISK{1}",
+                                 character.Balance, Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, " Birthday: {0} UTC{1}", character.Birthday,
+                                 Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "   Gender: {0}{1}", character.Gender,
                                  Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "     Race: {0}{1}", character.Race,
                                  Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "Bloodline: {0}{1}", character.Bloodline,
                                  Environment.NewLine);
-            builder.AppendFormat(CultureConstants.DefaultCulture, "  Balance: {0:N2} ISK{1}",
-                                 character.Balance, Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, " Ancestry: {0}{1}", character.Ancestry,
+                                 Environment.NewLine);
             builder.AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Intelligence: {0}{1}",
-                                 character.Intelligence.EffectiveValue.ToString(CultureConstants.DefaultCulture).PadLeft(5),
-                                 Environment.NewLine);
+                                 character.Intelligence.EffectiveValue, Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "    Charisma: {0}{1}",
-                                 character.Charisma.EffectiveValue.ToString(CultureConstants.DefaultCulture).PadLeft(5),
-                                 Environment.NewLine);
+                                 character.Charisma.EffectiveValue, Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "  Perception: {0}{1}",
-                                 character.Perception.EffectiveValue.ToString(CultureConstants.DefaultCulture).PadLeft(5),
-                                 Environment.NewLine);
+                                 character.Perception.EffectiveValue, Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "      Memory: {0}{1}",
-                                 character.Memory.EffectiveValue.ToString(CultureConstants.DefaultCulture).PadLeft(5),
-                                 Environment.NewLine);
+                                 character.Memory.EffectiveValue, Environment.NewLine);
             builder.AppendFormat(CultureConstants.DefaultCulture, "   Willpower: {0}{1}",
-                                 character.Willpower.EffectiveValue.ToString(CultureConstants.DefaultCulture).PadLeft(5),
-                                 Environment.NewLine);
+                                 character.Willpower.EffectiveValue, Environment.NewLine);
             builder.AppendLine();
 
             // Implants
@@ -124,7 +123,7 @@ namespace EVEMon.Common
             SerializableCharacterSkill mergedSkill = GetMergedSkill(plan, skill);
 
             string skillDesc = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", skill, skill.Rank);
-            builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2:N0}/{3:N0} Points{4}",
+            builder.AppendFormat(CultureConstants.DefaultCulture, "  {0} L{1} {2:N0}/{3:N0} Points{4}",
                                  skillDesc.PadRight(45), mergedSkill.Level.ToString(CultureConstants.DefaultCulture).PadRight(5),
                                  mergedSkill.Skillpoints,
                                  skill.StaticData.GetPointsRequiredForLevel(5),
@@ -184,10 +183,12 @@ namespace EVEMon.Common
             OutputCharacter serial = new OutputCharacter
                                          {
                                              Name = character.Name,
-                                             Balance = character.Balance,
+                                             Balance = character.Balance.ToString("N2", CultureConstants.DefaultCulture),
+                                             Birthday = character.Birthday.ToString(CultureConstants.DefaultCulture),
                                              CorporationName = character.CorporationName,
                                              CharacterID = character.CharacterID,
                                              BloodLine = character.Bloodline,
+                                             Ancestry = character.Ancestry,
                                              Gender = character.Gender,
                                              Race = character.Race,
                                              Intelligence = character.Intelligence.EffectiveValue,
@@ -266,7 +267,7 @@ namespace EVEMon.Common
                                             {
                                                 Name = skillGroup.Name,
                                                 SkillsCount = count,
-                                                TotalSP = skillGroupTotalSP
+                                                TotalSP = skillGroupTotalSP.ToString("N0", CultureConstants.DefaultCulture)
                                             };
             return outGroup;
         }
@@ -286,9 +287,11 @@ namespace EVEMon.Common
                                         Name = mergedSkill.Name,
                                         Rank = skill.Rank,
                                         Level = mergedSkill.Level,
-                                        SkillPoints = mergedSkill.Skillpoints,
+                                        SkillPoints = mergedSkill.Skillpoints.ToString("N0", CultureConstants.DefaultCulture),
                                         RomanLevel = Skill.GetRomanFromInt(mergedSkill.Level),
-                                        MaxSkillPoints = skill.StaticData.GetPointsRequiredForLevel(5)
+                                        MaxSkillPoints =
+                                            skill.StaticData.GetPointsRequiredForLevel(5).ToString("N0",
+                                                                                                   CultureConstants.DefaultCulture)
                                     });
         }
 
