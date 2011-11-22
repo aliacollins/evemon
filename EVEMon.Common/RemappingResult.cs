@@ -49,7 +49,7 @@ namespace EVEMon.Common
             if (result == null)
                 throw new ArgumentNullException("result");
 
-            result.Skills.ToList().ForEach(skillLevel => Skills.Add(skillLevel));
+            Skills.AddRange(result.Skills);
             BestScratchpad = bestScratchpad;
         }
 

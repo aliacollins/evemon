@@ -398,7 +398,7 @@ namespace EVEMon.BlankCharacter
                                                                                          },
                                                                         },
                                                   };
-            GetSkillsForRace().ToList().ForEach(skill => serial.Skills.Add(skill));
+            serial.Skills.AddRange(GetSkillsForRace());
 
             return serial;
         }

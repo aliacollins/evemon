@@ -386,7 +386,7 @@ namespace EVEMon.Common
             TrainingTime = scratchpad.TrainingTime;
 
             TrainedSkills.Clear();
-            scratchpad.TrainedSkills.ToList().ForEach(trainedSkill => TrainedSkills.Add(trainedSkill));
+            TrainedSkills.AddRange(scratchpad.TrainedSkills);
 
             for (int i = 0; i < m_attributes.Length; i++)
             {

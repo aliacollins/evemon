@@ -491,7 +491,7 @@ namespace EVEMon.Common
                                                 Name = oldPlan.Name,
                                                 Description = String.Empty,
                                             };
-                oldPlan.Entries.ToList().ForEach(oldPlanEntry => plan.Entries.Add(oldPlanEntry));
+                plan.Entries.AddRange(oldPlan.Entries);
                 serial.Plans.Add(plan);
             }
 

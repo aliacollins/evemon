@@ -51,8 +51,7 @@ namespace EVEMon.Common.Data
                 return;
 
             // Create the prerequisites list
-            prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)).ToList().ForEach(
-                staticSkillLevel => Prerequisites.Add(staticSkillLevel));
+            Prerequisites.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
 
             if (!IsTrainableOnTrialAccount)
                 return;

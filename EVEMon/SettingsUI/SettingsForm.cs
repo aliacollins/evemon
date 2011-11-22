@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
@@ -856,11 +857,12 @@ namespace EVEMon.SettingsUI
         private void btnAddAPIServer_Click(object sender, EventArgs e)
         {
             SerializableAPIProvider newProvider = new SerializableAPIProvider();
-            APIMethod.CreateDefaultSet().Select(
+            newProvider.Methods.AddRange(APIMethod.CreateDefaultSet().Select(
                 apiMethod => new SerializableAPIMethod
                                  {
-                                     Method = apiMethod.Method.ToString(), Path = apiMethod.Path
-                                 }).ToList().ForEach(method => newProvider.Methods.Add(method));
+                                     Method = apiMethod.Method.ToString(),
+                                     Path = apiMethod.Path
+                                 }));
 
             using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, newProvider))
             {

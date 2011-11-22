@@ -96,8 +96,8 @@ namespace EVEMon.Common.Serialization.Importation
                                                       ImplantSets = new SerializableImplantSetCollection
                                                           { API = OldExportedAttributeEnhancers.ToSerializableImplantSet() },
                                                   };
-            CreateSerializableCharacterSkillList().ToList().ForEach(skill => serial.Skills.Add(skill));
-            CreateSerializableCharacterCertificateList().ToList().ForEach(certificate => serial.Certificates.Add(certificate));
+            serial.Skills.AddRange(CreateSerializableCharacterSkillList());
+            serial.Certificates.AddRange(CreateSerializableCharacterCertificateList());
 
             return serial;
         }

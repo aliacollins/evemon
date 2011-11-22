@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -290,7 +291,7 @@ namespace EVEMon.Common
             // Generates a settings plan and transforms it to an output plan
             SerializablePlan serial = plan.Export();
             OutputPlan output = new OutputPlan { Name = serial.Name, Owner = serial.Owner, Revision = Settings.Revision };
-            serial.Entries.ToList().ForEach(entry => output.Entries.Add(entry));
+            output.Entries.AddRange(serial.Entries);
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlan), output);
@@ -305,7 +306,7 @@ namespace EVEMon.Common
         public static string ExportAsXML(IEnumerable<Plan> plans)
         {
             OutputPlans output = new OutputPlans { Revision = Settings.Revision };
-            plans.Select(plan => plan.Export()).ToList().ForEach(plan => output.Plans.Add(plan));
+            output.Plans.AddRange(plans.Select(plan => plan.Export()));
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlans), output);

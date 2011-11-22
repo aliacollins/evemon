@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
@@ -438,7 +439,7 @@ namespace EVEMon.Common
             serial.Info.LastKnownLocation = LastKnownLocation;
 
             // Employment History
-            EmploymentHistory.Export().ToList().ForEach(employmentHistory => serial.EmploymentHistory.Add(employmentHistory));
+            serial.EmploymentHistory.AddRange(EmploymentHistory.Export());
 
             // Attributes
             serial.Attributes.Intelligence = Intelligence.Base;
@@ -451,10 +452,10 @@ namespace EVEMon.Common
             serial.ImplantSets = ImplantSets.Export();
 
             // Skills
-            Skills.Export().ToList().ForEach(skill => serial.Skills.Add(skill));
+            serial.Skills.AddRange(Skills.Export());
 
             // Certificates
-            Certificates.Export().ToList().ForEach(certificate => serial.Certificates.Add(certificate));
+            serial.Certificates.AddRange(Certificates.Export());
         }
 
         /// <summary>

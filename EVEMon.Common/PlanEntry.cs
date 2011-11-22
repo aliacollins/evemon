@@ -68,7 +68,7 @@ namespace EVEMon.Common
             m_notes = serial.Notes;
             m_priority = serial.Priority;
 
-            serial.PlanGroups.ToList().ForEach(planGroup => m_planGroups.Add(planGroup));
+            m_planGroups.AddRange(serial.PlanGroups);
 
             if (serial.Remapping != null)
                 m_remapping = new RemappingPoint(serial.Remapping);
@@ -355,8 +355,8 @@ namespace EVEMon.Common
                                       OldTrainingTime = OldTrainingTime,
                                       TrainingTime = TrainingTime
                                   };
-            
-            m_planGroups.ToList().ForEach(planGroup => clone.m_planGroups.Add(planGroup));
+            clone.m_planGroups.AddRange(m_planGroups);
+
             return clone;
         }
 

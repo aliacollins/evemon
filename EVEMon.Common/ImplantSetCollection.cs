@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -169,7 +170,7 @@ namespace EVEMon.Common
         {
             SerializableImplantSetCollection serial = new SerializableImplantSetCollection
                                                           { API = API.Export(), OldAPI = OldAPI.Export() };
-            m_customSets.Select(x => x.Export()).ToList().ForEach(customSet => serial.CustomSets.Add(customSet));
+            serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
             serial.SelectedIndex = Enumerate().IndexOf(m_current);
             return serial;
         }

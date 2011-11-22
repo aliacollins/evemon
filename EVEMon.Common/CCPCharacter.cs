@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
@@ -224,16 +225,16 @@ namespace EVEMon.Common
             Export(serial);
 
             // Skill queue
-            SkillQueue.Export().ToList().ForEach(skill => serial.SkillQueue.Add(skill));
+            serial.SkillQueue.AddRange(SkillQueue.Export());
 
             // Standings
-            Standings.Export().ToList().ForEach(standing => serial.Standings.Add(standing));
+            serial.Standings.AddRange(Standings.Export());
 
             // Market orders
-            MarketOrdersExport().ToList().ForEach(order => serial.MarketOrders.Add(order));
+            serial.MarketOrders.AddRange(MarketOrdersExport());
 
             // Industry jobs
-            IndustryJobsExport().ToList().ForEach(job => serial.IndustryJobs.Add(job));
+            serial.IndustryJobs.AddRange(IndustryJobsExport());
 
             // Eve mail messages IDs
             serial.EveMailMessagesIDs = EVEMailMessages.Export();

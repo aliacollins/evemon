@@ -430,7 +430,7 @@ namespace EVEMon.XmlGenerator
                     properties.Insert(4, pvProp);
                 }
 
-                properties.ToList().ForEach(property => category.Properties.Add(property));
+                category.Properties.AddRange(properties);
             }
 
             // Set packaged volume property ID
@@ -451,8 +451,8 @@ namespace EVEMon.XmlGenerator
             gProperties.Insert(0, bpProp);
 
             // Add properties to custom categories
-            gProperties.ToList().ForEach(property => general.Properties.Add(property));
-            pProperties.ToList().ForEach(property => propulsion.Properties.Add(property));
+            general.Properties.AddRange(gProperties);
+            propulsion.Properties.AddRange(pProperties);
 
             // Sort groups
             string[] orderedGroupNames = new[]

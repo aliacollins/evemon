@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using EVEMon.Common.Attributes;
@@ -578,7 +579,8 @@ namespace EVEMon.Common
                                                 Monitored = Monitored,
                                                 LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
                                             };
-            IdentityIgnoreList.Export().ToList().ForEach(ignoredIdentity => serial.IgnoreList.Add(ignoredIdentity));
+            serial.IgnoreList.AddRange(IdentityIgnoreList.Export());
+
             return serial;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -306,8 +307,8 @@ namespace EVEMon.Common
 
             if (plan != null)
             {
-                character.Skills.Where(x => x.IsKnown || (plan.IsPlanned(x))).Select(
-                    x => GetMergedSkill(plan, x)).ToList().ForEach(skill => serial.Skills.Add(skill));
+                serial.Skills.AddRange(character.Skills.Where(x => x.IsKnown || (plan.IsPlanned(x))).Select(
+                    x => GetMergedSkill(plan, x)));
             }
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);

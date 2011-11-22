@@ -46,7 +46,7 @@ namespace EVEMon.Common.Serialization.API
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    value.Split(',').ToList().ForEach(element => m_toCharacterIDs.Add(element));
+                    m_toCharacterIDs.AddRange(value.Split(','));
             }
         }
 
@@ -57,7 +57,7 @@ namespace EVEMon.Common.Serialization.API
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    value.Split(',').ToList().ForEach(element => m_toListID.Add(element));
+                    m_toListID.AddRange(value.Split(','));
             }
         }
 

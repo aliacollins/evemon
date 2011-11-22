@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -265,7 +266,7 @@ namespace EVEMon.Common
                                 ID = item.Key,
                                 Name = item.Value,
                             });
-            entitiesList.ToList().ForEach(entity => serial.Entities.Add(entity));
+            serial.Entities.AddRange(entitiesList);
 
             return serial;
         }
