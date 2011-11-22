@@ -76,15 +76,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_agents; }
         }
-
-        /// <summary>
-        /// Adds the specified agents.
-        /// </summary>
-        /// <param name="agents">The agents.</param>
-        public void AddRange(IEnumerable<SerializableAgent> agents)
-        {
-            m_agents.Clear();
-            agents.ToList().ForEach(agent => m_agents.Add(agent));
-        }
     }
 }

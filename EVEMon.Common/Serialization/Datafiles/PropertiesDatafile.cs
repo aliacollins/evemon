@@ -34,15 +34,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_categories; }
         }
-
-        /// <summary>
-        /// Adds the specified categories.
-        /// </summary>
-        /// <param name="categories">The categories.</param>
-        public void AddRange(IEnumerable<SerializablePropertyCategory> categories)
-        {
-            m_categories.Clear();
-            categories.ToList().ForEach(category => m_categories.Add(category));
-        }
     }
 }

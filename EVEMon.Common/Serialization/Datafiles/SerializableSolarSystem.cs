@@ -75,15 +75,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_stations; }
         }
-
-        /// <summary>
-        /// Adds the specified m_stations.
-        /// </summary>
-        /// <param name="stations">The stations.</param>
-        public void AddRange(IEnumerable<SerializableStation> stations)
-        {
-            m_stations.Clear();
-            stations.ToList().ForEach(station => m_stations.Add(station));
-        }
     }
 }

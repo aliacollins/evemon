@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -840,7 +841,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.MarketOrders.AddRange(Columns.Cast<MarketOrderColumnSettings>());
+            Settings.UI.MainWindow.MarketOrders.Columns.Clear();
+            Settings.UI.MainWindow.MarketOrders.Columns.AddRange(Columns.Cast<MarketOrderColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;

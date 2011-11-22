@@ -34,15 +34,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_items; }
         }
-
-        /// <summary>
-        /// Adds the specified items.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        public void AddRange(IEnumerable<SerializableItemMaterials> items)
-        {
-            m_items.Clear();
-            items.ToList().ForEach(item => m_items.Add(item));
-        }
     }
 }

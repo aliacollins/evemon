@@ -67,28 +67,16 @@ namespace EVEMon.Common.SettingsObjects
                                                              MarketOrderColumn.Volume
                                                          };
 
-                List<MarketOrderColumnSettings> marketOrderColumns = Columns.ToList();
-                marketOrderColumns.AddRange(EnumExtensions.GetValues<MarketOrderColumn>().Where(
-                    x => x != MarketOrderColumn.None).Where(x => marketOrderColumns.All(y => y.Column != x)).Select(
-                            x => new MarketOrderColumnSettings
-                                     {
-                                         Column = x,
-                                         Visible = defaultColumns.Contains(x),
-                                         Width = -2
-                                     }));
-
-                return marketOrderColumns;
+                return EnumExtensions.GetValues<MarketOrderColumn>().Where(
+                    planColumn => planColumn != MarketOrderColumn.None).Where(
+                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
+                            planColumn => new MarketOrderColumnSettings
+                                              {
+                                                  Column = planColumn,
+                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Width = -2
+                                              });
             }
-        }
-
-        /// <summary>
-        /// Adds the specified columns.
-        /// </summary>
-        /// <param name="columns">The columns.</param>
-        public void AddRange(IEnumerable<MarketOrderColumnSettings> columns)
-        {
-            m_columns.Clear();
-            columns.ToList().ForEach(column => m_columns.Add(column));
         }
     }
 }

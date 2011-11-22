@@ -60,25 +60,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_subGroups; }
         }
-
-        /// <summary>
-        /// Adds the specified blueprints.
-        /// </summary>
-        /// <param name="blueprints">The blueprints.</param>
-        public void AddRange(IEnumerable<SerializableBlueprint> blueprints)
-        {
-            m_blueprints.Clear();
-            blueprints.ToList().ForEach(blueprint => m_blueprints.Add(blueprint));
-        }
-
-        /// <summary>
-        /// Adds the specified sub groups.
-        /// </summary>
-        /// <param name="subGroups">The sub groups.</param>
-        public void AddRange(IEnumerable<SerializableBlueprintMarketGroup> subGroups)
-        {
-            m_subGroups.Clear();
-            subGroups.ToList().ForEach(subGroup => m_subGroups.Add(subGroup));
-        }
     }
 }

@@ -47,15 +47,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_constellations; }
         }
-
-        /// <summary>
-        /// Adds the specified constellations.
-        /// </summary>
-        /// <param name="constellations">The constellations.</param>
-        public void AddRange(IEnumerable<SerializableConstellation> constellations)
-        {
-            m_constellations.Clear();
-            constellations.ToList().ForEach(constellation => m_constellations.Add(constellation));
-        }
     }
 }

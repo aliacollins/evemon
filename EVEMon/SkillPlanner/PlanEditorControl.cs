@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -295,7 +296,8 @@ namespace EVEMon.SkillPlanner
 
             if (m_columnsOrderChanged)
             {
-                Settings.UI.PlanWindow.AddRange(ExportColumnSettings());
+                Settings.UI.PlanWindow.Columns.Clear();
+                Settings.UI.PlanWindow.Columns.AddRange(ExportColumnSettings());
                 ImportColumnSettings(Settings.UI.PlanWindow.Columns);
             }
 
@@ -969,7 +971,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             m_columns[e.ColumnIndex].Width = lvSkills.Columns[e.ColumnIndex].Width;
-            Settings.UI.PlanWindow.AddRange(ExportColumnSettings());
+            Settings.UI.PlanWindow.Columns.Clear();
+            Settings.UI.PlanWindow.Columns.AddRange(ExportColumnSettings());
         }
 
         /// <summary>
@@ -2233,7 +2236,8 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
-                Settings.UI.PlanWindow.AddRange(ExportColumnSettings());
+                Settings.UI.PlanWindow.Columns.Clear();
+                Settings.UI.PlanWindow.Columns.AddRange(ExportColumnSettings());
             }
         }
 

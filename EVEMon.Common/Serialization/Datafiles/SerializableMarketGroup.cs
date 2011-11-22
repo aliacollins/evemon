@@ -61,25 +61,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_subGroups; }
         }
-
-        /// <summary>
-        /// Adds the specified items.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        public void AddRange(IEnumerable<SerializableItem> items)
-        {
-            m_items.Clear();
-            items.ToList().ForEach(item => m_items.Add(item));
-        }
-
-        /// <summary>
-        /// Adds the specified sub groups.
-        /// </summary>
-        /// <param name="subGroups">The sub groups.</param>
-        public void AddRange(IEnumerable<SerializableMarketGroup> subGroups)
-        {
-            m_subGroups.Clear();
-            subGroups.ToList().ForEach(subGroup => m_subGroups.Add(subGroup));
-        }
     }
 }

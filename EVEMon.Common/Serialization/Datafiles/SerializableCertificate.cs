@@ -66,25 +66,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_recommendations; }
         }
-
-        /// <summary>
-        /// Adds the specified prerequisites.
-        /// </summary>
-        /// <param name="prerequisites">The prerequisites.</param>
-        public void AddRange(IEnumerable<SerializableCertificatePrerequisite> prerequisites)
-        {
-            m_prerequisites.Clear();
-            prerequisites.ToList().ForEach(prerequisite => m_prerequisites.Add(prerequisite));
-        }
-
-        /// <summary>
-        /// Adds the specified recommendations.
-        /// </summary>
-        /// <param name="recommendations">The recommendations.</param>
-        public void AddRange(IEnumerable<SerializableCertificateRecommendation> recommendations)
-        {
-            m_recommendations.Clear();
-            recommendations.ToList().ForEach(recommendation => m_recommendations.Add(recommendation));
-        }
     }
 }

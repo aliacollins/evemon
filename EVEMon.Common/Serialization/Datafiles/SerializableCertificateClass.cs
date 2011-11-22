@@ -50,15 +50,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_certificates; }
         }
-
-        /// <summary>
-        /// Adds the specified certificates.
-        /// </summary>
-        /// <param name="certificates">The certificates.</param>
-        public void AddRange(IEnumerable<SerializableCertificate> certificates)
-        {
-            m_certificates.Clear();
-            certificates.ToList().ForEach(certificate => m_certificates.Add(certificate));
-        }
     }
 }

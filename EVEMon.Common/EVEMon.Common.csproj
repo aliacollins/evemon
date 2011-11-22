@@ -94,6 +94,7 @@
     <Compile Include="APIMethods.cs" />
     <Compile Include="CharacterDataQuerying.cs" />
     <Compile Include="CharacterIdentityIgnoreList.cs" />
+    <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">

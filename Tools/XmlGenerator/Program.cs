@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -465,8 +466,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
-            categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))).ToList().ForEach(
-                category => datafile.Categories.Add(category));
+            datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))));
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
@@ -532,17 +532,17 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Store the items
-                group.AddRange(items.OrderBy(x => x.Name));
+                group.Items.AddRange(items.OrderBy(x => x.Name));
             }
 
             // Create the parent-children groups relations
             foreach (SerializableMarketGroup group in groups.Values)
             {
-                IOrderedEnumerable<SerializableMarketGroup> children =
+                IEnumerable<SerializableMarketGroup> children =
                     s_marketGroups.Concat(s_injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID)
                         .Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
-                group.AddRange(children);
+                group.SubGroups.AddRange(children);
             }
 
             // Pick the family
@@ -553,16 +553,16 @@ namespace EVEMon.XmlGenerator
             SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresMarketGroupID], ItemFamily.StarbaseStructure);
 
             // Sort groups
-            List<SerializableMarketGroup> rootGroups =
+            IEnumerable<SerializableMarketGroup> rootGroups =
                 s_marketGroups.Concat(s_injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID])
-                    .OrderBy(x => x.Name).ToList();
+                    .OrderBy(x => x.Name);
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             ItemsDatafile datafile = new ItemsDatafile();
-            datafile.AddRange(rootGroups);
+            datafile.MarketGroups.AddRange(rootGroups);
 
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
@@ -922,7 +922,7 @@ namespace EVEMon.XmlGenerator
             props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
 
             // Add properties info to item
-            item.AddRange(props);
+            item.Properties.AddRange(props);
 
             // Prerequisites completion
             List<SerializablePrerequisiteSkill> prereqs = new List<SerializablePrerequisiteSkill>();
@@ -933,11 +933,11 @@ namespace EVEMon.XmlGenerator
             }
 
             // Add prerequisite skills info to item
-            item.AddRange(prereqs);
+            item.PrerequisiteSkills.AddRange(prereqs);
 
             // Metagroup
-            foreach (InvMetaType relation in s_metaTypes
-                .Where(x => x.ItemID == srcItem.ID && item.MetaGroup == ItemMetaGroup.None))
+            foreach (InvMetaType relation in s_metaTypes.Where(
+                x => x.ItemID == srcItem.ID && item.MetaGroup == ItemMetaGroup.None))
             {
                 switch (relation.MetaGroupID)
                 {
@@ -1114,9 +1114,8 @@ namespace EVEMon.XmlGenerator
             // Export skill groups
             List<SerializableSkillGroup> listOfSkillGroups = new List<SerializableSkillGroup>();
 
-            foreach (InvGroup group in s_groups
-                .Where(x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID)
-                .OrderBy(x => x.Name))
+            foreach (InvGroup group in s_groups.Where(
+                x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID).OrderBy(x => x.Name))
             {
                 SerializableSkillGroup skillGroup = new SerializableSkillGroup
                                                         {
@@ -1141,8 +1140,8 @@ namespace EVEMon.XmlGenerator
                                                         };
 
                     // Export skill atributes
-                    Dictionary<int, int> skillAttributes = s_typeAttributes.Where(x => x.ItemID == skill.ID)
-                        .ToDictionary(attribute => attribute.AttributeID, attribute => attribute.GetIntValue());
+                    Dictionary<int, int> skillAttributes = s_typeAttributes.Where(x => x.ItemID == skill.ID).ToDictionary(
+                        attribute => attribute.AttributeID, attribute => attribute.GetIntValue());
 
                     singleSkill.Rank = skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
                                        skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0
@@ -1188,14 +1187,14 @@ namespace EVEMon.XmlGenerator
                     }
 
                     // Add prerequesites to skill
-                    singleSkill.AddRange(listOfPrerequisites);
+                    singleSkill.SkillPrerequisites.AddRange(listOfPrerequisites);
 
                     // Add skill
                     listOfSkillsInGroup.Add(singleSkill);
                 }
 
                 // Add skills in skill group
-                skillGroup.AddRange(listOfSkillsInGroup.OrderBy(x => x.Name));
+                skillGroup.Skills.AddRange(listOfSkillsInGroup.OrderBy(x => x.Name));
 
                 // Add skill group
                 listOfSkillGroups.Add(skillGroup);
@@ -1206,7 +1205,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
-            datafile.AddRange(listOfSkillGroups);
+            datafile.SkillGroups.AddRange(listOfSkillGroups);
 
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
@@ -1300,8 +1299,7 @@ namespace EVEMon.XmlGenerator
                         // Export prerequesities
                         List<SerializableCertificatePrerequisite> listOfPrereq = new List<SerializableCertificatePrerequisite>();
 
-                        foreach (CrtRelationships relationship in s_crtRelationships
-                            .Where(x => x.ChildID == certificate.ID))
+                        foreach (CrtRelationships relationship in s_crtRelationships.Where(x => x.ChildID == certificate.ID))
                         {
                             SerializableCertificatePrerequisite crtPrerequisites = new SerializableCertificatePrerequisite
                                                                                        {
@@ -1330,26 +1328,26 @@ namespace EVEMon.XmlGenerator
                         }
 
                         //Add prerequisites to certificate
-                        crtCertificates.AddRange(listOfPrereq);
+                        crtCertificates.Prerequisites.AddRange(listOfPrereq);
 
                         // Add recommendations to certificate
-                        List<SerializableCertificateRecommendation> listOfRecommendations =
-                            (s_crtRecommendations.Where(x => x.CertificateID == certificate.ID)
-                                .Select(recommendation =>
-                                        new
-                                            {
-                                                recommendation,
-                                                shipName = s_types.First(x => x.ID == recommendation.ShipTypeID)
-                                            }).Select(
-                                                certRecom => new SerializableCertificateRecommendation
-                                                                 {
-                                                                     ID = certRecom.recommendation.ID,
-                                                                     Ship = certRecom.shipName.Name,
-                                                                     Level = certRecom.recommendation.Level
-                                                                 })
-                            ).ToList();
+                        IEnumerable<SerializableCertificateRecommendation> listOfRecommendations =
+                            (s_crtRecommendations.Where(x => x.CertificateID == certificate.ID).Select(
+                                recommendation =>
+                                new
+                                    {
+                                        recommendation,
+                                        shipName = s_types.First(x => x.ID == recommendation.ShipTypeID)
+                                    }).Select(
+                                        certRecom => new SerializableCertificateRecommendation
+                                                         {
+                                                             ID = certRecom.recommendation.ID,
+                                                             Ship = certRecom.shipName.Name,
+                                                             Level = certRecom.recommendation.Level
+                                                         })
+                            );
 
-                        crtCertificates.AddRange(listOfRecommendations);
+                        crtCertificates.Recommendations.AddRange(listOfRecommendations);
 
                         // Add certificate
                         listOfCertificates.Add(crtCertificates);
@@ -1363,14 +1361,14 @@ namespace EVEMon.XmlGenerator
                         continue;
 
                     // Add certificates to classes
-                    crtClasses.AddRange(listOfCertificates.OrderBy(x => x.Grade).ToList());
+                    crtClasses.Certificates.AddRange(listOfCertificates.OrderBy(x => x.Grade));
 
                     // Add certificate class
                     listOfCertClasses.Add(crtClasses);
                 }
 
                 // Add classes to categories
-                crtCategory.AddRange(listOfCertClasses);
+                crtCategory.Classes.AddRange(listOfCertClasses);
 
                 // Add category
                 listOfCertCategories.Add(crtCategory);
@@ -1381,7 +1379,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
-            datafile.AddRange(listOfCertCategories);
+            datafile.Categories.AddRange(listOfCertCategories);
 
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
@@ -1450,30 +1448,30 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Store the items
-                group.AddRange(blueprints.OrderBy(x => x.Name).ToList());
+                group.Blueprints.AddRange(blueprints.OrderBy(x => x.Name));
             }
 
             // Create the parent-children groups relations
             foreach (SerializableBlueprintMarketGroup group in groups.Values)
             {
-                List<SerializableBlueprintMarketGroup> children = s_marketGroups.Concat(
+                IEnumerable<SerializableBlueprintMarketGroup> children = s_marketGroups.Concat(
                     s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(
-                        x => groups[x.ID]).OrderBy(x => x.Name).ToList();
+                        x => groups[x.ID]).OrderBy(x => x.Name);
 
-                group.AddRange(children);
+                group.SubGroups.AddRange(children);
             }
 
             // Sort groups
-            List<SerializableBlueprintMarketGroup> blueprintGroups = s_marketGroups.Concat(
+            IEnumerable<SerializableBlueprintMarketGroup> blueprintGroups = s_marketGroups.Concat(
                 s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsMarketGroupID).Select(
-                    x => groups[x.ID]).OrderBy(x => x.Name).ToList();
+                    x => groups[x.ID]).OrderBy(x => x.Name);
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
-            datafile.AddRange(blueprintGroups);
+            datafile.MarketGroups.AddRange(blueprintGroups);
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
@@ -1680,8 +1678,8 @@ namespace EVEMon.XmlGenerator
             }
 
             // Metagroup
-            foreach (InvMetaType relation in s_metaTypes
-                .Where(x => x.ItemID == s_blueprintTypes[srcBlueprint.ID].ProductTypeID))
+            foreach (InvMetaType relation in s_metaTypes.Where(
+                x => x.ItemID == s_blueprintTypes[srcBlueprint.ID].ProductTypeID))
             {
                 switch (relation.MetaGroupID)
                 {
@@ -1736,17 +1734,17 @@ namespace EVEMon.XmlGenerator
             ExportRequirements(srcBlueprint, blueprint);
 
             // Look for the tech 2 variations that this blueprint invents
-            List<int> listOfInventionTypeID =
-                (s_metaTypes.Where(x => x.ParentItemID == blueprint.ProduceItemID &&
-                                        x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
-                                            x => x.ItemID).SelectMany(
-                                                relationItemID =>
-                                                s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID).Select(
-                                                    x => x.ID),
-                                                (relationItemID, variationItemID) => s_types[variationItemID].ID)).ToList();
+            IEnumerable<int> listOfInventionTypeID = s_metaTypes.Where(
+                x => x.ParentItemID == blueprint.ProduceItemID &&
+                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
+                         x => x.ItemID).SelectMany(
+                             relationItemID =>
+                             s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID).Select(
+                                 x => x.ID),
+                             (relationItemID, variationItemID) => s_types[variationItemID].ID);
 
             // Add invention blueprints to item
-            blueprint.AddRange(listOfInventionTypeID);
+            blueprint.InventionTypeID.AddRange(listOfInventionTypeID);
 
             // Add this item
             blueprintsGroup.Add(blueprint);
@@ -1769,10 +1767,10 @@ namespace EVEMon.XmlGenerator
             AddRequiredExtraMaterials(srcBlueprint.ID, prerequisiteSkills, requiredMaterials);
 
             // Add prerequisite skills to item
-            blueprint.AddRange(prerequisiteSkills.OrderBy(x => x.Activity).ToList());
+            blueprint.PrereqSkill.AddRange(prerequisiteSkills.OrderBy(x => x.Activity));
 
             // Add required materials to item
-            blueprint.AddRange(requiredMaterials.OrderBy(x => x.Activity).ToList());
+            blueprint.ReqMaterial.AddRange(requiredMaterials.OrderBy(x => x.Activity));
         }
 
         /// <summary>
@@ -1781,18 +1779,21 @@ namespace EVEMon.XmlGenerator
         /// <param name="produceItemID">The produce item ID.</param>
         /// <param name="requiredMaterials">The required materials.</param>
         private static void AddRequiredRawMaterials(int produceItemID,
-                                                    List<SerializableRequiredMaterial> requiredMaterials)
+                                                    ICollection<SerializableRequiredMaterial> requiredMaterials)
         {
             // Find the raw materials needed for the produced item and add them to the list
-            requiredMaterials.AddRange(s_typeMaterials.Where(x => x.TypeID == produceItemID)
-                                           .Select(reprocItem => new SerializableRequiredMaterial
-                                                                     {
-                                                                         ID = reprocItem.MaterialTypeID,
-                                                                         Quantity = reprocItem.Quantity,
-                                                                         DamagePerJob = 1,
-                                                                         Activity = (int)BlueprintActivity.Manufacturing,
-                                                                         WasteAffected = 1
-                                                                     }));
+            IEnumerable<SerializableRequiredMaterial> rawMaterials = s_typeMaterials.Where(
+                x => x.TypeID == produceItemID).Select(
+                    reprocItem => new SerializableRequiredMaterial
+                                      {
+                                          ID = reprocItem.MaterialTypeID,
+                                          Quantity = reprocItem.Quantity,
+                                          DamagePerJob = 1,
+                                          Activity = (int)BlueprintActivity.Manufacturing,
+                                          WasteAffected = 1
+                                      });
+
+            requiredMaterials.AddRange(rawMaterials);
         }
 
         /// <summary>
@@ -1835,14 +1836,14 @@ namespace EVEMon.XmlGenerator
                     // and substracted them from the related materials of the requiredMaterials list
                     if (requirement.Recyclable)
                     {
-                        foreach (InvTypeMaterials reprocItem in s_typeMaterials
-                            .Where(x => x.TypeID == requirement.RequiredTypeID))
+                        foreach (InvTypeMaterials reprocItem in s_typeMaterials.Where(
+                            x => x.TypeID == requirement.RequiredTypeID))
                         {
                             if (!requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
                                 continue;
 
-                            SerializableRequiredMaterial material = requiredMaterials
-                                .First(x => x.ID == reprocItem.MaterialTypeID);
+                            SerializableRequiredMaterial material = requiredMaterials.First(
+                                x => x.ID == reprocItem.MaterialTypeID);
 
                             material.Quantity -= requirement.Quantity * reprocItem.Quantity;
 
@@ -1871,8 +1872,8 @@ namespace EVEMon.XmlGenerator
             int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Count];
             int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
 
-            foreach (DgmTypeAttribute attribute in s_typeAttributes
-                .Where(x => x.ItemID == requirement.RequiredTypeID))
+            foreach (DgmTypeAttribute attribute in s_typeAttributes.Where(
+                x => x.ItemID == requirement.RequiredTypeID))
             {
                 int attributeIntValue = attribute.GetIntValue();
 
@@ -1926,6 +1927,7 @@ namespace EVEMon.XmlGenerator
             s_startTime = DateTime.Now;
 
             List<SerializableRegion> regions = new List<SerializableRegion>();
+            const double BaseDistance = 1.0E14;
 
             // Regions
             foreach (MapRegion srcRegion in s_regions)
@@ -1949,10 +1951,9 @@ namespace EVEMon.XmlGenerator
                     constellations.Add(constellation);
 
                     // Systems
-                    const double BaseDistance = 1.0E14;
                     List<SerializableSolarSystem> systems = new List<SerializableSolarSystem>();
-                    foreach (
-                        MapSolarSystem srcSystem in s_solarSystems.Where(x => x.ConstellationID == srcConstellation.ID))
+                    foreach (MapSolarSystem srcSystem in s_solarSystems.Where(
+                        x => x.ConstellationID == srcConstellation.ID))
                     {
                         SerializableSolarSystem system = new SerializableSolarSystem
                                                              {
@@ -1977,58 +1978,55 @@ namespace EVEMon.XmlGenerator
                                         ID = srcStation.ID,
                                         Name = srcStation.Name,
                                         CorporationID = srcStation.CorporationID,
-                                        CorporationName =
-                                            s_names.First(x => x.ID == srcStation.CorporationID).Name,
+                                        CorporationName = s_names.First(x => x.ID == srcStation.CorporationID).Name,
                                         ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
                                         ReprocessingStationsTake = srcStation.ReprocessingStationsTake
                                     };
 
-                            List<SerializableAgent> agents = (s_agents.Where(x => x.LocationID == srcStation.ID)
-                                .Select(srcAgent => new
+                            IEnumerable<SerializableAgent> agents =
+                                s_agents.Where(x => x.LocationID == srcStation.ID).Select(
+                                    srcAgent =>
+                                    new
+                                        {
+                                            srcAgent,
+                                            researchAgent = s_researchAgents.FirstOrDefault(
+                                                x => x.ID == srcAgent.ID)
+                                        }).Select(
+                                            config =>
+                                            new
+                                                {
+                                                    config,
+                                                    agentConfig = s_agentConfig.FirstOrDefault(
+                                                        x => x.ID == config.srcAgent.ID)
+                                                }).Select(
+                                                    agent =>
+                                                    new SerializableAgent
                                                         {
-                                                            srcAgent,
-                                                            researchAgent =
-                                                        s_researchAgents.FirstOrDefault(x => x.ID == srcAgent.ID)
-                                                        })
-                                .Select(config => new
-                                                      {
-                                                          config,
-                                                          agentConfig =
-                                                      s_agentConfig.FirstOrDefault(x => x.ID == config.srcAgent.ID)
-                                                      })
-                                .Select(agent => new SerializableAgent
-                                                     {
-                                                         ID = agent.config.srcAgent.ID,
-                                                         Level = agent.config.srcAgent.Level,
-                                                         Quality = agent.config.srcAgent.Quality,
-                                                         Name =
-                                                             s_names.First(x => x.ID == agent.config.srcAgent.ID).Name,
-                                                         DivisionName =
-                                                             s_npcDivisions.First(
-                                                                 x => x.ID == agent.config.srcAgent.DivisionID).
-                                                             DivisionName,
-                                                         AgentType =
-                                                             s_agentTypes.First(
-                                                                 x => x.ID == agent.config.srcAgent.AgentTypeID).
-                                                             AgentType,
-                                                         ResearchSkillID =
-                                                             (agent.config.researchAgent != null
-                                                                  ? agent.config.researchAgent.ResearchSkillID
-                                                                  : 0),
-                                                         LocatorService =
-                                                             (agent.agentConfig != null &&
-                                                              agent.agentConfig.Key.Contains(
-                                                                  "agent.LocateCharacterService.enabled"))
-                                                     })).ToList();
-                            station.AddRange(agents);
+                                                            ID = agent.config.srcAgent.ID,
+                                                            Level = agent.config.srcAgent.Level,
+                                                            Quality = agent.config.srcAgent.Quality,
+                                                            Name = s_names.First(
+                                                                x => x.ID == agent.config.srcAgent.ID).Name,
+                                                            DivisionName = s_npcDivisions.First(
+                                                                x => x.ID == agent.config.srcAgent.DivisionID).DivisionName,
+                                                            AgentType = s_agentTypes.First(
+                                                                x => x.ID == agent.config.srcAgent.AgentTypeID).AgentType,
+                                                            ResearchSkillID = agent.config.researchAgent != null
+                                                                                  ? agent.config.researchAgent.ResearchSkillID
+                                                                                  : 0,
+                                                            LocatorService = agent.agentConfig != null &&
+                                                                             agent.agentConfig.Key.Contains(
+                                                                                 "agent.LocateCharacterService.enabled")
+                                                        });
+                            station.Agents.AddRange(agents);
 
                             stations.Add(station);
                         }
-                        system.AddRange(stations.OrderBy(x => x.Name));
+                        system.Stations.AddRange(stations.OrderBy(x => x.Name));
                     }
-                    constellation.AddRange(systems.OrderBy(x => x.Name));
+                    constellation.Systems.AddRange(systems.OrderBy(x => x.Name));
                 }
-                region.AddRange(constellations.OrderBy(x => x.Name));
+                region.Constellations.AddRange(constellations.OrderBy(x => x.Name));
             }
 
             // Jumps
@@ -2047,8 +2045,8 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             GeoDatafile datafile = new GeoDatafile();
-            datafile.AddRange(regions.OrderBy(x => x.Name));
-            datafile.AddRange(jumps);
+            datafile.Regions.AddRange(regions.OrderBy(x => x.Name));
+            datafile.Jumps.AddRange(jumps);
 
             Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
         }
@@ -2077,18 +2075,19 @@ namespace EVEMon.XmlGenerator
             {
                 UpdatePercentDone(ReprocessGenTotal);
 
-                List<SerializableMaterialQuantity> materials = s_typeMaterials.Where(x => x.TypeID == typeID)
-                    .Select(srcMaterial => new SerializableMaterialQuantity
-                                               {
-                                                   ID = srcMaterial.MaterialTypeID,
-                                                   Quantity = srcMaterial.Quantity
-                                               }).ToList();
+                IEnumerable<SerializableMaterialQuantity> materials = s_typeMaterials.Where(
+                    x => x.TypeID == typeID).Select(
+                        srcMaterial => new SerializableMaterialQuantity
+                                           {
+                                               ID = srcMaterial.MaterialTypeID,
+                                               Quantity = srcMaterial.Quantity
+                                           });
 
-                if (materials.Count == 0)
+                if (materials.Count() == 0)
                     continue;
 
                 SerializableItemMaterials itemMaterials = new SerializableItemMaterials { ID = typeID };
-                materials.OrderBy(x => x.ID).ToList().ForEach(material => itemMaterials.Materials.Add(material));
+                itemMaterials.Materials.AddRange(materials.OrderBy(x => x.ID));
                 types.Add(itemMaterials);
             }
 
@@ -2097,7 +2096,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();
-            datafile.AddRange(types);
+            datafile.Items.AddRange(types);
             Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }
 

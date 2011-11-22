@@ -47,15 +47,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_skills; }
         }
-
-        /// <summary>
-        /// Adds the specified skills.
-        /// </summary>
-        /// <param name="skills">The skills.</param>
-        public void AddRange(IEnumerable<SerializableSkill> skills)
-        {
-            m_skills.Clear();
-            skills.ToList().ForEach(skill => m_skills.Add(skill));
-        }
     }
 }

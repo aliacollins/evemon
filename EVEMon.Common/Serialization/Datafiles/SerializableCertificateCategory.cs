@@ -54,15 +54,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_classes; }
         }
-
-        /// <summary>
-        /// Adds the specified classes.
-        /// </summary>
-        /// <param name="certificateClasses">The certificate classes.</param>
-        public void AddRange(IEnumerable<SerializableCertificateClass> certificateClasses)
-        {
-            m_classes.Clear();
-            certificateClasses.ToList().ForEach(certificateClass => m_classes.Add(certificateClass));
-        }
     }
 }

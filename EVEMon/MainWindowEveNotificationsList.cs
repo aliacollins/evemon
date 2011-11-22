@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -661,7 +662,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.EVENotifications.AddRange(Columns.Cast<EveNotificationsColumnSettings>());
+            Settings.UI.MainWindow.EVENotifications.Columns.Clear();
+            Settings.UI.MainWindow.EVENotifications.Columns.AddRange(Columns.Cast<EveNotificationsColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;

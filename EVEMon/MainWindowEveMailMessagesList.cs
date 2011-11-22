@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -825,7 +826,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.EVEMailMessages.AddRange(Columns.Cast<EveMailMessagesColumnSettings>());
+            Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
+            Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(Columns.Cast<EveMailMessagesColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;

@@ -47,15 +47,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_systems; }
         }
-
-        /// <summary>
-        /// Adds the specified systems.
-        /// </summary>
-        /// <param name="systems">The systems.</param>
-        public void AddRange(IEnumerable<SerializableSolarSystem> systems)
-        {
-            m_systems.Clear();
-            systems.ToList().ForEach(system => m_systems.Add(system));
-        }
     }
 }

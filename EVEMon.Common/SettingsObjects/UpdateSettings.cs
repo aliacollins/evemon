@@ -91,16 +91,6 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// Gets or sets the periods.
-        /// </summary>
-        /// <value>The periods.</value>
-        [XmlElement("periods")]
-        public SerializableDictionary<String, UpdatePeriod> Periods
-        {
-            get { return m_periods; }
-        }
-
-        /// <summary>
         /// Gets or sets the HTTP timeout.
         /// </summary>
         /// <value>The HTTP timeout.</value>
@@ -116,5 +106,15 @@ namespace EVEMon.Common.SettingsObjects
         /// </remarks>
         [XmlElement("ignoreNetworkStatus")]
         public bool IgnoreNetworkStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the periods.
+        /// </summary>
+        /// <value>The periods.</value>
+        [XmlElement("periods")]
+        public SerializableDictionary<String, UpdatePeriod> Periods
+        {
+            get { return m_periods; }
+        }
     }
 }

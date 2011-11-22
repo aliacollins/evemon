@@ -30,7 +30,7 @@ namespace EVEMon.Common.Data
             // Fetch deserialized data
             s_arrayIndicesCount = 0;
             List<Collection<SerializableSkillPrerequisite>> prereqs = new List<Collection<SerializableSkillPrerequisite>>();
-            foreach (SerializableSkillGroup srcGroup in datafile.Groups)
+            foreach (SerializableSkillGroup srcGroup in datafile.SkillGroups)
             {
                 StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref s_arrayIndicesCount);
                 s_skillGroupsByID[group.ID] = group;

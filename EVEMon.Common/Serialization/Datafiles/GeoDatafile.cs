@@ -48,25 +48,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_jumps; }
         }
-
-        /// <summary>
-        /// Adds the specified regions.
-        /// </summary>
-        /// <param name="regions">The regions.</param>
-        public void AddRange(IEnumerable<SerializableRegion> regions)
-        {
-            m_regions.Clear();
-            regions.ToList().ForEach(region => m_regions.Add(region));
-        }
-
-        /// <summary>
-        /// Adds the specified jumps.
-        /// </summary>
-        /// <param name="jumps">The jumps.</param>
-        public void AddRange(IEnumerable<SerializableJump> jumps)
-        {
-            m_jumps.Clear();
-            jumps.ToList().ForEach(jump => m_jumps.Add(jump));
-        }
     }
 }

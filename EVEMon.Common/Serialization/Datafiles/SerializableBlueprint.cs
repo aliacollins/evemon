@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -154,36 +152,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableRequiredMaterial> ReqMaterial
         {
             get { return m_requiredMaterials; }
-        }
-
-        /// <summary>
-        /// Adds the specified invent type ID.
-        /// </summary>
-        /// <param name="inventTypeId">The invent type ID.</param>
-        public void AddRange(IEnumerable<int> inventTypeId)
-        {
-            m_inventTypeID.Clear();
-            inventTypeId.ToList().ForEach(inventType => m_inventTypeID.Add(inventType));
-        }
-
-        /// <summary>
-        /// Adds the specified prereq skills.
-        /// </summary>
-        /// <param name="prereqSkills">The prereq skills.</param>
-        public void AddRange(IEnumerable<SerializablePrereqSkill> prereqSkills)
-        {
-            m_prereqSkills.Clear();
-            prereqSkills.ToList().ForEach(prereqSkill => m_prereqSkills.Add(prereqSkill));
-        }
-
-        /// <summary>
-        /// Adds the specified required materials.
-        /// </summary>
-        /// <param name="requiredMaterials">The required materials.</param>
-        public void AddRange(IEnumerable<SerializableRequiredMaterial> requiredMaterials)
-        {
-            m_requiredMaterials.Clear();
-            requiredMaterials.ToList().ForEach(requiredMaterial => m_requiredMaterials.Add(requiredMaterial));
         }
     }
 }

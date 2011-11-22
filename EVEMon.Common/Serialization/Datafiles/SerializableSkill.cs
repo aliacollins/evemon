@@ -98,15 +98,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_skillPrereqs; }
         }
-
-        /// <summary>
-        /// Adds the specified skill prerequisites.
-        /// </summary>
-        /// <param name="skillPrereqs">The skill prereqs.</param>
-        public void AddRange(IEnumerable<SerializableSkillPrerequisite> skillPrereqs)
-        {
-            m_skillPrereqs.Clear();
-            skillPrereqs.ToList().ForEach(skillPrereq => m_skillPrereqs.Add(skillPrereq));
-        }
     }
 }

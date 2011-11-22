@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -1050,7 +1051,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         ordersList.Columns = f.Columns;
-                        Settings.UI.MainWindow.MarketOrders.AddRange(ordersList.Columns.Cast<MarketOrderColumnSettings>());
+                        Settings.UI.MainWindow.MarketOrders.Columns.Clear();
+                        Settings.UI.MainWindow.MarketOrders.Columns.AddRange(ordersList.Columns.Cast<MarketOrderColumnSettings>());
                     }
                 }
             }
@@ -1064,7 +1066,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         jobsList.Columns = f.Columns;
-                        Settings.UI.MainWindow.IndustryJobs.AddRange(jobsList.Columns.Cast<IndustryJobColumnSettings>());
+                        Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
+                        Settings.UI.MainWindow.IndustryJobs.Columns.AddRange(jobsList.Columns.Cast<IndustryJobColumnSettings>());
                     }
                 }
             }
@@ -1078,7 +1081,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         researchList.Columns = f.Columns;
-                        Settings.UI.MainWindow.Research.AddRange(researchList.Columns.Cast<ResearchColumnSettings>());
+                        Settings.UI.MainWindow.Research.Columns.Clear();
+                        Settings.UI.MainWindow.Research.Columns.AddRange(researchList.Columns.Cast<ResearchColumnSettings>());
                     }
                 }
             }
@@ -1092,7 +1096,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         mailMessagesList.Columns = f.Columns;
-                        Settings.UI.MainWindow.EVEMailMessages.AddRange(
+                        Settings.UI.MainWindow.EVEMailMessages.Columns.Clear();
+                        Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(
                             mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>());
                     }
                 }
@@ -1107,7 +1112,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         eveNotificationsList.Columns = f.Columns;
-                        Settings.UI.MainWindow.EVENotifications.AddRange(
+                        Settings.UI.MainWindow.EVENotifications.Columns.Clear();
+                        Settings.UI.MainWindow.EVENotifications.Columns.AddRange(
                             eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>());
                     }
                 }

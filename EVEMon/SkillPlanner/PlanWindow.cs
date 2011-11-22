@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -124,7 +125,8 @@ namespace EVEMon.SkillPlanner
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {
-                Settings.UI.PlanWindow.AddRange(planEditor.ExportColumnSettings());
+                Settings.UI.PlanWindow.Columns.Clear();
+                Settings.UI.PlanWindow.Columns.AddRange(planEditor.ExportColumnSettings());
                 s_lastActivated = null;
             }
 

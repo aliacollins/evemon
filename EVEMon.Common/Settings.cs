@@ -12,6 +12,7 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Importation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
+using System.Collections.ObjectModel;
 
 namespace EVEMon.Common
 {
@@ -221,22 +222,22 @@ namespace EVEMon.Common
             }
 
             // Initializes the plan columns or adds missing ones
-            UI.PlanWindow.AddRange(UI.PlanWindow.DefaultColumns);
+            UI.PlanWindow.Columns.AddRange(UI.PlanWindow.DefaultColumns);
 
             // Initializes the market order columns or adds missing ones
-            UI.MainWindow.MarketOrders.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
+            UI.MainWindow.MarketOrders.Columns.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
 
             // Initializes the industry jobs columns or adds missing ones
-            UI.MainWindow.IndustryJobs.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
+            UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
 
             // Initializes the research points columns or adds missing ones
-            UI.MainWindow.Research.AddRange(UI.MainWindow.Research.DefaultColumns);
+            UI.MainWindow.Research.Columns.AddRange(UI.MainWindow.Research.DefaultColumns);
 
             // Initializes the EVE mail messages columns or adds missing ones
-            UI.MainWindow.EVEMailMessages.AddRange(UI.MainWindow.EVEMailMessages.DefaultColumns);
+            UI.MainWindow.EVEMailMessages.Columns.AddRange(UI.MainWindow.EVEMailMessages.DefaultColumns);
 
             // Initializes the EVE notifications columns or adds missing ones
-            UI.MainWindow.EVENotifications.AddRange(UI.MainWindow.EVENotifications.DefaultColumns);
+            UI.MainWindow.EVENotifications.Columns.AddRange(UI.MainWindow.EVENotifications.DefaultColumns);
 
             // Removes reduntant windows locations
             List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
@@ -270,11 +271,10 @@ namespace EVEMon.Common
                                                   UI = UI
                                               };
 
-            EveMonClient.Characters.Export().ToList().ForEach(character => serial.Characters.Add(character));
-            EveMonClient.APIKeys.Export().ToList().ForEach(apiKey => serial.APIKeys.Add(apiKey));
-            EveMonClient.Characters.ExportPlans().ToList().ForEach(plan => serial.Plans.Add(plan));
-            EveMonClient.MonitoredCharacters.Export().ToList().ForEach(
-                monitoredCharcter => serial.MonitoredCharacters.Add(monitoredCharcter));
+            serial.Characters.AddRange(EveMonClient.Characters.Export());
+            serial.APIKeys.AddRange(EveMonClient.APIKeys.Export());
+            serial.Plans.AddRange(EveMonClient.Characters.ExportPlans());
+            serial.MonitoredCharacters.AddRange(EveMonClient.MonitoredCharacters.Export());
 
             return serial;
         }

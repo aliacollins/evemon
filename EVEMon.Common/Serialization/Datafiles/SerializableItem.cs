@@ -115,25 +115,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_properties; }
         }
-
-        /// <summary>
-        /// Adds the specified prerequisite skills.
-        /// </summary>
-        /// <param name="prerequisiteSkills">The prerequisite skills.</param>
-        public void AddRange(IEnumerable<SerializablePrerequisiteSkill> prerequisiteSkills)
-        {
-            m_prerequisiteSkills.Clear();
-            prerequisiteSkills.ToList().ForEach(prerequisiteSkill => m_prerequisiteSkills.Add(prerequisiteSkill));
-        }
-
-        /// <summary>
-        /// Adds the specified properties.
-        /// </summary>
-        /// <param name="properties">The properties.</param>
-        public void AddRange(IEnumerable<SerializablePropertyValue> properties)
-        {
-            m_properties.Clear();
-            properties.ToList().ForEach(property => m_properties.Add(property));
-        }
     }
 }

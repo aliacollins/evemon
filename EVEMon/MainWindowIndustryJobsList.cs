@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -950,7 +951,8 @@ namespace EVEMon
             if (!m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.IndustryJobs.AddRange(Columns.Cast<IndustryJobColumnSettings>());
+            Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
+            Settings.UI.MainWindow.IndustryJobs.Columns.AddRange(Columns.Cast<IndustryJobColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;

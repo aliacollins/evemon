@@ -22,6 +22,7 @@ namespace EVEMon.Common.SettingsObjects
 
             m_windowLocations = new SerializableDictionary<string, SerializableRectangle>();
             m_splitters = new SerializableDictionary<string, int>();
+            m_confirmedTips = new Collection<string>();
 
             CertificateBrowser = new CertificateBrowserSettings();
             BlueprintBrowser = new BlueprintBrowserSettings();
@@ -34,7 +35,6 @@ namespace EVEMon.Common.SettingsObjects
             MainWindow = new MainWindowSettings();
             PlanWindow = new PlanWindowSettings();
             Scheduler = new SchedulerUISettings();
-            m_confirmedTips = new Collection<String>();
 
             UseStoredSearchFilters = true;
             ShowTextInToolStrip = true;
@@ -160,7 +160,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The window locations.</value>
         [XmlElement("locations")]
-        public SerializableDictionary<String, SerializableRectangle> WindowLocations
+        public SerializableDictionary<string, SerializableRectangle> WindowLocations
         {
             get { return m_windowLocations; }
         }
@@ -171,7 +171,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The splitters.</value>
         [XmlElement("splitters")]
-        public SerializableDictionary<String, int> Splitters
+        public SerializableDictionary<string, int> Splitters
         {
             get { return m_splitters; }
         }
@@ -183,7 +183,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The confirmed tips.</value>
         [XmlArray("confirmedTips")]
         [XmlArrayItem("tip")]
-        public Collection<String> ConfirmedTips
+        public Collection<string> ConfirmedTips
         {
             get { return m_confirmedTips; }
         }

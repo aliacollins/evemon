@@ -34,15 +34,5 @@ namespace EVEMon.Common.Serialization.Datafiles
         {
             get { return m_marketGroups; }
         }
-
-        /// <summary>
-        /// Adds the specified market groups.
-        /// </summary>
-        /// <param name="marketGroups">The market groups.</param>
-        public void AddRange(IEnumerable<SerializableMarketGroup> marketGroups)
-        {
-            m_marketGroups.Clear();
-            marketGroups.ToList().ForEach(marketGroup => m_marketGroups.Add(marketGroup));
-        }
     }
 }
