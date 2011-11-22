@@ -108,8 +108,8 @@ namespace EVEMon.Common
                                                                              using (Image newImage = new Bitmap(image))
                                                                              {
                                                                                  newImage.Save(fs, ImageFormat.Png);
+                                                                                 fs.Flush();
                                                                              }
-                                                                             fs.Flush();
                                                                              return true;
                                                                          });
                 }

@@ -125,10 +125,12 @@ namespace EVEMon.BlankCharacter
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                                                       fs =>
                                                           {
-                                                              StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
-                                                              writer.Write(content);
-                                                              writer.Flush();
-                                                              writer.Close();
+                                                              using(StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                                                              {
+                                                                  writer.Write(content);
+                                                                  writer.Flush();
+                                                                  fs.Flush();
+                                                              }
                                                               return true;
                                                           });
 

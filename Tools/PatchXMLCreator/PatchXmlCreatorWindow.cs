@@ -514,10 +514,12 @@ namespace EVEMon.PatchXmlCreator
                 FileHelper.OverwriteOrWarnTheUser(filenamePath,
                                                   fs =>
                                                       {
-                                                          StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                                                          sw.Write(patch);
-                                                          sw.Flush();
-                                                          sw.Close();
+                                                          using(StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                                          {
+                                                              sw.Write(patch);
+                                                              sw.Flush();
+                                                              fs.Flush();
+                                                          }
                                                           return true;
                                                       });
             }

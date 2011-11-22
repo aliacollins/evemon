@@ -221,6 +221,24 @@ namespace EVEMon.Common
                     Updates.Periods[method.ToString()] = Updates.Periods[APIGenericMethods.CharacterList.ToString()];
             }
 
+            // Initialize or add missing columns
+            InitializeOrAddMissingColumns();
+
+            // Removes reduntant windows locations
+            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
+            locations.AddRange(UI.WindowLocations);
+            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
+                windowLocation => windowLocation.Key == "FeaturesWindow"))
+            {
+                UI.WindowLocations.Remove(windowLocation.Key);
+            }
+        }
+
+        /// <summary>
+        /// Initializes or adds missing columns.
+        /// </summary>
+        private static void InitializeOrAddMissingColumns()
+        {
             // Initializes the plan columns or adds missing ones
             UI.PlanWindow.Columns.AddRange(UI.PlanWindow.DefaultColumns);
 
@@ -238,15 +256,6 @@ namespace EVEMon.Common
 
             // Initializes the EVE notifications columns or adds missing ones
             UI.MainWindow.EVENotifications.Columns.AddRange(UI.MainWindow.EVENotifications.DefaultColumns);
-
-            // Removes reduntant windows locations
-            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
-            locations.AddRange(UI.WindowLocations);
-            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
-                windowLocation => windowLocation.Key == "FeaturesWindow"))
-            {
-                UI.WindowLocations.Remove(windowLocation.Key);
-            }
         }
 
         /// <summary>

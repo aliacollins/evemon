@@ -181,8 +181,13 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         private void Import(ImplantSlots slot, SerializableImplant src)
         {
-            int index = (int)slot;
-            m_values[index] = (src == null ? Implant.None : StaticItems.GetImplants(slot)[src.Name]);
+            if (src == null)
+            {
+                m_values[(int)slot] = Implant.None;
+                return;
+            }
+
+            m_values[(int)slot] = StaticItems.GetImplants(slot)[src.Name] ?? Implant.None;
         }
     }
 }

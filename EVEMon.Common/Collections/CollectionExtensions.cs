@@ -13,6 +13,12 @@ namespace System.Collections.ObjectModel
         /// <param name="values">The values.</param>
         public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> values)
         {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            if (values == null)
+                throw new ArgumentNullException("values");
+
             foreach (T item in values)
             {
                 collection.Add(item);
@@ -29,6 +35,9 @@ namespace System.Collections.ObjectModel
         /// <returns></returns>
         public static T Find<T>(this ICollection<T> collection, Predicate<T> predicate)
         {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
             foreach (T item in collection.Where(item => predicate(item)))
             {
                 return item;

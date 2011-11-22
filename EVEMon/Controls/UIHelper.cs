@@ -50,11 +50,13 @@ namespace EVEMon.Controls
                             {
                                 // Emp is actually compressed xml
                                 Stream stream = new GZipStream(fs, CompressionMode.Compress);
-                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-                                writer.Write(content);
-                                writer.Flush();
-                                stream.Flush();
-                                fs.Flush();
+                                using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                                {
+                                    writer.Write(content);
+                                    writer.Flush();
+                                    stream.Flush();
+                                    fs.Flush();
+                                }
                                 return true;
                             });
                 }
@@ -134,11 +136,13 @@ namespace EVEMon.Controls
                                 if (format == PlanFormat.Emp)
                                     stream = new GZipStream(fs, CompressionMode.Compress);
 
-                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-                                writer.Write(content);
-                                writer.Flush();
-                                stream.Flush();
-                                fs.Flush();
+                                using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                                {
+                                    writer.Write(content);
+                                    writer.Flush();
+                                    stream.Flush();
+                                    fs.Flush();
+                                }
                                 return true;
                             });
                 }
@@ -216,10 +220,12 @@ namespace EVEMon.Controls
                         characterSaveDialog.FileName,
                         fs =>
                             {
-                                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                                sw.Write(content);
-                                sw.Flush();
-                                sw.Close();
+                                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                {
+                                    sw.Write(content);
+                                    sw.Flush();
+                                    fs.Flush();
+                                }
                                 return true;
                             });
                 }
@@ -276,10 +282,12 @@ namespace EVEMon.Controls
                                     return false;
                                 }
 
-                                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                                sw.Write(content);
-                                sw.Flush();
-                                sw.Close();
+                                using(StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                {
+                                    sw.Write(content);
+                                    sw.Flush();
+                                    fs.Flush();
+                                }
                                 return true;
                             });
                 }

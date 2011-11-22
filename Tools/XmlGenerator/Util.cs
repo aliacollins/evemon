@@ -96,7 +96,7 @@ namespace EVEMon.XmlGenerator
                             stream.Seek(0, SeekOrigin.Begin);
                             XmlDocument doc2 = new XmlDocument();
                             doc2.Load(stream);
-                            Trace.Write(GetXMLStringRepresentation(doc2));
+                            Trace.Write(Common.Util.GetXMLStringRepresentation(doc2));
                         }
 
                         // Deserialize from the given stream
@@ -124,13 +124,11 @@ namespace EVEMon.XmlGenerator
             string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
 
             using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
+            using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
             {
-                using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-                    serializer.Serialize(zstream, datafile);
-                    zstream.Flush();
-                }
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                serializer.Serialize(zstream, datafile);
+                zstream.Flush();
             }
 
             Console.WriteLine("-----------------------------------------------");
@@ -204,25 +202,6 @@ namespace EVEMon.XmlGenerator
             {
                 Trace.WriteLine(exc.ToString());
             }
-        }
-
-        /// <summary>
-        /// Gets a nicely formatted string representation of a XML document.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <returns></returns>
-        private static string GetXMLStringRepresentation(XmlDocument doc)
-        {
-            // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
-
-            // Writes to a string builder
-            StringBuilder xmlBuilder = new StringBuilder();
-            XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
-            doc.WriteContentTo(xmlWriter);
-            xmlWriter.Flush();
-
-            return xmlBuilder.ToString();
         }
     }
 }
