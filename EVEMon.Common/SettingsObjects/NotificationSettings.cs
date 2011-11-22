@@ -5,14 +5,12 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class NotificationSettings
     {
-        private readonly SerializableDictionary<NotificationCategory, NotificationCategorySettings> m_categories;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSettings"/> class.
         /// </summary>
         public NotificationSettings()
         {
-            m_categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
+            Categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
             Categories[NotificationCategory.AccountNotInTraining] =
                 new NotificationCategorySettings(ToolTipNotificationBehaviour.RepeatUntilClicked);
             EmailPortNumber = 25;
@@ -23,10 +21,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The categories.</value>
         [XmlElement("categories")]
-        public SerializableDictionary<NotificationCategory, NotificationCategorySettings> Categories
-        {
-            get { return m_categories; }
-        }
+        public SerializableDictionary<NotificationCategory, NotificationCategorySettings> Categories { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [play sound on skill completion].
