@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -32,9 +33,12 @@ namespace Tests.EVEMon
 
             // Great we found nUnit now lets start it
             ProcessStartInfo psi = new ProcessStartInfo(executable)
-                                       { Arguments = String.Format(Arguments, Assembly.GetEntryAssembly().Location) };
-            Process proc = new Process { StartInfo = psi };
-            proc.Start();
+                                       { Arguments = String.Format(CultureInfo.InvariantCulture, Arguments, Assembly.GetEntryAssembly().Location) };
+            using (Process proc = new Process())
+            {
+                proc.StartInfo = psi;
+                proc.Start();
+            }
         }
 
         /// <summary>
