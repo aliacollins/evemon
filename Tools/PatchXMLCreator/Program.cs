@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using EVEMon.Common;
 
 namespace EVEMon.PatchXmlCreator
 {
@@ -41,22 +42,25 @@ namespace EVEMon.PatchXmlCreator
             // Ensure that a release version of EVEMon has been created
             if (!File.Exists(eveMonExecFilePath))
             {
-                text = String.Format("An EVEMon release version has to be created first\r\nbefore you can use {0}.",
+                text = String.Format(CultureConstants.DefaultCulture,
+                                     "An EVEMon release version has to be created first\r\nbefore you can use {0}.",
                                      PatchXmlCreatorWindow.Caption);
 
                 ShowMessage(text);
                 return;
             }
 
-            string installerFile = String.Format(PatchXmlCreatorWindow.InstallerFilename, PatchXmlCreatorWindow.AssemblyVersion);
-            string installerPath = String.Format("{1}{0}{2}", Path.DirectorySeparatorChar, PatchXmlCreatorWindow.InstallerDir,
-                                                 installerFile);
+            string installerFile = String.Format(CultureConstants.InvariantCulture, PatchXmlCreatorWindow.InstallerFilename,
+                                                 PatchXmlCreatorWindow.AssemblyVersion);
+            string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}",
+                                                 Path.DirectorySeparatorChar, PatchXmlCreatorWindow.InstallerDir, installerFile);
 
             // Ensure that the installer file has been created
             if (File.Exists(installerPath))
                 return;
 
-            text = String.Format("An EVEMon installer file has to be created first\r\nbefore you can use {0}.",
+            text = String.Format(CultureConstants.DefaultCulture,
+                                 "An EVEMon installer file has to be created first\r\nbefore you can use {0}.",
                                  PatchXmlCreatorWindow.Caption);
 
             ShowMessage(text);

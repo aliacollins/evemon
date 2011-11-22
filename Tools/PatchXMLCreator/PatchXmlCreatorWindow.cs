@@ -39,7 +39,7 @@ namespace EVEMon.PatchXmlCreator
 
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
-        
+
         private readonly bool m_newRelease;
 
         private Control m_activeTextBox;
@@ -79,7 +79,7 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         internal static string AssemblyVersion
         {
-            get { return Assembly.LoadFrom(Path.Combine(EVEMonExecDir, EVEMonExecFilename)).GetName().Version.ToString(); }
+            get { return AssemblyName.GetAssemblyName(Path.Combine(EVEMonExecDir, EVEMonExecFilename)).Version.ToString(); }
         }
 
         #endregion
@@ -128,14 +128,15 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         private void UpdateReleaseInfo()
         {
-            if(!m_newRelease)
+            if (!m_newRelease)
             {
                 LoadReleaseInfoFromFile();
                 return;
             }
 
-            string installerFile = String.Format(InstallerFilename, AssemblyVersion);
-            string installerPath = String.Format("{1}{0}{2}", Path.DirectorySeparatorChar, InstallerDir, installerFile);
+            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, AssemblyVersion);
+            string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}", Path.DirectorySeparatorChar,
+                                                 InstallerDir, installerFile);
             FileInfo installerFileInfo = new FileInfo(installerPath);
 
             // Assign info
@@ -150,7 +151,8 @@ namespace EVEMon.PatchXmlCreator
         private static void InitDatafiles()
         {
             DirectoryInfo di = new DirectoryInfo(DatafileDir);
-            FileInfo[] directoryFiles = di.GetFiles(String.Format("{0}*{1}", DatafileHeader, DatafileTail));
+            FileInfo[] directoryFiles = di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*{1}",
+                                                                  DatafileHeader, DatafileTail));
             foreach (FileInfo datafile in directoryFiles)
             {
                 s_datafiles.Add(new Datafile(datafile.Name));
@@ -185,10 +187,6 @@ namespace EVEMon.PatchXmlCreator
                     newDatafileControl.Font = new Font(Font, FontStyle.Regular);
                     newDatafileControl.Anchor |= AnchorStyles.Right;
                     newDatafileControl.Size = new Size(gbDatafiles.Width - (Pad * 3), newDatafileControl.Height);
-                    newDatafileControl.Name =
-                        String.Format("gbDatafile_{0}",
-                                      newDatafileControl.gbDatafile.Text.Replace(DatafileHeader, String.Empty).Replace(
-                                          DatafileTail, String.Empty));
 
                     // Calculate window height and next control point
                     Height += datafileControl.Height + Pad;
@@ -262,8 +260,8 @@ namespace EVEMon.PatchXmlCreator
 
             // Remove any existing header and text that is before the header
             control.Text = (control.Text.Contains("\n")
-                                ? control.Text.Remove(0, control.Text.IndexOf("\n") + 1)
-                                : control.Text.Remove(0, control.Text.LastIndexOf("m") + 1));
+                                ? control.Text.Remove(0, control.Text.IndexOf("\n", StringComparison.OrdinalIgnoreCase) + 1)
+                                : control.Text.Remove(0, control.Text.LastIndexOf("m", StringComparison.Ordinal) + 1));
 
             // Create the new header text
             string headerText = String.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
@@ -284,7 +282,7 @@ namespace EVEMon.PatchXmlCreator
             // Check the remaining text and add it accordingly
             if (!String.IsNullOrEmpty(newText))
             {
-                if (!newText.StartsWith("\n"))
+                if (!newText.StartsWith("\n", StringComparison.OrdinalIgnoreCase))
                     sb.AppendLine();
 
                 sb.Append(newText);
@@ -307,13 +305,14 @@ namespace EVEMon.PatchXmlCreator
 
             // Store the text from the datafiles section excluding the update url
             foreach (Control control in gbDatafiles.Controls.Cast<Control>().Where(
-                x => (x is TextBox || x is RichTextBox || x is DatafileControl) && x != rtbDatafileUrl))
+                x => x != rtbDatafileUrl))
             {
                 if (control is TextBox || control is RichTextBox)
                     s_listOfInitMessages.Add(control, control.Text);
 
-                if (control is DatafileControl)
-                    s_listOfInitMessages.Add(control, ((DatafileControl)control).rtbDatafileMessage.Text);
+                DatafileControl dfControl = control as DatafileControl;
+                if (dfControl != null)
+                    s_listOfInitMessages.Add(control, dfControl.rtbDatafileMessage.Text);
             }
         }
 
@@ -336,7 +335,7 @@ namespace EVEMon.PatchXmlCreator
                     updateDatafilesText = false;
                 }
 
-                if (!control.Text.StartsWith(" ") && !String.IsNullOrEmpty(control.Text))
+                if (!String.IsNullOrEmpty(control.Text))
                     continue;
 
                 control.BackColor = SystemColors.Highlight;
@@ -353,9 +352,22 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         private void UpdateCreateButtonEnabled()
         {
-            bool buttonEnable = true;
+            // Look into release controls, datafiles controls and datafileControl controls
+            bool buttonEnable = ButtonEnabledFromReleaseControls() &&
+                                ButtonEnabledFromDatafileControls() &&
+                                ButtonEnabledFromDatafileControlControls();
 
-            // Look into release controls
+            // Enable/Disable Create button
+            btnCreate.Enabled = buttonEnable;
+        }
+
+        /// <summary>
+        /// "Create" button gets enabled from release controls.
+        /// </summary>
+        /// <returns></returns>
+        private bool ButtonEnabledFromReleaseControls()
+        {
+            bool buttonEnable = true;
             foreach (RichTextBox control in gbRelease.Controls.OfType<RichTextBox>().Where(x => x != null))
             {
                 control.BackColor = SystemColors.Window;
@@ -367,21 +379,27 @@ namespace EVEMon.PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (control.Text.StartsWith(" ") || String.IsNullOrEmpty(control.Text))
-                {
+                if (String.IsNullOrEmpty(control.Text))
                     control.BackColor = SystemColors.Highlight;
-                    buttonEnable = false;
-                }
-
-                if (control == rtbReleaseMessage ||
-                    (!Path.GetInvalidPathChars().Any(x => control.Text.Contains(x)) && !control.Text.Contains("#")))
+                else if (control == rtbReleaseMessage || (!Path.GetInvalidPathChars().Any(
+                    invalidChar => control.Text.Contains(invalidChar)) && !control.Text.Contains("#")))
+                {
                     continue;
+                }
 
                 control.ForeColor = SystemColors.Highlight;
                 buttonEnable = false;
             }
+            return buttonEnable;
+        }
 
-            // Look into datafiles controls
+        /// <summary>
+        /// Create button gets enabled from datafile controls.
+        /// </summary>
+        /// <returns></returns>
+        private bool ButtonEnabledFromDatafileControls()
+        {
+            bool buttonEnable = true;
             foreach (Control control in gbDatafiles.Controls.Cast<Control>().Where(x => x is TextBox || x is RichTextBox))
             {
                 control.BackColor = SystemColors.Window;
@@ -392,21 +410,27 @@ namespace EVEMon.PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (control.Text.StartsWith(" ") || String.IsNullOrEmpty(control.Text))
-                {
+                if (String.IsNullOrEmpty(control.Text))
                     control.BackColor = SystemColors.Highlight;
-                    buttonEnable = false;
-                }
-
-                if (control != rtbDatafileUrl ||
-                    (!Path.GetInvalidPathChars().Any(x => control.Text.Contains(x)) && !control.Text.Contains("#")))
+                else if (control != rtbDatafileUrl || (!Path.GetInvalidPathChars().Any(
+                    invalidChar => control.Text.Contains(invalidChar)) && !control.Text.Contains("#")))
+                {
                     continue;
+                }
 
                 control.ForeColor = SystemColors.Highlight;
                 buttonEnable = false;
             }
+            return buttonEnable;
+        }
 
-            // Look into datafileControl controls
+        /// <summary>
+        /// Create button gets enabled from datafile control controls.
+        /// </summary>
+        /// <returns></returns>
+        private bool ButtonEnabledFromDatafileControlControls()
+        {
+            bool buttonEnable = true;
             foreach (DatafileControl dfControl in gbDatafiles.Controls.OfType<DatafileControl>().Where(x => x != null))
             {
                 dfControl.rtbDatafileMessage.BackColor = SystemColors.Window;
@@ -418,15 +442,13 @@ namespace EVEMon.PatchXmlCreator
                     buttonEnable = false;
                 }
 
-                if (!dfControl.rtbDatafileMessage.Text.StartsWith(" ") && !String.IsNullOrEmpty(dfControl.rtbDatafileMessage.Text))
+                if (!String.IsNullOrEmpty(dfControl.rtbDatafileMessage.Text))
                     continue;
 
                 dfControl.rtbDatafileMessage.BackColor = SystemColors.Highlight;
                 buttonEnable = false;
             }
-
-            // Enable/Disable Create button
-            btnCreate.Enabled = buttonEnable;
+            return buttonEnable;
         }
 
         /// <summary>
@@ -467,11 +489,13 @@ namespace EVEMon.PatchXmlCreator
             serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
             serialRelease.Version = lblEVEMonVersion.Text;
             serialRelease.TopicAddress = rtbTopicUrl.Text;
-            serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text, String.Format(InstallerFilename, lblEVEMonVersion.Text));
+            serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text,
+                                                       String.Format(CultureConstants.InvariantCulture, InstallerFilename,
+                                                                     lblEVEMonVersion.Text));
             serialRelease.MD5Sum = lblMD5Sum.Text;
             serialRelease.InstallerArgs = InstallerArgs;
             serialRelease.AdditionalArgs = AdditionalArgs;
-            serialRelease.Message = rtbReleaseMessage.Text;
+            serialRelease.Message = rtbReleaseMessage.Text.Trim();
         }
 
         /// <summary>
@@ -481,7 +505,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
-            string url = String.Format("{1}{2}{0}{3}",
+            string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
                                        Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
 
             foreach (Datafile datafile in s_datafiles)
@@ -496,7 +520,7 @@ namespace EVEMon.PatchXmlCreator
                     serialDatafile.Date = dfControl.dtpDatafiles.Value.ToString(DateTimeFormat, s_enUsCulture);
                     serialDatafile.MD5Sum = dfControl.lblMD5Sum.Text;
                     serialDatafile.Address = url;
-                    serialDatafile.Message = dfControl.rtbDatafileMessage.Text;
+                    serialDatafile.Message = dfControl.rtbDatafileMessage.Text.Trim();
                 }
             }
         }
@@ -514,7 +538,7 @@ namespace EVEMon.PatchXmlCreator
                 FileHelper.OverwriteOrWarnTheUser(filenamePath,
                                                   fs =>
                                                       {
-                                                          using(StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                                          using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
                                                           {
                                                               sw.Write(patch);
                                                               sw.Flush();
@@ -623,9 +647,11 @@ namespace EVEMon.PatchXmlCreator
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
             string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName) + (expansionName.Length + 1);
+            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) +
+                                         (expansionName.Length + 1);
             string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
-            string version = message.Remove((message.IndexOf("(") - 1), (message.Length - (message.IndexOf("(") - 1)));
+            string version = message.Remove((message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1),
+                                            (message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1)));
 
             foreach (SerializableDatafile datafile in patch.Datafiles)
             {
@@ -640,7 +666,7 @@ namespace EVEMon.PatchXmlCreator
                     DateTime date;
                     if (DateTime.TryParse(datafile.Date, out date))
                         dfControl.dtpDatafiles.Value = date;
-                    
+
                     dfControl.lblMD5Sum.Text = datafile.MD5Sum;
                     dfControl.rtbDatafileMessage.Text = datafile.Message;
                 }
@@ -697,13 +723,19 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="e"></param>
         private void Control_DoubleClick(object sender, EventArgs e)
         {
-            Control control = (sender is DatafileControl ? ((DatafileControl)sender).rtbDatafileMessage : null);
+            Control control = null;
 
-            if (sender is RichTextBox)
-                control = (RichTextBox)sender;
+            DatafileControl dfControl = sender as DatafileControl;
+            if (dfControl != null)
+                control = dfControl.rtbDatafileMessage;
 
-            if (sender is TextBox)
-                control = (TextBox)sender;
+            RichTextBox richTextBox = sender as RichTextBox;
+            if (richTextBox != null)
+                control = richTextBox;
+
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+                control = textBox;
 
             if (control == null)
                 return;
@@ -720,11 +752,13 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="e"></param>
         private void Control_Enter(object sender, EventArgs e)
         {
-            if (sender is TextBox)
-                ((TextBox)sender).ForeColor = SystemColors.WindowText;
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+                textBox.ForeColor = SystemColors.WindowText;
 
-            if (sender is RichTextBox)
-                ((RichTextBox)sender).ForeColor = SystemColors.WindowText;
+            RichTextBox richTextBox = sender as RichTextBox;
+            if (richTextBox != null)
+                richTextBox.ForeColor = SystemColors.WindowText;
         }
 
         /// <summary>
@@ -734,15 +768,15 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="e"></param>
         private void Control_Leave(object sender, EventArgs e)
         {
-            Control control;
+            Control control = null;
 
-            if (sender is RichTextBox)
-                control = (RichTextBox)sender;
-            else
-                control = null;
+            RichTextBox richTextBox = sender as RichTextBox;
+            if (richTextBox != null)
+                control = richTextBox;
 
-            if (sender is TextBox)
-                control = (TextBox)sender;
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+                control = textBox;
 
             if (control == null)
                 return;
@@ -753,7 +787,7 @@ namespace EVEMon.PatchXmlCreator
                 || control.Parent.Parent is DatafileControl)
                 UpdateDatafilesControls();
 
-            if (control.Text == String.Empty)
+            if (control.Text.Length == 0)
                 control.Text = m_text;
 
             UpdateCreateButtonEnabled();
