@@ -254,11 +254,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Opens this skill in the skill browser and switches to this tab.
         /// </summary>
-        /// <param name="gs"></param>
-        public void ShowSkillInBrowser(Skill gs)
+        /// <param name="skill"></param>
+        public void ShowSkillInBrowser(Skill skill)
         {
             tabControl.SelectedTab = tpSkillBrowser;
-            skillBrowser.SelectedSkill = gs;
+            skillBrowser.SelectedSkill = skill;
         }
 
         /// <summary>
@@ -374,6 +374,16 @@ namespace EVEMon.SkillPlanner
                     m_plan.AcknoledgeInvalidEntries();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Sets the plan editor's skill selection control selected skill.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        public void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
+        {
+            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
+            skillSelectControl.SelectedSkill = skill;
         }
 
         /// <summary>
@@ -816,5 +826,6 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
+
     }
 }

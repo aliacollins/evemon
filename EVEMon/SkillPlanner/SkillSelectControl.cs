@@ -121,11 +121,12 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_selectedSkill == value)
                     return;
+
                 m_selectedSkill = value;
 
                 // Expands the tree view
                 tvItems.SelectNodeWithTag(value);
-
+                
                 // Notify subscribers
                 if (SelectedSkillChanged != null)
                     SelectedSkillChanged(this, new EventArgs());
@@ -305,7 +306,7 @@ namespace EVEMon.SkillPlanner
                 SelectedSkill = null;
             }
                 // Is it sorted ?
-            else if (cbSorting.SelectedIndex != 0)
+            else if (cbSorting.SelectedIndex > 0)
             {
                 lvSortedSkillList.Visible = true;
                 UpdateListView(skills);
@@ -433,8 +434,8 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (TreeNode node in tvItems.GetAllNodes()
-                        .Where(node => node.Tag.GetHashCode() == selectedItemHash))
+                    foreach (TreeNode node in tvItems.GetAllNodes().Where(
+                        node => node.Tag.GetHashCode() == selectedItemHash))
                     {
                         tvItems.SelectNodeWithTag(node.Tag);
                         selectedNode = node;
@@ -597,8 +598,8 @@ namespace EVEMon.SkillPlanner
                 // Restore the selected node (if any)
                 if (selectedItemHash > 0)
                 {
-                    foreach (ListViewItem lvItem in lvSortedSkillList.Items.Cast<ListViewItem>()
-                        .Where(lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
+                    foreach (ListViewItem lvItem in lvSortedSkillList.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItemHash))
                     {
                         lvItem.Selected = true;
                         selectedItem = lvItem;
@@ -753,7 +754,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedSkill = (lbSearchList.SelectedIndex >= 0 ? (Skill)lbSearchList.Items[lbSearchList.SelectedIndex] : null);
+            SelectedSkill = lbSearchList.SelectedIndex >= 0
+                                ? lbSearchList.Items[lbSearchList.SelectedIndex] as Skill
+                                : null;
         }
 
         /// <summary>
@@ -763,9 +766,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvSkillList_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            TreeNode tn = e.Node;
-            Skill gs = tn.Tag as Skill;
-            SelectedSkill = gs;
+            TreeNode treeNode = e.Node;
+            if (treeNode == null)
+                return;
+
+            SelectedSkill = treeNode.Tag as Skill;
         }
 
         /// <summary>
@@ -775,13 +780,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvSortedSkillList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSortedSkillList.SelectedItems.Count == 0)
-                SelectedSkill = null;
-            else
-            {
-                ListViewItem lvi = lvSortedSkillList.SelectedItems[0];
-                SelectedSkill = lvi.Tag as Skill;
-            }
+            SelectedSkill = lvSortedSkillList.SelectedItems.Count > 0
+                                ? lvSortedSkillList.SelectedItems[0].Tag as Skill
+                                : null;
         }
 
         /// <summary>
