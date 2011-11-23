@@ -156,20 +156,19 @@ namespace EVEMon.XmlGenerator
             const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
             string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
 
-            StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath);
-
-            foreach (string file in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            using (StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath))
             {
-                FileInfo datafile = new FileInfo(file);
-                if (!datafile.Exists)
-                    throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
+                foreach (string file in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo datafile = new FileInfo(file);
+                    if (!datafile.Exists)
+                        throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
 
-                string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
-                                            datafile.Name);
-                md5SumsFile.WriteLine(line);
+                    string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
+                                                datafile.Name);
+                    md5SumsFile.WriteLine(line);
+                }
             }
-
-            md5SumsFile.Close();
 
             Console.WriteLine("MD5Sums File Created Successfully");
             Console.WriteLine();
