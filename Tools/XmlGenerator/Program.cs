@@ -15,7 +15,7 @@ namespace EVEMon.XmlGenerator
     {
         #region Static Fields
 
-        private static string s_text = String.Empty;
+        private static string s_text;
         private static int s_counter;
         private static int s_tablesCount;
         private static int s_percentOld;
@@ -29,8 +29,8 @@ namespace EVEMon.XmlGenerator
         private const int GeoGenTotal = 97;
         private const int ReprocessGenTotal = 11669;
 
+        private static DateTime s_globalStartTime;
         private static DateTime s_startTime;
-        private static DateTime s_endTime;
 
         private static int s_propBasePriceID;
         private static int s_propPackagedVolumeID;
@@ -73,23 +73,17 @@ namespace EVEMon.XmlGenerator
 
         private static void Main()
         {
+            s_globalStartTime = DateTime.Now;
+
             // Setting a standard format for the generated files
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-
-            // Data dumps are available from CCP
-            Console.Write("Loading Data from SQL Server... ");
 
             // Read tables from database
             CreateTablesFromDatabase();
 
             Console.WriteLine();
-            Console.WriteLine();
-
 
             // Generate datafiles
-            Console.WriteLine("Datafile Generating In Progress");
-            Console.WriteLine();
-
             GenerateProperties();
             GenerateItems(); // Requires GenerateProperties()
             GenerateSkills();
@@ -100,7 +94,8 @@ namespace EVEMon.XmlGenerator
 
             GenerateMD5Sums();
 
-            Console.WriteLine("Done");
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating Datafiles completed in {0}",
+                                            DateTime.Now.Subtract(s_globalStartTime)).TrimEnd('0'));
             Console.ReadLine();
         }
 
@@ -109,6 +104,12 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         private static void CreateTablesFromDatabase()
         {
+            // Data dumps are available from CCP
+            Console.Write("Loading Data from SQL Server... ");
+            
+            s_text = String.Empty;
+            s_startTime = DateTime.Now;
+
             s_agents = Database.Agents();
             UpdateProgress();
             s_agentTypes = Database.AgentTypes();
@@ -167,6 +168,8 @@ namespace EVEMon.XmlGenerator
             UpdateProgress();
             s_crtRelationships = Database.CertificateRelationships();
             UpdateProgress();
+
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
         }
 
         #endregion
@@ -180,7 +183,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateProperties()
         {
             Console.WriteLine();
-            Console.Write("Generated properties datafile... ");
+            Console.Write("Generating properties datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -276,8 +279,7 @@ namespace EVEMon.XmlGenerator
                                                  "Targeting", "Propulsion", "Miscellaneous", "NULL"
                                              };
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
@@ -505,7 +507,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateItems()
         {
             Console.WriteLine();
-            Console.Write("Generated items datafile... ");
+            Console.Write("Generating items datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -541,8 +543,7 @@ namespace EVEMon.XmlGenerator
                 s_marketGroups.Concat(s_injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID])
                     .OrderBy(x => x.Name);
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             ItemsDatafile datafile = new ItemsDatafile();
@@ -1214,7 +1215,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateSkills()
         {
             Console.WriteLine();
-            Console.Write("Generated skills datafile... ");
+            Console.Write("Generating skills datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1240,8 +1241,7 @@ namespace EVEMon.XmlGenerator
                 listOfSkillGroups.Add(skillGroup);
             }
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
@@ -1361,7 +1361,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateCertificates()
         {
             Console.WriteLine();
-            Console.Write("Generated certificates datafile... ");
+            Console.Write("Generating certificates datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1387,8 +1387,7 @@ namespace EVEMon.XmlGenerator
                 listOfCertCategories.Add(crtCategory);
             }
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
@@ -1551,7 +1550,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateBlueprints()
         {
             Console.WriteLine();
-            Console.Write("Generated blueprints datafile... ");
+            Console.Write("Generating blueprints datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -1581,8 +1580,7 @@ namespace EVEMon.XmlGenerator
                 s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsMarketGroupID).Select(
                     x => groups[x.ID]).OrderBy(x => x.Name);
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
@@ -2092,7 +2090,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateGeography()
         {
             Console.WriteLine();
-            Console.Write("Generated geography datafile... ");
+            Console.Write("Generating geography datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -2120,8 +2118,7 @@ namespace EVEMon.XmlGenerator
             IEnumerable<SerializableJump> jumps = s_jumps.Where(srcJump => srcJump.A < srcJump.B).Select(
                 srcJump => new SerializableJump { FirstSystemID = srcJump.A, SecondSystemID = srcJump.B });
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             GeoDatafile datafile = new GeoDatafile();
@@ -2259,7 +2256,7 @@ namespace EVEMon.XmlGenerator
         private static void GenerateReprocessing()
         {
             Console.WriteLine();
-            Console.Write("Generated reprocessing datafile... ");
+            Console.Write("Generating reprocessing datafile... ");
 
             s_counter = 0;
             s_percentOld = 0;
@@ -2288,8 +2285,7 @@ namespace EVEMon.XmlGenerator
                 types.Add(itemMaterials);
             }
 
-            s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();
