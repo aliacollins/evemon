@@ -201,6 +201,7 @@ namespace EVEMon.XmlGenerator
             catch (Exception exc)
             {
                 Trace.WriteLine(exc.ToString());
+                throw;
             }
         }
     }
