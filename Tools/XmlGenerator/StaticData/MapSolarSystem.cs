@@ -8,21 +8,21 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("solarSystemName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("security")]
-        public float SecurityLevel;
+        public float SecurityLevel { get; set; }
 
         [XmlElement("constellationID")]
-        public int ConstellationID;
+        public int ConstellationID { get; set; }
 
         [XmlElement("x")]
-        public double X;
+        public double X { get; set; }
 
         [XmlElement("y")]
-        public double Y;
+        public double Y { get; set; }
 
         [XmlElement("z")]
-        public double Z;
+        public double Z { get; set; }
     }
 }

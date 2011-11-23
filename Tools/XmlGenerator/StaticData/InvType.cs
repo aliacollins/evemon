@@ -8,42 +8,42 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("groupID")]
-        public int GroupID;
+        public int GroupID { get; set; }
 
         [XmlElement("iconID")]
-        public int? IconID;
+        public int? IconID { get; set; }
 
         [XmlElement("typeName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("description")]
-        public string Description;
+        public string Description { get; set; }
 
         [XmlElement("mass")]
-        public double Mass;
+        public double Mass { get; set; }
 
         [XmlElement("volume")]
-        public double Volume;
+        public double Volume { get; set; }
 
         [XmlElement("capacity")]
-        public double Capacity;
+        public double Capacity { get; set; }
 
         [XmlElement("portionSize")]
-        public int PortionSize;
+        public int PortionSize { get; set; }
 
         [XmlElement("raceID")]
-        public int? RaceID;
+        public int? RaceID { get; set; }
 
         [XmlElement("marketGroupID")]
-        public int? MarketGroupID;
+        public int? MarketGroupID { get; set; }
 
         [XmlElement("basePrice")]
-        public decimal BasePrice;
+        public decimal BasePrice { get; set; }
 
         [XmlElement("published")]
-        public bool Published;
+        public bool Published { get; set; }
 
         [XmlIgnore]
-        public bool Generated;
+        public bool Generated { get; set; }
     }
 }

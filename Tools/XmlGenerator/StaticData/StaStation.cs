@@ -8,21 +8,21 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("stationName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("security")]
-        public int SecurityLevel;
+        public int SecurityLevel { get; set; }
 
         [XmlElement("corporationID")]
-        public int CorporationID;
+        public int CorporationID { get; set; }
 
         [XmlElement("solarSystemID")]
-        public int SolarSystemID;
+        public int SolarSystemID { get; set; }
 
         [XmlElement("reprocessingEfficiency")]
-        public float ReprocessingEfficiency;
+        public float ReprocessingEfficiency { get; set; }
 
         [XmlElement("reprocessingStationsTake")]
-        public float ReprocessingStationsTake;
+        public float ReprocessingStationsTake { get; set; }
     }
 }

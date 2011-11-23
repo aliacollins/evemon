@@ -8,30 +8,30 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("description")]
-        public string Description;
+        public string Description { get; set; }
 
         [XmlElement("attributeName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("displayName")]
-        public string DisplayName;
+        public string DisplayName { get; set; }
 
         [XmlElement("defaultValue")]
-        public string DefaultValue;
+        public string DefaultValue { get; set; }
 
         [XmlElement("iconID")]
-        public int? IconID;
+        public int? IconID { get; set; }
 
         [XmlElement("published")]
-        public bool Published;
+        public bool Published { get; set; }
 
         [XmlElement("unitID")]
-        public int? UnitID;
+        public int? UnitID { get; set; }
 
         [XmlElement("categoryID")]
-        public int? CategoryID;
+        public int? CategoryID { get; set; }
 
         [XmlElement("highIsGood")]
-        public bool HigherIsBetter;
+        public bool HigherIsBetter { get; set; }
     }
 }

@@ -5,16 +5,16 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmTypeAttribute : IRelation
     {
         [XmlElement("typeID")]
-        public int ItemID;
+        public int ItemID { get; set; }
 
         [XmlElement("attributeID")]
-        public int AttributeID;
+        public int AttributeID { get; set; }
 
         [XmlElement("valueInt")]
-        public int? ValueInt;
+        public int? ValueInt { get; set; }
 
         [XmlElement("valueFloat")]
-        public double? ValueFloat;
+        public double? ValueFloat { get; set; }
 
         /// <summary>
         /// Returns the value as an integer. 

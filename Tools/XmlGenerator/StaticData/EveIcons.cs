@@ -8,6 +8,6 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("iconFile")]
-        public string Icon;
+        public string Icon { get; set; }
     }
 }

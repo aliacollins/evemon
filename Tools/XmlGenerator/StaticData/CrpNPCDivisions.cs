@@ -8,6 +8,6 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("divisionName")]
-        public string DivisionName;
+        public string DivisionName { get; set; }
     }
 }

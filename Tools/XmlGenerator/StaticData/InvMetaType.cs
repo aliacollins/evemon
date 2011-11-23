@@ -5,13 +5,13 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvMetaType : IRelation
     {
         [XmlElement("typeID")]
-        public int ItemID;
+        public int ItemID { get; set; }
 
         [XmlElement("parentTypeID")]
-        public int ParentItemID;
+        public int ParentItemID { get; set; }
 
         [XmlElement("metaGroupID")]
-        public int MetaGroupID;
+        public int MetaGroupID { get; set; }
 
 
         #region IRelation Members
