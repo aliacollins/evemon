@@ -61,7 +61,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of EVE Agents.</returns>
         internal static Bag<AgtAgents> Agents()
         {
-            IndexedList<AgtAgents> list = new IndexedList<AgtAgents>();
+            IndexedCollection<AgtAgents> collection = new IndexedCollection<AgtAgents>();
 
             foreach (agtAgents agent in Context.agtAgents)
             {
@@ -85,10 +85,10 @@ namespace EVEMon.XmlGenerator
                 if (agent.agentTypeID.HasValue)
                     item.AgentTypeID = agent.agentTypeID.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<AgtAgents>(list);
+            return new Bag<AgtAgents>(collection);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of EVE Agent Types.</returns>
         internal static Bag<AgtAgentTypes> AgentTypes()
         {
-            IndexedList<AgtAgentTypes> list = new IndexedList<AgtAgentTypes>();
+            IndexedCollection<AgtAgentTypes> collection = new IndexedCollection<AgtAgentTypes>();
 
             foreach (AgtAgentTypes item in Context.agtAgentTypes.Select(
                 agentType => new AgtAgentTypes
@@ -106,10 +106,10 @@ namespace EVEMon.XmlGenerator
                                      AgentType = agentType.agentType
                                  }))
             {
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<AgtAgentTypes>(list);
+            return new Bag<AgtAgentTypes>(collection);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of EVE Research Agents.</returns>
         internal static Bag<AgtResearchAgents> ResearchAgents()
         {
-            IndexedList<AgtResearchAgents> list = new IndexedList<AgtResearchAgents>();
+            IndexedCollection<AgtResearchAgents> collection = new IndexedCollection<AgtResearchAgents>();
 
             foreach (AgtResearchAgents item in Context.agtResearchAgents.Select(
                 researchAgent => new AgtResearchAgents
@@ -142,10 +142,10 @@ namespace EVEMon.XmlGenerator
                                          ResearchSkillID = researchAgent.typeID
                                      }))
             {
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<AgtResearchAgents>(list);
+            return new Bag<AgtResearchAgents>(collection);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of EVE NPC Divisions.</returns>
         internal static Bag<CrpNPCDivisions> NPCDivisions()
         {
-            IndexedList<CrpNPCDivisions> list = new IndexedList<CrpNPCDivisions>();
+            IndexedCollection<CrpNPCDivisions> collection = new IndexedCollection<CrpNPCDivisions>();
 
             foreach (CrpNPCDivisions item in Context.crpNPCDivisions.Select(
                 npcDivision => new CrpNPCDivisions
@@ -163,10 +163,10 @@ namespace EVEMon.XmlGenerator
                                        DivisionName = npcDivision.divisionName
                                    }))
             {
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<CrpNPCDivisions>(list);
+            return new Bag<CrpNPCDivisions>(collection);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of EVE Names.</returns>
         internal static Bag<EveNames> Names()
         {
-            IndexedList<EveNames> list = new IndexedList<EveNames>();
+            IndexedCollection<EveNames> collection = new IndexedCollection<EveNames>();
 
             foreach (EveNames item in Context.eveNames.Select(
                 name => new EveNames
@@ -184,10 +184,10 @@ namespace EVEMon.XmlGenerator
                                 Name = name.itemName
                             }))
             {
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<EveNames>(list);
+            return new Bag<EveNames>(collection);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of EVE Units.</returns>
         internal static Bag<EveUnit> Units()
         {
-            IndexedList<EveUnit> list = new IndexedList<EveUnit>();
+            IndexedCollection<EveUnit> collection = new IndexedCollection<EveUnit>();
 
             foreach (EveUnit item in Context.eveUnits.Select(
                 unit => new EveUnit
@@ -210,10 +210,10 @@ namespace EVEMon.XmlGenerator
                 item.Description.Clean();
                 item.DisplayName.Clean();
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<EveUnit>(list);
+            return new Bag<EveUnit>(collection);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of icons.</returns>
         internal static Bag<EveIcons> Icons()
         {
-            IndexedList<EveIcons> list = new IndexedList<EveIcons>();
+            IndexedCollection<EveIcons> collection = new IndexedCollection<EveIcons>();
 
             foreach (EveIcons item in Context.eveIcons.Select(
                 icon => new EveIcons
@@ -231,10 +231,10 @@ namespace EVEMon.XmlGenerator
                                 Icon = icon.iconFile
                             }))
             {
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<EveIcons>(list);
+            return new Bag<EveIcons>(collection);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Attributes.</returns>
         internal static Bag<DgmAttributeTypes> Attributes()
         {
-            IndexedList<DgmAttributeTypes> list = new IndexedList<DgmAttributeTypes>();
+            IndexedCollection<DgmAttributeTypes> collection = new IndexedCollection<DgmAttributeTypes>();
 
             foreach (dgmAttributeTypes attribute in Context.dgmAttributeTypes)
             {
@@ -270,10 +270,10 @@ namespace EVEMon.XmlGenerator
                 if (attribute.highIsGood.HasValue)
                     item.HigherIsBetter = attribute.highIsGood.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<DgmAttributeTypes>(list);
+            return new Bag<DgmAttributeTypes>(collection);
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Attribute Categories.</returns>
         internal static Bag<DgmAttributeCategory> AttributeCategories()
         {
-            IndexedList<DgmAttributeCategory> list = new IndexedList<DgmAttributeCategory>();
+            IndexedCollection<DgmAttributeCategory> collection = new IndexedCollection<DgmAttributeCategory>();
 
             foreach (DgmAttributeCategory item in Context.dgmAttributeCategories.Select(
                 category => new DgmAttributeCategory
@@ -295,10 +295,10 @@ namespace EVEMon.XmlGenerator
                 item.Description.Clean();
                 item.Name.Clean();
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<DgmAttributeCategory>(list);
+            return new Bag<DgmAttributeCategory>(collection);
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of all regions in EVE.</returns>
         internal static Bag<MapRegion> Regions()
         {
-            IndexedList<MapRegion> list = new IndexedList<MapRegion>();
+            IndexedCollection<MapRegion> collection = new IndexedCollection<MapRegion>();
 
             foreach (MapRegion item in Context.mapRegions.Select(
                 region => new MapRegion
@@ -317,10 +317,10 @@ namespace EVEMon.XmlGenerator
                                   FactionID = region.factionID
                               }))
             {
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<MapRegion>(list);
+            return new Bag<MapRegion>(collection);
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Constallations in EVE.</returns>
         internal static Bag<MapConstellation> Constellations()
         {
-            IndexedList<MapConstellation> list = new IndexedList<MapConstellation>();
+            IndexedCollection<MapConstellation> collection = new IndexedCollection<MapConstellation>();
 
             foreach (mapConstellations constellation in Context.mapConstellations)
             {
@@ -342,10 +342,10 @@ namespace EVEMon.XmlGenerator
                 if (constellation.regionID.HasValue)
                     item.RegionID = constellation.regionID.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<MapConstellation>(list);
+            return new Bag<MapConstellation>(collection);
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Solar Systems in the EVE.</returns>
         internal static Bag<MapSolarSystem> Solarsystems()
         {
-            IndexedList<MapSolarSystem> list = new IndexedList<MapSolarSystem>();
+            IndexedCollection<MapSolarSystem> collection = new IndexedCollection<MapSolarSystem>();
 
             foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
             {
@@ -379,10 +379,10 @@ namespace EVEMon.XmlGenerator
                 if (solarsystem.z.HasValue)
                     item.Z = solarsystem.z.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<MapSolarSystem>(list);
+            return new Bag<MapSolarSystem>(collection);
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Stations in the EVE Universe.</returns>
         internal static Bag<StaStation> Stations()
         {
-            IndexedList<StaStation> list = new IndexedList<StaStation>();
+            IndexedCollection<StaStation> collection = new IndexedCollection<StaStation>();
 
             foreach (staStations station in Context.staStations)
             {
@@ -416,10 +416,10 @@ namespace EVEMon.XmlGenerator
                 if (station.corporationID.HasValue)
                     item.CorporationID = station.corporationID.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<StaStation>(list);
+            return new Bag<StaStation>(collection);
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Inventory Blueprint Types.</returns>
         internal static Bag<InvBlueprintTypes> BlueprintTypes()
         {
-            IndexedList<InvBlueprintTypes> list = new IndexedList<InvBlueprintTypes>();
+            IndexedCollection<InvBlueprintTypes> collection = new IndexedCollection<InvBlueprintTypes>();
 
             foreach (invBlueprintTypes blueprint in Context.invBlueprintTypes)
             {
@@ -482,10 +482,10 @@ namespace EVEMon.XmlGenerator
                 if (blueprint.maxProductionLimit.HasValue)
                     item.MaxProductionLimit = blueprint.maxProductionLimit.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<InvBlueprintTypes>(list);
+            return new Bag<InvBlueprintTypes>(collection);
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Market Groups available on the market.</returns>
         internal static Bag<InvMarketGroup> MarketGroups()
         {
-            IndexedList<InvMarketGroup> list = new IndexedList<InvMarketGroup>();
+            IndexedCollection<InvMarketGroup> collection = new IndexedCollection<InvMarketGroup>();
 
             foreach (InvMarketGroup item in Context.invMarketGroups.Select(
                 marketGroup => new InvMarketGroup
@@ -508,10 +508,10 @@ namespace EVEMon.XmlGenerator
             {
                 item.Description.Clean();
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<InvMarketGroup>(list);
+            return new Bag<InvMarketGroup>(collection);
         }
 
         /// <summary>
@@ -520,7 +520,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Inventory Groups.</returns>
         internal static Bag<InvGroup> Groups()
         {
-            IndexedList<InvGroup> list = new IndexedList<InvGroup>();
+            IndexedCollection<InvGroup> collection = new IndexedCollection<InvGroup>();
 
             foreach (invGroups group in Context.invGroups)
             {
@@ -536,10 +536,10 @@ namespace EVEMon.XmlGenerator
                 if (group.categoryID.HasValue)
                     item.CategoryID = group.categoryID.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<InvGroup>(list);
+            return new Bag<InvGroup>(collection);
         }
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of items from the Inventory.</returns>
         internal static Bag<InvType> Types()
         {
-            IndexedList<InvType> list = new IndexedList<InvType>();
+            IndexedCollection<InvType> collection = new IndexedCollection<InvType>();
 
             foreach (invTypes type in Context.invTypes)
             {
@@ -584,10 +584,10 @@ namespace EVEMon.XmlGenerator
                 if (type.portionSize.HasValue)
                     item.PortionSize = type.portionSize.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<InvType>(list);
+            return new Bag<InvType>(collection);
         }
 
         /// <summary>
@@ -643,7 +643,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Certificate Categories.</returns>
         internal static Bag<CrtCategories> CertificateCategories()
         {
-            IndexedList<CrtCategories> list = new IndexedList<CrtCategories>();
+            IndexedCollection<CrtCategories> collection = new IndexedCollection<CrtCategories>();
 
             foreach (CrtCategories item in Context.crtCategories.Select(
                 category => new CrtCategories
@@ -655,10 +655,10 @@ namespace EVEMon.XmlGenerator
             {
                 item.Description.Clean();
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<CrtCategories>(list);
+            return new Bag<CrtCategories>(collection);
         }
 
         /// <summary>
@@ -667,7 +667,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Classes of Certificate.</returns>
         internal static Bag<CrtClasses> CertificateClasses()
         {
-            IndexedList<CrtClasses> list = new IndexedList<CrtClasses>();
+            IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
 
             foreach (CrtClasses item in Context.crtClasses.Select(
                 cClass => new CrtClasses
@@ -679,10 +679,10 @@ namespace EVEMon.XmlGenerator
             {
                 item.Description.Clean();
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<CrtClasses>(list);
+            return new Bag<CrtClasses>(collection);
         }
 
         /// <summary>
@@ -691,7 +691,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Certificates.</returns>
         internal static Bag<CrtCertificates> Certificates()
         {
-            IndexedList<CrtCertificates> list = new IndexedList<CrtCertificates>();
+            IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
 
             foreach (crtCertificates certificate in Context.crtCertificates)
             {
@@ -711,10 +711,10 @@ namespace EVEMon.XmlGenerator
                 if (certificate.grade.HasValue)
                     item.Grade = certificate.grade.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<CrtCertificates>(list);
+            return new Bag<CrtCertificates>(collection);
         }
 
         /// <summary>
@@ -723,7 +723,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of Certificate Recommendations.</returns>
         internal static Bag<CrtRecommendations> CertificateRecommendations()
         {
-            IndexedList<CrtRecommendations> list = new IndexedList<CrtRecommendations>();
+            IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
 
             foreach (crtRecommendations recommendation in Context.crtRecommendations)
             {
@@ -739,10 +739,10 @@ namespace EVEMon.XmlGenerator
                 if (recommendation.shipTypeID.HasValue)
                     item.ShipTypeID = recommendation.shipTypeID.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<CrtRecommendations>(list);
+            return new Bag<CrtRecommendations>(collection);
         }
 
         /// <summary>
@@ -751,7 +751,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
         internal static Bag<CrtRelationships> CertificateRelationships()
         {
-            IndexedList<CrtRelationships> list = new IndexedList<CrtRelationships>();
+            IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
 
             foreach (crtRelationships relationship in Context.crtRelationships)
             {
@@ -768,10 +768,10 @@ namespace EVEMon.XmlGenerator
                 if (relationship.childID.HasValue)
                     item.ChildID = relationship.childID.Value;
 
-                list.Items.Add(item);
+                collection.Items.Add(item);
             }
 
-            return new Bag<CrtRelationships>(list);
+            return new Bag<CrtRelationships>(collection);
         }
 
         /// <summary>

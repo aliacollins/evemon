@@ -16,15 +16,15 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Initializes a new instance of the <see cref="Bag&lt;T&gt;"/> class.
         /// </summary>
-        /// <param name="list">The list.</param>
-        public Bag(IndexedList<T> list)
+        /// <param name="collection">The list.</param>
+        public Bag(IndexedCollection<T> collection)
         {
-            if (list == null)
-                throw new ArgumentNullException("list");
+            if (collection == null)
+                throw new ArgumentNullException("collection");
 
             m_items = new Dictionary<int, T>();
 
-            foreach (T item in list.Items)
+            foreach (T item in collection.Items)
             {
                 m_items[item.ID] = item;
             }

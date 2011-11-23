@@ -20,9 +20,9 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
         /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static SimpleList<T> DeserializeList<T>(string filename)
+        public static SimpleCollection<T> DeserializeList<T>(string filename)
         {
-            return DeserializeXMLCore<SimpleList<T>>(filename);
+            return DeserializeXMLCore<SimpleCollection<T>>(filename);
         }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
         /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static IndexedList<T> DeserializeIndexedList<T>(string filename)
+        public static IndexedCollection<T> DeserializeIndexedList<T>(string filename)
             where T : IHasID
         {
-            return DeserializeXMLCore<IndexedList<T>>(filename);
+            return DeserializeXMLCore<IndexedCollection<T>>(filename);
         }
 
         /// <summary>

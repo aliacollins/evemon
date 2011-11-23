@@ -109,8 +109,8 @@
     <Compile Include="StaticData\MapSolarSystem.cs" />
     <Compile Include="StaticData\MapSolarSystemJump.cs" />
     <Compile Include="StaticData\StaStation.cs" />
-    <Compile Include="IndexedList.cs" />
-    <Compile Include="SimpleList.cs" />
+    <Compile Include="IndexedCollection.cs" />
+    <Compile Include="SimpleCollection.cs" />
     <Compile Include="Relations.cs" />
   </ItemGroup>
   <ItemGroup>

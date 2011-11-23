@@ -1,32 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator
 {
     /// <summary>
-    /// A list of indexed items.
+    /// A collection of indexed items.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [XmlRoot("list")]
-    public sealed class IndexedList<T>
+    [XmlRoot("collection")]
+    public sealed class IndexedCollection<T>
         where T : IHasID
     {
+        private readonly Collection<T> m_items; 
+
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        public IndexedList()
+        public IndexedCollection()
         {
-            Items = new List<T>();
+            m_items = new Collection<T>();
         }
 
         /// <summary>
-        /// List of items in the list.
+        /// List of items in the collection.
         /// </summary>
         [XmlElement("item")]
-        public List<T> Items { get; set; }
+        public Collection<T> Items
+        {
+            get { return m_items; }
+        }
 
         /// <summary>
-        /// Converts list to a Bag.
+        /// Converts collection to a Bag.
         /// </summary>
         /// <returns>Bag of type T</returns>
         public Bag<T> ToBag()
