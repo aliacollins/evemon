@@ -105,25 +105,10 @@ namespace EVEMon.SkillPlanner
                 m_selectedSkill = value;
                 skillTreeDisplay.RootSkill = value;
                 skillSelectControl.SelectedSkill = value;
+                SetPlanEditorSkillSelectorSelectedSkill(value);
                 UpdateContent();
             }
         }
-
-        /// <summary>
-        /// Show the given skill in the skill explorer.
-        /// </summary>
-        /// <param name="skill"></param>
-        public void ShowSkillInExplorer(Skill skill)
-        {
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            SkillExplorerWindow skillExplorer = WindowsFactory.ShowByTag(planWindow,
-                                                                         window => new SkillExplorerWindow(skill, window));
-            skillExplorer.Skill = skill;
-        }
-
         #endregion
 
 
@@ -297,6 +282,31 @@ namespace EVEMon.SkillPlanner
             }
 
             label.Text = sb.ToString();
+        }
+
+        /// <summary>
+        /// Sets the plan editor's skill selector selected skill.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        private void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
+        {
+            PlanWindow planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            planWindow.SetPlanEditorSkillSelectorSelectedSkill(skill);
+        }
+
+        /// <summary>
+        /// Show the given skill in the skill explorer.
+        /// </summary>
+        /// <param name="skill"></param>
+        public void ShowSkillInExplorer(Skill skill)
+        {
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            SkillExplorerWindow skillExplorer = WindowsFactory.ShowByTag(planWindow,
+                                                                         window => new SkillExplorerWindow(skill, window));
+            skillExplorer.Skill = skill;
         }
 
         #endregion

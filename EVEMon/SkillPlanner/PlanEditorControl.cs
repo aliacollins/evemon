@@ -68,6 +68,8 @@ namespace EVEMon.SkillPlanner
 
             ListViewHelper.EnableDoubleBuffer(lvSkills);
 
+            pscPlan.Panel2Collapsed = true;
+
             lvSkills.ColumnWidthChanged += lvSkills_ColumnWidthChanged;
             lvSkills.ColumnClick += lvSkills_ColumnClick;
             tsSortPriorities.Click += tsSortPriorities_Clicked;
