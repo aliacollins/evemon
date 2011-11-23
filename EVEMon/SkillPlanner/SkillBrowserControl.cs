@@ -290,7 +290,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill">The skill.</param>
         private void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
         {
-            PlanWindow planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
             planWindow.SetPlanEditorSkillSelectorSelectedSkill(skill);
         }
 

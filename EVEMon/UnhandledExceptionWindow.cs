@@ -183,7 +183,7 @@ namespace EVEMon
                 // Richard Slater's local installer builder path
                 stackTraceBuilder = stackTraceBuilder.Replace(@"D:\EVEMon\", String.Empty);
                 // Jimi's local installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\Projects\C#\EVEMon\Repo\Mercurial\EVEMon", String.Empty);
+                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\Projects\Csharp\EVEMon\Repo\Mercurial\EVEMon", String.Empty);
                 // TeamCity's installer builder path
                 stackTraceBuilder = stackTraceBuilder.Replace(@"d:\tmp\evemon_installer\", String.Empty);
                 // TeamCity's snapshot builder path
