@@ -69,7 +69,9 @@ namespace EVEMon.XmlGenerator
             // Load XSLT 
             Assembly asm = Assembly.GetExecutingAssembly();
             XslCompiledTransform xslt = new XslCompiledTransform();
-            Stream input = asm.GetManifestResourceStream(String.Format("{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
+            Stream input =
+                asm.GetManifestResourceStream(String.Format(CultureConstants.DefaultCulture, "{0}.Zofu.MySQLDumpImport.xslt",
+                                                            asm.GetName().Name));
             if (input != null)
             {
                 using (XmlReader reader = XmlReader.Create(input))
@@ -164,9 +166,10 @@ namespace EVEMon.XmlGenerator
             {
                 FileInfo datafile = new FileInfo(file);
                 if (!datafile.Exists)
-                    throw new Exception(String.Format("{0} not found!", file));
+                    throw new Exception(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
 
-                string line = String.Format("{0} *{1}", Common.Util.CreateMD5From(file), datafile.Name);
+                string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
+                                            datafile.Name);
                 md5SumsFile.WriteLine(line);
             }
 
@@ -191,11 +194,13 @@ namespace EVEMon.XmlGenerator
                     if (fi.Directory.Exists && fi.Directory.Parent != null && fi.Directory.Parent.Parent != null)
                     {
                         File.Copy(srcFile, destFile, true);
-                        Console.WriteLine(String.Format(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name,
+                        Console.WriteLine(String.Format(CultureConstants.DefaultCulture, @"*** {0}\{1}\{2}",
+                                                        fi.Directory.Parent.Parent.Name,
                                                         fi.Directory.Parent.Name, fi.Directory.Name));
                     }
                     else
-                        Trace.WriteLine(String.Format("{0} doesn't exist, copy failed", fi.Directory.FullName));
+                        Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",
+                                                      fi.Directory.FullName));
                 }
             }
             catch (Exception exc)

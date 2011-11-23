@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using EVEMon.XmlGenerator.StaticData;
 
@@ -86,7 +87,7 @@ namespace EVEMon.XmlGenerator
             // Is it actually an integer stored as a float?
             if (property.ValueFloat.HasValue &&
                 Math.Abs(Math.Truncate(property.ValueFloat.Value) - property.ValueFloat.Value) < float.Epsilon)
-                return Convert.ToInt32(property.ValueFloat.Value).ToString();
+                return Convert.ToInt32(property.ValueFloat.Value).ToString(CultureInfo.InvariantCulture);
 
             return property.ValueFloat.ToString();
         }
@@ -99,7 +100,9 @@ namespace EVEMon.XmlGenerator
         public static string FormatDecimal(this decimal input)
         {
             // Is it actually an integer stored as a double?
-            return Math.Truncate(input) == input ? Convert.ToInt64(input).ToString() : input.ToString();
+            return Math.Truncate(input) == input
+                       ? Convert.ToInt64(input).ToString(CultureInfo.InvariantCulture)
+                       : input.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

@@ -462,7 +462,7 @@ namespace EVEMon.XmlGenerator
                                              };
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
@@ -513,7 +513,7 @@ namespace EVEMon.XmlGenerator
                     srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
                 {
                     string slotString = srcGroup.Name.Substring("Implant Slot ".Length);
-                    int slot = Int32.Parse(slotString);
+                    int slot = Int32.Parse(slotString, CultureInfo.InvariantCulture);
 
                     // Enumerate all implants without market groups
                     foreach (InvType srcItem in s_types.Where(
@@ -558,7 +558,7 @@ namespace EVEMon.XmlGenerator
                     .OrderBy(x => x.Name);
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             ItemsDatafile datafile = new ItemsDatafile();
@@ -848,11 +848,17 @@ namespace EVEMon.XmlGenerator
                 if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
                 {
                     props.Add(new SerializablePropertyValue
-                                  { ID = srcProp.AttributeID, Value = (BaseWarpSpeed * warpSpeedMultiplier).ToString() });
+                                  {
+                                      ID = srcProp.AttributeID,
+                                      Value = (BaseWarpSpeed * warpSpeedMultiplier).ToString(CultureInfo.InvariantCulture)
+                                  });
 
                     // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
                     props.Add(new SerializablePropertyValue
-                                  { ID = s_propPackagedVolumeID, Value = GetPackagedVolume(srcItem.GroupID).ToString() });
+                                  {
+                                      ID = s_propPackagedVolumeID,
+                                      Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureInfo.InvariantCulture)
+                                  });
                 }
 
                 // Other props
@@ -905,18 +911,23 @@ namespace EVEMon.XmlGenerator
 
             // Ensures there is a mass and add it to prop
             if (Math.Abs(srcItem.Mass) > double.Epsilon)
-                props.Add(new SerializablePropertyValue { ID = DBConstants.MassPropertyID, Value = srcItem.Mass.ToString() });
+                props.Add(new SerializablePropertyValue
+                              { ID = DBConstants.MassPropertyID, Value = srcItem.Mass.ToString(CultureInfo.InvariantCulture) });
 
             // Ensures there is a cargo capacity and add it to prop
             if (Math.Abs(srcItem.Capacity - 0) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
-                              { ID = DBConstants.CargoCapacityPropertyID, Value = srcItem.Capacity.ToString() });
+                              {
+                                  ID = DBConstants.CargoCapacityPropertyID,
+                                  Value = srcItem.Capacity.ToString(CultureInfo.InvariantCulture)
+                              });
             }
 
             // Ensures there is a volume and add it to prop
             if (Math.Abs(srcItem.Volume - 0) > double.Epsilon)
-                props.Add(new SerializablePropertyValue { ID = DBConstants.VolumePropertyID, Value = srcItem.Volume.ToString() });
+                props.Add(new SerializablePropertyValue
+                              { ID = DBConstants.VolumePropertyID, Value = srcItem.Volume.ToString(CultureInfo.InvariantCulture) });
 
             // Add base price as a prop
             props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
@@ -1201,7 +1212,7 @@ namespace EVEMon.XmlGenerator
             }
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
@@ -1375,7 +1386,7 @@ namespace EVEMon.XmlGenerator
             }
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
@@ -1467,7 +1478,7 @@ namespace EVEMon.XmlGenerator
                     x => groups[x.ID]).OrderBy(x => x.Name);
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
@@ -2041,7 +2052,7 @@ namespace EVEMon.XmlGenerator
             }
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             GeoDatafile datafile = new GeoDatafile();
@@ -2092,7 +2103,7 @@ namespace EVEMon.XmlGenerator
             }
 
             s_endTime = DateTime.Now;
-            Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
 
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();
@@ -2131,7 +2142,7 @@ namespace EVEMon.XmlGenerator
                 return;
 
             Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-            s_text = String.Format("{0}%", percent);
+            s_text = String.Format(CultureInfo.CurrentCulture, "{0}%", percent);
             Console.Write(s_text);
             s_percentOld = percent;
         }
@@ -2143,7 +2154,7 @@ namespace EVEMon.XmlGenerator
         {
             Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
             s_tablesCount++;
-            s_text = String.Format("{0}%", (s_tablesCount * 100 / TotalTablesCount));
+            s_text = String.Format(CultureInfo.CurrentCulture, "{0}%", (s_tablesCount * 100 / TotalTablesCount));
             Console.Write(s_text);
         }
 

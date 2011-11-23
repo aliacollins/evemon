@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.EntityClient;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using EVEMon.XmlGenerator.StaticData;
 
@@ -262,7 +263,7 @@ namespace EVEMon.XmlGenerator
                 item.Name.Clean();
 
                 if (attribute.defaultValue.HasValue)
-                    item.DefaultValue = attribute.defaultValue.Value.ToString();
+                    item.DefaultValue = attribute.defaultValue.Value.ToString(CultureInfo.InvariantCulture);
 
                 if (attribute.published.HasValue)
                     item.Published = attribute.published.Value;
@@ -804,10 +805,10 @@ namespace EVEMon.XmlGenerator
             {
                 InvMetaType item = new InvMetaType { ItemID = metaType.typeID };
                 if (metaType.metaGroupID.HasValue)
-                    item.MetaGroupID = Convert.ToInt32(metaType.metaGroupID);
+                    item.MetaGroupID = Convert.ToInt32(metaType.metaGroupID, CultureInfo.InvariantCulture);
 
                 if (metaType.parentTypeID.HasValue)
-                    item.ParentItemID = Convert.ToInt32(metaType.parentTypeID);
+                    item.ParentItemID = Convert.ToInt32(metaType.parentTypeID, CultureInfo.InvariantCulture);
                 list.Add(item);
             }
             return new RelationSet<InvMetaType>(list);
