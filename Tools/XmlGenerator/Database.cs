@@ -48,12 +48,21 @@ namespace EVEMon.XmlGenerator
                             };
 
                     // Initialize the EntityConnection
-                    EntityConnection connection = new EntityConnection(entityBuilder.ToString());
-
+                    EntityConnection connection = GetEntityConnection(entityBuilder.ToString());
                     s_entities = new EveStaticDataEntities(connection);
                 }
                 return s_entities;
             }
+        }
+
+        /// <summary>
+        /// Gets the entity connection.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        private static EntityConnection GetEntityConnection(string entity)
+        {
+            return new EntityConnection(entity);
         }
 
         /// <summary>
