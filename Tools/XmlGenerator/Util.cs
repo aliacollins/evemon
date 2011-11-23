@@ -82,31 +82,30 @@ namespace EVEMon.XmlGenerator
             // Apply trasnform and deserialize
             using (XmlNodeReader reader = new XmlNodeReader(doc))
             {
-                using (MemoryStream stream = new MemoryStream())
+                MemoryStream stream = Common.Util.GetMemoryStream();
+
+                // Apply the XSL transform
+                using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                 {
-                    // Apply the XSL transform
-                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
+                    writer.Formatting = Formatting.Indented;
+                    xslt.Transform(reader, writer);
+                    writer.Flush();
+
+                    if (EveMonClient.IsDebugBuild)
                     {
-                        writer.Formatting = Formatting.Indented;
-                        xslt.Transform(reader, writer);
-                        writer.Flush();
-
-                        if (EveMonClient.IsDebugBuild)
-                        {
-                            // Gets a printing for debugging
-                            stream.Seek(0, SeekOrigin.Begin);
-                            XmlDocument doc2 = new XmlDocument();
-                            doc2.Load(stream);
-                            Trace.Write(Common.Util.GetXMLStringRepresentation(doc2));
-                        }
-
-                        // Deserialize from the given stream
+                        // Gets a printing for debugging
                         stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
-                        T result = (T)xs.Deserialize(stream);
-
-                        return result;
+                        XmlDocument doc2 = new XmlDocument();
+                        doc2.Load(stream);
+                        Trace.Write(Common.Util.GetXMLStringRepresentation(doc2));
                     }
+
+                    // Deserialize from the given stream
+                    stream.Seek(0, SeekOrigin.Begin);
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
+                    T result = (T)xs.Deserialize(stream);
+
+                    return result;
                 }
             }
         }
@@ -121,7 +120,8 @@ namespace EVEMon.XmlGenerator
         {
             string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
 
-            using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
+            FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write);
+            
             using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T));

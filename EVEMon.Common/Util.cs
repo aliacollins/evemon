@@ -692,7 +692,7 @@ namespace EVEMon.Common
         /// Gets a memory stream.
         /// </summary>
         /// <returns>A new memory stream</returns>
-        internal static MemoryStream GetMemoryStream()
+        public static MemoryStream GetMemoryStream()
         {
             return new MemoryStream();
         }
