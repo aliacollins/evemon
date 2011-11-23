@@ -75,6 +75,9 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         public static string FormatPropertyValue(this DgmTypeAttribute property)
         {
+            if (property == null)
+                throw new ArgumentNullException("property");
+
             if (property.ValueInt.HasValue)
                 return property.ValueInt.ToString();
 

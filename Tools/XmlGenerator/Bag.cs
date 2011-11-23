@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace EVEMon.XmlGenerator
@@ -18,6 +19,9 @@ namespace EVEMon.XmlGenerator
         /// <param name="list">The list.</param>
         public Bag(IndexedList<T> list)
         {
+            if (list == null)
+                throw new ArgumentNullException("list");
+
             m_items = new Dictionary<int, T>();
 
             foreach (T item in list.Items)
