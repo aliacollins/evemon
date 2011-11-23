@@ -73,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EveStaticData.edmx</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IHasId.cs" />
     <Compile Include="RelationSet.cs" />
     <Compile Include="Program.cs" />
