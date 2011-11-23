@@ -69,9 +69,8 @@ namespace EVEMon.XmlGenerator
             // Load XSLT 
             Assembly asm = Assembly.GetExecutingAssembly();
             XslCompiledTransform xslt = new XslCompiledTransform();
-            Stream input =
-                asm.GetManifestResourceStream(String.Format(CultureConstants.DefaultCulture, "{0}.Zofu.MySQLDumpImport.xslt",
-                                                            asm.GetName().Name));
+            Stream input = asm.GetManifestResourceStream(String.Format(CultureConstants.DefaultCulture,
+                                                                       "{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
             if (input != null)
             {
                 using (XmlReader reader = XmlReader.Create(input))
@@ -106,9 +105,6 @@ namespace EVEMon.XmlGenerator
                         XmlSerializer xs = new XmlSerializer(typeof(T));
                         T result = (T)xs.Deserialize(stream);
 
-                        // XML deserialization creates a lot of garbage so we cleans up now to avoid wasting hundreds of MB 
-                        // and OOM exceptions.
-                        GC.Collect();
                         return result;
                     }
                 }
