@@ -524,7 +524,7 @@ namespace EVEMon.XmlGenerator
                                      {
                                          srcItem,
                                          slotAttrib = s_typeAttributes.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
-                                     }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue() == slot).Select(
+                                     }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue == slot).Select(
                                          x => x.srcItem))
                     {
                         CreateItem(srcItem, items);
@@ -738,7 +738,7 @@ namespace EVEMon.XmlGenerator
             int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
             foreach (DgmTypeAttribute srcProp in s_typeAttributes.Where(x => x.ItemID == srcItem.ID))
             {
-                int propIntValue = srcProp.GetIntValue();
+                int propIntValue = srcProp.GetIntValue;
 
                 // Is it a prereq skill ?
                 int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
@@ -1141,7 +1141,7 @@ namespace EVEMon.XmlGenerator
 
                     // Export skill atributes
                     Dictionary<int, int> skillAttributes = s_typeAttributes.Where(x => x.ItemID == skill.ID).ToDictionary(
-                        attribute => attribute.AttributeID, attribute => attribute.GetIntValue());
+                        attribute => attribute.AttributeID, attribute => attribute.GetIntValue);
 
                     singleSkill.Rank = skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
                                        skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0
@@ -1875,7 +1875,7 @@ namespace EVEMon.XmlGenerator
             foreach (DgmTypeAttribute attribute in s_typeAttributes.Where(
                 x => x.ItemID == requirement.RequiredTypeID))
             {
-                int attributeIntValue = attribute.GetIntValue();
+                int attributeIntValue = attribute.GetIntValue;
 
                 // Is it a prereq skill ?
                 int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(attribute.AttributeID);

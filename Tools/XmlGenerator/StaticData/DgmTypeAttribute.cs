@@ -21,9 +21,10 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Some int values are actually stored as floats in the DB, hence this trick.
         /// </summary>
         /// <returns></returns>
-        public int GetIntValue()
+        [XmlIgnore]
+        public int GetIntValue
         {
-            return ValueInt.HasValue ? ValueInt.Value : (int)(ValueFloat.HasValue ? ValueFloat.Value : 0);
+            get { return ValueInt.HasValue ? ValueInt.Value : (int)(ValueFloat.HasValue ? ValueFloat.Value : 0); }
         }
 
 
