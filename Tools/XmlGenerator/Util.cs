@@ -162,7 +162,7 @@ namespace EVEMon.XmlGenerator
             {
                 FileInfo datafile = new FileInfo(file);
                 if (!datafile.Exists)
-                    throw new Exception(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
+                    throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
 
                 string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
                                             datafile.Name);
