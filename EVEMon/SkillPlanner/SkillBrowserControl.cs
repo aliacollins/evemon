@@ -116,6 +116,9 @@ namespace EVEMon.SkillPlanner
         public void ShowSkillInExplorer(Skill skill)
         {
             PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
             SkillExplorerWindow skillExplorer = WindowsFactory.ShowByTag(planWindow,
                                                                          window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
@@ -332,7 +335,11 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill selector of the Plan Editor
-            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).UpdatePlanEditorSkillSelection();
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.UpdatePlanEditorSkillSelection();
         }
 
         /// <summary>

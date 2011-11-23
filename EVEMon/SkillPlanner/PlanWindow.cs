@@ -143,7 +143,8 @@ namespace EVEMon.SkillPlanner
             {
                 // Tell the skill explorer we're closing down
                 SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
-                WindowsFactory.CloseByTag(skillExplorerWindow, this);
+                if (skillExplorerWindow != null && !skillExplorerWindow.IsDisposed)
+                    WindowsFactory.CloseByTag(skillExplorerWindow, this);
 
                 // Tell the attributes optimization window we're closing down
                 if (m_attributesOptimizerWindow != null)
@@ -184,12 +185,12 @@ namespace EVEMon.SkillPlanner
                 // If the EFTLoadoutImportationForm is open, assign the new plan
                 // We do the check here as we need to catch the previous plan value
                 EFTLoadoutImportationForm eftloadoutImportation = WindowsFactory.GetByTag<EFTLoadoutImportationForm, Plan>(m_plan);
-                if (eftloadoutImportation != null)
+                if (eftloadoutImportation != null && !eftloadoutImportation.IsDisposed)
                     eftloadoutImportation.Plan = value;
 
                 // If the ShipLoadoutSelectWindow is open, assign the new plan
                 ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(m_plan);
-                if (loadoutSelect != null)
+                if (loadoutSelect != null && !loadoutSelect.IsDisposed)
                     loadoutSelect.Plan = value;
 
                 m_plan = value;
@@ -552,7 +553,8 @@ namespace EVEMon.SkillPlanner
 
             // Close the skill explorer
             SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
-            WindowsFactory.CloseByTag(skillExplorerWindow, this);
+            if (skillExplorerWindow != null && !skillExplorerWindow.IsDisposed)
+                WindowsFactory.CloseByTag(skillExplorerWindow, this);
 
             // Remove the plan
             int index = Character.Plans.IndexOf(m_plan);
@@ -663,7 +665,7 @@ namespace EVEMon.SkillPlanner
                 PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(plan);
 
                 // Opens the existing window when there is one, or switch to this plan when no window opened
-                if (window != null)
+                if (window != null && !window.IsDisposed)
                     window.BringToFront();
                 else
                     Plan = plan;

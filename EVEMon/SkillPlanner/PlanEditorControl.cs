@@ -792,12 +792,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrAutoRefresh_Tick(object sender, EventArgs e)
         {
-            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (window == null)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             UpdateListViewItems();
-            window.CheckObsoleteEntries();
+            planWindow.CheckObsoleteEntries();
         }
 
         /// <summary>
@@ -815,22 +815,22 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateStatusBar()
         {
-            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
 
-            if (window == null)
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // 1 or fewer items are selected and status bar only updates on multi-select
             if (lvSkills.SelectedItems.Count < 2 && Settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect)
             {
-                window.UpdateStatusBar();
+                planWindow.UpdateStatusBar();
                 return;
             }
 
             // 0 items selected
             if (lvSkills.SelectedItems.Count < 1)
             {
-                window.UpdateStatusBar();
+                planWindow.UpdateStatusBar();
                 return;
             }
 
@@ -841,9 +841,9 @@ namespace EVEMon.SkillPlanner
             // We compute the training time
             selectedTrainTime = SelectedEntries.Aggregate(selectedTrainTime, (current, entry) => current.Add(entry.TrainingTime));
 
-            window.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
-            window.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
-            window.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
+            planWindow.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
+            planWindow.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
+            planWindow.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
         }
 
         /// <summary>
@@ -1533,7 +1533,11 @@ namespace EVEMon.SkillPlanner
             if (entry == null)
                 return;
 
-            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).ShowSkillInBrowser(entry.CharacterSkill);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.ShowSkillInBrowser(entry.CharacterSkill);
         }
 
         /// <summary>
@@ -1549,7 +1553,11 @@ namespace EVEMon.SkillPlanner
             if (entry == null)
                 return;
 
-            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).ShowSkillInExplorer(entry.CharacterSkill);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.ShowSkillInExplorer(entry.CharacterSkill);
         }
 
         /// <summary>
@@ -1728,7 +1736,11 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill browser
-            WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan).UpdateSkillBrowser();
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.UpdateSkillBrowser();
         }
 
         /// <summary>

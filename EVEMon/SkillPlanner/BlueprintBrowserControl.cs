@@ -599,11 +599,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="item"></param>
         private void ShowInBrowser(Item item)
         {
-            PlanWindow pw = WindowsFactory.GetByTag<PlanWindow, Plan>(Plan);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(Plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
             if (item is Ship)
-                pw.ShowShipInBrowser(item);
+                planWindow.ShowShipInBrowser(item);
             else
-                pw.ShowItemInBrowser(item);
+                planWindow.ShowItemInBrowser(item);
         }
 
         /// <summary>

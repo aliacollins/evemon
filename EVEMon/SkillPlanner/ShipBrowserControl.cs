@@ -90,7 +90,7 @@ namespace EVEMon.SkillPlanner
             requiredSkillsControl.Object = SelectedObject;
 
             ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
-            if (loadoutSelect != null)
+            if (loadoutSelect != null && !loadoutSelect.IsDisposed)
                 loadoutSelect.Ship = shipSelectControl.SelectedObject;
         }
 

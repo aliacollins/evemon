@@ -293,9 +293,10 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Open skill browser tab for this skill
-            PlanWindow pw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
             Skill skill = ((SkillLevel)thisNode.Tag).Skill;
-            pw.ShowSkillInBrowser(skill);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (skill != null && planWindow != null && !planWindow.IsDisposed)
+                planWindow.ShowSkillInBrowser(skill);
         }
 
         #endregion
@@ -343,14 +344,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
+            // Make sure we have a skill to use
+            if (tvSkillList.SelectedNode.Tag == null)
+                return;
+            
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Open the skill explorer
-            SkillLevel skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
-            npw.ShowSkillInBrowser(skillLevel.Skill);
+            Skill skill = ((SkillLevel)tvSkillList.SelectedNode.Tag).Skill;
+            if (skill != null)
+                planWindow.ShowSkillInBrowser(skill);
         }
 
         /// <summary>
@@ -360,14 +366,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
+            // Make sure we have a skill to use
+            if (tvSkillList.SelectedNode.Tag == null)
+                return;
+
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Open the skill explorer
-            SkillLevel skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
-            npw.ShowSkillInExplorer(skillLevel.Skill);
+            Skill skill = ((SkillLevel)tvSkillList.SelectedNode.Tag).Skill;
+            if (skill != null)
+                planWindow.ShowSkillInExplorer(skill);
         }
 
         /// <summary>

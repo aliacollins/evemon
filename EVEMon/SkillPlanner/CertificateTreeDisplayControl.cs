@@ -691,8 +691,8 @@ namespace EVEMon.SkillPlanner
         private void showInBrowserMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Return when nothing is selected
@@ -702,12 +702,12 @@ namespace EVEMon.SkillPlanner
             Certificate cert = treeView.SelectedNode.Tag as Certificate;
             // When a certificate is selected, we select its class in the left tree
             if (cert != null)
-                npw.ShowCertInBrowser(cert);
+                planWindow.ShowCertInBrowser(cert);
                 // When a skill is selected, we select it in the skill browser
             else
             {
                 SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
-                npw.ShowSkillInBrowser(prereq.Skill);
+                planWindow.ShowSkillInBrowser(prereq.Skill);
             }
         }
 
@@ -719,8 +719,8 @@ namespace EVEMon.SkillPlanner
         private void showInExplorerMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Return when nothing is selected
@@ -729,7 +729,7 @@ namespace EVEMon.SkillPlanner
 
             // Open the skill explorer
             SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
-            npw.ShowSkillInExplorer(prereq.Skill);
+            planWindow.ShowSkillInExplorer(prereq.Skill);
         }
 
         #endregion

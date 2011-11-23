@@ -143,7 +143,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
             this.miShowInSkillBrowser.Size = new System.Drawing.Size(250, 22);
-            this.miShowInSkillBrowser.Text = "Show in Skill Browser";
+            this.miShowInSkillBrowser.Text = "Show in Skill &Browser";
             this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // miShowInSkillExplorer
@@ -151,7 +151,7 @@ namespace EVEMon.SkillPlanner
             this.miShowInSkillExplorer.Image = ((System.Drawing.Image)(resources.GetObject("miShowInSkillExplorer.Image")));
             this.miShowInSkillExplorer.Name = "miShowInSkillExplorer";
             this.miShowInSkillExplorer.Size = new System.Drawing.Size(250, 22);
-            this.miShowInSkillExplorer.Text = "Show in Skill Explorer...";
+            this.miShowInSkillExplorer.Text = "Show in Skill &Explorer...";
             this.miShowInSkillExplorer.Click += new System.EventHandler(this.miShowInSkillExplorer_Click);
             // 
             // miMarkOwned
@@ -268,7 +268,7 @@ namespace EVEMon.SkillPlanner
             // sfdSave
             // 
             this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML Format (*.xml)|*.xml|Text Format (*.txt)|*.t" +
-                "xt";
+    "xt";
             this.sfdSave.Title = "Save Plan As...";
             // 
             // tmrAutoRefresh
@@ -710,7 +710,7 @@ namespace EVEMon.SkillPlanner
             this.skillSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
             this.skillSelectControl.Margin = new System.Windows.Forms.Padding(2);
-            this.skillSelectControl.Name = "SkillSelectControl";
+            this.skillSelectControl.Name = "skillSelectControl";
             this.skillSelectControl.Plan = null;
             this.skillSelectControl.SelectedSkill = null;
             this.skillSelectControl.Size = new System.Drawing.Size(96, 100);

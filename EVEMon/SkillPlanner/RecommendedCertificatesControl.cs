@@ -452,22 +452,22 @@ namespace EVEMon.SkillPlanner
             // Get selected node
             TreeNode selectedNode = e.Node;
 
-            // Make sure we have a skill to use
+            // Make sure we have a tag
             if (selectedNode.Tag == null)
                 return;
 
-            if (selectedNode.Tag is Certificate)
+            Certificate cert = selectedNode.Tag as Certificate;
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (cert != null)
             {
-                PlanWindow pw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-                Certificate cert = ((Certificate)selectedNode.Tag);
-                pw.ShowCertInBrowser(cert);
+                if (planWindow != null && !planWindow.IsDisposed)
+                    planWindow.ShowCertInBrowser(cert);
             }
             else
             {
                 // Open skill browser tab for this skill
-                PlanWindow pw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
                 Skill skill = ((SkillLevel)selectedNode.Tag).Skill;
-                pw.ShowSkillInBrowser(skill);
+                planWindow.ShowSkillInBrowser(skill);
             }
         }
 
@@ -540,20 +540,25 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
+            // Make sure we have a tag
+            if (tvCertList.SelectedNode.Tag == null)
+                return;
+
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             Certificate cert = tvCertList.SelectedNode.Tag as Certificate;
             // When a certificate is selected
             if (cert != null)
-                npw.ShowCertInBrowser(cert);
+                planWindow.ShowCertInBrowser(cert);
                 // When a skill is selected
             else
             {
-                SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
-                npw.ShowSkillInBrowser(prereq.Skill);
+                Skill skill = ((SkillLevel)tvCertList.SelectedNode.Tag).Skill;
+                if (skill != null)
+                    planWindow.ShowSkillInBrowser(skill);
             }
         }
 
@@ -564,14 +569,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
+            // Make sure we have a tag
+            if (tvCertList.SelectedNode.Tag == null)
+                return;
+
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Open the skill explorer
-            SkillLevel prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
-            npw.ShowSkillInExplorer(prereq.Skill);
+            Skill skill = ((SkillLevel)tvCertList.SelectedNode.Tag).Skill;
+            if (skill != null)
+                planWindow.ShowSkillInExplorer(skill);
         }
 
         /// <summary>
