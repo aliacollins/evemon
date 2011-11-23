@@ -14,13 +14,15 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="input"><c>string</c> to be cleaned.</param>
         /// <returns>cleaned <c>string</c></returns>
-        public static void Clean(this string input)
+        public static string Clean(this string input)
         {
             string output = input.TrimWhitespace();
             output = output.ReplaceTabs();
             output = output.CleanXmlTags();
             output = output.CollapseSpaces();
-            output.Normalize();
+            output = output.Normalize();
+
+            return output;
         }
 
         /// <summary>
