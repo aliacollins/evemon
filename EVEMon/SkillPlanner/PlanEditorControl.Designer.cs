@@ -268,7 +268,7 @@ namespace EVEMon.SkillPlanner
             // sfdSave
             // 
             this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML Format (*.xml)|*.xml|Text Format (*.txt)|*.t" +
-                "xt";
+    "xt";
             this.sfdSave.Title = "Save Plan As...";
             // 
             // tmrAutoRefresh
@@ -581,10 +581,9 @@ namespace EVEMon.SkillPlanner
             // pscPlan.Panel2
             // 
             this.pscPlan.Panel2.Controls.Add(this.skillSelectControl);
-            this.pscPlan.Panel2Collapsed = true;
             this.pscPlan.RememberDistanceKey = null;
             this.pscPlan.Size = new System.Drawing.Size(719, 520);
-            this.pscPlan.SplitterDistance = 472;
+            this.pscPlan.SplitterDistance = 519;
             this.pscPlan.TabIndex = 13;
             // 
             // lvSkills
@@ -599,7 +598,7 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.Location = new System.Drawing.Point(0, 33);
             this.lvSkills.Name = "lvSkills";
             this.lvSkills.ShowItemToolTips = true;
-            this.lvSkills.Size = new System.Drawing.Size(719, 487);
+            this.lvSkills.Size = new System.Drawing.Size(519, 487);
             this.lvSkills.SmallImageList = this.ilIcons;
             this.lvSkills.TabIndex = 0;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
@@ -627,7 +626,7 @@ namespace EVEMon.SkillPlanner
             this.tlpHeader.Name = "tlpHeader";
             this.tlpHeader.RowCount = 1;
             this.tlpHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpHeader.Size = new System.Drawing.Size(719, 33);
+            this.tlpHeader.Size = new System.Drawing.Size(519, 33);
             this.tlpHeader.TabIndex = 4;
             // 
             // implantSetterPanel
@@ -639,7 +638,7 @@ namespace EVEMon.SkillPlanner
             this.implantSetterPanel.Location = new System.Drawing.Point(0, 0);
             this.implantSetterPanel.Margin = new System.Windows.Forms.Padding(0);
             this.implantSetterPanel.Name = "implantSetterPanel";
-            this.implantSetterPanel.Size = new System.Drawing.Size(686, 33);
+            this.implantSetterPanel.Size = new System.Drawing.Size(486, 33);
             this.implantSetterPanel.TabIndex = 1;
             // 
             // lblChooseImplantSet
@@ -670,7 +669,7 @@ namespace EVEMon.SkillPlanner
             this.tsPreferences.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tsPreferences.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.preferencesMenu});
-            this.tsPreferences.Location = new System.Drawing.Point(686, 0);
+            this.tsPreferences.Location = new System.Drawing.Point(486, 0);
             this.tsPreferences.Name = "tsPreferences";
             this.tsPreferences.Size = new System.Drawing.Size(33, 33);
             this.tsPreferences.TabIndex = 3;
@@ -710,10 +709,10 @@ namespace EVEMon.SkillPlanner
             this.skillSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
             this.skillSelectControl.Margin = new System.Windows.Forms.Padding(2);
-            this.skillSelectControl.Name = "SkillSelectControl";
+            this.skillSelectControl.Name = "skillSelectControl";
             this.skillSelectControl.Plan = null;
             this.skillSelectControl.SelectedSkill = null;
-            this.skillSelectControl.Size = new System.Drawing.Size(96, 100);
+            this.skillSelectControl.Size = new System.Drawing.Size(196, 520);
             this.skillSelectControl.TabIndex = 12;
             // 
             // PlanEditorControl
