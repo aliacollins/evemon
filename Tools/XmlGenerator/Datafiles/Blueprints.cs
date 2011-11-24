@@ -78,11 +78,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Add the items in this group
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
-                foreach (InvType item in Database.InvTypeTable.Where(x => x.MarketGroupID == marketGroup.ID
-                                                                          &&
-                                                                          Database.InvGroupTable[x.GroupID].CategoryID ==
-                                                                          DBConstants.BlueprintCategoryID
-                                                                          && Database.InvGroupTable[x.GroupID].Published))
+                foreach (InvType item in Database.InvTypeTable.Where(
+                    x => x.MarketGroupID == marketGroup.ID &&
+                         Database.InvGroupTable[x.GroupID].CategoryID == DBConstants.BlueprintCategoryID &&
+                         Database.InvGroupTable[x.GroupID].Published))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -159,17 +158,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                                          };
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
-            foreach (InvType item in Database.InvTypeTable.Where(x => (x.MarketGroupID == null ||
-                                                                       x.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
-                                                                      !x.Name.Contains("TEST") &&
-                                                                      Database.InvBlueprintTypesTable.Any(y => y.ID == x.ID) &&
-                                                                      Database.InvTypeTable.Any(
-                                                                          z =>
-                                                                          z.ID ==
-                                                                          Database.InvBlueprintTypesTable[x.ID].ProductTypeID) &&
-                                                                      Database.InvTypeTable[
-                                                                          Database.InvBlueprintTypesTable[x.ID].ProductTypeID].
-                                                                          Published))
+            foreach (InvType item in Database.InvTypeTable.Where(
+                x => (x.MarketGroupID == null || x.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
+                     !x.Name.Contains("TEST") && Database.InvBlueprintTypesTable.Any(y => y.ID == x.ID) &&
+                     Database.InvTypeTable.Any(z => z.ID == Database.InvBlueprintTypesTable[x.ID].ProductTypeID) &&
+                     Database.InvTypeTable[Database.InvBlueprintTypesTable[x.ID].ProductTypeID].Published))
             {
                 Util.UpdatePercentDone(BlueprintGenTotal);
 

@@ -109,15 +109,17 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Enumerate all implants without market groups
             foreach (InvType srcItem in Database.InvTypeTable.Where(
-                x => x.MarketGroupID == null && Database.InvGroupTable[x.GroupID].CategoryID == DBConstants.ImplantCategoryID
-                     && x.GroupID != DBConstants.CyberLearningImplantsGroupID).Select(
-                         srcItem =>
-                         new
-                             {
-                                 srcItem,
-                                 slotAttrib = Database.DgmTypeAttributesTable.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
-                             }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue == slot).Select(
-                                 x => x.srcItem))
+                item => (item.MarketGroupID == null || item.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
+                        Database.InvGroupTable[item.GroupID].CategoryID == DBConstants.ImplantCategoryID &&
+                        item.GroupID != DBConstants.CyberLearningImplantsGroupID).Select(
+                            srcItem =>
+                            new
+                                {
+                                    srcItem,
+                                    slotAttrib =
+                                Database.DgmTypeAttributesTable.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
+                                }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue == slot).Select(
+                                    x => x.srcItem))
             {
                 CreateItem(srcItem, items);
             }
