@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
 {
     public sealed class SerializableAPIKey
     {
+        private readonly Collection<SerializableCharacterIdentity> m_ignoreList;
+
         public SerializableAPIKey()
         {
-            IgnoreList = new List<SerializableCharacterIdentity>();
+            m_ignoreList = new Collection<SerializableCharacterIdentity>();
         }
 
         [XmlAttribute("id")]
@@ -33,7 +37,10 @@ namespace EVEMon.Common.Serialization.Settings
         public bool Monitored { get; set; }
 
         [XmlArray("ignoredCharacters")]
-        [XmlArrayItem ("character")]
-        public List<SerializableCharacterIdentity> IgnoreList { get; set; }
+        [XmlArrayItem("character")]
+        public Collection<SerializableCharacterIdentity> IgnoreList
+        {
+            get { return m_ignoreList; }
+        }
     }
 }

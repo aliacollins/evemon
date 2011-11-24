@@ -272,7 +272,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticCertificate(Certificate cert)
         {
-            return cert.StaticData;
+            return cert == null ? null : cert.StaticData;
         }
     }
 }

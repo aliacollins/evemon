@@ -50,12 +50,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            // Call the base method
-            base.OnLoad(e);
-
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            // Call the base method
+            base.OnLoad(e);
 
             lblHelp.Text = "Use the tree on the left to select a blueprint to view.";
             gbDescription.Text = "Attributes";
@@ -68,12 +68,10 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void OnSelectionChanged(object sender, EventArgs e)
+        protected override void OnSelectionChanged()
         {
             // Call the base method
-            base.OnSelectionChanged(sender, e);
+            base.OnSelectionChanged();
 
             if (SelectedObject == null)
                 return;
@@ -111,9 +109,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the implant modifier list when the settings changed.
         /// </summary>
-        protected override void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        protected override void OnSettingsChanged()
         {
-            base.EveMonClient_SettingsChanged(sender, e);
+            base.OnSettingsChanged();
             UpdateImplantSetModifier();
         }
 
@@ -601,11 +599,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="item"></param>
         private void ShowInBrowser(Item item)
         {
-            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(Plan);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(Plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
             if (item is Ship)
-                pw.ShowShipInBrowser(item);
+                planWindow.ShowShipInBrowser(item);
             else
-                pw.ShowItemInBrowser(item);
+                planWindow.ShowItemInBrowser(item);
         }
 
         /// <summary>

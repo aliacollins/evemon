@@ -150,8 +150,9 @@ namespace EVEMon.Common.Data
             {
                 // Skills
                 if (prereq.Kind == SerializableCertificatePrerequisiteKind.Skill)
-                    m_prerequisiteSkills.Add(new StaticSkillLevel(prereq.Name, Int32.Parse(prereq.Level)));
-                    // Certificates
+                    m_prerequisiteSkills.Add(new StaticSkillLevel(prereq.Name,
+                                                                  Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)));
+                // Certificates
                 else
                 {
                     CertificateGrade grade = GetGrade(prereq.Level);
@@ -194,7 +195,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("{0} {1}", Name, Grade);
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Name, Grade);
         }
 
         #endregion
@@ -207,6 +208,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public Certificate ToCharacter(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return character.Certificates[ID];
         }
     }

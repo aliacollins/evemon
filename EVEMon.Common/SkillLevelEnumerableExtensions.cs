@@ -98,6 +98,12 @@ namespace EVEMon.Common
         public static TimeSpan GetTotalTrainingTime(this IEnumerable<SkillLevel> src, Dictionary<Skill, int> alreadyCountedList,
                                                     ref bool isCurrentlyTraining)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
+            if (alreadyCountedList == null)
+                throw new ArgumentNullException("alreadyCountedList");
+
             TimeSpan result = TimeSpan.Zero;
             foreach (SkillLevel item in src)
             {

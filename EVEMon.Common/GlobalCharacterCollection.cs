@@ -10,7 +10,7 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents the global collection of characters
+    /// Represents the global collection of characters.
     /// </summary>
     public sealed class GlobalCharacterCollection : ReadonlyCollection<Character>
     {
@@ -26,9 +26,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public Character this[Guid guid]
+        public Character this[string guid]
         {
-            get { return Items.FirstOrDefault(character => character.Guid == guid); }
+            get { return Items.FirstOrDefault(character => character.Guid.ToString() == guid); }
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace EVEMon.Common
 
             // For CCP characters, also remove it from the API key's ignore list
             if (character is CCPCharacter)
-                character.Identity.APIKeys.ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
+                character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Remove(character.Identity));
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -63,7 +63,7 @@ namespace EVEMon.Common
 
             // For CCP characters, also add it on the API key's ignore list
             if (character is CCPCharacter)
-                character.Identity.APIKeys.ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
+                character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
 
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
@@ -76,6 +76,9 @@ namespace EVEMon.Common
         /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
         public static void TryAddOrUpdateFromUriAsync(Uri uri, EventHandler<UriCharacterEventArgs> callback)
         {
+            if (uri == null)
+                throw new ArgumentNullException("uri");
+
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
             {
@@ -126,7 +129,7 @@ namespace EVEMon.Common
                 // So, it's a web address, let's do it in an async way
             else
             {
-                Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri.ToString(), null, APIProvider.RowsetsTransform,
+                Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, null, APIProvider.RowsetsTransform,
                                                                            result =>
                                                                            callback(null, new UriCharacterEventArgs(uri, result)));
             }
@@ -173,16 +176,16 @@ namespace EVEMon.Common
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableSettingsCharacter> Export()
+        internal IEnumerable<SerializableSettingsCharacter> Export()
         {
-            return Items.Select(character => character.Export()).ToList();
+            return Items.Select(character => character.Export());
         }
 
         /// <summary>
-        /// imports the plans from serialization objects
+        /// imports the plans from serialization objects.
         /// </summary>
         /// <param name="serial"></param>
-        internal void ImportPlans(List<SerializablePlan> serial)
+        internal void ImportPlans(ICollection<SerializablePlan> serial)
         {
             foreach (Character character in Items)
             {
@@ -191,10 +194,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports the plans as serialization objects
+        /// Exports the plans as serialization objects.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializablePlan> ExportPlans()
+        internal IEnumerable<SerializablePlan> ExportPlans()
         {
             List<SerializablePlan> serial = new List<SerializablePlan>();
             foreach (Character character in Items)

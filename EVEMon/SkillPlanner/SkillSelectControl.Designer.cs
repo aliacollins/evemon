@@ -362,7 +362,7 @@ namespace EVEMon.SkillPlanner
             this.showInSkillExplorerListMenu.Image = ((System.Drawing.Image)(resources.GetObject("showInSkillExplorerListMenu.Image")));
             this.showInSkillExplorerListMenu.Name = "showInSkillExplorerListMenu";
             this.showInSkillExplorerListMenu.Size = new System.Drawing.Size(185, 22);
-            this.showInSkillExplorerListMenu.Text = "Show in Skill &Explorer";
+            this.showInSkillExplorerListMenu.Text = "Show in Skill &Explorer...";
             this.showInSkillExplorerListMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
             // 
             // lbSearchTextHint

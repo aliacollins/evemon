@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
@@ -15,6 +16,9 @@ namespace EVEMon.Common.Data
         public BlueprintMarketGroup(SerializableBlueprintMarketGroup src)
             : base(src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
             Blueprints = new BlueprintCollection(this, src.Blueprints);
         }
@@ -24,9 +28,12 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="src">The source.</param>
-        public BlueprintMarketGroup(BlueprintMarketGroup parent, SerializableBlueprintMarketGroup src)
+        public BlueprintMarketGroup(MarketGroup parent, SerializableBlueprintMarketGroup src)
             : base(parent, src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
             Blueprints = new BlueprintCollection(this, src.Blueprints);
         }

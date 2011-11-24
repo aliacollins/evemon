@@ -120,15 +120,17 @@ namespace EVEMon.BlankCharacter
                     // Disabling control edit ability
                     blankCharacterControl.Enabled = false;
 
-                    XmlDocument xmlDoc = Util.SerializeToXmlDocument(serial.GetType(), serial);
+                    XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
                     string content = Util.GetXMLStringRepresentation(xmlDoc);
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                                                       fs =>
                                                           {
-                                                              StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
-                                                              writer.Write(content);
-                                                              writer.Flush();
-                                                              writer.Close();
+                                                              using(StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                                                              {
+                                                                  writer.Write(content);
+                                                                  writer.Flush();
+                                                                  fs.Flush();
+                                                              }
                                                               return true;
                                                           });
 

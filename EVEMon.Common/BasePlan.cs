@@ -167,6 +167,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public PlanEntry GetEntry(StaticSkill skill, int level)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             return level == 0 ? null : m_lookup[skill.ArrayIndex * 5 + level - 1];
         }
 
@@ -176,6 +179,9 @@ namespace EVEMon.Common
         /// <param name="entry"></param>
         protected void AddCore(PlanEntry entry)
         {
+            if (entry == null)
+                throw new ArgumentNullException("entry");
+
             Items.Add(entry);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = entry;
             OnChanged(PlanChange.All);
@@ -188,6 +194,9 @@ namespace EVEMon.Common
         /// <param name="entry"></param>
         protected void InsertCore(int index, PlanEntry entry)
         {
+            if (entry == null)
+                throw new ArgumentNullException("entry");
+
             Items.Insert(index, entry);
             m_lookup[entry.Skill.ArrayIndex * 5 + entry.Level - 1] = entry;
             OnChanged(PlanChange.All);
@@ -477,6 +486,9 @@ namespace EVEMon.Common
         /// <param name="entries"></param>
         public void RebuildPlanFrom(IEnumerable<PlanEntry> entries)
         {
+            if (entries == null)
+                throw new ArgumentNullException("entries");
+
             using (SuspendingEvents())
             {
                 Items.Clear();
@@ -500,6 +512,9 @@ namespace EVEMon.Common
         /// <param name="entries"></param>
         public void RebuildPlanFrom(IEnumerable<PlanEntry> entries, bool preserveOldEntries)
         {
+            if (entries == null)
+                throw new ArgumentNullException("entries");
+
             if (!preserveOldEntries)
             {
                 RebuildPlanFrom(entries);
@@ -671,6 +686,9 @@ namespace EVEMon.Common
         /// <param name="priority">The new priority to set</param>
         public void SetPriority(IEnumerable<PlanEntry> displayPlan, IEnumerable<PlanEntry> entries, int priority)
         {
+            if (entries == null)
+                throw new ArgumentNullException("entries");
+
             // Change priorities and determine how conflicts are going to be fixed
             bool loweringPriorities = true;
             foreach (PlanEntry entry in entries)
@@ -723,6 +741,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool WillGrantEligibilityFor(Certificate cert)
         {
+            if (cert == null)
+                throw new ArgumentNullException("cert");
+
             if (cert.Status == CertificateStatus.Claimable || cert.Status == CertificateStatus.Granted)
                 return true;
 
@@ -760,6 +781,9 @@ namespace EVEMon.Common
         /// <param name="settings"></param>
         public void Sort(PlanSorting settings)
         {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
             PlanEntrySort criteria = (settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria);
             Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority);
         }
@@ -785,6 +809,9 @@ namespace EVEMon.Common
         /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
         public void UpdateStatistics(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
+            if (scratchpad == null)
+                throw new ArgumentNullException("scratchpad");
+
             CharacterScratchpad scratchpadWithoutImplants = scratchpad.Clone();
             scratchpadWithoutImplants.ClearImplants();
             DateTime time = DateTime.Now;
@@ -828,6 +855,9 @@ namespace EVEMon.Common
         /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
         public void UpdateOldTrainingTimes(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
+            if (scratchpad == null)
+                throw new ArgumentNullException("scratchpad");
+
             // Update the statistics
             foreach (PlanEntry entry in Items)
             {

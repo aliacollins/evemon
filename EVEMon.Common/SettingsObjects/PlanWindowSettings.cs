@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class PlanWindowSettings
     {
-        private Collection<PlanColumnSettings> m_columns;
+        private readonly Collection<PlanColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlanWindowSettings"/> class.
@@ -143,27 +143,16 @@ namespace EVEMon.Common.SettingsObjects
                                                       PlanColumn.SPPerHour
                                                   };
 
-                List<PlanColumnSettings> planColumns = Columns.ToList();
-                planColumns.AddRange(EnumExtensions.GetValues<PlanColumn>().Where(
-                    x => x != PlanColumn.None).Where(x => planColumns.All(y => y.Column != x)).Select(
-                        x => new PlanColumnSettings
-                                 {
-                                     Column = x,
-                                     Visible = defaultColumns.Contains(x),
-                                     Width = -1
-                                 }));
-
-                return planColumns;
+                return EnumExtensions.GetValues<PlanColumn>().Where(
+                    planColumn => planColumn != PlanColumn.None).Where(
+                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
+                            planColumn => new PlanColumnSettings
+                                              {
+                                                  Column = planColumn,
+                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Width = -2
+                                              });
             }
-        }
-
-        /// <summary>
-        /// Adds the specified columns.
-        /// </summary>
-        /// <param name="columns">The columns.</param>
-        public void Add(List<PlanColumnSettings> columns)
-        {
-            m_columns = new Collection<PlanColumnSettings>(columns);
         }
     }
 }

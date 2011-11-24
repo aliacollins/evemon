@@ -53,6 +53,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnDragOver(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnDragOver(e);
             TabPage draggedTab = GetDraggedTab(e);
 
@@ -99,6 +102,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnDragDrop(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             TabPage draggedTab = GetDraggedTab(e);
 
             m_lastPoint = new Point(Int32.MaxValue, Int32.MaxValue);
@@ -243,6 +249,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnMouseMove(e);
 
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
@@ -354,6 +363,9 @@ namespace EVEMon.Common.Controls
             /// <param name="e"></param>
             protected override void OnPaint(PaintEventArgs e)
             {
+                if (e == null)
+                    throw new ArgumentNullException("e");
+
                 Rectangle rect = ClientRectangle;
                 Color startColor = Color.FromArgb(0, 148, 255);
                 Color endColor = Color.FromArgb(0, 255, 255);

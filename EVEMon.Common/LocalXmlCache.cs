@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common
 {
@@ -22,7 +23,8 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
-                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", filename)));
+                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                                 String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename)));
             }
         }
 
@@ -31,13 +33,14 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="charName"></param>
         /// <returns></returns>
-        public static XmlDocument GetCharacterXml(string charName)
+        public static IXPathNavigable GetCharacterXml(string charName)
         {
             lock (s_syncLock)
             {
                 XmlDocument doc = new XmlDocument();
                 EveMonClient.EnsureCacheDirInit();
-                doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", charName)));
+                doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                      String.Format(CultureConstants.DefaultCulture, "{0}.xml", charName)));
                 return doc;
             }
         }
@@ -47,16 +50,21 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="xdoc">The xml to save.</param>
-        public static void Save(string key, XmlDocument xdoc)
+        public static void Save(string key, IXPathNavigable xdoc)
         {
+            if (xdoc == null)
+                throw new ArgumentNullException("xdoc");
+
             lock (s_syncLock)
             {
-                XmlNode characterNode = xdoc.SelectSingleNode("//name");
+                XmlDocument xmlDoc = (XmlDocument)xdoc;
+                XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
                 string name = (characterNode == null ? key : characterNode.InnerText);
 
                 // Writes in the target file
                 EveMonClient.EnsureCacheDirInit();
-                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
+                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                               String.Format(CultureConstants.DefaultCulture, "{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName,
                                                   fs =>
@@ -65,7 +73,7 @@ namespace EVEMon.Common
                                                           {
                                                               writer.Write(content);
                                                               writer.Flush();
-                                                              writer.Close();
+                                                              fs.Flush();
                                                           }
                                                           return true;
                                                       });
@@ -82,7 +90,9 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
-                return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir, String.Format("{0}.xml", characterName)));
+                return
+                    new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                         String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
             }
         }
 

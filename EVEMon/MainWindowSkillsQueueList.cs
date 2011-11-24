@@ -754,7 +754,7 @@ namespace EVEMon
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             Skill skill = (Skill)item.Tag;
 
-            SkillExplorerWindow window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
+            SkillExplorerWindow window = WindowsFactory.ShowUnique<SkillExplorerWindow>();
             window.Skill = skill;
         }
 

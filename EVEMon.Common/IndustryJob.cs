@@ -219,7 +219,7 @@ namespace EVEMon.Common
         /// </summary>
         public string FullLocation
         {
-            get { return String.Format("{0} > {1}", SolarSystem.FullLocation, Installation); }
+            get { return String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, Installation); }
         }
 
         /// <summary>

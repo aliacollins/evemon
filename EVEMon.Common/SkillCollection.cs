@@ -61,15 +61,15 @@ namespace EVEMon.Common
             get { return GetByKey(id); }
         }
 
-        /// <summary>
-        /// Gets the skill representing the given static skill.
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <returns></returns>
-        public Skill this[StaticSkill skill]
-        {
-            get { return GetByArrayIndex(skill.ArrayIndex); }
-        }
+        ///// <summary>
+        ///// Gets the skill representing the given static skill.
+        ///// </summary>
+        ///// <param name="skill"></param>
+        ///// <returns></returns>
+        //public Skill this[StaticSkill skill]
+        //{
+        //    get { return GetByArrayIndex(skill.ArrayIndex); }
+        //}
 
         /// <summary>
         /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>).
@@ -85,9 +85,9 @@ namespace EVEMon.Common
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableCharacterSkill> Export()
+        internal IEnumerable<SerializableCharacterSkill> Export()
         {
-            return Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export()).ToList();
+            return Items.Values.Where(x => x.IsKnown || x.IsOwned).Select(skill => skill.Export());
         }
 
         /// Imports data from a serialization object.

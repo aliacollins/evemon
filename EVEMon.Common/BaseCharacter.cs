@@ -34,6 +34,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public float GetBaseSPPerHour(StaticSkill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             if (skill.PrimaryAttribute == EveAttribute.None || skill.SecondaryAttribute == EveAttribute.None)
                 return 0.0f;
 
@@ -63,6 +66,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public CharacterScratchpad After(ImplantSet set)
         {
+            if (set == null)
+                throw new ArgumentNullException("set");
+
             CharacterScratchpad scratchpad = new CharacterScratchpad(this);
             for (int i = 0; i < 5; i++)
             {
@@ -95,6 +101,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public int GetSPToTrain(ISkillLevel skillLevel)
         {
+            if (skillLevel == null)
+                throw new ArgumentNullException("skillLevel");
+
             return GetSPToTrain(skillLevel.Skill, skillLevel.Level);
         }
 
@@ -151,6 +160,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public TimeSpan GetTrainingTime(ISkillLevel skillLevel)
         {
+            if (skillLevel == null)
+                throw new ArgumentNullException("skillLevel");
+
             return GetTrainingTime(skillLevel.Skill, skillLevel.Level);
         }
 

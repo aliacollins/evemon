@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
@@ -15,7 +15,7 @@ namespace EVEMon.Common
     {
         public const int DefaultPriority = 3;
 
-        private readonly List<string> m_planGroups = new List<string>();
+        private readonly Collection<string> m_planGroups = new Collection<string>();
         private readonly StaticSkill m_skill;
         private readonly BasePlan m_owner;
         private readonly int m_level;
@@ -25,10 +25,8 @@ namespace EVEMon.Common
         private int m_priority;
         private string m_notes;
 
-        // Statistics computed on Plan.UpdateTrainingTimes
-
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="skill">The skill.</param>
@@ -47,7 +45,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="skill">The skill.</param>
         /// <param name="level">The level.</param>
@@ -57,7 +55,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="serial">The serial.</param>
@@ -70,7 +68,7 @@ namespace EVEMon.Common
             m_notes = serial.Notes;
             m_priority = serial.Priority;
 
-            serial.PlanGroups.ForEach(x => m_planGroups.Add(x));
+            m_planGroups.AddRange(serial.PlanGroups);
 
             if (serial.Remapping != null)
                 m_remapping = new RemappingPoint(serial.Remapping);
@@ -85,7 +83,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the owner
+        /// Gets the owner.
         /// </summary>
         public BasePlan Plan
         {
@@ -93,7 +91,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill of this entry
+        /// Gets the skill of this entry.
         /// </summary>
         public StaticSkill Skill
         {
@@ -101,7 +99,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the character's skill of this entry
+        /// Gets the character's skill of this entry.
         /// </summary>
         public Skill CharacterSkill
         {
@@ -121,7 +119,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the entry's priority
+        /// Gets the entry's priority.
         /// </summary>
         public int Priority
         {
@@ -153,7 +151,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets the remapping point to apply before that skill is trained
+        /// Gets or sets the remapping point to apply before that skill is trained.
         /// </summary>
         public RemappingPoint Remapping
         {
@@ -169,13 +167,13 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the names of the plans this entry was taken from when those plans were merged.
         /// </summary>
-        public List<string> PlanGroups
+        public Collection<string> PlanGroups
         {
             get { return m_planGroups; }
         }
 
         /// <summary>
-        /// Gets a description of the plans groups ("none", "multiple (2)" or the plan's name)
+        /// Gets a description of the plans groups ("none", "multiple (2)" or the plan's name).
         /// </summary>
         public string PlanGroupsDescription
         {
@@ -191,7 +189,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if the character already know all the prerequisites
+        /// Gets true if the character already know all the prerequisites.
         /// </summary>
         public bool CanTrainNow
         {
@@ -208,7 +206,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a skill by its ID or its name
+        /// Gets a skill by its ID or its name.
         /// </summary>
         /// <param name="serial">The serial.</param>
         /// <returns></returns>
@@ -223,7 +221,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if this skill level is, in any way, dependent of the provided skill level. Checks prerequisites but also same skill's lower levels.
+        /// Gets true if this skill level is, in any way, dependent of the provided skill level.
+        /// Checks prerequisites but also same skill's lower levels.
         /// </summary>
         /// <param name="level"></param>
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
@@ -323,7 +322,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetHashCode()
         {
-            // after the switch to 64-bit integers this line was throwing a
+            // After the switch to 64-bit integers this line was throwing a
             // warning. GetHashCode can't possibly be unique for every object
             // there is, additionally GetHashCode() should not be used for
             // equality only grouping; or at least Google says so...
@@ -340,16 +339,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Creates a clone of this entry.
-        /// </summary>
-        /// <returns></returns>
-        public PlanEntry Clone()
-        {
-            return Clone(m_owner);
-        }
-
-        /// <summary>
-        /// Creates a clone of this entry for the given plan
+        /// Creates a clone of this entry for the given plan.
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
@@ -366,17 +356,18 @@ namespace EVEMon.Common
                                       TrainingTime = TrainingTime
                                   };
             clone.m_planGroups.AddRange(m_planGroups);
+
             return clone;
         }
 
         /// <summary>
-        /// Implicit conversion operator
+        /// Implicit conversion operator.
         /// </summary>
         /// <param name="entry"></param>
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(PlanEntry entry)
         {
-            return new StaticSkillLevel(entry.Skill, entry.Level);
+            return entry == null ? null : new StaticSkillLevel(entry.Skill, entry.Level);
         }
     }
 }

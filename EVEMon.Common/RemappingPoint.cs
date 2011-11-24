@@ -27,6 +27,9 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public RemappingPoint(SerializableRemappingPoint serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             Guid = Guid.NewGuid();
             m_attributes[(int)EveAttribute.Intelligence] = serial.Intelligence;
             m_attributes[(int)EveAttribute.Perception] = serial.Perception;
@@ -66,11 +69,11 @@ namespace EVEMon.Common
         private string ToShortString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append("i").Append(m_attributes[(int)EveAttribute.Intelligence].ToString()).
-                Append(" p").Append(m_attributes[(int)EveAttribute.Perception].ToString()).
-                Append(" c").Append(m_attributes[(int)EveAttribute.Charisma].ToString()).
-                Append(" w").Append(m_attributes[(int)EveAttribute.Willpower].ToString()).
-                Append(" m").Append(m_attributes[(int)EveAttribute.Memory].ToString());
+            builder.Append("i").Append(m_attributes[(int)EveAttribute.Intelligence].ToString(CultureConstants.DefaultCulture)).
+                Append(" p").Append(m_attributes[(int)EveAttribute.Perception].ToString(CultureConstants.DefaultCulture)).
+                Append(" c").Append(m_attributes[(int)EveAttribute.Charisma].ToString(CultureConstants.DefaultCulture)).
+                Append(" w").Append(m_attributes[(int)EveAttribute.Willpower].ToString(CultureConstants.DefaultCulture)).
+                Append(" m").Append(m_attributes[(int)EveAttribute.Memory].ToString(CultureConstants.DefaultCulture));
 
             return builder.ToString();
         }
@@ -90,9 +93,9 @@ namespace EVEMon.Common
                 case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case RemappingPointStatus.UpToDate:
-                    return String.Format("Remapping : {0}", m_description);
+                    return String.Format(CultureConstants.DefaultCulture, "Remapping : {0}", m_description);
                 default:
-                    throw new NotImplementedException();
+                    return String.Empty;
             }
         }
 
@@ -111,9 +114,9 @@ namespace EVEMon.Common
                 case RemappingPointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case RemappingPointStatus.UpToDate:
-                    return String.Format("Remapping (active) : {0}", ToShortString());
+                    return String.Format(CultureConstants.DefaultCulture, "Remapping (active) : {0}", ToShortString());
                 default:
-                    throw new NotImplementedException();
+                    return String.Empty;
             }
         }
 
@@ -155,14 +158,22 @@ namespace EVEMon.Common
         public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad,
                                                    CharacterScratchpad newScratchpad)
         {
+            if (oldScratchpad == null)
+                throw new ArgumentNullException("oldScratchpad");
+
+            if (newScratchpad == null)
+                throw new ArgumentNullException("newScratchpad");
+
             int bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
 
             if (bonusDifference == 0)
                 return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");
 
             return newScratchpad[attrib].ToString(bonusDifference > 0
-                                                      ? String.Format("%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
-                                                      : String.Format("%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
+                                                      ? String.Format(CultureConstants.DefaultCulture,
+                                                                      "%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
+                                                      : String.Format(CultureConstants.DefaultCulture,
+                                                                      "%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
         }
 
         /// <summary>

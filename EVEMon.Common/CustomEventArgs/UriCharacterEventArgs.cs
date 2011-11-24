@@ -19,6 +19,9 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="result">API Result</param>
         public UriCharacterEventArgs(Uri uri, APIResult<SerializableAPICharacterSheet> result)
         {
+            if (result == null)
+                throw new ArgumentNullException("result");
+
             Uri = uri;
             m_apiResult = result;
             m_result = m_apiResult.Result;
@@ -101,6 +104,9 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="character"></param>
         public void UpdateCharacter(UriCharacter character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             CharacterIdentity identity = GetIdentity(m_result);
 
             // Updates

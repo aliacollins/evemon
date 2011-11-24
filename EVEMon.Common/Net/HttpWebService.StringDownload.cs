@@ -18,7 +18,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public String DownloadString(string url)
+        public String DownloadString(Uri url)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -27,7 +27,8 @@ namespace EVEMon.Common.Net
             HttpWebServiceRequest request = GetRequest();
             try
             {
-                request.GetResponse(url, new MemoryStream(), STRING_ACCEPT);
+                MemoryStream responseStream = Util.GetMemoryStream();
+                request.GetResponse(url, responseStream, STRING_ACCEPT);
                 string result = String.Empty;
                 if (request.ResponseStream != null)
                 {
@@ -53,7 +54,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public void DownloadStringAsync(string url, DownloadStringCompletedCallback callback, object userState)
+        public void DownloadStringAsync(Uri url, DownloadStringCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -61,7 +62,8 @@ namespace EVEMon.Common.Net
 
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new MemoryStream(), STRING_ACCEPT, null, state);
+            MemoryStream responseStream = Util.GetMemoryStream();
+            request.GetResponseAsync(url, responseStream, STRING_ACCEPT, null, state);
         }
 
         /// <summary>

@@ -247,6 +247,9 @@ namespace EVEMon.PieChart
         /// </param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnPaint(e);
             if (HasAnyValue)
                 DoDraw(e.Graphics);
@@ -350,6 +353,9 @@ namespace EVEMon.PieChart
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnMouseMove(e);
             if (PieChart == null || m_values == null || m_values.Length <= 0)
                 return;

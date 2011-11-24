@@ -5,25 +5,26 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmTypeAttribute : IRelation
     {
         [XmlElement("typeID")]
-        public int ItemID;
+        public int ItemID { get; set; }
 
         [XmlElement("attributeID")]
-        public int AttributeID;
+        public int AttributeID { get; set; }
 
         [XmlElement("valueInt")]
-        public int? ValueInt;
+        public int? ValueInt { get; set; }
 
         [XmlElement("valueFloat")]
-        public double? ValueFloat;
+        public double? ValueFloat { get; set; }
 
         /// <summary>
         /// Returns the value as an integer. 
         /// Some int values are actually stored as floats in the DB, hence this trick.
         /// </summary>
         /// <returns></returns>
-        public int GetIntValue()
+        [XmlIgnore]
+        public int GetIntValue
         {
-            return ValueInt.HasValue ? ValueInt.Value : (int)(ValueFloat.HasValue ? ValueFloat.Value : 0);
+            get { return ValueInt.HasValue ? ValueInt.Value : (int)(ValueFloat.HasValue ? ValueFloat.Value : 0); }
         }
 
 

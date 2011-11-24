@@ -7,41 +7,52 @@ namespace EVEMon.Common.Controls
 {
     public static class NativeMethods
     {
-        public const int SWP_NOSIZE = 0x0001;
-        public const int SWP_NOMOVE = 0x0002;
-        public const int SW_SHOWNOACTIVATE = 4;
+        public const uint SWP_NOSIZE = 0x0001;
+        public const uint SWP_NOMOVE = 0x0002;
+        public const uint SW_SHOWNOACTIVATE = 0x0004;
         public const int HWND_TOPMOST = -1;
         public const uint SWP_NOACTIVATE = 0x0010;
 
         private const uint SRCCOPY = 0x00CC0020;
 
-        [DllImport("user32.dll")]
-        public static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
+        [DllImport("psapi.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool EmptyWorkingSet(IntPtr proc);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SendMessage(IntPtr handle, Int32 messg, IntPtr wparam, IntPtr lparam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
                                                Int32 cx, Int32 cy, uint uFlags);
 
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
-        public static extern int SetTextCharacterExtra(IntPtr hdc, int nCharExtra);
-
-        [DllImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
                                           int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
 
         /// <summary>
         /// Show the given form on topmost without activating it.
         /// </summary>
-        /// <param name="frm"></param>
-        public static void ShowInactiveTopmost(this Control frm)
+        /// <param name="form"></param>
+        /// <param name="uFlags"></param>
+        public static void ShowInactiveTopmost(this Control form, uint uFlags = 0)
         {
+            if (form == null)
+                throw new ArgumentNullException("form");
+
             // We store the 'left' and 'top' position because for some reason
             // on first execution of 'ShowWindow' the form position gets reset
-            int left = frm.Left;
-            int top = frm.Top;
+            int left = form.Left;
+            int top = form.Top;
 
-            SetWindowPos(frm.Handle, HWND_TOPMOST, left, top, frm.Width, frm.Height, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
-            ShowWindow(frm.Handle, SW_SHOWNOACTIVATE);
+            SetWindowPos(form.Handle, HWND_TOPMOST, left, top, form.Width, form.Height, SWP_NOACTIVATE | uFlags);
+            ShowWindow(form.Handle, SW_SHOWNOACTIVATE);
         }
 
         /// <summary>
@@ -54,6 +65,12 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         public static void CopyGraphics(Graphics dest, Rectangle destClip, Graphics src, Point bltFrom)
         {
+            if (dest == null)
+                throw new ArgumentNullException("dest");
+
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
                    src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
@@ -62,16 +79,16 @@ namespace EVEMon.Common.Controls
         #region Tray Icon
 
         // All definitions taken from http://pinvoke.net
-        [DllImport("shell32.dll")]
-        public static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SHAppBarMessage(uint dwMessage, ref AppBarData pData);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         public const string TaskbarClass = "Shell_TrayWnd";
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct AppBarData
+        internal struct AppBarData
         {
             private int cbSize;
             private readonly IntPtr hWnd;
@@ -106,7 +123,7 @@ namespace EVEMon.Common.Controls
         public const int ABE_BOTTOM = 3;
 
         [Serializable, StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        internal struct RECT
         {
             private RECT(int left, int top, int right, int bottom)
                 : this()
@@ -191,10 +208,11 @@ namespace EVEMon.Common.Controls
         public const int MF_ENABLED = 0x0;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+        internal static extern IntPtr GetSystemMenu(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool bRevert);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
 
         #endregion
     }

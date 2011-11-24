@@ -22,8 +22,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CreateBasicAPIKeyLinkLabel_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
-                                       (int)APIMethodsExtensions.BasicCharacterFeatures));
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
+                                       (int)APIMethodsExtensions.BasicCharacterFeatures)));
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CreateAllFeaturesAPIKeyLinkLabel_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
-                                       (int)APIMethodsExtensions.AllCharacterFeatures));
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
+                                       (int)APIMethodsExtensions.AllCharacterFeatures)));
         }
     }
 }

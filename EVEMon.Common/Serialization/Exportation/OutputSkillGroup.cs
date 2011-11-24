@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Exportation
@@ -8,9 +8,11 @@ namespace EVEMon.Common.Serialization.Exportation
     /// </summary>
     public sealed class OutputSkillGroup
     {
+        private readonly Collection<OutputSkill> m_skills;
+
         public OutputSkillGroup()
         {
-            Skills = new List<OutputSkill>();
+            m_skills = new Collection<OutputSkill>();
         }
 
         [XmlAttribute("groupName")]
@@ -20,9 +22,12 @@ namespace EVEMon.Common.Serialization.Exportation
         public int SkillsCount { get; set; }
 
         [XmlAttribute("totalSP")]
-        public int TotalSP { get; set; }
+        public string TotalSP { get; set; }
 
         [XmlElement("skill")]
-        public List<OutputSkill> Skills { get; set; }
+        public Collection<OutputSkill> Skills
+        {
+            get { return m_skills; }
+        }
     }
 }

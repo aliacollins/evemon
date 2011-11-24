@@ -109,7 +109,6 @@ namespace EVEMon.SkillPlanner
                 UpdateContent();
             }
         }
-
         #endregion
 
 
@@ -291,7 +290,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill">The skill.</param>
         private void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
         {
-            PlanWindow planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
             planWindow.SetPlanEditorSkillSelectorSelectedSkill(skill);
         }
 
@@ -301,9 +303,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInExplorer(Skill skill)
         {
-            PlanWindow planWindow = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            SkillExplorerWindow skillExplorer = WindowsFactory<SkillExplorerWindow>.ShowByTag(
-                planWindow, window => new SkillExplorerWindow(skill, window));
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            SkillExplorerWindow skillExplorer = WindowsFactory.ShowByTag(planWindow,
+                                                                         window => new SkillExplorerWindow(skill, window));
             skillExplorer.Skill = skill;
         }
 
@@ -343,8 +348,11 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill selector of the Plan Editor
-            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            pw.UpdatePlanEditorSkillSelection();
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.UpdatePlanEditorSkillSelection();
         }
 
         /// <summary>

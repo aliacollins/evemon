@@ -35,6 +35,12 @@ namespace System.Linq
         /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
         public static void StableSort<T>(this IList<T> list, Comparison<T> comparison)
         {
+            if (list == null)
+                throw new ArgumentNullException("list");
+
+            if (comparison == null)
+                throw new ArgumentNullException("comparison");
+
             // For every key
             for (int i = 1; i < list.Count; i++)
             {
@@ -62,6 +68,9 @@ namespace System.Linq
         /// <returns></returns>
         public static int IndexOf<T>(this IEnumerable<T> src, T item)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             int index = 0;
             foreach (T srcItem in src)
             {

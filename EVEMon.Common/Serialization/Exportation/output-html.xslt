@@ -14,30 +14,43 @@
           <tr>
             <td>
               <xsl:element name="img">
-                <xsl:attribute name="src">
-                  http://img.eve.is/serv.asp?s=256&amp;c=
-                  <xsl:value-of select="@characterID" />
-                </xsl:attribute>
-                <xsl:attribute name="style">
-                  width:256px;height:256px;
-                </xsl:attribute>
+                <xsl:attribute name="src">http://image.eveonline.com/character/<xsl:value-of select="@characterID" />_256.jpg</xsl:attribute>
+                <xsl:attribute name="style">width:256px;height:256px;</xsl:attribute>
               </xsl:element>
             </td>
             <td>
+              <p>
               <div class="characterName">
-                <xsl:value-of select="@name" />
+                <font size ="5">
+                  <b>
+                    <xsl:value-of select="@name" />
+                  </b>
+                </font>
               </div>
               <div class="characterBio">
                 <span class="gender">
-                  <xsl:value-of select="gender/child::text()" />
-                  ,
+                  <xsl:value-of select="gender/child::text()" /> - 
                 </span>
                 <span class="race">
-                  <xsl:value-of select="race/child::text()" />
-                  ,
+                  <xsl:value-of select="race/child::text()" /> - 
                 </span>
                 <span class="bloodline">
-                  <xsl:value-of select="bloodLine/child::text()" />
+                  <xsl:value-of select="bloodLine/child::text()" /> - 
+                </span>
+                <span class="ancestry">
+                  <xsl:value-of select="ancestry/child::text()" />
+                </span>
+              </div>
+              <div class="balanceInfo">
+                Balance:
+                <span class="balance">
+                  <xsl:value-of select="balance/child::text()" /> ISK
+                </span>
+              </div>
+              <div class="BirthInfo">
+                Birthday:
+                <span class="birtdayDateTime">
+                  <xsl:value-of select="birthday/child::text()" /> UTC
                 </span>
               </div>
               <div class="corpInfo">
@@ -46,13 +59,7 @@
                   <xsl:value-of select="corporationName/child::text()" />
                 </span>
               </div>
-              <div class="balanceInfo">
-                Balance:
-                <span class="balance">
-                  <xsl:value-of select="balance/child::text()" />
-                  ISK
-                </span>
-              </div>
+              </p>
               <table class="attributes">
                 <tr>
                   <td class="attributeTitle intelligenceTitle">Intelligence:</td>
@@ -102,52 +109,44 @@
 
   <xsl:template match="implant">
     <tr>
-      <xsl:element name="td">
-        <xsl:attribute name="class">
-          implantName
-          <xsl:value-of select="@attribute" />
-          ImplantName
-        </xsl:attribute>
-        <xsl:value-of select="@attribute" />
-      </xsl:element>
-      <xsl:element name="td">
-        <xsl:attribute name="class">
-          implantBonus
-          <xsl:value-of select="@attribute" />
-          ImplantBonus
-        </xsl:attribute>
-        +
-        <xsl:value-of select="@bonus" />
-      </xsl:element>
-      <xsl:element name="td">
-        <xsl:attribute name="class">
-          implantName
-          <xsl:value-of select="@attribute" />
-          ImplantName
-        </xsl:attribute>
-        <xsl:value-of select="@name" />
-      </xsl:element>
+      <p>
+        <xsl:element name="td">
+          <xsl:attribute name="class">implantName<xsl:value-of select="@attribute" />ImplantName</xsl:attribute><xsl:value-of select="@attribute" />
+        </xsl:element>
+        <xsl:element name="td">
+          <xsl:attribute name="class">implantBonus<xsl:value-of select="@attribute" />ImplantBonus</xsl:attribute> : + <xsl:value-of select="@bonus" />
+        </xsl:element>
+        <xsl:element name="td">
+          <xsl:attribute name="class">implantName<xsl:value-of select="@attribute" />ImplantName</xsl:attribute>(<xsl:value-of select="@name" />)
+        </xsl:element>
+      </p>
     </tr>
   </xsl:template>
 
   <xsl:template match="skillGroup">
+    <tr class="spacer">
+      <td>
+        <br />
+      </td>
+    </tr> 
     <tr class="skillGroupHeader">
       <td colspan="4">
-        <xsl:value-of select="@groupName" />
-        -
-        <xsl:value-of select="@skillsCount" />
-        Skill
-        <xsl:if test="count(skill)>1">s</xsl:if>
-        ,
-        <xsl:value-of select="@totalSP" />
-        Points
+        <b>
+          <xsl:value-of select="@groupName" /> - <xsl:value-of select="@skillsCount" /> Skill<xsl:if test="count(skill)>1">s</xsl:if>, <xsl:value-of select="@totalSP" /> Points
+        </b>
       </td>
     </tr>
     <tr class="skillGroupColumnHeaders">
       <td class="spacer"></td>
-      <td class="name">Name</td>
-      <td class="level">Level</td>
-      <td class="skillpoints">Points</td>
+      <td class="name">
+        <b>Name</b>
+      </td>
+      <td class="level">
+        <b>Level</b>
+      </td>
+      <td class="skillpoints">
+        <b>Points</b>
+      </td>
     </tr>
     <xsl:apply-templates select="skill" />
   </xsl:template>
@@ -156,21 +155,13 @@
     <tr class="skillRow">
       <td class="spacer"></td>
       <td class="name">
-        <xsl:value-of select="@typeName" />
-        (Rank
-        <xsl:value-of select="rank/child::text()" />
-        )
+        <xsl:value-of select="@typeName" /> (Rank <xsl:value-of select="rank/child::text()" />)
       </td>
       <td class="level">
-        Level
-        <xsl:value-of select="romanLevel/child::text()" />
+        Level <xsl:value-of select="romanLevel/child::text()" />
       </td>
       <td class="skillpoints">
-        (
-        <xsl:value-of select="SP/child::text()" />
-        /
-        <xsl:value-of select="maxSP/child::text()" />
-        SP)
+        (<xsl:value-of select="SP/child::text()" /> / <xsl:value-of select="maxSP/child::text()" /> SP)
       </td>
     </tr>
     <!-- Skill training detection -->

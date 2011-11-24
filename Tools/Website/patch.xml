@@ -64,52 +64,52 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>20 November 2011</date>
+      <date>24 November 2011</date>
       <md5>115c91c2a4a21fc1e4d9054f07bb1c02</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) blueprints data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>20 November 2011</date>
+      <date>24 November 2011</date>
       <md5>9fa59cae413770fa90c547bd46edab57</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) certificates data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>20 November 2011</date>
+      <date>24 November 2011</date>
       <md5>77d0209251919ddc8d8e07046d2195c7</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) geography data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>20 November 2011</date>
-      <md5>0a25fdb9cc798a4466d17a04a9b33754</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) items data file by the EVEMon Development Team]]></message>
+      <date>24 November 2011</date>
+      <md5>a21161b81908dd75fa2755e58a89cfe2</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>20 November 2011</date>
+      <date>24 November 2011</date>
       <md5>6de9e0c12cc805aaa31bf934023a9384</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) properties data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>20 November 2011</date>
+      <date>24 November 2011</date>
       <md5>75f2c25c7277b26d8501364189c7e765</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) reprocessing data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>20 November 2011</date>
+      <date>24 November 2011</date>
       <md5>217beb6e168f15bdd4105605ecb0d203</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979</url>
-      <message><![CDATA[Incarna 1.1 (306979) skills data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
+      <message><![CDATA[Incarna 1.1 (306979b) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>

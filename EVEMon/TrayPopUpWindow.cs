@@ -300,10 +300,11 @@ namespace EVEMon
                 List<APIKey> prevAPIKeys = new List<APIKey>();
                 foreach (Character character in characters)
                 {
-                    if (!character.Identity.APIKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
+                    List<APIKey> apiKeys = character.Identity.APIKeys.ToList();
+                    if (!apiKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
                     {
                         mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
-                        prevAPIKeys = character.Identity.APIKeys;
+                        prevAPIKeys = apiKeys;
                     }
                     else
                     {
@@ -317,7 +318,7 @@ namespace EVEMon
                             tempAccountGroupPanel.FlowDirection = FlowDirection.TopDown;
                             tempAccountGroupPanel.Padding = new Padding(10, 0, 0, 0);
                             tempAccountGroupPanel.Controls.Add(charPanel);
-                            
+
                             FlowLayoutPanel accountGroupPanel = tempAccountGroupPanel;
                             tempAccountGroupPanel = null;
 
@@ -325,11 +326,11 @@ namespace EVEMon
                         }
                         finally
                         {
-                            if(tempAccountGroupPanel != null)
+                            if (tempAccountGroupPanel != null)
                                 tempAccountGroupPanel.Dispose();
                         }
 
-                        prevAPIKeys = character.Identity.APIKeys;
+                        prevAPIKeys = apiKeys;
                     }
                 }
             }

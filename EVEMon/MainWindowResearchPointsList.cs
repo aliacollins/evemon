@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -500,7 +501,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.Research.Add(Columns.Cast<ResearchColumnSettings>().ToList());
+            Settings.UI.MainWindow.Research.Columns.Clear();
+            Settings.UI.MainWindow.Research.Columns.AddRange(Columns.Cast<ResearchColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.Research.Columns;

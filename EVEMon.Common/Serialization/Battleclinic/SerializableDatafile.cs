@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -15,13 +16,19 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public string MD5Sum { get; set; }
 
         [XmlElement("url")]
-        public string Url { get; set; }
+        public string Address { get; set; }
 
         [XmlElement("message")]
         public XmlCDataSection MessageXml
         {
             get { return new XmlDocument().CreateCDataSection(Message); }
-            set { Message = value.Data; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
+                Message = value.Data;
+            }
         }
 
         [XmlIgnore]

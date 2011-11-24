@@ -54,12 +54,9 @@ namespace EVEMon.Common
         /// Exports the standings to a serialization object for the settings file.
         /// </summary>
         /// <returns>List of serializable research points.</returns>
-        internal List<SerializableStanding> Export()
+        internal IEnumerable<SerializableStanding> Export()
         {
-            List<SerializableStanding> serial = new List<SerializableStanding>(Items.Count);
-            serial.AddRange(Items.Select(standing => standing.Export()));
-
-            return serial;
+            return Items.Select(standing => standing.Export());
         }
     }
 }

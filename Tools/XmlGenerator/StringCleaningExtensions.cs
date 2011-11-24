@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using EVEMon.XmlGenerator.StaticData;
 
@@ -14,13 +15,15 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="input"><c>string</c> to be cleaned.</param>
         /// <returns>cleaned <c>string</c></returns>
-        public static void Clean(this string input)
+        public static string Clean(this string input)
         {
             string output = input.TrimWhitespace();
             output = output.ReplaceTabs();
             output = output.CleanXmlTags();
             output = output.CollapseSpaces();
-            output.Normalize();
+            output = output.Normalize();
+
+            return output;
         }
 
         /// <summary>
@@ -75,13 +78,16 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         public static string FormatPropertyValue(this DgmTypeAttribute property)
         {
+            if (property == null)
+                throw new ArgumentNullException("property");
+
             if (property.ValueInt.HasValue)
                 return property.ValueInt.ToString();
 
             // Is it actually an integer stored as a float?
             if (property.ValueFloat.HasValue &&
                 Math.Abs(Math.Truncate(property.ValueFloat.Value) - property.ValueFloat.Value) < float.Epsilon)
-                return Convert.ToInt32(property.ValueFloat.Value).ToString();
+                return Convert.ToInt32(property.ValueFloat.Value).ToString(CultureInfo.InvariantCulture);
 
             return property.ValueFloat.ToString();
         }
@@ -94,7 +100,9 @@ namespace EVEMon.XmlGenerator
         public static string FormatDecimal(this decimal input)
         {
             // Is it actually an integer stored as a double?
-            return Math.Truncate(input) == input ? Convert.ToInt64(input).ToString() : input.ToString();
+            return Math.Truncate(input) == input
+                       ? Convert.ToInt64(input).ToString(CultureInfo.InvariantCulture)
+                       : input.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

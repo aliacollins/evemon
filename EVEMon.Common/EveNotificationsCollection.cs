@@ -92,7 +92,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal String Export()
         {
-            return String.Join(",", Items.Select(notification => notification.NotificationID.ToString()));
+            return String.Join(",", Items.Select(notification => notification.NotificationID.ToString(CultureConstants.InvariantCulture)));
         }
 
         #endregion

@@ -33,6 +33,9 @@ namespace EVEMon.Common
         /// <exception cref="InvalidOperationException">The API key does not exist in the list.</exception>
         public void Remove(APIKey apiKey)
         {
+            if (apiKey == null)
+                throw new ArgumentNullException("apiKey");
+
             // Removes the API key on the owned identities
             foreach (CharacterIdentity identity in apiKey.CharacterIdentities.Where(x => x.APIKeys.Contains(apiKey)))
             {
@@ -92,9 +95,9 @@ namespace EVEMon.Common
         /// Exports the data to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableAPIKey> Export()
+        internal IEnumerable<SerializableAPIKey> Export()
         {
-            return Items.Values.Select(apikey => apikey.Export()).ToList();
+            return Items.Values.Select(apikey => apikey.Export());
         }
 
         #endregion

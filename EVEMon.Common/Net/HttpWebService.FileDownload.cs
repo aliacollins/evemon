@@ -15,7 +15,7 @@ namespace EVEMon.Common.Net
         /// <param name="url"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public FileInfo DownloadFile(string url, string filePath)
+        public FileInfo DownloadFile(Uri url, string filePath)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -27,7 +27,7 @@ namespace EVEMon.Common.Net
                 FileStream responseStream;
                 try
                 {
-                    responseStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
                 }
                 catch (Exception ex)
                 {
@@ -51,7 +51,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="progressCallback"></param>
         /// <returns></returns>
-        public object DownloadFileAsync(string url, string filePath, DownloadFileCompletedCallback callback,
+        public object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
                                         DownloadProgressChangedCallback progressCallback)
         {
             string urlValidationError;
@@ -61,8 +61,8 @@ namespace EVEMon.Common.Net
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
                                                                     DownloadFileAsyncCompleted);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None),
-                                     IMAGE_ACCEPT, null, state);
+            FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
             return request;
         }
 

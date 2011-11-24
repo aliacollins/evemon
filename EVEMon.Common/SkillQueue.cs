@@ -121,9 +121,9 @@ namespace EVEMon.Common
         /// Generates a deserialization object.
         /// </summary>
         /// <returns></returns>
-        internal List<SerializableQueuedSkill> Export()
+        internal IEnumerable<SerializableQueuedSkill> Export()
         {
-            return Items.Select(skill => skill.Export()).ToList();
+            return Items.Select(skill => skill.Export());
         }
 
         /// <summary>

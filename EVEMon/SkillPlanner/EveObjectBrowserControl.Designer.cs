@@ -200,7 +200,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.scObjectBrowser);
             this.Name = "EveObjectBrowserControl";
             this.Size = new System.Drawing.Size(650, 413);
-            this.Load += new System.EventHandler(this.EveObjectBrowserControl_Load);
             this.scObjectBrowser.Panel2.ResumeLayout(false);
             this.scObjectBrowser.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).EndInit();

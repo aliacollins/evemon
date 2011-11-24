@@ -35,7 +35,7 @@ namespace EVEMon.Common.Data
         /// <param name="target"></param>
         /// <param name="minSecurityLevel">The mininmum, inclusive, security level.</param>
         /// <returns></returns>
-        public static List<SolarSystem> FindBestPath(SolarSystem start, SolarSystem target, float minSecurityLevel)
+        public static IEnumerable<SolarSystem> FindBestPath(SolarSystem start, SolarSystem target, float minSecurityLevel)
         {
             PathFinder result = FindBestPathCore(start, target, minSecurityLevel);
 

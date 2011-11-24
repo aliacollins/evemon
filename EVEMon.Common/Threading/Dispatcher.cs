@@ -75,6 +75,9 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void Invoke(Action action)
         {
+            if (action == null)
+                throw new ArgumentNullException("action");
+
             IActor actor = Actor;
             if (HasAccess || (actor == null))
                 action();
@@ -89,6 +92,9 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void BeginInvoke(Action action)
         {
+            if (action == null)
+                throw new ArgumentNullException("action");
+
             IActor actor = Actor;
             if (HasAccess || (actor == null))
                 action();
@@ -150,6 +156,9 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void BackgroundInvoke(Action action)
         {
+            if (action == null)
+                throw new ArgumentNullException("action");
+
             if (IsMultiThreaded)
                 action.BeginInvoke(null, null);
             else
@@ -165,6 +174,9 @@ namespace EVEMon.Common.Threading
         /// <param name="object"></param>
         public static void BackgroundInvoke(Action action, AsyncCallback callback, object @object)
         {
+            if (action == null)
+                throw new ArgumentNullException("action");
+
             if (IsMultiThreaded)
                 action.BeginInvoke(callback, @object);
             else

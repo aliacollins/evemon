@@ -31,16 +31,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// On load, we read the settings.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             // Return on design mode
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             // Call the base method
-            base.EveObjectSelectControl_Load(sender, e);
+            base.OnLoad(e);
 
             m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
 
@@ -83,7 +82,7 @@ namespace EVEMon.SkillPlanner
                     case ItemSlot.Low:
                         cbSlotFilter.SelectedIndex = 3;
                         break;
-                    case ItemSlot.None:                 
+                    case ItemSlot.None:
                     case ItemSlot.NoSlot:
                         cbSlotFilter.SelectedIndex = 4;
                         break;
@@ -125,12 +124,11 @@ namespace EVEMon.SkillPlanner
         /// When the search text changed, we store the next settings
         /// and update the list view and the list/tree visibilities.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void tbSearchText_TextChanged(object sender, EventArgs e)
+        /// <param name="searchText">The search text.</param>
+        protected override void OnSearchTextChanged(string searchText)
         {
-            Settings.UI.ItemBrowser.TextSearch = tbSearchText.Text;
-            base.tbSearchText_TextChanged(sender, e);
+            Settings.UI.ItemBrowser.TextSearch = searchText;
+            base.OnSearchTextChanged(searchText);
         }
 
         /// <summary>
@@ -346,11 +344,11 @@ namespace EVEMon.SkillPlanner
 
                     int result = BuildSubtree(group, node.Nodes);
 
-                    if (result != 0)
-                    {
-                        numberOfItems += result;
-                        tvItems.Nodes.Add(node);
-                    }
+                    if (result == 0)
+                        continue;
+
+                    numberOfItems += result;
+                    tvItems.Nodes.Add(node);
                 }
 
                 TreeNode selectedNode = null;

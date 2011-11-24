@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,6 +8,13 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPICharacterInfo
     {
+        private readonly Collection<SerializableEmploymentHistoryListItem> m_employmentHistory;
+
+        public SerializableAPICharacterInfo()
+        {
+            m_employmentHistory = new Collection<SerializableEmploymentHistoryListItem>();
+        }
+
         [XmlElement("shipName")]
         public string ShipName { get; set; }
 
@@ -22,6 +29,9 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlArray("employmentHistory")]
         [XmlArrayItem("record")]
-        public List<SerializableEmploymentHistoryListItem> EmploymentHistory { get; set; }
+        public Collection<SerializableEmploymentHistoryListItem> EmploymentHistory
+        {
+            get { return m_employmentHistory; }
+        }
     }
 }

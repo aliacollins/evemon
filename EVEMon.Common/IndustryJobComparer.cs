@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EVEMon.Common.SettingsObjects;
 
@@ -69,16 +70,16 @@ namespace EVEMon.Common
                     return x.EndProductionTime.CompareTo(y.EndProductionTime);
 
                 case IndustryJobColumn.InstalledItem:
-                    return x.InstalledItem.Name.CompareTo(y.InstalledItem.Name);
+                    return String.Compare(x.InstalledItem.Name, y.InstalledItem.Name, StringComparison.CurrentCulture);
 
                 case IndustryJobColumn.InstalledItemType:
-                    return x.InstalledItem.MarketGroup.Name.CompareTo(y.InstalledItem.MarketGroup.Name);
+                    return String.Compare(x.InstalledItem.MarketGroup.Name, y.InstalledItem.MarketGroup.Name, StringComparison.CurrentCulture);
 
                 case IndustryJobColumn.OutputItem:
-                    return x.OutputItem.Name.CompareTo(y.OutputItem.Name);
+                    return String.Compare(x.OutputItem.Name, y.OutputItem.Name, StringComparison.CurrentCulture);
 
                 case IndustryJobColumn.OutputItemType:
-                    return x.OutputItem.MarketGroup.Name.CompareTo(y.OutputItem.MarketGroup.Name);
+                    return String.Compare(x.OutputItem.MarketGroup.Name, y.OutputItem.MarketGroup.Name, StringComparison.CurrentCulture);
 
                 case IndustryJobColumn.Activity:
                     return x.Activity.CompareTo(y.Activity);
@@ -105,7 +106,7 @@ namespace EVEMon.Common
                     return (x.InstalledPE + x.Runs).CompareTo(y.InstalledPE + y.Runs);
 
                 case IndustryJobColumn.Location:
-                    return x.Installation.CompareTo(y.Installation);
+                    return String.Compare(x.FullLocation, y.FullLocation, StringComparison.CurrentCulture);
 
                 case IndustryJobColumn.Region:
                     return x.SolarSystem.Constellation.Region.CompareTo(y.SolarSystem.Constellation.Region);
@@ -114,7 +115,7 @@ namespace EVEMon.Common
                     return x.SolarSystem.CompareTo(y.SolarSystem);
 
                 case IndustryJobColumn.Installation:
-                    return x.Installation.CompareTo(y.Installation);
+                    return String.Compare(x.Installation, y.Installation, StringComparison.CurrentCulture);
 
                 case IndustryJobColumn.IssuedFor:
                     return x.IssuedFor.CompareTo(y.IssuedFor);

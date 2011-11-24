@@ -90,9 +90,10 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (MonitoredCharacterSettings characterSettings in monitoredCharacters)
             {
-                Character character = EveMonClient.Characters[characterSettings.CharacterGuid];
+                Character character = EveMonClient.Characters[characterSettings.CharacterGuid.ToString()];
                 if (character == null)
                     continue;
+
                 Items.Add(character);
                 character.Monitored = true;
                 character.UISettings = characterSettings.Settings;
@@ -104,9 +105,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Updates the settings from <see cref="Settings"/>. Adds and removes group as needed.
         /// </summary>
-        internal List<MonitoredCharacterSettings> Export()
+        internal IEnumerable<MonitoredCharacterSettings> Export()
         {
-            return Items.Select(character => new MonitoredCharacterSettings(character)).ToList();
+            return Items.Select(character => new MonitoredCharacterSettings(character));
         }
     }
 }

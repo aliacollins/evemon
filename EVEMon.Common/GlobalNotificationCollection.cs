@@ -33,6 +33,9 @@ namespace EVEMon.Common
         /// <param name="notification"></param>
         public void Notify(NotificationEventArgs notification)
         {
+            if (notification == null)
+                throw new ArgumentNullException("notification");
+
             switch (notification.Behaviour)
             {
                 case NotificationBehaviour.Cohabitate:
@@ -65,11 +68,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notifications with the given key and notify an event.
         /// </summary>
-        /// <param name="args"></param>
-        public void Invalidate(NotificationInvalidationEventArgs args)
+        /// <param name="e"></param>
+        public void Invalidate(NotificationInvalidationEventArgs e)
         {
-            if (InvalidateCore(args.Key))
-                EveMonClient.OnNotificationInvalidated(args);
+            if (e == null)
+                throw new ArgumentNullException("e");
+
+            if (InvalidateCore(e.Key))
+                EveMonClient.OnNotificationInvalidated(e);
         }
 
         /// <summary>
@@ -201,7 +207,7 @@ namespace EVEMon.Common
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                     {
-                        Description = String.Format(
+                        Description = String.Format(CultureConstants.DefaultCulture,
                             "An error occurred while querying the character list for API key {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Error
@@ -233,7 +239,7 @@ namespace EVEMon.Common
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
                     {
-                        Description = String.Format(
+                        Description = String.Format(CultureConstants.DefaultCulture,
                             "An error occurred while querying the account status for API key {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Error
@@ -535,9 +541,9 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
                     {
-                        Description = String.Format(
-                            "This API key expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
-                            apiKey),
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "This API key expires in {0}: {1}.",
+                                                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = priority
                     };
@@ -569,9 +575,9 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
                     {
-                        Description = String.Format(
-                            "This account expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc),
-                            apiKey),
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "This account expires in {0}: {1}.",
+                                                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = priority
                     };
@@ -601,7 +607,8 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)
                     {
-                        Description = String.Format("This account has no characters in training: {0}.", apiKey),
+                        Description = String.Format(CultureConstants.DefaultCulture,
+                                                    "This account has no characters in training: {0}.", apiKey),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Warning
                     };
@@ -773,10 +780,10 @@ namespace EVEMon.Common
             switch (status)
             {
                 case ServerStatus.Offline:
-                    text = String.Format("{0} is offline.", serverName);
+                    text = String.Format(CultureConstants.DefaultCulture, "{0} is offline.", serverName);
                     break;
                 case ServerStatus.Online:
-                    text = String.Format("{0} is online.", serverName);
+                    text = String.Format(CultureConstants.DefaultCulture, "{0} is online.", serverName);
                     break;
                 case ServerStatus.CheckDisabled:
                 case ServerStatus.Unknown:

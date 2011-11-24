@@ -241,7 +241,6 @@ namespace EVEMon.SkillPlanner
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "EveObjectSelectControl";
             this.Size = new System.Drawing.Size(185, 398);
-            this.Load += new System.EventHandler(this.EveObjectSelectControl_Load);
             this.contextMenu.ResumeLayout(false);
             this.upperPanel.ResumeLayout(false);
             this.upperPanel.PerformLayout();

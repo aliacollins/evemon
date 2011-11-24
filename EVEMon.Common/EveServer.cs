@@ -49,11 +49,11 @@ namespace EVEMon.Common
                         return String.Format(CultureConstants.DefaultCulture,
                                              "{0} Server Online ({1:N0} Pilots)", Name, m_users);
                     case ServerStatus.Offline:
-                        return String.Format("{0} Server Offline", Name);
+                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Offline", Name);
                     case ServerStatus.CheckDisabled:
-                        return String.Format("{0} Server Status Check Disabled", Name);
+                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Status Check Disabled", Name);
                     default:
-                        return String.Format("{0} Server Status Unknown", Name);
+                        return String.Format(CultureConstants.DefaultCulture, "{0} Server Status Unknown", Name);
                 }
             }
         }

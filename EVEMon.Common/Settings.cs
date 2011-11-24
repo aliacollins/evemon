@@ -12,6 +12,7 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Importation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
+using System.Collections.ObjectModel;
 
 namespace EVEMon.Common
 {
@@ -220,23 +221,8 @@ namespace EVEMon.Common
                     Updates.Periods[method.ToString()] = Updates.Periods[APIGenericMethods.CharacterList.ToString()];
             }
 
-            // Initializes the plan columns or adds missing ones
-            UI.PlanWindow.Add(UI.PlanWindow.DefaultColumns.ToList());
-
-            // Initializes the market order columns or adds missing ones
-            UI.MainWindow.MarketOrders.Add(UI.MainWindow.MarketOrders.DefaultColumns.ToList());
-
-            // Initializes the industry jobs columns or adds missing ones
-            UI.MainWindow.IndustryJobs.Add(UI.MainWindow.IndustryJobs.DefaultColumns.ToList());
-
-            // Initializes the research points columns or adds missing ones
-            UI.MainWindow.Research.Add(UI.MainWindow.Research.DefaultColumns.ToList());
-
-            // Initializes the EVE mail messages columns or adds missing ones
-            UI.MainWindow.EVEMailMessages.Add(UI.MainWindow.EVEMailMessages.DefaultColumns.ToList());
-
-            // Initializes the EVE notifications columns or adds missing ones
-            UI.MainWindow.EVENotifications.Add(UI.MainWindow.EVENotifications.DefaultColumns.ToList());
+            // Initialize or add missing columns
+            InitializeOrAddMissingColumns();
 
             // Removes reduntant windows locations
             List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
@@ -249,30 +235,57 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Initializes or adds missing columns.
+        /// </summary>
+        private static void InitializeOrAddMissingColumns()
+        {
+            // Initializes the plan columns or adds missing ones
+            UI.PlanWindow.Columns.AddRange(UI.PlanWindow.DefaultColumns);
+
+            // Initializes the market order columns or adds missing ones
+            UI.MainWindow.MarketOrders.Columns.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
+
+            // Initializes the industry jobs columns or adds missing ones
+            UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
+
+            // Initializes the research points columns or adds missing ones
+            UI.MainWindow.Research.Columns.AddRange(UI.MainWindow.Research.DefaultColumns);
+
+            // Initializes the EVE mail messages columns or adds missing ones
+            UI.MainWindow.EVEMailMessages.Columns.AddRange(UI.MainWindow.EVEMailMessages.DefaultColumns);
+
+            // Initializes the EVE notifications columns or adds missing ones
+            UI.MainWindow.EVENotifications.Columns.AddRange(UI.MainWindow.EVENotifications.DefaultColumns);
+        }
+
+        /// <summary>
         /// Creates a serializable version of the settings.
         /// </summary>
         /// <returns></returns>
         public static SerializableSettings Export()
         {
-            return new SerializableSettings
-                       {
-                           Revision = Revision,
-                           Compatibility = Compatibility,
-                           Characters = EveMonClient.Characters.Export(),
-                           APIKeys =  EveMonClient.APIKeys.Export(),
-                           Plans = EveMonClient.Characters.ExportPlans(),
-                           MonitoredCharacters = EveMonClient.MonitoredCharacters.Export(),
-                           APIProviders = EveMonClient.APIProviders.Export(),
-                           Scheduler = Scheduler.Export(),
-                           Calendar = Calendar,
-                           Notifications = Notifications,
-                           Exportation = Exportation,
-                           Updates = Updates,
-                           Proxy = Proxy,
-                           IGB = IGB,
-                           G15 = G15,
-                           UI = UI
-                       };
+            SerializableSettings serial = new SerializableSettings
+                                              {
+                                                  Revision = Revision,
+                                                  Compatibility = Compatibility,
+                                                  APIProviders = EveMonClient.APIProviders.Export(),
+                                                  Scheduler = Scheduler.Export(),
+                                                  Calendar = Calendar,
+                                                  Notifications = Notifications,
+                                                  Exportation = Exportation,
+                                                  Updates = Updates,
+                                                  Proxy = Proxy,
+                                                  IGB = IGB,
+                                                  G15 = G15,
+                                                  UI = UI
+                                              };
+
+            serial.Characters.AddRange(EveMonClient.Characters.Export());
+            serial.APIKeys.AddRange(EveMonClient.APIKeys.Export());
+            serial.Plans.AddRange(EveMonClient.Characters.ExportPlans());
+            serial.MonitoredCharacters.AddRange(EveMonClient.MonitoredCharacters.Export());
+
+            return serial;
         }
 
         #endregion
@@ -389,7 +402,7 @@ namespace EVEMon.Common
                     if (recover)
                     {
                         // Prompts the user to use the backup
-                        String fileDate = String.Format("{0} at {1}",
+                        String fileDate = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
                                                         backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
                                                         backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
                         DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
@@ -510,8 +523,7 @@ namespace EVEMon.Common
             {
                 fileDialog.Title = "Settings file backup";
                 fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak",
-                                                    revision.ToString());
+                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 DialogResult saveFile = fileDialog.ShowDialog();
                 if (saveFile != DialogResult.OK)

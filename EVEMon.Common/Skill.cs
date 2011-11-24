@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
@@ -494,6 +495,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return character.Skills[StaticData.ArrayIndex];
         }
 
@@ -572,11 +576,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Returns the static skill the provided skill is based on.
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="skill"></param>
         /// <returns></returns>
-        public static implicit operator StaticSkill(Skill s)
+        public static implicit operator StaticSkill(Skill skill)
         {
-            return s.StaticData;
+            return skill == null ? null : skill.StaticData;
         }
 
         #endregion
@@ -584,7 +588,7 @@ namespace EVEMon.Common
 
         #region IStaticSkill Members
 
-        List<StaticSkillLevel> IStaticSkill.Prerequisites
+        Collection<StaticSkillLevel> IStaticSkill.Prerequisites
         {
             get { return StaticData.Prerequisites; }
         }

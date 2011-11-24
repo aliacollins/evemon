@@ -5,9 +5,9 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Controls;
 using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon

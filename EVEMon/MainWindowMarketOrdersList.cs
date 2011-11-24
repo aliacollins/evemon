@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -840,7 +841,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.MarketOrders.Add(Columns.Cast<MarketOrderColumnSettings>().ToList());
+            Settings.UI.MainWindow.MarketOrders.Columns.Clear();
+            Settings.UI.MainWindow.MarketOrders.Columns.AddRange(Columns.Cast<MarketOrderColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
@@ -1230,10 +1232,20 @@ namespace EVEMon
             // Subscribe events
             foreach (Label label in marketExpPanelControl.Controls.OfType<Label>())
             {
-                label.MouseClick += marketExpPanelControl.expandablePanelControl_MouseClick;
+                label.MouseClick += OnExpandablePanelMouseClick;
             }
 
             marketExpPanelControl.ResumeLayout();
+        }
+
+        /// <summary>
+        /// Called when the expandable panel gets mouse clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void OnExpandablePanelMouseClick(object sender, MouseEventArgs e)
+        {
+            marketExpPanelControl.OnMouseClick(sender, e);
         }
 
         #endregion

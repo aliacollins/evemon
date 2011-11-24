@@ -115,13 +115,14 @@ namespace EVEMon.Common
             // Otherwise, query for the patch file
             // First look up for an emergency patch
             Util.DownloadXMLAsync<SerializablePatch>(
-                String.Format("{0}-emergency.xml", Settings.Updates.UpdatesUrl.Replace(".xml", String.Empty)),
+                new Uri(String.Format(CultureConstants.DefaultCulture,
+                                      "{0}-emergency.xml", Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))),
                 (result, errorMessage) =>
                     {
                         // If no emergency patch found proceed with the regular
                         if (!String.IsNullOrEmpty(errorMessage))
                         {
-                            Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, OnCheckCompleted);
+                            Util.DownloadXMLAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress), OnCheckCompleted);
                             return;
                         }
 
@@ -185,13 +186,13 @@ namespace EVEMon.Common
             // Is the program out of date ?
             if (newestVersion > currentVersion)
             {
-                string forumUrl = result.Release.TopicUrl;
+                Uri forumUrl = new Uri(result.Release.TopicAddress);
+                Uri installerUrl = new Uri(result.Release.PatchAddress);
                 string updateMessage = result.Release.Message;
                 string installArgs = result.Release.InstallerArgs;
-                string installerUrl = result.Release.Url;
                 string md5Sum = result.Release.MD5Sum;
                 string additionalArgs = result.Release.AdditionalArgs;
-                bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl) && !String.IsNullOrEmpty(installArgs));
+                bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs));
 
                 if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
                 {

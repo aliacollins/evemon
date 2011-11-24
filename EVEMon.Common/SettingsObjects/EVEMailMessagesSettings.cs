@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class EveMailMessagesSettings
     {
-        private Collection<EveMailMessagesColumnSettings> m_columns;
+        private readonly Collection<EveMailMessagesColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMailMessagesSettings"/> class.
@@ -60,27 +60,16 @@ namespace EVEMon.Common.SettingsObjects
                                                                  EveMailMessagesColumn.ToCharacters
                                                              };
 
-                List<EveMailMessagesColumnSettings> researchColumns = Columns.ToList();
-                researchColumns.AddRange(EnumExtensions.GetValues<EveMailMessagesColumn>().Where(
-                    x => x != EveMailMessagesColumn.None).Where(x => researchColumns.All(y => y.Column != x)).Select(
-                        x => new EveMailMessagesColumnSettings
-                                 {
-                                     Column = x,
-                                     Visible = defaultColumns.Contains(x),
-                                     Width = -2
-                                 }));
-
-                return researchColumns;
+                return EnumExtensions.GetValues<EveMailMessagesColumn>().Where(
+                    planColumn => planColumn != EveMailMessagesColumn.None).Where(
+                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
+                            planColumn => new EveMailMessagesColumnSettings
+                                              {
+                                                  Column = planColumn,
+                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Width = -2
+                                              });
             }
-        }
-
-        /// <summary>
-        /// Adds the specified columns.
-        /// </summary>
-        /// <param name="columns">The columns.</param>
-        public void Add(List<EveMailMessagesColumnSettings> columns)
-        {
-            m_columns = new Collection<EveMailMessagesColumnSettings>(columns);
         }
     }
 }

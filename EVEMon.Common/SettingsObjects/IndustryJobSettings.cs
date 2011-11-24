@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class IndustryJobSettings
     {
-        private Collection<IndustryJobColumnSettings> m_columns;
+        private readonly Collection<IndustryJobColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IndustryJobSettings"/> class.
@@ -60,27 +60,17 @@ namespace EVEMon.Common.SettingsObjects
                                                              IndustryJobColumn.OutputItem
                                                          };
 
-                List<IndustryJobColumnSettings> industryJobColumns = Columns.ToList();
-                industryJobColumns.AddRange(EnumExtensions.GetValues<IndustryJobColumn>().Where(
-                    x => x != IndustryJobColumn.None).Where(x => industryJobColumns.All(y => y.Column != x)).Select(
-                            x => new IndustryJobColumnSettings
-                                     {
-                                         Column = x,
-                                         Visible = defaultColumns.Contains(x),
-                                         Width = -2
-                                     }));
+                return EnumExtensions.GetValues<IndustryJobColumn>().Where(
+                    planColumn => planColumn != IndustryJobColumn.None).Where(
+                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
+                            planColumn => new IndustryJobColumnSettings
+                                              {
+                                                  Column = planColumn,
+                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Width = -2
+                                              });
 
-                return industryJobColumns;
             }
-        }
-
-        /// <summary>
-        /// Adds the specified columns.
-        /// </summary>
-        /// <param name="columns">The columns.</param>
-        public void Add(List<IndustryJobColumnSettings> columns)
-        {
-            m_columns = new Collection<IndustryJobColumnSettings>(columns);
         }
     }
 }

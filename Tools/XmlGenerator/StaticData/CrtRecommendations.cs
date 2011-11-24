@@ -8,12 +8,12 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("shipTypeID")]
-        public int ShipTypeID;
+        public int ShipTypeID { get; set; }
 
         [XmlElement("certificateID")]
-        public int CertificateID;
+        public int CertificateID { get; set; }
 
         [XmlElement("recommendationLevel")]
-        public int Level;
+        public int Level { get; set; }
     }
 }

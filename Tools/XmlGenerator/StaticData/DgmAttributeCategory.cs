@@ -8,9 +8,9 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("categoryName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("categoryDescription")]
-        public string Description;
+        public string Description { get; set; }
     }
 }

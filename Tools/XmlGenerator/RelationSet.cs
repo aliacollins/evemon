@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace EVEMon.XmlGenerator
@@ -14,6 +15,9 @@ namespace EVEMon.XmlGenerator
         /// <param name="src">The SRC.</param>
         public RelationSet(IEnumerable<T> src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             m_dictionary = new Dictionary<long, T>();
             foreach (T item in src)
             {

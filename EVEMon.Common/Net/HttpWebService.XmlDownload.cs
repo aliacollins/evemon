@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common.Net
 {
@@ -20,7 +21,7 @@ namespace EVEMon.Common.Net
         /// <param name="url"></param>
         /// <param name="postData"></param>
         /// <returns></returns>
-        public XmlDocument DownloadXml(string url, HttpPostData postData = null)
+        public IXPathNavigable DownloadXml(Uri url, HttpPostData postData = null)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -29,7 +30,8 @@ namespace EVEMon.Common.Net
             HttpWebServiceRequest request = GetRequest();
             try
             {
-                request.GetResponse(url, new MemoryStream(), XML_ACCEPT, postData);
+                MemoryStream responseStream = Util.GetMemoryStream();
+                request.GetResponse(url, responseStream, XML_ACCEPT, postData);
                 XmlDocument result = new XmlDocument();
                 if (request.ResponseStream != null)
                 {
@@ -53,7 +55,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public void DownloadXmlAsync(string url, HttpPostData postData, DownloadXmlCompletedCallback callback, object userState)
+        public void DownloadXmlAsync(Uri url, HttpPostData postData, DownloadXmlCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -61,7 +63,8 @@ namespace EVEMon.Common.Net
 
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new MemoryStream(), XML_ACCEPT, postData, state);
+            MemoryStream responseStream = Util.GetMemoryStream();
+            request.GetResponseAsync(url, responseStream, XML_ACCEPT, postData, state);
         }
 
         /// <summary>

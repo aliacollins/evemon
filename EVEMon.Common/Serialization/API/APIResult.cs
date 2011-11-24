@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common.Net;
 
@@ -72,6 +73,9 @@ namespace EVEMon.Common.Serialization.API
         /// <param name="exc">The exception.</param>
         public APIResult(InvalidOperationException exc)
         {
+            if (exc == null)
+                throw new ArgumentNullException("exc");
+
             m_error = APIError.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
             m_exception = exc;
@@ -170,7 +174,7 @@ namespace EVEMon.Common.Serialization.API
         /// Gets / sets the XML document when there's no HTTP error.
         /// </summary>
         [XmlIgnore]
-        public XmlDocument XmlDocument { get; set; }
+        public IXPathNavigable XmlDocument { get; set; }
 
         /// <summary>
         /// Gets the time left before a new version is available.

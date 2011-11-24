@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -9,14 +9,17 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class CharacterUISettings
     {
+        private readonly Collection<string> m_collapsedGroups;
+        private readonly Collection<string> m_advancedFeaturesEnabledPages;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacterUISettings"/> class.
         /// </summary>
         public CharacterUISettings()
         {
             SelectedPage = String.Empty;
-            CollapsedGroups = new List<string>();
-            AdvancedFeaturesEnabledPages = new List<string>();
+            m_collapsedGroups = new Collection<string>();
+            m_advancedFeaturesEnabledPages = new Collection<string>();
         }
 
         /// <summary>
@@ -31,7 +34,10 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The collapsed groups.</value>
         [XmlElement("collapsedGroup")]
-        public List<string> CollapsedGroups { get; set; }
+        public Collection<string> CollapsedGroups
+        {
+            get { return m_collapsedGroups; }
+        }
 
         /// <summary>
         /// Gets or sets the orders group by.
@@ -66,6 +72,9 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The advanced features enabled pages.</value>
         [XmlElement("advancedFeaturesEnabledPages")]
-        public List<string> AdvancedFeaturesEnabledPages { get; set; }
+        public Collection<string> AdvancedFeaturesEnabledPages
+        {
+            get { return m_advancedFeaturesEnabledPages; }
+        }
     }
 }

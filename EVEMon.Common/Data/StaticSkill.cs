@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -32,7 +33,7 @@ namespace EVEMon.Common.Data
             IsTrainableOnTrialAccount = src.CanTrainOnTrial;
             ArrayIndex = arrayIndex;
             Group = group;
-            Prerequisites = new List<StaticSkillLevel>();
+            Prerequisites = new Collection<StaticSkillLevel>();
             FormattedCost = String.Format(CultureConstants.DefaultCulture, "{0:N0}", Cost);
         }
 
@@ -132,7 +133,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the prerequisites a character must satisfy before it can be trained.
         /// </summary>
-        public List<StaticSkillLevel> Prerequisites { get; private set; }
+        public Collection<StaticSkillLevel> Prerequisites { get; private set; }
 
         /// <summary>
         /// Gets a formatted representation of the price.
@@ -204,7 +205,8 @@ namespace EVEMon.Common.Data
                 case 5:
                     return 256000 * Rank;
                 default:
-                    throw new NotImplementedException(String.Format("One of our devs messed up. Skill level was {0} ?!", level));
+                    throw new NotImplementedException(String.Format(CultureConstants.DefaultCulture,
+                                                                    "One of our devs messed up. Skill level was {0} ?!", level));
             }
         }
 
@@ -234,6 +236,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static string WordWrap(string text, int maxLength)
         {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
             text = text.Replace("\n", " ");
             text = text.Replace("\r", " ");
             text = text.Replace(".", ". ");
@@ -256,12 +261,12 @@ namespace EVEMon.Common.Data
                 if (inTag)
                 {
                     //Handle filenames inside html tags
-                    if (currentLine.EndsWith("."))
+                    if (currentLine.EndsWith(".", StringComparison.CurrentCulture))
                         currentLine += currentWord;
                     else
                         currentLine += " " + currentWord;
 
-                    if (currentWord.IndexOf(">") > -1)
+                    if (currentWord.IndexOf(">", StringComparison.CurrentCulture) > -1)
                         inTag = false;
                 }
                 else
@@ -287,7 +292,8 @@ namespace EVEMon.Common.Data
             lines.CopyTo(textLinesStr, 0);
 
             return textLinesStr.Aggregate(String.Empty,
-                                          (current, line) => String.Format("{0}{1}{2}", current, line, Environment.NewLine));
+                                          (current, line) => String.Format(CultureConstants.DefaultCulture,
+                                                                           "{0}{1}{2}", current, line, Environment.NewLine));
         }
 
         #endregion
@@ -302,6 +308,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             return character.Skills.GetByArrayIndex(ArrayIndex);
         }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -14,7 +15,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     [XmlRoot("blueprints")]
     public sealed class BlueprintsDatafile
     {
-        private Collection<SerializableBlueprintMarketGroup> m_marketGroups;
+        private readonly Collection<SerializableBlueprintMarketGroup> m_marketGroups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlueprintsDatafile"/> class.
@@ -32,15 +33,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableBlueprintMarketGroup> MarketGroups
         {
             get { return m_marketGroups; }
-        }
-
-        /// <summary>
-        /// Adds the specified market groups.
-        /// </summary>
-        /// <param name="marketGroups">The market groups.</param>
-        public void Add(List<SerializableBlueprintMarketGroup> marketGroups)
-        {
-            m_marketGroups = new Collection<SerializableBlueprintMarketGroup>(marketGroups);
         }
     }
 }

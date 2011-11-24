@@ -5,12 +5,12 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class AgtConfig
     {
         [XmlElement("agentID")]
-        public int ID;
+        public int ID { get; set; }
 
         [XmlElement("k")]
-        public string Key;
+        public string Key { get; set; }
 
         [XmlElement("v")]
-        public string Value;
+        public string Value { get; set; }
     }
 }

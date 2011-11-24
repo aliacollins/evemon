@@ -17,12 +17,15 @@ namespace EVEMon.Common.Data
         /// <param name="region">The region.</param>
         /// <param name="src">The source.</param>
         public Constellation(Region region, SerializableConstellation src)
-            : base(src.Systems.Count)
+            : base(src != null ? src.Systems.Count : 0)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             Name = src.Name;
             Region = region;
-            FullLocation = String.Format("{0} > {1}", Region.Name, Name);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", Region.Name, Name);
 
             foreach (SerializableSolarSystem srcSystem in src.Systems)
             {
@@ -67,7 +70,12 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Constellation other)
         {
-            return Region != other.Region ? Region.CompareTo(other.Region) : Name.CompareTo(other.Name);
+            if (other == null)
+                throw new ArgumentNullException("other");
+
+            return Region != other.Region
+                       ? Region.CompareTo(other.Region)
+                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

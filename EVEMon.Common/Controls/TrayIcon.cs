@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-
 using Timer = System.Threading.Timer;
 
 namespace EVEMon.Common.Controls
@@ -242,6 +241,9 @@ namespace EVEMon.Common.Controls
         /// <param name="tooltipForm">The tooltip form.</param>
         public static void SetToolTipLocation(Form tooltipForm)
         {
+            if (tooltipForm == null)
+                throw new ArgumentNullException("tooltipForm");
+
             Point mp = Control.MousePosition;
             NativeMethods.AppBarData appBarData = NativeMethods.AppBarData.Create();
             NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
@@ -418,17 +420,35 @@ namespace EVEMon.Common.Controls
                 switch (state)
                 {
                     case States.MouseOut:
-                        TrayIcon.m_mouseState = new MouseStateOut(TrayIcon);
                         // Restore the default icon text
                         TrayIcon.notifyIcon.Text = TrayIcon.m_iconText;
+                        TrayIcon.m_mouseState = new MouseStateOut(TrayIcon);
                         break;
                     case States.MouseOver:
-                        TrayIcon.m_mouseState = new MouseStateOver(TrayIcon, MousePosition);
+                        TrayIcon.m_mouseState = GetMouseStateOver();
                         break;
                     case States.MouseHovering:
-                        TrayIcon.m_mouseState = new MouseStateHovering(TrayIcon, MousePosition);
+                        TrayIcon.m_mouseState = GetMouseStateHovering();
                         break;
                 }
+            }
+
+            /// <summary>
+            /// Gets the mouse state over.
+            /// </summary>
+            /// <returns></returns>
+            private MouseStateOver GetMouseStateOver()
+            {
+                return new MouseStateOver(TrayIcon, MousePosition);
+            }
+
+            /// <summary>
+            /// Gets the mouse state hovering.
+            /// </summary>
+            /// <returns></returns>
+            private MouseStateHovering GetMouseStateHovering()
+            {
+                return new MouseStateHovering(TrayIcon, MousePosition);
             }
         }
 

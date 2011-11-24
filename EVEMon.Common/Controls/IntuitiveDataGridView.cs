@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
@@ -48,6 +49,9 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         protected override bool ProcessDataGridViewKey(KeyEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             if (e.KeyCode == Keys.Return && !IsCurrentCellInEditMode)
                 return ProcessF2Key(e.KeyData);
 
@@ -63,6 +67,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnCellClick(DataGridViewCellEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnCellClick(e);
             if (e.ColumnIndex >= 0)
                 BeginEdit(true);

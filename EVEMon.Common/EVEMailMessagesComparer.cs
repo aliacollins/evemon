@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -63,22 +65,22 @@ namespace EVEMon.Common
             switch (m_column)
             {
                 case EveMailMessagesColumn.SenderName:
-                    return x.Sender.CompareTo(y.Sender);
+                    return String.Compare(x.Sender, y.Sender, StringComparison.CurrentCulture);
 
                 case EveMailMessagesColumn.Title:
-                    return x.Title.CompareTo(y.Title);
+                    return String.Compare(x.Title, y.Title, StringComparison.CurrentCulture);
 
                 case EveMailMessagesColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);
 
                 case EveMailMessagesColumn.ToCharacters:
-                    return x.ToCharacters[0].CompareTo(y.ToCharacters[0]);
+                    return String.Compare(x.ToCharacters.First(), y.ToCharacters.First(), StringComparison.CurrentCulture);
 
                 case EveMailMessagesColumn.ToCorpOrAlliance:
-                    return x.ToCorpOrAlliance.CompareTo(y.ToCorpOrAlliance);
+                    return String.Compare(x.ToCorpOrAlliance, y.ToCorpOrAlliance, StringComparison.CurrentCulture);
 
                 case EveMailMessagesColumn.ToMailingList:
-                    return x.ToMailingLists[0].CompareTo(y.ToMailingLists[0]);
+                    return String.Compare(x.ToMailingLists.First(), y.ToMailingLists.First(), StringComparison.CurrentCulture);
 
                 default:
                     return 0;

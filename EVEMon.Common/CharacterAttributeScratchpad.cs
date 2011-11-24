@@ -98,13 +98,16 @@ namespace EVEMon.Common
         /// <returns>The formatted string.</returns>
         public string ToString(string format)
         {
+            if (format == null)
+                throw new ArgumentNullException("format");
+
             format = format.Replace("%n", m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
             format = format.Replace("%N", m_attrib.ToString());
-            format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString());
-            format = format.Replace("%b", m_base.ToString());
-            format = format.Replace("%i", ImplantBonus.ToString());
-            format = format.Replace("%r", (m_base - EveConstants.CharacterBaseAttributePoints).ToString());
-            format = format.Replace("%e", EffectiveValue.ToString("0"));
+            format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%b", m_base.ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%i", ImplantBonus.ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%r", (m_base - EveConstants.CharacterBaseAttributePoints).ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%e", EffectiveValue.ToString("0", CultureConstants.DefaultCulture));
             return format;
         }
 
@@ -114,7 +117,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("{0} : {1}", m_attrib, EffectiveValue);
+            return String.Format(CultureConstants.DefaultCulture, "{0} : {1}", m_attrib, EffectiveValue);
         }
     }
 }

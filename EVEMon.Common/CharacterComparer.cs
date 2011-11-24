@@ -116,11 +116,17 @@ namespace EVEMon.Common
         /// <param name="y"></param>
         public static int CompareByCompletionTime(Character x, Character y)
         {
+            if (x == null)
+                throw new ArgumentNullException("x");
+
+            if (y == null)
+                throw new ArgumentNullException("y");
+
             // Get their training skills
             QueuedSkill skillX = x.CurrentlyTrainingSkill;
             QueuedSkill skillY = y.CurrentlyTrainingSkill;
             if (skillX == null && skillY == null)
-                return String.Compare(x.Name, y.Name);
+                return String.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
             if (skillX == null || skillY == null)
                 return -1;
 
@@ -135,7 +141,13 @@ namespace EVEMon.Common
         /// <param name="y"></param>
         public static int CompareByName(Character x, Character y)
         {
-            return String.Compare(x.Name, y.Name);
+            if (x == null)
+                throw new ArgumentNullException("x");
+
+            if (y == null)
+                throw new ArgumentNullException("y");
+
+            return String.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

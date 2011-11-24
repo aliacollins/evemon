@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,8 +14,8 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableBlueprintMarketGroup
     {
-        private Collection<SerializableBlueprint> m_blueprints;
-        private Collection<SerializableBlueprintMarketGroup> m_subGroups;
+        private readonly Collection<SerializableBlueprint> m_blueprints;
+        private readonly Collection<SerializableBlueprintMarketGroup> m_subGroups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableBlueprintMarketGroup"/> class.
@@ -58,24 +59,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableBlueprintMarketGroup> SubGroups
         {
             get { return m_subGroups; }
-        }
-
-        /// <summary>
-        /// Adds the specified blueprints.
-        /// </summary>
-        /// <param name="blueprints">The blueprints.</param>
-        public void Add(List<SerializableBlueprint> blueprints)
-        {
-            m_blueprints = new Collection<SerializableBlueprint>(blueprints);
-        }
-
-        /// <summary>
-        /// Adds the specified sub groups.
-        /// </summary>
-        /// <param name="subGroups">The sub groups.</param>
-        public void Add(List<SerializableBlueprintMarketGroup> subGroups)
-        {
-            m_subGroups = new Collection<SerializableBlueprintMarketGroup>(subGroups);
         }
     }
 }

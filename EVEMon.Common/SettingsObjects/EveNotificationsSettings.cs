@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class EveNotificationsSettings
     {
-        private Collection<EveNotificationsColumnSettings> m_columns;
+        private readonly Collection<EveNotificationsColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveNotificationsSettings"/> class.
@@ -59,27 +59,16 @@ namespace EVEMon.Common.SettingsObjects
                                                                   EveNotificationsColumn.SentDate
                                                               };
 
-                List<EveNotificationsColumnSettings> eveNotificationsColumns = Columns.ToList();
-                eveNotificationsColumns.AddRange(EnumExtensions.GetValues<EveNotificationsColumn>().Where(
-                    x => x != EveNotificationsColumn.None).Where(x => eveNotificationsColumns.All(y => y.Column != x)).Select(
-                        x => new EveNotificationsColumnSettings
-                                 {
-                                     Column = x,
-                                     Visible = defaultColumns.Contains(x),
-                                     Width = -2
-                                 }));
-
-                return eveNotificationsColumns;
+                return EnumExtensions.GetValues<EveNotificationsColumn>().Where(
+                    planColumn => planColumn != EveNotificationsColumn.None).Where(
+                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
+                            planColumn => new EveNotificationsColumnSettings
+                                              {
+                                                  Column = planColumn,
+                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Width = -2
+                                              });
             }
-        }
-
-        /// <summary>
-        /// Adds the specified columns.
-        /// </summary>
-        /// <param name="columns">The columns.</param>
-        public void Add(List<EveNotificationsColumnSettings> columns)
-        {
-            m_columns = new Collection<EveNotificationsColumnSettings>(columns);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Data;
 
@@ -20,7 +21,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public CharacterScratchpad(BaseCharacter character)
         {
-            TrainedSkills = new List<StaticSkillLevel>();
+            TrainedSkills = new Collection<StaticSkillLevel>();
             TrainingTime = TimeSpan.Zero;
             Character = character;
             m_skillSP = new int[StaticSkills.ArrayIndicesCount];
@@ -108,6 +109,9 @@ namespace EVEMon.Common
         /// <param name="point"></param>
         public void Remap(RemappingPoint point)
         {
+            if (point == null)
+                throw new ArgumentNullException("point");
+
             for (int i = 0; i < m_attributes.Length; i++)
             {
                 EveAttribute attrib = (EveAttribute)i;
@@ -147,6 +151,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillLevel(StaticSkill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             return m_skillLevels[skill.ArrayIndex];
         }
 
@@ -157,6 +164,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillPoints(StaticSkill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             return m_skillSP[skill.ArrayIndex];
         }
 
@@ -183,7 +193,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the list of skills trained so far (by the <see cref="Train&lt;T&gt;"/> or <see cref="SetSkillLevel"/> methods).
         /// </summary>
-        public List<StaticSkillLevel> TrainedSkills { get; private set; }
+        public Collection<StaticSkillLevel> TrainedSkills { get; private set; }
 
         /// <summary>
         /// Clears the training time and trained skills only. 
@@ -203,6 +213,9 @@ namespace EVEMon.Common
         public void Train<T>(IEnumerable<T> trainings)
             where T : ISkillLevel
         {
+            if (trainings == null)
+                throw new ArgumentNullException("trainings");
+
             foreach (T item in trainings)
             {
                 Train(item.Skill, item.Level);
@@ -217,6 +230,9 @@ namespace EVEMon.Common
         /// <param name="applyRemappingPoints"></param>
         public void TrainEntries(IEnumerable<PlanEntry> entries, bool applyRemappingPoints)
         {
+            if (entries == null)
+                throw new ArgumentNullException("entries");
+
             foreach (PlanEntry entry in entries)
             {
                 if (entry.Remapping != null && entry.Remapping.Status == RemappingPointStatus.UpToDate &&
@@ -233,6 +249,9 @@ namespace EVEMon.Common
         /// <param name="training"></param>
         public void Train(ISkillLevel training)
         {
+            if (training == null)
+                throw new ArgumentNullException("training");
+
             Train(training.Skill, training.Level);
         }
 

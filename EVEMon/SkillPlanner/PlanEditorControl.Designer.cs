@@ -143,7 +143,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
             this.miShowInSkillBrowser.Size = new System.Drawing.Size(250, 22);
-            this.miShowInSkillBrowser.Text = "Show in Skill Browser";
+            this.miShowInSkillBrowser.Text = "Show in Skill &Browser";
             this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // miShowInSkillExplorer
@@ -151,7 +151,7 @@ namespace EVEMon.SkillPlanner
             this.miShowInSkillExplorer.Image = ((System.Drawing.Image)(resources.GetObject("miShowInSkillExplorer.Image")));
             this.miShowInSkillExplorer.Name = "miShowInSkillExplorer";
             this.miShowInSkillExplorer.Size = new System.Drawing.Size(250, 22);
-            this.miShowInSkillExplorer.Text = "Show in Skill Explorer...";
+            this.miShowInSkillExplorer.Text = "Show in Skill &Explorer...";
             this.miShowInSkillExplorer.Click += new System.EventHandler(this.miShowInSkillExplorer_Click);
             // 
             // miMarkOwned

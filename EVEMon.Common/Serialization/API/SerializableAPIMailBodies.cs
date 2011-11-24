@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,9 +8,19 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPIMailBodies
     {
+        private readonly Collection<SerializableMailBodiesListItem> m_bodies;
+
+        public SerializableAPIMailBodies()
+        {
+            m_bodies = new Collection<SerializableMailBodiesListItem>();
+        }
+
         [XmlArray("messages")]
         [XmlArrayItem("message")]
-        public List<SerializableMailBodiesListItem> Bodies { get; set; }
+        public Collection<SerializableMailBodiesListItem> Bodies
+        {
+            get { return m_bodies; }
+        }
 
         [XmlElement("missingMessageIDs")]
         public string MissingMessageIDs { get; set; }

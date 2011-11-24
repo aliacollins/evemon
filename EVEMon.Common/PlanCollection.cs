@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
@@ -36,6 +37,9 @@ namespace EVEMon.Common
         /// <param name="item"></param>
         protected override void OnAdding(ref Plan item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             if (item.Character != m_owner)
                 item = item.Clone(m_owner);
             else if (Contains(item))
@@ -50,6 +54,9 @@ namespace EVEMon.Common
         /// <param name="oldItem"></param>
         protected override void OnRemoving(Plan oldItem)
         {
+            if (oldItem == null)
+                throw new ArgumentNullException("oldItem");
+
             oldItem.IsConnected = false;
         }
 

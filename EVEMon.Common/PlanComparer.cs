@@ -49,7 +49,7 @@ namespace EVEMon.Common
                 case PlanSort.Description:
                 case PlanSort.Name:
                     if (x != null && y != null)
-                        return String.Compare(x.Name, y.Name);
+                        return String.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
                     break;
                 case PlanSort.Time:
                     if (x != null && y != null)

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,9 +12,9 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableBlueprint
     {
-        private Collection<int> m_inventTypeID;
-        private Collection<SerializablePrereqSkill> m_prereqSkills;
-        private Collection<SerializableRequiredMaterial> m_requiredMaterials;
+        private readonly Collection<int> m_inventTypeID;
+        private readonly Collection<SerializablePrereqSkill> m_prereqSkills;
+        private readonly Collection<SerializableRequiredMaterial> m_requiredMaterials;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableBlueprint"/> class.
@@ -153,33 +152,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableRequiredMaterial> ReqMaterial
         {
             get { return m_requiredMaterials; }
-        }
-
-        /// <summary>
-        /// Adds the specified invent type ID.
-        /// </summary>
-        /// <param name="inventTypeID">The invent type ID.</param>
-        public void Add(List<int> inventTypeID)
-        {
-            m_inventTypeID = new Collection<int>(inventTypeID);
-        }
-
-        /// <summary>
-        /// Adds the specified prereq skills.
-        /// </summary>
-        /// <param name="prereqSkills">The prereq skills.</param>
-        public void Add(List<SerializablePrereqSkill> prereqSkills)
-        {
-            m_prereqSkills = new Collection<SerializablePrereqSkill>(prereqSkills);
-        }
-
-        /// <summary>
-        /// Adds the specified required materials.
-        /// </summary>
-        /// <param name="requiredMaterials">The required materials.</param>
-        public void Add(List<SerializableRequiredMaterial> requiredMaterials)
-        {
-            m_requiredMaterials = new Collection<SerializableRequiredMaterial>(requiredMaterials);
         }
     }
 }

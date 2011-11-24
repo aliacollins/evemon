@@ -91,6 +91,9 @@ namespace EVEMon.Common
         /// <param name="entries"></param>
         public void AddRange(IEnumerable<PlanEntry> entries)
         {
+            if (entries == null)
+                throw new ArgumentNullException("entries");
+
             foreach (PlanEntry entry in entries)
             {
                 AddCore(entry);
@@ -103,6 +106,9 @@ namespace EVEMon.Common
         /// <param name="entry"></param>
         public void Remove(PlanEntry entry)
         {
+            if (entry == null)
+                throw new ArgumentNullException("entry");
+
             int index = IndexOf(entry.Skill, entry.Level);
             if (index != -1)
                 RemoveCore(index);

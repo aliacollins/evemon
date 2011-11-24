@@ -34,24 +34,6 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets a property from its name. If not found, return null.
         /// </summary>
-        /// <param name="property">The property we're searching for.</param>
-        /// <returns>The wanted property when found; null otherwise.</returns>
-        public EvePropertyValue? this[EveProperty property]
-        {
-            get
-            {
-                foreach (EvePropertyValue prop in Items.TakeWhile(
-                    prop => prop.Property != null).Where(prop => prop.Property == property))
-                {
-                    return prop;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets a property from its name. If not found, return null.
-        /// </summary>
         /// <param name="id">The property id we're searching for.</param>
         /// <returns>The wanted property when found; null otherwise.</returns>
         public EvePropertyValue? this[int id]

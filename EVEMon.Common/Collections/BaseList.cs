@@ -76,6 +76,9 @@ namespace EVEMon.Common.Collections
         /// <param name="items"></param>
         public void RebuildFrom(IEnumerable<T> items)
         {
+            if (items == null)
+                throw new ArgumentNullException("items");
+
             // Removing old items
             foreach (T item in m_items)
             {
@@ -172,6 +175,9 @@ namespace EVEMon.Common.Collections
         /// <param name="items"></param>
         public void AddRange(IEnumerable<T> items)
         {
+            if (items == null)
+                throw new ArgumentNullException("items");
+
             foreach (T item in items)
             {
                 T copy = item;

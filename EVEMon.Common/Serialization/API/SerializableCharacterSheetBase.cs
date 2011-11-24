@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -9,13 +9,17 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public class SerializableCharacterSheetBase : ISerializableCharacterIdentity
     {
+        private readonly Collection<SerializableCharacterSkill> m_skills;
+        private readonly Collection<SerializableCharacterCertificate> m_certificates;
+        private readonly Collection<SerializableEmploymentHistory> m_employmentHistorys;
+
         protected SerializableCharacterSheetBase()
         {
             Info = new SerializableAPICharacterInfo();
             Attributes = new SerializableCharacterAttributes();
-            Skills = new List<SerializableCharacterSkill>();
-            Certificates = new List<SerializableCharacterCertificate>();
-            EmploymentHistory = new List<SerializableEmploymentHistory>();
+            m_skills = new Collection<SerializableCharacterSkill>();
+            m_certificates = new Collection<SerializableCharacterCertificate>();
+            m_employmentHistorys = new Collection<SerializableEmploymentHistory>();
         }
 
         [XmlElement("characterID")]
@@ -73,18 +77,30 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlArray("employmentHistory")]
         [XmlArrayItem("record")]
-        public List<SerializableEmploymentHistory> EmploymentHistory { get; set; }
+        public Collection<SerializableEmploymentHistory> EmploymentHistory
+        {
+            get { return m_employmentHistorys; }
+        }
+
 
         [XmlElement("attributes")]
         public SerializableCharacterAttributes Attributes { get; set; }
 
         [XmlArray("skills")]
         [XmlArrayItem("skill")]
-        public List<SerializableCharacterSkill> Skills { get; set; }
+        public Collection<SerializableCharacterSkill> Skills
+        {
+            get { return m_skills; }
+        }
+
 
         [XmlArray("certificates")]
         [XmlArrayItem("certificate")]
-        public List<SerializableCharacterCertificate> Certificates { get; set; }
+        public Collection<SerializableCharacterCertificate> Certificates
+        {
+            get { return m_certificates; }
+        }
+
 
         /// <summary>
         /// The date and time the character was created.

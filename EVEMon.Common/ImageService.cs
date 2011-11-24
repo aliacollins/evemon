@@ -23,7 +23,8 @@ namespace EVEMon.Common
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
         public static void GetCharacterImageAsync(long charId, GetImageCallback callback)
         {
-            GetImageAsync(String.Format(NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128), false, callback);
+            GetImageAsync(new Uri(String.Format(CultureConstants.InvariantCulture,
+                                                NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128)), false, callback);
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace EVEMon.Common
         /// <param name="url">The URL.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        public static void GetImageAsync(string url, bool useCache, GetImageCallback callback)
+        public static void GetImageAsync(Uri url, bool useCache, GetImageCallback callback)
         {
             // Cache not to be used ?
             if (!useCache)
@@ -91,7 +92,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="url"></param>
         /// <param name="image"></param>
-        private static void AddImageToCache(string url, Image image)
+        private static void AddImageToCache(Uri url, Image image)
         {
             lock (s_syncLock)
             {
@@ -104,9 +105,11 @@ namespace EVEMon.Common
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
                                                                          {
                                                                              // We need to create a copy of the image because GDI+ is locking it
-                                                                             Image newImage = new Bitmap(image);
-                                                                             newImage.Save(fs, ImageFormat.Png);
-                                                                             fs.Flush();
+                                                                             using (Image newImage = new Bitmap(image))
+                                                                             {
+                                                                                 newImage.Save(fs, ImageFormat.Png);
+                                                                                 fs.Flush();
+                                                                             }
                                                                              return true;
                                                                          });
                 }
@@ -123,20 +126,24 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        private static string GetCacheName(string url)
+        private static string GetCacheName(Uri url)
         {
-            Match extensionMatch = Regex.Match(url, @"([^\.]+)$");
+            Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
             string ext = String.Empty;
             if (extensionMatch.Success)
                 ext = "." + extensionMatch.Groups[1];
 
-            byte[] hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(url));
             StringBuilder sb = new StringBuilder();
-            foreach (byte bit in hash)
+            using (MD5 md5 = MD5.Create())
             {
-                sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", bit));
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(url.AbsoluteUri));
+                foreach (byte bit in hash)
+                {
+                    sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", bit));
+                }
             }
             sb.Append(ext);
+
             return sb.ToString();
         }
 

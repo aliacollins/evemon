@@ -119,11 +119,11 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public string GetLabelOrDefault(Item obj)
         {
-            EvePropertyValue? value = obj.Properties[this];
-            if (value == null)
-                return Format(DefaultValue);
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-            return Format(value.Value.Value);
+            EvePropertyValue? value = obj.Properties[ID];
+            return Format(value == null ? DefaultValue : value.Value.Value);
         }
 
         /// <summary>
@@ -188,12 +188,12 @@ namespace EVEMon.Common.Data
 
                             // A reference to an item or a skill (typeID)
                         case DBConstants.TypeUnitID:
-                            int id = Int32.Parse(value);
+                            int id = Int32.Parse(value, CultureConstants.InvariantCulture);
                             return StaticItems.GetItemByID(id).Name;
 
                             // Format a Sizeclass ("1=small 2=medium 3=l")
                         case DBConstants.SizeclassUnitID:
-                            int size = Int32.Parse(value);
+                            int size = Int32.Parse(value, CultureConstants.InvariantCulture);
                             switch (size)
                             {
                                 case 1:
@@ -229,8 +229,11 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public float GetNumericValue(Item obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
             // Retrieve the string for the number
-            EvePropertyValue? value = obj.Properties[this];
+            EvePropertyValue? value = obj.Properties[ID];
             string number = (value == null ? DefaultValue : value.Value.Value);
 
             // Try to parse it as a float

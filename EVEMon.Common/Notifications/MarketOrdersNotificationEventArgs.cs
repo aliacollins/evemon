@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace EVEMon.Common.Notifications
 {
@@ -13,14 +14,21 @@ namespace EVEMon.Common.Notifications
         public MarketOrdersNotificationEventArgs(Object sender, IEnumerable<MarketOrder> orders)
             : base(sender, NotificationCategory.MarketOrdersEnding)
         {
-            Orders = new List<MarketOrder>(orders);
+            if (orders == null)
+                throw new ArgumentNullException("orders");
+
+            Orders = new Collection<MarketOrder>();
+            foreach (MarketOrder order in orders)
+            {
+                Orders.Add(order);
+            }
             UpdateDescription();
         }
 
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public List<MarketOrder> Orders { get; private set; }
+        public Collection<MarketOrder> Orders { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.
@@ -36,7 +44,11 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            Orders.AddRange(((MarketOrdersNotificationEventArgs)other).Orders);
+            foreach (MarketOrder order in ((MarketOrdersNotificationEventArgs)other).Orders)
+            {
+                Orders.Add((order));
+            }
+
             UpdateDescription();
         }
 

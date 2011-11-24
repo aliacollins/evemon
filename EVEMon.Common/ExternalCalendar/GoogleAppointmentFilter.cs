@@ -42,7 +42,7 @@ namespace EVEMon.Common.ExternalCalendar
 
             UserName = String.Empty;
             Password = String.Empty;
-            Uri = NetworkConstants.GoogleCalendarURL;
+            Uri = new Uri(NetworkConstants.GoogleCalendarURL);
             PopulateGoogleReminders();
         }
 
@@ -78,7 +78,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Gets or sets URI used for Google calendar.
         /// </summary>
-        internal string Uri { private get; set; }
+        internal Uri Uri { private get; set; }
 
         /// <summary>
         /// Gets or sets Reminder Method.
@@ -147,8 +147,7 @@ namespace EVEMon.Common.ExternalCalendar
             else
             {
                 // Send the request and receive the response
-                Uri postUri = new Uri(Uri);
-                m_service.Insert(postUri, appointmentItem);
+                m_service.Insert(Uri, appointmentItem);
             }
 
             if (googleProblem != null)
@@ -197,7 +196,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         public override void ReadAppointments()
         {
-            EventQuery myQuery = new EventQuery(Uri)
+            EventQuery myQuery = new EventQuery(Uri.AbsoluteUri)
                                      {
                                          StartTime = StartDate,
                                          EndTime = EndDate,

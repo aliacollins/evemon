@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace EVEMon.Common.Notifications
 {
@@ -16,14 +17,21 @@ namespace EVEMon.Common.Notifications
         public IndustryJobsNotificationEventArgs(Object sender, IEnumerable<IndustryJob> jobs)
             : base(sender, NotificationCategory.IndustryJobsCompletion)
         {
-            Jobs = new List<IndustryJob>(jobs);
+            if (jobs == null)
+                throw new ArgumentNullException("jobs");
+
+            Jobs = new Collection<IndustryJob>();
+            foreach (IndustryJob job in jobs)
+            {
+                Jobs.Add(job);
+            }
             UpdateDescription();
         }
 
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public List<IndustryJob> Jobs { get; private set; }
+        public Collection<IndustryJob> Jobs { get; private set; }
 
         /// <summary>
         /// Gets true if the notification has details.
@@ -39,7 +47,11 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public override void Append(NotificationEventArgs other)
         {
-            Jobs.AddRange(((IndustryJobsNotificationEventArgs)other).Jobs);
+            foreach (IndustryJob job in ((IndustryJobsNotificationEventArgs)other).Jobs)
+            {
+                Jobs.Add((job));
+            }
+
             UpdateDescription();
         }
 

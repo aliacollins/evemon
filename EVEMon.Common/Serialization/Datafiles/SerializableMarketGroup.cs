@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,8 +14,8 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableMarketGroup
     {
-        private Collection<SerializableItem> m_items;
-        private Collection<SerializableMarketGroup> m_subGroups;
+        private readonly Collection<SerializableItem> m_items;
+        private readonly Collection<SerializableMarketGroup> m_subGroups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableMarketGroup"/> class.
@@ -59,24 +60,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableMarketGroup> SubGroups
         {
             get { return m_subGroups; }
-        }
-
-        /// <summary>
-        /// Adds the specified items.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        public void Add(List<SerializableItem> items)
-        {
-            m_items = new Collection<SerializableItem>(items);
-        }
-
-        /// <summary>
-        /// Adds the specified sub groups.
-        /// </summary>
-        /// <param name="subGroups">The sub groups.</param>
-        public void Add(List<SerializableMarketGroup> subGroups)
-        {
-            m_subGroups = new Collection<SerializableMarketGroup>(subGroups);
         }
     }
 }
