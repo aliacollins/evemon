@@ -13,6 +13,11 @@ namespace EVEMon.XmlGenerator
 {
     public static class Util
     {
+        private static string s_text;
+        private static int s_counter;
+        private static int s_tablesCount;
+        private static int s_percentOld;
+
         /// <summary>
         /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
@@ -198,11 +203,71 @@ namespace EVEMon.XmlGenerator
                                                       fi.Directory.FullName));
                 }
             }
-            catch (Exception exc)
+            catch (IOException exc)
             {
-                Trace.WriteLine(exc.ToString());
-                throw;
+                WriteException(exc);
+            }
+            catch (UnauthorizedAccessException exc)
+            {
+                WriteException(exc);
             }
         }
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Writes the exception.
+        /// </summary>
+        /// <param name="exc">The exc.</param>
+        private static void WriteException(Exception exc)
+        {
+            Trace.WriteLine(exc.ToString());
+        }
+
+        /// <summary>
+        /// Resets the counters.
+        /// </summary>
+        internal static void ResetCounters()
+        {
+            s_counter = 0;
+            s_percentOld = 0;
+            s_text = String.Empty;
+        }
+
+        /// <summary>
+        /// Updates the percantage done of the datafile generating procedure.
+        /// </summary>
+        /// <param name="total"></param>
+        internal static void UpdatePercentDone(int total)
+        {
+            s_counter++;
+            int percent = (s_counter * 100 / total);
+
+            if (s_counter != 1 && s_percentOld >= percent)
+                return;
+
+            if (!String.IsNullOrEmpty(s_text))
+                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0}%", percent);
+            Console.Write(s_text);
+            s_percentOld = percent;
+        }
+
+        /// <summary>
+        /// Updates the progress of data loaded from SQL server.
+        /// </summary>
+        internal static void UpdateProgress()
+        {
+            if (!String.IsNullOrEmpty(s_text))
+                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+
+            s_tablesCount++;
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0}%", (s_tablesCount * 100 / Database.TotalTablesCount));
+            Console.Write(s_text);
+        }
+
+        #endregion
     }
 }
