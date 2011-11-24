@@ -1,14 +1,10 @@
 using System;
-using System.IO;
 using System.Windows.Forms;
-using EVEMon.Common;
 
 namespace EVEMon.PatchXmlCreator
 {
     internal static class Program
     {
-        private static bool s_exitRequested;
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -18,74 +14,17 @@ namespace EVEMon.PatchXmlCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            bool newRelease = SelectAction();
+            Action action = Helper.SelectAction();
 
-            // Ensure that the applications prerequisites are met
-            if (newRelease)
-                EnsurePrerequisites();
+            // Ensure that the prerequisites for a release are met
+            if (!Helper.ExitRequested && action != Action.DatafilesOnly)
+                Helper.EnsurePrerequisites();
 
             // When prerequisites are not met we exit before Run()
-            if (s_exitRequested)
+            if (Helper.ExitRequested)
                 return;
 
-            Application.Run(new PatchXmlCreatorWindow(newRelease));
-        }
-
-        /// <summary>
-        /// Ensures that the prerequisites to run the application are met.
-        /// </summary>
-        private static void EnsurePrerequisites()
-        {
-            string text;
-            string eveMonExecFilePath = Path.Combine(PatchXmlCreatorWindow.EVEMonExecDir, PatchXmlCreatorWindow.EVEMonExecFilename);
-
-            // Ensure that a release version of EVEMon has been created
-            if (!File.Exists(eveMonExecFilePath))
-            {
-                text = String.Format(CultureConstants.DefaultCulture,
-                                     "An EVEMon release version has to be created first\r\nbefore you can use {0}.",
-                                     PatchXmlCreatorWindow.Caption);
-
-                ShowMessage(text);
-                return;
-            }
-
-            string installerFile = String.Format(CultureConstants.InvariantCulture, PatchXmlCreatorWindow.InstallerFilename,
-                                                 PatchXmlCreatorWindow.AssemblyVersion);
-            string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}",
-                                                 Path.DirectorySeparatorChar, PatchXmlCreatorWindow.InstallerDir, installerFile);
-
-            // Ensure that the installer file has been created
-            if (File.Exists(installerPath))
-                return;
-
-            text = String.Format(CultureConstants.DefaultCulture,
-                                 "An EVEMon installer file has to be created first\r\nbefore you can use {0}.",
-                                 PatchXmlCreatorWindow.Caption);
-
-            ShowMessage(text);
-        }
-
-        /// <summary>
-        /// Shows the message.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        private static void ShowMessage(string text)
-        {
-            MessageBox.Show(text, PatchXmlCreatorWindow.Caption, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            s_exitRequested = true;
-        }
-
-        /// <summary>
-        /// Selects the action.
-        /// </summary>
-        /// <returns></returns>
-        private static bool SelectAction()
-        {
-            DialogResult dialogResult = MessageBox.Show(
-                "Create patch file for a new EVEMon release ?\r\n\r\nSelect 'No' if you are creating a patch file for new data files.",
-                PatchXmlCreatorWindow.Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            return dialogResult == DialogResult.Yes;
+            Application.Run(new PatchXmlCreatorWindow(action));
         }
     }
 }

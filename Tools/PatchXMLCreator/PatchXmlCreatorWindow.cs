@@ -14,7 +14,7 @@ using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon.PatchXmlCreator
 {
-    public partial class PatchXmlCreatorWindow : EVEMonForm
+    internal partial class PatchXmlCreatorWindow : EVEMonForm
     {
         #region Fields
 
@@ -40,7 +40,7 @@ namespace EVEMon.PatchXmlCreator
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
 
-        private readonly bool m_newRelease;
+        private readonly Action m_action;
 
         private Control m_activeTextBox;
         private string m_text;
@@ -62,10 +62,10 @@ namespace EVEMon.PatchXmlCreator
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PatchXmlCreatorWindow(bool newRelease)
+        public PatchXmlCreatorWindow(Action action)
             : this()
         {
-            m_newRelease = newRelease;
+            m_action = action;
         }
 
 
@@ -128,7 +128,7 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         private void UpdateReleaseInfo()
         {
-            if (!m_newRelease)
+            if (m_action == Action.DatafilesOnly)
             {
                 LoadReleaseInfoFromFile();
                 return;
@@ -321,6 +321,12 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         private void UpdateDatafilesControls()
         {
+            if(m_action == Action.ReleaseOnly)
+            {
+                LoadDatafilesInfoFromFile();
+                return;
+            }
+
             bool updateDatafilesText = true;
 
             // Look into datafiles controls
@@ -353,8 +359,8 @@ namespace EVEMon.PatchXmlCreator
         private void UpdateCreateButtonEnabled()
         {
             // Look into release controls, datafiles controls and datafileControl controls
-            bool buttonEnable = ButtonEnabledFromReleaseControls() &&
-                                ButtonEnabledFromDatafileControls() &&
+            bool buttonEnable = ButtonEnabledFromReleaseControls() &
+                                ButtonEnabledFromDatafileControls() &
                                 ButtonEnabledFromDatafileControlControls();
 
             // Enable/Disable Create button
@@ -577,6 +583,43 @@ namespace EVEMon.PatchXmlCreator
             rtbReleaseMessage.Text = patch.Release.Message;
         }
 
+        private void LoadDatafilesInfoFromFile()
+        {
+            SerializablePatch patch = TryDeserializePatchXml();
+            if (patch == null)
+                return;
+
+            string url = patch.Datafiles[0].Address;
+            string revision = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
+            url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
+            string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
+            url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
+            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) +
+                                         (expansionName.Length + 1);
+            string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
+            string version = message.Remove((message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1),
+                                            (message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1)));
+
+            foreach (SerializableDatafile datafile in patch.Datafiles)
+            {
+                rtbDatafileUrl.Text = url;
+                tbExpansion.Text = expansionName;
+                tbExpVersion.Text = version;
+                tbExpRevision.Text = revision;
+
+                foreach (DatafileControl dfControl in gbDatafiles.Controls.OfType<DatafileControl>().Where(
+                    x => x != null && x.gbDatafile.Text == datafile.Name))
+                {
+                    DateTime date;
+                    if (DateTime.TryParse(datafile.Date, out date))
+                        dfControl.dtpDatafiles.Value = date;
+
+                    dfControl.lblMD5Sum.Text = datafile.MD5Sum;
+                    dfControl.rtbDatafileMessage.Text = datafile.Message;
+                }
+            }
+        }
+
         #endregion
 
 
@@ -638,40 +681,7 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="e"></param>
         private void btnLoadDatafileInfo_Click(object sender, EventArgs e)
         {
-            SerializablePatch patch = TryDeserializePatchXml();
-            if (patch == null)
-                return;
-
-            string url = patch.Datafiles[0].Address;
-            string revision = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
-            url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
-            string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
-            url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) +
-                                         (expansionName.Length + 1);
-            string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
-            string version = message.Remove((message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1),
-                                            (message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1)));
-
-            foreach (SerializableDatafile datafile in patch.Datafiles)
-            {
-                rtbDatafileUrl.Text = url;
-                tbExpansion.Text = expansionName;
-                tbExpVersion.Text = version;
-                tbExpRevision.Text = revision;
-
-                foreach (DatafileControl dfControl in gbDatafiles.Controls.OfType<DatafileControl>().Where(
-                    x => x != null && x.gbDatafile.Text == datafile.Name))
-                {
-                    DateTime date;
-                    if (DateTime.TryParse(datafile.Date, out date))
-                        dfControl.dtpDatafiles.Value = date;
-
-                    dfControl.lblMD5Sum.Text = datafile.MD5Sum;
-                    dfControl.rtbDatafileMessage.Text = datafile.Message;
-                }
-            }
-
+            LoadDatafilesInfoFromFile();
             UpdateCreateButtonEnabled();
         }
 

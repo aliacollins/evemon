@@ -516,11 +516,11 @@
     <Compile Include="Controls\ApiErrorTroubleshooter.Designer.cs">
       <DependentUpon>ApiErrorTroubleshooter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MsgBoxCustom.cs">
+    <Compile Include="Controls\MessageBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\MsgBoxCustom.Designer.cs">
-      <DependentUpon>MsgBoxCustom.cs</DependentUpon>
+    <Compile Include="Controls\MessageBoxCustom.Designer.cs">
+      <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ResolutionAction.cs" />
     <Compile Include="CultureConstants.cs" />
@@ -794,8 +794,8 @@
       <DependentUpon>EveFolderWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MsgBoxCustom.resx">
-      <DependentUpon>MsgBoxCustom.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\MessageBoxCustom.resx">
+      <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Resources\Skill_Select\Group0\Default.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
