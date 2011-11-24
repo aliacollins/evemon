@@ -132,8 +132,7 @@ namespace EVEMon.Controls
                         fs =>
                             {
                                 Stream stream = fs;
-
-                                // Emp is actually compressed xml
+                                // Emp is actually compressed text
                                 if (format == PlanFormat.Emp)
                                     stream = new GZipStream(fs, CompressionMode.Compress);
 
@@ -225,6 +224,7 @@ namespace EVEMon.Controls
                                 {
                                     sw.Write(content);
                                     sw.Flush();
+                                    fs.Flush();
                                 }
                                 return true;
                             });
@@ -282,10 +282,11 @@ namespace EVEMon.Controls
                                     return false;
                                 }
 
-                                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                                using(StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
                                 {
                                     sw.Write(content);
                                     sw.Flush();
+                                    fs.Flush();
                                 }
                                 return true;
                             });

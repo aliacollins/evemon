@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -600,7 +601,7 @@ namespace EVEMon
                 return;
 
             // Show or bring to front if a window with the same EVE notification already exists
-            WindowsFactory<EveMessageWindow>.ShowByTag(notification);
+            WindowsFactory.ShowByTag<EveMessageWindow, EveNotification>(notification);
         }
 
         /// <summary>
@@ -661,7 +662,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.EVENotifications.Add(Columns.Cast<EveNotificationsColumnSettings>().ToList());
+            Settings.UI.MainWindow.EVENotifications.Columns.Clear();
+            Settings.UI.MainWindow.EVENotifications.Columns.AddRange(Columns.Cast<EveNotificationsColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;

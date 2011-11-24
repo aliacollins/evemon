@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -9,6 +9,8 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class UISettings
     {
+        private readonly Collection<string> m_confirmedTips;
+ 
         /// <summary>
         /// Initializes a new instance of the <see cref="UISettings"/> class.
         /// </summary>
@@ -18,6 +20,7 @@ namespace EVEMon.Common.SettingsObjects
 
             WindowLocations = new SerializableDictionary<string, SerializableRectangle>();
             Splitters = new SerializableDictionary<string, int>();
+            m_confirmedTips = new Collection<string>();
 
             CertificateBrowser = new CertificateBrowserSettings();
             BlueprintBrowser = new BlueprintBrowserSettings();
@@ -30,7 +33,6 @@ namespace EVEMon.Common.SettingsObjects
             MainWindow = new MainWindowSettings();
             PlanWindow = new PlanWindowSettings();
             Scheduler = new SchedulerUISettings();
-            ConfirmedTips = new List<String>();
 
             UseStoredSearchFilters = true;
             ShowTextInToolStrip = true;
@@ -156,14 +158,16 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The window locations.</value>
         [XmlElement("locations")]
-        public SerializableDictionary<String, SerializableRectangle> WindowLocations { get; set; }
+        public SerializableDictionary<string, SerializableRectangle> WindowLocations{ get; set; }
+
 
         /// <summary>
         /// Gets or sets the splitters.
         /// </summary>
         /// <value>The splitters.</value>
         [XmlElement("splitters")]
-        public SerializableDictionary<String, int> Splitters { get; set; }
+        public SerializableDictionary<string, int> Splitters { get; set; }
+
 
         /// <summary>
         /// Gets or sets the confirmed tips.
@@ -171,6 +175,9 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The confirmed tips.</value>
         [XmlArray("confirmedTips")]
         [XmlArrayItem("tip")]
-        public List<String> ConfirmedTips { get; set; }
+        public Collection<string> ConfirmedTips
+        {
+            get { return m_confirmedTips; }
+        }
     }
 }

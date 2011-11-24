@@ -84,7 +84,7 @@ namespace EVEMon
         /// </summary>
         private bool DownloadUpdate()
         {
-            string filename = Path.GetFileName(m_args.InstallerUrl);
+            string filename = Path.GetFileName(m_args.InstallerUrl.AbsoluteUri);
             if (filename == null)
                 return false;
 
@@ -94,7 +94,7 @@ namespace EVEMon
             if (File.Exists(localFilename))
                 UpdateManager.DeleteInstallationFiles();
 
-            using (UpdateDownloadForm form = new UpdateDownloadForm(new Uri(m_args.InstallerUrl), localFilename))
+            using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
             {
                 form.ShowDialog();
 

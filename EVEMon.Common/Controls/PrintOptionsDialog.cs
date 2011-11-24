@@ -10,6 +10,12 @@ namespace EVEMon.Common.Controls
 
         public PrintOptionsDialog(PlanExportSettings pto, PrintDocument doc)
         {
+            if (pto == null)
+                throw new ArgumentNullException("pto");
+
+            if (doc == null)
+                throw new ArgumentNullException("doc");
+
             InitializeComponent();
 
             string curPrinter = doc.PrinterSettings.PrinterName;

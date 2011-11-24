@@ -10,7 +10,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public CalendarSettings()
         {
-            GoogleURL = NetworkConstants.GoogleCalendarURL;
+            GoogleAddress = NetworkConstants.GoogleCalendarURL;
             GoogleReminder = GoogleCalendarReminder.Email;
             RemindingInterval = 10;
 
@@ -82,7 +82,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The google URL.</value>
         [XmlElement("googleUrl")]
-        public string GoogleURL { get; set; }
+        public string GoogleAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the google reminder.

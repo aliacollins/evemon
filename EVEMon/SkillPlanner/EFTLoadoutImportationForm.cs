@@ -254,8 +254,11 @@ namespace EVEMon.SkillPlanner
             if (item == null)
                 return;
 
-            PlanWindow opener = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            opener.ShowItemInBrowser(item);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.ShowItemInBrowser(item);
         }
 
         /// <summary>
@@ -401,7 +404,7 @@ namespace EVEMon.SkillPlanner
             Character character = (Character)m_character;
             foreach (Item obj in m_objects)
             {
-                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill].Level < x.Level));
+                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill.ID].Level < x.Level));
             }
             m_skillsToAdd.AddRange(scratchpad.TrainedSkills);
 

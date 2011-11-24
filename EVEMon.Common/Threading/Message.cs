@@ -10,6 +10,7 @@ namespace EVEMon.Common.Threading
     {
         private readonly Action m_action;
         private readonly EventWaitHandle m_waitHandle;
+        private static readonly EventWaitHandle s_eventWaitHandler = new EventWaitHandle(false, EventResetMode.AutoReset);
 
         /// <summary>
         /// Constructor for a message with or without waiting mechanism.
@@ -19,7 +20,7 @@ namespace EVEMon.Common.Threading
         public Message(Action action, bool waitForInvocation)
         {
             m_action = action;
-            m_waitHandle = waitForInvocation ? new EventWaitHandle(false, EventResetMode.AutoReset) : null;
+            m_waitHandle = waitForInvocation ? s_eventWaitHandler : null;
         }
 
         /// <summary>

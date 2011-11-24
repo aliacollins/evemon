@@ -1026,12 +1026,12 @@ namespace EVEMon.SkillPlanner
         private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Open the skill explorer
-            npw.ShowSkillInBrowser(SelectedSkill);
+            planWindow.ShowSkillInBrowser(SelectedSkill);
         }
 
         /// <summary>
@@ -1042,12 +1042,12 @@ namespace EVEMon.SkillPlanner
         private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
-            PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // Open the skill explorer
-            npw.ShowSkillInExplorer(SelectedSkill);
+            planWindow.ShowSkillInExplorer(SelectedSkill);
         }
 
         #endregion

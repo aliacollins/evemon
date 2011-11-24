@@ -159,7 +159,8 @@ namespace EVEMon.Common.IgbService
             Dictionary<string, string> headers = new Dictionary<string, string>();
 
             string request = String.Empty;
-            string requestUrl = ExtractHeaders(buffer, headers, ref request);
+            string url = ExtractHeaders(buffer, headers, ref request);
+            Uri requestUrl = new Uri(url);
 
             SendOutputToClient(client, headers, request, requestUrl);
             client.Close();
@@ -172,35 +173,35 @@ namespace EVEMon.Common.IgbService
         /// <param name="headers">dictionary of headers</param>
         /// <param name="request">the requested method</param>
         /// <param name="requestUrl">url to respond to</param>
-        private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string request, string requestUrl)
+        private void SendOutputToClient(IgbTcpClient client, IDictionary<string, string> headers, string request, Uri requestUrl)
         {
-            using (MemoryStream ms = new MemoryStream())
+            MemoryStream stream = Util.GetMemoryStream();
+            using (StreamWriter sw = new StreamWriter(stream))
             {
-                using (StreamWriter sw = new StreamWriter(ms))
+                ProcessRequest(request, requestUrl, headers, sw);
+
+                sw.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+
+                // We should support only the "GET" method
+                client.Write("HTTP/1.1 {0}\n", request.Equals("GET") ? "200 OK" : "501 Not Implemented");
+                client.Write("Server: EVEMon/1.0\n");
+                client.Write("Content-Type: text/html; charset=utf-8\n");
+                if (headers.ContainsKey("eve_trusted") &&
+                    headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
                 {
-                    ProcessRequest(request, requestUrl, headers, sw);
-
-                    sw.Flush();
-                    ms.Seek(0, SeekOrigin.Begin);
-
-                    // We should support only the "GET" method
-                    client.Write(request.Equals("GET") ? "HTTP/1.1 200 OK\n" : "HTTP/1.1 501 Not Implemented\n");
-                    client.Write("Server: EVEMon/1.0\n");
-                    client.Write("Content-Type: text/html; charset=utf-8\n");
-                    if (headers.ContainsKey("eve_trusted") &&
-                        headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
-                    {
-                        client.Write("eve.trustme: http://" + BuildHostAndPort(headers["host"]) +
-                                     "/::EVEMon needs your pilot information.\n");
-                    }
-
-                    client.Write("Connection: close\n");
-                    client.Write("Content-Length: " + ms.Length + "\n\n");
-                    using (StreamReader sr = new StreamReader(ms))
-                    {
-                        client.Write(sr.ReadToEnd());
-                    }
+                    client.Write("eve.trustme: http://{0}/::EVEMon needs your pilot information.\n",
+                                 BuildHostAndPort(headers["host"]));
                 }
+
+                client.Write("Connection: close\n");
+                client.Write("Content-Length: {0}\n\n", stream.Length);
+            }
+
+            MemoryStream mStream = Util.GetMemoryStream();
+            using (StreamReader sr = new StreamReader(mStream))
+            {
+                client.Write(sr.ReadToEnd());
             }
         }
 
@@ -301,14 +302,13 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestUrl">URL of the request</param>
         /// <param name="headers">dictionary of headers</param>
         /// <param name="sw">stream writer to output to</param>
-        private void ProcessRequest(string request, string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
+        private void ProcessRequest(string request, Uri requestUrl, IDictionary<string, string> headers, StreamWriter sw)
         {
             if (!request.Equals("GET"))
             {
-                sw.WriteLine(
-                    String.Format(
-                        "<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
-                        request));
+                sw.WriteLine(String.Format(CultureConstants.DefaultCulture,
+                                           "<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
+                                           request));
                 return;
             }
 
@@ -341,14 +341,14 @@ namespace EVEMon.Common.IgbService
             string characterName = headerCharacterName;
             Regex contextRegex = new Regex(@"(?'context'\/characters(\/(?'charName'[^\/]*))?)?(?'request'.*)",
                                            RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            Match match = contextRegex.Match(requestUrl);
+            Match match = contextRegex.Match(requestUrl.AbsoluteUri);
             if (match.Success)
             {
                 Group contextGroup = match.Groups["context"];
                 if (contextGroup.Success)
                     characterName = HttpUtility.UrlDecode(match.Groups["charName"].Value);
 
-                requestUrl = match.Groups["request"].Value;
+                requestUrl = new Uri(match.Groups["request"].Value);
             }
             Character character = !string.IsNullOrEmpty(characterName)
                                       ? EveMonClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName)
@@ -362,9 +362,11 @@ namespace EVEMon.Common.IgbService
             string context = String.Format(CultureConstants.DefaultCulture, "/characters/{0}",
                                            HttpUtility.UrlEncode(character.Name));
 
-            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))
+            if (requestUrl.AbsoluteUri.StartsWith("/plan/", StringComparison.OrdinalIgnoreCase)
+                || requestUrl.AbsoluteUri.StartsWith("/shopping/", StringComparison.OrdinalIgnoreCase)
+                || requestUrl.AbsoluteUri.StartsWith("/owned/", StringComparison.OrdinalIgnoreCase))
                 GeneratePlanOrShoppingOutput(context, requestUrl, sw, character);
-            else if (requestUrl.StartsWith("/skills/bytime"))
+            else if (requestUrl.AbsoluteUri.StartsWith("/skills/bytime", StringComparison.OrdinalIgnoreCase))
                 GenerateSkillsByTimeOutput(context, sw, character);
             else
                 GeneratePlanListOutput(context, sw, character);
@@ -515,7 +517,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestUrl">url of the request</param>
         /// <param name="sw">stream writer to output to</param>
         /// <param name="character">character to use</param>
-        private static void GeneratePlanOrShoppingOutput(string context, string requestUrl, StreamWriter sw, Character character)
+        private static void GeneratePlanOrShoppingOutput(string context, Uri requestUrl, StreamWriter sw, Character character)
         {
             WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
@@ -526,7 +528,7 @@ namespace EVEMon.Common.IgbService
                 new Regex(
                     @"\/(owned\/(?'skillId'[^\/]+)\/(?'markOwned'[^\/]+)\/)?(?'requestType'shopping|plan)\/(?'planName'[^\/]+)(.*)",
                     RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            Match match = regex.Match(requestUrl);
+            Match match = regex.Match(requestUrl.AbsoluteUri);
 
             if (match.Success)
             {

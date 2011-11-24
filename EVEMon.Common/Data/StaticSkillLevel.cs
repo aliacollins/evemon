@@ -49,6 +49,9 @@ namespace EVEMon.Common.Data
         /// <param name="obj"></param>
         public StaticSkillLevel(ISkillLevel obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
             Skill = obj.Skill;
             Level = obj.Level;
         }
@@ -117,6 +120,9 @@ namespace EVEMon.Common.Data
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
         public bool IsDependentOf(ISkillLevel skillLevel)
         {
+            if (skillLevel == null)
+                throw new ArgumentNullException("skillLevel");
+
             // Same skill, lower level ?
             if (Skill == skillLevel.Skill)
                 return Level > skillLevel.Level;
@@ -139,7 +145,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(SkillLevel training)
         {
-            return new StaticSkillLevel(training.Skill.StaticData, training.Level);
+            return training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
         }
 
         #endregion

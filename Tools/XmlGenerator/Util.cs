@@ -13,6 +13,11 @@ namespace EVEMon.XmlGenerator
 {
     public static class Util
     {
+        private static string s_text;
+        private static int s_counter;
+        private static int s_tablesCount;
+        private static int s_percentOld;
+
         /// <summary>
         /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
@@ -20,9 +25,9 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
         /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static SimpleList<T> DeserializeList<T>(string filename)
+        public static SimpleCollection<T> DeserializeList<T>(string filename)
         {
-            return DeserializeXMLCore<SimpleList<T>>(filename);
+            return DeserializeXMLCore<SimpleCollection<T>>(filename);
         }
 
         /// <summary>
@@ -32,10 +37,10 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
         /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static IndexedList<T> DeserializeIndexedList<T>(string filename)
+        public static IndexedCollection<T> DeserializeIndexedList<T>(string filename)
             where T : IHasID
         {
-            return DeserializeXMLCore<IndexedList<T>>(filename);
+            return DeserializeXMLCore<IndexedCollection<T>>(filename);
         }
 
         /// <summary>
@@ -69,7 +74,8 @@ namespace EVEMon.XmlGenerator
             // Load XSLT 
             Assembly asm = Assembly.GetExecutingAssembly();
             XslCompiledTransform xslt = new XslCompiledTransform();
-            Stream input = asm.GetManifestResourceStream(String.Format("{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
+            Stream input = asm.GetManifestResourceStream(String.Format(CultureConstants.DefaultCulture,
+                                                                       "{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
             if (input != null)
             {
                 using (XmlReader reader = XmlReader.Create(input))
@@ -81,34 +87,30 @@ namespace EVEMon.XmlGenerator
             // Apply trasnform and deserialize
             using (XmlNodeReader reader = new XmlNodeReader(doc))
             {
-                using (MemoryStream stream = new MemoryStream())
+                MemoryStream stream = Common.Util.GetMemoryStream();
+
+                // Apply the XSL transform
+                using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                 {
-                    // Apply the XSL transform
-                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
+                    writer.Formatting = Formatting.Indented;
+                    xslt.Transform(reader, writer);
+                    writer.Flush();
+
+                    if (EveMonClient.IsDebugBuild)
                     {
-                        writer.Formatting = Formatting.Indented;
-                        xslt.Transform(reader, writer);
-                        writer.Flush();
-
-                        if (EveMonClient.IsDebugBuild)
-                        {
-                            // Gets a printing for debugging
-                            stream.Seek(0, SeekOrigin.Begin);
-                            XmlDocument doc2 = new XmlDocument();
-                            doc2.Load(stream);
-                            Trace.Write(GetXMLStringRepresentation(doc2));
-                        }
-
-                        // Deserialize from the given stream
+                        // Gets a printing for debugging
                         stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
-                        T result = (T)xs.Deserialize(stream);
-
-                        // XML deserialization creates a lot of garbage so we cleans up now to avoid wasting hundreds of MB 
-                        // and OOM exceptions.
-                        GC.Collect();
-                        return result;
+                        XmlDocument doc2 = new XmlDocument();
+                        doc2.Load(stream);
+                        Trace.Write(Common.Util.GetXMLStringRepresentation(doc2));
                     }
+
+                    // Deserialize from the given stream
+                    stream.Seek(0, SeekOrigin.Begin);
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
+                    T result = (T)xs.Deserialize(stream);
+
+                    return result;
                 }
             }
         }
@@ -123,14 +125,13 @@ namespace EVEMon.XmlGenerator
         {
             string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
 
-            using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
+            FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write);
+            
+            using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
             {
-                using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-                    serializer.Serialize(zstream, datafile);
-                    zstream.Flush();
-                }
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                serializer.Serialize(zstream, datafile);
+                zstream.Flush();
             }
 
             Console.WriteLine("-----------------------------------------------");
@@ -160,19 +161,19 @@ namespace EVEMon.XmlGenerator
             const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
             string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
 
-            StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath);
-
-            foreach (string file in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            using (StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath))
             {
-                FileInfo datafile = new FileInfo(file);
-                if (!datafile.Exists)
-                    throw new Exception(String.Format("{0} not found!", file));
+                foreach (string file in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo datafile = new FileInfo(file);
+                    if (!datafile.Exists)
+                        throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
 
-                string line = String.Format("{0} *{1}", Common.Util.CreateMD5From(file), datafile.Name);
-                md5SumsFile.WriteLine(line);
+                    string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
+                                                datafile.Name);
+                    md5SumsFile.WriteLine(line);
+                }
             }
-
-            md5SumsFile.Close();
 
             Console.WriteLine("MD5Sums File Created Successfully");
             Console.WriteLine();
@@ -193,36 +194,80 @@ namespace EVEMon.XmlGenerator
                     if (fi.Directory.Exists && fi.Directory.Parent != null && fi.Directory.Parent.Parent != null)
                     {
                         File.Copy(srcFile, destFile, true);
-                        Console.WriteLine(String.Format(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name,
+                        Console.WriteLine(String.Format(CultureConstants.DefaultCulture, @"*** {0}\{1}\{2}",
+                                                        fi.Directory.Parent.Parent.Name,
                                                         fi.Directory.Parent.Name, fi.Directory.Name));
                     }
                     else
-                        Trace.WriteLine(String.Format("{0} doesn't exist, copy failed", fi.Directory.FullName));
+                        Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",
+                                                      fi.Directory.FullName));
                 }
             }
-            catch (Exception exc)
+            catch (IOException exc)
             {
-                Trace.WriteLine(exc.ToString());
+                WriteException(exc);
             }
+            catch (UnauthorizedAccessException exc)
+            {
+                WriteException(exc);
+            }
+        }
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Writes the exception.
+        /// </summary>
+        /// <param name="exc">The exc.</param>
+        private static void WriteException(Exception exc)
+        {
+            Trace.WriteLine(exc.ToString());
         }
 
         /// <summary>
-        /// Gets a nicely formatted string representation of a XML document.
+        /// Resets the counters.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <returns></returns>
-        private static string GetXMLStringRepresentation(XmlDocument doc)
+        internal static void ResetCounters()
         {
-            // Creates the settings for the text writer
-            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
-
-            // Writes to a string builder
-            StringBuilder xmlBuilder = new StringBuilder();
-            XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
-            doc.WriteContentTo(xmlWriter);
-            xmlWriter.Flush();
-
-            return xmlBuilder.ToString();
+            s_counter = 0;
+            s_percentOld = 0;
+            s_text = String.Empty;
         }
+
+        /// <summary>
+        /// Updates the percantage done of the datafile generating procedure.
+        /// </summary>
+        /// <param name="total"></param>
+        internal static void UpdatePercentDone(int total)
+        {
+            s_counter++;
+            int percent = (s_counter * 100 / total);
+
+            if (s_counter != 1 && s_percentOld >= percent)
+                return;
+
+            if (!String.IsNullOrEmpty(s_text))
+                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0}%", percent);
+            Console.Write(s_text);
+            s_percentOld = percent;
+        }
+
+        /// <summary>
+        /// Updates the progress of data loaded from SQL server.
+        /// </summary>
+        internal static void UpdateProgress()
+        {
+            if (!String.IsNullOrEmpty(s_text))
+                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+
+            s_tablesCount++;
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0}%", (s_tablesCount * 100 / Database.TotalTablesCount));
+            Console.Write(s_text);
+        }
+
+        #endregion
     }
 }

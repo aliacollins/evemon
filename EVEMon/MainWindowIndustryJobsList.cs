@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -950,7 +951,8 @@ namespace EVEMon
             if (!m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.IndustryJobs.Add(Columns.Cast<IndustryJobColumnSettings>().ToList());
+            Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
+            Settings.UI.MainWindow.IndustryJobs.Columns.AddRange(Columns.Cast<IndustryJobColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
@@ -1199,10 +1201,20 @@ namespace EVEMon
             // Subscribe events
             foreach (Label label in industryExpPanelControl.Controls.OfType<Label>())
             {
-                label.MouseClick += industryExpPanelControl.expandablePanelControl_MouseClick;
+                label.MouseClick += OnExpandablePanelMouseClick;
             }
 
             industryExpPanelControl.ResumeLayout();
+        }
+
+        /// <summary>
+        /// Called when the expandable panel gets mouse clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void OnExpandablePanelMouseClick(object sender, MouseEventArgs e)
+        {
+            industryExpPanelControl.OnMouseClick(sender, e);
         }
 
         #endregion

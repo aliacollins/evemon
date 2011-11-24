@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
     /// </remarks>
     public sealed class ResearchSettings
     {
-        private Collection<ResearchColumnSettings> m_columns;
+        private readonly Collection<ResearchColumnSettings> m_columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResearchSettings"/> class.
@@ -52,27 +52,16 @@ namespace EVEMon.Common.SettingsObjects
                                                           ResearchColumn.Station
                                                       };
 
-                List<ResearchColumnSettings> researchColumns = Columns.ToList();
-                researchColumns.AddRange(EnumExtensions.GetValues<ResearchColumn>().Where(
-                    x => x != ResearchColumn.None).Where(x => researchColumns.All(y => y.Column != x)).Select(
-                            x => new ResearchColumnSettings
-                                     {
-                                         Column = x,
-                                         Visible = defaultColumns.Contains(x),
-                                         Width = -2
-                                     }));
-
-                return researchColumns;
+                return EnumExtensions.GetValues<ResearchColumn>().Where(
+                    planColumn => planColumn != ResearchColumn.None).Where(
+                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
+                            planColumn => new ResearchColumnSettings
+                                              {
+                                                  Column = planColumn,
+                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Width = -2
+                                              });
             }
-        }
-
-        /// <summary>
-        /// Adds the specified columns.
-        /// </summary>
-        /// <param name="columns">The columns.</param>
-        public void Add(List<ResearchColumnSettings> columns)
-        {
-            m_columns = new Collection<ResearchColumnSettings>(columns);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
@@ -36,6 +37,9 @@ namespace EVEMon.Common.Controls
         /// <param name="pe"></param>
         protected override void OnPaint(PaintEventArgs pe)
         {
+            if (pe == null)
+                throw new ArgumentNullException("pe");
+
             base.OnPaint(pe);
             Rectangle rect = ClientRectangle;
             rect.Inflate(-1, -1);

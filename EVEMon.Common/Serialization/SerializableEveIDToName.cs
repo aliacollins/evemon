@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization
@@ -6,13 +6,18 @@ namespace EVEMon.Common.Serialization
     [XmlRoot("EveIDToName")]
     public sealed class SerializableEveIDToName
     {
+        private readonly Collection<SerializableEveIDToNameListItem> m_entities;
+
         public SerializableEveIDToName()
         {
-            Entities = new List<SerializableEveIDToNameListItem>();
+            m_entities = new Collection<SerializableEveIDToNameListItem>();
         }
 
         [XmlArray("entities")]
         [XmlArrayItem("entity")]
-        public List<SerializableEveIDToNameListItem> Entities { get; set; }
+        public Collection<SerializableEveIDToNameListItem> Entities
+        {
+            get { return m_entities; }
+        }
     }
 }

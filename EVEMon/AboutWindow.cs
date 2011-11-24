@@ -254,7 +254,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonMainPage);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace EVEMon
             try
             {
                 Uri linkUri = new Uri(e.Link.LinkData.ToString());
-                Util.OpenURL(linkUri.AbsoluteUri);
+                Util.OpenURL(linkUri);
             }
             catch (UriFormatException ex)
             {

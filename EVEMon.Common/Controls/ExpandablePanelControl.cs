@@ -27,7 +27,6 @@ namespace EVEMon.Common.Controls
         private ToolStripMenuItem m_tsmiLowAnim;
 
         // Graphics variables
-        private StringFormat m_hCenteredStringFormat;
         private Bitmap m_headerImage;
         private Bitmap m_expandImage;
         private Bitmap m_collapseImage;
@@ -44,6 +43,7 @@ namespace EVEMon.Common.Controls
         {
             HeaderText = "Header Text";
             ExpandDirection = Direction.Up;
+
             // Header
             CreateHeader();
 
@@ -106,8 +106,24 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void CreateHeader()
         {
-            Header = new NoFlickerPanel { Width = Width, Height = 30, BackColor = Color.Transparent };
-            Controls.Add(Header);
+            NoFlickerPanel tempHeader = null;
+            try
+            {
+                tempHeader = new NoFlickerPanel();
+                tempHeader.Width = Width;
+                tempHeader.Height = 30;
+                tempHeader.BackColor = Color.Transparent;
+
+                Header = tempHeader;
+                tempHeader = null;
+
+                Controls.Add(Header);
+            }
+            finally
+            {
+                if (tempHeader != null)
+                    tempHeader.Dispose();
+            }
         }
 
         /// <summary>
@@ -174,6 +190,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Graphics gr = e.Graphics;
             gr.SmoothingMode = SmoothingMode.AntiAlias;
             using (Pen pen = new Pen(SystemBrushes.ControlDark, 1))
@@ -200,8 +219,6 @@ namespace EVEMon.Common.Controls
             Graphics gr = e.Graphics;
             gr.SmoothingMode = SmoothingMode.AntiAlias;
 
-            m_hCenteredStringFormat = new StringFormat { LineAlignment = StringAlignment.Center };
-
             Header.Width = Width;
             m_headerImage = (IsExpanded ? m_collapseImage : m_expandImage);
 
@@ -213,8 +230,13 @@ namespace EVEMon.Common.Controls
                                            m_headerImage.Height));
             }
 
-            gr.DrawString(HeaderText, Font, Brushes.Black,
-                          new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), m_hCenteredStringFormat);
+            using (StringFormat hCenteredStringFormat = new StringFormat())
+            {
+                hCenteredStringFormat.LineAlignment = StringAlignment.Center;
+
+                gr.DrawString(HeaderText, Font, Brushes.Black,
+                              new RectangleF(Pad + m_offset, 0, Header.Width - Pad * 4, Header.Height), hCenteredStringFormat);
+            }
         }
 
         #endregion
@@ -476,11 +498,21 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
+        /// Occurs on a mouse click.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        public void OnMouseClick(object sender, MouseEventArgs e)
+        {
+            expandablePanelControl_MouseClick(sender, e);
+        }
+
+        /// <summary>
         /// Occurs on a mouse click in the main Panel.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void expandablePanelControl_MouseClick(object sender, MouseEventArgs e)
+        private void expandablePanelControl_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {

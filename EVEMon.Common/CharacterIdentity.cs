@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace EVEMon.Common
@@ -9,7 +10,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CharacterIdentity
     {
-        private readonly List<APIKey> m_apiKeys;
+        private readonly Collection<APIKey> m_apiKeys;
 
         /// <summary>
         /// Constructor from an id and a name.
@@ -25,7 +26,7 @@ namespace EVEMon.Common
             CorporationID = corpId;
             CorporationName = corpName;
 
-            m_apiKeys = new List<APIKey>();
+            m_apiKeys = new Collection<APIKey>();
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the API keys this identity is associated with.
         /// </summary>
-        public List<APIKey> APIKeys
+        public Collection<APIKey> APIKeys
         {
             get { return m_apiKeys; }
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -14,8 +15,8 @@ namespace EVEMon.Common.Serialization.Datafiles
     [XmlRoot("geographyDatafile")]
     public sealed class GeoDatafile
     {
-        private Collection<SerializableRegion> m_regions;
-        private Collection<SerializableJump> m_jumps;
+        private readonly Collection<SerializableRegion> m_regions;
+        private readonly Collection<SerializableJump> m_jumps;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoDatafile"/> class.
@@ -46,24 +47,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableJump> Jumps
         {
             get { return m_jumps; }
-        }
-
-        /// <summary>
-        /// Adds the specified regions.
-        /// </summary>
-        /// <param name="regions">The regions.</param>
-        public void Add(List<SerializableRegion> regions)
-        {
-            m_regions = new Collection<SerializableRegion>(regions);
-        }
-
-        /// <summary>
-        /// Adds the specified jumps.
-        /// </summary>
-        /// <param name="jumps">The jumps.</param>
-        public void Add(List<SerializableJump> jumps)
-        {
-            m_jumps = new Collection<SerializableJump>(jumps);
         }
     }
 }

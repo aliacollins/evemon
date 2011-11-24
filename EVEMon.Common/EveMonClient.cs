@@ -230,7 +230,8 @@ namespace EVEMon.Common
                     }
                     catch (UnauthorizedAccessException exc)
                     {
-                        string msg = String.Format("An error occurred while EVEMon was looking for its data directory. " +
+                        string msg = String.Format(CultureConstants.DefaultCulture,
+                                                   "An error occurred while EVEMon was looking for its data directory. " +
                                                    "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
                                                    Environment.NewLine, exc.Message);
 
@@ -1065,7 +1066,7 @@ namespace EVEMon.Common
         /// <param name="md5Sum">The MD5 sum.</param>
         /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
         /// <param name="installArgs">The install args.</param>
-        internal static void OnUpdateAvailable(string forumUrl, string installerUrl, string updateMessage,
+        internal static void OnUpdateAvailable(Uri forumUrl, Uri installerUrl, string updateMessage,
                                                Version currentVersion, Version newestVersion, string md5Sum,
                                                bool canAutoInstall, string installArgs)
         {
@@ -1114,7 +1115,7 @@ namespace EVEMon.Common
             TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
             string timeStr = String.Format(CultureConstants.DefaultCulture,
                                            "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
-            System.Diagnostics.Trace.WriteLine(String.Format("{0}{1}", timeStr, message));
+            System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
         }
 
         /// <summary>
@@ -1125,7 +1126,7 @@ namespace EVEMon.Common
         /// <param name="args"></param>
         public static void Trace(string format, params object[] args)
         {
-            Trace(String.Format(format, args));
+            Trace(String.Format(CultureConstants.DefaultCulture, format, args));
         }
 
         /// <summary>
@@ -1177,7 +1178,8 @@ namespace EVEMon.Common
             }
             catch (IOException e)
             {
-                string text = String.Format("EVEMon has encountered an error and needs to terminate.{0}" +
+                string text = String.Format(CultureConstants.DefaultCulture,
+                                            "EVEMon has encountered an error and needs to terminate.{0}" +
                                             "The error message is:{0}{0}\"{1}\"",
                                             Environment.NewLine, e.Message);
                 MessageBox.Show(text, "EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

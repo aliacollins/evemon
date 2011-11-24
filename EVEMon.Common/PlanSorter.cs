@@ -212,7 +212,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static int CompareByPlanGroup(PlanEntry x, PlanEntry y)
         {
-            return String.Compare(x.PlanGroupsDescription, y.PlanGroupsDescription);
+            return String.Compare(x.PlanGroupsDescription, y.PlanGroupsDescription, StringComparison.CurrentCulture);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static int CompareByNotes(PlanEntry x, PlanEntry y)
         {
-            return String.Compare(x.Notes, y.Notes);
+            return String.Compare(x.Notes, y.Notes, StringComparison.CurrentCulture);
         }
 
         /// <summary>

@@ -21,6 +21,9 @@ namespace EVEMon.Common
         /// <returns>A CSV text file.</returns>
         public static void CreateCSV(ListView listViewToExport)
         {
+            if (listViewToExport == null)
+                throw new ArgumentNullException("listViewToExport");
+
             s_saveFileDialog.Filter = "Comma Delimited Files (*.csv)|*.csv";
             if (s_saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
@@ -84,7 +87,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static String MakeCSVString(bool ignoreComma, string text)
         {
-            return MakeCSVNumber(ignoreComma, String.Format("\"{0}\"", text));
+            return MakeCSVNumber(ignoreComma, String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text));
         }
 
         /// <summary>
@@ -95,7 +98,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static String MakeCSVNumber(bool ignoreComma, string text)
         {
-            return String.Format("{0}{1}", ignoreComma ? String.Empty : ",", text);
+            return String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreComma ? String.Empty : ",", text);
         }
     }
 }

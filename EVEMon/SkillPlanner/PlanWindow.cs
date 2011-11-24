@@ -1,6 +1,6 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -125,7 +125,8 @@ namespace EVEMon.SkillPlanner
             // Save settings if this one is the last activated and up-to-date
             if (s_lastActivated == this)
             {
-                Settings.UI.PlanWindow.Add(planEditor.ExportColumnSettings().ToList());
+                Settings.UI.PlanWindow.Columns.Clear();
+                Settings.UI.PlanWindow.Columns.AddRange(planEditor.ExportColumnSettings());
                 s_lastActivated = null;
             }
 
@@ -141,7 +142,9 @@ namespace EVEMon.SkillPlanner
                 e.CloseReason != CloseReason.WindowsShutDown) // and Windows is not shutting down
             {
                 // Tell the skill explorer we're closing down
-                WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
+                SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
+                if (skillExplorerWindow != null && !skillExplorerWindow.IsDisposed)
+                    WindowsFactory.CloseByTag(skillExplorerWindow, this);
 
                 // Tell the attributes optimization window we're closing down
                 if (m_attributesOptimizerWindow != null)
@@ -181,13 +184,13 @@ namespace EVEMon.SkillPlanner
 
                 // If the EFTLoadoutImportationForm is open, assign the new plan
                 // We do the check here as we need to catch the previous plan value
-                EFTLoadoutImportationForm eftloadoutImportation = WindowsFactory<EFTLoadoutImportationForm>.GetByTag(m_plan);
-                if (eftloadoutImportation != null)
+                EFTLoadoutImportationForm eftloadoutImportation = WindowsFactory.GetByTag<EFTLoadoutImportationForm, Plan>(m_plan);
+                if (eftloadoutImportation != null && !eftloadoutImportation.IsDisposed)
                     eftloadoutImportation.Plan = value;
 
                 // If the ShipLoadoutSelectWindow is open, assign the new plan
-                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetByTag(m_plan);
-                if (loadoutSelect != null)
+                ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(m_plan);
+                if (loadoutSelect != null && !loadoutSelect.IsDisposed)
                     loadoutSelect.Plan = value;
 
                 m_plan = value;
@@ -559,7 +562,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Close the skill explorer
-            WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
+            SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
+            if (skillExplorerWindow != null && !skillExplorerWindow.IsDisposed)
+                WindowsFactory.CloseByTag(skillExplorerWindow, this);
 
             // Remove the plan
             int index = Character.Plans.IndexOf(m_plan);
@@ -647,7 +652,7 @@ namespace EVEMon.SkillPlanner
                         if (plan == m_plan)
                             menuPlanItem.Enabled = false;
                             // Is it already opened in another plan ?
-                        else if (WindowsFactory<PlanWindow>.GetByTag(plan) != null)
+                        else if (WindowsFactory.GetByTag<PlanWindow, Plan>(plan) != null)
                             menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
                     });
         }
@@ -667,10 +672,10 @@ namespace EVEMon.SkillPlanner
             if (e.ClickedItem.Tag != null)
             {
                 Plan plan = (Plan)e.ClickedItem.Tag;
-                PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(plan);
+                PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(plan);
 
                 // Opens the existing window when there is one, or switch to this plan when no window opened
-                if (window != null)
+                if (window != null && !window.IsDisposed)
                     window.BringToFront();
                 else
                     Plan = plan;
@@ -722,7 +727,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbEFTImport_Click(object sender, EventArgs e)
         {
-            WindowsFactory<EFTLoadoutImportationForm>.ShowByTag(m_plan);
+            WindowsFactory.ShowByTag<EFTLoadoutImportationForm, Plan>(m_plan);
         }
 
         /// <summary>

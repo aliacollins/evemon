@@ -203,12 +203,20 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void ShowBlankImage()
         {
-            Bitmap b = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height);
-            using (Graphics g = Graphics.FromImage(b))
+            Bitmap bmp;
+            using (Bitmap tempBitmap = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height))
             {
-                g.FillRectangle(new SolidBrush(BackColor), new Rectangle(0, 0, b.Width, b.Height));
+                bmp = (Bitmap)tempBitmap.Clone();
             }
-            pbImage.Image = b;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                using (SolidBrush brush = new SolidBrush(BackColor))
+                    g.FillRectangle(brush, new Rectangle(0, 0, bmp.Width, bmp.Height));
+            }
+
+
+            pbImage.Image = bmp;
         }
 
         /// <summary>
@@ -258,7 +266,8 @@ namespace EVEMon.Common.Controls
                 drawOverlayIcon = true;
             }
 
-            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize);
+            Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
+                                                 NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize));
 
             ImageService.GetImageAsync(imageURL, true, img =>
                                                            {
@@ -276,24 +285,24 @@ namespace EVEMon.Common.Controls
         private void GetImageFromAlternativeSource(ImageTypeData typeData)
         {
             // Set file & pathname variables
-            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int)m_imageSize);
+            string eveSize = String.Format(CultureConstants.InvariantCulture, "{0}_{0}", (int)m_imageSize);
 
             string imageWebName;
             string imageResourceName;
 
             if (typeData.NameFrom == ImageNameFrom.TypeID)
             {
-                imageWebName = m_item.ID.ToString();
-                imageResourceName = String.Format("_{0}", imageWebName);
+                imageWebName = m_item.ID.ToString(CultureConstants.InvariantCulture);
+                imageResourceName = String.Format(CultureConstants.InvariantCulture, "_{0}", imageWebName);
             }
             else
             {
-                imageWebName = String.Format("icon{0}", m_item.Icon);
+                imageWebName = String.Format(CultureConstants.InvariantCulture, "icon{0}", m_item.Icon);
                 imageResourceName = imageWebName;
             }
 
             // Try and get image from a local optional resources file (probably don't used anymore, not sure)
-            string localResources = String.Format("{1}Resources{0}Optional{0}{2}{3}.resources",
+            string localResources = String.Format(CultureConstants.InvariantCulture, "{1}Resources{0}Optional{0}{2}{3}.resources",
                                                   Path.DirectorySeparatorChar, AppDomain.CurrentDomain.BaseDirectory,
                                                   typeData.LocalComponent, eveSize);
 
@@ -304,7 +313,8 @@ namespace EVEMon.Common.Controls
             // Result should be like :
             // http://eve.no-ip.de/icons/32_32/icon22_08.png
             // http://eve.no-ip.de/icons/32_32/7538.png
-            string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName);
+            Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
+                                                 NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName));
 
             ImageService.GetImageAsync(imageURL, true, img => GotImage(m_item.ID, img, true));
         }
@@ -322,15 +332,17 @@ namespace EVEMon.Common.Controls
 
             try
             {
-                IResourceReader basic = new ResourceReader(localResources);
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
+                using (IResourceReader basic = new ResourceReader(localResources))
                 {
-                    if (basicx.Key.ToString() != imageResourceName)
-                        continue;
+                    IDictionaryEnumerator basicx = basic.GetEnumerator();
+                    while (basicx.MoveNext())
+                    {
+                        if (basicx.Key.ToString() != imageResourceName)
+                            continue;
 
-                    pbImage.Image = (Image)basicx.Value;
-                    return true;
+                        pbImage.Image = (Image)basicx.Value;
+                        return true;
+                    }
                 }
             }
             catch (InvalidOperationException ex)
@@ -366,32 +378,43 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void DrawOverlayIcon()
         {
-            Bitmap overlayIcon = new Bitmap(16, 16);
-            switch (m_item.MetaGroup)
+            Bitmap overlayIcon = null;
+            try
             {
-                case ItemMetaGroup.T2:
-                    overlayIcon = Properties.Resources.T2;
-                    break;
-                case ItemMetaGroup.T3:
-                    overlayIcon = Properties.Resources.T3;
-                    break;
-                case ItemMetaGroup.Storyline:
-                    overlayIcon = Properties.Resources.Storyline;
-                    break;
-                case ItemMetaGroup.Deadspace:
-                    overlayIcon = Properties.Resources.Deadspace;
-                    break;
-                case ItemMetaGroup.Officer:
-                    overlayIcon = Properties.Resources.Officer;
-                    break;
-                case ItemMetaGroup.Faction:
-                    overlayIcon = Properties.Resources.Faction;
-                    break;
-            }
+                switch (m_item.MetaGroup)
+                {
+                    case ItemMetaGroup.T2:
+                        overlayIcon = Properties.Resources.T2;
+                        break;
+                    case ItemMetaGroup.T3:
+                        overlayIcon = Properties.Resources.T3;
+                        break;
+                    case ItemMetaGroup.Storyline:
+                        overlayIcon = Properties.Resources.Storyline;
+                        break;
+                    case ItemMetaGroup.Deadspace:
+                        overlayIcon = Properties.Resources.Deadspace;
+                        break;
+                    case ItemMetaGroup.Officer:
+                        overlayIcon = Properties.Resources.Officer;
+                        break;
+                    case ItemMetaGroup.Faction:
+                        overlayIcon = Properties.Resources.Faction;
+                        break;
+                    default:
+                        overlayIcon = new Bitmap(16, 16);
+                        break;
+                }
 
-            using (Graphics graph = Graphics.FromImage(pbImage.Image))
+                using (Graphics graph = Graphics.FromImage(pbImage.Image))
+                {
+                    graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
+                }
+            }
+            finally
             {
-                graph.DrawImage(overlayIcon, 0, 0, (int)m_imageSize / 4, (int)m_imageSize / 4);
+                if (overlayIcon != null)
+                    overlayIcon.Dispose();
             }
         }
 
@@ -411,7 +434,7 @@ namespace EVEMon.Common.Controls
             if (!m_popUpActive)
                 return;
 
-            WindowsFactory<EveImagePopUp>.ShowUnique(() => new EveImagePopUp(m_item));
+            WindowsFactory.ShowUnique(() => new EveImagePopUp(m_item));
         }
 
         #endregion

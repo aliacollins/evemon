@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,11 +8,21 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPIAccountBalance
     {
+        private readonly Collection<SerializableAccountBalanceListItem> m_accounts;
+
+        public SerializableAPIAccountBalance()
+        {
+            m_accounts = new Collection<SerializableAccountBalanceListItem>();
+        }
+
         /// <summary>
         /// Gets the list of balance accounts for every account on this API key (one for character balance, one per division for corporations).
         /// </summary>
         [XmlArray("accounts")]
         [XmlArrayItem("account")]
-        public List<SerializableAccountBalanceListItem> Accounts { get; set; }
+        public Collection<SerializableAccountBalanceListItem> Accounts
+        {
+            get { return m_accounts; }
+        }
     }
 }

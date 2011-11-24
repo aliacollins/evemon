@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -45,7 +46,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal static string GetIDToName(long id)
         {
-            return GetIDToName(id.ToString());
+            return GetIDToName(id.ToString(CultureConstants.InvariantCulture));
         }
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace EVEMon.Common
         {
             foreach (string id in s_listOfIDs)
             {
-                string name = s_cacheList.FirstOrDefault(x => x.Key.ToString() == id).Value;
+                string name = s_cacheList.FirstOrDefault(x => x.Key.ToString(CultureConstants.InvariantCulture) == id).Value;
 
                 if (name == null)
                     s_listOfIDsToQuery.Add(id);
@@ -259,13 +260,12 @@ namespace EVEMon.Common
         private static SerializableEveIDToName Export()
         {
             SerializableEveIDToName serial = new SerializableEveIDToName();
-            List<SerializableEveIDToNameListItem> entitiesList =
-                s_cacheList.Select(item => new SerializableEveIDToNameListItem
-                                               {
-                                                   ID = item.Key,
-                                                   Name = item.Value,
-                                               }).ToList();
-
+            IEnumerable<SerializableEveIDToNameListItem> entitiesList = s_cacheList.Select(
+                item => new SerializableEveIDToNameListItem
+                            {
+                                ID = item.Key,
+                                Name = item.Value,
+                            });
             serial.Entities.AddRange(entitiesList);
 
             return serial;

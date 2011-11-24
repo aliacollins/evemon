@@ -133,7 +133,7 @@ namespace EVEMon.Common
                 // or character market orders monitor is not enabled
                 // we switch the flag
                 IQueryMonitor charMarketOrdersMonitor =
-                    m_ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
+                    m_ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()];
                 return m_charMarketOrdersQueried |= charMarketOrdersMonitor == null || !charMarketOrdersMonitor.Enabled;
             }
             set { m_charMarketOrdersQueried = value; }
@@ -153,7 +153,7 @@ namespace EVEMon.Common
                 // or character industry jobs monitor is not enabled
                 // we switch the flag
                 IQueryMonitor charIndustryJobsMonitor =
-                    m_ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs];
+                    m_ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()];
                 return m_charIndustryJobsQueried |= charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled;
             }
             set { m_charIndustryJobsQueried = value; }
@@ -327,7 +327,7 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            result.Result.Orders.ForEach(order => order.IssuedFor = IssuedFor.Character);
+            result.Result.Orders.ToList().ForEach(order => order.IssuedFor = IssuedFor.Character);
 
             // Import the data
             List<MarketOrder> endedOrders = new List<MarketOrder>();
@@ -354,7 +354,7 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            result.Result.Jobs.ForEach(x => x.IssuedFor = IssuedFor.Character);
+            result.Result.Jobs.ToList().ForEach(x => x.IssuedFor = IssuedFor.Character);
 
             // Import the data
             m_ccpCharacter.CharacterIndustryJobs.Import(result.Result.Jobs);

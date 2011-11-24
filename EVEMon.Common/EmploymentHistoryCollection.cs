@@ -55,11 +55,9 @@ namespace EVEMon.Common
         /// Exports the standings to a serialization object for the settings file.
         /// </summary>
         /// <returns>List of serializable research points.</returns>
-        internal List<SerializableEmploymentHistory> Export()
+        internal IEnumerable<SerializableEmploymentHistory> Export()
         {
-            List<SerializableEmploymentHistory> serial = new List<SerializableEmploymentHistory>(Items.Count);
-            serial.AddRange(Items.Select(employmentRecord => employmentRecord.Export()));
-            return serial;
+            return Items.Select(employmentRecord => employmentRecord.Export());
         }
 
         #endregion

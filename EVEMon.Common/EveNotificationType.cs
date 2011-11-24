@@ -42,22 +42,21 @@ namespace EVEMon.Common
             using (XmlNodeReader reader = new XmlNodeReader(xmlDoc))
             {
                 // Create a memory stream to transform the xml 
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    // Write the xml output to the stream
-                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                    {
-                        // Apply the XSL transform
-                        XslCompiledTransform transform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
-                        writer.Formatting = Formatting.Indented;
-                        transform.Transform(reader, writer);
-                        writer.Flush();
+                MemoryStream stream = Util.GetMemoryStream();
 
-                        // Deserialize from the given stream
-                        stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(SerializableNotificationRefTypeIDs));
-                        s_notificationTypes = (SerializableNotificationRefTypeIDs)xs.Deserialize(stream);
-                    }
+                // Write the xml output to the stream
+                using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
+                {
+                    // Apply the XSL transform
+                    XslCompiledTransform transform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
+                    writer.Formatting = Formatting.Indented;
+                    transform.Transform(reader, writer);
+                    writer.Flush();
+
+                    // Deserialize from the given stream
+                    stream.Seek(0, SeekOrigin.Begin);
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableNotificationRefTypeIDs));
+                    s_notificationTypes = (SerializableNotificationRefTypeIDs)xs.Deserialize(stream);
                 }
             }
 

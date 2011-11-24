@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -81,7 +82,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(SkillLevel training)
         {
-            return new StaticSkillLevel(training.Skill.StaticData, training.Level);
+            return training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return Skill.Name + " " + Skill.GetRomanFromInt(Level);
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Skill.GetRomanFromInt(Level));
         }
     }
 }

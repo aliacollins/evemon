@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -10,7 +9,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableItemMaterials
     {
-        private Collection<SerializableMaterialQuantity> m_materials;
+        private readonly Collection<SerializableMaterialQuantity> m_materials;
 
         public SerializableItemMaterials()
         {
@@ -32,15 +31,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableMaterialQuantity> Materials
         {
             get { return m_materials; }
-        }
-
-        /// <summary>
-        /// Adds the specified materials.
-        /// </summary>
-        /// <param name="materials">The materials.</param>
-        public void Add(List<SerializableMaterialQuantity> materials)
-        {
-            m_materials = new Collection<SerializableMaterialQuantity>(materials);
         }
     }
 }

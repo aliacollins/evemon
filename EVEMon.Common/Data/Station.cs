@@ -18,12 +18,15 @@ namespace EVEMon.Common.Data
         /// <param name="src"></param>
         protected Station(SerializableOutpost src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.StationID;
             Name = src.StationName;
             CorporationID = src.CorporationID;
             CorporationName = src.CorporationName;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
-            FullLocation = String.Format("{0} > {1}", SolarSystem.FullLocation, src.StationName);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, src.StationName);
         }
 
         /// <summary>
@@ -32,8 +35,14 @@ namespace EVEMon.Common.Data
         /// <param name="owner">The owner.</param>
         /// <param name="src">The source.</param>
         public Station(SolarSystem owner, SerializableStation src)
-            : base(src.Agents == null ? 0 : src.Agents.Count)
+            : base(src != null && src.Agents != null ? src.Agents.Count : 0)
         {
+            if (owner == null)
+                throw new ArgumentNullException("owner");
+
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             Name = src.Name;
             CorporationID = src.CorporationID;
@@ -41,7 +50,7 @@ namespace EVEMon.Common.Data
             SolarSystem = owner;
             ReprocessingStationsTake = src.ReprocessingStationsTake;
             ReprocessingEfficiency = src.ReprocessingEfficiency;
-            FullLocation = String.Format("{0} > {1}", owner.FullLocation, src.Name);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", owner.FullLocation, src.Name);
             if (src.Agents == null)
                 return;
 
@@ -108,7 +117,12 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Station other)
         {
-            return (SolarSystem != other.SolarSystem ? SolarSystem.CompareTo(other.SolarSystem) : Name.CompareTo(other.Name));
+            if (other == null)
+                throw new ArgumentNullException("other");
+
+            return SolarSystem != other.SolarSystem
+                       ? SolarSystem.CompareTo(other.SolarSystem)
+                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,6 +8,9 @@ namespace EVEMon.Common.Controls
     {
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Rectangle newBounds = new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height);
 
             if (newBounds.Width == 0 || newBounds.Height == 0)

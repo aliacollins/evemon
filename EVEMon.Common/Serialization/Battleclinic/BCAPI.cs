@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Windows.Forms;
-using System.Xml;
+using System.Xml.XPath;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.BattleClinic
@@ -118,7 +118,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="requestMethod">A BCAPIMethods enumeration member specfying the method for which the URL is required.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        private static string GetMethodUrl(BCAPIMethods requestMethod)
+        private static Uri GetMethodUrl(BCAPIMethods requestMethod)
         {
             // Gets the proper data
             string url = NetworkConstants.BCAPIBase;
@@ -128,7 +128,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             Uri baseUri = new Uri(url);
             UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
-            return uriBuilder.Uri.ToString();
+            return uriBuilder.Uri;
         }
 
         /// <summary>
@@ -184,7 +184,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileSave()
         {
             HttpPostData postData =
-                new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                               "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
                                                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                BCAPISettings.Default.BCApplicationKey,
                                                EveMonClient.SettingsFileName, SettingsFileContent));
@@ -195,9 +196,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <summary>
         /// Gets the file content by the file name.
         /// </summary>
-        public static XmlDocument FileGetByName()
+        public static IXPathNavigable FileGetByName()
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                                                                    BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                                    BCAPISettings.Default.BCApplicationKey,
                                                                    EveMonClient.SettingsFileName));
@@ -213,7 +215,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void CheckAPICredentialsAsync(uint userID, string apiKey, QueryCallback<SerializableBCAPICredentials> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}",
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}",
                                                                    userID, apiKey, BCAPISettings.Default.BCApplicationKey));
 
             QueryMethodAsync(BCAPIMethods.CheckCredentials, postData, callback);
@@ -226,7 +229,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileSaveAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
             HttpPostData postData =
-                new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                               "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
                                                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                BCAPISettings.Default.BCApplicationKey,
                                                EveMonClient.SettingsFileName, SettingsFileContent));
@@ -240,7 +244,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void FileGetByNameAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
                                                                    BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
                                                                    BCAPISettings.Default.BCApplicationKey,
                                                                    EveMonClient.SettingsFileName));
@@ -258,9 +263,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
-        private static XmlDocument QueryMethod(BCAPIMethods method, HttpPostData postData)
+        private static IXPathNavigable QueryMethod(BCAPIMethods method, HttpPostData postData)
         {
-            string url = GetMethodUrl(method);
+            Uri url = GetMethodUrl(method);
             return EveMonClient.HttpWebService.DownloadXml(url, postData);
         }
 
@@ -277,7 +282,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (callback == null)
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
-            string url = GetMethodUrl(method);
+            Uri url = GetMethodUrl(method);
             Util.DownloadBCAPIResultAsync(url, callback, postData);
         }
 
@@ -341,6 +346,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="settingsFile">The settings file.</param>
         public static void SaveSettingsFile(SerializableFilesListItem settingsFile)
         {
+            if (settingsFile == null)
+                throw new ArgumentNullException("settingsFile");
+
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Title = "EVEMon Settings Backup File Save";
@@ -352,7 +360,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 string currentDirectory = Directory.GetCurrentDirectory();
 
                 // Prompts the user for a location
-                saveFileDialog.FileName = String.Format("{0}.bak", settingsFile.FileName);
+                saveFileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.bak", settingsFile.FileName);
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 DialogResult result = saveFileDialog.ShowDialog();
 

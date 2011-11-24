@@ -22,8 +22,22 @@ namespace EVEMon.Common
         public SkillQueueToolTip(Control owner)
         {
             m_owner = owner;
-            m_toolTip = new ToolTip { UseFading = false };
-            m_toolTip.Popup += m_toolTip_Popup;
+
+            ToolTip tempToolTip = null;
+            try
+            {
+                tempToolTip = new ToolTip();
+                tempToolTip.Popup += m_toolTip_Popup;
+                tempToolTip.UseFading = false;
+
+                m_toolTip = tempToolTip;
+                tempToolTip = null;
+            }
+            finally
+            {
+                if (tempToolTip != null)
+                    tempToolTip.Dispose();
+            }
         }
 
         /// <summary>
@@ -54,6 +68,9 @@ namespace EVEMon.Common
         /// <param name="pt">The pt.</param>
         public void Display(QueuedSkill skill, Point pt)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             const string Format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.SkillName;
             string skillLevel = Skill.GetRomanFromInt(skill.Level);

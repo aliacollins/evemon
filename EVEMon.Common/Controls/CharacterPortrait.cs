@@ -84,7 +84,7 @@ namespace EVEMon.Common.Controls
             get { return m_character; }
             set
             {
-                if (m_character == value)
+                if (value == null || m_character == value)
                     return;
 
                 m_id = value.CharacterID;
@@ -169,7 +169,7 @@ namespace EVEMon.Common.Controls
 
             EveMonClient.EnsureCacheDirInit();
             string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
-                                                String.Format("{0}.png", m_character.Guid));
+                                                String.Format(CultureConstants.InvariantCulture, "{0}.png", m_character.Guid));
 
             if (!File.Exists(cacheFileName))
                 return null;
@@ -264,16 +264,17 @@ namespace EVEMon.Common.Controls
                 // Save the image to the portrait cache file
                 EveMonClient.EnsureCacheDirInit();
                 string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
-                                                    String.Format("{0}.png", m_character.Guid));
+                                                    String.Format(CultureConstants.InvariantCulture, "{0}.png", m_character.Guid));
 
                 FileHelper.OverwriteOrWarnTheUser(cacheFileName,
                                                   fs =>
                                                       {
                                                           // We need to create a copy of the image because GDI+ is locking it
-                                                          Image image = new Bitmap(newImage);
-                                                          image.Save(fs, ImageFormat.Png);
-                                                          fs.Flush();
-                                                          fs.Close();
+                                                          using (Image image = new Bitmap(newImage))
+                                                          {
+                                                              image.Save(fs, ImageFormat.Png);
+                                                              fs.Flush();
+                                                          }
                                                           return true;
                                                       });
 
@@ -320,7 +321,7 @@ namespace EVEMon.Common.Controls
                 foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
                     evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
                 {
-                    filesInEveCache.AddRange(di.GetFiles(String.Format("{0}*", m_id)));
+                    filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*", m_id)));
 
                     // Look up for an image file and add it to the list
                     // (CCP changed image format in Incursion 1.1.0
@@ -352,11 +353,11 @@ namespace EVEMon.Common.Controls
                 // Search for the biggest portrait
                 int bestSize = 0;
                 string bestFile = String.Empty;
-                int charIDLength = m_id.ToString().Length;
+                int charIDLength = m_id.ToString(CultureConstants.DefaultCulture).Length;
                 foreach (FileInfo file in imageFilesInEveCache)
                 {
                     int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
-                    int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
+                    int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength), CultureConstants.InvariantCulture);
 
                     if (imageSize <= bestSize)
                         continue;

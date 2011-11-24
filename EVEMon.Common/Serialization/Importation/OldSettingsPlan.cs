@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using EVEMon.Common.Serialization.Settings;
 
@@ -14,9 +14,11 @@ namespace EVEMon.Common.Serialization.Importation
     /// </remarks>
     public sealed class OldSettingsPlan
     {
+        private readonly Collection<SerializablePlanEntry> m_entries;
+
         public OldSettingsPlan()
         {
-            Entries = new List<SerializablePlanEntry>();
+            m_entries = new Collection<SerializablePlanEntry>();
         }
 
         [XmlAttribute("character")]
@@ -26,6 +28,9 @@ namespace EVEMon.Common.Serialization.Importation
         public string Name { get; set; }
 
         [XmlElement("entry")]
-        public List<SerializablePlanEntry> Entries { get; set; }
+        public Collection<SerializablePlanEntry> Entries
+        {
+            get { return m_entries; }
+        }
     }
 }

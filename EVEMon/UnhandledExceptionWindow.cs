@@ -71,7 +71,7 @@ namespace EVEMon
             FileStream traceStream = null;
             try
             {
-                traceStream = new FileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read);
+                traceStream = Util.GetFileStream(EveMonClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read);
 
                 using (StreamReader traceReader = new StreamReader(traceStream))
                 {
@@ -183,7 +183,7 @@ namespace EVEMon
                 // Richard Slater's local installer builder path
                 stackTraceBuilder = stackTraceBuilder.Replace(@"D:\EVEMon\", String.Empty);
                 // Jimi's local installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\Projects\C#\EVEMon\Repo\Mercurial\EVEMon", String.Empty);
+                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\Projects\Csharp\EVEMon\Repo\Mercurial\EVEMon", String.Empty);
                 // TeamCity's installer builder path
                 stackTraceBuilder = stackTraceBuilder.Replace(@"d:\tmp\evemon_installer\", String.Empty);
                 // TeamCity's snapshot builder path
@@ -257,7 +257,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonBugReport);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonBugReport));
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonKnownProblems);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonKnownProblems));
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(NetworkConstants.EVEMonMainPage);
+            Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
         }
     }
 }

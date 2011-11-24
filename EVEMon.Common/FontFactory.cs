@@ -86,6 +86,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Font GetFont(Font prototype, FontStyle style = FontStyle.Regular)
         {
+            if (prototype == null)
+                throw new ArgumentNullException("prototype");
+
             return GetFont(prototype.FontFamily.Name, prototype.Size, style, prototype.Unit);
         }
 
@@ -100,6 +103,9 @@ namespace EVEMon.Common
         public static Font GetFont(FontFamily family, float emSize, FontStyle style = FontStyle.Regular,
                                    GraphicsUnit unit = GraphicsUnit.Point)
         {
+            if (family == null)
+                throw new ArgumentNullException("family");
+
             return GetFont(family.Name, emSize, style, unit);
         }
 
@@ -117,9 +123,9 @@ namespace EVEMon.Common
         public static Font GetFont(string familyName, float emSize, FontStyle style = FontStyle.Regular,
                                    GraphicsUnit unit = GraphicsUnit.Point)
         {
-            FontFamily family = null;
             try
             {
+                FontFamily family = null;
                 try
                 {
                     try
@@ -132,8 +138,7 @@ namespace EVEMon.Common
                     {
                         // First fallback : default family
                         ExceptionHandler.LogException(e, true);
-                        family = DefaultFont.FontFamily;
-                        return new Font(family, emSize, style, unit);
+                        return new Font(DefaultFont.FontFamily, emSize, style, unit);
                     }
                 }
                 catch (ArgumentException e)
@@ -141,13 +146,17 @@ namespace EVEMon.Common
                     // Second fallback : default family and style
                     ExceptionHandler.LogException(e, true);
                     family = family ?? DefaultFont.FontFamily;
-                    style = DefaultFont.Style;
-                    return new Font(family, emSize, style, unit);
+                    return new Font(family, emSize, DefaultFont.Style, unit);
+                }
+                finally
+                {
+                    if (family != null)
+                        family.Dispose();
                 }
             }
             catch (ArgumentException e)
             {
-                // Fourth fallback : all to default
+                // Third fallback : all to default
                 ExceptionHandler.LogException(e, true);
                 return DefaultFont;
             }

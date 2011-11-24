@@ -51,6 +51,9 @@ namespace EVEMon.Common
         /// <returns>True if the action was performed, false if the reference was no longer available.</returns>
         public bool TryDo(Action<T> action)
         {
+            if (action == null)
+                throw new ArgumentNullException("action");
+
             // Removes the reference at this index if it does not exist anymore
             if (!IsAlive)
                 return false;

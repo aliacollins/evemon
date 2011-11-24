@@ -8,6 +8,6 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("agentType")]
-        public string AgentType;
+        public string AgentType { get; set; }
     }
 }

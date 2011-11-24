@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -14,33 +15,24 @@ namespace EVEMon.Common.Serialization.Datafiles
     [XmlRoot("skills")]
     public sealed class SkillsDatafile
     {
-        private Collection<SerializableSkillGroup> m_groups;
+        private readonly Collection<SerializableSkillGroup> m_skillGroups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SkillsDatafile"/> class.
         /// </summary>
         public SkillsDatafile()
         {
-            m_groups = new Collection<SerializableSkillGroup>();
+            m_skillGroups = new Collection<SerializableSkillGroup>();
         }
 
         /// <summary>
-        /// Gets the groups.
+        /// Gets the skill groups.
         /// </summary>
-        /// <value>The groups.</value>
+        /// <value>The skill groups.</value>
         [XmlElement("group")]
-        public Collection<SerializableSkillGroup> Groups
+        public Collection<SerializableSkillGroup> SkillGroups
         {
-            get { return m_groups; }
-        }
-
-        /// <summary>
-        /// Adds the specified groups.
-        /// </summary>
-        /// <param name="groups">The groups.</param>
-        public void Add(List<SerializableSkillGroup> groups)
-        {
-            m_groups = new Collection<SerializableSkillGroup>(groups);
+            get { return m_skillGroups; }
         }
     }
 }

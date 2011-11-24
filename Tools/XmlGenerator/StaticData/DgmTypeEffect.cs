@@ -5,10 +5,10 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmTypeEffect : IRelation
     {
         [XmlElement("typeID")]
-        public int ItemID;
+        public int ItemID { get; set; }
 
         [XmlElement("effectID")]
-        public int EffectID;
+        public int EffectID { get; set; }
 
 
         #region IRelation Members

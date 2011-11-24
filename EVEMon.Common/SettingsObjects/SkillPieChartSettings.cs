@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
     public sealed class SkillPieChartSettings
     {
+        private readonly Collection<SerializableColor> m_colors; 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SkillPieChartSettings"/> class.
         /// </summary>
         public SkillPieChartSettings()
         {
-            Colors = new List<SerializableColor>();
+            m_colors = new Collection<SerializableColor>();
         }
 
         /// <summary>
@@ -46,6 +48,9 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The colors.</value>
         [XmlElement("colors")]
-        public List<SerializableColor> Colors { get; set; }
+        public Collection<SerializableColor> Colors
+        {
+            get { return m_colors; }
+        }
     }
 }

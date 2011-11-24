@@ -15,7 +15,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="md5Sum">The MD5 sum.</param>
         /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
         /// <param name="installArgs">The install args.</param>
-        public UpdateAvailableEventArgs(string forumUrl, string installerUrl, string updateMessage,
+        public UpdateAvailableEventArgs(Uri forumUrl, Uri installerUrl, string updateMessage,
                                         Version currentVersion, Version newestVersion, string md5Sum,
                                         bool canAutoInstall, string installArgs)
         {
@@ -33,13 +33,13 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets or sets the forum URL.
         /// </summary>
         /// <value>The forum URL.</value>
-        public string ForumUrl { get; private set; }
+        public Uri ForumUrl { get; private set; }
 
         /// <summary>
         /// Gets or sets the installer URL.
         /// </summary>
         /// <value>The auto install URL.</value>
-        public string InstallerUrl { get; private set; }
+        public Uri InstallerUrl { get; private set; }
 
         /// <summary>
         /// Gets or sets the update message.

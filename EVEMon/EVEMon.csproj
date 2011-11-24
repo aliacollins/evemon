@@ -37,7 +37,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -70,12 +70,6 @@
     </Compile>
     <Compile Include="AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="APITester\APITesterWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="APITester\APITesterWindow.Designer.cs">
-      <DependentUpon>APITesterWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ApiCredentialsManagement\ApiKeyDeletionWindow.cs">
       <SubType>Form</SubType>
@@ -159,6 +153,7 @@
     <Compile Include="ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -335,9 +330,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\EveMonFeaturesWindow.resx">
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="APITester\APITesterWindow.resx">
-      <DependentUpon>APITesterWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BlankCharacter\BlankCharacterControl.resx">
       <DependentUpon>BlankCharacterControl.cs</DependentUpon>

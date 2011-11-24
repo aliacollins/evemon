@@ -8,36 +8,36 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("parentBlueprintTypeID")]
-        public short? ParentID;
+        public short? ParentID { get; set; }
 
         [XmlElement("productTypeID")]
-        public short ProductTypeID;
+        public short ProductTypeID { get; set; }
 
         [XmlElement("productionTime")]
-        public int ProductionTime;
+        public int ProductionTime { get; set; }
 
         [XmlElement("techLevel")]
-        public short TechLevel;
+        public short TechLevel { get; set; }
 
         [XmlElement("researchProductivityTime")]
-        public int ResearchProductivityTime;
+        public int ResearchProductivityTime { get; set; }
 
         [XmlElement("researchMaterialTime")]
-        public int ResearchMaterialTime;
+        public int ResearchMaterialTime { get; set; }
 
         [XmlElement("researchCopyTime")]
-        public int ResearchCopyTime;
+        public int ResearchCopyTime { get; set; }
 
         [XmlElement("researchTechTime")]
-        public int ResearchTechTime;
+        public int ResearchTechTime { get; set; }
 
         [XmlElement("productivityModifier")]
-        public int ProductivityModifier;
+        public int ProductivityModifier { get; set; }
 
         [XmlElement("wasteFactor")]
-        public short WasteFactor;
+        public short WasteFactor { get; set; }
 
         [XmlElement("maxProductionLimit")]
-        public int MaxProductionLimit;
+        public int MaxProductionLimit { get; set; }
     }
 }

@@ -88,7 +88,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static void PerformSilently(IPlanOperation operation)
         {
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
+            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
             PerformSilently(window, operation);
         }
 
@@ -121,7 +124,10 @@ namespace EVEMon.SkillPlanner
             if (operation == null)
                 throw new ArgumentNullException("operation");
 
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(operation.Plan);
+            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+            
             Perform(window, operation);
         }
 

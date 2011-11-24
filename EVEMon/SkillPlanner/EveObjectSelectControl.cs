@@ -21,6 +21,9 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
+
+        #region Properties
+
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
@@ -51,13 +54,17 @@ namespace EVEMon.SkillPlanner
         /// <value><c>true</c> if [all expanded]; otherwise, <c>false</c>.</value>
         protected bool AllExpanded { get; set; }
 
+        #endregion
+
+
         /// <summary>
         /// Occurs when the control is loaded.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void EveObjectSelectControl_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             UsabilityPredicate = SelectAll;
 
             if (DesignMode || this.IsDesignModeHosted())
@@ -138,10 +145,19 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void tbSearchText_TextChanged(object sender, EventArgs e)
+        private void tbSearchText_TextChanged(object sender, EventArgs e)
+        {
+            OnSearchTextChanged(tbSearchText.Text);
+        }
+
+        /// <summary>
+        /// Updates the control when the search text changes.
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        protected virtual void OnSearchTextChanged(string searchText)
         {
             if (!tbSearchText.Focused)
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(searchText);
 
             BuildListView();
         }

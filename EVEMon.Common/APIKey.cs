@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using EVEMon.Common.Attributes;
@@ -568,17 +569,19 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal SerializableAPIKey Export()
         {
-            return new SerializableAPIKey
-                       {
-                           ID = ID,
-                           VerificationCode = VerificationCode,
-                           Type = Type,
-                           AccessMask = AccessMask,
-                           Expiration = Expiration,
-                           Monitored = Monitored,
-                           LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
-                           IgnoreList = IdentityIgnoreList.Export()
-                       };
+            SerializableAPIKey serial = new SerializableAPIKey
+                                            {
+                                                ID = ID,
+                                                VerificationCode = VerificationCode,
+                                                Type = Type,
+                                                AccessMask = AccessMask,
+                                                Expiration = Expiration,
+                                                Monitored = Monitored,
+                                                LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
+                                            };
+            serial.IgnoreList.AddRange(IdentityIgnoreList.Export());
+
+            return serial;
         }
 
         #endregion
@@ -603,6 +606,9 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="APIKeyCreationEventArgs"/> instance containing the event data.</param>
         public void Update(APIKeyCreationEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             VerificationCode = e.VerificationCode;
             AccessMask = e.AccessMask;
             Type = e.Type;
@@ -660,7 +666,7 @@ namespace EVEMon.Common
         {
             // If no characters on this API key, return only the API key ID
             if (CharacterIdentities.Count() == 0)
-                return ID.ToString();
+                return ID.ToString(CultureConstants.DefaultCulture);
 
             // Otherwise, return the chars' names into parenthesis
             StringBuilder names = new StringBuilder();
@@ -670,7 +676,7 @@ namespace EVEMon.Common
                 if (id != CharacterIdentities.Last())
                     names.Append(", ");
             }
-            return String.Format("{0} ({1})", ID, names);
+            return String.Format(CultureConstants.DefaultCulture, "{0} ({1})", ID, names);
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
@@ -96,7 +97,7 @@ namespace EVEMon.Common
                 return (Identity.APIKeys.IsEmpty() ||
                         (m_characterDataQuerying.CharacterSheetMonitor.LastResult != null &&
                          m_characterDataQuerying.CharacterSheetMonitor.LastResult.HasError))
-                           ? String.Format("{0} (cached)", Name)
+                           ? String.Format(CultureConstants.DefaultCulture, "{0} (cached)", Name)
                            : Name;
             }
         }
@@ -224,16 +225,16 @@ namespace EVEMon.Common
             Export(serial);
 
             // Skill queue
-            serial.SkillQueue = SkillQueue.Export();
+            serial.SkillQueue.AddRange(SkillQueue.Export());
 
             // Standings
-            serial.Standings = Standings.Export();
+            serial.Standings.AddRange(Standings.Export());
 
             // Market orders
-            serial.MarketOrders = MarketOrdersExport();
+            serial.MarketOrders.AddRange(MarketOrdersExport());
 
             // Industry jobs
-            serial.IndustryJobs = IndustryJobsExport();
+            serial.IndustryJobs.AddRange(IndustryJobsExport());
 
             // Eve mail messages IDs
             serial.EveMailMessagesIDs = EVEMailMessages.Export();
@@ -259,18 +260,18 @@ namespace EVEMon.Common
         /// Exports the market orders.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableOrderBase> MarketOrdersExport()
+        private IEnumerable<SerializableOrderBase> MarketOrdersExport()
         {
-            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter()).ToList();
+            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter());
         }
 
         /// <summary>
         /// Exports the industry jobs.
         /// </summary>
         /// <returns></returns>
-        private List<SerializableJob> IndustryJobsExport()
+        private IEnumerable<SerializableJob> IndustryJobsExport()
         {
-            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter()).ToList();
+            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter());
         }
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace EVEMon.Common
             foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
             {
                 Enum method = APIMethods.Methods.First(x => x.ToString() == lastUpdate.Method);
-                IQueryMonitorEx monitor = QueryMonitors[method] as IQueryMonitorEx;
+                IQueryMonitorEx monitor = QueryMonitors[method.ToString()] as IQueryMonitorEx;
                 if (monitor != null)
                     monitor.Reset(lastUpdate.Time);
             }
@@ -343,7 +344,10 @@ namespace EVEMon.Common
         /// <param name="queryMonitor">The query monitor.</param>
         public void ForceUpdate(IQueryMonitor queryMonitor)
         {
-            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method] as IQueryMonitorEx;
+            if (queryMonitor == null)
+                throw new ArgumentNullException("queryMonitor");
+
+            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method.ToString()] as IQueryMonitorEx;
             if (monitor != null)
                 monitor.ForceUpdate(false);
         }

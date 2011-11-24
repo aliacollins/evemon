@@ -20,9 +20,9 @@ namespace EVEMon.Common.Serialization.Exportation
         public string RomanLevel { get; set; }
 
         [XmlElement("SP")]
-        public int SkillPoints { get; set; }
+        public string SkillPoints { get; set; }
 
         [XmlElement("maxSP")]
-        public int MaxSkillPoints { get; set; }
+        public string MaxSkillPoints { get; set; }
     }
 }

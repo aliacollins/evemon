@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -8,9 +8,11 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializableAPIProviders
     {
+        private readonly Collection<SerializableAPIProvider> m_customProviders;
+
         public SerializableAPIProviders()
         {
-            CustomProviders = new List<SerializableAPIProvider>();
+            m_customProviders = new Collection<SerializableAPIProvider>();
         }
 
         [XmlElement("currentProvider")]
@@ -18,7 +20,10 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("customProviders")]
         [XmlArrayItem("provider")]
-        public List<SerializableAPIProvider> CustomProviders { get; set; }
+        public Collection<SerializableAPIProvider> CustomProviders
+        {
+            get { return m_customProviders; }
+        }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

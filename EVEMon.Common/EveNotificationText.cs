@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using EVEMon.Common.Serialization.API;
@@ -13,6 +14,9 @@ namespace EVEMon.Common
         /// <param name="src">The source.</param>
         public EveNotificationText(SerializableNotificationTextsListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             NotificationID = src.NotificationID;
             NotificationText = FormatText(src.NotificationText);
         }
@@ -56,22 +60,23 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static string NewLinesToBreakLines(string text)
         {
-            StringReader sr = new StringReader(text);
-            StringWriter sw = new StringWriter();
-
-            //Loop while next character exists
-            while (sr.Peek() > -1)
+            using (StringReader sr = new StringReader(text))
+            using (StringWriter sw = new StringWriter(CultureConstants.InvariantCulture))
             {
-                // Read a line from the string and store it to a temp variable
-                string temp = sr.ReadLine();
-                // Write the string with the HTML break tag
-                // (method writes to an internal StringBuilder created automatically)
-                sw.Write("{0}<br>", temp);
+                //Loop while next character exists
+                while (sr.Peek() > -1)
+                {
+                    // Read a line from the string and store it to a temp variable
+                    string temp = sr.ReadLine();
+                    // Write the string with the HTML break tag
+                    // (method writes to an internal StringBuilder created automatically)
+                    sw.Write("{0}<br>", temp);
+                }
+                return sw.GetStringBuilder().ToString();
             }
-            return sw.GetStringBuilder().ToString();
         }
 
-        /// <summary>
+    /// <summary>
         /// Decodes the unicode characters.
         /// </summary>
         /// <param name="text">The text.</param>
@@ -79,7 +84,10 @@ namespace EVEMon.Common
         private static string DecodeUnicodeCharacters(string text)
         {
             return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
-                                 m => ((char)int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber)).ToString());
+                                 m =>
+                                 ((char)
+                                  int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber, CultureConstants.InvariantCulture)).
+                                     ToString(CultureConstants.DefaultCulture));
         }
 
         #endregion

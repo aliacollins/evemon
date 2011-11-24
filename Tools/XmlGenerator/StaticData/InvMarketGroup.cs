@@ -8,15 +8,15 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("marketGroupName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("parentGroupID")]
-        public int? ParentID;
+        public int? ParentID { get; set; }
 
         [XmlElement("iconID")]
-        public int? IconID;
+        public int? IconID { get; set; }
 
         [XmlElement("description")]
-        public string Description;
+        public string Description { get; set; }
     }
 }

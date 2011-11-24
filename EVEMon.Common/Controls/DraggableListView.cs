@@ -80,6 +80,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragDrop(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
@@ -152,6 +155,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragOver(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
@@ -189,7 +195,7 @@ namespace EVEMon.Common.Controls
 
             base.OnDragOver(e);
             String text = (String)e.Data.GetData(Reorder.GetType());
-            if (text.CompareTo(Reorder) == 0)
+            if (String.Compare(text, Reorder, StringComparison.CurrentCulture) == 0)
             {
                 e.Effect = DragDropEffects.Move;
                 hoverItem.EnsureVisible();
@@ -210,6 +216,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data. </param>
         protected override void OnDragEnter(DragEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             Skill dragSkill = GetDraggingSkill(e);
             if (dragSkill != null)
             {
@@ -234,7 +243,7 @@ namespace EVEMon.Common.Controls
 
             base.OnDragEnter(e);
             String text = (String)e.Data.GetData(Reorder.GetType());
-            if (text.CompareTo(Reorder) == 0)
+            if (String.Compare(text, Reorder, StringComparison.CurrentCulture) == 0)
                 e.Effect = DragDropEffects.Move;
             else
             {

@@ -47,7 +47,7 @@ namespace EVEMon.Common.Data
         /// <param name="system">The system.</param>
         /// <param name="maxInclusiveNumberOfJumps">The maximum, inclusive, number of jumps.</param>
         /// <returns></returns>
-        internal static List<SolarSystemRange> GetSystemRangesFrom(SolarSystem system, int maxInclusiveNumberOfJumps)
+        internal static IEnumerable<SolarSystemRange> GetSystemRangesFrom(SolarSystem system, int maxInclusiveNumberOfJumps)
         {
             Dictionary<long, SolarSystem> collectedSystems = new Dictionary<long, SolarSystem>();
             List<SolarSystemRange> ranges = new List<SolarSystemRange>();

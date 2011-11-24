@@ -17,8 +17,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static Stream OpenRead(string filename, bool allowIgnore)
         {
+            if (filename == null)
+                throw new ArgumentNullException("filename");
+
             string normalizedFilename = filename;
-            if (filename.StartsWith("file:///"))
+            if (filename.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
                 normalizedFilename = filename.Remove(0, 8);
 
             if (!File.Exists(normalizedFilename))
@@ -74,10 +77,13 @@ namespace EVEMon.Common
         /// true otherwise.</returns>
         public static void OverwriteOrWarnTheUser(string destFileName, Func<Stream, bool> writeContentFunc)
         {
+            if (writeContentFunc == null)
+                throw new ArgumentNullException("writeContentFunc");
+
             string tempFileName = Path.GetTempFileName();
             try
             {
-                using (FileStream fs = new FileStream(tempFileName, FileMode.Open))
+                using (FileStream fs = Util.GetFileStream(tempFileName, FileMode.Open))
                 {
                     if (!writeContentFunc(fs))
                         return;
@@ -106,17 +112,16 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    FileInfo destFile = new FileInfo(destFileName);
-
                     // We need to make sure this file is not read-only
                     // If it is, this method will request the user the permission to automatically remove the readonly attributes
-                    if (!EnsureWritable(destFile))
+                    if (!EnsureWritable(destFileName))
                         return;
 
                     // Overwrite the file
                     File.Copy(srcFileName, destFileName, true);
 
                     // Ensures we didn't copied a read-only attribute, no permission required since the file has been overwritten
+                    FileInfo destFile = new FileInfo(destFileName);
                     destFile.Refresh();
                     if (destFile.IsReadOnly)
                         destFile.IsReadOnly = false;

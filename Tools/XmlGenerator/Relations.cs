@@ -1,30 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator
 {
     /// <summary>
-    /// List of related items of type T
+    /// Collection of related items of type T
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [XmlRoot("list")]
+    [XmlRoot("collection")]
     public sealed class Relations<T>
         where T : class, IRelation
     {
+        private readonly Collection<T> m_items; 
+
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public Relations()
         {
-            Items = new List<T>();
+            m_items = new Collection<T>();
         }
 
         /// <summary>
-        /// List of items in the list
+        /// List of items in the collection.
         /// </summary>
         [XmlElement("item")]
-        public List<T> Items { get; set; }
+        public Collection<T> Items
+        {
+            get { return m_items; }
+        }
 
+        /// <summary>
+        /// Converts collection to a RelationSet.
+        /// </summary>
+        /// <returns></returns>
         public RelationSet<T> ToSet()
         {
             return new RelationSet<T>(Items);

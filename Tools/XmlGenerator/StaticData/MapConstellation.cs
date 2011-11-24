@@ -8,9 +8,9 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("constellationName")]
-        public string Name;
+        public string Name { get; set; }
 
         [XmlElement("regionID")]
-        public int RegionID;
+        public int RegionID { get; set; }
     }
 }

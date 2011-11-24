@@ -24,13 +24,19 @@ namespace EVEMon.Common.Data
         /// Constructor.
         /// </summary>
         public SolarSystem(Constellation owner, SerializableSolarSystem src)
-            : base(src.Stations == null ? 0 : src.Stations.Count)
+            : base(src != null && src.Stations != null ? src.Stations.Count : 0)
         {
+            if (owner == null)
+                throw new ArgumentNullException("owner");
+
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             Constellation = owner;
             Name = src.Name;
             SecurityLevel = src.SecurityLevel;
-            FullLocation = String.Format("{0} > {1}", owner.FullLocation, src.Name);
+            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", owner.FullLocation, src.Name);
             m_jumps = new FastList<SolarSystem>(0);
 
             m_x = src.X;
@@ -88,6 +94,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int GetSquareDistanceWith(SolarSystem other)
         {
+            if (other == null)
+                throw new ArgumentNullException("other");
+
             int dx = m_x - other.m_x;
             int dy = m_y - other.m_y;
             int dz = m_z - other.m_z;
@@ -100,7 +109,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="maxInclusiveNumberOfJumps">The maximum, inclusive, number of jumps from this system.</param>
         /// <returns></returns>
-        public List<SolarSystemRange> GetSystemsWithinRange(int maxInclusiveNumberOfJumps)
+        public IEnumerable<SolarSystemRange> GetSystemsWithinRange(int maxInclusiveNumberOfJumps)
         {
             return SolarSystemRange.GetSystemRangesFrom(this, maxInclusiveNumberOfJumps);
         }
@@ -111,7 +120,7 @@ namespace EVEMon.Common.Data
         /// <param name="target">The target system.</param>
         /// <param name="minSecurityLevel">The mininmum, inclusive, real security level. Systems have levels between -1 and +1.</param>
         /// <returns>The list of systems, beginning with this one and ending with the provided target.</returns>
-        public List<SolarSystem> GetFastestPathTo(SolarSystem target, float minSecurityLevel)
+        public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, float minSecurityLevel)
         {
             return PathFinder.FindBestPath(this, target, minSecurityLevel);
         }
@@ -182,9 +191,12 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(SolarSystem other)
         {
+            if (other == null)
+                throw new ArgumentNullException("other");
+
             return Constellation != other.Constellation
                        ? Constellation.CompareTo(other.Constellation)
-                       : Name.CompareTo(other.Name);
+                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

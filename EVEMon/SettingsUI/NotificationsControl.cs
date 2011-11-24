@@ -7,8 +7,6 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
-using CheckBox = System.Windows.Forms.CheckBox;
-using Label = System.Windows.Forms.Label;
 
 namespace EVEMon.SettingsUI
 {

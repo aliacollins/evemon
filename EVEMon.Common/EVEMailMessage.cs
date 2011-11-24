@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Serialization.API;
 
@@ -25,9 +26,9 @@ namespace EVEMon.Common
                          ? EVEMailState.Inbox
                          : EVEMailState.SentItem);
             MessageID = src.MessageID;
-            Sender = src.ToListID.Any(x => x == src.SenderID.ToString())
-                         ? GetMailingListIDToName(src.SenderID.ToString())
-                         : EveIDToName.GetIDToName(src.SenderID.ToString());
+            Sender = src.ToListID.Any(x => x == src.SenderID.ToString(CultureConstants.InvariantCulture))
+                         ? GetMailingListIDToName(src.SenderID.ToString(CultureConstants.InvariantCulture))
+                         : EveIDToName.GetIDToName(src.SenderID.ToString(CultureConstants.InvariantCulture));
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
             ToCorpOrAlliance = EveIDToName.GetIDToName(src.ToCorpOrAllianceID);
@@ -86,13 +87,13 @@ namespace EVEMon.Common
         /// Gets or sets the EVE mail recipient(s) (characters).
         /// </summary>
         /// <value>To characters.</value>
-        public List<string> ToCharacters { get; private set; }
+        public Collection<string> ToCharacters { get; private set; }
 
         /// <summary>
         /// Gets or sets the EVE mail recipient (mailing lists).
         /// </summary>
         /// <value>To mailing lists.</value>
-        public List<string> ToMailingLists { get; private set; }
+        public Collection<string> ToMailingLists { get; private set; }
 
         /// <summary>
         /// Gets or sets the recipients.
@@ -125,7 +126,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">A list of character IDs.</param>
         /// <returns>A list of character names</returns>
-        private List<string> GetIDsToNames(List<string> src)
+        private Collection<string> GetIDsToNames(Collection<string> src)
         {
             // If there are no IDs to query return a list with an empty entry
             if (src.Count == 0)
@@ -139,7 +140,7 @@ namespace EVEMon.Common
 
             foreach (string id in src)
             {
-                if (id == m_ccpCharacter.CharacterID.ToString())
+                if (id == m_ccpCharacter.CharacterID.ToString(CultureConstants.InvariantCulture))
                     listOfNames.Add(m_ccpCharacter.Name);
                 else
                     listOfIDsToQuery.Add(id);
@@ -149,7 +150,7 @@ namespace EVEMon.Common
             if (listOfIDsToQuery.Count > 0)
                 listOfNames.AddRange(EveIDToName.GetIDsToNames(listOfIDsToQuery));
 
-            return listOfNames;
+            return new Collection<string>(listOfNames);
         }
 
         /// <summary>
@@ -167,8 +168,8 @@ namespace EVEMon.Common
             if (mailingListID == "0")
                 return "Unknown";
 
-            List<string> list = new List<string> { mailingListID };
-            List<string> name = GetMailingListIDsToNames(list);
+            Collection<string> list = new Collection<string> { mailingListID };
+            Collection<string> name = GetMailingListIDsToNames(list);
             return name[0];
         }
 
@@ -177,7 +178,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="mailingListIDs">The mailing list IDs.</param>
         /// <returns></returns>
-        private List<string> GetMailingListIDsToNames(List<string> mailingListIDs)
+        private Collection<string> GetMailingListIDsToNames(Collection<string> mailingListIDs)
         {
             // If there are no IDs to query return a list with an empty entry
             if (mailingListIDs.Count == 0)
@@ -187,13 +188,14 @@ namespace EVEMon.Common
             }
 
             List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
-                x => x.ID.ToString() == listID)).Select(mailingList => mailingList != null ? mailingList.Name : "Unknown").ToList();
+                x => x.ID.ToString(CultureConstants.InvariantCulture) == listID)).Select(
+                    mailingList => mailingList != null ? mailingList.Name : "Unknown").ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (listOfNames.Count == 0)
                 listOfNames.Add("Unknown");
 
-            return listOfNames;
+            return new Collection<string>(listOfNames);
         }
 
         /// <summary>
@@ -277,7 +279,7 @@ namespace EVEMon.Common
                 result.Result.Bodies.Add(
                     new SerializableMailBodiesListItem
                         {
-                            MessageID = long.Parse(result.Result.MissingMessageIDs),
+                            MessageID = long.Parse(result.Result.MissingMessageIDs, CultureConstants.InvariantCulture),
                             MessageText = "The text for this message was reported missing."
                         });
             }

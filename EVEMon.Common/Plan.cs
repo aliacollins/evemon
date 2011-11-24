@@ -53,6 +53,9 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public void Import(SerializablePlan serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             // Update name
             m_name = serial.Name;
             m_description = serial.Description ?? String.Empty;
@@ -290,6 +293,9 @@ namespace EVEMon.Common
         /// <param name="level">The level we want to train to</param>
         public void PlanTo(StaticSkill skill, int level)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             PlanTo(skill, level, PlanEntry.DefaultPriority, skill.Name);
         }
 
@@ -345,6 +351,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public IPlanOperation TryPlanTo(Skill skill, int level)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             return TryPlanTo(skill, level, skill.Name);
         }
 
@@ -450,6 +459,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public IPlanOperation TryPlanTo(StaticCertificate certificate)
         {
+            if (certificate == null)
+                throw new ArgumentNullException("certificate");
+
             return TryAddSet(certificate.AllTopPrerequisiteSkills, certificate.ToString());
         }
 
@@ -469,6 +481,9 @@ namespace EVEMon.Common
         /// </returns>
         public bool TrySetPriority(PlanScratchpad displayPlan, IEnumerable<PlanEntry> entries, int priority)
         {
+            if (entries == null)
+                throw new ArgumentNullException("entries");
+
             // Change priorities and make a backup
             Queue<int> oldPriorities = new Queue<int>();
             foreach (PlanEntry entry in entries)

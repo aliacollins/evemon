@@ -98,6 +98,9 @@ namespace EVEMon.Common.Controls
         /// <returns>The selected node, null if this tag was not found</returns>
         public static void SelectNodeWithTag(this TreeView treeView, object tag)
         {
+            if (treeView == null)
+                throw new ArgumentNullException("treeView");
+
             foreach (TreeNode node in GetAllNodes(treeView).Where(node => ReferenceEquals(node.Tag, tag)))
             {
                 node.EnsureVisible();

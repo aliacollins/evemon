@@ -13,6 +13,9 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="character">The character.</param>
         public static void UpdateCalendar(CCPCharacter character)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             SkillQueue skillQueue = character.SkillQueue;
 
             int queuePosition = 0;
@@ -117,7 +120,7 @@ namespace EVEMon.Common.ExternalCalendar
                                                                       {
                                                                           UserName = Settings.Calendar.GoogleEmail,
                                                                           Password = Settings.Calendar.GooglePassword,
-                                                                          Uri = Settings.Calendar.GoogleURL,
+                                                                          Uri = new Uri(Settings.Calendar.GoogleAddress),
                                                                           StartDate = DateTime.Now.AddDays(-40),
                                                                           EndDate = DateTime.Now.AddDays(100),
                                                                           Subject = String.Format(

@@ -37,6 +37,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static void SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
         {
+            if (queueList == null)
+                throw new ArgumentNullException("queueList");
+
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue.
@@ -190,27 +196,29 @@ namespace EVEMon.Common
             try
             {
                 // Set up message
-                MailMessage msg = new MailMessage(settings.EmailFromAddress, settings.EmailToAddress, subject, body);
+                using(MailMessage msg = new MailMessage(settings.EmailFromAddress, settings.EmailToAddress, subject, body))
 
                 // Set up client
-                SmtpClient client = new SmtpClient(settings.EmailSmtpServer);
-                client.SendCompleted += SendCompleted;
-                if (settings.EmailPortNumber > 0)
-                    client.Port = settings.EmailPortNumber;
-
-                // Enter crendtials
-                if (settings.EmailAuthenticationRequired)
+                using (SmtpClient client = new SmtpClient(settings.EmailSmtpServer))
                 {
-                    client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
-                                                               settings.EmailAuthenticationPassword);
+                    client.SendCompleted += SendCompleted;
+                    if (settings.EmailPortNumber > 0)
+                        client.Port = settings.EmailPortNumber;
+
+                    // Enter crendtials
+                    if (settings.EmailAuthenticationRequired)
+                    {
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
+                                                                   settings.EmailAuthenticationPassword);
+                    }
+
+                    // SSL
+                    client.EnableSsl = settings.EmailServerRequiresSSL;
+
+                    // Send message
+                    client.SendAsync(msg, null);
                 }
-
-                // SSL
-                client.EnableSsl = settings.EmailServerRequiresSSL;
-
-                // Send message
-                client.SendAsync(msg, null);
                 return true;
             }
             catch (InvalidOperationException e)

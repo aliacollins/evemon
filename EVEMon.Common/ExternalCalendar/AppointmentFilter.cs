@@ -8,6 +8,9 @@ namespace EVEMon.Common.ExternalCalendar
     /// </summary>
     public abstract class AppointmentFilter
     {
+        private readonly ArrayList m_arrayList;
+
+
         #region Constructor
 
         /// <summary>
@@ -24,7 +27,7 @@ namespace EVEMon.Common.ExternalCalendar
             AlternateReminder = false;
             EarlyReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 0, 0);
             LateReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 0, 0);
-            AppointmentArray = new ArrayList();
+            m_arrayList = new ArrayList();
         }
 
         #endregion
@@ -88,7 +91,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Gets or sets Appointment Array.
         /// </summary>
-        protected ArrayList AppointmentArray { get; set; }
+        protected ArrayList AppointmentArray
+        {
+            get { return m_arrayList; }
+        }
 
         #endregion
 

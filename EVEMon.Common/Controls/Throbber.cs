@@ -21,7 +21,7 @@ namespace EVEMon.Common.Controls
         private int m_ticks;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public Throbber()
         {
@@ -31,7 +31,7 @@ namespace EVEMon.Common.Controls
 
             // Initializes the common timer
             if (s_timer == null)
-                s_timer = new Timer { Interval = 100 };
+                s_timer = new Timer();
 
             // Always subscribed to the timer (ridiculous CPU overhead, less work for the GC with no subscriptions/unsubscriptions, cleaner code)
             s_timer.Tick += TimerTick;
@@ -42,7 +42,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Gets or sets the throbber's state
+        /// Gets or sets the throbber's state.
         /// </summary>
         public ThrobberState State
         {
@@ -76,7 +76,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Start animating this throbber
+        /// Start animating this throbber.
         /// </summary>
         private void Start()
         {
@@ -111,7 +111,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// occurs 
+        /// Occurs when the timer ticks.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -123,11 +123,14 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Handles the painting
+        /// Handles the painting.
         /// </summary>
         /// <param name="pe"></param>
         protected override void OnPaint(PaintEventArgs pe)
         {
+            if (pe == null)
+                throw new ArgumentNullException("pe");
+
             Image frame = s_strobeFrame;
 
             // Select the frame to display
@@ -189,14 +192,19 @@ namespace EVEMon.Common.Controls
             s_movingFrames = new Image[8];
             for (int i = 1; i < 9; i++)
             {
-                Bitmap ib = new Bitmap(ImageWidth, ImageHeight);
-                using (Graphics g = Graphics.FromImage(ib))
+                Bitmap bmp;
+                using (Bitmap tempBitmap = new Bitmap(ImageWidth, ImageHeight))
+                {
+                    bmp = (Bitmap)tempBitmap.Clone();
+                }
+
+                using (Graphics g = Graphics.FromImage(bmp))
                 {
                     g.DrawImage(b, new Rectangle(0, 0, ImageWidth, ImageHeight),
                                 new Rectangle(i * ImageWidth, 0, ImageWidth, ImageHeight),
                                 GraphicsUnit.Pixel);
                 }
-                s_movingFrames[i - 1] = ib;
+                s_movingFrames[i - 1] = bmp;
             }
         }
     }

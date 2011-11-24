@@ -145,7 +145,7 @@ namespace EVEMon.SkillPlanner
         {
             // Compute best scratchpad
             RemappingResult remapping = null;
-            List<RemappingResult> remappingList = null;
+            ICollection<RemappingResult> remappingList = null;
 
             switch (m_strategy)
             {
@@ -158,9 +158,8 @@ namespace EVEMon.SkillPlanner
                     }
                     else
                     {
-                        remapping =
-                            AttributesOptimizer.GetResultsFromRemappingPoints(m_plan).Single(
-                                x => x.Point == m_manuallyEditedRemappingPoint);
+                        remapping = AttributesOptimizer.GetResultsFromRemappingPoints(m_plan).Single(
+                            x => x.Point == m_manuallyEditedRemappingPoint);
                         m_manuallyEditedRemappingPoint = m_manuallyEditedRemappingPoint.Clone();
                         m_remapping = remapping;
                     }
@@ -199,7 +198,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping">An <see cref="RemappingResult"/> object</param>
         /// <param name="remappingList">List of remappings</param>
-        private void UpdateForm(RemappingResult remapping, List<RemappingResult> remappingList)
+        private void UpdateForm(RemappingResult remapping, ICollection<RemappingResult> remappingList)
         {
             // If the thread has been canceled, we stop right now to prevent an exception
             if (m_thread == null)

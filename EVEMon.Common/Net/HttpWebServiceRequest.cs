@@ -21,7 +21,7 @@ namespace EVEMon.Common.Net
         private HttpPostData m_postData;
 
         private string m_accept;
-        private string m_url;
+        private Uri m_url;
         private string m_referer = String.Empty;
 
         private int m_redirectsRemaining;
@@ -52,7 +52,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The original url for the request.
         /// </summary>
-        public string BaseUrl { get; private set; }
+        public Uri BaseUrl { get; private set; }
 
         /// <summary>
         /// Returns true if an asynchronous request was cancelled. When set to true, cancels the current asynchronous request.
@@ -74,14 +74,14 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
-        private delegate void GetResponseDelegate(string url, Stream responseStream, string accept, HttpPostData postData);
+        private delegate void GetResponseDelegate(Uri url, Stream responseStream, string accept, HttpPostData postData);
 
         /// <summary>
         /// Retrieve the response from the reguested URL to the specified response stream
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
-        internal void GetResponse(string url, Stream responseStream, string accept, HttpPostData postData = null)
+        internal void GetResponse(Uri url, Stream responseStream, string accept, HttpPostData postData = null)
         {
             // Store params
             m_url = url;
@@ -150,7 +150,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
-        public void GetResponseAsync(string url, Stream responseStream, string accept, HttpPostData postData,
+        public void GetResponseAsync(Uri url, Stream responseStream, string accept, HttpPostData postData,
                                      WebRequestAsyncState state)
         {
             m_asyncState = state;
@@ -232,16 +232,15 @@ namespace EVEMon.Common.Net
             if (m_redirectsRemaining-- <= 0)
                 throw HttpWebServiceException.RedirectsExceededException(BaseUrl);
 
-            Uri referer = new Uri(m_url);
-            m_referer = referer.ToString();
-            m_url = new Uri(referer, target).ToString();
+            m_referer = m_url.AbsoluteUri;
+            m_url = new Uri(m_url, target);
             return GetHttpResponse();
         }
 
         /// <summary>
         /// Constructs an HttpWebRequest for the specified url and referer.
         /// </summary>
-        private HttpWebRequest GetHttpWebRequest(string url, string referer)
+        private HttpWebRequest GetHttpWebRequest(Uri url, string referer)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.AllowAutoRedirect = false;

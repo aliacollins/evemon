@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -571,7 +572,7 @@ namespace EVEMon
             EveMailMessage message = (EveMailMessage)item.Tag;
 
             // Show or bring to front if a window with the same EVE mail message already exists
-            WindowsFactory<EveMessageWindow>.ShowByTag(message);
+            WindowsFactory.ShowByTag<EveMessageWindow, EveMailMessage>(message);
         }
 
         /// <summary>
@@ -581,9 +582,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailOpen,
-                                                     message.MessageID)));
+                                                     message.MessageID))));
         }
 
         /// <summary>
@@ -593,9 +594,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReply,
-                                                     message.MessageID)));
+                                                     message.MessageID))));
         }
 
         /// <summary>
@@ -605,9 +606,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReplyAll,
-                                                     message.MessageID)));
+                                                     message.MessageID))));
         }
 
         /// <summary>
@@ -617,9 +618,9 @@ namespace EVEMon
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailForward,
-                                                     message.MessageID)));
+                                                     message.MessageID))));
         }
 
         /// <summary>
@@ -825,7 +826,8 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.EVEMailMessages.Add(Columns.Cast<EveMailMessagesColumnSettings>().ToList());
+            Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
+            Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(Columns.Cast<EveMailMessagesColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;

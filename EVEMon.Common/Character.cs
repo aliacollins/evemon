@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
@@ -35,6 +36,9 @@ namespace EVEMon.Common
         /// <param name="guid"></param>
         protected Character(CharacterIdentity identity, Guid guid)
         {
+            if (identity == null)
+                throw new ArgumentNullException("identity");
+
             CharacterID = identity.CharacterID;
             m_name = identity.CharacterName;
             CorporationID = identity.CorporationID;
@@ -322,7 +326,10 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillLevel(StaticSkill skill)
         {
-            return Skills[skill].Level;
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
+            return Skills[skill.ID].Level;
         }
 
         /// <summary>
@@ -332,7 +339,10 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetSkillPoints(StaticSkill skill)
         {
-            return Skills[skill].SkillPoints;
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
+            return Skills[skill.ID].SkillPoints;
         }
 
         #endregion
@@ -403,6 +413,9 @@ namespace EVEMon.Common
         /// <param name="serial">The serial.</param>
         protected void Export(SerializableSettingsCharacter serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             serial.Guid = Guid;
             serial.ID = Identity.CharacterID;
             serial.Name = m_name;
@@ -426,7 +439,7 @@ namespace EVEMon.Common
             serial.Info.LastKnownLocation = LastKnownLocation;
 
             // Employment History
-            serial.EmploymentHistory = EmploymentHistory.Export();
+            serial.EmploymentHistory.AddRange(EmploymentHistory.Export());
 
             // Attributes
             serial.Attributes.Intelligence = Intelligence.Base;
@@ -439,10 +452,10 @@ namespace EVEMon.Common
             serial.ImplantSets = ImplantSets.Export();
 
             // Skills
-            serial.Skills = Skills.Export();
+            serial.Skills.AddRange(Skills.Export());
 
             // Certificates
-            serial.Certificates = Certificates.Export();
+            serial.Certificates.AddRange(Certificates.Export());
         }
 
         /// <summary>
@@ -461,6 +474,9 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         protected void Import(SerializableSettingsCharacter serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             Import((SerializableCharacterSheetBase)serial);
 
             // Implants

@@ -7,8 +7,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
     [XmlRoot("evemon")]
     public sealed class SerializablePatch
     {
-        private Collection<SerializableDatafile> m_datafiles;
-        private Collection<SerializableDatafile> m_changedDatafiles;
+        private readonly Collection<SerializableDatafile> m_datafiles;
+        private readonly Collection<SerializableDatafile> m_changedDatafiles;
 
         public SerializablePatch()
         {

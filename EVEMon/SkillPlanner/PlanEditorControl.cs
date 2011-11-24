@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -297,7 +298,8 @@ namespace EVEMon.SkillPlanner
 
             if (m_columnsOrderChanged)
             {
-                Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
+                Settings.UI.PlanWindow.Columns.Clear();
+                Settings.UI.PlanWindow.Columns.AddRange(ExportColumnSettings());
                 ImportColumnSettings(Settings.UI.PlanWindow.Columns);
             }
 
@@ -316,7 +318,10 @@ namespace EVEMon.SkillPlanner
         {
             // Populate the "choose implant set"
             cbChooseImplantSet.Items.Clear();
-            cbChooseImplantSet.Items.AddRange(m_character.ImplantSets.ToArray());
+            foreach (ImplantSet set in m_character.ImplantSets)
+            {
+                cbChooseImplantSet.Items.Add(set);
+            }
         }
 
         /// <summary>
@@ -789,12 +794,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrAutoRefresh_Tick(object sender, EventArgs e)
         {
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (window == null)
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             UpdateListViewItems();
-            window.CheckObsoleteEntries();
+            planWindow.CheckObsoleteEntries();
         }
 
         /// <summary>
@@ -812,22 +817,22 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateStatusBar()
         {
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
 
-            if (window == null)
+            if (planWindow == null || planWindow.IsDisposed)
                 return;
 
             // 1 or fewer items are selected and status bar only updates on multi-select
             if (lvSkills.SelectedItems.Count < 2 && Settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect)
             {
-                window.UpdateStatusBar();
+                planWindow.UpdateStatusBar();
                 return;
             }
 
             // 0 items selected
             if (lvSkills.SelectedItems.Count < 1)
             {
-                window.UpdateStatusBar();
+                planWindow.UpdateStatusBar();
                 return;
             }
 
@@ -838,9 +843,9 @@ namespace EVEMon.SkillPlanner
             // We compute the training time
             selectedTrainTime = SelectedEntries.Aggregate(selectedTrainTime, (current, entry) => current.Add(entry.TrainingTime));
 
-            window.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
-            window.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
-            window.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
+            planWindow.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
+            planWindow.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
+            planWindow.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
         }
 
         /// <summary>
@@ -968,7 +973,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             m_columns[e.ColumnIndex].Width = lvSkills.Columns[e.ColumnIndex].Width;
-            Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
+            Settings.UI.PlanWindow.Columns.Clear();
+            Settings.UI.PlanWindow.Columns.AddRange(ExportColumnSettings());
         }
 
         /// <summary>
@@ -1529,7 +1535,11 @@ namespace EVEMon.SkillPlanner
             if (entry == null)
                 return;
 
-            WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInBrowser(entry.CharacterSkill);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.ShowSkillInBrowser(entry.CharacterSkill);
         }
 
         /// <summary>
@@ -1545,7 +1555,11 @@ namespace EVEMon.SkillPlanner
             if (entry == null)
                 return;
 
-            WindowsFactory<PlanWindow>.GetByTag(m_plan).ShowSkillInExplorer(entry.CharacterSkill);
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.ShowSkillInExplorer(entry.CharacterSkill);
         }
 
         /// <summary>
@@ -1724,8 +1738,11 @@ namespace EVEMon.SkillPlanner
             skillSelectControl.UpdateContent();
 
             // Update also the skill browser
-            PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            pw.UpdateSkillBrowser();
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow == null || planWindow.IsDisposed)
+                return;
+
+            planWindow.UpdateSkillBrowser();
         }
 
         /// <summary>
@@ -2233,7 +2250,8 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
-                Settings.UI.PlanWindow.Add(ExportColumnSettings().ToList());
+                Settings.UI.PlanWindow.Columns.Clear();
+                Settings.UI.PlanWindow.Columns.AddRange(ExportColumnSettings());
             }
         }
 

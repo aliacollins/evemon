@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -8,9 +8,11 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializablePlanEntry
     {
+        private readonly Collection<string> m_planGroups;
+
         public SerializablePlanEntry()
         {
-            PlanGroups = new List<string>();
+            m_planGroups = new Collection<string>();
             Priority = 3;
         }
 
@@ -33,7 +35,10 @@ namespace EVEMon.Common.Serialization.Settings
         public string Notes { get; set; }
 
         [XmlElement("group")]
-        public List<string> PlanGroups { get; set; }
+        public Collection<string> PlanGroups
+        {
+            get { return m_planGroups; }
+        }
 
         [XmlElement("remapping")]
         public SerializableRemappingPoint Remapping { get; set; }

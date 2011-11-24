@@ -188,6 +188,9 @@ namespace EVEMon.Common.Controls
         /// <param name="pe">Paint Event</param>
         protected override void OnPaint(PaintEventArgs pe)
         {
+            if (pe == null)
+                throw new ArgumentNullException("pe");
+
             base.OnPaint(pe);
 
             Graphics g = pe.Graphics;
@@ -372,6 +375,9 @@ namespace EVEMon.Common.Controls
         /// </returns>
         public static Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             TimeSpan relativeStart;
             TimeSpan relativeFinish;
 
@@ -406,6 +412,9 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             if (m_skillQueue == null)
                 return;
 

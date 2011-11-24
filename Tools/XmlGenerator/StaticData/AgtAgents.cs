@@ -8,18 +8,18 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("divisionID")]
-        public int DivisionID;
+        public int DivisionID { get; set; }
 
         [XmlElement("locationID")]
-        public int LocationID;
+        public int LocationID { get; set; }
 
         [XmlElement("level")]
-        public int Level;
+        public int Level { get; set; }
 
         [XmlElement("quality")]
-        public int Quality;
+        public int Quality { get; set; }
 
         [XmlElement("agentTypeID")]
-        public int AgentTypeID;
+        public int AgentTypeID { get; set; }
     }
 }

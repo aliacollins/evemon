@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\TimeUtilTests.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PathVersion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

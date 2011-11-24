@@ -17,7 +17,7 @@ namespace EVEMon.Common
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
         {
             SyncState state = new SyncState(callback);
-            EveMonClient.HttpWebService.DownloadStringAsync(NetworkConstants.BatlleclinicTimeSynch, SyncDownloadCompleted, state);
+            EveMonClient.HttpWebService.DownloadStringAsync(new Uri(NetworkConstants.BatlleclinicTimeSynch), SyncDownloadCompleted, state);
         }
 
         /// <summary>

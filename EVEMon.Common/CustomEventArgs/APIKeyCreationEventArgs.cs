@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.CustomEventArgs
@@ -17,11 +17,14 @@ namespace EVEMon.Common.CustomEventArgs
         public APIKeyCreationEventArgs(long id, string verificationCode,
                                        APIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {
+            if (apiKeyInfo == null)
+                throw new ArgumentNullException("apiKeyInfo");
+
             ID = id;
             VerificationCode = verificationCode;
             KeyTestError = String.Empty;
             APIKeyInfo = apiKeyInfo;
-            Identities = new List<CharacterIdentity>();
+            Identities = new Collection<CharacterIdentity>();
 
             // Determine the API key type
             Type = APIKey.GetCredentialsType(apiKeyInfo);
@@ -111,7 +114,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// <summary>
         /// Gets the list of identities available from this API key.
         /// </summary>
-        public List<CharacterIdentity> Identities { get; private set; }
+        public Collection<CharacterIdentity> Identities { get; private set; }
 
         #endregion
 

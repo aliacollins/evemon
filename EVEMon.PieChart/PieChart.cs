@@ -572,6 +572,10 @@ namespace EVEMon.PieChart
             Debug.Assert(graphics != null);
             Debug.Assert(m_font != null);
             Debug.Assert(m_foreColor != Color.Empty);
+
+            if (graphics == null)
+                throw new ArgumentNullException("graphics");
+
             using (StringFormat drawFormat = new StringFormat())
             {
                 drawFormat.Alignment = StringAlignment.Center;

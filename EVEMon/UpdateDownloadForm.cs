@@ -42,7 +42,7 @@ namespace EVEMon
         {
             try
             {
-                m_request = EveMonClient.HttpWebService.DownloadFileAsync(m_url.AbsoluteUri, m_fileName, DownloadCompletedCallback,
+                m_request = EveMonClient.HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback,
                                                                           ProgressChangedCallback);
             }
             catch (Exception ex)

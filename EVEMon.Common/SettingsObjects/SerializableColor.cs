@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Xml.Serialization;
 
@@ -36,6 +37,9 @@ namespace EVEMon.Common.SettingsObjects
         /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
         public static explicit operator Color(SerializableColor src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             return Color.FromArgb(src.A, src.R, src.G, src.B);
         }
 

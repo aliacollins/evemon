@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -8,11 +9,13 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializableImplantSetCollection
     {
+        private readonly Collection<SerializableSettingsImplantSet> m_customSets;
+
         public SerializableImplantSetCollection()
         {
             API = new SerializableSettingsImplantSet();
             OldAPI = new SerializableSettingsImplantSet();
-            CustomSets = new List<SerializableSettingsImplantSet>();
+            m_customSets = new Collection<SerializableSettingsImplantSet>();
         }
 
         [XmlElement("api")]
@@ -22,7 +25,10 @@ namespace EVEMon.Common.Serialization.Settings
         public SerializableSettingsImplantSet OldAPI { get; set; }
 
         [XmlElement("customSet")]
-        public List<SerializableSettingsImplantSet> CustomSets { get; set; }
+        public Collection<SerializableSettingsImplantSet> CustomSets
+        {
+            get { return m_customSets; }
+        }
 
         [XmlElement("selectedIndex")]
         public int SelectedIndex { get; set; }

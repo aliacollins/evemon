@@ -17,6 +17,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         public EmploymentRecord(Character character, SerializableEmploymentHistoryListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             m_character = character;
             CorporationName = GetIDToName(src.CorporationID);
             StartDate = src.StartDate;
@@ -29,6 +32,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         public EmploymentRecord(Character character, SerializableEmploymentHistory src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             m_character = character;
             CorporationName = src.CorporationName;
             StartDate = src.StartDate.TimeStringToDateTime();

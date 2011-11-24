@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using EVEMon.Common.SettingsObjects;
 
@@ -10,12 +10,17 @@ namespace EVEMon.Common.Serialization.Settings
     [XmlRoot("Settings")]
     public sealed class SerializableSettings
     {
+        private readonly Collection<SerializablePlan> m_plans;
+        private readonly Collection<SerializableAPIKey> m_apiKeys;
+        private readonly Collection<SerializableSettingsCharacter> m_characters;
+        private readonly Collection<MonitoredCharacterSettings> m_monitoredCharacters;
+
         public SerializableSettings()
         {
-            Plans = new List<SerializablePlan>();
-            APIKeys = new List<SerializableAPIKey>();
-            Characters = new List<SerializableSettingsCharacter>();
-            MonitoredCharacters = new List<MonitoredCharacterSettings>();
+            m_plans = new Collection<SerializablePlan>();
+            m_apiKeys = new Collection<SerializableAPIKey>();
+            m_characters = new Collection<SerializableSettingsCharacter>();
+            m_monitoredCharacters = new Collection<MonitoredCharacterSettings>();
             APIProviders = new SerializableAPIProviders();
             Notifications = new NotificationSettings();
             Exportation = new ExportationSettings();
@@ -36,20 +41,36 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlArray("apiKeys")]
         [XmlArrayItem("apikey")]
-        public List<SerializableAPIKey> APIKeys { get; set; }
+        public Collection<SerializableAPIKey> APIKeys
+        {
+            get { return m_apiKeys; }
+        }
+
 
         [XmlArray("characters")]
         [XmlArrayItem("ccp", typeof(SerializableCCPCharacter))]
         [XmlArrayItem("uri", typeof(SerializableUriCharacter))]
-        public List<SerializableSettingsCharacter> Characters { get; set; }
+        public Collection<SerializableSettingsCharacter> Characters
+        {
+            get { return m_characters; }
+        }
+
 
         [XmlArray("plans")]
         [XmlArrayItem("plan")]
-        public List<SerializablePlan> Plans { get; set; }
+        public Collection<SerializablePlan> Plans
+        {
+            get { return m_plans; }
+        }
+
 
         [XmlArray("monitoredCharacters")]
         [XmlArrayItem("character")]
-        public List<MonitoredCharacterSettings> MonitoredCharacters { get; set; }
+        public Collection<MonitoredCharacterSettings> MonitoredCharacters
+        {
+            get { return m_monitoredCharacters; }
+        }
+
 
         [XmlElement("apiProviders")]
         public SerializableAPIProviders APIProviders { get; set; }

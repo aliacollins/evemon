@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableSkillGroup
     {
-        private Collection<SerializableSkill> m_skills;
+        private readonly Collection<SerializableSkill> m_skills;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableSkillGroup"/> class.
@@ -45,15 +46,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableSkill> Skills
         {
             get { return m_skills; }
-        }
-
-        /// <summary>
-        /// Adds the specified skills.
-        /// </summary>
-        /// <param name="skills">The skills.</param>
-        public void Add(List<SerializableSkill> skills)
-        {
-            m_skills = new Collection<SerializableSkill>(skills);
         }
     }
 }

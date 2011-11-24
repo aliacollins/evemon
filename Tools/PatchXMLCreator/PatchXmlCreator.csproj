@@ -62,6 +62,7 @@
     <Compile Include="DatafileControl.Designer.cs">
       <DependentUpon>DatafileControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PatchXmlCreatorWindow.cs">
       <SubType>Form</SubType>
     </Compile>

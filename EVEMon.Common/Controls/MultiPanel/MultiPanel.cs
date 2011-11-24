@@ -54,6 +54,9 @@ namespace EVEMon.Common.Controls.MultiPanel
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             base.OnPaint(e);
 
             Graphics g = e.Graphics;
@@ -131,6 +134,9 @@ namespace EVEMon.Common.Controls.MultiPanel
             /// <param name="controls"></param>
             public override void AddRange(Control[] controls)
             {
+                if (controls == null)
+                    throw new ArgumentNullException("controls");
+
                 foreach (MultiPanelPage p in controls)
                 {
                     Add(p);

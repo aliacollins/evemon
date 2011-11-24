@@ -173,7 +173,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                EvePropertyValue? property = Properties[StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID)];
+                EvePropertyValue? property = Properties[DBConstants.ReprocessingSkillPropertyID];
 
                 // Returns scrap metal processing by default
                 if (property == null)
@@ -278,7 +278,9 @@ namespace EVEMon.Common.Data
             if (tail == null)
                 return stripMe;
 
-            return stripMe.EndsWith(tail) ? stripMe.Remove(stripMe.Length - tail.Length) : stripMe;
+            return stripMe.EndsWith(tail, StringComparison.CurrentCulture)
+                       ? stripMe.Remove(stripMe.Length - tail.Length)
+                       : stripMe;
         }
 
         /// <summary>

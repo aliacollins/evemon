@@ -54,7 +54,7 @@ namespace EVEMon.Common
         /// </summary>
         public override string AdornedName
         {
-            get { return String.Format("{0} {1}", Name, (m_uri.IsFile ? "(file)" : "(url)")); }
+            get { return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Name, (m_uri.IsFile ? "(file)" : "(url)")); }
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace EVEMon.Common
             SerializableUriCharacter serial = new SerializableUriCharacter();
             Export(serial);
 
-            serial.Uri = m_uri.ToString();
+            serial.Address = m_uri.AbsoluteUri;
             return serial;
         }
 
@@ -94,9 +94,12 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         public void Import(SerializableUriCharacter serial)
         {
+            if (serial == null)
+                throw new ArgumentNullException("serial");
+
             Import((SerializableSettingsCharacter)serial);
 
-            m_uri = new Uri(serial.Uri);
+            m_uri = new Uri(serial.Address);
 
             EveMonClient.OnCharacterUpdated(this);
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -14,7 +15,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     [XmlRoot("reprocessingDatafile")]
     public sealed class ReprocessingDatafile
     {
-        private Collection<SerializableItemMaterials> m_items;
+        private readonly Collection<SerializableItemMaterials> m_items;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReprocessingDatafile"/> class.
@@ -32,15 +33,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableItemMaterials> Items
         {
             get { return m_items; }
-        }
-
-        /// <summary>
-        /// Adds the specified items.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        public void Add(List<SerializableItemMaterials> items)
-        {
-            m_items = new Collection<SerializableItemMaterials>(items);
         }
     }
 }

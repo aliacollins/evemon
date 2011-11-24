@@ -62,25 +62,25 @@ namespace EVEMon.Common
                 TimeSpan ts = t.Subtract(now);
                 if (ts.Days > 0)
                 {
-                    sb.Append(ts.Days.ToString());
+                    sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
                     sb.Append("d ");
                 }
                 ts -= TimeSpan.FromDays(ts.Days);
                 if (ts.Hours > 0)
                 {
-                    sb.Append(ts.Hours.ToString());
+                    sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
                     sb.Append("h ");
                 }
                 ts -= TimeSpan.FromHours(ts.Hours);
                 if (ts.Minutes > 0)
                 {
-                    sb.Append(ts.Minutes.ToString());
+                    sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
                     sb.Append("m ");
                 }
                 ts -= TimeSpan.FromMinutes(ts.Minutes);
                 if (ts.Seconds > 0)
                 {
-                    sb.Append(ts.Seconds.ToString());
+                    sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
                     sb.Append("s");
                 }
                 return sb.ToString();
@@ -110,7 +110,7 @@ namespace EVEMon.Common
                 TimeSpan ts = t.Subtract(now);
                 if (ts.Days > 0)
                 {
-                    sb.Append(ts.Days.ToString());
+                    sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
                     sb.Append(" day");
                     if (ts.Days > 1)
                         sb.Append("s");
@@ -121,7 +121,7 @@ namespace EVEMon.Common
                     if (sb.Length > 0)
                         sb.Append(", ");
 
-                    sb.Append(ts.Hours.ToString());
+                    sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
                     sb.Append(" hour");
                     if (ts.Hours > 1)
                         sb.Append("s");
@@ -132,7 +132,7 @@ namespace EVEMon.Common
                     if (sb.Length > 0)
                         sb.Append(", ");
 
-                    sb.Append(ts.Minutes.ToString());
+                    sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
                     sb.Append(" minute");
                     if (ts.Minutes > 1)
                         sb.Append("s");
@@ -142,7 +142,7 @@ namespace EVEMon.Common
                 {
                     if (sb.Length > 0)
                         sb.Append(", ");
-                    sb.Append(ts.Seconds.ToString());
+                    sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
                     sb.Append(" second");
                     if (ts.Seconds > 1)
                         sb.Append("s");
@@ -217,7 +217,7 @@ namespace EVEMon.Common
             string shortTimePattern = dateTimeFormat.LongTimePattern.Replace(":ss", String.Empty);
             shortTimePattern = shortTimePattern.Replace(":s", String.Empty);
 
-            return shortTimeString.ToString(shortTimePattern);
+            return shortTimeString.ToString(shortTimePattern, CultureConstants.DefaultCulture);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace EVEMon.Common
             if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
                 sb.Append(" ");
 
-            sb.Append(p.ToString());
+            sb.Append(p.ToString(CultureConstants.DefaultCulture));
 
             if ((dto & DescriptiveTextOptions.SpaceText) != 0)
                 sb.Append(' ');

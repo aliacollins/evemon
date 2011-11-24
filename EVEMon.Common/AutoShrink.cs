@@ -4,8 +4,8 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.Common
 {
@@ -108,11 +108,11 @@ namespace EVEMon.Common
 
             // Performs the same operation that Windows does upon "minimize window".  This releases all memory pages not currently in use
             // which greatly reduces the amount of RAM that a managed application take up when idle.
+            // Note by Jimi: Using 'EmptyWorkingSet' in favor of 'SetProcessWorkingSetSize' as proposed in
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/ms686234.aspx and
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/ms682606.aspx
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+                NativeMethods.EmptyWorkingSet(Process.GetCurrentProcess().Handle);
         }
-
-        [DllImport("kernel32.dll")]
-        private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
     }
 }

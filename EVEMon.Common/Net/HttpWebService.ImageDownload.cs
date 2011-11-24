@@ -18,7 +18,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public Image DownloadImage(string url)
+        public Image DownloadImage(Uri url)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -27,7 +27,8 @@ namespace EVEMon.Common.Net
             HttpWebServiceRequest request = GetRequest();
             try
             {
-                request.GetResponse(url, new MemoryStream(), IMAGE_ACCEPT);
+                MemoryStream responseStream = Util.GetMemoryStream();
+                request.GetResponse(url, responseStream, IMAGE_ACCEPT);
                 return GetImage(request);
             }
             finally
@@ -44,7 +45,7 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public void DownloadImageAsync(string url, DownloadImageCompletedCallback callback, object userState)
+        public void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -52,7 +53,8 @@ namespace EVEMon.Common.Net
 
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new MemoryStream(), IMAGE_ACCEPT, null, state);
+            MemoryStream responseStream = Util.GetMemoryStream();
+            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
         }
 
         /// <summary>

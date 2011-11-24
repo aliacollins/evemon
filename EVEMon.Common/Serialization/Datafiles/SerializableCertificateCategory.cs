@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -13,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableCertificateCategory
     {
-        private Collection<SerializableCertificateClass> m_classes;
+        private readonly Collection<SerializableCertificateClass> m_classes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableCertificateCategory"/> class.
@@ -52,15 +53,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableCertificateClass> Classes
         {
             get { return m_classes; }
-        }
-
-        /// <summary>
-        /// Adds the specified classes.
-        /// </summary>
-        /// <param name="classes">The classes.</param>
-        public void Add(List<SerializableCertificateClass> classes)
-        {
-            m_classes = new Collection<SerializableCertificateClass>(classes);
         }
     }
 }
