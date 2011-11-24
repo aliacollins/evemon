@@ -123,6 +123,12 @@
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </Compile>
     <None Include="Properties\AssemblyInfo.template.cs" />
+    <Compile Include="APITester\APITesterWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="APITester\APITesterWindow.Designer.cs">
+      <DependentUpon>APITesterWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="BlankCharacter\BlankCharacterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -330,6 +336,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApiCredentialsManagement\EveMonFeaturesWindow.resx">
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="APITester\APITesterWindow.resx">
+      <DependentUpon>APITesterWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BlankCharacter\BlankCharacterControl.resx">
       <DependentUpon>BlankCharacterControl.cs</DependentUpon>

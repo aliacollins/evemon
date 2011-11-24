@@ -41,11 +41,11 @@ namespace EVEMon.APITester
             get
             {
                 // Gets the proper data
-                string url = EveMonClient.APIProviders.CurrentProvider.Url;
+                string url = EveMonClient.APIProviders.CurrentProvider.Url.AbsoluteUri;
                 m_path = EveMonClient.APIProviders.CurrentProvider.GetMethod((Enum)cbAPIMethod.SelectedItem).Path;
                 if (String.IsNullOrEmpty(m_path) || String.IsNullOrEmpty(url))
                 {
-                    url = APIProvider.DefaultProvider.Url;
+                    url = APIProvider.DefaultProvider.Url.AbsoluteUri;
                     m_path = APIProvider.DefaultProvider.GetMethod((Enum)cbAPIMethod.SelectedItem).Path;
                 }
 
@@ -191,7 +191,7 @@ namespace EVEMon.APITester
         private String GetPostDataForGenericAPIMethods()
         {
             if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName))
-                return String.Format(NetworkConstants.PostDataIDsOnly, tbIDOrName.Text);
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, tbIDOrName.Text);
 
             if (!APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem))
             {
@@ -206,11 +206,13 @@ namespace EVEMon.APITester
 
                     return apiKey == null
                                ? String.Empty
-                               : String.Format(NetworkConstants.PostDataBase, apiKey.ID, apiKey.VerificationCode);
+                               : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
+                                               apiKey.ID, apiKey.VerificationCode);
                 }
 
                 if (rbExternal.Checked)
-                    return String.Format(NetworkConstants.PostDataBase, tbKeyID.Text, tbVCode.Text);
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
+                                         tbKeyID.Text, tbVCode.Text);
             }
 
             return String.Empty;
@@ -236,11 +238,11 @@ namespace EVEMon.APITester
                 if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
                     cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
                 {
-                    return String.Format(NetworkConstants.PostDataWithCharIDAndIDS,
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, tbIDOrName.Text);
                 }
 
-                return String.Format(NetworkConstants.PostDataWithCharID,
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                      apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
@@ -248,16 +250,20 @@ namespace EVEMon.APITester
             {
                 if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
                     (tbKeyID.Text.Length == 0 || tbVCode.Text.Length == 0))
-                    return String.Format(NetworkConstants.PostDataCharacterIDOnly, tbCharID.Text);
+                {
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly,
+                                         tbCharID.Text);
+                }
 
                 if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
                     cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
                 {
-                    return String.Format(NetworkConstants.PostDataWithCharIDAndIDS,
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                          tbKeyID.Text, tbVCode.Text, tbCharID.Text, tbIDOrName.Text);
                 }
 
-                return String.Format(NetworkConstants.PostDataWithCharID, tbKeyID.Text, tbVCode.Text, tbCharID.Text);
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                     tbKeyID.Text, tbVCode.Text, tbCharID.Text);
             }
 
             return String.Empty;
@@ -279,12 +285,13 @@ namespace EVEMon.APITester
 
                 return apiKey == null
                            ? String.Empty
-                           : String.Format(NetworkConstants.PostDataWithCharID,
+                           : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                            apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
             return rbExternal.Checked
-                       ? String.Format(NetworkConstants.PostDataWithCharID, tbKeyID.Text, tbVCode.Text, tbCharID.Text)
+                       ? String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                       tbKeyID.Text, tbVCode.Text, tbCharID.Text)
                        : String.Empty;
         }
 
@@ -306,14 +313,13 @@ namespace EVEMon.APITester
             if (webBrowser.Document == null || webBrowser.Document.Body == null)
                 return;
 
-            using (SaveFileDialog sfd = new SaveFileDialog
-                                            {
-                                                Filter = "XML (*.xml)|*.xml",
-                                                FileName = m_path.Substring(
-                                                    m_path.LastIndexOf("/") + 1,
-                                                    m_path.LastIndexOf(".") - m_path.LastIndexOf("/") - 1)
-                                            })
+            using (SaveFileDialog sfd = new SaveFileDialog())
             {
+                sfd.Filter = "XML (*.xml)|*.xml";
+                sfd.FileName = m_path.Substring(m_path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1,
+                                                m_path.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) -
+                                                m_path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) - 1);
+
                 if (sfd.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -322,7 +328,7 @@ namespace EVEMon.APITester
                     XmlDocument xdoc = new XmlDocument();
                     string innerText = webBrowser.Document.Body.InnerText.Trim().Replace("\n-", "\n");
                     xdoc.LoadXml(innerText);
-                    string content = Util.XMLToStringRepresentation(xdoc);
+                    string content = Util.GetXMLStringRepresentation(xdoc);
 
                     // Moves to the final file
                     FileHelper.OverwriteOrWarnTheUser(
@@ -525,7 +531,7 @@ namespace EVEMon.APITester
                 return;
             }
 
-            if (textbox.Text.StartsWith("0"))
+            if (textbox.Text.StartsWith("0", StringComparison.Ordinal))
             {
                 errorProvider.SetError(textbox, "ID must not start with zero.");
                 e.Cancel = true;
@@ -655,6 +661,9 @@ namespace EVEMon.APITester
         /// <param name="e">A <see cref="T:System.Windows.Forms.KeyPressEventArgs"/> that contains the event data.</param>
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
             if (e.KeyChar.Equals((char)Keys.Escape))
             {
                 if (tbIDOrName.Focused)
