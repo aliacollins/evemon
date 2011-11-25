@@ -17,5 +17,15 @@ namespace EVEMon.Common
             }
             return text;
         }
+
+        /// <summary>
+        /// Convert an UpperCamelCase string to lowerCamelCase.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static string ConvertUpperToLowerCamelCase(this string text)
+        {
+            return string.Format("{0}{1}", text.Substring(0, 1).ToLower(), text.Substring(1, text.Length - 1));
+        }
     }
 }
