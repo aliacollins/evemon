@@ -376,7 +376,7 @@ namespace EVEMon.Common
                         BCAPIResult<T> result = asyncResult.Error != null
                                                     ? null
                                                     : DeserializeBCAPIResultCore<T>(asyncResult.Result);
-
+                        
                         string errorMessage = asyncResult.Error == null
                                                   ? String.Empty
                                                   : asyncResult.Error.InnerException == null
@@ -401,7 +401,7 @@ namespace EVEMon.Common
 
             try
             {
-                // Deserialization with a transform
+                // Deserialization
                 using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(BCAPIResult<T>));

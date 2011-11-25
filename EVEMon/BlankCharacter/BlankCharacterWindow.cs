@@ -120,7 +120,7 @@ namespace EVEMon.BlankCharacter
                     // Disabling control edit ability
                     blankCharacterControl.Enabled = false;
 
-                    XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
+                    XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableCCPCharacter), serial);
                     string content = Util.GetXMLStringRepresentation(xmlDoc);
                     FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                                                       fs =>

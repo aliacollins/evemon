@@ -337,7 +337,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
             EveMonClient.Trace("BCAPI.DownloadSettingsFile - Completed");
 
-            SaveSettingsFile(result.Result.Files[0]);
+            SaveSettingsFile(result.Result.Files.First());
         }
 
         /// <summary>
