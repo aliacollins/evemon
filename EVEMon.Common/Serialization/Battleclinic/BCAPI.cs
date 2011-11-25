@@ -103,7 +103,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// Returns the request method.
         /// </summary>
         /// <param name="requestMethod">A BCAPIMethods enumeration member specfying the method for which the URL is required.</param>
-        public static BCAPIMethod GetMethod(BCAPIMethods requestMethod)
+        private static BCAPIMethod GetMethod(BCAPIMethods requestMethod)
         {
             foreach (BCAPIMethod method in s_methods.Where(method => method.Method.Equals(requestMethod)))
             {
@@ -120,14 +120,11 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <returns>A String representing the full URL path of the specified method.</returns>
         private static Uri GetMethodUrl(BCAPIMethods requestMethod)
         {
-            // Gets the proper data
-            string url = NetworkConstants.BCAPIBase;
-            string path = GetMethod(requestMethod).Path;
-
             // Build the uri
-            Uri baseUri = new Uri(url);
+            Uri baseUri = new Uri(NetworkConstants.BCAPIBase);
             UriBuilder uriBuilder = new UriBuilder(baseUri);
-            uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
+            uriBuilder.Path = String.Format(CultureConstants.InvariantCulture, "{0}{1}",
+                                            uriBuilder.Path.TrimEnd("/".ToCharArray()), GetMethod(requestMethod).Path);
             return uriBuilder.Uri;
         }
 
@@ -156,8 +153,11 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (!BCAPISettings.Default.UploadAlways || !HasCredentialsStored)
                 return;
 
+            EveMonClient.Trace("BCAPI.UploadSettingsFile - Initiated");
+
             FileSave();
-            EveMonClient.Trace("BCAPI.UploadSettingsFile - Done");
+            
+            EveMonClient.Trace("BCAPI.UploadSettingsFile - Completed");
         }
 
         /// <summary>
@@ -353,7 +353,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             {
                 saveFileDialog.Title = "EVEMon Settings Backup File Save";
                 saveFileDialog.DefaultExt = "xml";
-                saveFileDialog.Filter = "EVEMon Settings Backup Files (.bak)|*.bak";
+                saveFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
                 saveFileDialog.FilterIndex = 1;
 
                 // Save current directory
