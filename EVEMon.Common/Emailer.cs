@@ -208,7 +208,10 @@ namespace EVEMon.Common
                     // Set up client
                 using (SmtpClient client = new SmtpClient(settings.EmailSmtpServer.Trim()))
                 {
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.Timeout = Settings.Updates.HttpTimeout;
                     client.SendCompleted += SendCompleted;
+                    
                     if (settings.EmailPortNumber > 0)
                         client.Port = settings.EmailPortNumber;
 

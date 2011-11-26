@@ -665,7 +665,7 @@ namespace EVEMon.SettingsUI
         private void tbMailServer_TextChanged(object sender, EventArgs e)
         {
             string text = ((TextBox)sender).Text;
-            emailPortTextBox.Enabled = true;
+            //emailPortTextBox.Enabled = true;
             cbEmailServerRequireSsl.Checked = false;
             cbEmailServerRequireSsl.Enabled = true;
             cbEmailAuthRequired.Checked = false;
@@ -673,8 +673,8 @@ namespace EVEMon.SettingsUI
             if (text != "smtp.gmail.com")
                 return;
 
-            emailPortTextBox.Text = "587";
-            emailPortTextBox.Enabled = false;
+            emailPortTextBox.Text = "465";
+            //emailPortTextBox.Enabled = false;
             cbEmailServerRequireSsl.Checked = true;
             cbEmailServerRequireSsl.Enabled = false;
             cbEmailAuthRequired.Checked = true;
