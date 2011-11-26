@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -149,8 +150,8 @@ namespace EVEMon.Common
 
             string subject = String.Format(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}", charName,
                                            skillName, skillLevelString);
+
             SendMail(Settings.Notifications, subject, body.ToString());
-            return;
         }
 
         /// <summary>
@@ -180,37 +181,43 @@ namespace EVEMon.Common
         /// <returns>True if no exceptions thrown, otherwise false</returns>
         /// <remarks>
         /// NotificationSettings object is required to support
-        /// alternative settings from Tols -> Options. Use
+        /// alternative settings from Tools -> Options. Use
         /// Settings.Notifications unless using an alternative
         /// configuration.
         /// </remarks>
         private static bool SendMail(NotificationSettings settings, string subject, string body)
         {
-            // trace something to the logs so we can identify the time the message was sent.
+            // Trace something to the logs so we can identify the time the message was sent
             EveMonClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
                                subject,
                                settings.EmailSmtpServer,
-                               settings.EmailPortNumber
-                );
+                               settings.EmailPortNumber);
+
+            string sender = String.IsNullOrEmpty(settings.EmailFromAddress)
+                                ? "evemonclient@battleclinic.com"
+                                : settings.EmailFromAddress;
+
+            if (!Validate(settings))
+                return false;
 
             try
             {
                 // Set up message
-                using(MailMessage msg = new MailMessage(settings.EmailFromAddress, settings.EmailToAddress, subject, body))
+                using (MailMessage msg = new MailMessage(sender, settings.EmailToAddress, subject, body))
 
-                // Set up client
-                using (SmtpClient client = new SmtpClient(settings.EmailSmtpServer))
+                    // Set up client
+                using (SmtpClient client = new SmtpClient(settings.EmailSmtpServer.Trim()))
                 {
                     client.SendCompleted += SendCompleted;
                     if (settings.EmailPortNumber > 0)
                         client.Port = settings.EmailPortNumber;
 
-                    // Enter crendtials
+                    // Enter credentials
                     if (settings.EmailAuthenticationRequired)
                     {
                         client.UseDefaultCredentials = false;
-                        client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
-                                                                   settings.EmailAuthenticationPassword);
+                        client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName.Trim(),
+                                                                   settings.EmailAuthenticationPassword.Trim());
                     }
 
                     // SSL
@@ -224,13 +231,82 @@ namespace EVEMon.Common
             catch (InvalidOperationException e)
             {
                 ExceptionHandler.LogException(e, true);
+                ShowMessage(e.Message);
                 return false;
             }
             catch (SmtpException e)
             {
                 ExceptionHandler.LogException(e, true);
+                ShowMessage(e.Message);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Validates the emailer settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        private static bool Validate(NotificationSettings settings)
+        {
+            // Server address can't be empty
+            if (String.IsNullOrEmpty(settings.EmailSmtpServer))
+            {
+                ShowMessage("Email Server is not specified.");
+                return false;
+            }
+
+            // Authentication is required
+            if (settings.EmailAuthenticationRequired)
+            {
+                // Username is blank
+                if (String.IsNullOrEmpty(settings.EmailAuthenticationUserName))
+                {
+                    ShowMessage(String.Format(CultureConstants.DefaultCulture, "Username can not be blank."));
+                    return false;
+                }
+
+                // Password is blank
+                if (String.IsNullOrEmpty(settings.EmailAuthenticationPassword))
+                {
+                    ShowMessage(String.Format(CultureConstants.DefaultCulture, "Password can not be blank"));
+                    return false;
+                }
+            }
+
+            // Sender is not of valid email format
+            if (!String.IsNullOrEmpty(settings.EmailFromAddress) && !settings.EmailFromAddress.IsValidEmail())
+            {
+                ShowMessage(String.Format(CultureConstants.DefaultCulture, "{0} is not of a valid email format.",
+                                          settings.EmailFromAddress));
+                return false;
+            }
+
+            // Receiver can't be empty
+            if (String.IsNullOrEmpty(settings.EmailToAddress))
+            {
+                ShowMessage("Receive address is not specified.");
+                return false;
+            }
+
+            // Receiver is not of valid email format
+            if (!settings.EmailToAddress.IsValidEmail())
+            {
+                ShowMessage(String.Format(CultureConstants.DefaultCulture, "{0} is not of a valid email format.",
+                                          settings.EmailToAddress));
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Shows an error message to the user.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        private static void ShowMessage(string text)
+        {
+            MessageBox.Show(text, "Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

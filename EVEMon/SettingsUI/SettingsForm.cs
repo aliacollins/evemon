@@ -451,9 +451,7 @@ namespace EVEMon.SettingsUI
             m_settings.G15.ShowEVETime = cbG15ShowEVETime.Checked;
 
             // Notifications
-            NotificationSettings notificationSettings;
-            PopulateNotificationsFromControls(out notificationSettings);
-            m_settings.Notifications = notificationSettings;
+            m_settings.Notifications = PopulateNotificationsFromControls();
 
             // IGB
             m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
@@ -540,10 +538,9 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Populates the notifications from controls.
         /// </summary>
-        /// <param name="notificationSettings">The notification settings.</param>
-        private void PopulateNotificationsFromControls(out NotificationSettings notificationSettings)
+        private NotificationSettings PopulateNotificationsFromControls()
         {
-            notificationSettings = notificationsControl.Settings;
+            NotificationSettings notificationSettings = notificationsControl.Settings;
             notificationSettings.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
 
             notificationSettings.EmailToAddress = tbToAddress.Text;
@@ -562,6 +559,8 @@ namespace EVEMon.SettingsUI
             notificationSettings.EmailAuthenticationPassword = tbEmailPassword.Text;
             notificationSettings.UseEmailShortFormat = cbEmailUseShortFormat.Checked;
             notificationSettings.SendMailAlert = mailNotificationCheckBox.Checked;
+
+            return notificationSettings;
         }
 
         /// <summary>
@@ -647,7 +646,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// IGB Port text box changes
+        /// IGB Port text box changes.
         /// We update the text box displaying the url to use.
         /// </summary>
         /// <param name="sender"></param>
@@ -655,6 +654,78 @@ namespace EVEMon.SettingsUI
         private void igbPortTextBox_TextChanged(object sender, EventArgs e)
         {
             igbUrlTextBox.Text = String.Format(CultureConstants.DefaultCulture, "http://localhost:{0}/", igbPortTextBox.Text);
+        }
+
+        /// <summary>
+        /// Email server text box changes.
+        /// We update the text box displaying the port to use.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tbMailServer_TextChanged(object sender, EventArgs e)
+        {
+            string text = ((TextBox)sender).Text;
+            emailPortTextBox.Enabled = true;
+            cbEmailServerRequireSsl.Checked = false;
+            cbEmailServerRequireSsl.Enabled = true;
+            cbEmailAuthRequired.Checked = false;
+
+            if (text != "smtp.gmail.com")
+                return;
+
+            emailPortTextBox.Text = "587";
+            emailPortTextBox.Enabled = false;
+            cbEmailServerRequireSsl.Checked = true;
+            cbEmailServerRequireSsl.Enabled = false;
+            cbEmailAuthRequired.Checked = true;
+        }
+
+        /// <summary>
+        /// Email Port text box validation.
+        /// Ensures the text represents a correct port number.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void emailPortTextBox_Validating(object sender, CancelEventArgs e)
+        {
+            string text = ((TextBox)sender).Text;
+            e.Cancel = !IsValidPort(text, "Email server port");
+        }
+
+        /// <summary>
+        /// Email FromAddress text box validation.
+        /// Ensures the text represents of valid email format.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tbFromAddress_Validating(object sender, CancelEventArgs e)
+        {
+            e.Cancel = !String.IsNullOrEmpty(tbFromAddress.Text) && !tbFromAddress.Text.IsValidEmail();
+
+            // Sender is not of valid email format
+            if (e.Cancel)
+            {
+                ShowErrorMessage("Emailer Error", String.Format(CultureConstants.DefaultCulture,
+                                                                "{0} is not of a valid email format.", tbFromAddress.Text));
+            }
+        }
+
+        /// <summary>
+        /// Email ToAddress text box validation.
+        /// Ensures the text represents of valid email format.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void tbToAddress_Validating(object sender, CancelEventArgs e)
+        {
+            e.Cancel = !String.IsNullOrEmpty(tbToAddress.Text) && !tbToAddress.Text.IsValidEmail();
+
+            // Receiver is not of valid email format
+            if (e.Cancel)
+            {
+                ShowErrorMessage("Emailer Error", String.Format(CultureConstants.DefaultCulture,
+                                                                "{0} is not of a valid email format.", tbToAddress.Text));
+            }
         }
 
         /// <summary>
@@ -732,6 +803,9 @@ namespace EVEMon.SettingsUI
             if (rbSystemTrayOptionsNever.Checked && rbMinToTray.Checked)
                 rbMinToTaskBar.Checked = true;
 
+            // Emailer
+            tlpEmailAuthTable.Enabled = cbEmailAuthRequired.Checked;
+
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
             gbGoogle.Enabled = rbGoogle.Checked;
@@ -778,8 +852,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void emailTestButton_Click(object sender, EventArgs e)
         {
-            NotificationSettings configuredValues;
-            PopulateNotificationsFromControls(out configuredValues);
+            NotificationSettings configuredValues = PopulateNotificationsFromControls();
 
             if (!Emailer.SendTestMail(configuredValues))
                 MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
