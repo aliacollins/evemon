@@ -1829,6 +1829,7 @@ namespace EVEMon.SettingsUI
             this.tbMailServer.Name = "tbMailServer";
             this.tbMailServer.Size = new System.Drawing.Size(152, 20);
             this.tbMailServer.TabIndex = 1;
+            this.tbMailServer.TextChanged += new System.EventHandler(this.tbMailServer_TextChanged);
             // 
             // tbFromAddress
             // 
@@ -1836,6 +1837,7 @@ namespace EVEMon.SettingsUI
             this.tbFromAddress.Name = "tbFromAddress";
             this.tbFromAddress.Size = new System.Drawing.Size(206, 20);
             this.tbFromAddress.TabIndex = 1;
+            this.tbFromAddress.Validating += new System.ComponentModel.CancelEventHandler(this.tbFromAddress_Validating);
             // 
             // tbToAddress
             // 
@@ -1843,6 +1845,7 @@ namespace EVEMon.SettingsUI
             this.tbToAddress.Name = "tbToAddress";
             this.tbToAddress.Size = new System.Drawing.Size(206, 20);
             this.tbToAddress.TabIndex = 1;
+            this.tbToAddress.Validating += new System.ComponentModel.CancelEventHandler(this.tbToAddress_Validating);
             // 
             // cbEmailServerRequireSsl
             // 
@@ -1903,10 +1906,12 @@ namespace EVEMon.SettingsUI
             // emailPortTextBox
             // 
             this.emailPortTextBox.Location = new System.Drawing.Point(82, 29);
+            this.emailPortTextBox.MaxLength = 5;
             this.emailPortTextBox.Name = "emailPortTextBox";
-            this.emailPortTextBox.Size = new System.Drawing.Size(152, 20);
+            this.emailPortTextBox.Size = new System.Drawing.Size(40, 20);
             this.emailPortTextBox.TabIndex = 1;
             this.emailPortTextBox.Text = "25";
+            this.emailPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.emailPortTextBox_Validating);
             // 
             // btnTestEmail
             // 

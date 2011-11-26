@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Text.RegularExpressions;
+using System.Web;
 
 namespace EVEMon.Common
 {
@@ -19,13 +20,18 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Convert an UpperCamelCase string to lowerCamelCase.
+        /// Determines whether the string is of a valid email format.
         /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
-        public static string ConvertUpperToLowerCamelCase(this string text)
+        /// <param name="strIn">The string.</param>
+        /// <returns>
+        /// 	<c>true</c> if the string is of a valid email format; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsValidEmail(this string strIn)
         {
-            return string.Format("{0}{1}", text.Substring(0, 1).ToLower(), text.Substring(1, text.Length - 1));
+            // Return true if strIn is in valid e-mail format
+            return Regex.IsMatch(strIn,
+                   @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
+                   @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$");
         }
     }
 }
