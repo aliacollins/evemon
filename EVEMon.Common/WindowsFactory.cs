@@ -268,7 +268,7 @@ namespace EVEMon.Common
         {
             ConstructorInfo constructorInfo = typeof(TForm).GetConstructor(Type.EmptyTypes);
             if (constructorInfo != null)
-                return (TForm)(constructorInfo.Invoke(null));
+                return (TForm)constructorInfo.Invoke(null);
             return null;
         }
 
@@ -285,7 +285,7 @@ namespace EVEMon.Common
             // Search a public instance constructor with a single argument of type TArg
             ConstructorInfo ctor = typeof(TForm).GetConstructor(new[] { typeof(TArg) });
             if (ctor != null)
-                return (TForm)(ctor.Invoke(new Object[] { data }));
+                return (TForm)ctor.Invoke(new Object[] { data });
 
             // Failed, use the default constructor
             return Create<TForm>();

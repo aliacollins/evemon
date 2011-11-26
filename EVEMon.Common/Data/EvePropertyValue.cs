@@ -3,10 +3,6 @@ using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
-
-
-    #region EvePropertyValue
-
     /// <summary>
     /// Describes a property of a ship/item (e.g. CPU size)
     /// </summary>
@@ -72,6 +68,4 @@ namespace EVEMon.Common.Data
 
         #endregion
     }
-
-    # endregion
 }

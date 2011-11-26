@@ -38,9 +38,10 @@ namespace EVEMon.SettingsUI
             get { return m_settings; }
             set
             {
-                m_settings = value;
                 if (value == null)
                     return;
+
+                m_settings = value;
 
                 foreach (ComboBox combo in m_combos)
                 {
