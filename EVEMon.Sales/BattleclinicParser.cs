@@ -3,14 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace EVEMon.Sales
 {
-    [DefaultMineralParser("battleclinic")]
     public class BattleclinicParser : IMineralParser
     {
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets the name.
         /// </summary>
-        /// <value>The anme.</value>
-        public string Name { get; set; }
+        /// <value>The name.</value>
+        public string Name
+        {
+            get { return "battleclinic"; }
+        }
+
 
         /// <summary>
         /// Gets the title.

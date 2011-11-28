@@ -9,10 +9,10 @@ namespace EVEMon.Sales
     public interface IMineralParser
     {
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets the name.
         /// </summary>
         /// <value>The name.</value>
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// Gets the title.
