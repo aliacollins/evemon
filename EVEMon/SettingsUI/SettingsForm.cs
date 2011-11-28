@@ -67,10 +67,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnOk_Click(object sender, EventArgs e)
         {
+            // If enabled validate email notification settings
+            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
+                return;
+
             // Return settings
             ApplyToSettings();
-            Settings.Import(m_settings, true);
-            Settings.Save();
 
             // Close
             Close();
@@ -84,10 +86,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void applyButton_Click(object sender, EventArgs e)
         {
+            // If enabled validate email notification settings
+            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
+                return;
+
             // Return settings
             ApplyToSettings();
-            Settings.Import(m_settings, true);
-            Settings.Save();
         }
 
         /// <summary>
@@ -166,7 +170,8 @@ namespace EVEMon.SettingsUI
             cbPlaySoundOnSkillComplete.Checked = m_settings.Notifications.PlaySoundOnSkillCompletion;
 
             // Email Notifications
-            SetEmailerSettings();
+            emailNotificationsControl.Settings = m_settings.Notifications;
+            mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
 
             // Proxy settings
             customProxyCheckBox.Checked = m_settings.Proxy.Enabled;
@@ -284,23 +289,6 @@ namespace EVEMon.SettingsUI
             overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
             overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
             overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
-        }
-
-        /// <summary>
-        /// Sets the emailer settings.
-        /// </summary>
-        private void SetEmailerSettings()
-        {
-            mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
-            tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
-            emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString(CultureConstants.DefaultCulture);
-            cbEmailServerRequireSsl.Checked = m_settings.Notifications.EmailServerRequiresSSL;
-            cbEmailUseShortFormat.Checked = m_settings.Notifications.UseEmailShortFormat;
-            cbEmailAuthRequired.Checked = m_settings.Notifications.EmailAuthenticationRequired;
-            tbEmailUsername.Text = m_settings.Notifications.EmailAuthenticationUserName;
-            tbEmailPassword.Text = m_settings.Notifications.EmailAuthenticationPassword;
-            tbFromAddress.Text = m_settings.Notifications.EmailFromAddress;
-            tbToAddress.Text = m_settings.Notifications.EmailToAddress;
         }
 
         /// <summary>
@@ -451,7 +439,9 @@ namespace EVEMon.SettingsUI
             m_settings.G15.ShowEVETime = cbG15ShowEVETime.Checked;
 
             // Notifications
-            m_settings.Notifications = PopulateNotificationsFromControls();
+            m_settings.Notifications.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
+            m_settings.Notifications.SendMailAlert = mailNotificationCheckBox.Checked;
+            emailNotificationsControl.PopulateSettingsFromControls();
 
             // IGB
             m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
@@ -459,7 +449,6 @@ namespace EVEMon.SettingsUI
             int igbServerPort;
             if (Int32.TryParse(igbPortTextBox.Text, out igbServerPort))
                 m_settings.IGB.IGBServerPort = igbServerPort;
-
 
             // Main window - Overview
             m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;
@@ -533,34 +522,9 @@ namespace EVEMon.SettingsUI
             }
             else
                 rk.DeleteValue("EVEMon", false);
-        }
 
-        /// <summary>
-        /// Populates the notifications from controls.
-        /// </summary>
-        private NotificationSettings PopulateNotificationsFromControls()
-        {
-            NotificationSettings notificationSettings = notificationsControl.Settings;
-            notificationSettings.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
-
-            notificationSettings.EmailToAddress = tbToAddress.Text;
-            notificationSettings.EmailFromAddress = tbFromAddress.Text;
-            notificationSettings.EmailSmtpServer = tbMailServer.Text;
-
-            // Try and get a usable number out of the text box
-            int emailPortNumber;
-            notificationSettings.EmailPortNumber = Int32.TryParse(emailPortTextBox.Text, out emailPortNumber)
-                                                       ? emailPortNumber
-                                                       : 25;
-
-            notificationSettings.EmailServerRequiresSSL = cbEmailServerRequireSsl.Checked;
-            notificationSettings.EmailAuthenticationRequired = cbEmailAuthRequired.Checked;
-            notificationSettings.EmailAuthenticationUserName = tbEmailUsername.Text;
-            notificationSettings.EmailAuthenticationPassword = tbEmailPassword.Text;
-            notificationSettings.UseEmailShortFormat = cbEmailUseShortFormat.Checked;
-            notificationSettings.SendMailAlert = mailNotificationCheckBox.Checked;
-
-            return notificationSettings;
+            Settings.Import(m_settings, true);
+            Settings.Save();
         }
 
         /// <summary>
@@ -618,7 +582,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             e.Cancel = true;
-            ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer");
+            ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer.");
         }
 
         /// <summary>
@@ -657,84 +621,12 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Email server text box changes.
-        /// We update the text box displaying the port to use.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tbMailServer_TextChanged(object sender, EventArgs e)
-        {
-            string text = ((TextBox)sender).Text;
-            //emailPortTextBox.Enabled = true;
-            cbEmailServerRequireSsl.Checked = false;
-            cbEmailServerRequireSsl.Enabled = true;
-            cbEmailAuthRequired.Checked = false;
-
-            if (text != "smtp.gmail.com")
-                return;
-
-            emailPortTextBox.Text = "465";
-            //emailPortTextBox.Enabled = false;
-            cbEmailServerRequireSsl.Checked = true;
-            cbEmailServerRequireSsl.Enabled = false;
-            cbEmailAuthRequired.Checked = true;
-        }
-
-        /// <summary>
-        /// Email Port text box validation.
-        /// Ensures the text represents a correct port number.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void emailPortTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            string text = ((TextBox)sender).Text;
-            e.Cancel = !IsValidPort(text, "Email server port");
-        }
-
-        /// <summary>
-        /// Email FromAddress text box validation.
-        /// Ensures the text represents of valid email format.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tbFromAddress_Validating(object sender, CancelEventArgs e)
-        {
-            e.Cancel = !String.IsNullOrEmpty(tbFromAddress.Text) && !tbFromAddress.Text.IsValidEmail();
-
-            // Sender is not of valid email format
-            if (e.Cancel)
-            {
-                ShowErrorMessage("Emailer Error", String.Format(CultureConstants.DefaultCulture,
-                                                                "{0} is not of a valid email format.", tbFromAddress.Text));
-            }
-        }
-
-        /// <summary>
-        /// Email ToAddress text box validation.
-        /// Ensures the text represents of valid email format.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbToAddress_Validating(object sender, CancelEventArgs e)
-        {
-            e.Cancel = !String.IsNullOrEmpty(tbToAddress.Text) && !tbToAddress.Text.IsValidEmail();
-
-            // Receiver is not of valid email format
-            if (e.Cancel)
-            {
-                ShowErrorMessage("Emailer Error", String.Format(CultureConstants.DefaultCulture,
-                                                                "{0} is not of a valid email format.", tbToAddress.Text));
-            }
-        }
-
-        /// <summary>
         /// Checks a port is valid and displays a message box when it is not.
         /// </summary>
         /// <param name="str"></param>
         /// <param name="portName"></param>
         /// <returns></returns>
-        private static bool IsValidPort(string str, string portName)
+        internal static bool IsValidPort(string str, string portName)
         {
             int port;
             if (!Int32.TryParse(str, out port))
@@ -743,7 +635,7 @@ namespace EVEMon.SettingsUI
             if ((port < IPEndPoint.MinPort) || (port > IPEndPoint.MaxPort))
             {
                 ShowErrorMessage("Invalid port",
-                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}",
+                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}.",
                                                portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
 
                 return false;
@@ -781,7 +673,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Enable or disable controls in reaction to other controls states.
+        /// Enable or disable controls in reaction to other controls states. 
         /// </summary>
         private void UpdateDisables()
         {
@@ -790,7 +682,7 @@ namespace EVEMon.SettingsUI
             ACycleTimesInterval.Enabled = cbG15CycleTimes.Checked;
             igbFlowPanel.Enabled = igbCheckBox.Checked;
             trayIconPopupGroupBox.Enabled = !rbSystemTrayOptionsNever.Checked;
-            mailNotificationPanel.Enabled = mailNotificationCheckBox.Checked;
+            emailNotificationsControl.Enabled = mailNotificationCheckBox.Checked;
             customProxyPanel.Enabled = customProxyCheckBox.Checked;
             overviewPanel.Enabled = cbShowOverViewTab.Checked;
 
@@ -802,9 +694,6 @@ namespace EVEMon.SettingsUI
             rbMinToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
             if (rbSystemTrayOptionsNever.Checked && rbMinToTray.Checked)
                 rbMinToTaskBar.Checked = true;
-
-            // Emailer
-            tlpEmailAuthTable.Enabled = cbEmailAuthRequired.Checked;
 
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
@@ -844,24 +733,6 @@ namespace EVEMon.SettingsUI
 
 
         #region Buttons handlers
-
-        /// <summary>
-        /// Alerts > Email alerts > Send test email button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void emailTestButton_Click(object sender, EventArgs e)
-        {
-            NotificationSettings configuredValues = PopulateNotificationsFromControls();
-
-            if (!Emailer.SendTestMail(configuredValues))
-                MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            else
-            {
-                MessageBox.Show("The message sent successfully. Please verify that the message was received.",
-                                "Mail Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
 
         /// <summary>
         /// Network > Proxy > Authentication button.

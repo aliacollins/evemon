@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -14,6 +15,8 @@ namespace EVEMon.Common
     /// </summary>
     public static class Emailer
     {
+        private static SmtpClient s_smtpClient;
+
         /// <summary>
         /// Sends a test mail
         /// </summary>
@@ -163,10 +166,11 @@ namespace EVEMon.Common
         {
             if (e.Cancelled)
                 EveMonClient.Trace("Emailer.SendCompleted - The last message was cancelled");
-            if (e.Error != null)
+            else if (e.Error != null)
             {
                 EveMonClient.Trace("Emailer.SendCompleted - An error occurred");
                 ExceptionHandler.LogException(e.Error, false);
+                MessageBox.Show(e.Error.Message, "EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
                 EveMonClient.Trace("Emailer.SendCompleted - Message sent.");
@@ -190,126 +194,63 @@ namespace EVEMon.Common
             // Trace something to the logs so we can identify the time the message was sent
             EveMonClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
                                subject,
-                               settings.EmailSmtpServer,
+                               settings.EmailSmtpServerAddress,
                                settings.EmailPortNumber);
 
             string sender = String.IsNullOrEmpty(settings.EmailFromAddress)
                                 ? "evemonclient@battleclinic.com"
                                 : settings.EmailFromAddress;
 
-            if (!Validate(settings))
-                return false;
+            List<string> toAddresses = settings.EmailToAddress.Split(
+                new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             try
             {
                 // Set up message
-                using (MailMessage msg = new MailMessage(sender, settings.EmailToAddress, subject, body))
+                MailMessage msg = new MailMessage();
+                toAddresses.ForEach(address => msg.To.Add(address.Trim()));
+                msg.From = new MailAddress(sender);
+                msg.Subject = subject;
+                msg.Body = body;
 
-                    // Set up client
-                using (SmtpClient client = new SmtpClient(settings.EmailSmtpServer.Trim()))
+                // Set up client
+                s_smtpClient = new SmtpClient();
+
+                s_smtpClient.SendCompleted += SendCompleted;
+                s_smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                s_smtpClient.Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
+                
+                // Host and port
+                s_smtpClient.Host = settings.EmailSmtpServerAddress;
+                s_smtpClient.Port = settings.EmailPortNumber;
+
+                // SSL
+                s_smtpClient.EnableSsl = settings.EmailServerRequiresSsl;
+                ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
+
+                // Credentials
+                if (settings.EmailAuthenticationRequired)
                 {
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.Timeout = Settings.Updates.HttpTimeout;
-                    client.SendCompleted += SendCompleted;
-                    
-                    if (settings.EmailPortNumber > 0)
-                        client.Port = settings.EmailPortNumber;
-
-                    // Enter credentials
-                    if (settings.EmailAuthenticationRequired)
-                    {
-                        client.UseDefaultCredentials = false;
-                        client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName.Trim(),
-                                                                   settings.EmailAuthenticationPassword.Trim());
-                    }
-
-                    // SSL
-                    client.EnableSsl = settings.EmailServerRequiresSSL;
-
-                    // Send message
-                    client.SendAsync(msg, null);
+                    s_smtpClient.UseDefaultCredentials = false;
+                    s_smtpClient.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
+                                                                     settings.EmailAuthenticationPassword);
                 }
+
+                // Send message
+                s_smtpClient.SendAsync(msg, null);
+
                 return true;
             }
             catch (InvalidOperationException e)
             {
                 ExceptionHandler.LogException(e, true);
-                ShowMessage(e.Message);
                 return false;
             }
             catch (SmtpException e)
             {
                 ExceptionHandler.LogException(e, true);
-                ShowMessage(e.Message);
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Validates the emailer settings.
-        /// </summary>
-        /// <param name="settings">The settings.</param>
-        /// <returns></returns>
-        private static bool Validate(NotificationSettings settings)
-        {
-            // Server address can't be empty
-            if (String.IsNullOrEmpty(settings.EmailSmtpServer))
-            {
-                ShowMessage("Email Server is not specified.");
-                return false;
-            }
-
-            // Authentication is required
-            if (settings.EmailAuthenticationRequired)
-            {
-                // Username is blank
-                if (String.IsNullOrEmpty(settings.EmailAuthenticationUserName))
-                {
-                    ShowMessage(String.Format(CultureConstants.DefaultCulture, "Username can not be blank."));
-                    return false;
-                }
-
-                // Password is blank
-                if (String.IsNullOrEmpty(settings.EmailAuthenticationPassword))
-                {
-                    ShowMessage(String.Format(CultureConstants.DefaultCulture, "Password can not be blank"));
-                    return false;
-                }
-            }
-
-            // Sender is not of valid email format
-            if (!String.IsNullOrEmpty(settings.EmailFromAddress) && !settings.EmailFromAddress.IsValidEmail())
-            {
-                ShowMessage(String.Format(CultureConstants.DefaultCulture, "{0} is not of a valid email format.",
-                                          settings.EmailFromAddress));
-                return false;
-            }
-
-            // Receiver can't be empty
-            if (String.IsNullOrEmpty(settings.EmailToAddress))
-            {
-                ShowMessage("Receive address is not specified.");
-                return false;
-            }
-
-            // Receiver is not of valid email format
-            if (!settings.EmailToAddress.IsValidEmail())
-            {
-                ShowMessage(String.Format(CultureConstants.DefaultCulture, "{0} is not of a valid email format.",
-                                          settings.EmailToAddress));
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Shows an error message to the user.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        private static void ShowMessage(string text)
-        {
-            MessageBox.Show(text, "Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

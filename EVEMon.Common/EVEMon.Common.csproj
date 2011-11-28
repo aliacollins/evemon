@@ -193,6 +193,14 @@
     <Compile Include="Data\MaterialCollection.cs" />
     <Compile Include="Data\NPCCorporation.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
+    <Compile Include="EmailProvider\DefaultProvider.cs" />
+    <Compile Include="EmailProvider\EmailProviders.cs" />
+    <Compile Include="EmailProvider\GmxProvider.cs" />
+    <Compile Include="EmailProvider\GoogleProvider.cs" />
+    <Compile Include="EmailProvider\HotmailProvider.cs" />
+    <Compile Include="EmailProvider\IEmailProvider.cs" />
+    <Compile Include="EmailProvider\YahooPlusProvider.cs" />
+    <Compile Include="EmailProvider\YahooProvider.cs" />
     <Compile Include="EmploymentHistoryCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />
     <Compile Include="EveMailingList.cs" />
