@@ -376,7 +376,7 @@ namespace EVEMon.Common
                         BCAPIResult<T> result = asyncResult.Error != null
                                                     ? null
                                                     : DeserializeBCAPIResultCore<T>(asyncResult.Result);
-                        
+
                         string errorMessage = asyncResult.Error == null
                                                   ? String.Empty
                                                   : asyncResult.Error.InnerException == null
@@ -692,9 +692,9 @@ namespace EVEMon.Common
         /// Gets a memory stream.
         /// </summary>
         /// <returns>A new memory stream</returns>
-        public static MemoryStream GetMemoryStream()
+        public static MemoryStream GetMemoryStream(byte[] buffer = null)
         {
-            return new MemoryStream();
+            return buffer == null ? new MemoryStream() : new MemoryStream(buffer);
         }
 
         /// <summary>
@@ -706,9 +706,99 @@ namespace EVEMon.Common
         /// <param name="share">The share.</param>
         /// <returns>A new file stream</returns>
         public static FileStream GetFileStream(string filePath, FileMode mode = FileMode.OpenOrCreate,
-                                                 FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
+                                               FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             return new FileStream(filePath, mode, access, share);
+        }
+
+        /// <summary>
+        /// Encrypts the specified text using the provided password.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public static string Encrypt(string text, string password)
+        {
+            if (password == null)
+                throw new ArgumentNullException("password");
+
+            // If no password is provided return the text unencrypted
+            if (password.Length == 0)
+                return text;
+
+            // Ensure that salt is of the correct size
+            while (password.Length < 8)
+            {
+                password += password;
+            }
+
+            byte[] encrypted;
+            using (Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+            {
+                using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+                {
+                    ICryptoTransform encryptor = aes.CreateEncryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                    MemoryStream msEncrypt = GetMemoryStream();
+                    CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        //Write all data to the stream
+                        swEncrypt.Write(text);
+                    }
+                    encrypted = msEncrypt.ToArray();
+                }
+            }
+            return Convert.ToBase64String(encrypted);
+        }
+
+        /// <summary>
+        /// Decrypts the specified ciphered text using the provided password.
+        /// </summary>
+        /// <param name="cipheredText">The ciphered text.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public static string Decrypt(string cipheredText, string password)
+        {
+            if (password == null)
+                throw new ArgumentNullException("password");
+
+            // If no password is provided return the text undecrypted
+            if (password.Length == 0)
+                return cipheredText;
+
+            byte[] text;
+            try
+            {
+                text = Convert.FromBase64String(cipheredText);
+            }
+                // If text is not encrypted return it undecrypted
+            catch (FormatException)
+            {
+                return cipheredText;
+            }
+
+            // Ensure that salt is of the correct size
+            while (password.Length < 8)
+            {
+                password += password;
+            }
+
+            string decrypted;
+            using (Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+            {
+                using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+                {
+                    ICryptoTransform decryptor = aes.CreateDecryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                    MemoryStream msDecrypt = GetMemoryStream(text);
+                    CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                    {
+                        // Read the decrypted bytes from the decrypting stream and place them in a string
+                        decrypted = srDecrypt.ReadToEnd();
+                    }
+                }
+            }
+            return decrypted;
         }
     }
 }

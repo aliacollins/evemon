@@ -233,7 +233,8 @@ namespace EVEMon.Common
                 {
                     s_smtpClient.UseDefaultCredentials = false;
                     s_smtpClient.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
-                                                                     settings.EmailAuthenticationPassword);
+                                                                     Util.Decrypt(settings.EmailAuthenticationPassword,
+                                                                     settings.EmailAuthenticationUserName));
                 }
 
                 // Send message

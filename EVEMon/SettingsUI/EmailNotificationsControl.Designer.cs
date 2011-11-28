@@ -47,7 +47,7 @@
             this.tbEmailServerAddress = new System.Windows.Forms.TextBox();
             this.lblPortNumber = new System.Windows.Forms.Label();
             this.tbEmailPort = new System.Windows.Forms.TextBox();
-            this.cbEmailServerRequireSSL = new System.Windows.Forms.CheckBox();
+            this.cbEmailServerRequireSsl = new System.Windows.Forms.CheckBox();
             this.cbEmailAuthRequired = new System.Windows.Forms.CheckBox();
             this.lblToAddressInfo = new System.Windows.Forms.Label();
             this.btnTestEmail = new System.Windows.Forms.Button();
@@ -234,7 +234,7 @@
             this.tlpEmailServerSettings.Controls.Add(this.tbEmailServerAddress, 1, 0);
             this.tlpEmailServerSettings.Controls.Add(this.lblPortNumber, 0, 1);
             this.tlpEmailServerSettings.Controls.Add(this.tbEmailPort, 1, 1);
-            this.tlpEmailServerSettings.Controls.Add(this.cbEmailServerRequireSSL, 1, 2);
+            this.tlpEmailServerSettings.Controls.Add(this.cbEmailServerRequireSsl, 1, 2);
             this.tlpEmailServerSettings.Controls.Add(this.cbEmailAuthRequired, 1, 3);
             this.tlpEmailServerSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpEmailServerSettings.Location = new System.Drawing.Point(0, 27);
@@ -291,13 +291,13 @@
             // 
             // cbEmailServerRequireSsl
             // 
-            this.cbEmailServerRequireSSL.AutoSize = true;
-            this.cbEmailServerRequireSSL.Location = new System.Drawing.Point(91, 55);
-            this.cbEmailServerRequireSSL.Name = "cbEmailServerRequireSSL";
-            this.cbEmailServerRequireSSL.Size = new System.Drawing.Size(117, 17);
-            this.cbEmailServerRequireSSL.TabIndex = 2;
-            this.cbEmailServerRequireSSL.Text = "Connect using SSL";
-            this.cbEmailServerRequireSSL.UseVisualStyleBackColor = true;
+            this.cbEmailServerRequireSsl.AutoSize = true;
+            this.cbEmailServerRequireSsl.Location = new System.Drawing.Point(91, 55);
+            this.cbEmailServerRequireSsl.Name = "cbEmailServerRequireSsl";
+            this.cbEmailServerRequireSsl.Size = new System.Drawing.Size(117, 17);
+            this.cbEmailServerRequireSsl.TabIndex = 2;
+            this.cbEmailServerRequireSsl.Text = "Connect using SSL";
+            this.cbEmailServerRequireSsl.UseVisualStyleBackColor = true;
             // 
             // cbEmailAuthRequired
             // 
@@ -391,7 +391,7 @@
         private System.Windows.Forms.TextBox tbEmailServerAddress;
         private System.Windows.Forms.Label lblPortNumber;
         private System.Windows.Forms.TextBox tbEmailPort;
-        private System.Windows.Forms.CheckBox cbEmailServerRequireSSL;
+        private System.Windows.Forms.CheckBox cbEmailServerRequireSsl;
         private System.Windows.Forms.CheckBox cbEmailAuthRequired;
         private System.Windows.Forms.Label lblToAddressInfo;
         private System.Windows.Forms.ErrorProvider errorProvider;

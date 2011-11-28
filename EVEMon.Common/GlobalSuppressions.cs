@@ -1610,3 +1610,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EVEMon", Scope = "member", Target = "EVEMon.Common.Emailer.#SendCompleted(System.Object,System.ComponentModel.AsyncCompletedEventArgs)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "EVE", Scope = "namespace", Target = "EVEMon.Common.EmailProvider")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gmx", Scope = "type", Target = "EVEMon.Common.EmailProvider.GmxProvider")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Scope = "member", Target = "EVEMon.Common.Util.#GetMemoryStream(System.Byte[])")]

@@ -59,15 +59,18 @@ namespace EVEMon.SettingsUI
             tlpEmailAuthTable.Enabled = false;
 
             IEmailProvider emailProvider;
+            // Backwards compatibility condition
             if (String.IsNullOrEmpty(m_settings.EmailSmtpServerProvider) && EmailProviders.Providers.Any(
                 provider => provider.ServerAddress == m_settings.EmailSmtpServerAddress))
             {
-                 emailProvider = EmailProviders.Providers.First(
+                emailProvider = EmailProviders.Providers.First(
                     provider => provider.ServerAddress == m_settings.EmailSmtpServerAddress);
-                 cbbEMailServerProvider.SelectedIndex = cbbEMailServerProvider.Items.IndexOf(emailProvider.Name);
+                cbbEMailServerProvider.SelectedIndex = cbbEMailServerProvider.Items.IndexOf(emailProvider.Name);
             }
+                // Backwards compatibility condition
             else if (String.IsNullOrEmpty(m_settings.EmailSmtpServerProvider))
                 cbbEMailServerProvider.SelectedIndex = cbbEMailServerProvider.Items.IndexOf(m_defaultProvider.Name);
+                // Regular condition
             else
             {
                 emailProvider = EmailProviders.GetByKey(m_settings.EmailSmtpServerProvider);
@@ -88,13 +91,13 @@ namespace EVEMon.SettingsUI
             // Try and get a usable number out of the text box
             int emailPortNumber;
             m_settings.EmailPortNumber = Int32.TryParse(tbEmailPort.Text.Trim(), out emailPortNumber)
-                                                       ? emailPortNumber
-                                                       : 25;
+                                             ? emailPortNumber
+                                             : 25;
 
-            m_settings.EmailServerRequiresSsl = cbEmailServerRequireSSL.Checked;
+            m_settings.EmailServerRequiresSsl = cbEmailServerRequireSsl.Checked;
             m_settings.EmailAuthenticationRequired = cbEmailAuthRequired.Checked;
             m_settings.EmailAuthenticationUserName = tbEmailUsername.Text.Trim();
-            m_settings.EmailAuthenticationPassword = tbEmailPassword.Text.Trim();
+            m_settings.EmailAuthenticationPassword = Util.Encrypt(tbEmailPassword.Text.Trim(), tbEmailUsername.Text.Trim());
             m_settings.EmailToAddress = tbToAddress.Text.Trim();
             m_settings.EmailFromAddress = tbFromAddress.Text.Trim();
         }
@@ -104,13 +107,13 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void SetControls()
         {
-            IEmailProvider provider = EmailProviders.GetByKey((String)cbbEMailServerProvider.SelectedItem );
+            IEmailProvider provider = EmailProviders.GetByKey((String)cbbEMailServerProvider.SelectedItem);
 
             if (provider != null && provider != m_defaultProvider)
             {
                 tbEmailServerAddress.Text = provider.ServerAddress;
                 tbEmailPort.Text = provider.ServerPort.ToString(CultureConstants.DefaultCulture);
-                cbEmailServerRequireSSL.Checked = provider.RequiresSsl;
+                cbEmailServerRequireSsl.Checked = provider.RequiresSsl;
                 cbEmailAuthRequired.Checked = provider.RequiresAuthentication;
                 tlpEmailServerSettings.Enabled = false;
             }
@@ -119,12 +122,12 @@ namespace EVEMon.SettingsUI
                 tlpEmailServerSettings.Enabled = true;
                 tbEmailServerAddress.Text = m_settings.EmailSmtpServerAddress;
                 tbEmailPort.Text = m_settings.EmailPortNumber.ToString(CultureConstants.DefaultCulture);
-                cbEmailServerRequireSSL.Checked = m_settings.EmailServerRequiresSsl;
+                cbEmailServerRequireSsl.Checked = m_settings.EmailServerRequiresSsl;
                 cbEmailAuthRequired.Checked = m_settings.EmailAuthenticationRequired;
             }
 
             tbEmailUsername.Text = m_settings.EmailAuthenticationUserName;
-            tbEmailPassword.Text = m_settings.EmailAuthenticationPassword;
+            tbEmailPassword.Text = Util.Decrypt(m_settings.EmailAuthenticationPassword, m_settings.EmailAuthenticationUserName);
             tbFromAddress.Text = m_settings.EmailFromAddress;
             tbToAddress.Text = m_settings.EmailToAddress;
         }
@@ -138,7 +141,7 @@ namespace EVEMon.SettingsUI
             cbbEMailServerProvider.SelectedIndex = cbbEMailServerProvider.Items.IndexOf(m_defaultProvider.Name);
             tbEmailServerAddress.Text = m_defaultProvider.ServerAddress;
             tbEmailPort.Text = m_defaultProvider.ServerAddress;
-            cbEmailServerRequireSSL.Checked = m_defaultProvider.RequiresSsl;
+            cbEmailServerRequireSsl.Checked = m_defaultProvider.RequiresSsl;
             cbEmailAuthRequired.Checked = m_defaultProvider.RequiresAuthentication;
             tbEmailUsername.ResetText();
             tbEmailPassword.ResetText();
@@ -187,7 +190,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             PopulateSettingsFromControls();
-            
+
             if (!Emailer.SendTestMail(m_settings))
                 MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else
@@ -206,7 +209,7 @@ namespace EVEMon.SettingsUI
         {
             e.Cancel = String.IsNullOrWhiteSpace(tbEmailServerAddress.Text.Trim());
 
-            if(e.Cancel)
+            if (e.Cancel)
                 errorProvider.SetError(tbEmailServerAddress, "Server Address can not be blank");
         }
 
@@ -224,7 +227,7 @@ namespace EVEMon.SettingsUI
         {
             e.Cancel = cbEmailAuthRequired.Checked && String.IsNullOrWhiteSpace(tbEmailUsername.Text.Trim());
 
-            if(e.Cancel)
+            if (e.Cancel)
                 errorProvider.SetError(tbEmailUsername, "Username can not be blank");
         }
 
