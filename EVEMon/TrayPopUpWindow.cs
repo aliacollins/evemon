@@ -107,7 +107,7 @@ namespace EVEMon
             base.OnShown(e);
 
             // Show the given form on topmost without activating it
-            this.ShowInactiveTopmost();
+            this.ShowInactiveTopmost(NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
         }
 
         /// <summary>

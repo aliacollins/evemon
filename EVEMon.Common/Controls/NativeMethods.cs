@@ -7,10 +7,10 @@ namespace EVEMon.Common.Controls
 {
     public static class NativeMethods
     {
+        public const int HWND_TOPMOST = -1;
         public const uint SWP_NOSIZE = 0x0001;
         public const uint SWP_NOMOVE = 0x0002;
         public const uint SW_SHOWNOACTIVATE = 0x0004;
-        public const int HWND_TOPMOST = -1;
         public const uint SWP_NOACTIVATE = 0x0010;
 
         private const uint SRCCOPY = 0x00CC0020;
