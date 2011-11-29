@@ -719,15 +719,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string Encrypt(string text, string password)
         {
-            if (password == null)
-                throw new ArgumentNullException("password");
-
             // If no password is provided return the text unencrypted
-            if (password.Length == 0)
+            if (String.IsNullOrWhiteSpace(password))
                 return text;
 
             // Ensure that salt is of the correct size
-            while (password.Length < 8)
+            while (password.Length < sizeof(long))
             {
                 password += password;
             }
@@ -759,11 +756,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string Decrypt(string cipheredText, string password)
         {
-            if (password == null)
-                throw new ArgumentNullException("password");
-
             // If no password is provided return the text undecrypted
-            if (password.Length == 0)
+            if (String.IsNullOrWhiteSpace(password))
                 return cipheredText;
 
             byte[] text;
@@ -778,7 +772,7 @@ namespace EVEMon.Common
             }
 
             // Ensure that salt is of the correct size
-            while (password.Length < 8)
+            while (password.Length < sizeof(long))
             {
                 password += password;
             }
