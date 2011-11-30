@@ -61,7 +61,7 @@ namespace EVEMon.Common.Serialization.API
         public string AllianceName { get; set; }
 
         [XmlElement("allianceID")]
-        public int AllianceID { get; set; }
+        public string AllianceID { get; set; }
 
         [XmlElement("cloneName")]
         public string CloneName { get; set; }

@@ -88,7 +88,7 @@ namespace EVEMon.Common
                 {
                     case "eveapi":
                         APIResult<SerializableAPICharacterSheet> apiResult =
-                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.ToString(), APIProvider.RowsetsTransform);
+                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.AbsoluteUri, APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;
                     case "serializableccpcharacter":
