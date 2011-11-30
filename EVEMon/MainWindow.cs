@@ -1770,7 +1770,7 @@ namespace EVEMon
                 return;
 
             m_trayPopup.Close();
-            m_trayPopup = null;
+            m_trayPopup.Dispose();
         }
 
         /// <summary>
@@ -1817,6 +1817,9 @@ namespace EVEMon
 
             // Show the tooltip
             m_trayPopup.Show();
+
+            // Ensure that the tooltip will be shown on top of all other windows
+            m_trayPopup.BringToFront();
         }
 
         /// <summary>
