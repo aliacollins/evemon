@@ -1815,10 +1815,6 @@ namespace EVEMon
             else
                 m_trayPopup = new TrayTooltipWindow();
 
-            // Ensure that the tooltip will be shown on top of all other winodws
-            m_trayPopup.Visible = true;
-            m_trayPopup.Activate();
-
             // Show the tooltip
             m_trayPopup.Show();
         }
