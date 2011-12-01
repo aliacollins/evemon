@@ -12,79 +12,80 @@ namespace EVEMon.Common.Data
         // Group of PropertyIDs
         public static readonly ReadOnlyCollection<long> RequiredSkillPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                RequiredSkill1PropertyID, RequiredSkill2PropertyID,
-                                                RequiredSkill3PropertyID, RequiredSkill4PropertyID,
-                                                RequiredSkill5PropertyID, RequiredSkill6PropertyID
-                                            });
+                                             {
+                                                 RequiredSkill1PropertyID, RequiredSkill2PropertyID,
+                                                 RequiredSkill3PropertyID, RequiredSkill4PropertyID,
+                                                 RequiredSkill5PropertyID, RequiredSkill6PropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> RequiredSkillLevelPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                RequiredSkill1LevelPropertyID, RequiredSkill2LevelPropertyID,
-                                                RequiredSkill3LevelPropertyID, RequiredSkill4LevelPropertyID,
-                                                RequiredSkill5LevelPropertyID, RequiredSkill6LevelPropertyID
-                                            });
+                                             {
+                                                 RequiredSkill1LevelPropertyID, RequiredSkill2LevelPropertyID,
+                                                 RequiredSkill3LevelPropertyID, RequiredSkill4LevelPropertyID,
+                                                 RequiredSkill5LevelPropertyID, RequiredSkill6LevelPropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> AlwaysVisibleForShipPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                CPUOutputPropertyID, PGOutputPropertyID, UpgradeCapacityPropertyID,
-                                                HiSlotsPropertyID, MedSlotsPropertyID, LowSlotsPropertyID,
-                                                DroneCapacityPropertyID, DroneBandwidthPropertyID, CargoCapacityPropertyID,
-                                                MassPropertyID, VolumePropertyID, CapacitorCapacityPropertyID,
-                                                CapacitorRechargeRatePropertyID, MaxTargetRangePropertyID,
-                                                ScanResolutionPropertyID, SignatureRadiusPropertyID, MaxVelocityPropertyID,
-                                                ShipWarpSpeedPropertyID, StructureHitpointsPropertyID, ShieldHitpointsPropertyID,
-                                                ArmorHitpointsPropertyID, ShieldRechargeRatePropertyID,
-                                                ShieldEMResistancePropertyID, ShieldExplosiveResistancePropertyID,
-                                                ShieldKineticResistancePropertyID, ShieldThermalResistancePropertyID,
-                                                ArmorEMResistancePropertyID, ArmorExplosiveResistancePropertyID,
-                                                ArmorKineticResistancePropertyID, ArmorThermalResistancePropertyID
-                                            });
+                                             {
+                                                 CPUOutputPropertyID, PGOutputPropertyID, UpgradeCapacityPropertyID,
+                                                 HiSlotsPropertyID, MedSlotsPropertyID, LowSlotsPropertyID,
+                                                 DroneCapacityPropertyID, DroneBandwidthPropertyID, CargoCapacityPropertyID,
+                                                 MassPropertyID, VolumePropertyID, CapacitorCapacityPropertyID,
+                                                 CapacitorRechargeRatePropertyID, MaxTargetRangePropertyID,
+                                                 ScanResolutionPropertyID, SignatureRadiusPropertyID, MaxVelocityPropertyID,
+                                                 ShipWarpSpeedPropertyID, StructureHitpointsPropertyID, ShieldHitpointsPropertyID,
+                                                 ArmorHitpointsPropertyID, ShieldRechargeRatePropertyID,
+                                                 ShieldEMResistancePropertyID, ShieldExplosiveResistancePropertyID,
+                                                 ShieldKineticResistancePropertyID, ShieldThermalResistancePropertyID,
+                                                 ArmorEMResistancePropertyID, ArmorExplosiveResistancePropertyID,
+                                                 ArmorKineticResistancePropertyID, ArmorThermalResistancePropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> HideIfDefaultPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                LauncherSlotsLeftPropertyID, TurretSlotsLeftPropertyID,
-                                                TurretHardPointModifierPropertyID, LauncherHardPointModifierPropertyID,
-                                                HiSlotModifierPropertyID, MedSlotModifierPropertyID,
-                                                LowSlotModifierPropertyID, ScanRadarStrengthPropertyID,
-                                                ScanLadarStrengthPropertyID, ScanMagnetometricStrengthPropertyID,
-                                                ScanGravimetricStrengthPropertyID, HullEMResistancePropertyID,
-                                                HullExplosiveResistancePropertyID, HullKineticResistancePropertyID,
-                                                HullThermalResistancePropertyID, EmDamagePropertyID, ExplosiveDamagePropertyID,
-                                                KineticDamagePropertyID, ThermalDamagePropertyID,
-                                                CharismaModifierPropertyID, IntelligenceModifierPropertyID,
-                                                MemoryModifierPropertyID, PerceptionModifierPropertyID,
-                                                WillpowerModifierPropertyID, MetaLevelPropertyID
-                                            });
+                                             {
+                                                 LauncherSlotsLeftPropertyID, TurretSlotsLeftPropertyID,
+                                                 TurretHardPointModifierPropertyID, LauncherHardPointModifierPropertyID,
+                                                 HiSlotModifierPropertyID, MedSlotModifierPropertyID,
+                                                 LowSlotModifierPropertyID, ScanRadarStrengthPropertyID,
+                                                 ScanLadarStrengthPropertyID, ScanMagnetometricStrengthPropertyID,
+                                                 ScanGravimetricStrengthPropertyID, HullEMResistancePropertyID,
+                                                 HullExplosiveResistancePropertyID, HullKineticResistancePropertyID,
+                                                 HullThermalResistancePropertyID, EmDamagePropertyID, ExplosiveDamagePropertyID,
+                                                 KineticDamagePropertyID, ThermalDamagePropertyID,
+                                                 CharismaModifierPropertyID, IntelligenceModifierPropertyID,
+                                                 MemoryModifierPropertyID, PerceptionModifierPropertyID,
+                                                 WillpowerModifierPropertyID, MetaLevelPropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> LauncherGroupPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                LauncherGroupPropertyID, LauncherGroup2PropertyID, LauncherGroup3PropertyID
-                                            });
+                                             {
+                                                 LauncherGroupPropertyID, LauncherGroup2PropertyID, LauncherGroup3PropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> ChargeGroupPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                ChargeGroup1PropertyID, ChargeGroup2PropertyID, ChargeGroup3PropertyID,
-                                                ChargeGroup4PropertyID, ChargeGroup5PropertyID
-                                            });
+                                             {
+                                                 ChargeGroup1PropertyID, ChargeGroup2PropertyID, ChargeGroup3PropertyID,
+                                                 ChargeGroup4PropertyID, ChargeGroup5PropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> CanFitShipGroupPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                CanFitShipGroup1PropertyID, CanFitShipGroup2PropertyID,
-                                                CanFitShipGroup3PropertyID, CanFitShipGroup4PropertyID
-                                            });
+                                             {
+                                                 CanFitShipGroup1PropertyID, CanFitShipGroup2PropertyID,
+                                                 CanFitShipGroup3PropertyID, CanFitShipGroup4PropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> ModuleShipGroupPropertyIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                ModuleShipGroup1PropertyID, ModuleShipGroup2PropertyID, ModuleShipGroup3PropertyID
-                                            });
+                                             {
+                                                 ModuleShipGroup1PropertyID, ModuleShipGroup2PropertyID,
+                                                 ModuleShipGroup3PropertyID
+                                             });
 
         public static readonly ReadOnlyCollection<long> ReactionGroupPropertyIDs =
             new ReadOnlyCollection<long>(new[] { ReactionGroup1PropertyID, ReactionGroup2PropertyID });
@@ -109,33 +110,65 @@ namespace EVEMon.Common.Data
 
         public static readonly ReadOnlyCollection<long> SmallToXLargeShipsMarketGroupIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                StandardFrigatesMarketGroupID, StandardCruisersMarketGroupID,
-                                                StandardBattleshipsMarketGroupID, StandardIndustrialShipsMarketGroupID,
-                                                ShuttlessMarketGroupID, StandardDestroyersMarketGroupID,
-                                                StandardBattlecruisersMarketGroupID, MiningBargesMarketGroupID,
-                                                DreadnoughtsMarketGroupID, FreightersMarketGroupID, CarriersMarketGroupID,
-                                                FightersMarketGroupID, CapitalIndustrialShipsMarketGroupID,
-                                                FighterBombersMarketGroupID
-                                            });
+                                             {
+                                                 StandardFrigatesMarketGroupID, StandardCruisersMarketGroupID,
+                                                 StandardBattleshipsMarketGroupID, StandardIndustrialShipsMarketGroupID,
+                                                 ShuttlessMarketGroupID, StandardDestroyersMarketGroupID,
+                                                 StandardBattlecruisersMarketGroupID, MiningBargesMarketGroupID,
+                                                 DreadnoughtsMarketGroupID, FreightersMarketGroupID, CarriersMarketGroupID,
+                                                 FightersMarketGroupID, CapitalIndustrialShipsMarketGroupID,
+                                                 FighterBombersMarketGroupID
+                                             });
 
         public static readonly ReadOnlyCollection<long> CapitalShipsMarketGroupIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                DreadnoughtsMarketGroupID, FreightersMarketGroupID,
-                                                TitansMarketGroupID, CarriersMarketGroupID
-                                            });
+                                             {
+                                                 DreadnoughtsMarketGroupID, FreightersMarketGroupID,
+                                                 TitansMarketGroupID, CarriersMarketGroupID
+                                             });
 
         public static readonly ReadOnlyCollection<long> AdvancedSmallToLargeShipsMarketGroupIDs =
             new ReadOnlyCollection<long>(new[]
-                                            {
-                                                InterceptorsMarketGroupID, CovertOpsMarketGroupID, AssaultShipsMarketGroupID,
-                                                LogisticsMarketGroupID, HeavyAssaultShipsMarketGroupID,
-                                                TransportShipsMarketGroupID, CommandShipsMarketGroupID, InterdictorsMarketGroupID,
-                                                ReconShipsMarketGroupID, ExhumersMarketGroupID,
-                                                ElectronicAttackFrigatesMarketGroupID, HeavyInterdictorsMarketGroupID,
-                                                BlackOpsMarketGroupID, MaraudersMarketGroupID, JumpFreightersMarketGroupID
-                                            });
+                                             {
+                                                 InterceptorsMarketGroupID, CovertOpsMarketGroupID, AssaultShipsMarketGroupID,
+                                                 LogisticsMarketGroupID, HeavyAssaultShipsMarketGroupID,
+                                                 TransportShipsMarketGroupID, CommandShipsMarketGroupID, InterdictorsMarketGroupID
+                                                 ,
+                                                 ReconShipsMarketGroupID, ExhumersMarketGroupID,
+                                                 ElectronicAttackFrigatesMarketGroupID, HeavyInterdictorsMarketGroupID,
+                                                 BlackOpsMarketGroupID, MaraudersMarketGroupID, JumpFreightersMarketGroupID
+                                             });
+
+        // Group of Implants IDs
+        public static readonly ReadOnlyCollection<long> ManufacturingModifyingImplantIDs =
+            new ReadOnlyCollection<long>(new[]
+                                             {
+                                                 ZainouBeancounterF40ID, ZainouBeancounterF50ID, ZainouBeancounterF60ID
+                                             });
+
+        public static readonly ReadOnlyCollection<long> ResearchMaterialTimeModifyingImplantIDs =
+            new ReadOnlyCollection<long>(new[]
+                                             {
+                                                 ZainouBeancounterJ40ID, ZainouBeancounterJ50ID, ZainouBeancounterJ60ID
+                                             });
+
+        public static readonly ReadOnlyCollection<long> ResearchCopyTimeModifyingImplantIDs =
+            new ReadOnlyCollection<long>(new[]
+                                             {
+                                                 ZainouBeancounterK40ID, ZainouBeancounterK50ID, ZainouBeancounterK60ID
+                                             });
+
+        public static readonly ReadOnlyCollection<long> ResearchProductivityTimeModifyingImplantIDs =
+            new ReadOnlyCollection<long>(new[]
+                                             {
+                                                 ZainouBeancounterI40ID, ZainouBeancounterI50ID, ZainouBeancounterI60ID
+                                             });
+
+        public static readonly ReadOnlyCollection<long> MaterialQuantityModifyingImplantIDs =
+            new ReadOnlyCollection<long>(new[]
+                                             {
+                                                 ZainouBeancounterG40ID, ZainouBeancounterG50ID, ZainouBeancounterG60ID
+                                             });
 
         #endregion
 
@@ -340,14 +373,11 @@ namespace EVEMon.Common.Data
 
         #region Group IDs
 
-        public const long PlanetGroupID = 7;
         public const long FrigateGroupID = 25;
         public const long CruiserGroupID = 26;
         public const long BattleshipGroupID = 27;
         public const long IndustrialGroupID = 28;
-        public const long CapsuleGroupID = 29;
         public const long TitanGroupID = 30;
-        public const long ShuttleGroupID = 31;
         public const long RookieShipGroupID = 237;
         public const long TradeSkillsGroupID = 274;
         public const long SocialSkillsGroupID = 278;
@@ -381,8 +411,6 @@ namespace EVEMon.Common.Data
         public const long CombatReconShipGroupID = 906;
         public const long IndustrialCommandShipGroupID = 941;
         public const long StrategicCruiserGroupID = 963;
-        public const long SubsystemsGroupID = 989;
-        public const long PrototypeExplorationShipGroupID = 1022;
         public const long CorporationManagementSkillsGroupID = 266;
 
         #endregion
@@ -402,7 +430,6 @@ namespace EVEMon.Common.Data
         public const long ImplantsMarketGroupID = 27;
         public const long SkillsMarketGroupID = 150;
         public const long DronesMarketGroupID = 157;
-        public const long ShipsBlueprintsMarketGroupID = 204;
         public const long ShuttlessMarketGroupID = 391;
         public const long InterceptorsMarketGroupID = 399;
         public const long CovertOpsMarketGroupID = 420;
@@ -483,7 +510,6 @@ namespace EVEMon.Common.Data
 
         #region TechLevels
 
-        public const long TechLevelI = 1;
         public const long TechLevelII = 2;
         public const long TechLevelIII = 3;
 
@@ -546,9 +572,6 @@ namespace EVEMon.Common.Data
         public const long VisibilitySkillID = 3447;
         public const long NavigationSkillID = 3449;
         public const long EchelonBlueprintID = 3533;
-        public const long GallenteAdministrativeOutpostPlatformID = 10257;
-        public const long MinmatarServiceOutpostPlatformID = 10258;
-        public const long AmarrFactoryOutpostPlatformID = 10260;
         public const long ScrapMetalProcessingSkillID = 12196;
         public const long MegathronFederateIssueID = 13202;
         public const long AllianceID = 16159;
@@ -563,7 +586,6 @@ namespace EVEMon.Common.Data
         public const long CynabalBlueprintID = 17721;
         public const long NightmareBlueprintID = 17737;
         public const long MacharielBlueprintID = 17739;
-        public const long GoldSculptureID = 17761;
         public const long RepublicFleetFiretailBlueprintID = 17813;
         public const long FederationNavyCometBlueprintID = 17842;
         public const long AshimmuBlueprintID = 17923;
@@ -572,43 +594,35 @@ namespace EVEMon.Common.Data
         public const long DaredevilBlueprintID = 17929;
         public const long DramielBlueprintID = 17933;
         public const long TycconSkillID = 18580;
-        public const long CaldariResearchOutpostPlatformID = 19758;
-        public const long CrudeSculptureID = 21054;
         public const long GorusShuttleID = 21097;
         public const long GorusShuttleBlueprintID = 21098;
-        public const long ProcessInterruptiveWarpDisruptorID = 21510;
         public const long GuristasShuttleID = 21628;
         public const long GuristasShuttleBlueprintID = 21629;
-        public const long EliteDroneAIID = 21815;
         public const long GallenteMiningLaserBlueprintID = 21842;
-        public const long DaemonCodebreakerIID = 22325;
-        public const long CodexCodebreakerIID = 22327;
-        public const long AlphaCodebreakerIID = 22329;
-        public const long LibramCodebreakerIID = 22331;
-        public const long TalocanDataAnalyzerIID = 22333;
-        public const long SleeperDataAnalyzerIID = 22335;
-        public const long TerranDataAnalyzerIID = 22337;
-        public const long TetrimonDataAnalyzerIID = 22339;
-        public const long WarpDisruptProbeBlueprintID = 22779;
-        public const long WildMinerIID = 22923;
-        public const long StandardDecodingDeviceID = 23882;
-        public const long MethrosEnhancedDecodingDeviceID = 23883;
         public const long WildMinerIBlueprintID = 22924;
         public const long InfomorphPsychologySkillID = 24242;
         public const long SupplyChainManagementSkillID = 24268;
         public const long ScientificNetworkingSkillID = 24270;
-        public const long EncodingMatrixComponentID = 24289;
         public const long AdvancedLaboratoryOperationSkillID = 24624;
         public const long AdvancedMassProductionSkillID = 24625;
         public const long RavenStateIssueID = 26840;
         public const long TempestTribalIssueID = 26842;
         public const long ChalcopyriteID = 27029;
-        public const long ClayPigeonID = 27038;
-        public const long SynthSoothSayerBoosterBlueprintID = 28685;
-        public const long AmberMykoserocinID = 28694;
-        public const long ModifiedAugumeneAntidoteID = 29202;
-        public const long MinmatarDNAID = 29203;
-        public const long BasicRoboticsID = 29226;
+        public const long ZainouBeancounterF50ID = 27167;
+        public const long ZainouBeancounterG50ID = 27168;
+        public const long ZainouBeancounterF40ID = 27170;
+        public const long ZainouBeancounterF60ID = 27171;
+        public const long ZainouBeancounterG60ID = 27172;
+        public const long ZainouBeancounterG40ID = 27173;
+        public const long ZainouBeancounterJ50ID = 27176;
+        public const long ZainouBeancounterI50ID = 27177;
+        public const long ZainouBeancounterK50ID = 27178;
+        public const long ZainouBeancounterI60ID = 27179;
+        public const long ZainouBeancounterI40ID = 27180;
+        public const long ZainouBeancounterJ60ID = 27181;
+        public const long ZainouBeancounterJ40ID = 27182;
+        public const long ZainouBeancounterK60ID = 27184;
+        public const long ZainouBeancounterK40ID = 27185;
         public const long TenguBlueprintID = 29985;
         public const long LegionBlueprintID = 29987;
         public const long ProteusBlueprintID = 29989;
@@ -629,17 +643,11 @@ namespace EVEMon.Common.Data
         public const long LegionDefensiveAdaptiveAugmenterBlueprintID = 30227;
         public const long TenguDefensiveAdaptiveShieldingBlueprintID = 30232;
         public const long ProteusDefensiveAdaptiveAugmenterBlueprintID = 30237;
-        public const long CivilianStasisWebifierID = 30328;
         public const long LokiDefensiveAdaptiveShieldingBlueprintID = 30242;
-        public const long CivilianHeatDissipationFieldID = 30342;
         public const long LegionOffensiveDroneSynthesisProjectorBlueprintID = 30392;
         public const long TenguOffensiveAcceleratedEjectionBayBlueprintID = 30397;
         public const long ProteusOffensiveDissonicEncodingPlatformBlueprintID = 30402;
         public const long LokiOffensiveTurretConcurrenceRegistryBlueprintID = 30407;
-        public const long CivilianPhotonScatteringFieldID = 30420;
-        public const long CivilianExplosionDampeningFieldID = 30422;
-        public const long CivilianBallisticDeflectionFieldID = 30424;
-        public const long CivilianDamageControlID = 30839;
         public const long InterbusShuttleID = 30842;
         public const long InterbusShuttleBlueprintID = 30843;
         public const long ShatteredPlanetID = 30889;
