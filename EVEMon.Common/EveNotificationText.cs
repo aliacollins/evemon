@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -48,46 +45,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static string FormatText(string text)
         {
-            text = NewLinesToBreakLines(text);
-            text = DecodeUnicodeCharacters(text);
+            text = text.NewLinesToBreakLines();
+            text = text.DecodeUnicodeCharacters();
             return text;
-        }
-
-        /// <summary>
-        /// Converts new lines to break lines.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
-        private static string NewLinesToBreakLines(string text)
-        {
-            using (StringReader sr = new StringReader(text))
-            using (StringWriter sw = new StringWriter(CultureConstants.InvariantCulture))
-            {
-                //Loop while next character exists
-                while (sr.Peek() > -1)
-                {
-                    // Read a line from the string and store it to a temp variable
-                    string temp = sr.ReadLine();
-                    // Write the string with the HTML break tag
-                    // (method writes to an internal StringBuilder created automatically)
-                    sw.Write("{0}<br>", temp);
-                }
-                return sw.GetStringBuilder().ToString();
-            }
-        }
-
-    /// <summary>
-        /// Decodes the unicode characters.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
-        private static string DecodeUnicodeCharacters(string text)
-        {
-            return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
-                                 m =>
-                                 ((char)
-                                  int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber, CultureConstants.InvariantCulture)).
-                                     ToString(CultureConstants.DefaultCulture));
         }
 
         #endregion

@@ -22,6 +22,7 @@ namespace EVEMon.XmlGenerator
 
             string output = input.TrimWhitespace();
             output = output.ReplaceTabs();
+            output = output.ReplaceHtmlLineBreaks();
             output = output.CleanXmlTags();
             output = output.CollapseSpaces();
             output = output.Normalize();
@@ -38,6 +39,17 @@ namespace EVEMon.XmlGenerator
         {
             Regex collapseSpace = new Regex(@"[ ]{2,}", RegexOptions.Compiled);
             return collapseSpace.Replace(input, @" ");
+        }
+
+        /// <summary>
+        /// Replaces the HTML line breaks.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private static string ReplaceHtmlLineBreaks(this string input)
+        {
+            return Regex.Replace(input, @"<br+?>|<br\s?/+?>",
+                                 m => (Environment.NewLine), RegexOptions.Singleline | RegexOptions.Compiled);
         }
 
         /// <summary>

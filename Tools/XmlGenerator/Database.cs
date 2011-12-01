@@ -487,8 +487,8 @@ namespace EVEMon.XmlGenerator
                                 Name = unit.unitName
                             }))
             {
-                item.Description.Clean();
-                item.DisplayName.Clean();
+                item.Description = item.Description.Clean();
+                item.DisplayName = item.DisplayName.Clean();
 
                 collection.Items.Add(item);
             }
@@ -537,9 +537,9 @@ namespace EVEMon.XmlGenerator
                                                  Name = attribute.attributeName,
                                                  UnitID = attribute.unitID,
                                              };
-                item.Description.Clean();
-                item.DisplayName.Clean();
-                item.Name.Clean();
+                item.Description = item.Description.Clean();
+                item.DisplayName = item.DisplayName.Clean();
+                item.Name = item.Name.Clean();
 
                 if (attribute.defaultValue.HasValue)
                     item.DefaultValue = attribute.defaultValue.Value.ToString(CultureInfo.InvariantCulture);
@@ -572,8 +572,8 @@ namespace EVEMon.XmlGenerator
                                     Name = category.categoryName
                                 }))
             {
-                item.Description.Clean();
-                item.Name.Clean();
+                item.Description = item.Description.Clean();
+                item.Name = item.Name.Clean();
 
                 collection.Items.Add(item);
             }
@@ -786,7 +786,7 @@ namespace EVEMon.XmlGenerator
                                        ParentID = marketGroup.parentGroupID
                                    }))
             {
-                item.Description.Clean();
+                item.Description = item.Description.Clean();
 
                 collection.Items.Add(item);
             }
@@ -841,7 +841,7 @@ namespace EVEMon.XmlGenerator
                                        Name = type.typeName,
                                        RaceID = type.raceID
                                    };
-                item.Description.Clean();
+                item.Description = item.Description.Clean();
 
                 if (type.basePrice.HasValue)
                     item.BasePrice = type.basePrice.Value;
@@ -933,7 +933,7 @@ namespace EVEMon.XmlGenerator
                                     Description = category.description
                                 }))
             {
-                item.Description.Clean();
+                item.Description = item.Description.Clean();
 
                 collection.Items.Add(item);
             }
@@ -957,7 +957,7 @@ namespace EVEMon.XmlGenerator
                                   Description = cClass.description
                               }))
             {
-                item.Description.Clean();
+                item.Description = item.Description.Clean();
 
                 collection.Items.Add(item);
             }
@@ -980,7 +980,7 @@ namespace EVEMon.XmlGenerator
                                                ID = certificate.certificateID,
                                                Description = certificate.description
                                            };
-                item.Description.Clean();
+                item.Description = item.Description.Clean();
 
                 if (certificate.categoryID.HasValue)
                     item.CategoryID = certificate.categoryID.Value;
