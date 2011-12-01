@@ -8,9 +8,9 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets true if the item's market group belongs to the questioned group. 
         /// </summary>
-        public static bool BelongsIn(this MarketGroup marketGroup, IEnumerable<int> group)
+        public static bool BelongsIn(this MarketGroup marketGroup, IEnumerable<long> group)
         {
-            int[] g = group.ToArray();
+            List<long> g = group.ToList();
             while (marketGroup != null)
             {
                 if (g.Any(x => x == marketGroup.ID))

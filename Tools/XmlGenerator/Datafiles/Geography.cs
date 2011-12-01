@@ -123,7 +123,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                       ID = srcStation.ID,
                                                       Name = srcStation.Name,
                                                       CorporationID = srcStation.CorporationID,
-                                                      CorporationName = Database.EveNamesTable.First(
+                                                      CorporationName = Database.InvNamesTable.First(
                                                           x => x.ID == srcStation.CorporationID).Name,
                                                       ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
                                                       ReprocessingStationsTake = srcStation.ReprocessingStationsTake
@@ -139,39 +139,32 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Exports the agents.
         /// </summary>
-        /// <param name="srcStation">The SRC station.</param>
+        /// <param name="srcStation">The station.</param>
         /// <returns></returns>
         private static IEnumerable<SerializableAgent> ExportAgents(IHasID srcStation)
         {
-            return Database.AgentsTable.Where(x => x.LocationID == srcStation.ID).Select(
+            return Database.AgtAgentsTable.Where(x => x.LocationID == srcStation.ID).Select(
                 srcAgent =>
                 new
                     {
                         srcAgent,
-                        researchAgent = Database.ResearchAgentsTable.FirstOrDefault(x => x.ID == srcAgent.ID)
+                        researchAgent = Database.AgtResearchAgentsTable.FirstOrDefault(x => x.ID == srcAgent.ID)
                     }).Select(
-                        config =>
-                        new
-                            {
-                                config,
-                                agentConfig = Database.AgentConfigTable.FirstOrDefault(x => x.ID == config.srcAgent.ID)
-                            }).Select(
                                 agent =>
                                 new SerializableAgent
                                     {
-                                        ID = agent.config.srcAgent.ID,
-                                        Level = agent.config.srcAgent.Level,
-                                        Quality = agent.config.srcAgent.Quality,
-                                        Name = Database.EveNamesTable.First(x => x.ID == agent.config.srcAgent.ID).Name,
-                                        DivisionName = Database.NPCDivisionsTable.First(
-                                            x => x.ID == agent.config.srcAgent.DivisionID).DivisionName,
-                                        AgentType = Database.AgentTypesTable.First(
-                                            x => x.ID == agent.config.srcAgent.AgentTypeID).AgentType,
-                                        ResearchSkillID = agent.config.researchAgent != null
-                                                              ? agent.config.researchAgent.ResearchSkillID
+                                        ID = agent.srcAgent.ID,
+                                        Level = agent.srcAgent.Level,
+                                        Quality = agent.srcAgent.Quality,
+                                        Name = Database.InvNamesTable.First(x => x.ID == agent.srcAgent.ID).Name,
+                                        DivisionName = Database.CrpNPCDivisionsTable.First(
+                                            x => x.ID == agent.srcAgent.DivisionID).DivisionName,
+                                        AgentType = Database.AgtAgentTypesTable.First(
+                                            x => x.ID == agent.srcAgent.AgentTypeID).AgentType,
+                                        ResearchSkillID = agent.researchAgent != null
+                                                              ? agent.researchAgent.ResearchSkillID
                                                               : 0,
-                                        LocatorService = agent.agentConfig != null &&
-                                                         agent.agentConfig.Key.Contains("agent.LocateCharacterService.enabled")
+                                        LocatorService = agent.srcAgent.IsLocator
                                     });
         }
     }

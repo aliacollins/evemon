@@ -5,150 +5,89 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient"
-              ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
-              xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="EveStaticDataModelStoreContainer">
           <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables"
-                     Schema="dbo" />
+          <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.Store.agtConfig" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="chrBloodlines" EntityType="EveStaticDataModel.Store.chrBloodlines" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="chrFactions" EntityType="EveStaticDataModel.Store.chrFactions" store:Type="Tables"
-                     Schema="dbo" />
+          <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrBloodlines" EntityType="EveStaticDataModel.Store.chrBloodlines" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrFactions" EntityType="EveStaticDataModel.Store.chrFactions" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="chrRaces" EntityType="EveStaticDataModel.Store.chrRaces" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporationResearchFields"
-                     EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="crtClasses" EntityType="EveStaticDataModel.Store.crtClasses" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="crtRecommendations" EntityType="EveStaticDataModel.Store.crtRecommendations"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crtRelationships" EntityType="EveStaticDataModel.Store.crtRelationships" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="dgmAttributeCategories" EntityType="EveStaticDataModel.Store.dgmAttributeCategories"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmAttributeTypes" EntityType="EveStaticDataModel.Store.dgmAttributeTypes"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.Store.dgmEffects" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.Store.dgmTypeAttributes"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables"
-                     Schema="dbo" />
+          <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationResearchFields" EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtClasses" EntityType="EveStaticDataModel.Store.crtClasses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtRecommendations" EntityType="EveStaticDataModel.Store.crtRecommendations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtRelationships" EntityType="EveStaticDataModel.Store.crtRelationships" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmAttributeCategories" EntityType="EveStaticDataModel.Store.dgmAttributeCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmAttributeTypes" EntityType="EveStaticDataModel.Store.dgmAttributeTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.Store.dgmEffects" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.Store.dgmTypeAttributes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveIcons" EntityType="EveStaticDataModel.Store.eveIcons" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="eveLocations" EntityType="EveStaticDataModel.Store.eveLocations" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="eveNames" EntityType="EveStaticDataModel.Store.eveNames" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="eveOwners" EntityType="EveStaticDataModel.Store.eveOwners" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.Store.eveUnits" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.Store.invContrabandTypes"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invControlTowerResourcePurposes"
-                     EntityType="EveStaticDataModel.Store.invControlTowerResourcePurposes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources"
-                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.Store.invContrabandTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invControlTowerResourcePurposes" EntityType="EveStaticDataModel.Store.invControlTowerResourcePurposes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invFlags" EntityType="EveStaticDataModel.Store.invFlags" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invGroups" EntityType="EveStaticDataModel.Store.invGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invItems" EntityType="EveStaticDataModel.Store.invItems" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="invTypeMaterials" EntityType="EveStaticDataModel.Store.invTypeMaterials" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="invTypeReactions" EntityType="EveStaticDataModel.Store.invTypeReactions" store:Type="Tables"
-                     Schema="dbo" />
+          <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invNames" EntityType="EveStaticDataModel.Store.invNames" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invPositions" EntityType="EveStaticDataModel.Store.invPositions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invTypeMaterials" EntityType="EveStaticDataModel.Store.invTypeMaterials" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invTypeReactions" EntityType="EveStaticDataModel.Store.invTypeReactions" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invTypes" EntityType="EveStaticDataModel.Store.invTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapCelestialStatistics" EntityType="EveStaticDataModel.Store.mapCelestialStatistics"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapConstellationJumps" EntityType="EveStaticDataModel.Store.mapConstellationJumps"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapConstellations" EntityType="EveStaticDataModel.Store.mapConstellations"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapDenormalize" EntityType="EveStaticDataModel.Store.mapDenormalize" store:Type="Tables"
-                     Schema="dbo" />
+          <EntitySet Name="invUniqueNames" EntityType="EveStaticDataModel.Store.invUniqueNames" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapCelestialStatistics" EntityType="EveStaticDataModel.Store.mapCelestialStatistics" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapConstellationJumps" EntityType="EveStaticDataModel.Store.mapConstellationJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapConstellations" EntityType="EveStaticDataModel.Store.mapConstellations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapDenormalize" EntityType="EveStaticDataModel.Store.mapDenormalize" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="mapJumps" EntityType="EveStaticDataModel.Store.mapJumps" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapLandmarks" EntityType="EveStaticDataModel.Store.mapLandmarks" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="mapLocationScenes" EntityType="EveStaticDataModel.Store.mapLocationScenes"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapLocationWormholeClasses" EntityType="EveStaticDataModel.Store.mapLocationWormholeClasses"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapRegionJumps" EntityType="EveStaticDataModel.Store.mapRegionJumps" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="mapRegions" EntityType="EveStaticDataModel.Store.mapRegions" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="mapSolarSystemJumps" EntityType="EveStaticDataModel.Store.mapSolarSystemJumps"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="mapSolarSystems" EntityType="EveStaticDataModel.Store.mapSolarSystems" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.Store.mapUniverse" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="planetSchematics" EntityType="EveStaticDataModel.Store.planetSchematics" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.Store.planetSchematicsPinMap"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.Store.planetSchematicsTypeMap"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory"
-                     EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup"
-                     EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramInstallationTypeContents"
-                     EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables"
-                     Schema="dbo" />
-          <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns"
-                     store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables"
-                     Schema="dbo" />
+          <EntitySet Name="mapLandmarks" EntityType="EveStaticDataModel.Store.mapLandmarks" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLocationScenes" EntityType="EveStaticDataModel.Store.mapLocationScenes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLocationWormholeClasses" EntityType="EveStaticDataModel.Store.mapLocationWormholeClasses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapRegionJumps" EntityType="EveStaticDataModel.Store.mapRegionJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapRegions" EntityType="EveStaticDataModel.Store.mapRegions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapSolarSystemJumps" EntityType="EveStaticDataModel.Store.mapSolarSystemJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapSolarSystems" EntityType="EveStaticDataModel.Store.mapSolarSystems" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.Store.mapUniverse" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematics" EntityType="EveStaticDataModel.Store.planetSchematics" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.Store.planetSchematicsPinMap" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.Store.planetSchematicsTypeMap" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramInstallationTypeContents" EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="translationLaguages" EntityType="EveStaticDataModel.Store.translationLaguages" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="translationTables" EntityType="EveStaticDataModel.Store.translationTables" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="trnTranslationLanguages" EntityType="EveStaticDataModel.Store.trnTranslationLanguages" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="warCombatZones" EntityType="EveStaticDataModel.Store.warCombatZones" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="warCombatZoneSystems" EntityType="EveStaticDataModel.Store.warCombatZoneSystems" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <EntityType Name="agtAgents">
           <Key>
@@ -161,6 +100,7 @@
           <Property Name="level" Type="tinyint" />
           <Property Name="quality" Type="smallint" />
           <Property Name="agentTypeID" Type="int" />
+          <Property Name="isLocator" Type="bit" />
         </EntityType>
         <EntityType Name="agtAgentTypes">
           <Key>
@@ -480,36 +420,6 @@
           <Property Name="iconFile" Type="varchar" Nullable="false" MaxLength="500" />
           <Property Name="description" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-        <EntityType Name="eveLocations">
-          <Key>
-            <PropertyRef Name="locationID" />
-          </Key>
-          <Property Name="locationID" Type="bigint" Nullable="false" />
-          <Property Name="locationName" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="x" Type="float" Nullable="false" />
-          <Property Name="y" Type="float" Nullable="false" />
-          <Property Name="z" Type="float" Nullable="false" />
-        </EntityType>
-        <EntityType Name="eveNames">
-          <Key>
-            <PropertyRef Name="itemID" />
-          </Key>
-          <Property Name="itemID" Type="int" Nullable="false" />
-          <Property Name="itemName" Type="nvarchar" MaxLength="100" />
-          <Property Name="categoryID" Type="tinyint" />
-          <Property Name="groupID" Type="smallint" />
-          <Property Name="typeID" Type="int" />
-        </EntityType>
-        <EntityType Name="eveOwners">
-          <Key>
-            <PropertyRef Name="ownerID" />
-          </Key>
-          <Property Name="ownerID" Type="int" Nullable="false" />
-          <Property Name="ownerName" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="deleted" Type="bit" Nullable="false" />
-          <Property Name="typeID" Type="smallint" Nullable="false" />
-          <Property Name="rowDate" Type="smalldatetime" Nullable="false" />
-        </EntityType>
         <EntityType Name="eveUnits">
           <Key>
             <PropertyRef Name="unitID" />
@@ -643,6 +553,25 @@
           <Property Name="parentTypeID" Type="int" />
           <Property Name="metaGroupID" Type="smallint" />
         </EntityType>
+        <EntityType Name="invNames">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Name="itemID" Type="bigint" Nullable="false" />
+          <Property Name="itemName" Type="nvarchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="invPositions">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Name="itemID" Type="bigint" Nullable="false" />
+          <Property Name="x" Type="float" Nullable="false" />
+          <Property Name="y" Type="float" Nullable="false" />
+          <Property Name="z" Type="float" Nullable="false" />
+          <Property Name="yaw" Type="real" />
+          <Property Name="pitch" Type="real" />
+          <Property Name="roll" Type="real" />
+        </EntityType>
         <EntityType Name="invTypeMaterials">
           <Key>
             <PropertyRef Name="typeID" />
@@ -683,6 +612,14 @@
           <Property Name="marketGroupID" Type="smallint" />
           <Property Name="chanceOfDuplicating" Type="float" />
           <Property Name="iconID" Type="int" />
+        </EntityType>
+        <EntityType Name="invUniqueNames">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Name="itemID" Type="int" Nullable="false" />
+          <Property Name="itemName" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="groupID" Type="int" />
         </EntityType>
         <EntityType Name="mapCelestialStatistics">
           <Key>
@@ -1080,6 +1017,25 @@
           <Property Name="reprocessingEfficiency" Type="float" />
           <Property Name="conquerable" Type="bit" />
         </EntityType>
+        <EntityType Name="translationLaguages">
+          <Key>
+            <PropertyRef Name="numericLanguageID" />
+          </Key>
+          <Property Name="numericLanguageID" Type="int" Nullable="false" />
+          <Property Name="languageID" Type="varchar" MaxLength="50" />
+          <Property Name="languageName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="translationTables">
+          <Key>
+            <PropertyRef Name="sourceTable" />
+            <PropertyRef Name="translatedKey" />
+          </Key>
+          <Property Name="sourceTable" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="destinationTable" Type="nvarchar" MaxLength="200" />
+          <Property Name="translatedKey" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="tcGroupID" Type="int" />
+          <Property Name="tcID" Type="int" />
+        </EntityType>
         <EntityType Name="trnTranslationColumns">
           <Key>
             <PropertyRef Name="tcID" />
@@ -1090,6 +1046,14 @@
           <Property Name="columnName" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="masterID" Type="nvarchar" MaxLength="128" />
         </EntityType>
+        <EntityType Name="trnTranslationLanguages">
+          <Key>
+            <PropertyRef Name="numericLanguageID" />
+          </Key>
+          <Property Name="numericLanguageID" Type="int" Nullable="false" />
+          <Property Name="languageID" Type="varchar" MaxLength="50" />
+          <Property Name="languageName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="trnTranslations">
           <Key>
             <PropertyRef Name="tcID" />
@@ -1098,11 +1062,27 @@
           </Key>
           <Property Name="tcID" Type="smallint" Nullable="false" />
           <Property Name="keyID" Type="int" Nullable="false" />
-          <Property Name="languageID" Type="char" Nullable="false" MaxLength="2" />
+          <Property Name="languageID" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="text" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+        <EntityType Name="warCombatZones">
+          <Key>
+            <PropertyRef Name="combatZoneID" />
+          </Key>
+          <Property Name="combatZoneID" Type="int" Nullable="false" />
+          <Property Name="combatZoneName" Type="nvarchar" MaxLength="100" />
+          <Property Name="factionID" Type="int" />
+          <Property Name="centerSystemID" Type="int" />
+          <Property Name="description" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="warCombatZoneSystems">
+          <Key>
+            <PropertyRef Name="solarSystemID" />
+          </Key>
+          <Property Name="solarSystemID" Type="int" Nullable="false" />
+          <Property Name="combatZoneID" Type="int" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EveStaticDataModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -1133,7 +1113,6 @@
           <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.dgmEffects" />
           <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.dgmTypeAttributes" />
           <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.dgmTypeEffects" />
-          <EntitySet Name="eveNames" EntityType="EveStaticDataModel.eveNames" />
           <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.eveUnits" />
           <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.invBlueprintTypes" />
           <EntitySet Name="invCategories" EntityType="EveStaticDataModel.invCategories" />
@@ -1184,9 +1163,15 @@
           <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.planetSchematicsPinMap" />
           <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.planetSchematicsTypeMap" />
           <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.eveGraphics" />
-          <EntitySet Name="eveLocations" EntityType="EveStaticDataModel.eveLocations" />
-          <EntitySet Name="eveOwners" EntityType="EveStaticDataModel.eveOwners" />
           <EntitySet Name="invItems" EntityType="EveStaticDataModel.invItems" />
+          <EntitySet Name="invNames" EntityType="EveStaticDataModel.invNames" />
+          <EntitySet Name="invPositions" EntityType="EveStaticDataModel.invPositions" />
+          <EntitySet Name="invUniqueNames" EntityType="EveStaticDataModel.invUniqueNames" />
+          <EntitySet Name="translationLaguages" EntityType="EveStaticDataModel.translationLaguages" />
+          <EntitySet Name="translationTables" EntityType="EveStaticDataModel.translationTables" />
+          <EntitySet Name="trnTranslationLanguages" EntityType="EveStaticDataModel.trnTranslationLanguages" />
+          <EntitySet Name="warCombatZones" EntityType="EveStaticDataModel.warCombatZones" />
+          <EntitySet Name="warCombatZoneSystems" EntityType="EveStaticDataModel.warCombatZoneSystems" />
         </EntityContainer>
         <EntityType Name="agtAgentTypes">
           <Key>
@@ -1206,6 +1191,7 @@
           <Property Name="level" Type="Byte" />
           <Property Name="quality" Type="Int16" />
           <Property Name="agentTypeID" Type="Byte" />
+          <Property Type="Boolean" Name="isLocator" />
         </EntityType>
         <EntityType Name="agtConfig">
           <Key>
@@ -1495,16 +1481,6 @@
           <Property Name="typeID" Type="Int16" Nullable="false" />
           <Property Name="effectID" Type="Int16" Nullable="false" />
           <Property Name="isDefault" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="eveNames">
-          <Key>
-            <PropertyRef Name="itemID" />
-          </Key>
-          <Property Name="itemID" Type="Int32" Nullable="false" />
-          <Property Name="itemName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="categoryID" Type="Byte" />
-          <Property Name="groupID" Type="Int16" />
-          <Property Name="typeID" Type="Int16" />
         </EntityType>
         <EntityType Name="eveUnits">
           <Key>
@@ -2111,27 +2087,6 @@
           <Property Type="Int32" Name="directoryID" />
           <Property Type="String" Name="graphicName" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="eveLocations">
-          <Key>
-            <PropertyRef Name="locationID" />
-          </Key>
-          <Property Type="Int64" Name="locationID" Nullable="false" />
-          <Property Type="String" Name="locationName" Nullable="false" MaxLength="100" FixedLength="false"
-                    Unicode="true" />
-          <Property Type="Double" Name="x" Nullable="false" />
-          <Property Type="Double" Name="y" Nullable="false" />
-          <Property Type="Double" Name="z" Nullable="false" />
-        </EntityType>
-        <EntityType Name="eveOwners">
-          <Key>
-            <PropertyRef Name="ownerID" />
-          </Key>
-          <Property Type="Int32" Name="ownerID" Nullable="false" />
-          <Property Type="String" Name="ownerName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="deleted" Nullable="false" />
-          <Property Type="Int16" Name="typeID" Nullable="false" />
-          <Property Type="DateTime" Name="rowDate" Nullable="false" />
-        </EntityType>
         <EntityType Name="invItems">
           <Key>
             <PropertyRef Name="itemID" />
@@ -2142,6 +2097,77 @@
           <Property Type="Int64" Name="locationID" Nullable="false" />
           <Property Type="Int16" Name="flagID" Nullable="false" />
           <Property Type="Int32" Name="quantity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="invNames">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Type="Int64" Name="itemID" Nullable="false" />
+          <Property Type="String" Name="itemName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="invPositions">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Type="Int64" Name="itemID" Nullable="false" />
+          <Property Type="Double" Name="x" Nullable="false" />
+          <Property Type="Double" Name="y" Nullable="false" />
+          <Property Type="Double" Name="z" Nullable="false" />
+          <Property Type="Single" Name="yaw" />
+          <Property Type="Single" Name="pitch" />
+          <Property Type="Single" Name="roll" />
+        </EntityType>
+        <EntityType Name="invUniqueNames">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Type="Int32" Name="itemID" Nullable="false" />
+          <Property Type="String" Name="itemName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="groupID" />
+        </EntityType>
+        <EntityType Name="translationLaguages">
+          <Key>
+            <PropertyRef Name="numericLanguageID" />
+          </Key>
+          <Property Type="Int32" Name="numericLanguageID" Nullable="false" />
+          <Property Type="String" Name="languageID" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="languageName" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="translationTables">
+          <Key>
+            <PropertyRef Name="sourceTable" />
+            <PropertyRef Name="translatedKey" />
+          </Key>
+          <Property Type="String" Name="sourceTable" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="destinationTable" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="translatedKey" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="tcGroupID" />
+          <Property Type="Int32" Name="tcID" />
+        </EntityType>
+        <EntityType Name="trnTranslationLanguages">
+          <Key>
+            <PropertyRef Name="numericLanguageID" />
+          </Key>
+          <Property Type="Int32" Name="numericLanguageID" Nullable="false" />
+          <Property Type="String" Name="languageID" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="languageName" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="warCombatZones">
+          <Key>
+            <PropertyRef Name="combatZoneID" />
+          </Key>
+          <Property Type="Int32" Name="combatZoneID" Nullable="false" />
+          <Property Type="String" Name="combatZoneName" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="factionID" />
+          <Property Type="Int32" Name="centerSystemID" />
+          <Property Type="String" Name="description" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="warCombatZoneSystems">
+          <Key>
+            <PropertyRef Name="solarSystemID" />
+          </Key>
+          <Property Type="Int32" Name="solarSystemID" Nullable="false" />
+          <Property Type="Int32" Name="combatZoneID" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2161,6 +2187,7 @@
           <EntitySetMapping Name="agtAgents">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.agtAgents)">
               <MappingFragment StoreEntitySet="agtAgents">
+                <ScalarProperty Name="isLocator" ColumnName="isLocator" />
                 <ScalarProperty Name="agentID" ColumnName="agentID" />
                 <ScalarProperty Name="divisionID" ColumnName="divisionID" />
                 <ScalarProperty Name="corporationID" ColumnName="corporationID" />
@@ -2473,17 +2500,6 @@
                 <ScalarProperty Name="typeID" ColumnName="typeID" />
                 <ScalarProperty Name="effectID" ColumnName="effectID" />
                 <ScalarProperty Name="isDefault" ColumnName="isDefault" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="eveNames">
-            <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.eveNames)">
-              <MappingFragment StoreEntitySet="eveNames">
-                <ScalarProperty Name="itemID" ColumnName="itemID" />
-                <ScalarProperty Name="itemName" ColumnName="itemName" />
-                <ScalarProperty Name="categoryID" ColumnName="categoryID" />
-                <ScalarProperty Name="groupID" ColumnName="groupID" />
-                <ScalarProperty Name="typeID" ColumnName="typeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3117,28 +3133,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="eveLocations">
-            <EntityTypeMapping TypeName="EveStaticDataModel.eveLocations">
-              <MappingFragment StoreEntitySet="eveLocations">
-                <ScalarProperty Name="z" ColumnName="z" />
-                <ScalarProperty Name="y" ColumnName="y" />
-                <ScalarProperty Name="x" ColumnName="x" />
-                <ScalarProperty Name="locationName" ColumnName="locationName" />
-                <ScalarProperty Name="locationID" ColumnName="locationID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="eveOwners">
-            <EntityTypeMapping TypeName="EveStaticDataModel.eveOwners">
-              <MappingFragment StoreEntitySet="eveOwners">
-                <ScalarProperty Name="rowDate" ColumnName="rowDate" />
-                <ScalarProperty Name="typeID" ColumnName="typeID" />
-                <ScalarProperty Name="deleted" ColumnName="deleted" />
-                <ScalarProperty Name="ownerName" ColumnName="ownerName" />
-                <ScalarProperty Name="ownerID" ColumnName="ownerID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="invItems">
             <EntityTypeMapping TypeName="EveStaticDataModel.invItems">
               <MappingFragment StoreEntitySet="invItems">
@@ -3148,6 +3142,84 @@
                 <ScalarProperty Name="ownerID" ColumnName="ownerID" />
                 <ScalarProperty Name="typeID" ColumnName="typeID" />
                 <ScalarProperty Name="itemID" ColumnName="itemID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invNames">
+            <EntityTypeMapping TypeName="EveStaticDataModel.invNames">
+              <MappingFragment StoreEntitySet="invNames">
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invPositions">
+            <EntityTypeMapping TypeName="EveStaticDataModel.invPositions">
+              <MappingFragment StoreEntitySet="invPositions">
+                <ScalarProperty Name="roll" ColumnName="roll" />
+                <ScalarProperty Name="pitch" ColumnName="pitch" />
+                <ScalarProperty Name="yaw" ColumnName="yaw" />
+                <ScalarProperty Name="z" ColumnName="z" />
+                <ScalarProperty Name="y" ColumnName="y" />
+                <ScalarProperty Name="x" ColumnName="x" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invUniqueNames">
+            <EntityTypeMapping TypeName="EveStaticDataModel.invUniqueNames">
+              <MappingFragment StoreEntitySet="invUniqueNames">
+                <ScalarProperty Name="groupID" ColumnName="groupID" />
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="translationLaguages">
+            <EntityTypeMapping TypeName="EveStaticDataModel.translationLaguages">
+              <MappingFragment StoreEntitySet="translationLaguages">
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="languageID" ColumnName="languageID" />
+                <ScalarProperty Name="numericLanguageID" ColumnName="numericLanguageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="translationTables">
+            <EntityTypeMapping TypeName="EveStaticDataModel.translationTables">
+              <MappingFragment StoreEntitySet="translationTables">
+                <ScalarProperty Name="tcID" ColumnName="tcID" />
+                <ScalarProperty Name="tcGroupID" ColumnName="tcGroupID" />
+                <ScalarProperty Name="translatedKey" ColumnName="translatedKey" />
+                <ScalarProperty Name="destinationTable" ColumnName="destinationTable" />
+                <ScalarProperty Name="sourceTable" ColumnName="sourceTable" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trnTranslationLanguages">
+            <EntityTypeMapping TypeName="EveStaticDataModel.trnTranslationLanguages">
+              <MappingFragment StoreEntitySet="trnTranslationLanguages">
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="languageID" ColumnName="languageID" />
+                <ScalarProperty Name="numericLanguageID" ColumnName="numericLanguageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="warCombatZones">
+            <EntityTypeMapping TypeName="EveStaticDataModel.warCombatZones">
+              <MappingFragment StoreEntitySet="warCombatZones">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="centerSystemID" ColumnName="centerSystemID" />
+                <ScalarProperty Name="factionID" ColumnName="factionID" />
+                <ScalarProperty Name="combatZoneName" ColumnName="combatZoneName" />
+                <ScalarProperty Name="combatZoneID" ColumnName="combatZoneID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="warCombatZoneSystems">
+            <EntityTypeMapping TypeName="EveStaticDataModel.warCombatZoneSystems">
+              <MappingFragment StoreEntitySet="warCombatZoneSystems">
+                <ScalarProperty Name="combatZoneID" ColumnName="combatZoneID" />
+                <ScalarProperty Name="solarSystemID" ColumnName="solarSystemID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3171,7 +3243,7 @@
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram Name="EveStaticData" ZoomLevel="101" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+      <Diagram Name="EveStaticData" ZoomLevel="75" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx" ShowGrid="false">
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgentTypes" Width="1.5" PointX="0.75" PointY="0.75"
                          Height="1.4033821614583331" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgents" Width="1.5" PointX="2.75" PointY="0.75"
@@ -3222,8 +3294,6 @@
                          Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeEffects" Width="1.5" PointX="14.75" PointY="0.75"
                          Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveNames" Width="1.5" PointX="2.75" PointY="14.75"
-                         Height="1.9802864583333317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.eveUnits" Width="1.5" PointX="14.75" PointY="3.75"
                          Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invBlueprintTypes" Width="1.5" PointX="14.75" PointY="6.75"
@@ -3308,22 +3378,26 @@
                          PointY="22.75" Height="1.9802864583333317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="16.75" PointY="22.75"
                          Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveIcons" Width="1.5" PointX="2.75" PointY="17.25"
+        <EntityTypeShape EntityType="EveStaticDataModel.eveIcons" Width="1.5" PointX="2.75" PointY="8.5"
                          Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematics" Width="1.5" PointX="8.625" PointY="20"
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematics" Width="1.5" PointX="2.75" PointY="13.375"
                          Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="8.625"
-                         PointY="21.875" Height="1.4033821614583246" />
-        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="6.625" PointY="20"
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="2.75"
+                         PointY="17.5" Height="1.4033821614583246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="2.75" PointY="15.25"
                          Height="1.7879850260416674" />
         <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.625" PointY="14.125"
                          Height="2.7494921874999818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveLocations" Width="1.5" PointX="23.375" PointY="16.75"
-                         Height="1.9802864583333246" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveOwners" Width="1.5" PointX="23.375" PointY="19.75"
-                         Height="1.9802864583333246" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invItems" Width="1.5" PointX="19.375" PointY="23.75"
+        <EntityTypeShape EntityType="EveStaticDataModel.invItems" Width="1.5" PointX="4.75" PointY="14.375"
                          Height="2.1725878906249818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invNames" Width="1.5" PointX="4.75" PointY="12.75" Height="1.4033821614583246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invPositions" Width="1.5" PointX="4.75" PointY="10.125" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invUniqueNames" Width="1.5" PointX="0.5" PointY="14.875" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.translationLaguages" Width="1.5" PointX="7.375" PointY="24.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.translationTables" Width="1.5" PointX="25.375" PointY="0.75" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslationLanguages" Width="1.5" PointX="25.375" PointY="3.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.warCombatZones" Width="1.5" PointX="25.375" PointY="6.75" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.warCombatZoneSystems" Width="1.5" PointX="25.375" PointY="9.75" Height="1.4033821614583246" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

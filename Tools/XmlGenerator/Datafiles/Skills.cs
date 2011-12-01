@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Skills
     {
-        private const int SkillGenTotal = 454;
+        private const int SkillGenTotal = 426;
 
         private static DateTime s_startTime;
 
@@ -72,13 +72,13 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                     {
                                                         ID = skill.ID,
                                                         Name = skill.Name,
-                                                        Description = skill.Description,
+                                                        Description = skill.Description ?? String.Empty,
                                                         Public = skill.Published,
                                                         Cost = (long)skill.BasePrice,
                                                     };
 
                 // Export skill atributes
-                Dictionary<int, int> skillAttributes = Database.DgmTypeAttributesTable.Where(x => x.ItemID == skill.ID).
+                Dictionary<long, int> skillAttributes = Database.DgmTypeAttributesTable.Where(x => x.ItemID == skill.ID).
                     ToDictionary(
                         attribute => attribute.AttributeID, attribute => attribute.GetIntValue);
 
@@ -137,7 +137,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Gets the Eve attribute.
         /// </summary>        
-        private static EveAttribute IntToEveAttribute(int attributeValue)
+        private static EveAttribute IntToEveAttribute(long attributeValue)
         {
             switch (attributeValue)
             {

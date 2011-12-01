@@ -535,7 +535,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="factor">The factor.</param>
         /// <param name="copyActivity">if set to <c>true</c> [copy activity].</param>
         /// <returns></returns>
-        private string CharacterActivityTime(double activityTime, int skillID, double factor, bool copyActivity)
+        private string CharacterActivityTime(double activityTime, long skillID, double factor, bool copyActivity)
         {
             int skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
             double activityTimeModifier = (1 - (factor * skillLevel));
@@ -691,9 +691,8 @@ namespace EVEMon.SkillPlanner
             if (implant == null)
                 return 1.0d;
 
-            double bonus =
-                implant.Properties.FirstOrDefault(
-                    x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).IntValue;
+            double bonus = implant.Properties.FirstOrDefault(
+                x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).IntValue;
             double multiplier = 1.0d + (bonus / 100);
 
             return multiplier;

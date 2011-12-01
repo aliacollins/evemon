@@ -9,12 +9,10 @@ namespace EVEMon.Common.Data
         #region Fields
 
         private static readonly Dictionary<long, EveProperty> s_propertiesByID = new Dictionary<long, EveProperty>();
+        private static readonly Dictionary<string, EveProperty> s_propertiesByName = new Dictionary<string, EveProperty>();
 
-        private static readonly Dictionary<string, EveProperty> s_propertiesByName =
-            new Dictionary<string, EveProperty>();
-
-        private static readonly Dictionary<string, EvePropertyCategory> s_categoriesByName =
-            new Dictionary<string, EvePropertyCategory>();
+        private static readonly Dictionary<long, EvePropertyCategory> s_categoriesByID =
+            new Dictionary<long, EvePropertyCategory>();
 
         #endregion
 
@@ -33,7 +31,7 @@ namespace EVEMon.Common.Data
             foreach (EvePropertyCategory category in datafile.Categories.Select(
                 srcCategory => new EvePropertyCategory(srcCategory)))
             {
-                s_categoriesByName[category.Name] = category;
+                s_categoriesByID[category.ID] = category;
 
                 // Store properties
                 foreach (EveProperty property in category)
@@ -69,7 +67,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<EvePropertyCategory> AllCategories
         {
-            get { return s_categoriesByName.Values; }
+            get { return s_categoriesByID.Values; }
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<EveProperty> AllProperties
         {
-            get { return s_categoriesByName.Values.SelectMany(category => category); }
+            get { return s_propertiesByID.Values; }
         }
 
         #endregion
@@ -86,23 +84,11 @@ namespace EVEMon.Common.Data
         #region Public Finders
 
         /// <summary>
-        /// Gets a property by its name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static EveProperty GetPropertyByName(string name)
-        {
-            EveProperty property;
-            s_propertiesByName.TryGetValue(name, out property);
-            return property;
-        }
-
-        /// <summary>
         /// Gets a property by its identifier.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static EveProperty GetPropertyByID(int id)
+        public static EveProperty GetPropertyByID(long id)
         {
             EveProperty property;
             s_propertiesByID.TryGetValue(id, out property);
@@ -110,14 +96,14 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a group by its name.
+        /// Gets a group by its id.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public static EvePropertyCategory GetCategoryByName(string name)
+        public static EvePropertyCategory GetCategoryByID(long id)
         {
             EvePropertyCategory category;
-            s_categoriesByName.TryGetValue(name, out category);
+            s_categoriesByID.TryGetValue(id, out category);
             return category;
         }
 

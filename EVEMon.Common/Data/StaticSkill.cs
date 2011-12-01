@@ -27,7 +27,7 @@ namespace EVEMon.Common.Data
             IsPublic = src.Public;
             Name = src.Name;
             Description = src.Description;
-            DescriptionNL = WordWrap(Description, 100);
+            DescriptionNL = WordWrap(src.Description, 100);
             PrimaryAttribute = src.PrimaryAttribute;
             SecondaryAttribute = src.SecondaryAttribute;
             IsTrainableOnTrialAccount = src.CanTrainOnTrial;

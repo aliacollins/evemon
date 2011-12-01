@@ -12,7 +12,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableBlueprint
     {
-        private readonly Collection<int> m_inventTypeID;
+        private readonly Collection<long> m_inventTypeID;
         private readonly Collection<SerializablePrereqSkill> m_prereqSkills;
         private readonly Collection<SerializableRequiredMaterial> m_requiredMaterials;
 
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         public SerializableBlueprint()
         {
-            m_inventTypeID = new Collection<int>();
+            m_inventTypeID = new Collection<long>();
             m_prereqSkills = new Collection<SerializablePrereqSkill>();
             m_requiredMaterials = new Collection<SerializableRequiredMaterial>();
         }
@@ -31,7 +31,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The ID.</value>
         [XmlAttribute("id")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -129,7 +129,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The invention type ID.</value>
         [XmlElement("inventTypeID")]
-        public Collection<int> InventionTypeID
+        public Collection<long> InventionTypeID
         {
             get { return m_inventTypeID; }
         }

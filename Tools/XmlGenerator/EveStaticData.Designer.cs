@@ -465,22 +465,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<eveNames> eveNames
-        {
-            get
-            {
-                if ((_eveNames == null))
-                {
-                    _eveNames = base.CreateObjectSet<eveNames>("eveNames");
-                }
-                return _eveNames;
-            }
-        }
-        private ObjectSet<eveNames> _eveNames;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<eveUnits> eveUnits
         {
             get
@@ -1233,38 +1217,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<eveLocations> eveLocations
-        {
-            get
-            {
-                if ((_eveLocations == null))
-                {
-                    _eveLocations = base.CreateObjectSet<eveLocations>("eveLocations");
-                }
-                return _eveLocations;
-            }
-        }
-        private ObjectSet<eveLocations> _eveLocations;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<eveOwners> eveOwners
-        {
-            get
-            {
-                if ((_eveOwners == null))
-                {
-                    _eveOwners = base.CreateObjectSet<eveOwners>("eveOwners");
-                }
-                return _eveOwners;
-            }
-        }
-        private ObjectSet<eveOwners> _eveOwners;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<invItems> invItems
         {
             get
@@ -1277,6 +1229,134 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<invItems> _invItems;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<invNames> invNames
+        {
+            get
+            {
+                if ((_invNames == null))
+                {
+                    _invNames = base.CreateObjectSet<invNames>("invNames");
+                }
+                return _invNames;
+            }
+        }
+        private ObjectSet<invNames> _invNames;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<invPositions> invPositions
+        {
+            get
+            {
+                if ((_invPositions == null))
+                {
+                    _invPositions = base.CreateObjectSet<invPositions>("invPositions");
+                }
+                return _invPositions;
+            }
+        }
+        private ObjectSet<invPositions> _invPositions;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<invUniqueNames> invUniqueNames
+        {
+            get
+            {
+                if ((_invUniqueNames == null))
+                {
+                    _invUniqueNames = base.CreateObjectSet<invUniqueNames>("invUniqueNames");
+                }
+                return _invUniqueNames;
+            }
+        }
+        private ObjectSet<invUniqueNames> _invUniqueNames;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<translationLaguages> translationLaguages
+        {
+            get
+            {
+                if ((_translationLaguages == null))
+                {
+                    _translationLaguages = base.CreateObjectSet<translationLaguages>("translationLaguages");
+                }
+                return _translationLaguages;
+            }
+        }
+        private ObjectSet<translationLaguages> _translationLaguages;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<translationTables> translationTables
+        {
+            get
+            {
+                if ((_translationTables == null))
+                {
+                    _translationTables = base.CreateObjectSet<translationTables>("translationTables");
+                }
+                return _translationTables;
+            }
+        }
+        private ObjectSet<translationTables> _translationTables;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<trnTranslationLanguages> trnTranslationLanguages
+        {
+            get
+            {
+                if ((_trnTranslationLanguages == null))
+                {
+                    _trnTranslationLanguages = base.CreateObjectSet<trnTranslationLanguages>("trnTranslationLanguages");
+                }
+                return _trnTranslationLanguages;
+            }
+        }
+        private ObjectSet<trnTranslationLanguages> _trnTranslationLanguages;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<warCombatZones> warCombatZones
+        {
+            get
+            {
+                if ((_warCombatZones == null))
+                {
+                    _warCombatZones = base.CreateObjectSet<warCombatZones>("warCombatZones");
+                }
+                return _warCombatZones;
+            }
+        }
+        private ObjectSet<warCombatZones> _warCombatZones;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<warCombatZoneSystems> warCombatZoneSystems
+        {
+            get
+            {
+                if ((_warCombatZoneSystems == null))
+                {
+                    _warCombatZoneSystems = base.CreateObjectSet<warCombatZoneSystems>("warCombatZoneSystems");
+                }
+                return _warCombatZoneSystems;
+            }
+        }
+        private ObjectSet<warCombatZoneSystems> _warCombatZoneSystems;
 
         #endregion
         #region AddTo Methods
@@ -1479,14 +1559,6 @@ namespace EVEMon.XmlGenerator
         public void AddTodgmTypeEffects(dgmTypeEffects dgmTypeEffects)
         {
             base.AddObject("dgmTypeEffects", dgmTypeEffects);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the eveNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveNames(eveNames eveNames)
-        {
-            base.AddObject("eveNames", eveNames);
         }
     
         /// <summary>
@@ -1866,27 +1938,75 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the eveLocations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveLocations(eveLocations eveLocations)
-        {
-            base.AddObject("eveLocations", eveLocations);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the eveOwners EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveOwners(eveOwners eveOwners)
-        {
-            base.AddObject("eveOwners", eveOwners);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the invItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToinvItems(invItems invItems)
         {
             base.AddObject("invItems", invItems);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the invNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvNames(invNames invNames)
+        {
+            base.AddObject("invNames", invNames);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the invPositions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvPositions(invPositions invPositions)
+        {
+            base.AddObject("invPositions", invPositions);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the invUniqueNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvUniqueNames(invUniqueNames invUniqueNames)
+        {
+            base.AddObject("invUniqueNames", invUniqueNames);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the translationLaguages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTotranslationLaguages(translationLaguages translationLaguages)
+        {
+            base.AddObject("translationLaguages", translationLaguages);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the translationTables EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTotranslationTables(translationTables translationTables)
+        {
+            base.AddObject("translationTables", translationTables);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the trnTranslationLanguages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTotrnTranslationLanguages(trnTranslationLanguages trnTranslationLanguages)
+        {
+            base.AddObject("trnTranslationLanguages", trnTranslationLanguages);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the warCombatZones EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTowarCombatZones(warCombatZones warCombatZones)
+        {
+            base.AddObject("warCombatZones", warCombatZones);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the warCombatZoneSystems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTowarCombatZoneSystems(warCombatZoneSystems warCombatZoneSystems)
+        {
+            base.AddObject("warCombatZoneSystems", warCombatZoneSystems);
         }
 
         #endregion
@@ -2091,6 +2211,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Byte> _agentTypeID;
         partial void OnagentTypeIDChanging(Nullable<global::System.Byte> value);
         partial void OnagentTypeIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> isLocator
+        {
+            get
+            {
+                return _isLocator;
+            }
+            set
+            {
+                OnisLocatorChanging(value);
+                ReportPropertyChanging("isLocator");
+                _isLocator = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("isLocator");
+                OnisLocatorChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _isLocator;
+        partial void OnisLocatorChanging(Nullable<global::System.Boolean> value);
+        partial void OnisLocatorChanged();
 
         #endregion
     
@@ -7298,475 +7442,6 @@ namespace EVEMon.XmlGenerator
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="eveLocations")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class eveLocations : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new eveLocations object.
-        /// </summary>
-        /// <param name="locationID">Initial value of the locationID property.</param>
-        /// <param name="locationName">Initial value of the locationName property.</param>
-        /// <param name="x">Initial value of the x property.</param>
-        /// <param name="y">Initial value of the y property.</param>
-        /// <param name="z">Initial value of the z property.</param>
-        public static eveLocations CreateeveLocations(global::System.Int64 locationID, global::System.String locationName, global::System.Double x, global::System.Double y, global::System.Double z)
-        {
-            eveLocations eveLocations = new eveLocations();
-            eveLocations.locationID = locationID;
-            eveLocations.locationName = locationName;
-            eveLocations.x = x;
-            eveLocations.y = y;
-            eveLocations.z = z;
-            return eveLocations;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int64 locationID
-        {
-            get
-            {
-                return _locationID;
-            }
-            set
-            {
-                if (_locationID != value)
-                {
-                    OnlocationIDChanging(value);
-                    ReportPropertyChanging("locationID");
-                    _locationID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("locationID");
-                    OnlocationIDChanged();
-                }
-            }
-        }
-        private global::System.Int64 _locationID;
-        partial void OnlocationIDChanging(global::System.Int64 value);
-        partial void OnlocationIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String locationName
-        {
-            get
-            {
-                return _locationName;
-            }
-            set
-            {
-                OnlocationNameChanging(value);
-                ReportPropertyChanging("locationName");
-                _locationName = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("locationName");
-                OnlocationNameChanged();
-            }
-        }
-        private global::System.String _locationName;
-        partial void OnlocationNameChanging(global::System.String value);
-        partial void OnlocationNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Double x
-        {
-            get
-            {
-                return _x;
-            }
-            set
-            {
-                OnxChanging(value);
-                ReportPropertyChanging("x");
-                _x = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("x");
-                OnxChanged();
-            }
-        }
-        private global::System.Double _x;
-        partial void OnxChanging(global::System.Double value);
-        partial void OnxChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Double y
-        {
-            get
-            {
-                return _y;
-            }
-            set
-            {
-                OnyChanging(value);
-                ReportPropertyChanging("y");
-                _y = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("y");
-                OnyChanged();
-            }
-        }
-        private global::System.Double _y;
-        partial void OnyChanging(global::System.Double value);
-        partial void OnyChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Double z
-        {
-            get
-            {
-                return _z;
-            }
-            set
-            {
-                OnzChanging(value);
-                ReportPropertyChanging("z");
-                _z = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("z");
-                OnzChanged();
-            }
-        }
-        private global::System.Double _z;
-        partial void OnzChanging(global::System.Double value);
-        partial void OnzChanged();
-
-        #endregion
-    
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="eveNames")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class eveNames : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new eveNames object.
-        /// </summary>
-        /// <param name="itemID">Initial value of the itemID property.</param>
-        public static eveNames CreateeveNames(global::System.Int32 itemID)
-        {
-            eveNames eveNames = new eveNames();
-            eveNames.itemID = itemID;
-            return eveNames;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 itemID
-        {
-            get
-            {
-                return _itemID;
-            }
-            set
-            {
-                if (_itemID != value)
-                {
-                    OnitemIDChanging(value);
-                    ReportPropertyChanging("itemID");
-                    _itemID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("itemID");
-                    OnitemIDChanged();
-                }
-            }
-        }
-        private global::System.Int32 _itemID;
-        partial void OnitemIDChanging(global::System.Int32 value);
-        partial void OnitemIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String itemName
-        {
-            get
-            {
-                return _itemName;
-            }
-            set
-            {
-                OnitemNameChanging(value);
-                ReportPropertyChanging("itemName");
-                _itemName = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("itemName");
-                OnitemNameChanged();
-            }
-        }
-        private global::System.String _itemName;
-        partial void OnitemNameChanging(global::System.String value);
-        partial void OnitemNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Byte> categoryID
-        {
-            get
-            {
-                return _categoryID;
-            }
-            set
-            {
-                OncategoryIDChanging(value);
-                ReportPropertyChanging("categoryID");
-                _categoryID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("categoryID");
-                OncategoryIDChanged();
-            }
-        }
-        private Nullable<global::System.Byte> _categoryID;
-        partial void OncategoryIDChanging(Nullable<global::System.Byte> value);
-        partial void OncategoryIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int16> groupID
-        {
-            get
-            {
-                return _groupID;
-            }
-            set
-            {
-                OngroupIDChanging(value);
-                ReportPropertyChanging("groupID");
-                _groupID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("groupID");
-                OngroupIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _groupID;
-        partial void OngroupIDChanging(Nullable<global::System.Int16> value);
-        partial void OngroupIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int16> typeID
-        {
-            get
-            {
-                return _typeID;
-            }
-            set
-            {
-                OntypeIDChanging(value);
-                ReportPropertyChanging("typeID");
-                _typeID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("typeID");
-                OntypeIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _typeID;
-        partial void OntypeIDChanging(Nullable<global::System.Int16> value);
-        partial void OntypeIDChanged();
-
-        #endregion
-    
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="eveOwners")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class eveOwners : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new eveOwners object.
-        /// </summary>
-        /// <param name="ownerID">Initial value of the ownerID property.</param>
-        /// <param name="ownerName">Initial value of the ownerName property.</param>
-        /// <param name="deleted">Initial value of the deleted property.</param>
-        /// <param name="typeID">Initial value of the typeID property.</param>
-        /// <param name="rowDate">Initial value of the rowDate property.</param>
-        public static eveOwners CreateeveOwners(global::System.Int32 ownerID, global::System.String ownerName, global::System.Boolean deleted, global::System.Int16 typeID, global::System.DateTime rowDate)
-        {
-            eveOwners eveOwners = new eveOwners();
-            eveOwners.ownerID = ownerID;
-            eveOwners.ownerName = ownerName;
-            eveOwners.deleted = deleted;
-            eveOwners.typeID = typeID;
-            eveOwners.rowDate = rowDate;
-            return eveOwners;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 ownerID
-        {
-            get
-            {
-                return _ownerID;
-            }
-            set
-            {
-                if (_ownerID != value)
-                {
-                    OnownerIDChanging(value);
-                    ReportPropertyChanging("ownerID");
-                    _ownerID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("ownerID");
-                    OnownerIDChanged();
-                }
-            }
-        }
-        private global::System.Int32 _ownerID;
-        partial void OnownerIDChanging(global::System.Int32 value);
-        partial void OnownerIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String ownerName
-        {
-            get
-            {
-                return _ownerName;
-            }
-            set
-            {
-                OnownerNameChanging(value);
-                ReportPropertyChanging("ownerName");
-                _ownerName = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("ownerName");
-                OnownerNameChanged();
-            }
-        }
-        private global::System.String _ownerName;
-        partial void OnownerNameChanging(global::System.String value);
-        partial void OnownerNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Boolean deleted
-        {
-            get
-            {
-                return _deleted;
-            }
-            set
-            {
-                OndeletedChanging(value);
-                ReportPropertyChanging("deleted");
-                _deleted = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("deleted");
-                OndeletedChanged();
-            }
-        }
-        private global::System.Boolean _deleted;
-        partial void OndeletedChanging(global::System.Boolean value);
-        partial void OndeletedChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int16 typeID
-        {
-            get
-            {
-                return _typeID;
-            }
-            set
-            {
-                OntypeIDChanging(value);
-                ReportPropertyChanging("typeID");
-                _typeID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("typeID");
-                OntypeIDChanged();
-            }
-        }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
-        partial void OntypeIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.DateTime rowDate
-        {
-            get
-            {
-                return _rowDate;
-            }
-            set
-            {
-                OnrowDateChanging(value);
-                ReportPropertyChanging("rowDate");
-                _rowDate = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("rowDate");
-                OnrowDateChanged();
-            }
-        }
-        private global::System.DateTime _rowDate;
-        partial void OnrowDateChanging(global::System.DateTime value);
-        partial void OnrowDateChanged();
-
-        #endregion
-    
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="eveUnits")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -9863,6 +9538,292 @@ namespace EVEMon.XmlGenerator
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="invNames")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class invNames : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new invNames object.
+        /// </summary>
+        /// <param name="itemID">Initial value of the itemID property.</param>
+        /// <param name="itemName">Initial value of the itemName property.</param>
+        public static invNames CreateinvNames(global::System.Int64 itemID, global::System.String itemName)
+        {
+            invNames invNames = new invNames();
+            invNames.itemID = itemID;
+            invNames.itemName = itemName;
+            return invNames;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int64 itemID
+        {
+            get
+            {
+                return _itemID;
+            }
+            set
+            {
+                if (_itemID != value)
+                {
+                    OnitemIDChanging(value);
+                    ReportPropertyChanging("itemID");
+                    _itemID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("itemID");
+                    OnitemIDChanged();
+                }
+            }
+        }
+        private global::System.Int64 _itemID;
+        partial void OnitemIDChanging(global::System.Int64 value);
+        partial void OnitemIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String itemName
+        {
+            get
+            {
+                return _itemName;
+            }
+            set
+            {
+                OnitemNameChanging(value);
+                ReportPropertyChanging("itemName");
+                _itemName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("itemName");
+                OnitemNameChanged();
+            }
+        }
+        private global::System.String _itemName;
+        partial void OnitemNameChanging(global::System.String value);
+        partial void OnitemNameChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="invPositions")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class invPositions : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new invPositions object.
+        /// </summary>
+        /// <param name="itemID">Initial value of the itemID property.</param>
+        /// <param name="x">Initial value of the x property.</param>
+        /// <param name="y">Initial value of the y property.</param>
+        /// <param name="z">Initial value of the z property.</param>
+        public static invPositions CreateinvPositions(global::System.Int64 itemID, global::System.Double x, global::System.Double y, global::System.Double z)
+        {
+            invPositions invPositions = new invPositions();
+            invPositions.itemID = itemID;
+            invPositions.x = x;
+            invPositions.y = y;
+            invPositions.z = z;
+            return invPositions;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int64 itemID
+        {
+            get
+            {
+                return _itemID;
+            }
+            set
+            {
+                if (_itemID != value)
+                {
+                    OnitemIDChanging(value);
+                    ReportPropertyChanging("itemID");
+                    _itemID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("itemID");
+                    OnitemIDChanged();
+                }
+            }
+        }
+        private global::System.Int64 _itemID;
+        partial void OnitemIDChanging(global::System.Int64 value);
+        partial void OnitemIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Double x
+        {
+            get
+            {
+                return _x;
+            }
+            set
+            {
+                OnxChanging(value);
+                ReportPropertyChanging("x");
+                _x = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("x");
+                OnxChanged();
+            }
+        }
+        private global::System.Double _x;
+        partial void OnxChanging(global::System.Double value);
+        partial void OnxChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Double y
+        {
+            get
+            {
+                return _y;
+            }
+            set
+            {
+                OnyChanging(value);
+                ReportPropertyChanging("y");
+                _y = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("y");
+                OnyChanged();
+            }
+        }
+        private global::System.Double _y;
+        partial void OnyChanging(global::System.Double value);
+        partial void OnyChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Double z
+        {
+            get
+            {
+                return _z;
+            }
+            set
+            {
+                OnzChanging(value);
+                ReportPropertyChanging("z");
+                _z = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("z");
+                OnzChanged();
+            }
+        }
+        private global::System.Double _z;
+        partial void OnzChanging(global::System.Double value);
+        partial void OnzChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Single> yaw
+        {
+            get
+            {
+                return _yaw;
+            }
+            set
+            {
+                OnyawChanging(value);
+                ReportPropertyChanging("yaw");
+                _yaw = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("yaw");
+                OnyawChanged();
+            }
+        }
+        private Nullable<global::System.Single> _yaw;
+        partial void OnyawChanging(Nullable<global::System.Single> value);
+        partial void OnyawChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Single> pitch
+        {
+            get
+            {
+                return _pitch;
+            }
+            set
+            {
+                OnpitchChanging(value);
+                ReportPropertyChanging("pitch");
+                _pitch = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("pitch");
+                OnpitchChanged();
+            }
+        }
+        private Nullable<global::System.Single> _pitch;
+        partial void OnpitchChanging(Nullable<global::System.Single> value);
+        partial void OnpitchChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Single> roll
+        {
+            get
+            {
+                return _roll;
+            }
+            set
+            {
+                OnrollChanging(value);
+                ReportPropertyChanging("roll");
+                _roll = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("roll");
+                OnrollChanged();
+            }
+        }
+        private Nullable<global::System.Single> _roll;
+        partial void OnrollChanging(Nullable<global::System.Single> value);
+        partial void OnrollChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="invTypeMaterials")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -10517,6 +10478,111 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _iconID;
         partial void OniconIDChanging(Nullable<global::System.Int32> value);
         partial void OniconIDChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="invUniqueNames")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class invUniqueNames : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new invUniqueNames object.
+        /// </summary>
+        /// <param name="itemID">Initial value of the itemID property.</param>
+        /// <param name="itemName">Initial value of the itemName property.</param>
+        public static invUniqueNames CreateinvUniqueNames(global::System.Int32 itemID, global::System.String itemName)
+        {
+            invUniqueNames invUniqueNames = new invUniqueNames();
+            invUniqueNames.itemID = itemID;
+            invUniqueNames.itemName = itemName;
+            return invUniqueNames;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 itemID
+        {
+            get
+            {
+                return _itemID;
+            }
+            set
+            {
+                if (_itemID != value)
+                {
+                    OnitemIDChanging(value);
+                    ReportPropertyChanging("itemID");
+                    _itemID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("itemID");
+                    OnitemIDChanged();
+                }
+            }
+        }
+        private global::System.Int32 _itemID;
+        partial void OnitemIDChanging(global::System.Int32 value);
+        partial void OnitemIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String itemName
+        {
+            get
+            {
+                return _itemName;
+            }
+            set
+            {
+                OnitemNameChanging(value);
+                ReportPropertyChanging("itemName");
+                _itemName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("itemName");
+                OnitemNameChanged();
+            }
+        }
+        private global::System.String _itemName;
+        partial void OnitemNameChanging(global::System.String value);
+        partial void OnitemNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> groupID
+        {
+            get
+            {
+                return _groupID;
+            }
+            set
+            {
+                OngroupIDChanging(value);
+                ReportPropertyChanging("groupID");
+                _groupID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("groupID");
+                OngroupIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _groupID;
+        partial void OngroupIDChanging(Nullable<global::System.Int32> value);
+        partial void OngroupIDChanged();
 
         #endregion
     
@@ -17220,6 +17286,265 @@ namespace EVEMon.XmlGenerator
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="translationLaguages")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class translationLaguages : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new translationLaguages object.
+        /// </summary>
+        /// <param name="numericLanguageID">Initial value of the numericLanguageID property.</param>
+        public static translationLaguages CreatetranslationLaguages(global::System.Int32 numericLanguageID)
+        {
+            translationLaguages translationLaguages = new translationLaguages();
+            translationLaguages.numericLanguageID = numericLanguageID;
+            return translationLaguages;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 numericLanguageID
+        {
+            get
+            {
+                return _numericLanguageID;
+            }
+            set
+            {
+                if (_numericLanguageID != value)
+                {
+                    OnnumericLanguageIDChanging(value);
+                    ReportPropertyChanging("numericLanguageID");
+                    _numericLanguageID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("numericLanguageID");
+                    OnnumericLanguageIDChanged();
+                }
+            }
+        }
+        private global::System.Int32 _numericLanguageID;
+        partial void OnnumericLanguageIDChanging(global::System.Int32 value);
+        partial void OnnumericLanguageIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String languageID
+        {
+            get
+            {
+                return _languageID;
+            }
+            set
+            {
+                OnlanguageIDChanging(value);
+                ReportPropertyChanging("languageID");
+                _languageID = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("languageID");
+                OnlanguageIDChanged();
+            }
+        }
+        private global::System.String _languageID;
+        partial void OnlanguageIDChanging(global::System.String value);
+        partial void OnlanguageIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String languageName
+        {
+            get
+            {
+                return _languageName;
+            }
+            set
+            {
+                OnlanguageNameChanging(value);
+                ReportPropertyChanging("languageName");
+                _languageName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("languageName");
+                OnlanguageNameChanged();
+            }
+        }
+        private global::System.String _languageName;
+        partial void OnlanguageNameChanging(global::System.String value);
+        partial void OnlanguageNameChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="translationTables")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class translationTables : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new translationTables object.
+        /// </summary>
+        /// <param name="sourceTable">Initial value of the sourceTable property.</param>
+        /// <param name="translatedKey">Initial value of the translatedKey property.</param>
+        public static translationTables CreatetranslationTables(global::System.String sourceTable, global::System.String translatedKey)
+        {
+            translationTables translationTables = new translationTables();
+            translationTables.sourceTable = sourceTable;
+            translationTables.translatedKey = translatedKey;
+            return translationTables;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String sourceTable
+        {
+            get
+            {
+                return _sourceTable;
+            }
+            set
+            {
+                if (_sourceTable != value)
+                {
+                    OnsourceTableChanging(value);
+                    ReportPropertyChanging("sourceTable");
+                    _sourceTable = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("sourceTable");
+                    OnsourceTableChanged();
+                }
+            }
+        }
+        private global::System.String _sourceTable;
+        partial void OnsourceTableChanging(global::System.String value);
+        partial void OnsourceTableChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String destinationTable
+        {
+            get
+            {
+                return _destinationTable;
+            }
+            set
+            {
+                OndestinationTableChanging(value);
+                ReportPropertyChanging("destinationTable");
+                _destinationTable = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("destinationTable");
+                OndestinationTableChanged();
+            }
+        }
+        private global::System.String _destinationTable;
+        partial void OndestinationTableChanging(global::System.String value);
+        partial void OndestinationTableChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String translatedKey
+        {
+            get
+            {
+                return _translatedKey;
+            }
+            set
+            {
+                if (_translatedKey != value)
+                {
+                    OntranslatedKeyChanging(value);
+                    ReportPropertyChanging("translatedKey");
+                    _translatedKey = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("translatedKey");
+                    OntranslatedKeyChanged();
+                }
+            }
+        }
+        private global::System.String _translatedKey;
+        partial void OntranslatedKeyChanging(global::System.String value);
+        partial void OntranslatedKeyChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> tcGroupID
+        {
+            get
+            {
+                return _tcGroupID;
+            }
+            set
+            {
+                OntcGroupIDChanging(value);
+                ReportPropertyChanging("tcGroupID");
+                _tcGroupID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("tcGroupID");
+                OntcGroupIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _tcGroupID;
+        partial void OntcGroupIDChanging(Nullable<global::System.Int32> value);
+        partial void OntcGroupIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> tcID
+        {
+            get
+            {
+                return _tcID;
+            }
+            set
+            {
+                OntcIDChanging(value);
+                ReportPropertyChanging("tcID");
+                _tcID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("tcID");
+                OntcIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _tcID;
+        partial void OntcIDChanging(Nullable<global::System.Int32> value);
+        partial void OntcIDChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="trnTranslationColumns")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -17375,6 +17700,109 @@ namespace EVEMon.XmlGenerator
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="trnTranslationLanguages")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class trnTranslationLanguages : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new trnTranslationLanguages object.
+        /// </summary>
+        /// <param name="numericLanguageID">Initial value of the numericLanguageID property.</param>
+        public static trnTranslationLanguages CreatetrnTranslationLanguages(global::System.Int32 numericLanguageID)
+        {
+            trnTranslationLanguages trnTranslationLanguages = new trnTranslationLanguages();
+            trnTranslationLanguages.numericLanguageID = numericLanguageID;
+            return trnTranslationLanguages;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 numericLanguageID
+        {
+            get
+            {
+                return _numericLanguageID;
+            }
+            set
+            {
+                if (_numericLanguageID != value)
+                {
+                    OnnumericLanguageIDChanging(value);
+                    ReportPropertyChanging("numericLanguageID");
+                    _numericLanguageID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("numericLanguageID");
+                    OnnumericLanguageIDChanged();
+                }
+            }
+        }
+        private global::System.Int32 _numericLanguageID;
+        partial void OnnumericLanguageIDChanging(global::System.Int32 value);
+        partial void OnnumericLanguageIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String languageID
+        {
+            get
+            {
+                return _languageID;
+            }
+            set
+            {
+                OnlanguageIDChanging(value);
+                ReportPropertyChanging("languageID");
+                _languageID = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("languageID");
+                OnlanguageIDChanged();
+            }
+        }
+        private global::System.String _languageID;
+        partial void OnlanguageIDChanging(global::System.String value);
+        partial void OnlanguageIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String languageName
+        {
+            get
+            {
+                return _languageName;
+            }
+            set
+            {
+                OnlanguageNameChanging(value);
+                ReportPropertyChanging("languageName");
+                _languageName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("languageName");
+                OnlanguageNameChanged();
+            }
+        }
+        private global::System.String _languageName;
+        partial void OnlanguageNameChanging(global::System.String value);
+        partial void OnlanguageNameChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="trnTranslations")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -17506,6 +17934,236 @@ namespace EVEMon.XmlGenerator
         private global::System.String _text;
         partial void OntextChanging(global::System.String value);
         partial void OntextChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="warCombatZones")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class warCombatZones : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new warCombatZones object.
+        /// </summary>
+        /// <param name="combatZoneID">Initial value of the combatZoneID property.</param>
+        public static warCombatZones CreatewarCombatZones(global::System.Int32 combatZoneID)
+        {
+            warCombatZones warCombatZones = new warCombatZones();
+            warCombatZones.combatZoneID = combatZoneID;
+            return warCombatZones;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 combatZoneID
+        {
+            get
+            {
+                return _combatZoneID;
+            }
+            set
+            {
+                if (_combatZoneID != value)
+                {
+                    OncombatZoneIDChanging(value);
+                    ReportPropertyChanging("combatZoneID");
+                    _combatZoneID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("combatZoneID");
+                    OncombatZoneIDChanged();
+                }
+            }
+        }
+        private global::System.Int32 _combatZoneID;
+        partial void OncombatZoneIDChanging(global::System.Int32 value);
+        partial void OncombatZoneIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String combatZoneName
+        {
+            get
+            {
+                return _combatZoneName;
+            }
+            set
+            {
+                OncombatZoneNameChanging(value);
+                ReportPropertyChanging("combatZoneName");
+                _combatZoneName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("combatZoneName");
+                OncombatZoneNameChanged();
+            }
+        }
+        private global::System.String _combatZoneName;
+        partial void OncombatZoneNameChanging(global::System.String value);
+        partial void OncombatZoneNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> factionID
+        {
+            get
+            {
+                return _factionID;
+            }
+            set
+            {
+                OnfactionIDChanging(value);
+                ReportPropertyChanging("factionID");
+                _factionID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("factionID");
+                OnfactionIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _factionID;
+        partial void OnfactionIDChanging(Nullable<global::System.Int32> value);
+        partial void OnfactionIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> centerSystemID
+        {
+            get
+            {
+                return _centerSystemID;
+            }
+            set
+            {
+                OncenterSystemIDChanging(value);
+                ReportPropertyChanging("centerSystemID");
+                _centerSystemID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("centerSystemID");
+                OncenterSystemIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _centerSystemID;
+        partial void OncenterSystemIDChanging(Nullable<global::System.Int32> value);
+        partial void OncenterSystemIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String description
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                OndescriptionChanging(value);
+                ReportPropertyChanging("description");
+                _description = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("description");
+                OndescriptionChanged();
+            }
+        }
+        private global::System.String _description;
+        partial void OndescriptionChanging(global::System.String value);
+        partial void OndescriptionChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="warCombatZoneSystems")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class warCombatZoneSystems : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new warCombatZoneSystems object.
+        /// </summary>
+        /// <param name="solarSystemID">Initial value of the solarSystemID property.</param>
+        public static warCombatZoneSystems CreatewarCombatZoneSystems(global::System.Int32 solarSystemID)
+        {
+            warCombatZoneSystems warCombatZoneSystems = new warCombatZoneSystems();
+            warCombatZoneSystems.solarSystemID = solarSystemID;
+            return warCombatZoneSystems;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 solarSystemID
+        {
+            get
+            {
+                return _solarSystemID;
+            }
+            set
+            {
+                if (_solarSystemID != value)
+                {
+                    OnsolarSystemIDChanging(value);
+                    ReportPropertyChanging("solarSystemID");
+                    _solarSystemID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("solarSystemID");
+                    OnsolarSystemIDChanged();
+                }
+            }
+        }
+        private global::System.Int32 _solarSystemID;
+        partial void OnsolarSystemIDChanging(global::System.Int32 value);
+        partial void OnsolarSystemIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> combatZoneID
+        {
+            get
+            {
+                return _combatZoneID;
+            }
+            set
+            {
+                OncombatZoneIDChanging(value);
+                ReportPropertyChanging("combatZoneID");
+                _combatZoneID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("combatZoneID");
+                OncombatZoneIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _combatZoneID;
+        partial void OncombatZoneIDChanging(Nullable<global::System.Int32> value);
+        partial void OncombatZoneIDChanged();
 
         #endregion
     

@@ -13,7 +13,7 @@ namespace EVEMon.BlankCharacter
 {
     public partial class BlankCharacterControl : UserControl
     {
-        private readonly Dictionary<int, int> m_allRaceSkills = new Dictionary<int, int>
+        private readonly Dictionary<long, int> m_allRaceSkills = new Dictionary<long, int>
                                                                     {
                                                                         { DBConstants.ElectronicsSkillID, 3 },
                                                                         { DBConstants.EngineeringSkillID, 3 },
@@ -26,25 +26,25 @@ namespace EVEMon.BlankCharacter
                                                                         { DBConstants.SpaceshipCommandSkillID, 3 }
                                                                     };
 
-        private readonly Dictionary<int, int> m_amarrRaceSkills = new Dictionary<int, int>
+        private readonly Dictionary<long, int> m_amarrRaceSkills = new Dictionary<long, int>
                                                                       {
                                                                           { DBConstants.SmallEnergyTurretSkillID, 3 },
                                                                           { DBConstants.AmarrFrigateSkillID, 2 }
                                                                       };
 
-        private readonly Dictionary<int, int> m_caldariRaceSkills = new Dictionary<int, int>
+        private readonly Dictionary<long, int> m_caldariRaceSkills = new Dictionary<long, int>
                                                                         {
                                                                             { DBConstants.SmallHybridTurretSkillID, 3 },
                                                                             { DBConstants.CaldariFrigateSkillID, 2 }
                                                                         };
 
-        private readonly Dictionary<int, int> m_gallenteRaceSkills = new Dictionary<int, int>
+        private readonly Dictionary<long, int> m_gallenteRaceSkills = new Dictionary<long, int>
                                                                          {
                                                                              { DBConstants.SmallHybridTurretSkillID, 3 },
                                                                              { DBConstants.GallenteFrigateSkillID, 2 }
                                                                          };
 
-        private readonly Dictionary<int, int> m_minmatarRaceSkills = new Dictionary<int, int>
+        private readonly Dictionary<long, int> m_minmatarRaceSkills = new Dictionary<long, int>
                                                                          {
                                                                              { DBConstants.SmallProjectileTurretSkillID, 3 },
                                                                              { DBConstants.MinmatarFrigateSkillID, 2 }
@@ -414,7 +414,7 @@ namespace EVEMon.BlankCharacter
         /// <returns></returns>
         private IEnumerable<SerializableCharacterSkill> GetSkillsForRace()
         {
-            Dictionary<int, int> startingSkills = GetStartingSkills();
+            Dictionary<long, int> startingSkills = GetStartingSkills();
 
             return (startingSkills.Select(
                 raceSkill => new
@@ -439,9 +439,9 @@ namespace EVEMon.BlankCharacter
         /// Gets the starting skills.
         /// </summary>
         /// <returns></returns>
-        private Dictionary<int, int> GetStartingSkills()
+        private Dictionary<long, int> GetStartingSkills()
         {
-            Dictionary<int, int> startingSkills = new Dictionary<int, int>();
+            Dictionary<long, int> startingSkills = new Dictionary<long, int>();
 
             switch (m_race)
             {

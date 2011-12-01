@@ -17,6 +17,9 @@ namespace EVEMon.XmlGenerator
         /// <returns>cleaned <c>string</c></returns>
         public static string Clean(this string input)
         {
+            if (String.IsNullOrEmpty(input))
+                return String.Empty;
+
             string output = input.TrimWhitespace();
             output = output.ReplaceTabs();
             output = output.CleanXmlTags();

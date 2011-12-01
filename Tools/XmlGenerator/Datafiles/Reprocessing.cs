@@ -9,7 +9,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Reprocessing
     {
-        private const int ReprocessGenTotal = 11669;
+        private const int ReprocessGenTotal = 11949;
 
         private static DateTime s_startTime;
 

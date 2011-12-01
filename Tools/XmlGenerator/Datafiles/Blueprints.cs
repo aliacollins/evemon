@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Blueprints
     {
-        private const int BlueprintGenTotal = 4010;
+        private const int BlueprintGenTotal = 4078;
 
         private static DateTime s_startTime;
         private static List<InvMarketGroup> s_injectedMarketGroups;
@@ -30,7 +30,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Configure blueprints with Null market group
             ConfigureNullMarketBlueprint();
 
-            Dictionary<int, SerializableBlueprintMarketGroup> groups = new Dictionary<int, SerializableBlueprintMarketGroup>();
+            Dictionary<long, SerializableBlueprintMarketGroup> groups = new Dictionary<long, SerializableBlueprintMarketGroup>();
 
             // Export blueprint groups           
             CreateMarketGroups(groups);
@@ -64,7 +64,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// Creates the market groups.
         /// </summary>
         /// <param name="groups">The groups.</param>
-        private static void CreateMarketGroups(IDictionary<int, SerializableBlueprintMarketGroup> groups)
+        private static void CreateMarketGroups(IDictionary<long, SerializableBlueprintMarketGroup> groups)
         {
             foreach (InvMarketGroup marketGroup in Database.InvMarketGroupTable.Concat(s_injectedMarketGroups))
             {
@@ -79,9 +79,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add the items in this group
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
                 foreach (InvType item in Database.InvTypeTable.Where(
-                    x => x.MarketGroupID == marketGroup.ID &&
-                         Database.InvGroupTable[x.GroupID].CategoryID == DBConstants.BlueprintCategoryID &&
-                         Database.InvGroupTable[x.GroupID].Published))
+                    item => item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Select(
+                        item => new { item, group = Database.InvGroupTable[item.GroupID] }).Where(
+                            itemGroup => itemGroup.group.CategoryID == DBConstants.BlueprintCategoryID
+                                         && itemGroup.group.Published).Select(itemGroup => itemGroup.item))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -159,10 +160,14 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvType item in Database.InvTypeTable.Where(
-                x => (x.MarketGroupID == null || x.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
-                     !x.Name.Contains("TEST") && Database.InvBlueprintTypesTable.Any(y => y.ID == x.ID) &&
-                     Database.InvTypeTable.Any(z => z.ID == Database.InvBlueprintTypesTable[x.ID].ProductTypeID) &&
-                     Database.InvTypeTable[Database.InvBlueprintTypesTable[x.ID].ProductTypeID].Published))
+                item => (item.MarketGroupID == null || item.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
+                        !item.Name.Contains("TEST") && Database.InvBlueprintTypesTable.Any(
+                            blueprintTypes => blueprintTypes.ID == item.ID)).Select(
+                                item =>
+                                new { item, ID = Database.InvBlueprintTypesTable[item.ID].ProductTypeID }).Where(
+                                    producedItem =>
+                                    Database.InvTypeTable.Any(item => item.ID == producedItem.ID) &&
+                                    Database.InvTypeTable[producedItem.ID].Published).Select(producedItem => producedItem.item))
             {
                 Util.UpdatePercentDone(BlueprintGenTotal);
 
@@ -316,7 +321,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             ExportRequirements(srcBlueprint, blueprint);
 
             // Look for the tech 2 variations that this blueprint invents
-            IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypeTable.Where(
+            IEnumerable<long> listOfInventionTypeID = Database.InvMetaTypeTable.Where(
                 x => x.ParentItemID == blueprint.ProduceItemID &&
                      x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
                          x => x.ItemID).SelectMany(
@@ -444,7 +449,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="blueprintID">The blueprint ID.</param>
         /// <param name="prerequisiteSkills">The prerequisite skills.</param>
         /// <param name="requiredMaterials">The required materials.</param>
-        private static void AddRequiredExtraMaterials(int blueprintID,
+        private static void AddRequiredExtraMaterials(long blueprintID,
                                                       ICollection<SerializablePrereqSkill> prerequisiteSkills,
                                                       ICollection<SerializableRequiredMaterial> requiredMaterials)
         {

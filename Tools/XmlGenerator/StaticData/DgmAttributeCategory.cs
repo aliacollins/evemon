@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmAttributeCategory : IHasID
     {
         [XmlElement("categoryID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         [XmlElement("categoryName")]
         public string Name { get; set; }

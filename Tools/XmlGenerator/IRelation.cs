@@ -5,7 +5,7 @@
     /// </summary>
     public interface IRelation
     {
-        int Left { get; }
-        int Right { get; }
+        long Left { get; }
+        long Right { get; }
     }
 }

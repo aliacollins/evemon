@@ -21,7 +21,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        internal Item(int id, string name)
+        internal Item(long id, string name)
         {
             ID = id;
             Name = name;
@@ -128,7 +128,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the metalevel this item belong to.
         /// </summary>
-        public int MetaLevel { get; private set; }
+        public long MetaLevel { get; private set; }
 
         /// <summary>
         /// Gets the metagroup this item belong to.

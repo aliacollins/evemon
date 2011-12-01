@@ -5,6 +5,6 @@
     /// </summary>
     public interface IHasID
     {
-        int ID { get; }
+        long ID { get; }
     }
 }

@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Items
     {
-        private const int ItemGenTotal = 11431;
+        private const int ItemGenTotal = 11708;
 
         private static DateTime s_startTime;
         private static List<InvMarketGroup> s_injectedMarketGroups;
@@ -30,7 +30,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Create custom market groups that don't exist in EVE
             ConfigureNullMarketItem();
 
-            Dictionary<int, SerializableMarketGroup> groups = new Dictionary<int, SerializableMarketGroup>();
+            Dictionary<long, SerializableMarketGroup> groups = new Dictionary<long, SerializableMarketGroup>();
 
             // Create the market groups
             CreateMarketGroups(groups);
@@ -52,9 +52,8 @@ namespace EVEMon.XmlGenerator.Datafiles
             SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresMarketGroupID], ItemFamily.StarbaseStructure);
 
             // Sort groups
-            IEnumerable<SerializableMarketGroup> rootGroups =
-                Database.InvMarketGroupTable.Concat(s_injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID])
-                    .OrderBy(x => x.Name);
+            IEnumerable<SerializableMarketGroup> rootGroups = Database.InvMarketGroupTable.Concat(s_injectedMarketGroups).Where(
+                x => !x.ParentID.HasValue).Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
             Console.WriteLine(
                 String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
@@ -70,26 +69,29 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// Creates the market groups.
         /// </summary>
         /// <param name="groups">The groups.</param>
-        private static void CreateMarketGroups(IDictionary<int, SerializableMarketGroup> groups)
+        private static void CreateMarketGroups(IDictionary<long, SerializableMarketGroup> groups)
         {
-            foreach (InvMarketGroup srcGroup in Database.InvMarketGroupTable.Concat(s_injectedMarketGroups))
+            foreach (InvMarketGroup marketGroup in Database.InvMarketGroupTable.Concat(s_injectedMarketGroups))
             {
-                SerializableMarketGroup group = new SerializableMarketGroup { ID = srcGroup.ID, Name = srcGroup.Name };
-                groups[srcGroup.ID] = group;
+                SerializableMarketGroup group = new SerializableMarketGroup { ID = marketGroup.ID, Name = marketGroup.Name };
+                groups[marketGroup.ID] = group;
 
-                // Add the items in this group
+                // Add the items in this group; excluding the implants we are adding below
                 List<SerializableItem> items = new List<SerializableItem>();
                 foreach (InvType srcItem in Database.InvTypeTable.Where(
-                    x => x.Published && (x.MarketGroupID.GetValueOrDefault() == srcGroup.ID)))
+                    x => x.Published && x.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Where(
+                        srcItem => marketGroup.ID != DBConstants.RootNonMarketGroupID ||
+                                   Database.InvGroupTable[srcItem.GroupID].CategoryID != DBConstants.ImplantCategoryID ||
+                                   srcItem.GroupID == DBConstants.CyberLearningImplantsGroupID))
                 {
                     CreateItem(srcItem, items);
                 }
 
                 // If this is an implant group, we add the implants with no market groups in this one
-                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
-                    srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
+                if (marketGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
+                    marketGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
                 {
-                    AddImplant(items, srcGroup);
+                    AddImplant(items, marketGroup);
                 }
 
                 // Store the items
@@ -281,7 +283,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                         {
                                             ID = srcItem.ID,
                                             Name = srcItem.Name,
-                                            Description = srcItem.Description,
+                                            Description = srcItem.Description ?? String.Empty,
                                             Icon = (srcItem.IconID.HasValue ? Database.EveIconsTable[srcItem.IconID.Value].Icon : String.Empty),
                                             PortionSize = srcItem.PortionSize,
                                             MetaGroup = ItemMetaGroup.None
@@ -562,7 +564,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         /// <param name="propIntValue">The prop int value.</param>
         /// <param name="srcProp">The SRC prop.</param>
-        private static void AddMetaData(SerializableItem item, int propIntValue, DgmTypeAttribute srcProp)
+        private static void AddMetaData(SerializableItem item, long propIntValue, DgmTypeAttribute srcProp)
         {
             // Is metalevel property ?
             if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
@@ -655,7 +657,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         /// <param name="groupID">The group ID.</param>
         /// <returns></returns>
-        private static int GetPackagedVolume(int groupID)
+        private static int GetPackagedVolume(long groupID)
         {
             switch (groupID)
             {

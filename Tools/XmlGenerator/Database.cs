@@ -20,31 +20,25 @@ namespace EVEMon.XmlGenerator
         /// Gets or sets the agents table.
         /// </summary>
         /// <value>The agents table.</value>
-        internal static Bag<AgtAgents> AgentsTable { get; private set; }
+        internal static Bag<AgtAgents> AgtAgentsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the agent types table.
         /// </summary>
         /// <value>The agent types table.</value>
-        internal static Bag<AgtAgentTypes> AgentTypesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the agent config table.
-        /// </summary>
-        /// <value>The agent config table.</value>
-        internal static List<AgtConfig> AgentConfigTable { get; private set; }
+        internal static Bag<AgtAgentTypes> AgtAgentTypesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the research agents table.
         /// </summary>
         /// <value>The research agents table.</value>
-        internal static Bag<AgtResearchAgents> ResearchAgentsTable { get; private set; }
+        internal static Bag<AgtResearchAgents> AgtResearchAgentsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the NPC divisions table.
         /// </summary>
         /// <value>The NPC divisions table.</value>
-        internal static Bag<CrpNPCDivisions> NPCDivisionsTable { get; private set; }
+        internal static Bag<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the eve units table.
@@ -56,7 +50,7 @@ namespace EVEMon.XmlGenerator
         /// Gets or sets the eve names table.
         /// </summary>
         /// <value>The eve names table.</value>
-        internal static Bag<EveNames> EveNamesTable { get; private set; }
+        internal static Bag<InvNames> InvNamesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the eve icons table.
@@ -202,7 +196,7 @@ namespace EVEMon.XmlGenerator
         /// <value>The total tables count.</value>
         internal static int TotalTablesCount
         {
-            get { return 29; }
+            get { return 28; }
         }
 
         #endregion
@@ -293,53 +287,13 @@ namespace EVEMon.XmlGenerator
 
             s_startTime = DateTime.Now;
 
-            AgentsTable = Agents();
+            AgtAgentsTable = Agents();
             Util.UpdateProgress();
-            AgentTypesTable = AgentTypes();
+            AgtAgentTypesTable = AgentTypes();
             Util.UpdateProgress();
-            AgentConfigTable = AgentConfig();
+            AgtResearchAgentsTable = ResearchAgents();
             Util.UpdateProgress();
-            ResearchAgentsTable = ResearchAgents();
-            Util.UpdateProgress();
-            NPCDivisionsTable = NPCDivisions();
-            Util.UpdateProgress();
-            EveUnitsTable = Units();
-            Util.UpdateProgress();
-            EveNamesTable = Names();
-            Util.UpdateProgress();
-            EveIconsTable = Icons();
-            Util.UpdateProgress();
-            DgmAttributeTypesTable = Attributes();
-            Util.UpdateProgress();
-            DgmAttributeCategoriesTable = AttributeCategories();
-            Util.UpdateProgress();
-            MapRegionsTable = Regions();
-            Util.UpdateProgress();
-            MapConstellationsTable = Constellations();
-            Util.UpdateProgress();
-            MapSolarSystemTable = Solarsystems();
-            Util.UpdateProgress();
-            StaStationTable = Stations();
-            Util.UpdateProgress();
-            MapSolarSystemJumpTable = Jumps();
-            Util.UpdateProgress();
-            DgmTypeAttributesTable = TypeAttributes();
-            Util.UpdateProgress();
-            InvBlueprintTypesTable = BlueprintTypes();
-            Util.UpdateProgress();
-            InvMarketGroupTable = MarketGroups();
-            Util.UpdateProgress();
-            InvGroupTable = Groups();
-            Util.UpdateProgress();
-            InvMetaTypeTable = MetaTypes();
-            Util.UpdateProgress();
-            DgmTypeEffectsTable = TypeEffects();
-            Util.UpdateProgress();
-            InvTypeTable = Types();
-            Util.UpdateProgress();
-            InvTypeMaterialsTable = TypeMaterials();
-            Util.UpdateProgress();
-            RamTypeRequirementsTable = TypeRequirements();
+            CrpNPCDivisionsTable = NPCDivisions();
             Util.UpdateProgress();
             CrtCategoriesTable = CertificateCategories();
             Util.UpdateProgress();
@@ -350,6 +304,44 @@ namespace EVEMon.XmlGenerator
             CrtRecommendationsTable = CertificateRecommendations();
             Util.UpdateProgress();
             CrtRelationshipsTable = CertificateRelationships();
+            Util.UpdateProgress();
+            DgmAttributeTypesTable = Attributes();
+            Util.UpdateProgress();
+            DgmAttributeCategoriesTable = AttributeCategories();
+            Util.UpdateProgress();
+            EveUnitsTable = Units();
+            Util.UpdateProgress();
+            EveIconsTable = Icons();
+            Util.UpdateProgress();
+            DgmTypeAttributesTable = TypeAttributes();
+            Util.UpdateProgress();
+            DgmTypeEffectsTable = TypeEffects();
+            Util.UpdateProgress();
+            InvBlueprintTypesTable = BlueprintTypes();
+            Util.UpdateProgress();
+            InvGroupTable = Groups();
+            Util.UpdateProgress();
+            InvMarketGroupTable = MarketGroups();
+            Util.UpdateProgress();
+            InvMetaTypeTable = MetaTypes();
+            Util.UpdateProgress();
+            InvNamesTable = Names();
+            Util.UpdateProgress();
+            InvTypeMaterialsTable = TypeMaterials();
+            Util.UpdateProgress();
+            InvTypeTable = Types();
+            Util.UpdateProgress();
+            MapRegionsTable = Regions();
+            Util.UpdateProgress();
+            MapConstellationsTable = Constellations();
+            Util.UpdateProgress();
+            MapSolarSystemTable = Solarsystems();
+            Util.UpdateProgress();
+            MapSolarSystemJumpTable = Jumps();
+            Util.UpdateProgress();
+            RamTypeRequirementsTable = TypeRequirements();
+            Util.UpdateProgress();
+            StaStationTable = Stations();
             Util.UpdateProgress();
 
             Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
@@ -385,6 +377,9 @@ namespace EVEMon.XmlGenerator
                 if (agent.agentTypeID.HasValue)
                     item.AgentTypeID = agent.agentTypeID.Value;
 
+                if (agent.isLocator.HasValue)
+                    item.IsLocator = agent.isLocator.Value;
+
                 collection.Items.Add(item);
             }
 
@@ -410,21 +405,6 @@ namespace EVEMon.XmlGenerator
             }
 
             return new Bag<AgtAgentTypes>(collection);
-        }
-
-        /// <summary>
-        /// EVE Agent Config.
-        /// </summary>
-        /// <returns><c>List</c> of EVE Agent Config.</returns>
-        private static List<AgtConfig> AgentConfig()
-        {
-            return Context.agtConfig.Select(
-                agentConfig => new AgtConfig
-                                   {
-                                       ID = agentConfig.agentID,
-                                       Key = agentConfig.k,
-                                       Value = agentConfig.v
-                                   }).ToList();
         }
 
         /// <summary>
@@ -473,12 +453,12 @@ namespace EVEMon.XmlGenerator
         /// EVE Names.
         /// </summary>
         /// <returns><c>Bag</c> of EVE Names.</returns>
-        private static Bag<EveNames> Names()
+        private static Bag<InvNames> Names()
         {
-            IndexedCollection<EveNames> collection = new IndexedCollection<EveNames>();
+            IndexedCollection<InvNames> collection = new IndexedCollection<InvNames>();
 
-            foreach (EveNames item in Context.eveNames.Select(
-                name => new EveNames
+            foreach (InvNames item in Context.invNames.Select(
+                name => new InvNames
                             {
                                 ID = name.itemID,
                                 Name = name.itemName
@@ -487,7 +467,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<EveNames>(collection);
+            return new Bag<InvNames>(collection);
         }
 
         /// <summary>

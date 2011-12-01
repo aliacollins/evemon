@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class MapRegion : IHasID
     {
         [XmlElement("regionID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         [XmlElement("regionName")]
         public string Name { get; set; }

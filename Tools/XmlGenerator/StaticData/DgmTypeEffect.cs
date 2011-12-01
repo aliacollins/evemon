@@ -5,10 +5,10 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmTypeEffect : IRelation
     {
         [XmlElement("typeID")]
-        public int ItemID { get; set; }
+        public long ItemID { get; set; }
 
         [XmlElement("effectID")]
-        public int EffectID { get; set; }
+        public long EffectID { get; set; }
 
 
         #region IRelation Members
@@ -17,7 +17,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the left column value.
         /// </summary>
         /// <value>The left.</value>
-        int IRelation.Left
+        long IRelation.Left
         {
             get { return ItemID; }
         }
@@ -26,7 +26,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the right column value.
         /// </summary>
         /// <value>The right.</value>
-        int IRelation.Right
+        long IRelation.Right
         {
             get { return EffectID; }
         }

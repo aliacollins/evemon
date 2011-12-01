@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvType : IHasID
     {
         [XmlElement("typeID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         [XmlElement("groupID")]
         public int GroupID { get; set; }
@@ -35,7 +35,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public int? RaceID { get; set; }
 
         [XmlElement("marketGroupID")]
-        public int? MarketGroupID { get; set; }
+        public long? MarketGroupID { get; set; }
 
         [XmlElement("basePrice")]
         public decimal BasePrice { get; set; }

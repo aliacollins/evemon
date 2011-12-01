@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class EveUnit : IHasID
     {
         [XmlElement("unitID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         [XmlElement("unitName")]
         public string Name { get; set; }

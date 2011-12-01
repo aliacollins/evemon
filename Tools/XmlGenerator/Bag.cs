@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator
     public sealed class Bag<T> : IEnumerable<T>
         where T : IHasID
     {
-        private readonly Dictionary<int, T> m_items;
+        private readonly Dictionary<long, T> m_items;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bag&lt;T&gt;"/> class.
@@ -22,7 +22,7 @@ namespace EVEMon.XmlGenerator
             if (collection == null)
                 throw new ArgumentNullException("collection");
 
-            m_items = new Dictionary<int, T>();
+            m_items = new Dictionary<long, T>();
 
             foreach (T item in collection.Items)
             {
@@ -46,10 +46,9 @@ namespace EVEMon.XmlGenerator
         /// Gets or sets the <see cref="T"/> with the specified id.
         /// </summary>
         /// <value></value>
-        public T this[int id]
+        public T this[long id]
         {
             get { return m_items[id]; }
-            private set { m_items[id] = value; }
         }
 
         /// <summary>

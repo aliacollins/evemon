@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmAttributeTypes : IHasID
     {
         [XmlElement("attributeID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         [XmlElement("description")]
         public string Description { get; set; }
@@ -29,7 +29,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public int? UnitID { get; set; }
 
         [XmlElement("categoryID")]
-        public int? CategoryID { get; set; }
+        public long? CategoryID { get; set; }
 
         [XmlElement("highIsGood")]
         public bool HigherIsBetter { get; set; }

@@ -20,6 +20,13 @@ namespace EVEMon.Common.Serialization.Datafiles
         }
 
         /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlElement("id")]
+        public long ID { get; set; }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>

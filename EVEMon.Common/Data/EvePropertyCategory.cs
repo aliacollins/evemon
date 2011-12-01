@@ -18,6 +18,7 @@ namespace EVEMon.Common.Data
             if (serial == null)
                 throw new ArgumentNullException("serial");
 
+            ID = serial.ID;
             Name = serial.Name;
             Description = serial.Description;
 
@@ -42,6 +43,11 @@ namespace EVEMon.Common.Data
 
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets this category's id.
+        /// </summary>
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets this category's name.
