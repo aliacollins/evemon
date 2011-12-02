@@ -427,7 +427,7 @@ namespace EVEMon.Common
             serial.CorporationName = CorporationName;
             serial.CorporationID = CorporationID;
             serial.AllianceName = AllianceName;
-            serial.AllianceID = AllianceID.ToString(CultureConstants.InvariantCulture);
+            serial.AllianceID = AllianceID;
             serial.CloneSkillPoints = CloneSkillPoints;
             serial.CloneName = CloneName;
             serial.Balance = Balance;
@@ -517,8 +517,6 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         private void Import(SerializableCharacterSheetBase serial)
         {
-            int allianceID;
-
             // Bio
             m_name = serial.Name;
             Balance = serial.Balance;
@@ -530,7 +528,7 @@ namespace EVEMon.Common
             CorporationName = serial.CorporationName;
             CorporationID = serial.CorporationID;
             AllianceName = serial.AllianceName;
-            AllianceID = Int32.TryParse(serial.AllianceID, out allianceID) ? allianceID : 0;
+            AllianceID = serial.AllianceID;
             CloneName = serial.CloneName;
             CloneSkillPoints = serial.CloneSkillPoints;
 
