@@ -127,7 +127,7 @@ namespace EVEMon.Common
         /// <param name="builder">The builder.</param>
         private static void AddName(PlanExportSettings settings, ISkillLevel entry, StringBuilder builder)
         {
-            if (settings.Markup.Equals(MarkupType.Html))
+            if (settings.Markup == MarkupType.Html)
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture,
                                      !settings.ShoppingList
