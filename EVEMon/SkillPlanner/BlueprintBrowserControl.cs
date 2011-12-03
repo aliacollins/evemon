@@ -269,7 +269,7 @@ namespace EVEMon.SkillPlanner
             lblResearchPECharTime.Text = CharacterActivityTime(activityTime, DBConstants.ResearchSkillID, factor, false);
 
             gbResearching.Visible =
-                !m_blueprint.MarketGroup.BelongsIn(new[] { DBConstants.BlueprintRootNonMarketGroupID });
+                !m_blueprint.MarketGroup.BelongsIn(DBConstants.BlueprintRootNonMarketGroupID);
             gbInvention.Text = (gbResearching.Visible ? "INVENTION" : "RESEARCHING");
             lblInventionTime.Text = (gbResearching.Visible ? "Invention Time:" : "Research Tech Time:");
             gbInvention.Location = (gbResearching.Visible ? new Point(3, 385) : new Point(3, 225));
@@ -439,20 +439,20 @@ namespace EVEMon.SkillPlanner
                 switch (m_activity)
                 {
                     case BlueprintActivity.Manufacturing:
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.DronesMarketGroupID })
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID)
                             && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
                             cbFacility.Items.Add("Drone Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.AmmosAndChargesMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID))
                             cbFacility.Items.Add("Ammunition Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.ShipEquipmentsMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID))
                         {
                             cbFacility.Items.Add("Equipment Assembly Array");
                             cbFacility.Items.Add("Rapid Equipment Assembly Array");
                         }
 
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.ComponentsMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.ComponentsMarketGroupID))
                             cbFacility.Items.Add("Component Assembly Array");
 
                         if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsMarketGroupIDs))

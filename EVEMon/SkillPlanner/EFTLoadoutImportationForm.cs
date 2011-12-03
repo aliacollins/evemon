@@ -331,15 +331,15 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Is it a rig?
-                if (item.MarketGroup.BelongsIn(new[] { DBConstants.ShipModificationsMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(DBConstants.ShipModificationsMarketGroupID))
                     nodeName = "Rigs";
 
                 // Is it a subsystem?
-                if (item.MarketGroup.BelongsIn(new[] { DBConstants.SubsystemsMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(DBConstants.SubsystemsMarketGroupID))
                     nodeName = "Subsystems";
 
                 // Is it a drone?
-                if (item.MarketGroup.BelongsIn(new[] { DBConstants.DronesMarketGroupID }))
+                if (item.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID))
                     nodeName = "Drones";
 
                 // Gets or create the node for the slot
