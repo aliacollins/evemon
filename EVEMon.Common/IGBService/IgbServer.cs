@@ -145,6 +145,19 @@ namespace EVEMon.Common.IgbService
         }
 
         /// <summary>
+        /// Event triggered on connection close read.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClosed(object sender, EventArgs e)
+        {
+            lock (m_clients)
+            {
+                m_clients.Remove((IgbTcpClient)sender);
+            }
+        }
+
+        /// <summary>
         /// Process the buffer and respond to the client.
         /// </summary>
         /// <param name="client">client to respond to</param>
@@ -253,19 +266,19 @@ namespace EVEMon.Common.IgbService
         /// <param name="buffer">Buffer</param>
         /// <param name="length">The length.</param>
         /// <returns></returns>
-        private static bool TailHasTwoNewLine(byte[] buffer, int length)
+        private static bool TailHasTwoNewLine(IList<byte> buffer, int length)
         {
             bool gotOne = false;
             for (int i = 0; i < length; i++)
             {
-                if (buffer[buffer.Length - i - 1] == ((byte)'\n'))
+                if (buffer[buffer.Count - i - 1] == ((byte)'\n'))
                 {
                     if (gotOne)
                         return true;
 
                     gotOne = true;
                 }
-                else if (buffer[buffer.Length - i - 1] != ((byte)'\r'))
+                else if (buffer[buffer.Count - i - 1] != ((byte)'\r'))
                     gotOne = false;
             }
 
@@ -406,7 +419,7 @@ namespace EVEMon.Common.IgbService
         /// Outputs the documents footer.
         /// </summary>
         /// <param name="sw"></param>
-        private static void WriteDocumentFooter(StreamWriter sw)
+        private static void WriteDocumentFooter(TextWriter sw)
         {
             sw.WriteLine("  </body>");
             sw.WriteLine("</html>");
@@ -416,7 +429,7 @@ namespace EVEMon.Common.IgbService
         /// Outputs the document header.
         /// </summary>
         /// <param name="sw"></param>
-        private static void WriteDocumentHeader(StreamWriter sw)
+        private static void WriteDocumentHeader(TextWriter sw)
         {
             sw.WriteLine("<html>");
             sw.WriteLine("  <head>");
@@ -436,7 +449,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="context">context of the request</param>
         /// <param name="sw">stream writer to output to</param>
         /// <param name="character">character to use</param>
-        private static void GeneratePlanListOutput(string context, StreamWriter sw, Character character)
+        private static void GeneratePlanListOutput(string context, TextWriter sw, Character character)
         {
             WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
@@ -464,7 +477,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="context">context of the request</param>
         /// <param name="sw">stream writer to output to</param>
         /// <param name="character">character to use</param>
-        private static void GenerateSkillsByTimeOutput(string context, StreamWriter sw, Character character)
+        private static void GenerateSkillsByTimeOutput(string context, TextWriter sw, Character character)
         {
             WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
@@ -520,7 +533,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestPath">url of the request</param>
         /// <param name="sw">stream writer to output to</param>
         /// <param name="character">character to use</param>
-        private static void GeneratePlanOrShoppingOutput(string context, string requestPath, StreamWriter sw, Character character)
+        private static void GeneratePlanOrShoppingOutput(string context, string requestPath, TextWriter sw, Character character)
         {
             WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
@@ -576,15 +589,15 @@ namespace EVEMon.Common.IgbService
 
                     PlanExportSettings x = new PlanExportSettings
                                                {
-                                                   // only if not shopping
+                                                   // Only if not shopping
                                                    EntryTrainingTimes = !shopping,
-                                                   // only if not shopping
+                                                   // Only if not shopping
                                                    EntryStartDate = !shopping,
-                                                   // only if not shopping
+                                                   // Only if not shopping
                                                    EntryFinishDate = !shopping,
-                                                   // only if not shopping
+                                                   // Only if not shopping
                                                    FooterTotalTime = !shopping,
-                                                   // only if not shopping
+                                                   // Only if not shopping
                                                    FooterDate = !shopping,
                                                    FooterCount = true,
                                                    ShoppingList = shopping,
@@ -632,19 +645,6 @@ namespace EVEMon.Common.IgbService
                                                                            : "Mark as not owned"),
                                                 requestType, HttpUtility.HtmlEncode(plan.Name));
                        };
-        }
-
-        /// <summary>
-        /// Event triggered on connection close read.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnClosed(object sender, EventArgs e)
-        {
-            lock (m_clients)
-            {
-                m_clients.Remove((IgbTcpClient)sender);
-            }
         }
 
         #endregion

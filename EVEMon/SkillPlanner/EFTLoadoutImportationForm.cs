@@ -26,7 +26,6 @@ namespace EVEMon.SkillPlanner
 
         private Plan m_plan;
         private BaseCharacter m_character;
-        private string m_loadoutName = String.Empty;
 
 
         #region Constructors
@@ -162,58 +161,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">Arguments of the event.</param>
         private void tbEFTLoadout_TextChanged(object sender, EventArgs e)
         {
-            m_objects.Clear();
-            m_loadoutName = String.Empty;
-            ResultsTreeView.Nodes.Clear();
-
-            // If the box is empty, error
-            if (PasteTextBox.Lines.Length == 0)
-            {
-                ResultsTreeView.Nodes.Add("Cannot determine ship type");
-                ResultsTreeView.Enabled = false;
-                return;
-            }
-
-            // Error on first line ?
-            string line = PasteTextBox.Lines[0];
-            if (String.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
-            {
-                ResultsTreeView.Nodes.Add("Cannot determine ship type");
-                ResultsTreeView.Enabled = false;
-                return;
-            }
-
-            // Retrieve the ship
-            int commaIndex = line.IndexOf(',');
-            string shipTypeName = line.Substring(1, commaIndex - 1);
-            Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
-            if (ship != null)
-                m_objects.Add(ship);
-            else
-            {
-                // Couldn't find that ship
-                ResultsTreeView.Nodes.Add("Cannot determine ship type");
-                ResultsTreeView.Enabled = false;
-                return;
-            }
-
-            // Retrieve the loadout name
-            int lineLength = line.Length;
-            m_loadoutName = line.Substring(commaIndex + 1, (lineLength - commaIndex - 2));
-
-            // Add the items
-            for (int i = 1; i < PasteTextBox.Lines.Length; i++)
-            {
-                line = PasteTextBox.Lines[i];
-                if (!String.IsNullOrEmpty(line))
-                    AddItem(line);
-            }
-
-            // Update the controls
-            UpdatePlanStatus();
-            ResultsTreeView.ExpandAll();
-            ResultsTreeView.Enabled = true;
-            Cursor.Current = Cursors.Default;
+            BuildTreeView();
         }
 
         /// <summary>
@@ -234,7 +182,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnPlan_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
+            // Retrieve the loadout name
+            string line = PasteTextBox.Lines.First();
+            int commaIndex = line.IndexOf(',');
+            string loadoutName = line.Substring(commaIndex + 1, (line.Length - commaIndex - 2)).Trim();
+
+            IPlanOperation operation = m_plan.TryAddSet(m_skillsToAdd, loadoutName);
             PlanHelper.Perform(operation);
             UpdatePlanStatus();
         }
@@ -268,19 +221,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">Arguments of the event.</param>
         private void tvLoadout_MouseUp(object sender, MouseEventArgs e)
         {
-            // Show menu only if the right mouse button is clicked.
+            // Show menu only if the right mouse button is clicked
             if (e.Button != MouseButtons.Right)
                 return;
 
-            // Point where the mouse is clicked.
+            // Point where the mouse is clicked
             Point p = new Point(e.X, e.Y);
 
-            // Get the node that the user has clicked.
+            // Get the node that the user has clicked
             TreeNode node = ResultsTreeView.GetNodeAt(p);
             if (node == null || node.Tag == null)
                 return;
 
-            // Select the node the user has clicked.
+            // Select the node the user has clicked
             ResultsTreeView.SelectedNode = node;
             RightClickContextMenuStrip.Show(ResultsTreeView, p);
         }
@@ -297,41 +250,66 @@ namespace EVEMon.SkillPlanner
         /// <returns>Is loadout valid.</returns>
         private static bool IsLoadout(string text)
         {
-            string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Nothing to evaluate
             if (lines.Length == 0)
                 return false;
 
             // Error on first line ?
-            string line = lines[0];
+            string line = lines.First();
             if (String.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
                 return false;
 
             // Retrieve the ship
             int commaIndex = line.IndexOf(',');
             string shipTypeName = line.Substring(1, commaIndex - 1);
-            Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
 
-            return ship != null;
+            return StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName) != null;
         }
 
         /// <summary>
-        /// Parses one line of loadout text and adds the required
-        /// skills for the items to the _SkillsToAdd list.
+        /// Builds the tree view.
         /// </summary>
-        /// <remarks>
-        /// parsed items are also added to the TreeView.
-        /// </remarks>
+        private void BuildTreeView()
+        {
+            m_objects.Clear();
+            ResultsTreeView.Nodes.Clear();
+
+            // Add the items
+            foreach (string line in PasteTextBox.Lines.Where(line => !String.IsNullOrEmpty(line)))
+            {
+                AddItem(line);
+            }
+
+            // Update the controls
+            UpdatePlanStatus();
+            ResultsTreeView.ExpandAll();
+            ResultsTreeView.Enabled = true;
+            Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// Parses a line of loadout text and adds the item to the TreeView.
+        /// </summary>
         /// <param name="line">Line of text to be parsed.</param>
         private void AddItem(string line)
         {
-            // Retrieve the item and its charge
+            // Retrieve the ship
+            if (line == PasteTextBox.Lines.First())
+            {
+                string shipTypeName = line.Substring(1, line.IndexOf(',') - 1);
+                Item ship = StaticItems.ShipsMarketGroup.AllItems.First(x => x.Name == shipTypeName);
+                m_objects.Add(ship);
+            }
+
+            // Retrieve the item (might be a drone)
             string itemName = line.Contains(",") ? line.Substring(0, line.LastIndexOf(',')) : line;
-            string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
-
-            // Look up if it's a drone
             itemName = itemName.Contains(" x") ? itemName.Substring(0, line.LastIndexOf(" x", StringComparison.CurrentCulture)) : itemName;
-
             Item item = StaticItems.GetItemByName(itemName);
+
+            // Retrieve the charge
+            string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
             Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.GetItemByName(chargeName) : null;
 
             // Regular item ?

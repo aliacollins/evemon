@@ -14,7 +14,6 @@ namespace EVEMon.Common
 {
     public static class PlanIOHelper
     {
-
         /// <summary>
         /// Exports the plan under a text format.
         /// </summary>
