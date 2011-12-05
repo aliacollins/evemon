@@ -33,7 +33,7 @@ namespace EVEMon.Common.Data
         /// Gets or sets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets or sets the name.

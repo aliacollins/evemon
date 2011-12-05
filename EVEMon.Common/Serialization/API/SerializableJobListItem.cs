@@ -9,13 +9,13 @@ namespace EVEMon.Common.Serialization.API
         public long JobID { get; set; }
 
         [XmlAttribute("installedItemLocationID")]
-        public long InstalledItemLocationID { get; set; }
+        public int InstalledItemLocationID { get; set; }
 
         [XmlAttribute("outputLocationID")]
-        public long OutputLocationID { get; set; }
+        public int OutputLocationID { get; set; }
 
         [XmlAttribute("installedInSolarSystemID")]
-        public long SolarSystemID { get; set; }
+        public int SolarSystemID { get; set; }
 
         [XmlAttribute("installedItemProductivityLevel")]
         public int InstalledItemProductivityLevel { get; set; }
@@ -30,10 +30,10 @@ namespace EVEMon.Common.Serialization.API
         public int Runs { get; set; }
 
         [XmlAttribute("installedItemTypeID")]
-        public long InstalledItemTypeID { get; set; }
+        public int InstalledItemTypeID { get; set; }
 
         [XmlAttribute("outputTypeID")]
-        public long OutputTypeID { get; set; }
+        public int OutputTypeID { get; set; }
 
         [XmlAttribute("installedItemCopy")]
         public int InstalledItemCopy { get; set; }

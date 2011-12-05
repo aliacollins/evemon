@@ -12,7 +12,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The ID.</value>
         [XmlAttribute("id")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         /// <summary>
         /// Gets or sets the level.

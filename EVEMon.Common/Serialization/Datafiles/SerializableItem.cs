@@ -31,7 +31,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The ID.</value>
         [XmlAttribute("id")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -66,7 +66,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The meta level.</value>
         [XmlAttribute("metaLevel")]
-        public long MetaLevel { get; set; }
+        public int MetaLevel { get; set; }
 
         /// <summary>
         /// Gets or sets the meta group.

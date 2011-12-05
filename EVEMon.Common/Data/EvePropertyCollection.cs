@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The property id we're searching for.</param>
         /// <returns>The wanted property when found; null otherwise.</returns>
-        public EvePropertyValue? this[long id]
+        public EvePropertyValue? this[int id]
         {
             get
             {

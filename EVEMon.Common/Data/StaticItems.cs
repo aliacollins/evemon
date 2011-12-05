@@ -9,8 +9,8 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class StaticItems
     {
-        private static readonly Dictionary<long, MarketGroup> s_marketGroupsByID = new Dictionary<long, MarketGroup>();
-        private static readonly Dictionary<long, Item> s_itemsByID = new Dictionary<long, Item>();
+        private static readonly Dictionary<int, MarketGroup> s_marketGroupsByID = new Dictionary<int, MarketGroup>();
+        private static readonly Dictionary<int, Item> s_itemsByID = new Dictionary<int, Item>();
         private static readonly ImplantCollection[] s_implantSlots = new ImplantCollection[10];
 
 
@@ -117,7 +117,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="itemId">The id of the item to find.</param>
         /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
-        public static Item GetItemByID(long itemId)
+        public static Item GetItemByID(int itemId)
         {
             Item value;
             s_itemsByID.TryGetValue(itemId, out value);

@@ -44,7 +44,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property's ID.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets the property name (the displayName in the CCP tables).

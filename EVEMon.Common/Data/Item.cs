@@ -21,7 +21,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        internal Item(long id, string name)
+        internal Item(int id, string name)
         {
             ID = id;
             Name = name;
@@ -93,7 +93,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's ID.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets this object's icon.
@@ -128,7 +128,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the metalevel this item belong to.
         /// </summary>
-        public long MetaLevel { get; private set; }
+        public int MetaLevel { get; private set; }
 
         /// <summary>
         /// Gets the metagroup this item belong to.

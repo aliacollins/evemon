@@ -30,7 +30,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Configure blueprints with Null market group
             ConfigureNullMarketBlueprint();
 
-            Dictionary<long, SerializableBlueprintMarketGroup> groups = new Dictionary<long, SerializableBlueprintMarketGroup>();
+            Dictionary<int, SerializableBlueprintMarketGroup> groups = new Dictionary<int, SerializableBlueprintMarketGroup>();
 
             // Export blueprint groups           
             CreateMarketGroups(groups);
@@ -64,7 +64,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// Creates the market groups.
         /// </summary>
         /// <param name="groups">The groups.</param>
-        private static void CreateMarketGroups(IDictionary<long, SerializableBlueprintMarketGroup> groups)
+        private static void CreateMarketGroups(IDictionary<int, SerializableBlueprintMarketGroup> groups)
         {
             foreach (InvMarketGroup marketGroup in Database.InvMarketGroupTable.Concat(s_injectedMarketGroups))
             {
@@ -321,7 +321,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             ExportRequirements(srcBlueprint, blueprint);
 
             // Look for the tech 2 variations that this blueprint invents
-            IEnumerable<long> listOfInventionTypeID = Database.InvMetaTypeTable.Where(
+            IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypeTable.Where(
                 x => x.ParentItemID == blueprint.ProduceItemID &&
                      x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
                          x => x.ItemID).SelectMany(
@@ -449,7 +449,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="blueprintID">The blueprint ID.</param>
         /// <param name="prerequisiteSkills">The prerequisite skills.</param>
         /// <param name="requiredMaterials">The required materials.</param>
-        private static void AddRequiredExtraMaterials(long blueprintID,
+        private static void AddRequiredExtraMaterials(int blueprintID,
                                                       ICollection<SerializablePrereqSkill> prerequisiteSkills,
                                                       ICollection<SerializableRequiredMaterial> requiredMaterials)
         {

@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvType : IHasID
     {
         [XmlElement("typeID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("groupID")]
         public int GroupID { get; set; }

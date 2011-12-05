@@ -9,7 +9,7 @@ namespace EVEMon.Common.Serialization.API
         public long RecordID { get; set; }
 
         [XmlAttribute("corporationID")]
-        public long CorporationID { get; set; }
+        public int CorporationID { get; set; }
 
         [XmlAttribute("startDate")]
         public string StartDateXml

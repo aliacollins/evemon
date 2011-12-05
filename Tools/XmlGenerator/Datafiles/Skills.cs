@@ -78,7 +78,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                     };
 
                 // Export skill atributes
-                Dictionary<long, int> skillAttributes = Database.DgmTypeAttributesTable.Where(x => x.ItemID == skill.ID).
+                Dictionary<int, int> skillAttributes = Database.DgmTypeAttributesTable.Where(x => x.ItemID == skill.ID).
                     ToDictionary(
                         attribute => attribute.AttributeID, attribute => attribute.GetIntValue);
 
@@ -137,7 +137,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Gets the Eve attribute.
         /// </summary>        
-        private static EveAttribute IntToEveAttribute(long attributeValue)
+        private static EveAttribute IntToEveAttribute(int attributeValue)
         {
             switch (attributeValue)
             {

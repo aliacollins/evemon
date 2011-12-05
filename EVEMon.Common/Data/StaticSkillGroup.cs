@@ -7,7 +7,7 @@ namespace EVEMon.Common.Data
     /// <summary>
     /// Represents a readonly skill group definition. Characters have their own implementations, <see cref="SkillGroup"/>
     /// </summary>
-    public sealed class StaticSkillGroup : ReadonlyKeyedCollection<long, StaticSkill>
+    public sealed class StaticSkillGroup : ReadonlyKeyedCollection<int, StaticSkill>
     {
         #region Constructors
 

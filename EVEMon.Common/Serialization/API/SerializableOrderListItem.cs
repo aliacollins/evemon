@@ -25,7 +25,7 @@ namespace EVEMon.Common.Serialization.API
         public int ItemID { get; set; }
 
         [XmlAttribute("stationID")]
-        public long StationID { get; set; }
+        public int StationID { get; set; }
 
         [XmlAttribute("volEntered")]
         public int InitialVolume { get; set; }

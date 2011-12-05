@@ -22,13 +22,13 @@ namespace EVEMon.Common.Serialization.Settings
         public long JobID { get; set; }
 
         [XmlAttribute("installedItemID")]
-        public long InstalledItemID { get; set; }
+        public int InstalledItemID { get; set; }
 
         [XmlAttribute("installedItem")]
         public string InstalledItem { get; set; }
 
         [XmlAttribute("outputItemID")]
-        public long OutputItemID { get; set; }
+        public int OutputItemID { get; set; }
 
         [XmlAttribute("outputItem")]
         public string OutputItem { get; set; }
@@ -55,7 +55,7 @@ namespace EVEMon.Common.Serialization.Settings
         public string ItemLocation { get; set; }
 
         [XmlAttribute("installedSolarSystemID")]
-        public long SolarSystemID { get; set; }
+        public int SolarSystemID { get; set; }
 
         [XmlAttribute("installedTime")]
         public DateTime InstalledTime { get; set; }

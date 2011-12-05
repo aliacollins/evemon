@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class MapConstellation : IHasID
     {
         [XmlElement("constellationID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("constellationName")]
         public string Name { get; set; }

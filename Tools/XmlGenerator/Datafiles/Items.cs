@@ -30,7 +30,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Create custom market groups that don't exist in EVE
             ConfigureNullMarketItem();
 
-            Dictionary<long, SerializableMarketGroup> groups = new Dictionary<long, SerializableMarketGroup>();
+            Dictionary<int, SerializableMarketGroup> groups = new Dictionary<int, SerializableMarketGroup>();
 
             // Create the market groups
             CreateMarketGroups(groups);
@@ -69,7 +69,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// Creates the market groups.
         /// </summary>
         /// <param name="groups">The groups.</param>
-        private static void CreateMarketGroups(IDictionary<long, SerializableMarketGroup> groups)
+        private static void CreateMarketGroups(IDictionary<int, SerializableMarketGroup> groups)
         {
             foreach (InvMarketGroup marketGroup in Database.InvMarketGroupTable.Concat(s_injectedMarketGroups))
             {
@@ -564,7 +564,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         /// <param name="propIntValue">The prop int value.</param>
         /// <param name="srcProp">The SRC prop.</param>
-        private static void AddMetaData(SerializableItem item, long propIntValue, DgmTypeAttribute srcProp)
+        private static void AddMetaData(SerializableItem item, int propIntValue, DgmTypeAttribute srcProp)
         {
             // Is metalevel property ?
             if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
@@ -657,7 +657,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         /// <param name="groupID">The group ID.</param>
         /// <returns></returns>
-        private static int GetPackagedVolume(long groupID)
+        private static int GetPackagedVolume(int groupID)
         {
             switch (groupID)
             {

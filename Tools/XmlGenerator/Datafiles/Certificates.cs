@@ -67,7 +67,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             foreach (CrtClasses certClass in Database.CrtClassesTable)
             {
                 // Exclude unused classes
-                long id = certClass.ID;
+                int id = certClass.ID;
                 if (id == DBConstants.IndustrialHarvestingID ||
                     id == DBConstants.AutomatedMiningID ||
                     id == DBConstants.ProductionInternID)
@@ -179,7 +179,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Gets the certificates Grade.
         /// </summary>        
-        private static CertificateGrade GetGrade(long gradeValue)
+        private static CertificateGrade GetGrade(int gradeValue)
         {
             switch (gradeValue)
             {

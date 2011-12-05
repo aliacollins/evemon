@@ -19,13 +19,13 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// Gets or sets the base price property ID.
         /// </summary>
         /// <value>The base price property ID.</value>
-        internal static long PropBasePriceID { get; private set; }
+        internal static int PropBasePriceID { get; private set; }
 
         /// <summary>
         /// Gets or sets the packaged volume property ID.
         /// </summary>
         /// <value>The packaged volume property ID.</value>
-        internal static long PropPackagedVolumeID { get; private set; }
+        internal static int PropPackagedVolumeID { get; private set; }
 
         /// <summary>
         /// Generate the properties datafile.
@@ -160,8 +160,8 @@ namespace EVEMon.XmlGenerator.Datafiles
             List<SerializablePropertyCategory> categories = new List<SerializablePropertyCategory>();
 
             // Export attribute categories
-            long newCategoryID = 0;
-            long newPropID = 0;
+            int newCategoryID = 0;
+            int newPropID = 0;
             List<SerializableProperty> gProperties = new List<SerializableProperty>();
             List<SerializableProperty> pProperties = new List<SerializableProperty>();
             foreach (DgmAttributeCategory srcCategory in Database.DgmAttributeCategoriesTable)
@@ -239,7 +239,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Set packaged volume property ID
             PropPackagedVolumeID = ++newPropID;
-            categories[(int)DBConstants.StructureAtributeCategoryID - 1].Properties[4].ID = PropPackagedVolumeID;
+            categories[DBConstants.StructureAtributeCategoryID - 1].Properties[4].ID = PropPackagedVolumeID;
 
             // Add EVEMon custom properties (Base Price)
             PropBasePriceID = ++newPropID;

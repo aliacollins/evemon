@@ -142,7 +142,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the installed item ID.
         /// </summary>
-        public long InstalledItemID { get; private set; }
+        public int InstalledItemID { get; private set; }
 
         /// <summary>
         /// Gets the installed item (can only be a blueprint).
@@ -152,7 +152,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the putput item ID.
         /// </summary>
-        public long OutputItemID { get; private set; }
+        public int OutputItemID { get; private set; }
 
         /// <summary>
         /// Gets the output item (can be a blueprint or item).
@@ -334,7 +334,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The itemID of the blueprint.</param>
         /// <returns>The output item from the bluperint.</returns>
-        private static Item GetOutputItem(long id)
+        private static Item GetOutputItem(int id)
         {
             // Is it a blueprint ? If not then it's an item
             return StaticBlueprints.GetBlueprintByID(id) ?? StaticItems.GetItemByID(id);
@@ -345,7 +345,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The ID of the installation.</param>
         /// <returns>Name of the installation.</returns>
-        private string GetInstallation(long id)
+        private string GetInstallation(int id)
         {
             // Look for the station in datafile, if not found check if it's a conquerable outpost station
             Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);

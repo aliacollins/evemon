@@ -68,7 +68,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group ID.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets the parent category. <c>Null</c> for the root category.

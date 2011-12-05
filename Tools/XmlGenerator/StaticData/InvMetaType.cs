@@ -5,13 +5,13 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvMetaType : IRelation
     {
         [XmlElement("typeID")]
-        public long ItemID { get; set; }
+        public int ItemID { get; set; }
 
         [XmlElement("parentTypeID")]
-        public long ParentItemID { get; set; }
+        public int ParentItemID { get; set; }
 
         [XmlElement("metaGroupID")]
-        public long MetaGroupID { get; set; }
+        public int MetaGroupID { get; set; }
 
 
         #region IRelation Members
@@ -20,7 +20,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the left column value.
         /// </summary>
         /// <value>The left.</value>
-        long IRelation.Left
+        int IRelation.Left
         {
             get { return ItemID; }
         }
@@ -29,7 +29,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the right.
         /// </summary>
         /// <value>The right column value.</value>
-        long IRelation.Right
+        int IRelation.Right
         {
             get { return MetaGroupID; }
         }

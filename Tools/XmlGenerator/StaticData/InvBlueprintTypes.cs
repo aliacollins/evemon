@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvBlueprintTypes : IHasID
     {
         [XmlElement("blueprintTypeID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("parentBlueprintTypeID")]
         public short? ParentID { get; set; }

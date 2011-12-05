@@ -12,12 +12,12 @@ namespace EVEMon.Common.Data
     {
         #region Fields
 
-        private static readonly Dictionary<long, Region> s_regionsByID = new Dictionary<long, Region>();
-        private static readonly Dictionary<long, Constellation> s_constellationsByID = new Dictionary<long, Constellation>();
-        private static readonly Dictionary<long, SolarSystem> s_solarSystemsByID = new Dictionary<long, SolarSystem>();
-        private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
-        private static readonly Dictionary<long, NPCCorporation> s_corporationsByID = new Dictionary<long, NPCCorporation>();
-        private static readonly Dictionary<long, Agent> s_agentsByID = new Dictionary<long, Agent>();
+        private static readonly Dictionary<int, Region> s_regionsByID = new Dictionary<int, Region>();
+        private static readonly Dictionary<int, Constellation> s_constellationsByID = new Dictionary<int, Constellation>();
+        private static readonly Dictionary<int, SolarSystem> s_solarSystemsByID = new Dictionary<int, SolarSystem>();
+        private static readonly Dictionary<int, Station> s_stationsByID = new Dictionary<int, Station>();
+        private static readonly Dictionary<int, NPCCorporation> s_corporationsByID = new Dictionary<int, NPCCorporation>();
+        private static readonly Dictionary<int, Agent> s_agentsByID = new Dictionary<int, Agent>();
         private static bool s_initialized;
 
         #endregion
@@ -174,7 +174,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static Region GetRegionByID(long id)
+        public static Region GetRegionByID(int id)
         {
             EnsureInitialized();
             Region result;
@@ -198,7 +198,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static Constellation GetConstellationByID(long id)
+        public static Constellation GetConstellationByID(int id)
         {
             EnsureInitialized();
             Constellation result;
@@ -222,7 +222,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static SolarSystem GetSolarSystemByID(long id)
+        public static SolarSystem GetSolarSystemByID(int id)
         {
             EnsureInitialized();
             SolarSystem result;
@@ -246,7 +246,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static Station GetStationByID(long id)
+        public static Station GetStationByID(int id)
         {
             EnsureInitialized();
             Station result;
@@ -270,7 +270,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static NPCCorporation GetCorporationByID(long id)
+        public static NPCCorporation GetCorporationByID(int id)
         {
             EnsureInitialized();
             NPCCorporation result;
@@ -294,7 +294,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static Agent GetAgentByID(long id)
+        public static Agent GetAgentByID(int id)
         {
             EnsureInitialized();
             Agent result;

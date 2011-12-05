@@ -9550,7 +9550,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="itemID">Initial value of the itemID property.</param>
         /// <param name="itemName">Initial value of the itemName property.</param>
-        public static invNames CreateinvNames(global::System.Int64 itemID, global::System.String itemName)
+        public static invNames CreateinvNames(global::System.Int32 itemID, global::System.String itemName)
         {
             invNames invNames = new invNames();
             invNames.itemID = itemID;
@@ -9566,7 +9566,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int64 itemID
+        public global::System.Int32 itemID
         {
             get
             {
@@ -9584,8 +9584,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int64 _itemID;
-        partial void OnitemIDChanging(global::System.Int64 value);
+        private global::System.Int32 _itemID;
+        partial void OnitemIDChanging(global::System.Int32 value);
         partial void OnitemIDChanged();
     
         /// <summary>

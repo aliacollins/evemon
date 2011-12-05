@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmAttributeTypes : IHasID
     {
         [XmlElement("attributeID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("description")]
         public string Description { get; set; }

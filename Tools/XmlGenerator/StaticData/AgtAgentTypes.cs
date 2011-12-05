@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class AgtAgentTypes : IHasID
     {
         [XmlElement("agentTypeID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("agentType")]
         public string AgentType { get; set; }

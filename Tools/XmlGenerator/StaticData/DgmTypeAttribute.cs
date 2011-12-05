@@ -5,10 +5,10 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class DgmTypeAttribute : IRelation
     {
         [XmlElement("typeID")]
-        public long ItemID { get; set; }
+        public int ItemID { get; set; }
 
         [XmlElement("attributeID")]
-        public long AttributeID { get; set; }
+        public int AttributeID { get; set; }
 
         [XmlElement("valueInt")]
         public int? ValueInt { get; set; }
@@ -34,7 +34,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the left column value.
         /// </summary>
         /// <value>The left.</value>
-        long IRelation.Left
+        int IRelation.Left
         {
             get { return ItemID; }
         }
@@ -43,7 +43,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// Gets the right column value.
         /// </summary>
         /// <value>The right.</value>
-        long IRelation.Right
+        int IRelation.Right
         {
             get { return AttributeID; }
         }

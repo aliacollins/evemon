@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class CrpNPCDivisions : IHasID
     {
         [XmlElement("divisionID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("divisionName")]
         public string DivisionName { get; set; }

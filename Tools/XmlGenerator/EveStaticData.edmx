@@ -557,7 +557,7 @@
           <Key>
             <PropertyRef Name="itemID" />
           </Key>
-          <Property Name="itemID" Type="bigint" Nullable="false" />
+          <Property Name="itemID" Type="int" Nullable="false" />
           <Property Name="itemName" Type="nvarchar" Nullable="false" MaxLength="200" />
         </EntityType>
         <EntityType Name="invPositions">
@@ -2102,7 +2102,7 @@
           <Key>
             <PropertyRef Name="itemID" />
           </Key>
-          <Property Type="Int64" Name="itemID" Nullable="false" />
+          <Property Type="Int32" Name="itemID" Nullable="false" />
           <Property Type="String" Name="itemName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="invPositions">

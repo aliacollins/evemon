@@ -541,7 +541,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="factor">The factor.</param>
         /// <param name="copyActivity">if set to <c>true</c> [copy activity].</param>
         /// <returns></returns>
-        private string CharacterActivityTime(double activityTime, long skillID, double factor, bool copyActivity)
+        private string CharacterActivityTime(double activityTime, int skillID, double factor, bool copyActivity)
         {
             int skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
             double activityTimeModifier = (1 - (factor * skillLevel));
@@ -686,7 +686,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the multiplier of an implant.
         /// </summary>
         /// <returns></returns>
-        private double GetImplantMultiplier(ICollection<long> implantIDs)
+        private double GetImplantMultiplier(ICollection<int> implantIDs)
         {
             ImplantSet implantSet = (ImplantSet)cbImplantSet.Tag;
 

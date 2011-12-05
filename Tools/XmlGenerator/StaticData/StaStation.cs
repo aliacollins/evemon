@@ -5,7 +5,7 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class StaStation : IHasID
     {
         [XmlElement("stationID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("stationName")]
         public string Name { get; set; }
