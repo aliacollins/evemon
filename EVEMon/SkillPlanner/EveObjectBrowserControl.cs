@@ -294,12 +294,12 @@ namespace EVEMon.SkillPlanner
                     // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
                     if (prop.HideIfDefault)
                     {
-                        visibleProperty = SelectControl.SelectedObjects
-                            .Any(x =>
-                                     {
-                                         EvePropertyValue? eveProperty = x.Properties[prop.ID];
-                                         return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
-                                     });
+                        visibleProperty = SelectControl.SelectedObjects.Any(
+                            x =>
+                                {
+                                    EvePropertyValue? eveProperty = x.Properties[prop.ID];
+                                    return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
+                                });
                     }
 
                     // We hide the reprocessing skill here and make it visible in the "Reprocessing Info" section

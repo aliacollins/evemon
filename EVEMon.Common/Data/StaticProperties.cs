@@ -8,11 +8,13 @@ namespace EVEMon.Common.Data
     {
         #region Fields
 
-        private static readonly Dictionary<long, EveProperty> s_propertiesByID = new Dictionary<long, EveProperty>();
-        private static readonly Dictionary<string, EveProperty> s_propertiesByName = new Dictionary<string, EveProperty>();
-
         private static readonly Dictionary<long, EvePropertyCategory> s_categoriesByID =
             new Dictionary<long, EvePropertyCategory>();
+        private static readonly Dictionary<string, EvePropertyCategory> s_categoriesByName =
+            new Dictionary<string, EvePropertyCategory>();
+
+        private static readonly Dictionary<long, EveProperty> s_propertiesByID = new Dictionary<long, EveProperty>();
+        private static readonly Dictionary<string, EveProperty> s_propertiesByName = new Dictionary<string, EveProperty>();
 
         #endregion
 
@@ -32,6 +34,7 @@ namespace EVEMon.Common.Data
                 srcCategory => new EvePropertyCategory(srcCategory)))
             {
                 s_categoriesByID[category.ID] = category;
+                s_categoriesByName[category.Name] = category;
 
                 // Store properties
                 foreach (EveProperty property in category)
@@ -42,7 +45,7 @@ namespace EVEMon.Common.Data
             }
 
             // Set visibility in ships browser
-            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs.Where(
+            foreach (long propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs.Where(
                 propertyID => s_propertiesByID.ContainsKey(propertyID)))
             {
                 s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
@@ -50,7 +53,7 @@ namespace EVEMon.Common.Data
 
             // Set hide if default for properties
             // we want to hide in browser if they just show their default value
-            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs.Where(
+            foreach (long propertyID in DBConstants.HideIfDefaultPropertyIDs.Where(
                 propertyID => s_propertiesByID.ContainsKey(propertyID)))
             {
                 s_propertiesByID[propertyID].HideIfDefault = true;
@@ -67,7 +70,12 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<EvePropertyCategory> AllCategories
         {
-            get { return s_categoriesByID.Values; }
+            get
+            {
+                if (s_categoriesByID.Keys.Any(id => id == 0))
+                    return s_categoriesByName.Values;
+                return s_categoriesByID.Values;
+            }
         }
 
         /// <summary>
