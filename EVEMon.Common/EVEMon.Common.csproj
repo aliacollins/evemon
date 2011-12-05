@@ -342,7 +342,7 @@
     <Compile Include="ListViewExporter.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
-    <Compile Include="PlanSorter.cs" />
+    <Compile Include="PlanEntrySorter.cs" />
     <Compile Include="ResearchPoint.cs" />
     <Compile Include="ResearchPointCollection.cs" />
     <Compile Include="ResearchPointComparer.cs" />

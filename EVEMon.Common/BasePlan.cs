@@ -769,7 +769,7 @@ namespace EVEMon.Common
         private void Sort(PlanEntrySort sort, bool reverseOrder, bool groupByPriority)
         {
             // Perform the sort
-            IEnumerable<PlanEntry> entries = new PlanSorter(Character, Items, sort, reverseOrder, groupByPriority).Sort();
+            IEnumerable<PlanEntry> entries = new PlanEntrySorter(Character, Items, sort, reverseOrder, groupByPriority).Sort();
 
             // Update plan
             RebuildPlanFrom(entries);

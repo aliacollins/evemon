@@ -76,7 +76,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        ///Deserializes an XML document.
+        ///Deserializes an XML document from a file.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="filename">The XML document to deserialize from.</param>
@@ -593,7 +593,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename"></param>
         /// <returns>The temporary file's name.</returns>
-        public static string UncompressToTempFile(String filename)
+        public static string UncompressToTempFile(string filename)
         {
             string tempFile = Path.GetTempFileName();
 
@@ -641,12 +641,12 @@ namespace EVEMon.Common
         /// </remarks>
         /// <param name="filename">Filename of an XmlDocument</param>
         /// <returns>Text representation of the root node</returns>
-        public static string GetXmlRootElement(string filename)
+        public static string GetXmlRootElement(Uri filename)
         {
-            if (!File.Exists(filename))
-                throw new FileNotFoundException("Document not found", filename);
+            if (!File.Exists(filename.LocalPath))
+                throw new FileNotFoundException("Document not found", filename.AbsoluteUri);
 
-            using (XmlTextReader reader = new XmlTextReader(filename))
+            using (XmlTextReader reader = new XmlTextReader(filename.AbsoluteUri))
             {
                 reader.XmlResolver = null;
                 while (reader.Read())

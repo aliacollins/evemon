@@ -82,7 +82,7 @@ namespace EVEMon.Common
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
             {
-                string format = Util.GetXmlRootElement(uri.LocalPath);
+                string format = Util.GetXmlRootElement(uri);
 
                 switch (format.ToLower(CultureConstants.DefaultCulture))
                 {
