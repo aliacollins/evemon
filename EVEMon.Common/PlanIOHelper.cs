@@ -344,9 +344,9 @@ namespace EVEMon.Common
 
                 // Old format
                 result = revision == 0
-                             ? Util.DeserializeXML<SerializablePlan>(filename,
+                             ? Util.DeserializeXMLFromFile<SerializablePlan>(filename,
                                                                      Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport))
-                             : Util.DeserializeXML<OutputPlan>(filename);
+                             : Util.DeserializeXMLFromFile<OutputPlan>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {
@@ -396,7 +396,7 @@ namespace EVEMon.Common
                 int revision = Util.GetRevisionNumber(filename);
 
                 if (revision != 0)
-                    result = Util.DeserializeXML<OutputPlans>(filename);
+                    result = Util.DeserializeXMLFromFile<OutputPlans>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {

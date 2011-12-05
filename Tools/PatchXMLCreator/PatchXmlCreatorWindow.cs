@@ -465,7 +465,7 @@ namespace EVEMon.PatchXmlCreator
         {
             String filePath = Path.Combine(PatchDir, PatchFilename);
 
-            SerializablePatch xmlDoc = File.Exists(filePath) ? Util.DeserializeXML<SerializablePatch>(filePath) : null;
+            SerializablePatch xmlDoc = File.Exists(filePath) ? Util.DeserializeXMLFromFile<SerializablePatch>(filePath) : null;
 
             return xmlDoc;
         }

@@ -11,8 +11,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class ConquerableStation : Station
     {
-        private static readonly Dictionary<long, ConquerableStation> s_conqStationsByID =
-            new Dictionary<long, ConquerableStation>();
+        private static readonly Dictionary<int, ConquerableStation> s_conqStationsByID =
+            new Dictionary<int, ConquerableStation>();
 
         private static readonly Dictionary<string, ConquerableStation> s_conqStationsByName =
             new Dictionary<string, ConquerableStation>();
@@ -101,6 +101,10 @@ namespace EVEMon.Common
         /// </summary>
         private static void OnUpdated(APIResult<SerializableAPIConquerableStationList> result)
         {
+            // Checks if EVE database is out of service
+            if (result.EVEDatabaseError)
+                return;
+
             // Was there an error ?
             if (result.HasError)
             {
@@ -140,18 +144,14 @@ namespace EVEMon.Common
             if (s_loaded)
                 return;
 
-            string file = LocalXmlCache.GetFile(Filename).FullName;
+            string filename = LocalXmlCache.GetFile(Filename).FullName;
 
             // Abort if the file hasn't been obtained for any reason
-            if (!File.Exists(file))
+            if (!File.Exists(filename))
                 return;
 
             APIResult<SerializableAPIConquerableStationList> result =
-                Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(file, APIProvider.RowsetsTransform);
-
-            // Checks if EVE database is out of service
-            if (result.EVEDatabaseError)
-                return;
+                Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization
             if (result.HasError)
@@ -172,8 +172,8 @@ namespace EVEMon.Common
 
             foreach (SerializableOutpost outpost in outposts)
             {
-                s_conqStationsByID.Add(outpost.StationID, new ConquerableStation(outpost));
-                s_conqStationsByName.Add(outpost.StationName, new ConquerableStation(outpost));
+                s_conqStationsByID[outpost.StationID] = new ConquerableStation(outpost);
+                s_conqStationsByName[outpost.StationName] = new ConquerableStation(outpost);
             }
 
             s_loaded = true;
@@ -188,7 +188,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the conquerable station with the provided ID.
         /// </summary>
-        public static ConquerableStation GetStationByID(long id)
+        public static ConquerableStation GetStationByID(int id)
         {
             // Ensure list importation
             EnsureImportation();
