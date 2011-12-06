@@ -515,7 +515,7 @@ namespace EVEMon
             ToolStripMenuItem tmSkillExplorerTemp = null;
             try
             {
-                tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill Explorer...", CommonProperties.Resources.LeadsTo);
+                tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", CommonProperties.Resources.LeadsTo);
                 tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
                 tmSkillExplorerTemp.Tag = skill;
 
