@@ -6,7 +6,7 @@ namespace EVEMon.Common.Data
 {
     public sealed class EvePropertyCategory : ReadonlyCollection<EveProperty>
     {
-        #region Consructor
+        #region Constructor
 
         /// <summary>
         /// Deserialization constructor.

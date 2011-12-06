@@ -33,7 +33,7 @@ namespace EVEMon.XmlGenerator
         /// <returns>
         /// 	<c>true</c> if [contains] [the specified left]; otherwise, <c>false</c>.
         /// </returns>
-        public bool Contains(long left, long right)
+        public bool Contains(int left, int right)
         {
             return m_dictionary.ContainsKey(GetKey(left, right));
         }
@@ -44,7 +44,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns></returns>
-        public T Get(long left, long right)
+        public T Get(int left, int right)
         {
             T value;
             m_dictionary.TryGetValue(GetKey(left, right), out value);
