@@ -82,19 +82,19 @@ namespace EVEMon.Common
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
             {
-                string format = Util.GetXmlRootElement(uri);
+                string xmlRootElement = Util.GetXmlRootElement(uri);
 
-                switch (format.ToLower(CultureConstants.DefaultCulture))
+                switch (xmlRootElement.ToLower(CultureConstants.DefaultCulture))
                 {
                     case "eveapi":
                         APIResult<SerializableAPICharacterSheet> apiResult =
-                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.AbsoluteUri, APIProvider.RowsetsTransform);
+                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.AbsolutePath, APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;
                     case "serializableccpcharacter":
                         try
                         {
-                            SerializableCCPCharacter ccpResult = Util.DeserializeXML<SerializableCCPCharacter>(uri.ToString());
+                            SerializableCCPCharacter ccpResult = Util.DeserializeXMLFromFile<SerializableCCPCharacter>(uri.AbsolutePath);
                             callback(null, new UriCharacterEventArgs(uri, ccpResult));
                         }
                         catch (NullReferenceException ex)
@@ -109,7 +109,7 @@ namespace EVEMon.Common
                     case "character":
                         try
                         {
-                            OldExportedCharacter oldCharacterResult = Util.DeserializeXML<OldExportedCharacter>(uri.ToString());
+                            OldExportedCharacter oldCharacterResult = Util.DeserializeXMLFromFile<OldExportedCharacter>(uri.AbsolutePath);
                             SerializableCCPCharacter ccpCharacterResult = oldCharacterResult.ToSerializableCCPCharacter();
                             callback(null, new UriCharacterEventArgs(uri, ccpCharacterResult));
                         }
@@ -125,14 +125,13 @@ namespace EVEMon.Common
                         callback(null, new UriCharacterEventArgs(uri, "Format Not Recognized"));
                         break;
                 }
+                return;
             }
-                // So, it's a web address, let's do it in an async way
-            else
-            {
-                Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, null, APIProvider.RowsetsTransform,
-                                                                           result =>
-                                                                           callback(null, new UriCharacterEventArgs(uri, result)));
-            }
+
+            // So, it's a web address, let's do it in an async way
+            Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, null, APIProvider.RowsetsTransform,
+                                                                       result =>
+                                                                       callback(null, new UriCharacterEventArgs(uri, result)));
         }
 
         /// <summary>

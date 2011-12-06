@@ -82,11 +82,13 @@ namespace EVEMon.Common
         /// <param name="filename">The XML document to deserialize from.</param>
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXML<T>(string filename, XslCompiledTransform transform = null)
+        public static T DeserializeXMLFromFile<T>(string filename, XslCompiledTransform transform = null)
             where T : class
         {
             try
             {
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+
                 if (transform != null)
                 {
                     MemoryStream stream = GetMemoryStream();
@@ -99,7 +101,6 @@ namespace EVEMon.Common
 
                         // Deserialize from the given stream
                         stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
                         return (T)xs.Deserialize(stream);
                     }
                 }
@@ -107,7 +108,6 @@ namespace EVEMon.Common
                 // Deserialization without transform
                 using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -116,6 +116,36 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(exc, true);
                 return null;
+            }
+                // An error occurred during the deserialization
+            catch (InvalidOperationException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return null;
+            }
+            catch (XmlException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an XML document from a string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static T DeserializeXMLFromString<T>(string text) 
+            where T : class
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(T));
+            try
+            {
+                using (TextReader stream = new StringReader(text))
+                {
+                    return (T)xs.Deserialize(stream);
+                }
             }
                 // An error occurred during the deserialization
             catch (InvalidOperationException exc)
@@ -643,10 +673,10 @@ namespace EVEMon.Common
         /// <returns>Text representation of the root node</returns>
         public static string GetXmlRootElement(Uri filename)
         {
-            if (!File.Exists(filename.LocalPath))
-                throw new FileNotFoundException("Document not found", filename.AbsoluteUri);
+            if (!File.Exists(filename.AbsolutePath))
+                throw new FileNotFoundException("Document not found", filename.LocalPath);
 
-            using (XmlTextReader reader = new XmlTextReader(filename.AbsoluteUri))
+            using (XmlTextReader reader = new XmlTextReader(filename.AbsolutePath))
             {
                 reader.XmlResolver = null;
                 while (reader.Read())
@@ -657,6 +687,30 @@ namespace EVEMon.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the XML root element if the specified input is valid XML.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
+        public static string GetXmlRootElement(string input)
+        {
+            if (input == null)
+                throw new ArgumentNullException("input");
+
+            TextReader text = new StringReader(input);
+
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(text);
+                return xmlDoc.DocumentElement != null ? xmlDoc.DocumentElement.Name : null;
+            }
+            catch (XmlException)
+            {
+                return null;
+            }
         }
 
         /// <summary>

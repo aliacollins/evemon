@@ -47,7 +47,7 @@ namespace EVEMon.SkillPlanner
             this.tsbImplantCalculator = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbAttributesOptimization = new System.Windows.Forms.ToolStripButton();
-            this.tsbEFTImport = new System.Windows.Forms.ToolStripButton();
+            this.tsbLoadoutImport = new System.Windows.Forms.ToolStripButton();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -140,7 +140,7 @@ namespace EVEMon.SkillPlanner
             this.tsbImplantCalculator,
             this.toolStripSeparator1,
             this.tsbAttributesOptimization,
-            this.tsbEFTImport});
+            this.tsbLoadoutImport});
             this.upperToolStrip.Location = new System.Drawing.Point(0, 0);
             this.upperToolStrip.Name = "upperToolStrip";
             this.upperToolStrip.Size = new System.Drawing.Size(824, 25);
@@ -240,14 +240,14 @@ namespace EVEMon.SkillPlanner
             this.tsbAttributesOptimization.Text = "Optimize attributes";
             this.tsbAttributesOptimization.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
             // 
-            // tsbEFTImport
+            // tsbLoadoutImport
             // 
-            this.tsbEFTImport.Image = ((System.Drawing.Image)(resources.GetObject("tsbEFTImport.Image")));
-            this.tsbEFTImport.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEFTImport.Name = "tsbEFTImport";
-            this.tsbEFTImport.Size = new System.Drawing.Size(132, 22);
-            this.tsbEFTImport.Text = "EFT Loadout Import";
-            this.tsbEFTImport.Click += new System.EventHandler(this.tsbEFTImport_Click);
+            this.tsbLoadoutImport.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadoutImport.Image")));
+            this.tsbLoadoutImport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbLoadoutImport.Name = "tsbLoadoutImport";
+            this.tsbLoadoutImport.Size = new System.Drawing.Size(110, 22);
+            this.tsbLoadoutImport.Text = "Loadout Import";
+            this.tsbLoadoutImport.Click += new System.EventHandler(this.tsbEFTImport_Click);
             // 
             // ttToolTip
             // 
@@ -341,7 +341,7 @@ namespace EVEMon.SkillPlanner
             this.certBrowser.Name = "certBrowser";
             this.certBrowser.Plan = null;
             this.certBrowser.SelectedCertificateClass = null;
-            this.certBrowser.Size = new System.Drawing.Size(816, 480);
+            this.certBrowser.Size = new System.Drawing.Size(192, 74);
             this.certBrowser.TabIndex = 0;
             // 
             // tpShipBrowser
@@ -363,7 +363,7 @@ namespace EVEMon.SkillPlanner
             this.shipBrowser.Name = "shipBrowser";
             this.shipBrowser.Plan = null;
             this.shipBrowser.SelectedObject = null;
-            this.shipBrowser.Size = new System.Drawing.Size(816, 480);
+            this.shipBrowser.Size = new System.Drawing.Size(192, 74);
             this.shipBrowser.TabIndex = 0;
             // 
             // tpItemBrowser
@@ -385,7 +385,7 @@ namespace EVEMon.SkillPlanner
             this.itemBrowser.Name = "itemBrowser";
             this.itemBrowser.Plan = null;
             this.itemBrowser.SelectedObject = null;
-            this.itemBrowser.Size = new System.Drawing.Size(816, 480);
+            this.itemBrowser.Size = new System.Drawing.Size(192, 74);
             this.itemBrowser.TabIndex = 0;
             // 
             // tpBlueprintBrowser
@@ -406,7 +406,7 @@ namespace EVEMon.SkillPlanner
             this.blueprintBrowser.Name = "blueprintBrowser";
             this.blueprintBrowser.Plan = null;
             this.blueprintBrowser.SelectedObject = null;
-            this.blueprintBrowser.Size = new System.Drawing.Size(816, 480);
+            this.blueprintBrowser.Size = new System.Drawing.Size(192, 74);
             this.blueprintBrowser.TabIndex = 0;
             // 
             // ilTabIcons
@@ -478,7 +478,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TabPage tpCertificateBrowser;
         private CertificateBrowserControl certBrowser;
         private System.Windows.Forms.ImageList ilTabIcons;
-        private System.Windows.Forms.ToolStripButton tsbEFTImport;
+        private System.Windows.Forms.ToolStripButton tsbLoadoutImport;
         private System.Windows.Forms.ToolStripStatusLabel ObsoleteEntriesStatusLabel;
         private System.Windows.Forms.TabPage tpBlueprintBrowser;
         private BlueprintBrowserControl blueprintBrowser;

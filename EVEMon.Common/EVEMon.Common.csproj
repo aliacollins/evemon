@@ -299,6 +299,11 @@
     <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFitting.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittingDescription.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
