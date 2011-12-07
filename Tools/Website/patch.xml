@@ -1,115 +1,90 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>20 November 2011</date>
-    <version>1.5.2.3179</version>
-    <md5>b657ad66a3d9fcb5ab8072f3b44ce790</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,154855.0.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.5.2.3179.exe</autopatchurl>
+    <date>07 December 2011</date>
+    <version>1.5.3.3285</version>
+    <md5>25cb0cb66a1991f15263d8917ce9a93a</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,155902.0.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.5.3.3285.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
 
 * Jimi
-* Kelos Pelmand
-* lerthe61
 
 == Bug Fixes ==
 
-* Fixed a bug where sender id of an EVE notification wasn't parsed correctly.
-* Fixed a visual bug in character monitor when active ship name exceeds panel width.
-* Fixed issues with HTML special characters in EVE mail titles.
-* Fixed a visual bug in cache timer error page of the API Key Importation window.
-* Fixed an issue where character list in API key management window is not updated when updating API key after an error.
-* Fixed a crash bug in Certificate browser.
-* Fixed a visual bug in Overview when skill training is completed and there is no skill in queue.
-* Fixed a visual bug of the monitor timer upon first selection of a character tab.
-* Fixed potential crash bug in ship loadouts feature.
-* Fixed a visual bug (completion date) in footer info when printing a plan.
-* Fixed a bug where skill level entries where removed after canceling in 'Remove entries from plan' window.
-* Last State Change info will now be shown correctly in Market orders monitor.
-* Last State Change info will now be shown correctly in Industry jobs monitor.
-* Fixed a visual bug in Industry jobs monitor where job state does not get updated when job is ready.
-* Fixed an bug where prerequisite skill for a blueprint was presented multiple times in tooltip, in the Skill Explorer.
-* Fixed a bug where clicking the 'copy details' in the exception handler window causes the operation to fail.
-* Fixed a visual bug in SkillExplorerWindow when using larger fonts settings.
+* Fixed a crash bug caused when EVEMon doesn't find implants previously used.
+* Fixed a potential crash bug caused when EVEMon doesn't find implants from the API.
+* Fixed a bug where plans where not exported in a correct format.
+* Fixed a crash bag when selecting to show a skill in skill browser.
+* Fixed a crash bug when EVEMon doesn't find the produced item from an industry job.
+* Fixed a visual bug where in rare cases the tray tooltip was not shown on top of all windows.
+* Fixed a memory leak and crash bug in EVE Mail monitor.
+* Fixed a bug when trying to add a skill level to a plan from a character's skill list or skill queue.
 
 == Enhancements ==
 
-* Added support for Corporation type API keys. Corp Market orders and Industry jobs issued by a character are again available.
-* Improved the way EVEMon is handling notifications about EVE database inaccessibility and expands the range of notifications about database related errors.
-* Added support for unicode characters in EVE mail bodies and EVE notification texts.
-* Enhanced the way the columns are sized in each monitor.
-* Improved the way ignored characters and characters with more than one associated API key are displayed in API key deletion window.
-* Assigned buttons for 'Enter' or 'Esc' key pressing in API keys Importation window. Resolved issue with 'Import', 'Update' button not having focus when on last page.
-* Negative balance will be now shown in red.
-* MD5Sum check will now prevent from installing a corrupt EVEMon installer via the auto-updater.
-* Added auto-size ability via preferences menu item selection in each monitor with columns.
-* Enhanced the way column sizes in skill planner.
-* Upon a new release auto-update, the data files will get deleted, assuring that the next time EVEMon starts it loads the newest data files.
-* Changed the notification behavior on EVEMon startup.
-* Added a button in settings that opens the EVEMon's data directory.
-* Enhanced the visual feedback in ship loadout window.
-* Each ship loadout window now describes the plan it's bound to. Each Plan window can now open its own ship loadout window.
-* EveIDtoName file is now saved upon collecting the data and not when EVEMon closes.
-* An informative tooltip is now shown when hovering over an Industry job.
-* Skill selection updates through out the entire Skill Planner. Noticable effect when toggling the 'Owns book' in skill browser and 'Mark as owned/unowned' in plan queue.
+* Exporting in HTML, TXT format have been brought in line with EVE changes.
+* Improved the handling of the Skill Planner skill selector.
+* Added a close window function for the Blank Character Creator.
+* Added prefix settings for various Email provider in EVEMon Emailer.
+* All password will now be stored encrypted in settings file, thus increasing user data security.
+* Redesigned the EFT Loadout Importation window and added support for XMl and DNA formatted loadouts.
 
 == Misc ==
 
-* Updated format of EFT exporting for CAK.
-* Removed the link in 'Help' to 'EVE Online Q&A' as the project is deleted.
-* Several improvements have been done to the base code to make EVEMon a better application.]]></message>
+* Several improvements have been done to the base code to make EVEMon a better and more stable application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>115c91c2a4a21fc1e4d9054f07bb1c02</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) blueprints data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>8d9094da3658407d14502562377e114e</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>9fa59cae413770fa90c547bd46edab57</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) certificates data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>3e7415569f07d7c8983fc43398db2c7e</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>77d0209251919ddc8d8e07046d2195c7</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) geography data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>86f20df2faac5e2b80ee8c8d82acbb55</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>a21161b81908dd75fa2755e58a89cfe2</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) items data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>a324047511feb20f98201b5cf7f95e5b</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>6de9e0c12cc805aaa31bf934023a9384</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) properties data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>516d30f7782396bc99b0ebcd09ba1afa</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>75f2c25c7277b26d8501364189c7e765</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) reprocessing data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>49ba52183d47d7921784383270d45bbf</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>24 November 2011</date>
-      <md5>217beb6e168f15bdd4105605ecb0d203</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Incarna/306979b</url>
-      <message><![CDATA[Incarna 1.1 (306979b) skills data file by the EVEMon Development Team]]></message>
+      <date>07 December 2011</date>
+      <md5>218a3bb5fc9f204386b334bea64fe6aa</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/323364</url>
+      <message><![CDATA[Crucible 1.0.1 (323364) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
