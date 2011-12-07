@@ -19,7 +19,7 @@ namespace EVEMon.Common.EmailProvider
         /// <value>The server address.</value>
         public string ServerAddress
         {
-            get { return "mail.gmx.com"; }
+            get { return "mail.gmx.net"; }
         }
 
         /// <summary>
