@@ -267,28 +267,28 @@ namespace EVEMon.Common
         internal SerializableJob Export()
         {
             return new SerializableJob
-            {
-                Ignored = Ignored,
-                JobID = ID,
-                State = State,
-                InstalledItemID = InstalledItemID,
-                InstalledItem = InstalledItem.Name,
-                OutputItemID = OutputItemID,
-                OutputItem = OutputItem.Name,
-                Runs = Runs,
-                Activity = Activity,
-                BlueprintType = BlueprintType,
-                ItemLocation = Installation,
-                SolarSystemID = SolarSystem.ID,
-                InstalledTime = InstalledTime,
-                InstalledItemME = InstalledME,
-                InstalledItemPE = InstalledPE,
-                BeginProductionTime = BeginProductionTime,
-                EndProductionTime = EndProductionTime,
-                PauseProductionTime = PauseProductionTime,
-                IssuedFor = IssuedFor,
-                LastStateChange = LastStateChange,
-            };
+                       {
+                           Ignored = Ignored,
+                           JobID = ID,
+                           State = State,
+                           InstalledItemID = InstalledItemID,
+                           InstalledItem = (InstalledItem != null ? InstalledItem.Name : "Unknown Blueprint"),
+                           OutputItemID = OutputItemID,
+                           OutputItem = (OutputItem != null ? OutputItem.Name : "Unknown Blueprint/Item"),
+                           Runs = Runs,
+                           Activity = Activity,
+                           BlueprintType = BlueprintType,
+                           ItemLocation = Installation,
+                           SolarSystemID = (SolarSystem != null ? SolarSystem.ID : 0),
+                           InstalledTime = InstalledTime,
+                           InstalledItemME = InstalledME,
+                           InstalledItemPE = InstalledPE,
+                           BeginProductionTime = BeginProductionTime,
+                           EndProductionTime = EndProductionTime,
+                           PauseProductionTime = PauseProductionTime,
+                           IssuedFor = IssuedFor,
+                           LastStateChange = LastStateChange,
+                       };
         }
 
         /// <summary>

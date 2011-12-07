@@ -479,7 +479,7 @@ namespace EVEMon
                 // Add the items in every group
                 foreach (MarketOrder order in group)
                 {
-                    if (order.Item == null)
+                    if (order.Item == null || order.Station == null)
                         continue;
 
                     ListViewItem item = new ListViewItem(order.Item.Name, listGroup)

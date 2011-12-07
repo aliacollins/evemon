@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         #region Constructor
 
         /// <summary>
-        /// Private constructor for the default.
+        /// Internal constructor for the default.
         /// </summary>
         internal Implant()
             : base(-1, ImplantSlots.None.ToString())
@@ -32,7 +32,11 @@ namespace EVEMon.Common.Data
         {
             // Gets the slot
             EvePropertyValue? slotProperty = Properties[DBConstants.ImplantSlotPropertyID];
-            Slot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IntValue - 1));
+
+            if (slotProperty == null)
+                return;
+
+            Slot = (ImplantSlots)(slotProperty.Value.IntValue - 1);
 
             // Sets the implant bonus
             SetImplantBonus();

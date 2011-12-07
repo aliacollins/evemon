@@ -54,11 +54,7 @@ namespace EVEMon.Common.Data
                         {
                             s_stationsByID[station.ID] = station;
 
-                            s_corporationsByID[station.CorporationID] = new NPCCorporation
-                                                                            {
-                                                                                ID = station.CorporationID,
-                                                                                Name = station.CorporationName
-                                                                            };
+                            s_corporationsByID[station.CorporationID] = new NPCCorporation(station);
 
                             foreach (Agent agent in station)
                             {
@@ -69,11 +65,27 @@ namespace EVEMon.Common.Data
                 }
             }
 
+            // Mark as initialized
+            s_initialized = true;
+
+            CompleteInitialization(datafile);
+        }
+
+        /// <summary>
+        /// Completes the initialization.
+        /// </summary>
+        /// <param name="datafile">The datafile.</param>
+        private static void CompleteInitialization(GeoDatafile datafile)
+        {
             // Connects the systems
             foreach (SerializableJump srcJump in datafile.Jumps)
             {
-                SolarSystem a = s_solarSystemsByID[srcJump.FirstSystemID];
-                SolarSystem b = s_solarSystemsByID[srcJump.SecondSystemID];
+                SolarSystem a = GetSolarSystemByID(srcJump.FirstSystemID);
+                SolarSystem b = GetSolarSystemByID(srcJump.SecondSystemID);
+
+                if (a == null || b == null)
+                    continue;
+
                 a.AddNeighbor(b);
                 b.AddNeighbor(a);
             }
@@ -82,9 +94,6 @@ namespace EVEMon.Common.Data
             {
                 system.TrimNeighbors();
             }
-
-            // Mark as initialized
-            s_initialized = true;
         }
 
         #endregion

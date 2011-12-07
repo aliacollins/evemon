@@ -85,6 +85,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 foreach (CrtCertificates certificate in Database.CrtCertificatesTable.Where(x => x.ClassID == certClass.ID))
                 {
+
                     // Storing the certificate categoryID for use in classes
                     categoryID = certificate.CategoryID;
 
@@ -162,13 +163,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                         {
                             recommendation,
                             shipName = Database.InvTypeTable.First(x => x.ID == recommendation.ShipTypeID)
-                        }).Select(
-                            certRecom => new SerializableCertificateRecommendation
-                                             {
-                                                 ID = certRecom.recommendation.ID,
-                                                 Ship = certRecom.shipName.Name,
-                                                 Level = certRecom.recommendation.Level
-                                             });
+                        }).Select(certRecom => new SerializableCertificateRecommendation
+                                                   {
+                                                       ID = certRecom.recommendation.ID,
+                                                       Ship = certRecom.shipName.Name,
+                                                       Level = certRecom.recommendation.Level
+                                                   });
 
             crtCertificates.Recommendations.AddRange(listOfRecommendations);
 

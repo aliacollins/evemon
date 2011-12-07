@@ -172,6 +172,9 @@ namespace EVEMon.SkillPlanner
                                         ? tvItems.SelectedNodes[0].Tag.GetHashCode()
                                         : 0);
 
+            if (StaticItems.ShipsMarketGroup == null)
+                return;
+
             int numberOfItems = 0;
             tvItems.BeginUpdate();
             try

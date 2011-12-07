@@ -60,6 +60,7 @@ namespace EVEMon.SkillPlanner
             base.OnLoad(e);
 
             ListViewHelper.EnableDoubleBuffer(PropertiesList);
+            PropertiesList.ShowItemToolTips = true;
 
             lblEveObjName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
@@ -430,11 +431,17 @@ namespace EVEMon.SkillPlanner
 
             string groupName = "Reprocessing - Refining Info";
 
-            if (SelectControl.SelectedObjects.All(x => x.ReprocessingSkill.ID != DBConstants.ScrapMetalProcessingSkillID))
+            if (SelectControl.SelectedObjects.Where(x => x.ReprocessingSkill != null).All(
+                x => x.ReprocessingSkill.ID != DBConstants.ScrapMetalProcessingSkillID))
+            {
                 groupName = "Refining Info";
+            }
 
-            if (SelectControl.SelectedObjects.All(x => x.ReprocessingSkill.ID == DBConstants.ScrapMetalProcessingSkillID))
+            if (SelectControl.SelectedObjects.Where(x => x.ReprocessingSkill != null).All(
+                x => x.ReprocessingSkill.ID == DBConstants.ScrapMetalProcessingSkillID))
+            {
                 groupName = "Reprocessing Info";
+            }
 
             ListViewGroup group = new ListViewGroup(groupName);
 
@@ -467,7 +474,7 @@ namespace EVEMon.SkillPlanner
                 List<Material> materials = new List<Material>();
                 foreach (Item obj in SelectControl.SelectedObjects)
                 {
-                    // Compansate for missing entries
+                    // Compensate for missing entries
                     if (obj.ReprocessingMaterials == null)
                     {
                         materials.Add(null);
@@ -511,24 +518,26 @@ namespace EVEMon.SkillPlanner
             List<string> labels = new List<string>();
             foreach (Item obj in SelectControl.SelectedObjects)
             {
+                // Add a placeholder if no materials
                 if (obj.ReprocessingMaterials == null)
                 {
                     labels.Add("None");
                     continue;
                 }
-                labels.Add(obj.ReprocessingSkill.Name);
+
+                string skillName = obj.ReprocessingSkill != null ? obj.ReprocessingSkill.Name : "Unknown";
+                labels.Add(skillName);
             }
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group)
-                                    {
-                                        ToolTipText =
-                                            StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).
-                                            Description,
-                                        Text =
-                                            StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID).
-                                            Name
-                                    };
+            EveProperty property = StaticProperties.GetPropertyByID(DBConstants.ReprocessingSkillPropertyID);
+            ListViewItem item = new ListViewItem(group);
+            if (property != null)
+            {
+                item.ToolTipText = property.Description;
+                item.Text = property.Name;
+            }
+
             items.Add(item);
 
             // Add the value for every selected item

@@ -220,7 +220,7 @@ namespace EVEMon.Common
             src.State = m_state;
             src.ItemID = m_itemID;
             src.Item = (Item != null ? Item.Name : "Unknown Item");
-            src.StationID = Station.ID;
+            src.StationID = (Station != null ? Station.ID : 0);
             src.UnitaryPrice = UnitaryPrice;
             src.InitialVolume = InitialVolume;
             src.RemainingVolume = RemainingVolume;
@@ -317,9 +317,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static Item GetItem(SerializableOrderBase src)
         {
-            // Try get item by its ID, if we faile try get it by its name
-            Item item = StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
-            return item;
+            // Try get item by its ID, if we fail try get it by its name
+            return StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
         }
 
         /// <summary>
@@ -338,7 +337,8 @@ namespace EVEMon.Common
             {
                 station = StaticGeography.GetStationByID(60013747);
                 EveMonClient.Trace("Could not find station id {0}", id);
-                EveMonClient.Trace("Setting to {0}", station.Name);
+                if (station != null)
+                    EveMonClient.Trace("Setting to {0}", station.Name);
             }
 
             return station;

@@ -41,15 +41,19 @@ namespace EVEMon.SkillPlanner
             // Call the base method
             base.OnLoad(e);
 
+
             m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
 
-            // Set the presets
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesMarketGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ImplantsAndBoostersMarketGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.StarbaseStructuresMarketGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipModificationsMarketGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipEquipmentsMarketGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesMarketGroupID));
+            // Set the preset groups
+            if (!StaticItems.MarketGroups.IsEmpty())
+            {
+                m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesMarketGroupID));
+                m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ImplantsAndBoostersMarketGroupID));
+                m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.StarbaseStructuresMarketGroupID));
+                m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipModificationsMarketGroupID));
+                m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipEquipmentsMarketGroupID));
+                m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesMarketGroupID));
+            }
 
             // Initialize the "skills" combo box
             cbUsabilityFilter.Items[0] = "All Items";
