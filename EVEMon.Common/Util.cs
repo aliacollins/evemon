@@ -673,10 +673,10 @@ namespace EVEMon.Common
         /// <returns>Text representation of the root node</returns>
         public static string GetXmlRootElement(Uri filename)
         {
-            if (!File.Exists(filename.AbsolutePath))
+            if (!File.Exists(filename.LocalPath))
                 throw new FileNotFoundException("Document not found", filename.LocalPath);
 
-            using (XmlTextReader reader = new XmlTextReader(filename.AbsolutePath))
+            using (XmlTextReader reader = new XmlTextReader(filename.LocalPath))
             {
                 reader.XmlResolver = null;
                 while (reader.Read())

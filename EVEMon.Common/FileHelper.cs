@@ -22,7 +22,7 @@ namespace EVEMon.Common
 
             Uri uri = new Uri(filename);
 
-            if (uri.IsFile && !File.Exists(uri.AbsolutePath))
+            if (uri.IsFile && !File.Exists(uri.LocalPath))
                 return null;
 
             // While problems happen and the user ask to retry...
@@ -30,7 +30,7 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    return new MemoryStream(File.ReadAllBytes(uri.AbsolutePath));
+                    return new MemoryStream(File.ReadAllBytes(uri.LocalPath));
                 }
                 catch (UnauthorizedAccessException exc)
                 {

@@ -88,13 +88,13 @@ namespace EVEMon.Common
                 {
                     case "eveapi":
                         APIResult<SerializableAPICharacterSheet> apiResult =
-                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.AbsolutePath, APIProvider.RowsetsTransform);
+                            Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.LocalPath, APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;
                     case "serializableccpcharacter":
                         try
                         {
-                            SerializableCCPCharacter ccpResult = Util.DeserializeXMLFromFile<SerializableCCPCharacter>(uri.AbsolutePath);
+                            SerializableCCPCharacter ccpResult = Util.DeserializeXMLFromFile<SerializableCCPCharacter>(uri.LocalPath);
                             callback(null, new UriCharacterEventArgs(uri, ccpResult));
                         }
                         catch (NullReferenceException ex)
@@ -109,7 +109,7 @@ namespace EVEMon.Common
                     case "character":
                         try
                         {
-                            OldExportedCharacter oldCharacterResult = Util.DeserializeXMLFromFile<OldExportedCharacter>(uri.AbsolutePath);
+                            OldExportedCharacter oldCharacterResult = Util.DeserializeXMLFromFile<OldExportedCharacter>(uri.LocalPath);
                             SerializableCCPCharacter ccpCharacterResult = oldCharacterResult.ToSerializableCCPCharacter();
                             callback(null, new UriCharacterEventArgs(uri, ccpCharacterResult));
                         }

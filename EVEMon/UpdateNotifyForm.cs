@@ -62,7 +62,7 @@ namespace EVEMon
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
                 DialogResult result = DialogResult.Yes;
-                while (!DownloadUpdate() && result == DialogResult.Yes)
+                while (result == DialogResult.Yes && !DownloadUpdate())
                 {
                     // File download failed
                     string message = String.Format(CultureConstants.DefaultCulture,
