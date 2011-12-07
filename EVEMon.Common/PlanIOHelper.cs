@@ -317,7 +317,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public static SerializablePlan ImportFromXML(String filename)
+        public static SerializablePlan ImportFromXML(string filename)
         {
             if (filename == null)
                 throw new ArgumentNullException("filename");
