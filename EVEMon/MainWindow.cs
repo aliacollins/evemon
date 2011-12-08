@@ -1083,13 +1083,6 @@ namespace EVEMon
                 return;
             }
 
-            // Did the user previously choose to ignore this version ?
-            if (Settings.Updates.MostRecentDeniedUpgrade != null)
-            {
-                if (e.NewestVersion <= new Version(Settings.Updates.MostRecentDeniedUpgrade))
-                    return;
-            }
-
             // Notify the user and prompt him
             if (m_isShowingUpdateWindow)
                 return;
