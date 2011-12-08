@@ -1350,6 +1350,9 @@ namespace EVEMon
 
             if (dr == DialogResult.Yes)
                 Settings.Reset();
+
+            // Trigger the tip window
+            OnShown(e);
         }
 
         /// <summary>

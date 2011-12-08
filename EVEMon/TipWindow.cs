@@ -75,7 +75,7 @@ namespace EVEMon
                 TipWindow tw = new TipWindow(title, tiptext, key);
                 form.Controls.Add(tw);
 
-                // Aligns the top right corner of the tip window with the top right corner of the owner's client rectangle.
+                // Aligns the top right corner of the tip window with the top right corner of the owner's client rectangle
                 tw.Location = new Point(form.ClientRectangle.Left + form.ClientSize.Width - tw.Width,
                                         form.ClientRectangle.Top);
                 tw.Anchor = AnchorStyles.Top | AnchorStyles.Right;
