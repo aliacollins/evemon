@@ -837,24 +837,24 @@ namespace EVEMon.Common
             {
                 using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
                 {
-                    ICryptoTransform decryptor = aes.CreateDecryptor(pdb.GetBytes(32), pdb.GetBytes(16));
-                    MemoryStream msDecrypt = GetMemoryStream(text);
-                    CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                    try
                     {
-                        try
+                        ICryptoTransform decryptor = aes.CreateDecryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                        MemoryStream msDecrypt = GetMemoryStream(text);
+                        CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
                             // Read the decrypted bytes from the decrypting stream and place them in a string
                             decrypted = srDecrypt.ReadToEnd();
                         }
-                        catch
-                        {
-                            // In same rare cases the ciphered text may not be a ciphered one
-                            // but still pass the Base64 convertion; In those cases the decryptor
-                            // throws an exception, so we return the text as is
-                            // Note: If anyone knows a better way to validate a string as base64 converted, please refactore the code
-                            return cipheredText;
-                        }
+                    }
+                    catch
+                    {
+                        // In same rare cases the ciphered text may not be a ciphered one
+                        // but still pass the Base64 convertion; In those cases the decryptor
+                        // throws an exception, so we return the text as is
+                        // Note: If anyone knows a better way to validate a string as base64 converted, please refactore the code
+                        return cipheredText;
                     }
                 }
             }
