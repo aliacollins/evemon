@@ -725,7 +725,7 @@ namespace EVEMon.Common
 
             StringBuilder builder = new StringBuilder();
 
-            Stream fileStream = GetFileStream(filename, FileMode.Open);
+            Stream fileStream = GetFileStream(filename, FileMode.Open, FileAccess.Read);
             using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
             {
                 using (MD5 md5 = MD5.Create())
