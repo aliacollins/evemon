@@ -136,7 +136,7 @@ namespace EVEMon.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static T DeserializeXMLFromString<T>(string text) 
+        public static T DeserializeXMLFromString<T>(string text)
             where T : class
         {
             XmlSerializer xs = new XmlSerializer(typeof(T));
@@ -778,7 +778,7 @@ namespace EVEMon.Common
                 return text;
 
             // Ensure that salt is of the correct size
-            while (password.Length < sizeof(long))
+            while (password.Length < sizeof (long))
             {
                 password += password;
             }
@@ -827,7 +827,7 @@ namespace EVEMon.Common
             }
 
             // Ensure that salt is of the correct size
-            while (password.Length < sizeof(long))
+            while (password.Length < sizeof (long))
             {
                 password += password;
             }
@@ -842,8 +842,19 @@ namespace EVEMon.Common
                     CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
                     using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                     {
-                        // Read the decrypted bytes from the decrypting stream and place them in a string
-                        decrypted = srDecrypt.ReadToEnd();
+                        try
+                        {
+                            // Read the decrypted bytes from the decrypting stream and place them in a string
+                            decrypted = srDecrypt.ReadToEnd();
+                        }
+                        catch
+                        {
+                            // In same rare cases the ciphered text may not be a ciphered one
+                            // but still pass the Base64 convertion; In those cases the decryptor
+                            // throws an exception, so we return the text as is
+                            // Note: If anyone knows a better way to validate a string as base64 converted, please refactore the code
+                            return cipheredText;
+                        }
                     }
                 }
             }
