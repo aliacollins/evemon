@@ -213,7 +213,7 @@ namespace EVEMon.Common
             foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null).Where(
                 method => !Updates.Periods.ContainsKey(method.ToString())))
             {
-                Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
+                Updates.Periods[method.ToString()] = method.GetUpdatePeriod().DefaultPeriod;
 
                 // Bind the APIKeyInfo and CharacterList update period
                 if ((APIGenericMethods)method == APIGenericMethods.APIKeyInfo &&
@@ -225,9 +225,9 @@ namespace EVEMon.Common
             InitializeOrAddMissingColumns();
 
             // Removes reduntant windows locations
-            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
+            List<KeyValuePair<string, WindowLocationSettings>> locations = new List<KeyValuePair<string, WindowLocationSettings>>();
             locations.AddRange(UI.WindowLocations);
-            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
+            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
                 windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);

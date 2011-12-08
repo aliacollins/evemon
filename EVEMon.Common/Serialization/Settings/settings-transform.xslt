@@ -1,19 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
-    <xsl:output method="xml" indent="yes"/>
+  <xsl:strip-space elements="*" />
+  <xsl:output method="xml" indent="yes"/>
 
-    <xsl:template match="@* | node()">
-        <xsl:copy>
-            <xsl:apply-templates select="@* | node()"/>
-        </xsl:copy>
-    </xsl:template>
-  
-  <xsl:template match="APIMethods">
-    <xsl:element name="string">
-      <xsl:value-of select="."/>
-    </xsl:element>
+  <xsl:template match="@* | node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@* | node()"/>
+    </xsl:copy>
   </xsl:template>
 
+  <!--Transforms the SerializableDictionary to its Modified version-->
+  <xsl:template match="periods/dictionary">
+    <xsl:for-each select ="item">
+      <xsl:variable name="apiMethod" select="key/string"/>
+      <!--As of version 1.5.2 the element name was renamed, so we try to catch that name too-->
+      <xsl:variable name="apiMethodPre-Renamed" select="key/APIMethods"/>
+      <xsl:variable name="updatePeriod" select="value/UpdatePeriod"/>
+      <period updatePeriod ="{$updatePeriod}">
+        <xsl:value-of select="$apiMethod|$apiMethodPre-Renamed"/>
+      </period>
+    </xsl:for-each>
+  </xsl:template>
 
+  <xsl:template match="categories/dictionary">
+    <xsl:for-each select ="item">
+      <xsl:variable name="notificationCategory" select="key/NotificationCategory"/>
+      <xsl:variable name="toolTipBehaviour" select="value/NotificationCategorySettings/@toolTipBehaviour"/>
+      <xsl:variable name="showOnMainWindow" select="value/NotificationCategorySettings/@showOnMainWindow"/>
+      <category toolTipBehaviour ="{$toolTipBehaviour}" showOnMainWindow ="{$showOnMainWindow}">
+        <xsl:value-of select="$notificationCategory"/>
+      </category>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="locations/dictionary">
+    <xsl:for-each select ="item">
+      <xsl:variable name="window" select="key/string"/>
+      <xsl:variable name="left" select="value/SerializableRectangle/@left"/>
+      <xsl:variable name="top" select="value/SerializableRectangle/@top"/>
+      <xsl:variable name="width" select="value/SerializableRectangle/@width"/>
+      <xsl:variable name="height" select="value/SerializableRectangle/@height"/>
+      <location left="{$left}" top="{$top}" width="{$width}" height="{$height}">
+        <xsl:value-of select="$window"/>
+      </location>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="splitters/dictionary">
+    <xsl:for-each select ="item">
+      <xsl:variable name="splitter" select="key/string"/>
+      <xsl:variable name="int" select="value/int"/>
+      <int int="{$int}">
+        <xsl:value-of select="$splitter"/>
+      </int>
+    </xsl:for-each>
+  </xsl:template>
+  
 </xsl:stylesheet>

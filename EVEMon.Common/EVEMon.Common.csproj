@@ -309,6 +309,7 @@
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
+    <Compile Include="SettingsObjects\ModifiedSerializableDictionary.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
     <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
@@ -712,7 +713,7 @@
     <Compile Include="Serialization\Datafiles\SkillsDatafile.cs" />
     <Compile Include="Serialization\Settings\SerializableCharacterIdentity.cs" />
     <Compile Include="Serialization\Settings\SerializableSettingsCharacter.cs" />
-    <Compile Include="SettingsObjects\SerializableRectangle.cs" />
+    <Compile Include="SettingsObjects\WindowLocationSettings.cs" />
     <Compile Include="SettingsObjects\PlanWindowSettings.cs" />
     <Compile Include="SettingsObjects\ShipBrowserSettings.cs" />
     <Compile Include="SettingsObjects\SkillBrowserSettings.cs" />

@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Attributes;
+﻿using System.Xml.Serialization;
+using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -383,6 +384,7 @@ namespace EVEMon.Common.SettingsObjects
 
     #region EVE API Update Period
 
+    [XmlRoot("period")]
     public enum UpdatePeriod
     {
         [Header("Never")]

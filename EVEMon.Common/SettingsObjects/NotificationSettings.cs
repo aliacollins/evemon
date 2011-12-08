@@ -10,18 +10,11 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public NotificationSettings()
         {
-            Categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
+            Categories = new ModifiedSerializableDictionary<NotificationCategory, NotificationCategorySettings>();
             Categories[NotificationCategory.AccountNotInTraining] =
                 new NotificationCategorySettings(ToolTipNotificationBehaviour.RepeatUntilClicked);
             EmailPortNumber = 25;
         }
-
-        /// <summary>
-        /// Gets or sets the categories.
-        /// </summary>
-        /// <value>The categories.</value>
-        [XmlElement("categories")]
-        public SerializableDictionary<NotificationCategory, NotificationCategorySettings> Categories { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [play sound on skill completion].
@@ -114,5 +107,12 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The email to address.</value>
         [XmlElement("emailToAddress")]
         public string EmailToAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the categories.
+        /// </summary>
+        /// <value>The categories.</value>
+        [XmlElement("categories")]
+        public ModifiedSerializableDictionary<NotificationCategory, NotificationCategorySettings> Categories { get; set; }
     }
 }

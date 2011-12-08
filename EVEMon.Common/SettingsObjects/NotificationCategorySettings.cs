@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -5,6 +6,8 @@ namespace EVEMon.Common.SettingsObjects
     /// <summary>
     /// Category settings for notifications
     /// </summary>
+    [Serializable]
+    [XmlRoot("category")]
     public sealed class NotificationCategorySettings
     {
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -10,7 +9,7 @@ namespace EVEMon.Common.SettingsObjects
     public sealed class UISettings
     {
         private readonly Collection<string> m_confirmedTips;
- 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UISettings"/> class.
         /// </summary>
@@ -18,8 +17,8 @@ namespace EVEMon.Common.SettingsObjects
         {
             MainWindowCloseBehaviour = CloseBehaviour.Exit;
 
-            WindowLocations = new SerializableDictionary<string, SerializableRectangle>();
-            Splitters = new SerializableDictionary<string, int>();
+            WindowLocations = new ModifiedSerializableDictionary<string, WindowLocationSettings>();
+            Splitters = new ModifiedSerializableDictionary<string, int>();
             m_confirmedTips = new Collection<string>();
 
             CertificateBrowser = new CertificateBrowserSettings();
@@ -158,7 +157,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The window locations.</value>
         [XmlElement("locations")]
-        public SerializableDictionary<string, SerializableRectangle> WindowLocations{ get; set; }
+        public ModifiedSerializableDictionary<string, WindowLocationSettings> WindowLocations { get; set; }
 
 
         /// <summary>
@@ -166,8 +165,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The splitters.</value>
         [XmlElement("splitters")]
-        public SerializableDictionary<string, int> Splitters { get; set; }
-
+        public ModifiedSerializableDictionary<string, int> Splitters { get; set; }
 
         /// <summary>
         /// Gets or sets the confirmed tips.
