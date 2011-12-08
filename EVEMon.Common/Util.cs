@@ -734,7 +734,7 @@ namespace EVEMon.Common
                     foreach (byte b in hash)
                     {
                         builder.Append(
-                            b.ToString("x2", CultureConstants.InvariantCulture).ToLower(CultureConstants.DefaultCulture));
+                            b.ToString("x2", CultureConstants.InvariantCulture).ToLower(CultureConstants.InvariantCulture));
                     }
                 }
             }
@@ -793,8 +793,9 @@ namespace EVEMon.Common
                     CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
                     using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
                     {
-                        //Write all data to the stream
+                        // Write all data to the stream
                         swEncrypt.Write(text);
+                        swEncrypt.Flush();
                     }
                     encrypted = msEncrypt.ToArray();
                 }
