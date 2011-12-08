@@ -510,11 +510,12 @@ namespace EVEMon.Common
             int revision = Assembly.GetExecutingAssembly().GetName().Version.Revision;
             if (revision == settings.Revision)
                 return;
+
             DialogResult backupSettings =
-                MessageBox.Show(
-                    "The current EVEMon settings file is from a previous version of EVEMon. Backup the current file before proceeding (recommended)?",
-                    "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1);
+                MessageBox.Show("The current EVEMon settings file is from a previous version of EVEMon.\n" +
+                                "Backup the current file before proceeding (recommended)?",
+                                "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button1);
 
             if (backupSettings != DialogResult.Yes)
                 return;
@@ -523,10 +524,10 @@ namespace EVEMon.Common
             {
                 fileDialog.Title = "Settings file backup";
                 fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision);
+                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", settings.Revision);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                DialogResult saveFile = fileDialog.ShowDialog();
-                if (saveFile != DialogResult.OK)
+                
+                if (fileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
                 FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
