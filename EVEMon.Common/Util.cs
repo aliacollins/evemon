@@ -848,7 +848,7 @@ namespace EVEMon.Common
                             decrypted = srDecrypt.ReadToEnd();
                         }
                     }
-                    catch
+                    catch (CryptographicException)
                     {
                         // In same rare cases the ciphered text may not be a ciphered one
                         // but still pass the Base64 convertion; In those cases the decryptor
