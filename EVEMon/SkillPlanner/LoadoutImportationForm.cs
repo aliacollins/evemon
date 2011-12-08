@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -298,9 +299,15 @@ namespace EVEMon.SkillPlanner
             XmlRootAttribute xmlRoot = new SerializableFittings().GetType().GetCustomAttributes(
                 typeof(XmlRootAttribute), false).Cast<XmlRootAttribute>().FirstOrDefault();
 
-            if (xmlRoot == null || Util.GetXmlRootElement(text) != xmlRoot.ElementName)
+            if (xmlRoot == null)
                 return false;
 
+            using (TextReader reader = new StringReader(text))
+            {
+                if (Util.GetXmlRootElement(reader) != xmlRoot.ElementName)
+                    return false;
+            }
+            
             s_fittings = Util.DeserializeXMLFromString<SerializableFittings>(text);
             return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == s_fittings.Fitting.ShipType.Name);
         }
@@ -447,7 +454,7 @@ namespace EVEMon.SkillPlanner
                 // Retrieve the ship
                 if (line == s_lines.First())
                 {
-                    int shipID = Int32.Parse(line);
+                    int shipID = Int32.Parse(line, CultureConstants.InvariantCulture);
                     Item ship = StaticItems.ShipsMarketGroup.AllItems.First(x => x.ID == shipID);
                     ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}", ship.Name);
                     LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Loadout Name: {0} - DNA loadout",
@@ -464,7 +471,7 @@ namespace EVEMon.SkillPlanner
                                 : null;
 
                 if (item != null)
-                    quantity = Byte.Parse(line.Substring(line.LastIndexOf(';') + 1));
+                    quantity = Byte.Parse(line.Substring(line.LastIndexOf(';') + 1), CultureConstants.InvariantCulture);
 
                 // Retrieve the charge
                 Item charge = item != null && item.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID)

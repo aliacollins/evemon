@@ -1,3 +1,5 @@
+using System;
+
 namespace EVEMon.Common.Data
 {
     public sealed class NPCCorporation
@@ -8,6 +10,9 @@ namespace EVEMon.Common.Data
         /// <param name="station">The station.</param>
         public NPCCorporation(Station station)
         {
+            if (station == null)
+                throw new ArgumentNullException("station");
+
             ID = station.CorporationID;
             Name = station.CorporationName;
         }

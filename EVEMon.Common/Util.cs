@@ -673,6 +673,9 @@ namespace EVEMon.Common
         /// <returns>Text representation of the root node</returns>
         public static string GetXmlRootElement(Uri filename)
         {
+            if (filename == null)
+                throw new ArgumentNullException("filename");
+
             if (!File.Exists(filename.LocalPath))
                 throw new FileNotFoundException("Document not found", filename.LocalPath);
 
@@ -694,17 +697,15 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns></returns>
-        public static string GetXmlRootElement(string input)
+        public static string GetXmlRootElement(TextReader input)
         {
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            TextReader text = new StringReader(input);
-
             try
             {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(text);
+                xmlDoc.Load(input);
                 return xmlDoc.DocumentElement != null ? xmlDoc.DocumentElement.Name : null;
             }
             catch (XmlException)
