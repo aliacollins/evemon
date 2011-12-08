@@ -18,7 +18,7 @@ namespace EVEMon.Common
 
         private OrderState m_state;
 
-        private readonly long m_itemID;
+        private readonly int m_itemID;
 
 
         #region Constructors
@@ -220,7 +220,7 @@ namespace EVEMon.Common
             src.State = m_state;
             src.ItemID = m_itemID;
             src.Item = (Item != null ? Item.Name : "Unknown Item");
-            src.StationID = Station.ID;
+            src.StationID = (Station != null ? Station.ID : 0);
             src.UnitaryPrice = UnitaryPrice;
             src.InitialVolume = InitialVolume;
             src.RemainingVolume = RemainingVolume;
@@ -295,10 +295,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private static long GetItemID(SerializableOrderBase src)
+        private static int GetItemID(SerializableOrderBase src)
         {
             // Try get item ID by source
-            long itemID = src.ItemID;
+            int itemID = src.ItemID;
 
             // We failed? Try get item ID by name
             if (itemID == 0)
@@ -317,9 +317,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static Item GetItem(SerializableOrderBase src)
         {
-            // Try get item by its ID, if we faile try get it by its name
-            Item item = StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
-            return item;
+            // Try get item by its ID, if we fail try get it by its name
+            return StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
         }
 
         /// <summary>
@@ -327,7 +326,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private static Station GetStationByID(long id)
+        private static Station GetStationByID(int id)
         {
             // Look for the station in datafile, if we fail then it may be a conquerable outpost station
             Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
@@ -338,7 +337,8 @@ namespace EVEMon.Common
             {
                 station = StaticGeography.GetStationByID(60013747);
                 EveMonClient.Trace("Could not find station id {0}", id);
-                EveMonClient.Trace("Setting to {0}", station.Name);
+                if (station != null)
+                    EveMonClient.Trace("Setting to {0}", station.Name);
             }
 
             return station;

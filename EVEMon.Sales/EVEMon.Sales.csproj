@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="BattleclinicParser.cs" />
     <Compile Include="CXIParser.cs" />
-    <Compile Include="DefaultMineralParserAttribute.cs" />
     <Compile Include="EveCentralParser.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IMineralParser.cs" />

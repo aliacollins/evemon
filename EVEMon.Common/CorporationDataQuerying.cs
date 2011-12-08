@@ -103,6 +103,10 @@ namespace EVEMon.Common
         /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
         private void OnCorporationMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null)
+                return;
+
             CorporationMarketOrdersQueried = true;
 
             // Notify an error occurred
@@ -131,6 +135,10 @@ namespace EVEMon.Common
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
         private void OnCorporationIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
         {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null)
+                return;
+
             CorporationIndustryJobsQueried = true;
 
             // Notify an error occurred

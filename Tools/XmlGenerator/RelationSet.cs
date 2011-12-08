@@ -67,9 +67,9 @@ namespace EVEMon.XmlGenerator
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns></returns>
-        private static long GetKey(int left, int right)
+        private static long GetKey(long left, long right)
         {
-            return (((long)left) << 32) | (uint)right;
+            return (left << 32) | (uint)right;
         }
 
         /// <summary>

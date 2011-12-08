@@ -31,7 +31,52 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region Static Public Methods & Properties
+        #region Public Properties
+
+        /// <summary>
+        /// Gets the button1.
+        /// </summary>
+        /// <value>The button1.</value>
+        public Button Button1
+        {
+            get { return button1; }
+        }
+
+        public Button Button2
+        {
+            get { return button2; }
+        }
+
+        public Button Button3
+        {
+            get { return button3; }
+        }
+
+        public Label Message
+        {
+            get { return msgText; }
+        }
+
+        public PictureBox PictureBox
+        {
+            get { return msgIcon; }
+        }
+
+        public CheckBox CheckBox
+        {
+            get { return cbOption; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the checkbox is checked.
+        /// </summary>
+        /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
+        public static bool CheckBoxChecked { get; private set; }
+
+        #endregion
+
+
+        #region Static Public Methods
 
         /// <summary>
         /// Displays a message box.
@@ -76,12 +121,6 @@ namespace EVEMon.Common.Controls
             return Show(owner, text, String.Empty, String.Empty);
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the checkbox is checked.
-        /// </summary>
-        /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
-        public static bool CheckBoxChecked { get; private set; }
-
         #endregion
 
 
@@ -94,8 +133,12 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnButtonClick(object sender, EventArgs e)
         {
-            string buttonText = ((ButtonBase)sender).Text;
-            m_dialogResult = GetDialogResult(buttonText);
+            ButtonBase button = sender as Button;
+
+            if (button == null)
+                return;
+
+            m_dialogResult = GetDialogResult(button.Text);
             Close();
         }
 
@@ -161,6 +204,8 @@ namespace EVEMon.Common.Controls
         /// <param name="buttons">Which buttons to display.</param>
         private void SetButtonsToDisplay(MessageBoxButtons buttons)
         {
+            AcceptButton = button2;
+
             switch (buttons)
             {
                 case (MessageBoxButtons.AbortRetryIgnore):

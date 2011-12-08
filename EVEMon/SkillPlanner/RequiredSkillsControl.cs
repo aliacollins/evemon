@@ -165,15 +165,19 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Recursive method to generate treenodes for tvSkillList
+        /// Recursive method to generate treenodes for tvSkillList.
         /// </summary>
         /// <param name="prereq">The prereq.</param>
         /// <param name="allSkillsKnown">if set to <c>true</c> [all skills known].</param>
         /// <param name="skillsUnplanned">if set to <c>true</c> [skills unplanned].</param>
         /// <returns></returns>
-        private TreeNode GetSkillNode(StaticSkillLevel prereq, ref bool allSkillsKnown, ref bool skillsUnplanned)
+        private TreeNode GetSkillNode(ISkillLevel prereq, ref bool allSkillsKnown, ref bool skillsUnplanned)
         {
             Character character = (Character)m_plan.Character;
+            
+            if (prereq.Skill == null)
+                return new TreeNode();
+
             Skill skill = character.Skills[prereq.Skill.ID];
 
             TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };

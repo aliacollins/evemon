@@ -45,7 +45,7 @@ namespace EVEMon
                 changedFiles.AppendFormat(CultureConstants.DefaultCulture,
                                           "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
                                           versionDatafile.Name, versionDatafile.Date, versionDatafile.Address, Environment.NewLine);
-                notes.AppendLine(versionDatafile.Message);
+                notes.AppendLine(versionDatafile.Message).AppendLine();
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
             tbNotes.Lines = notes.ToString().Split('\n');

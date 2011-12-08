@@ -14,7 +14,6 @@ namespace EVEMon.Common
 {
     public static class PlanIOHelper
     {
-
         /// <summary>
         /// Exports the plan under a text format.
         /// </summary>
@@ -127,7 +126,7 @@ namespace EVEMon.Common
         /// <param name="builder">The builder.</param>
         private static void AddName(PlanExportSettings settings, ISkillLevel entry, StringBuilder builder)
         {
-            if (settings.Markup.Equals(MarkupType.Html))
+            if (settings.Markup == MarkupType.Html)
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture,
                                      !settings.ShoppingList
@@ -318,7 +317,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public static SerializablePlan ImportFromXML(String filename)
+        public static SerializablePlan ImportFromXML(string filename)
         {
             if (filename == null)
                 throw new ArgumentNullException("filename");
@@ -345,9 +344,9 @@ namespace EVEMon.Common
 
                 // Old format
                 result = revision == 0
-                             ? Util.DeserializeXML<SerializablePlan>(filename,
+                             ? Util.DeserializeXMLFromFile<SerializablePlan>(filename,
                                                                      Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport))
-                             : Util.DeserializeXML<OutputPlan>(filename);
+                             : Util.DeserializeXMLFromFile<OutputPlan>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {
@@ -397,7 +396,7 @@ namespace EVEMon.Common
                 int revision = Util.GetRevisionNumber(filename);
 
                 if (revision != 0)
-                    result = Util.DeserializeXML<OutputPlans>(filename);
+                    result = Util.DeserializeXMLFromFile<OutputPlans>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {

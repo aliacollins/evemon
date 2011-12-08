@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Properties
     {
-        private const int PropGenTotal = 1602;
+        private const int PropGenTotal = 1623;
 
         private static DateTime s_startTime;
 
@@ -159,22 +159,9 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             List<SerializablePropertyCategory> categories = new List<SerializablePropertyCategory>();
 
-            // We insert custom categories
-            SerializablePropertyCategory general = new SerializablePropertyCategory
-                                                       {
-                                                           Name = "General",
-                                                           Description = "General informations"
-                                                       };
-            categories.Insert(0, general);
-            SerializablePropertyCategory propulsion = new SerializablePropertyCategory
-                                                          {
-                                                              Name = "Propulsion",
-                                                              Description = "Navigation attributes for ships"
-                                                          };
-            categories.Insert(0, propulsion);
-
             // Export attribute categories
-            int newID = 0;
+            int newCategoryID = 0;
+            int newPropID = 0;
             List<SerializableProperty> gProperties = new List<SerializableProperty>();
             List<SerializableProperty> pProperties = new List<SerializableProperty>();
             foreach (DgmAttributeCategory srcCategory in Database.DgmAttributeCategoriesTable)
@@ -182,6 +169,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 List<SerializableProperty> properties = new List<SerializableProperty>();
                 SerializablePropertyCategory category = new SerializablePropertyCategory
                                                             {
+                                                                ID = srcCategory.ID,
                                                                 Description = srcCategory.Description,
                                                                 Name = srcCategory.Name
                                                             };
@@ -195,11 +183,15 @@ namespace EVEMon.XmlGenerator.Datafiles
                     SerializableProperty prop = new SerializableProperty();
                     properties.Add(prop);
 
+                    prop.ID = srcProp.ID;
                     prop.DefaultValue = srcProp.DefaultValue;
                     prop.Description = srcProp.Description;
                     prop.HigherIsBetter = srcProp.HigherIsBetter;
-                    prop.Name = (String.IsNullOrEmpty(srcProp.DisplayName) ? srcProp.Name : srcProp.DisplayName);
-                    prop.ID = srcProp.ID;
+                    prop.Name = !String.IsNullOrEmpty(srcProp.DisplayName)
+                                    ? srcProp.DisplayName
+                                    : !String.IsNullOrEmpty(srcProp.Name)
+                                          ? srcProp.Name
+                                          : String.Empty;
 
                     // Unit
                     if (srcProp.UnitID == null)
@@ -220,8 +212,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     // Reordering some properties
                     ReorderProperties(pProperties, gProperties, prop, srcProp, properties);
 
-                    // New ID
-                    newID = Math.Max(newID, srcProp.ID);
+                    // New property ID
+                    newPropID = Math.Max(newPropID, srcProp.ID);
                 }
 
                 // Add EVEMon custom properties (Packaged Volume)
@@ -240,14 +232,17 @@ namespace EVEMon.XmlGenerator.Datafiles
                 }
 
                 category.Properties.AddRange(properties);
+
+                // New category ID
+                newCategoryID = Math.Max(newCategoryID, srcCategory.ID);
             }
 
             // Set packaged volume property ID
-            PropPackagedVolumeID = ++newID;
-            categories[5].Properties[4].ID = PropPackagedVolumeID;
+            PropPackagedVolumeID = ++newPropID;
+            categories[DBConstants.StructureAtributeCategoryID - 1].Properties[4].ID = PropPackagedVolumeID;
 
             // Add EVEMon custom properties (Base Price)
-            PropBasePriceID = ++newID;
+            PropBasePriceID = ++newPropID;
             SerializableProperty bpProp = new SerializableProperty
                                               {
                                                   ID = PropBasePriceID,
@@ -258,6 +253,23 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                   UnitID = 133
                                               };
             gProperties.Insert(0, bpProp);
+
+            // We insert custom categories
+            SerializablePropertyCategory general = new SerializablePropertyCategory
+                                                       {
+                                                           ID = ++newCategoryID,
+                                                           Name = "General",
+                                                           Description = "General informations"
+                                                       };
+            categories.Insert(0, general);
+
+            SerializablePropertyCategory propulsion = new SerializablePropertyCategory
+                                                          {
+                                                              ID = ++newCategoryID,
+                                                              Name = "Propulsion",
+                                                              Description = "Navigation attributes for ships"
+                                                          };
+            categories.Insert(0, propulsion);
 
             // Add properties to custom categories
             general.Properties.AddRange(gProperties);

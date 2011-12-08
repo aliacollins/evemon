@@ -49,25 +49,18 @@ namespace EVEMon.Common.SettingsObjects
         public bool UseEmailShortFormat { get; set; }
 
         /// <summary>
-        /// Gets or sets the email from address.
+        /// Gets or sets the email SMTP server provider.
         /// </summary>
-        /// <value>The email from address.</value>
-        [XmlElement("emailFromAddress")]
-        public string EmailFromAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the email to address.
-        /// </summary>
-        /// <value>The email to address.</value>
-        [XmlElement("emailToAddress")]
-        public string EmailToAddress { get; set; }
+        /// <value>The email SMTP server provider.</value>
+        [XmlElement("emailSmtpServerProvider")]
+        public string EmailSmtpServerProvider { get; set; }
 
         /// <summary>
         /// Gets or sets the email SMTP server.
         /// </summary>
         /// <value>The email SMTP server.</value>
         [XmlElement("emailSmtpServer")]
-        public string EmailSmtpServer { get; set; }
+        public string EmailSmtpServerAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the email port number.
@@ -75,6 +68,15 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The email port number.</value>
         [XmlElement("emailPortNumber")]
         public int EmailPortNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [email server requires SSL].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [email server requires SSL]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("emailServerRequiresSSL")]
+        public bool EmailServerRequiresSsl { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [email authentication required].
@@ -100,12 +102,17 @@ namespace EVEMon.Common.SettingsObjects
         public string EmailAuthenticationPassword { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [email server requires SSL].
+        /// Gets or sets the email from address.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [email server requires SSL]; otherwise, <c>false</c>.
-        /// </value>
-        [XmlElement("emailServerRequiresSSL")]
-        public bool EmailServerRequiresSSL { get; set; }
+        /// <value>The email from address.</value>
+        [XmlElement("emailFromAddress")]
+        public string EmailFromAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email to address.
+        /// </summary>
+        /// <value>The email to address.</value>
+        [XmlElement("emailToAddress")]
+        public string EmailToAddress { get; set; }
     }
 }

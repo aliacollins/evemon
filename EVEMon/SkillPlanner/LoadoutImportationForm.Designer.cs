@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class EFTLoadoutImportationForm
+    partial class LoadoutImportationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -39,18 +39,17 @@ namespace EVEMon.SkillPlanner
             this.AddToPlanButton = new System.Windows.Forms.Button();
             this.TrainingTimeLabel = new System.Windows.Forms.Label();
             this.CloseButton = new System.Windows.Forms.Button();
-            this.splitContainerPanel = new System.Windows.Forms.Panel();
-            this.topSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
-            this.PasteTextBox = new System.Windows.Forms.RichTextBox();
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.ResultsTreeView = new System.Windows.Forms.TreeView();
+            this.HeaderPanel = new System.Windows.Forms.Panel();
+            this.DescriptionLabel = new System.Windows.Forms.Label();
+            this.ShipTypeNameLabel = new System.Windows.Forms.Label();
+            this.LoadoutNameLabel = new System.Windows.Forms.Label();
+            this.TreeViewPanel = new System.Windows.Forms.Panel();
             this.RightClickContextMenuStrip.SuspendLayout();
             this.BottomPanel.SuspendLayout();
-            this.splitContainerPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.topSplitContainer)).BeginInit();
-            this.topSplitContainer.Panel1.SuspendLayout();
-            this.topSplitContainer.Panel2.SuspendLayout();
-            this.topSplitContainer.SuspendLayout();
+            this.HeaderPanel.SuspendLayout();
+            this.TreeViewPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // RightClickContextMenuStrip
@@ -64,7 +63,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.ShowInBrowserMenuItem.Name = "ShowInBrowserMenuItem";
             this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.ShowInBrowserMenuItem.Text = "Show Item In Browser...";
+            this.ShowInBrowserMenuItem.Text = "Show in &Item Browser";
             this.ShowInBrowserMenuItem.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // BottomPanel
@@ -75,14 +74,13 @@ namespace EVEMon.SkillPlanner
             this.BottomPanel.Controls.Add(this.TrainingTimeLabel);
             this.BottomPanel.Controls.Add(this.CloseButton);
             this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.BottomPanel.Location = new System.Drawing.Point(0, 401);
+            this.BottomPanel.Location = new System.Drawing.Point(0, 370);
             this.BottomPanel.Name = "BottomPanel";
-            this.BottomPanel.Size = new System.Drawing.Size(647, 44);
+            this.BottomPanel.Size = new System.Drawing.Size(374, 72);
             this.BottomPanel.TabIndex = 2;
             // 
             // TrainTimeLabel
             // 
-            this.TrainTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TrainTimeLabel.AutoSize = true;
             this.TrainTimeLabel.Location = new System.Drawing.Point(191, 14);
             this.TrainTimeLabel.Name = "TrainTimeLabel";
@@ -103,7 +101,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.AddToPlanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddToPlanButton.Enabled = false;
-            this.AddToPlanButton.Location = new System.Drawing.Point(479, 9);
+            this.AddToPlanButton.Location = new System.Drawing.Point(206, 37);
             this.AddToPlanButton.Name = "AddToPlanButton";
             this.AddToPlanButton.Size = new System.Drawing.Size(75, 23);
             this.AddToPlanButton.TabIndex = 2;
@@ -113,7 +111,6 @@ namespace EVEMon.SkillPlanner
             // 
             // TrainingTimeLabel
             // 
-            this.TrainingTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TrainingTimeLabel.AutoSize = true;
             this.TrainingTimeLabel.Location = new System.Drawing.Point(12, 14);
             this.TrainingTimeLabel.Name = "TrainingTimeLabel";
@@ -125,7 +122,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(560, 9);
+            this.CloseButton.Location = new System.Drawing.Point(287, 37);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
             this.CloseButton.TabIndex = 3;
@@ -133,97 +130,100 @@ namespace EVEMon.SkillPlanner
             this.CloseButton.UseVisualStyleBackColor = true;
             this.CloseButton.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // splitContainerPanel
-            // 
-            this.splitContainerPanel.Controls.Add(this.topSplitContainer);
-            this.splitContainerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerPanel.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerPanel.Name = "splitContainerPanel";
-            this.splitContainerPanel.Padding = new System.Windows.Forms.Padding(6);
-            this.splitContainerPanel.Size = new System.Drawing.Size(647, 401);
-            this.splitContainerPanel.TabIndex = 3;
-            // 
-            // topSplitContainer
-            // 
-            this.topSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.topSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.topSplitContainer.Location = new System.Drawing.Point(6, 6);
-            this.topSplitContainer.Name = "topSplitContainer";
-            // 
-            // topSplitContainer.Panel1
-            // 
-            this.topSplitContainer.Panel1.Controls.Add(this.PasteTextBox);
-            this.topSplitContainer.Panel1.Controls.Add(this.ExplanationLabel);
-            // 
-            // topSplitContainer.Panel2
-            // 
-            this.topSplitContainer.Panel2.Controls.Add(this.ResultsTreeView);
-            this.topSplitContainer.RememberDistanceKey = null;
-            this.topSplitContainer.Size = new System.Drawing.Size(635, 389);
-            this.topSplitContainer.SplitterDistance = 270;
-            this.topSplitContainer.TabIndex = 1;
-            // 
-            // PasteTextBox
-            // 
-            this.PasteTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.PasteTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PasteTextBox.Location = new System.Drawing.Point(0, 23);
-            this.PasteTextBox.Name = "PasteTextBox";
-            this.PasteTextBox.ReadOnly = true;
-            this.PasteTextBox.Size = new System.Drawing.Size(270, 366);
-            this.PasteTextBox.TabIndex = 0;
-            this.PasteTextBox.Text = "";
-            this.PasteTextBox.WordWrap = false;
-            this.PasteTextBox.TextChanged += new System.EventHandler(this.tbEFTLoadout_TextChanged);
-            // 
             // ExplanationLabel
             // 
-            this.ExplanationLabel.AutoSize = true;
             this.ExplanationLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.ExplanationLabel.Location = new System.Drawing.Point(0, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Padding = new System.Windows.Forms.Padding(2, 5, 2, 5);
-            this.ExplanationLabel.Size = new System.Drawing.Size(242, 23);
+            this.ExplanationLabel.Size = new System.Drawing.Size(374, 23);
             this.ExplanationLabel.TabIndex = 1;
-            this.ExplanationLabel.Text = "Copy an EFT formated loadout into the clipboard.";
+            this.ExplanationLabel.Text = "Copy an EFT, XML or DNA formated loadout into the clipboard.";
+            this.ExplanationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ResultsTreeView
             // 
-            this.ResultsTreeView.ContextMenuStrip = this.RightClickContextMenuStrip;
             this.ResultsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ResultsTreeView.Location = new System.Drawing.Point(0, 0);
+            this.ResultsTreeView.Location = new System.Drawing.Point(5, 5);
             this.ResultsTreeView.Name = "ResultsTreeView";
-            this.ResultsTreeView.Size = new System.Drawing.Size(361, 389);
+            this.ResultsTreeView.Size = new System.Drawing.Size(364, 278);
             this.ResultsTreeView.TabIndex = 1;
             this.ResultsTreeView.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
             this.ResultsTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
             // 
-            // EFTLoadoutImportationForm
+            // HeaderPanel
+            // 
+            this.HeaderPanel.Controls.Add(this.DescriptionLabel);
+            this.HeaderPanel.Controls.Add(this.ShipTypeNameLabel);
+            this.HeaderPanel.Controls.Add(this.LoadoutNameLabel);
+            this.HeaderPanel.Controls.Add(this.ExplanationLabel);
+            this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.HeaderPanel.Location = new System.Drawing.Point(0, 0);
+            this.HeaderPanel.Name = "HeaderPanel";
+            this.HeaderPanel.Size = new System.Drawing.Size(374, 82);
+            this.HeaderPanel.TabIndex = 3;
+            // 
+            // DescriptionLabel
+            // 
+            this.DescriptionLabel.AutoSize = true;
+            this.DescriptionLabel.Location = new System.Drawing.Point(12, 53);
+            this.DescriptionLabel.Name = "DescriptionLabel";
+            this.DescriptionLabel.Size = new System.Drawing.Size(63, 13);
+            this.DescriptionLabel.TabIndex = 4;
+            this.DescriptionLabel.Text = "Description:";
+            // 
+            // ShipTypeNameLabel
+            // 
+            this.ShipTypeNameLabel.AutoSize = true;
+            this.ShipTypeNameLabel.Location = new System.Drawing.Point(12, 27);
+            this.ShipTypeNameLabel.Name = "ShipTypeNameLabel";
+            this.ShipTypeNameLabel.Size = new System.Drawing.Size(31, 13);
+            this.ShipTypeNameLabel.TabIndex = 3;
+            this.ShipTypeNameLabel.Text = "Ship:";
+            // 
+            // LoadoutNameLabel
+            // 
+            this.LoadoutNameLabel.AutoSize = true;
+            this.LoadoutNameLabel.Location = new System.Drawing.Point(12, 40);
+            this.LoadoutNameLabel.Name = "LoadoutNameLabel";
+            this.LoadoutNameLabel.Size = new System.Drawing.Size(80, 13);
+            this.LoadoutNameLabel.TabIndex = 2;
+            this.LoadoutNameLabel.Text = "Loadout Name:";
+            // 
+            // TreeViewPanel
+            // 
+            this.TreeViewPanel.Controls.Add(this.ResultsTreeView);
+            this.TreeViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TreeViewPanel.Location = new System.Drawing.Point(0, 82);
+            this.TreeViewPanel.Name = "TreeViewPanel";
+            this.TreeViewPanel.Padding = new System.Windows.Forms.Padding(5);
+            this.TreeViewPanel.Size = new System.Drawing.Size(374, 288);
+            this.TreeViewPanel.TabIndex = 4;
+            // 
+            // LoadoutImportationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(647, 445);
-            this.Controls.Add(this.splitContainerPanel);
+            this.ClientSize = new System.Drawing.Size(374, 442);
+            this.Controls.Add(this.TreeViewPanel);
+            this.Controls.Add(this.HeaderPanel);
             this.Controls.Add(this.BottomPanel);
-            this.MinimumSize = new System.Drawing.Size(663, 483);
-            this.Name = "EFTLoadoutImportationForm";
-            this.Text = "EFT Loadout Import";
+            this.MaximumSize = new System.Drawing.Size(390, 1280);
+            this.MinimumSize = new System.Drawing.Size(390, 480);
+            this.Name = "LoadoutImportationForm";
+            this.Text = "Loadout Import";
             this.RightClickContextMenuStrip.ResumeLayout(false);
             this.BottomPanel.ResumeLayout(false);
             this.BottomPanel.PerformLayout();
-            this.splitContainerPanel.ResumeLayout(false);
-            this.topSplitContainer.Panel1.ResumeLayout(false);
-            this.topSplitContainer.Panel1.PerformLayout();
-            this.topSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.topSplitContainer)).EndInit();
-            this.topSplitContainer.ResumeLayout(false);
+            this.HeaderPanel.ResumeLayout(false);
+            this.HeaderPanel.PerformLayout();
+            this.TreeViewPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private PersistentSplitContainer topSplitContainer;
         private System.Windows.Forms.TreeView ResultsTreeView;
         private System.Windows.Forms.Panel BottomPanel;
         private System.Windows.Forms.Button AddToPlanButton;
@@ -234,7 +234,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.ContextMenuStrip RightClickContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem ShowInBrowserMenuItem;
-        private System.Windows.Forms.RichTextBox PasteTextBox;
-        private System.Windows.Forms.Panel splitContainerPanel;
+        private System.Windows.Forms.Panel HeaderPanel;
+        private System.Windows.Forms.Label DescriptionLabel;
+        private System.Windows.Forms.Label ShipTypeNameLabel;
+        private System.Windows.Forms.Label LoadoutNameLabel;
+        private System.Windows.Forms.Panel TreeViewPanel;
     }
 }

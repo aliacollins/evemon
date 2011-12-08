@@ -20,11 +20,9 @@ namespace EVEMon.Common
             if (filename == null)
                 throw new ArgumentNullException("filename");
 
-            string normalizedFilename = filename;
-            if (filename.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
-                normalizedFilename = filename.Remove(0, 8);
+            Uri uri = new Uri(filename);
 
-            if (!File.Exists(normalizedFilename))
+            if (uri.IsFile && !File.Exists(uri.LocalPath))
                 return null;
 
             // While problems happen and the user ask to retry...
@@ -32,7 +30,7 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    return new MemoryStream(File.ReadAllBytes(normalizedFilename));
+                    return new MemoryStream(File.ReadAllBytes(uri.LocalPath));
                 }
                 catch (UnauthorizedAccessException exc)
                 {
@@ -44,9 +42,9 @@ namespace EVEMon.Common
                                (allowIgnore ? "abort" : "cancel") + " will make EVEMon quit.";
 
                     DialogResult result = MessageBox.Show(message, "Failed to read a file",
-                                                          (allowIgnore
+                                                          allowIgnore
                                                                ? MessageBoxButtons.AbortRetryIgnore
-                                                               : MessageBoxButtons.RetryCancel),
+                                                               : MessageBoxButtons.RetryCancel,
                                                           MessageBoxIcon.Error);
 
                     // On abort, we quit the application

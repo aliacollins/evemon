@@ -86,6 +86,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <value>The slots.</value>
         [XmlElement("slot")]
-        public Collection<SerializableLoadoutSlot> Slots { get { return m_slots; } }
+        public Collection<SerializableLoadoutSlot> Slots
+        {
+            get { return m_slots; }
+        }
     }
 }

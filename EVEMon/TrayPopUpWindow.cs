@@ -23,9 +23,12 @@ namespace EVEMon
     {
         private readonly int[] m_portraitSize = { 16, 24, 32, 40, 48, 56, 64 };
 
-        private Label m_eveTimeLabel = new Label();
-        private Label m_serverStatusLabel = new Label();
+        private readonly Label m_eveTimeLabel = new Label();
+        private readonly Label m_serverStatusLabel = new Label();
         private bool m_updatePending;
+
+
+        #region Constructor
 
         /// <summary>
         /// Default constructor.
@@ -35,8 +38,10 @@ namespace EVEMon
             InitializeComponent();
         }
 
+        #endregion
 
-        #region Control's lifecycle management and painting
+
+        #region Inherited Events
 
         /// <summary>
         /// Adds the character panes to the form, gets the TQ status message and sets the popup position
@@ -94,12 +99,13 @@ namespace EVEMon
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
             // Draw the border and background
             DrawBorder(e);
         }
 
         /// <summary>
-        /// Sets this window as topmost without activiting it.
+        /// Sets this window as topmost without activating it.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnShown(EventArgs e)
@@ -107,7 +113,7 @@ namespace EVEMon
             base.OnShown(e);
 
             // Show the given form on topmost without activating it
-            this.ShowInactiveTopmost();
+            this.ShowInactiveTopmost(NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
         }
 
         /// <summary>

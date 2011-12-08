@@ -16,32 +16,25 @@ namespace EVEMon.Sales
         private static readonly Dictionary<string, IMineralParser> s_parsers = new Dictionary<string, IMineralParser>();
 
         /// <summary>
+        /// Initializes the data source.
+        /// </summary>
+        internal static void Initialize()
+        {
+            foreach (IMineralParser parser in Assembly.GetExecutingAssembly().GetTypes().Where(
+                type => typeof(IMineralParser).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null).Select(
+                    type => Activator.CreateInstance(type) as IMineralParser).OrderBy(parser => parser.Name))
+            {
+                s_parsers[parser.Name] = parser;
+            }
+        }
+
+        /// <summary>
         /// Gets the parsers.
         /// </summary>
         /// <value>The parsers.</value>
         public static IEnumerable<IMineralParser> Parsers
         {
             get { return s_parsers.Values; }
-        }
-
-        /// <summary>
-        /// Initializes the data source.
-        /// </summary>
-        internal static void Initialize()
-        {
-            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                foreach (DefaultMineralParserAttribute dmpa in type.GetCustomAttributes(
-                    typeof(DefaultMineralParserAttribute), false))
-                {
-                    IMineralParser mp = Activator.CreateInstance(type) as IMineralParser;
-                    if (mp == null)
-                        continue;
-
-                    mp.Name = dmpa.Name;
-                    s_parsers[dmpa.Name] = mp;
-                }
-            }
         }
 
         /// <summary>

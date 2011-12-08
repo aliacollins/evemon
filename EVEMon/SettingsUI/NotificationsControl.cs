@@ -38,9 +38,10 @@ namespace EVEMon.SettingsUI
             get { return m_settings; }
             set
             {
-                m_settings = value;
                 if (value == null)
                     return;
+
+                m_settings = value;
 
                 foreach (ComboBox combo in m_combos)
                 {
@@ -70,11 +71,8 @@ namespace EVEMon.SettingsUI
         {
             get
             {
-                IEnumerable<NotificationCategory> categories = Enum.GetValues(typeof(NotificationCategory))
-                    .Cast<NotificationCategory>()
-                    .Where(x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication)
-                    .Where(x => x.HasHeader());
-                return categories;
+                return Enum.GetValues(typeof(NotificationCategory)).Cast<NotificationCategory>().Where(
+                    x => EveMonClient.IsDebugBuild || x != NotificationCategory.TestNofitication).Where(x => x.HasHeader());
             }
         }
 

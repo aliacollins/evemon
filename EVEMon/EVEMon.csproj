@@ -233,6 +233,12 @@
     <Compile Include="SettingsUI\BattleClinicAPIControl.Designer.cs">
       <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\EmailNotificationsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\EmailNotificationsControl.Designer.cs">
+      <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\SettingsFileStorageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -383,6 +389,9 @@
     <EmbeddedResource Include="SettingsUI\BattleClinicAPIControl.resx">
       <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\EmailNotificationsControl.resx">
+      <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -529,11 +538,11 @@
     <Compile Include="SkillPlanner\PlanPrioritiesEditorForm.Designer.cs">
       <DependentUpon>PlanPrioritiesEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\EFTLoadoutImportationForm.cs">
+    <Compile Include="SkillPlanner\LoadoutImportationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\EFTLoadoutImportationForm.Designer.cs">
-      <DependentUpon>EFTLoadoutImportationForm.cs</DependentUpon>
+    <Compile Include="SkillPlanner\LoadoutImportationForm.Designer.cs">
+      <DependentUpon>LoadoutImportationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\EveObjectBrowserControl.cs">
       <SubType>UserControl</SubType>
@@ -783,8 +792,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>PlanImportationFromCharacterForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\EFTLoadoutImportationForm.resx">
-      <DependentUpon>EFTLoadoutImportationForm.cs</DependentUpon>
+    <EmbeddedResource Include="SkillPlanner\LoadoutImportationForm.resx">
+      <DependentUpon>LoadoutImportationForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\EveObjectBrowserControl.resx">

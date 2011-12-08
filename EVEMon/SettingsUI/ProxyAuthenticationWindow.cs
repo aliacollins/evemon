@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
@@ -9,13 +10,18 @@ namespace EVEMon.SettingsUI
     {
         private readonly ProxySettings m_proxySetting;
 
+        private ProxyAuthenticationWindow()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="settings"></param>
         public ProxyAuthenticationWindow(ProxySettings settings)
+            : this()
         {
-            InitializeComponent();
             m_proxySetting = settings;
             UpdateFields();
         }
@@ -33,17 +39,17 @@ namespace EVEMon.SettingsUI
                 case ProxyAuthentication.None:
                     rbNoAuth.Checked = true;
                     break;
-
                 case ProxyAuthentication.SystemDefault:
                     rbSystemDefault.Checked = true;
                     break;
-
                 case ProxyAuthentication.Specified:
-                    tbUsername.Text = m_proxySetting.Username;
-                    tbPassword.Text = m_proxySetting.Password;
                     rbSuppliedAuth.Checked = true;
                     break;
             }
+
+            tlpSpecifiedAuth.Enabled = false;
+            tbUsername.Text = m_proxySetting.Username;
+            tbPassword.Text = Util.Decrypt(m_proxySetting.Password, m_proxySetting.Username);
         }
 
         /// <summary>
@@ -79,11 +85,10 @@ namespace EVEMon.SettingsUI
             else if (rbSystemDefault.Checked)
                 m_proxySetting.Authentication = ProxyAuthentication.SystemDefault;
             else if (rbSuppliedAuth.Checked)
-            {
                 m_proxySetting.Authentication = ProxyAuthentication.Specified;
-                m_proxySetting.Username = tbUsername.Text;
-                m_proxySetting.Password = tbPassword.Text;
-            }
+
+            m_proxySetting.Username = tbUsername.Text.Trim();
+            m_proxySetting.Password = Util.Encrypt(tbPassword.Text.Trim(), tbUsername.Text.Trim());
 
             DialogResult = DialogResult.OK;
             Close();

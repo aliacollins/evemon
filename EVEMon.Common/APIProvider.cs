@@ -237,7 +237,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Query this method with the provided HTTP POST data.
         /// </summary>
-        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult{T}"/>).</typeparam>
+        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult&lt;T&gt;"/>).</typeparam>
         /// <param name="method">The method to query</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
@@ -272,7 +272,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Asynchrnoneously queries this method with the provided HTTP POST data.
         /// </summary>
-        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult{T}"/>).</typeparam>
+        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult&lt;T&gt;"/>).</typeparam>
         /// <param name="method">The method to query</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>

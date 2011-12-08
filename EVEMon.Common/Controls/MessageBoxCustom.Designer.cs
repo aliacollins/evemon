@@ -47,9 +47,9 @@
             // 
             this.cbOption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbOption.AutoSize = true;
-            this.cbOption.Location = new System.Drawing.Point(12, 17);
+            this.cbOption.Location = new System.Drawing.Point(12, 19);
             this.cbOption.Name = "cbOption";
-            this.cbOption.Size = new System.Drawing.Size(77, 19);
+            this.cbOption.Size = new System.Drawing.Size(71, 17);
             this.cbOption.TabIndex = 0;
             this.cbOption.Text = "<cbText>";
             this.cbOption.UseVisualStyleBackColor = true;
@@ -77,9 +77,9 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.SystemColors.Window;
             this.panel1.Controls.Add(this.msgIcon);
@@ -104,7 +104,7 @@
             this.msgText.Location = new System.Drawing.Point(65, 0);
             this.msgText.MaximumSize = new System.Drawing.Size(420, 0);
             this.msgText.Name = "msgText";
-            this.msgText.Size = new System.Drawing.Size(69, 15);
+            this.msgText.Size = new System.Drawing.Size(62, 13);
             this.msgText.TabIndex = 1;
             this.msgText.Text = "<Message>";
             this.msgText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -134,8 +134,8 @@
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.AutoSize = true;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
@@ -144,8 +144,8 @@
             // 
             // panel4
             // 
-            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.AutoSize = true;
             this.panel4.Location = new System.Drawing.Point(0, 90);
             this.panel4.Name = "panel4";
@@ -153,8 +153,7 @@
             this.panel4.TabIndex = 8;
             // 
             // MessageBoxCustom
-            // 
-            this.AcceptButton = this.button2;
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
@@ -183,12 +182,13 @@
 
         #endregion
 
+
         private System.Windows.Forms.CheckBox cbOption;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label msgText;
         private System.Windows.Forms.PictureBox msgIcon;
+        private System.Windows.Forms.Label msgText;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;

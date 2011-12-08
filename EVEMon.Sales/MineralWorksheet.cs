@@ -111,13 +111,7 @@ namespace EVEMon.Sales
                 mineralTile.SubtotalChanged += TileSubtotal_Changed;
             }
 
-            SortedList<string, IMineralParser> parsersSorted = new SortedList<string, IMineralParser>();
             foreach (IMineralParser parser in MineralDataRequest.Parsers)
-            {
-                parsersSorted.Add(parser.Title, parser);
-            }
-
-            foreach (IMineralParser parser in parsersSorted.Values)
             {
                 ToolStripMenuItem menuItem;
                 using (ToolStripMenuItem item = new ToolStripMenuItem())

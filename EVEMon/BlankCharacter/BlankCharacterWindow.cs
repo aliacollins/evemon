@@ -13,7 +13,6 @@ namespace EVEMon.BlankCharacter
     public partial class BlankCharacterWindow : EVEMonForm
     {
         private string m_filename;
-        private bool m_fileSaved;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlankCharacterWindow"/> class.
@@ -33,6 +32,7 @@ namespace EVEMon.BlankCharacter
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
 
+            buttonOK.Text = "Save";
             buttonOK.Enabled = false;
         }
 
@@ -47,7 +47,6 @@ namespace EVEMon.BlankCharacter
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             buttonOK.Enabled = !String.IsNullOrEmpty(blankCharacterControl.CharacterName);
-            buttonOK.Text = (!buttonOK.Enabled || m_fileSaved ? "Import" : "Save");
         }
 
         /// <summary>
@@ -73,18 +72,22 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            // Create the blank character from selections
-            SerializableCCPCharacter serial = blankCharacterControl.CreateCharacter();
-
-            // Two choices for one button
-            // Save blank character ?
-            if (!m_fileSaved)
-                Save(serial);
-                // Add blank character ?
-            else
-                AddBlankCharacter();
-
-            buttonOK.DialogResult = (m_fileSaved ? DialogResult.OK : DialogResult.None);
+            // Three choices for one button
+            switch (buttonOK.DialogResult)
+            {
+                    // Save blank character
+                case DialogResult.None:
+                    Save(blankCharacterControl.CreateCharacter());
+                    break;
+                    // Add blank character
+                case DialogResult.Yes:
+                    AddBlankCharacter();
+                    break;
+                    // Close window
+                case DialogResult.OK:
+                    Close();
+                    break;
+            }
         }
 
         /// <summary>
@@ -115,30 +118,29 @@ namespace EVEMon.BlankCharacter
                 fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.xml", serial.Name);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-                if (fileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    // Disabling control edit ability
-                    blankCharacterControl.Enabled = false;
+                if (fileDialog.ShowDialog() != DialogResult.OK)
+                    return;
 
-                    XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
-                    string content = Util.GetXMLStringRepresentation(xmlDoc);
-                    FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
-                                                      fs =>
+                // Disabling control edit ability
+                blankCharacterControl.Enabled = false;
+
+                XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableCCPCharacter), serial);
+                string content = Util.GetXMLStringRepresentation(xmlDoc);
+                FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
+                                                  fs =>
+                                                      {
+                                                          using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                                                           {
-                                                              using(StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                                                              {
-                                                                  writer.Write(content);
-                                                                  writer.Flush();
-                                                                  fs.Flush();
-                                                              }
-                                                              return true;
-                                                          });
+                                                              writer.Write(content);
+                                                              writer.Flush();
+                                                              fs.Flush();
+                                                          }
+                                                          return true;
+                                                      });
 
-                    m_filename = fileDialog.FileName;
-                    m_fileSaved = true;
-                }
-                else
-                    m_fileSaved = false;
+                m_filename = fileDialog.FileName;
+                buttonOK.DialogResult = DialogResult.Yes;
+                buttonOK.Text = "Import";
             }
         }
 
@@ -156,6 +158,9 @@ namespace EVEMon.BlankCharacter
 
                                                                          UriCharacter character = args.CreateCharacter();
                                                                          character.Monitored = true;
+                                                                         
+                                                                         buttonOK.Text = "Close";
+                                                                         buttonOK.DialogResult = DialogResult.OK;
                                                                      });
         }
 

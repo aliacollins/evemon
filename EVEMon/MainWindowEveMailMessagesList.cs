@@ -185,6 +185,7 @@ namespace EVEMon
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVEMailingListsUpdated -= EveMonClient_CharacterEVEMailingListsUpdated;
             EveMonClient.CharacterEVEMailBodyDownloaded -= EveMonClient_CharacterEVEMailBodyDownloaded;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             Disposed -= OnDisposed;

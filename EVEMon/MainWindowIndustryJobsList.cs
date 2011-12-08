@@ -457,7 +457,7 @@ namespace EVEMon
                 // Add the items in every group
                 foreach (IndustryJob job in group)
                 {
-                    if (job.InstalledItem == null)
+                    if (job.InstalledItem == null || job.OutputItem == null || job.SolarSystem == null)
                         continue;
 
                     ListViewItem item = new ListViewItem(job.InstalledItem.Name, listGroup)

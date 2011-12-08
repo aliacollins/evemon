@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -13,6 +15,8 @@ namespace EVEMon.Common
     /// </summary>
     public static class Emailer
     {
+        private static SmtpClient s_smtpClient;
+
         /// <summary>
         /// Sends a test mail
         /// </summary>
@@ -149,8 +153,8 @@ namespace EVEMon.Common
 
             string subject = String.Format(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}", charName,
                                            skillName, skillLevelString);
+
             SendMail(Settings.Notifications, subject, body.ToString());
-            return;
         }
 
         /// <summary>
@@ -162,10 +166,11 @@ namespace EVEMon.Common
         {
             if (e.Cancelled)
                 EveMonClient.Trace("Emailer.SendCompleted - The last message was cancelled");
-            if (e.Error != null)
+            else if (e.Error != null)
             {
                 EveMonClient.Trace("Emailer.SendCompleted - An error occurred");
                 ExceptionHandler.LogException(e.Error, false);
+                MessageBox.Show(e.Error.Message, "EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
                 EveMonClient.Trace("Emailer.SendCompleted - Message sent.");
@@ -180,45 +185,61 @@ namespace EVEMon.Common
         /// <returns>True if no exceptions thrown, otherwise false</returns>
         /// <remarks>
         /// NotificationSettings object is required to support
-        /// alternative settings from Tols -> Options. Use
+        /// alternative settings from Tools -> Options. Use
         /// Settings.Notifications unless using an alternative
         /// configuration.
         /// </remarks>
         private static bool SendMail(NotificationSettings settings, string subject, string body)
         {
-            // trace something to the logs so we can identify the time the message was sent.
+            // Trace something to the logs so we can identify the time the message was sent
             EveMonClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
                                subject,
-                               settings.EmailSmtpServer,
-                               settings.EmailPortNumber
-                );
+                               settings.EmailSmtpServerAddress,
+                               settings.EmailPortNumber);
+
+            string sender = String.IsNullOrEmpty(settings.EmailFromAddress)
+                                ? "evemonclient@battleclinic.com"
+                                : settings.EmailFromAddress;
+
+            List<string> toAddresses = settings.EmailToAddress.Split(
+                new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             try
             {
                 // Set up message
-                using(MailMessage msg = new MailMessage(settings.EmailFromAddress, settings.EmailToAddress, subject, body))
+                MailMessage msg = new MailMessage();
+                toAddresses.ForEach(address => msg.To.Add(address.Trim()));
+                msg.From = new MailAddress(sender);
+                msg.Subject = subject;
+                msg.Body = body;
 
                 // Set up client
-                using (SmtpClient client = new SmtpClient(settings.EmailSmtpServer))
+                s_smtpClient = new SmtpClient();
+
+                s_smtpClient.SendCompleted += SendCompleted;
+                s_smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                s_smtpClient.Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
+                
+                // Host and port
+                s_smtpClient.Host = settings.EmailSmtpServerAddress;
+                s_smtpClient.Port = settings.EmailPortNumber;
+
+                // SSL
+                s_smtpClient.EnableSsl = settings.EmailServerRequiresSsl;
+                ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
+
+                // Credentials
+                if (settings.EmailAuthenticationRequired)
                 {
-                    client.SendCompleted += SendCompleted;
-                    if (settings.EmailPortNumber > 0)
-                        client.Port = settings.EmailPortNumber;
-
-                    // Enter crendtials
-                    if (settings.EmailAuthenticationRequired)
-                    {
-                        client.UseDefaultCredentials = false;
-                        client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
-                                                                   settings.EmailAuthenticationPassword);
-                    }
-
-                    // SSL
-                    client.EnableSsl = settings.EmailServerRequiresSSL;
-
-                    // Send message
-                    client.SendAsync(msg, null);
+                    s_smtpClient.UseDefaultCredentials = false;
+                    s_smtpClient.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
+                                                                     Util.Decrypt(settings.EmailAuthenticationPassword,
+                                                                     settings.EmailAuthenticationUserName));
                 }
+
+                // Send message
+                s_smtpClient.SendAsync(msg, null);
+
                 return true;
             }
             catch (InvalidOperationException e)

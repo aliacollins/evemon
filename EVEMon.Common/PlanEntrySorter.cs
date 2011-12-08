@@ -8,7 +8,7 @@ namespace EVEMon.Common
     /// <summary>
     /// This class holds the responsibility to sort enumerations of plan entries.
     /// </summary>
-    internal sealed class PlanSorter
+    internal sealed class PlanEntrySorter
     {
         private readonly PlanEntrySort m_sort;
         private readonly bool m_reverseOrder;
@@ -24,7 +24,7 @@ namespace EVEMon.Common
         /// <param name="sort"></param>
         /// <param name="reverseOrder"></param>
         /// <param name="groupByPriority"></param>
-        internal PlanSorter(BaseCharacter character, IEnumerable<PlanEntry> entries, PlanEntrySort sort, bool reverseOrder,
+        internal PlanEntrySorter(BaseCharacter character, IEnumerable<PlanEntry> entries, PlanEntrySort sort, bool reverseOrder,
                             bool groupByPriority)
         {
             m_sort = sort;

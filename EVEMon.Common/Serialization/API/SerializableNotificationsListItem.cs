@@ -12,7 +12,7 @@ namespace EVEMon.Common.Serialization.API
         public int TypeID { get; set; }
 
         [XmlAttribute("senderID")]
-        public long SenderID { get; set; }
+        public int SenderID { get; set; }
 
         [XmlAttribute("sentDate")]
         public string SentDateXml

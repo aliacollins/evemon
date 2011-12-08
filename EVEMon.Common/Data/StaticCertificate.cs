@@ -34,17 +34,15 @@ namespace EVEMon.Common.Data
 
             // Recommendations
             Recommendations = new StaticRecommendations<Item>();
-            if (src.Recommendations != null)
+            if (src.Recommendations == null || StaticItems.ShipsMarketGroup == null)
+                return;
+
+            foreach (Ship ship in src.Recommendations.Select(
+                recommendation => StaticItems.ShipsMarketGroup.AllItems.OfType<Ship>().FirstOrDefault(
+                    ship => ship != null && ship.Name == recommendation.Ship)))
             {
-                foreach (SerializableCertificateRecommendation recommendation in src.Recommendations)
-                {
-                    Ship ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == recommendation.Ship) as Ship;
-                    if (ship != null)
-                    {
-                        ship.Recommendations.Add(this);
-                        Recommendations.Add(ship);
-                    }
-                }
+                ship.Recommendations.Add(this);
+                Recommendations.Add(ship);
             }
         }
 
@@ -120,7 +118,7 @@ namespace EVEMon.Common.Data
 
                 // Collect all prerequisites from skills
                 foreach (StaticSkillLevel skillPrereq in m_prerequisiteSkills.Where(
-                    skillPrereq => highestLevels[skillPrereq.Skill.ArrayIndex] < skillPrereq.Level))
+                    skillPrereq => skillPrereq.Skill != null && highestLevels[skillPrereq.Skill.ArrayIndex] < skillPrereq.Level))
                 {
                     highestLevels[skillPrereq.Skill.ArrayIndex] = skillPrereq.Level;
                     list.Add(skillPrereq);

@@ -274,6 +274,10 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private void OnAccountStatusUpdated(APIResult<SerializableAPIAccountStatus> result)
         {
+            // Quit if the API key was deleted while it was updating
+            if (!EveMonClient.APIKeys.Contains(this))
+                return;
+            
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
                 return;
@@ -304,6 +308,10 @@ namespace EVEMon.Common
         /// <param name="characterName">The character's name.</param>
         private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string characterName)
         {
+            // Quit if the API key was deleted while it was updating
+            if (!EveMonClient.APIKeys.Contains(this))
+                return;
+            
             CCPCharacter ccpCharacter = EveMonClient.Characters.OfType<CCPCharacter>().FirstOrDefault(x => x.Name == characterName);
 
             // Checks if EVE database is out of service

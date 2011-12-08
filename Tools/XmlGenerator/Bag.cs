@@ -49,7 +49,6 @@ namespace EVEMon.XmlGenerator
         public T this[int id]
         {
             get { return m_items[id]; }
-            private set { m_items[id] = value; }
         }
 
         /// <summary>

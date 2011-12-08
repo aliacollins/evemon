@@ -132,53 +132,53 @@ namespace EVEMon.Common
                 case PlanEntrySort.None:
                     break;
                 case PlanEntrySort.Name:
-                    Items.StableSort(PlanSorter.CompareByName);
+                    Items.StableSort(PlanEntrySorter.CompareByName);
                     break;
                 case PlanEntrySort.Cost:
-                    Items.StableSort(PlanSorter.CompareByCost);
+                    Items.StableSort(PlanEntrySorter.CompareByCost);
                     break;
                 case PlanEntrySort.PrimaryAttribute:
-                    Items.StableSort(PlanSorter.CompareByPrimaryAttribute);
+                    Items.StableSort(PlanEntrySorter.CompareByPrimaryAttribute);
                     break;
                 case PlanEntrySort.SecondaryAttribute:
-                    Items.StableSort(PlanSorter.CompareBySecondaryAttribute);
+                    Items.StableSort(PlanEntrySorter.CompareBySecondaryAttribute);
                     break;
                 case PlanEntrySort.Priority:
-                    Items.StableSort(PlanSorter.CompareByPriority);
+                    Items.StableSort(PlanEntrySorter.CompareByPriority);
                     break;
                 case PlanEntrySort.PlanGroup:
-                    Items.StableSort(PlanSorter.CompareByPlanGroup);
+                    Items.StableSort(PlanEntrySorter.CompareByPlanGroup);
                     break;
                 case PlanEntrySort.PercentCompleted:
-                    Items.StableSort(PlanSorter.CompareByPercentCompleted);
+                    Items.StableSort(PlanEntrySorter.CompareByPercentCompleted);
                     break;
                 case PlanEntrySort.Rank:
-                    Items.StableSort(PlanSorter.CompareByRank);
+                    Items.StableSort(PlanEntrySorter.CompareByRank);
                     break;
                 case PlanEntrySort.Notes:
-                    Items.StableSort(PlanSorter.CompareByNotes);
+                    Items.StableSort(PlanEntrySorter.CompareByNotes);
                     break;
                 case PlanEntrySort.PlanType:
-                    Items.StableSort(PlanSorter.CompareByPlanType);
+                    Items.StableSort(PlanEntrySorter.CompareByPlanType);
                     break;
                 case PlanEntrySort.TimeDifference:
-                    Items.StableSort(PlanSorter.CompareByTimeDifference);
+                    Items.StableSort(PlanEntrySorter.CompareByTimeDifference);
                     break;
                 case PlanEntrySort.TrainingTime:
-                    Items.StableSort(PlanSorter.CompareByTrainingTime);
+                    Items.StableSort(PlanEntrySorter.CompareByTrainingTime);
                     break;
                 case PlanEntrySort.TrainingTimeNatural:
-                    Items.StableSort(PlanSorter.CompareByTrainingTimeNatural);
+                    Items.StableSort(PlanEntrySorter.CompareByTrainingTimeNatural);
                     break;
                 case PlanEntrySort.SkillGroupDuration:
                     Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations = new Dictionary<StaticSkillGroup, TimeSpan>();
-                    Items.StableSort((x, y) => PlanSorter.CompareBySkillGroupDuration(x, y, Items, skillGroupsDurations));
+                    Items.StableSort((x, y) => PlanEntrySorter.CompareBySkillGroupDuration(x, y, Items, skillGroupsDurations));
                     break;
                 case PlanEntrySort.SPPerHour:
-                    Items.StableSort(PlanSorter.CompareBySPPerHour);
+                    Items.StableSort(PlanEntrySorter.CompareBySPPerHour);
                     break;
                 case PlanEntrySort.SkillPointsRequired:
-                    Items.StableSort(PlanSorter.CompareBySkillPointsRequired);
+                    Items.StableSort(PlanEntrySorter.CompareBySkillPointsRequired);
                     break;
                 default:
                     throw new NotImplementedException();

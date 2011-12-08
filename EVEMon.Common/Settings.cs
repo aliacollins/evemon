@@ -365,7 +365,7 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(settingsFile)
-                                                        : Util.DeserializeXML<SerializableSettings>(settingsFile, SettingsTransform);
+                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile, SettingsTransform);
 
                     // If the settings loaded OK, make a backup as 'last good settings' and return
                     if (settings != null)
@@ -425,7 +425,7 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(backupFile)
-                                                        : Util.DeserializeXML<SerializableSettings>(backupFile, SettingsTransform);
+                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile, SettingsTransform);
 
                     // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
                     if (settings != null)
@@ -455,7 +455,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static SerializableSettings DeserializeOldFormat(string filename)
         {
-            OldSettings oldSerial = Util.DeserializeXML<OldSettings>(filename,
+            OldSettings oldSerial = Util.DeserializeXMLFromFile<OldSettings>(filename,
                                                                      Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
 
             if (oldSerial == null)

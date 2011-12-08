@@ -1784,7 +1784,7 @@ namespace EVEMon
                 return;
 
             m_trayPopup.Close();
-            m_trayPopup = null;
+            m_trayPopup.Dispose();
         }
 
         /// <summary>
@@ -1815,21 +1815,25 @@ namespace EVEMon
         /// <param name="e"></param>
         private void trayIcon_MouseHover(object sender, EventArgs e)
         {
-            // Only display the pop up window if the context menu isn't showing.
+            // Only display the pop up window if the context menu isn't showing
             if (trayIconToolStrip.Visible)
                 return;
 
-            // Stop if the popup is disabled.
+            // Stop if the popup is disabled
             if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled)
                 return;
 
-            // Create the popup.
+            // Create the popup
             if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm)
                 m_trayPopup = new TrayPopUpWindow();
             else
                 m_trayPopup = new TrayTooltipWindow();
 
+            // Show the tooltip
             m_trayPopup.Show();
+
+            // Ensure that the tooltip will be shown on top of all other windows
+            m_trayPopup.BringToFront();
         }
 
         /// <summary>

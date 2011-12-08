@@ -40,8 +40,8 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (EvePropertyValue prop in Items.TakeWhile(prop => prop.Property != null)
-                    .Where(prop => prop.Property.ID == id))
+                foreach (EvePropertyValue prop in Items.TakeWhile(prop => prop.Property != null).Where(
+                    prop => prop.Property.ID == id))
                 {
                     return prop;
                 }

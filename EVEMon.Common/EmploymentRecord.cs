@@ -85,7 +85,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        private static string GetIDToName(long id)
+        private static string GetIDToName(int id)
         {
             NPCCorporation corporation = StaticGeography.GetCorporationByID(id);
             string corporationName = corporation != null ? corporation.Name : String.Empty;

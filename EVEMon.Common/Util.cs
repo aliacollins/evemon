@@ -76,17 +76,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        ///Deserializes an XML document.
+        ///Deserializes an XML document from a file.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="filename">The XML document to deserialize from.</param>
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXML<T>(string filename, XslCompiledTransform transform = null)
+        public static T DeserializeXMLFromFile<T>(string filename, XslCompiledTransform transform = null)
             where T : class
         {
             try
             {
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+
                 if (transform != null)
                 {
                     MemoryStream stream = GetMemoryStream();
@@ -99,7 +101,6 @@ namespace EVEMon.Common
 
                         // Deserialize from the given stream
                         stream.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
                         return (T)xs.Deserialize(stream);
                     }
                 }
@@ -107,7 +108,6 @@ namespace EVEMon.Common
                 // Deserialization without transform
                 using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -116,6 +116,36 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(exc, true);
                 return null;
+            }
+                // An error occurred during the deserialization
+            catch (InvalidOperationException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return null;
+            }
+            catch (XmlException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an XML document from a string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static T DeserializeXMLFromString<T>(string text) 
+            where T : class
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(T));
+            try
+            {
+                using (TextReader stream = new StringReader(text))
+                {
+                    return (T)xs.Deserialize(stream);
+                }
             }
                 // An error occurred during the deserialization
             catch (InvalidOperationException exc)
@@ -401,7 +431,7 @@ namespace EVEMon.Common
 
             try
             {
-                // Deserialization with a transform
+                // Deserialization
                 using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(BCAPIResult<T>));
@@ -593,7 +623,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename"></param>
         /// <returns>The temporary file's name.</returns>
-        public static string UncompressToTempFile(String filename)
+        public static string UncompressToTempFile(string filename)
         {
             string tempFile = Path.GetTempFileName();
 
@@ -641,12 +671,12 @@ namespace EVEMon.Common
         /// </remarks>
         /// <param name="filename">Filename of an XmlDocument</param>
         /// <returns>Text representation of the root node</returns>
-        public static string GetXmlRootElement(string filename)
+        public static string GetXmlRootElement(Uri filename)
         {
-            if (!File.Exists(filename))
-                throw new FileNotFoundException("Document not found", filename);
+            if (!File.Exists(filename.LocalPath))
+                throw new FileNotFoundException("Document not found", filename.LocalPath);
 
-            using (XmlTextReader reader = new XmlTextReader(filename))
+            using (XmlTextReader reader = new XmlTextReader(filename.LocalPath))
             {
                 reader.XmlResolver = null;
                 while (reader.Read())
@@ -657,6 +687,30 @@ namespace EVEMon.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the XML root element if the specified input is valid XML.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
+        public static string GetXmlRootElement(string input)
+        {
+            if (input == null)
+                throw new ArgumentNullException("input");
+
+            TextReader text = new StringReader(input);
+
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(text);
+                return xmlDoc.DocumentElement != null ? xmlDoc.DocumentElement.Name : null;
+            }
+            catch (XmlException)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -692,9 +746,9 @@ namespace EVEMon.Common
         /// Gets a memory stream.
         /// </summary>
         /// <returns>A new memory stream</returns>
-        public static MemoryStream GetMemoryStream()
+        public static MemoryStream GetMemoryStream(byte[] buffer = null)
         {
-            return new MemoryStream();
+            return buffer == null ? new MemoryStream() : new MemoryStream(buffer);
         }
 
         /// <summary>
@@ -706,9 +760,93 @@ namespace EVEMon.Common
         /// <param name="share">The share.</param>
         /// <returns>A new file stream</returns>
         public static FileStream GetFileStream(string filePath, FileMode mode = FileMode.OpenOrCreate,
-                                                 FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
+                                               FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             return new FileStream(filePath, mode, access, share);
+        }
+
+        /// <summary>
+        /// Encrypts the specified text using the provided password.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public static string Encrypt(string text, string password)
+        {
+            // If no password is provided return the text unencrypted
+            if (String.IsNullOrWhiteSpace(password))
+                return text;
+
+            // Ensure that salt is of the correct size
+            while (password.Length < sizeof(long))
+            {
+                password += password;
+            }
+
+            byte[] encrypted;
+            using (Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+            {
+                using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+                {
+                    ICryptoTransform encryptor = aes.CreateEncryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                    MemoryStream msEncrypt = GetMemoryStream();
+                    CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        //Write all data to the stream
+                        swEncrypt.Write(text);
+                    }
+                    encrypted = msEncrypt.ToArray();
+                }
+            }
+            return Convert.ToBase64String(encrypted);
+        }
+
+        /// <summary>
+        /// Decrypts the specified ciphered text using the provided password.
+        /// </summary>
+        /// <param name="cipheredText">The ciphered text.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public static string Decrypt(string cipheredText, string password)
+        {
+            // If no password is provided return the text undecrypted
+            if (String.IsNullOrWhiteSpace(password))
+                return cipheredText;
+
+            byte[] text;
+            try
+            {
+                text = Convert.FromBase64String(cipheredText);
+            }
+                // If text is not encrypted return it undecrypted
+            catch (FormatException)
+            {
+                return cipheredText;
+            }
+
+            // Ensure that salt is of the correct size
+            while (password.Length < sizeof(long))
+            {
+                password += password;
+            }
+
+            string decrypted;
+            using (Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, Encoding.Unicode.GetBytes(password)))
+            {
+                using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+                {
+                    ICryptoTransform decryptor = aes.CreateDecryptor(pdb.GetBytes(32), pdb.GetBytes(16));
+                    MemoryStream msDecrypt = GetMemoryStream(text);
+                    CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                    {
+                        // Read the decrypted bytes from the decrypting stream and place them in a string
+                        decrypted = srDecrypt.ReadToEnd();
+                    }
+                }
+            }
+            return decrypted;
         }
     }
 }

@@ -115,6 +115,8 @@ namespace EVEMon.SettingsUI
 
             Settings.SaveImmediate();
 
+            EveMonClient.Trace("BCAPI.UploadSettingsFile - Initiated");
+
             BCAPI.FileSaveAsync(OnFileSave);
         }
 
@@ -134,6 +136,8 @@ namespace EVEMon.SettingsUI
             m_queryPending = true;
             throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
+
+            EveMonClient.Trace("BCAPI.DownloadSettingsFile - Initiated");
 
             BCAPI.FileGetByNameAsync(OnFileGetByName);
         }
@@ -170,6 +174,8 @@ namespace EVEMon.SettingsUI
 
             apiResponseLabel.ForeColor = Color.Green;
             apiResponseLabel.Text = "File uploaded successfully.";
+
+            EveMonClient.Trace("BCAPI.UploadSettingsFile - Completed");
         }
 
         /// <summary>
@@ -196,6 +202,8 @@ namespace EVEMon.SettingsUI
                 apiResponseLabel.Text = result.Error.ErrorMessage;
                 return;
             }
+
+            EveMonClient.Trace("BCAPI.DownloadSettingsFile - Completed");
 
             BCAPI.SaveSettingsFile(result.Result.Files[0]);
         }

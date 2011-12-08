@@ -33,7 +33,7 @@ namespace EVEMon
             this.btnIgnore = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.updateNotesTextBox = new System.Windows.Forms.TextBox();
             this.cbAutoInstall = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -74,13 +74,13 @@ namespace EVEMon
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.updateNotesTextBox, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.cbAutoInstall, 0, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -96,27 +96,27 @@ namespace EVEMon
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(231, 78);
+            this.label1.Size = new System.Drawing.Size(226, 78);
             this.label1.TabIndex = 0;
             this.label1.Text = "An EVEMon update is available.\r\n\r\nCurrent version: {0}\r\nNewest version: {1}\r\n\r\nTh" +
-                "e newest version has the following updates:";
+    "e newest version has the following updates:";
             // 
-            // textBox1
+            // updateNotesTextBox
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(3, 81);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(361, 185);
-            this.textBox1.TabIndex = 1;
+            this.updateNotesTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.updateNotesTextBox.Location = new System.Drawing.Point(3, 81);
+            this.updateNotesTextBox.Multiline = true;
+            this.updateNotesTextBox.Name = "updateNotesTextBox";
+            this.updateNotesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.updateNotesTextBox.Size = new System.Drawing.Size(361, 185);
+            this.updateNotesTextBox.TabIndex = 1;
             // 
             // cbAutoInstall
             // 
             this.cbAutoInstall.AutoSize = true;
             this.cbAutoInstall.Location = new System.Drawing.Point(3, 272);
             this.cbAutoInstall.Name = "cbAutoInstall";
-            this.cbAutoInstall.Size = new System.Drawing.Size(177, 17);
+            this.cbAutoInstall.Size = new System.Drawing.Size(172, 17);
             this.cbAutoInstall.TabIndex = 2;
             this.cbAutoInstall.Text = "Automatically install this update";
             this.cbAutoInstall.UseVisualStyleBackColor = true;
@@ -155,7 +155,7 @@ namespace EVEMon
         private System.Windows.Forms.Button btnIgnore;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox updateNotesTextBox;
         private System.Windows.Forms.CheckBox cbAutoInstall;
 
 

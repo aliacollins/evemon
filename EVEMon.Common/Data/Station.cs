@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
             CorporationID = src.CorporationID;
             CorporationName = src.CorporationName;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
-            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, src.StationName);
+            FullLocation = GetFullLocation(SolarSystem, src.StationName);
         }
 
         /// <summary>
@@ -50,7 +50,8 @@ namespace EVEMon.Common.Data
             SolarSystem = owner;
             ReprocessingStationsTake = src.ReprocessingStationsTake;
             ReprocessingEfficiency = src.ReprocessingEfficiency;
-            FullLocation = String.Format(CultureConstants.DefaultCulture, "{0} > {1}", owner.FullLocation, src.Name);
+            FullLocation = GetFullLocation(owner, src.Name);
+
             if (src.Agents == null)
                 return;
 
@@ -68,7 +69,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets this object's name.
@@ -123,6 +124,24 @@ namespace EVEMon.Common.Data
             return SolarSystem != other.SolarSystem
                        ? SolarSystem.CompareTo(other.SolarSystem)
                        : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets the station's full location.
+        /// </summary>
+        /// <param name="solarSystem">The solar system.</param>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        private static string GetFullLocation(SolarSystem solarSystem, string name)
+        {
+            return solarSystem == null
+                       ? String.Empty
+                       : String.Format(CultureConstants.DefaultCulture, "{0} > {1}", solarSystem.FullLocation, name);
         }
 
         #endregion

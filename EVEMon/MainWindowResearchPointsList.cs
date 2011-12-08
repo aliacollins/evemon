@@ -258,7 +258,8 @@ namespace EVEMon
                 // Add the items in every group
                 foreach (ResearchPoint researchPoint in researhPoints)
                 {
-                    if (String.IsNullOrEmpty(researchPoint.AgentName) || String.IsNullOrEmpty(researchPoint.Field))
+                    if (String.IsNullOrEmpty(researchPoint.AgentName) || String.IsNullOrEmpty(researchPoint.Field) ||
+                        researchPoint.Station == null)
                         continue;
 
                     ListViewItem item = new ListViewItem(researchPoint.AgentName)

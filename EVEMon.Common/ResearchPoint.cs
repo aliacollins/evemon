@@ -96,7 +96,9 @@ namespace EVEMon.Common
 
             AgentName = agent.Name;
             AgentLevel = agent.Level;
-            Station = StaticGeography.GetStationByID(agent.Station.ID);
+
+            if (agent.Station != null)
+                Station = StaticGeography.GetStationByID(agent.Station.ID);
         }
 
         #endregion

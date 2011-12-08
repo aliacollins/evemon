@@ -74,7 +74,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the unitID for this property.
         /// </summary>
-        public int UnitID { get; private set; }
+        public long UnitID { get; private set; }
 
         /// <summary>
         /// When true, the higher the value, the better it is.

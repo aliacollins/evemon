@@ -181,7 +181,7 @@ namespace EVEMon.Common
         /// Show the window with the given tag.
         /// When none exist, it is created using the public constructor accepting an argument of type <see cref="TTag"/>,
         /// or the default constructor if the previous one does not exist.
-        /// When it already exists, it is bringed to front, or show when hidden.
+        /// When it already exists, it is brought to front, or shown when hidden.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
         /// <typeparam name="TTag"></typeparam>
@@ -197,7 +197,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Show the window with the given tag.
         /// When none exist, it is created using the provided callback, and the provided tag is then associated with it.
-        /// When it already exists, it is bringed to front, or show when hidden.
+        /// When it already exists, it is brought to front, or shown when hidden.
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="creation"></param>
@@ -268,7 +268,7 @@ namespace EVEMon.Common
         {
             ConstructorInfo constructorInfo = typeof(TForm).GetConstructor(Type.EmptyTypes);
             if (constructorInfo != null)
-                return (TForm)(constructorInfo.Invoke(null));
+                return (TForm)constructorInfo.Invoke(null);
             return null;
         }
 
@@ -285,7 +285,7 @@ namespace EVEMon.Common
             // Search a public instance constructor with a single argument of type TArg
             ConstructorInfo ctor = typeof(TForm).GetConstructor(new[] { typeof(TArg) });
             if (ctor != null)
-                return (TForm)(ctor.Invoke(new Object[] { data }));
+                return (TForm)ctor.Invoke(new Object[] { data });
 
             // Failed, use the default constructor
             return Create<TForm>();

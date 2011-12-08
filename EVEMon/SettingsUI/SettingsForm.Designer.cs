@@ -103,12 +103,6 @@ namespace EVEMon.SettingsUI
             this.label11 = new System.Windows.Forms.Label();
             this.lblHTTP = new System.Windows.Forms.Label();
             this.lblEmailNotificationPage = new System.Windows.Forms.Label();
-            this.lblEmailServer = new System.Windows.Forms.Label();
-            this.lblFromAddress = new System.Windows.Forms.Label();
-            this.lblToAddress = new System.Windows.Forms.Label();
-            this.lblEmailPassword = new System.Windows.Forms.Label();
-            this.lblEmailUsername = new System.Windows.Forms.Label();
-            this.lblPortNumber = new System.Windows.Forms.Label();
             this.lblNotificationsPage = new System.Windows.Forms.Label();
             this.lblTrayIconPage = new System.Windows.Forms.Label();
             this.lblSchedulerUIPage = new System.Windows.Forms.Label();
@@ -186,24 +180,11 @@ namespace EVEMon.SettingsUI
             this.proxyAuthenticationButton = new System.Windows.Forms.Button();
             this.proxyHttpHostTextBox = new System.Windows.Forms.TextBox();
             this.emailNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.mailNotificationPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbEmailUseShortFormat = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tlpEmailSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.tbMailServer = new System.Windows.Forms.TextBox();
-            this.tbFromAddress = new System.Windows.Forms.TextBox();
-            this.tbToAddress = new System.Windows.Forms.TextBox();
-            this.cbEmailServerRequireSsl = new System.Windows.Forms.CheckBox();
-            this.cbEmailAuthRequired = new System.Windows.Forms.CheckBox();
-            this.tlpEmailAuthTable = new System.Windows.Forms.TableLayoutPanel();
-            this.tbEmailUsername = new System.Windows.Forms.TextBox();
-            this.tbEmailPassword = new System.Windows.Forms.TextBox();
-            this.emailPortTextBox = new System.Windows.Forms.TextBox();
-            this.btnTestEmail = new System.Windows.Forms.Button();
             this.mailNotificationCheckBox = new System.Windows.Forms.CheckBox();
+            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
             this.notificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
+            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
             this.trayIconPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mainWindowBehaviourGroupBox = new System.Windows.Forms.GroupBox();
             this.rbMinToTaskBar = new System.Windows.Forms.RadioButton();
@@ -305,10 +286,6 @@ namespace EVEMon.SettingsUI
             this.ProxyServerGroupBox.SuspendLayout();
             this.customProxyPanel.SuspendLayout();
             this.emailNotificationsPage.SuspendLayout();
-            this.mailNotificationPanel.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tlpEmailSettings.SuspendLayout();
-            this.tlpEmailAuthTable.SuspendLayout();
             this.notificationsPage.SuspendLayout();
             this.trayIconPage.SuspendLayout();
             this.mainWindowBehaviourGroupBox.SuspendLayout();
@@ -693,83 +670,11 @@ namespace EVEMon.SettingsUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEmailNotificationPage.AutoSize = true;
             this.lblEmailNotificationPage.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.lblEmailNotificationPage.Location = new System.Drawing.Point(4, 40);
+            this.lblEmailNotificationPage.Location = new System.Drawing.Point(4, 20);
             this.lblEmailNotificationPage.Name = "lblEmailNotificationPage";
             this.lblEmailNotificationPage.Size = new System.Drawing.Size(366, 13);
             this.lblEmailNotificationPage.TabIndex = 19;
             this.lblEmailNotificationPage.Text = "EVEMon can send you an email whenever a skill level completes its training.";
-            // 
-            // lblEmailServer
-            // 
-            this.lblEmailServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblEmailServer.AutoSize = true;
-            this.lblEmailServer.Location = new System.Drawing.Point(7, 0);
-            this.lblEmailServer.Name = "lblEmailServer";
-            this.lblEmailServer.Size = new System.Drawing.Size(69, 26);
-            this.lblEmailServer.TabIndex = 0;
-            this.lblEmailServer.Text = "Email Server:";
-            this.lblEmailServer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblFromAddress
-            // 
-            this.lblFromAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblFromAddress.AutoSize = true;
-            this.lblFromAddress.Location = new System.Drawing.Point(3, 158);
-            this.lblFromAddress.Name = "lblFromAddress";
-            this.lblFromAddress.Size = new System.Drawing.Size(73, 26);
-            this.lblFromAddress.TabIndex = 1;
-            this.lblFromAddress.Text = "From address:";
-            this.lblFromAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblToAddress
-            // 
-            this.lblToAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblToAddress.AutoSize = true;
-            this.lblToAddress.Location = new System.Drawing.Point(13, 184);
-            this.lblToAddress.Name = "lblToAddress";
-            this.lblToAddress.Size = new System.Drawing.Size(63, 26);
-            this.lblToAddress.TabIndex = 2;
-            this.lblToAddress.Text = "To address:";
-            this.lblToAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblEmailPassword
-            // 
-            this.lblEmailPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblEmailPassword.AutoSize = true;
-            this.lblEmailPassword.Location = new System.Drawing.Point(5, 26);
-            this.lblEmailPassword.Name = "lblEmailPassword";
-            this.lblEmailPassword.Size = new System.Drawing.Size(56, 26);
-            this.lblEmailPassword.TabIndex = 8;
-            this.lblEmailPassword.Text = "Password:";
-            this.lblEmailPassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblEmailUsername
-            // 
-            this.lblEmailUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblEmailUsername.AutoSize = true;
-            this.lblEmailUsername.Location = new System.Drawing.Point(3, 0);
-            this.lblEmailUsername.Name = "lblEmailUsername";
-            this.lblEmailUsername.Size = new System.Drawing.Size(58, 26);
-            this.lblEmailUsername.TabIndex = 7;
-            this.lblEmailUsername.Text = "Username:";
-            this.lblEmailUsername.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblPortNumber
-            // 
-            this.lblPortNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPortNumber.AutoSize = true;
-            this.lblPortNumber.Location = new System.Drawing.Point(7, 26);
-            this.lblPortNumber.Name = "lblPortNumber";
-            this.lblPortNumber.Size = new System.Drawing.Size(69, 26);
-            this.lblPortNumber.TabIndex = 10;
-            this.lblPortNumber.Text = "Port Number:";
-            this.lblPortNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblNotificationsPage
             // 
@@ -1740,8 +1645,8 @@ namespace EVEMon.SettingsUI
             // emailNotificationsPage
             // 
             this.emailNotificationsPage.Controls.Add(this.lblEmailNotificationPage);
-            this.emailNotificationsPage.Controls.Add(this.mailNotificationPanel);
             this.emailNotificationsPage.Controls.Add(this.mailNotificationCheckBox);
+            this.emailNotificationsPage.Controls.Add(this.emailNotificationsControl);
             this.emailNotificationsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.emailNotificationsPage.Location = new System.Drawing.Point(5, 5);
             this.emailNotificationsPage.Name = "emailNotificationsPage";
@@ -1750,191 +1655,30 @@ namespace EVEMon.SettingsUI
             this.emailNotificationsPage.Text = "emailNotificationsPage";
             this.emailNotificationsPage.Visible = false;
             // 
-            // mailNotificationPanel
-            // 
-            this.mailNotificationPanel.AutoSize = true;
-            this.mailNotificationPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mailNotificationPanel.Controls.Add(this.cbEmailUseShortFormat);
-            this.mailNotificationPanel.Controls.Add(this.tableLayoutPanel2);
-            this.mailNotificationPanel.Controls.Add(this.btnTestEmail);
-            this.mailNotificationPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.mailNotificationPanel.Location = new System.Drawing.Point(3, 104);
-            this.mailNotificationPanel.Name = "mailNotificationPanel";
-            this.mailNotificationPanel.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.mailNotificationPanel.Size = new System.Drawing.Size(362, 285);
-            this.mailNotificationPanel.TabIndex = 1;
-            this.mailNotificationPanel.WrapContents = false;
-            // 
-            // cbEmailUseShortFormat
-            // 
-            this.cbEmailUseShortFormat.AutoSize = true;
-            this.cbEmailUseShortFormat.Location = new System.Drawing.Point(12, 3);
-            this.cbEmailUseShortFormat.Name = "cbEmailUseShortFormat";
-            this.cbEmailUseShortFormat.Size = new System.Drawing.Size(179, 17);
-            this.cbEmailUseShortFormat.TabIndex = 2;
-            this.cbEmailUseShortFormat.Text = "Use Short Format (SMS-Friendly)";
-            this.cbEmailUseShortFormat.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.tlpEmailSettings, 1, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 26);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 227F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 227F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(338, 227);
-            this.tableLayoutPanel2.TabIndex = 1;
-            // 
-            // tlpEmailSettings
-            // 
-            this.tlpEmailSettings.AutoSize = true;
-            this.tlpEmailSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpEmailSettings.ColumnCount = 2;
-            this.tlpEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpEmailSettings.Controls.Add(this.lblEmailServer, 0, 0);
-            this.tlpEmailSettings.Controls.Add(this.lblFromAddress, 0, 5);
-            this.tlpEmailSettings.Controls.Add(this.lblToAddress, 0, 6);
-            this.tlpEmailSettings.Controls.Add(this.tbMailServer, 1, 0);
-            this.tlpEmailSettings.Controls.Add(this.tbFromAddress, 1, 5);
-            this.tlpEmailSettings.Controls.Add(this.tbToAddress, 1, 6);
-            this.tlpEmailSettings.Controls.Add(this.cbEmailServerRequireSsl, 1, 2);
-            this.tlpEmailSettings.Controls.Add(this.cbEmailAuthRequired, 1, 3);
-            this.tlpEmailSettings.Controls.Add(this.tlpEmailAuthTable, 1, 4);
-            this.tlpEmailSettings.Controls.Add(this.emailPortTextBox, 1, 1);
-            this.tlpEmailSettings.Controls.Add(this.lblPortNumber, 0, 1);
-            this.tlpEmailSettings.Location = new System.Drawing.Point(23, 3);
-            this.tlpEmailSettings.Name = "tlpEmailSettings";
-            this.tlpEmailSettings.RowCount = 7;
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.Size = new System.Drawing.Size(291, 210);
-            this.tlpEmailSettings.TabIndex = 2;
-            // 
-            // tbMailServer
-            // 
-            this.tbMailServer.Location = new System.Drawing.Point(82, 3);
-            this.tbMailServer.Name = "tbMailServer";
-            this.tbMailServer.Size = new System.Drawing.Size(152, 20);
-            this.tbMailServer.TabIndex = 1;
-            // 
-            // tbFromAddress
-            // 
-            this.tbFromAddress.Location = new System.Drawing.Point(82, 161);
-            this.tbFromAddress.Name = "tbFromAddress";
-            this.tbFromAddress.Size = new System.Drawing.Size(206, 20);
-            this.tbFromAddress.TabIndex = 1;
-            // 
-            // tbToAddress
-            // 
-            this.tbToAddress.Location = new System.Drawing.Point(82, 187);
-            this.tbToAddress.Name = "tbToAddress";
-            this.tbToAddress.Size = new System.Drawing.Size(206, 20);
-            this.tbToAddress.TabIndex = 1;
-            // 
-            // cbEmailServerRequireSsl
-            // 
-            this.cbEmailServerRequireSsl.AutoSize = true;
-            this.cbEmailServerRequireSsl.Location = new System.Drawing.Point(82, 55);
-            this.cbEmailServerRequireSsl.Name = "cbEmailServerRequireSsl";
-            this.cbEmailServerRequireSsl.Size = new System.Drawing.Size(117, 17);
-            this.cbEmailServerRequireSsl.TabIndex = 1;
-            this.cbEmailServerRequireSsl.Text = "Connect using SSL";
-            this.cbEmailServerRequireSsl.UseVisualStyleBackColor = true;
-            // 
-            // cbEmailAuthRequired
-            // 
-            this.cbEmailAuthRequired.AutoSize = true;
-            this.cbEmailAuthRequired.Location = new System.Drawing.Point(82, 78);
-            this.cbEmailAuthRequired.Name = "cbEmailAuthRequired";
-            this.cbEmailAuthRequired.Size = new System.Drawing.Size(122, 17);
-            this.cbEmailAuthRequired.TabIndex = 1;
-            this.cbEmailAuthRequired.Text = "Server requires login";
-            this.cbEmailAuthRequired.UseVisualStyleBackColor = true;
-            this.cbEmailAuthRequired.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // tlpEmailAuthTable
-            // 
-            this.tlpEmailAuthTable.AutoSize = true;
-            this.tlpEmailAuthTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpEmailAuthTable.ColumnCount = 2;
-            this.tlpEmailAuthTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpEmailAuthTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpEmailAuthTable.Controls.Add(this.lblEmailPassword, 0, 1);
-            this.tlpEmailAuthTable.Controls.Add(this.lblEmailUsername, 0, 0);
-            this.tlpEmailAuthTable.Controls.Add(this.tbEmailUsername, 1, 0);
-            this.tlpEmailAuthTable.Controls.Add(this.tbEmailPassword, 1, 1);
-            this.tlpEmailAuthTable.Location = new System.Drawing.Point(82, 101);
-            this.tlpEmailAuthTable.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
-            this.tlpEmailAuthTable.Name = "tlpEmailAuthTable";
-            this.tlpEmailAuthTable.RowCount = 2;
-            this.tlpEmailAuthTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailAuthTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailAuthTable.Size = new System.Drawing.Size(199, 52);
-            this.tlpEmailAuthTable.TabIndex = 8;
-            // 
-            // tbEmailUsername
-            // 
-            this.tbEmailUsername.Location = new System.Drawing.Point(67, 3);
-            this.tbEmailUsername.Name = "tbEmailUsername";
-            this.tbEmailUsername.Size = new System.Drawing.Size(129, 20);
-            this.tbEmailUsername.TabIndex = 1;
-            // 
-            // tbEmailPassword
-            // 
-            this.tbEmailPassword.Location = new System.Drawing.Point(67, 29);
-            this.tbEmailPassword.Name = "tbEmailPassword";
-            this.tbEmailPassword.PasswordChar = '*';
-            this.tbEmailPassword.Size = new System.Drawing.Size(129, 20);
-            this.tbEmailPassword.TabIndex = 1;
-            // 
-            // emailPortTextBox
-            // 
-            this.emailPortTextBox.Location = new System.Drawing.Point(82, 29);
-            this.emailPortTextBox.Name = "emailPortTextBox";
-            this.emailPortTextBox.Size = new System.Drawing.Size(152, 20);
-            this.emailPortTextBox.TabIndex = 1;
-            this.emailPortTextBox.Text = "25";
-            // 
-            // btnTestEmail
-            // 
-            this.btnTestEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTestEmail.Location = new System.Drawing.Point(240, 259);
-            this.btnTestEmail.Name = "btnTestEmail";
-            this.btnTestEmail.Size = new System.Drawing.Size(110, 23);
-            this.btnTestEmail.TabIndex = 10;
-            this.btnTestEmail.Text = "Send Test Email";
-            this.btnTestEmail.UseVisualStyleBackColor = true;
-            this.btnTestEmail.Click += new System.EventHandler(this.emailTestButton_Click);
-            // 
             // mailNotificationCheckBox
             // 
             this.mailNotificationCheckBox.AutoSize = true;
-            this.mailNotificationCheckBox.Location = new System.Drawing.Point(3, 81);
+            this.mailNotificationCheckBox.Location = new System.Drawing.Point(7, 51);
             this.mailNotificationCheckBox.Name = "mailNotificationCheckBox";
             this.mailNotificationCheckBox.Size = new System.Drawing.Size(215, 17);
-            this.mailNotificationCheckBox.TabIndex = 1;
+            this.mailNotificationCheckBox.TabIndex = 0;
             this.mailNotificationCheckBox.Text = "Send email when skill training completes";
             this.mailNotificationCheckBox.UseVisualStyleBackColor = true;
             this.mailNotificationCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
+            // emailNotificationsControl
+            // 
+            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
+            this.emailNotificationsControl.Name = "emailNotificationsControl";
+            this.emailNotificationsControl.Settings = null;
+            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
+            this.emailNotificationsControl.TabIndex = 20;
+            // 
             // notificationsPage
             // 
             this.notificationsPage.Controls.Add(this.lblNotificationsPage);
-            this.notificationsPage.Controls.Add(this.notificationsControl);
             this.notificationsPage.Controls.Add(this.cbPlaySoundOnSkillComplete);
+            this.notificationsPage.Controls.Add(this.notificationsControl);
             this.notificationsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.notificationsPage.Location = new System.Drawing.Point(5, 5);
             this.notificationsPage.Name = "notificationsPage";
@@ -1942,6 +1686,16 @@ namespace EVEMon.SettingsUI
             this.notificationsPage.TabIndex = 7;
             this.notificationsPage.Text = "notificationsPage";
             this.notificationsPage.Visible = false;
+            // 
+            // cbPlaySoundOnSkillComplete
+            // 
+            this.cbPlaySoundOnSkillComplete.AutoSize = true;
+            this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(3, 401);
+            this.cbPlaySoundOnSkillComplete.Name = "cbPlaySoundOnSkillComplete";
+            this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(215, 17);
+            this.cbPlaySoundOnSkillComplete.TabIndex = 3;
+            this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
+            this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
             // 
             // notificationsControl
             // 
@@ -1952,18 +1706,8 @@ namespace EVEMon.SettingsUI
             this.notificationsControl.Location = new System.Drawing.Point(3, 56);
             this.notificationsControl.Name = "notificationsControl";
             this.notificationsControl.Settings = null;
-            this.notificationsControl.Size = new System.Drawing.Size(429, 341);
+            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
             this.notificationsControl.TabIndex = 4;
-            // 
-            // cbPlaySoundOnSkillComplete
-            // 
-            this.cbPlaySoundOnSkillComplete.AutoSize = true;
-            this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(3, 403);
-            this.cbPlaySoundOnSkillComplete.Name = "cbPlaySoundOnSkillComplete";
-            this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(215, 17);
-            this.cbPlaySoundOnSkillComplete.TabIndex = 3;
-            this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
-            this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
             // 
             // trayIconPage
             // 
@@ -2958,14 +2702,6 @@ namespace EVEMon.SettingsUI
             this.customProxyPanel.PerformLayout();
             this.emailNotificationsPage.ResumeLayout(false);
             this.emailNotificationsPage.PerformLayout();
-            this.mailNotificationPanel.ResumeLayout(false);
-            this.mailNotificationPanel.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.tlpEmailSettings.ResumeLayout(false);
-            this.tlpEmailSettings.PerformLayout();
-            this.tlpEmailAuthTable.ResumeLayout(false);
-            this.tlpEmailAuthTable.PerformLayout();
             this.notificationsPage.ResumeLayout(false);
             this.notificationsPage.PerformLayout();
             this.trayIconPage.ResumeLayout(false);
@@ -3017,24 +2753,11 @@ namespace EVEMon.SettingsUI
         #endregion
 
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.CheckBox mailNotificationCheckBox;
-        private System.Windows.Forms.TableLayoutPanel tlpEmailSettings;
-        private System.Windows.Forms.TextBox tbMailServer;
-        private System.Windows.Forms.TextBox tbFromAddress;
-        private System.Windows.Forms.TextBox tbToAddress;
-        private System.Windows.Forms.Button btnTestEmail;
-        private System.Windows.Forms.CheckBox cbEmailServerRequireSsl;
-        private System.Windows.Forms.TextBox tbEmailPassword;
-        private System.Windows.Forms.TextBox tbEmailUsername;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.CheckBox cbEmailAuthRequired;
-        private System.Windows.Forms.TableLayoutPanel tlpEmailAuthTable;
         private System.Windows.Forms.CheckBox cbPlaySoundOnSkillComplete;
-        private System.Windows.Forms.FlowLayoutPanel mailNotificationPanel;
         private System.Windows.Forms.GroupBox ProxyServerGroupBox;
         private System.Windows.Forms.TextBox proxyPortTextBox;
         private System.Windows.Forms.TextBox proxyHttpHostTextBox;
@@ -3047,7 +2770,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbWorksafeMode;
         private System.Windows.Forms.CheckBox cbHighlightPlannedSkills;
         private System.Windows.Forms.CheckBox cbHighlightPrerequisites;
-        private System.Windows.Forms.TextBox emailPortTextBox;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.CheckBox runAtStartupComboBox;
         private System.Windows.Forms.CheckBox cbTitleToTime;
@@ -3056,7 +2778,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsNever;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsMinimized;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsAlways;
-        private System.Windows.Forms.CheckBox cbEmailUseShortFormat;
         private System.Windows.Forms.FlowLayoutPanel igbFlowPanel;
         private System.Windows.Forms.CheckBox igbCheckBox;
         private System.Windows.Forms.CheckBox cbIGBPublic;
@@ -3197,12 +2918,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lblHTTP;
         private System.Windows.Forms.Label lblEmailNotificationPage;
-        private System.Windows.Forms.Label lblEmailServer;
-        private System.Windows.Forms.Label lblFromAddress;
-        private System.Windows.Forms.Label lblToAddress;
-        private System.Windows.Forms.Label lblEmailPassword;
-        private System.Windows.Forms.Label lblEmailUsername;
-        private System.Windows.Forms.Label lblPortNumber;
         private System.Windows.Forms.Label lblNotificationsPage;
         private System.Windows.Forms.Label lblTrayIconPage;
         private System.Windows.Forms.Label lblSchedulerUIPage;
@@ -3227,5 +2942,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox systemTrayIconGroupBox;
         private System.Windows.Forms.Button btnEVEMonDataDir;
+        private EmailNotificationsControl emailNotificationsControl;
+        private System.Windows.Forms.CheckBox mailNotificationCheckBox;
     }
 }

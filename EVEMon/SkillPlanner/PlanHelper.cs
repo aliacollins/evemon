@@ -88,7 +88,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static void PerformSilently(IPlanOperation operation)
         {
-            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(operation.Plan);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
             if (window == null || window.IsDisposed)
                 return;
 
@@ -122,9 +125,9 @@ namespace EVEMon.SkillPlanner
         public static void Perform(IPlanOperation operation)
         {
             if (operation == null)
-                throw new ArgumentNullException("operation");
+                return;
 
-            PlanWindow window = WindowsFactory.GetByTag<PlanWindow, Plan>(operation.Plan);
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
             if (window == null || window.IsDisposed)
                 return;
             
@@ -154,7 +157,7 @@ namespace EVEMon.SkillPlanner
         public static void SelectPerform(IPlanOperation operation)
         {
             if (operation == null)
-                throw new ArgumentNullException("operation");
+                return;
 
             if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
                 Perform(operation);

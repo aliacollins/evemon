@@ -591,6 +591,7 @@ namespace EVEMon
             // 
             // userVoiceMenuItem
             // 
+            this.userVoiceMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("userVoiceMenuItem.Image")));
             this.userVoiceMenuItem.Name = "userVoiceMenuItem";
             this.userVoiceMenuItem.Size = new System.Drawing.Size(238, 22);
             this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";

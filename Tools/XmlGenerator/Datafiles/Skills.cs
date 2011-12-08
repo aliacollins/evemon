@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Skills
     {
-        private const int SkillGenTotal = 454;
+        private const int SkillGenTotal = 426;
 
         private static DateTime s_startTime;
 
@@ -72,7 +72,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                     {
                                                         ID = skill.ID,
                                                         Name = skill.Name,
-                                                        Description = skill.Description,
+                                                        Description = skill.Description ?? String.Empty,
                                                         Public = skill.Published,
                                                         Cost = (long)skill.BasePrice,
                                                     };

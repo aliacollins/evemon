@@ -184,7 +184,7 @@ namespace EVEMon.SkillPlanner
 
                 // If the EFTLoadoutImportationForm is open, assign the new plan
                 // We do the check here as we need to catch the previous plan value
-                EFTLoadoutImportationForm eftloadoutImportation = WindowsFactory.GetByTag<EFTLoadoutImportationForm, Plan>(m_plan);
+                LoadoutImportationForm eftloadoutImportation = WindowsFactory.GetByTag<LoadoutImportationForm, Plan>(m_plan);
                 if (eftloadoutImportation != null && !eftloadoutImportation.IsDisposed)
                     eftloadoutImportation.Plan = value;
 
@@ -727,7 +727,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbEFTImport_Click(object sender, EventArgs e)
         {
-            WindowsFactory.ShowByTag<EFTLoadoutImportationForm, Plan>(m_plan);
+            WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
         }
 
         /// <summary>

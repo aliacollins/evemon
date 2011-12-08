@@ -35,7 +35,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public int? RaceID { get; set; }
 
         [XmlElement("marketGroupID")]
-        public int? MarketGroupID { get; set; }
+        public long? MarketGroupID { get; set; }
 
         [XmlElement("basePrice")]
         public decimal BasePrice { get; set; }

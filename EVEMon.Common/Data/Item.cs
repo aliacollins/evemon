@@ -93,7 +93,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's ID.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets this object's icon.

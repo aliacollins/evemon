@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace EVEMon.PatchXmlCreator
 {
-    public partial class DatafileControl : UserControl
+    internal partial class DatafileControl : UserControl
     {
         /// <summary>
         /// Constructor.

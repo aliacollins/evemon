@@ -235,7 +235,8 @@ namespace EVEMon.SkillPlanner
             lblProductionBaseTime.Text = BaseActivityTime(m_blueprint.ProductionTime * pModifier);
 
             // Manufacturing character time
-            double activityTime = m_blueprint.ProductionTime * pModifier * m_timeMultiplier * GetImplantMultiplier("F");
+            double activityTime = m_blueprint.ProductionTime * pModifier * m_timeMultiplier *
+                                  GetImplantMultiplier(DBConstants.ManufacturingModifyingImplantIDs);
             lblProductionCharTime.Text = CharacterActivityTime(activityTime, DBConstants.IndustrySkillID, factor, false);
 
             // Researching material efficiency base time
@@ -245,7 +246,7 @@ namespace EVEMon.SkillPlanner
             factor = 0.05d;
             activityTime = m_blueprint.ResearchMaterialTime
                            * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingMaterialProductivity) *
-                           GetImplantMultiplier("J");
+                           GetImplantMultiplier(DBConstants.ResearchMaterialTimeModifyingImplantIDs);
             lblResearchMECharTime.Text = CharacterActivityTime(activityTime, DBConstants.MetallurgySkillID, factor,
                                                                false);
 
@@ -254,7 +255,8 @@ namespace EVEMon.SkillPlanner
 
             // Researching copy character time
             activityTime = (m_blueprint.ResearchCopyTime / m_blueprint.RunsPerCopy)
-                           * GetResearchFacilityMultiplier(BlueprintActivity.Copying) * GetImplantMultiplier("K");
+                           * GetResearchFacilityMultiplier(BlueprintActivity.Copying) *
+                           GetImplantMultiplier(DBConstants.ResearchCopyTimeModifyingImplantIDs);
             lblResearchCopyCharTime.Text = CharacterActivityTime(activityTime, DBConstants.ScienceSkillID, factor, true);
 
             // Researching productivity efficiency base time
@@ -263,11 +265,11 @@ namespace EVEMon.SkillPlanner
             // Researching productivity efficiency character time
             activityTime = m_blueprint.ResearchProductivityTime
                            * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingTimeProductivity) *
-                           GetImplantMultiplier("I");
+                           GetImplantMultiplier(DBConstants.ResearchProductivityTimeModifyingImplantIDs);
             lblResearchPECharTime.Text = CharacterActivityTime(activityTime, DBConstants.ResearchSkillID, factor, false);
 
             gbResearching.Visible =
-                !m_blueprint.MarketGroup.BelongsIn(new[] { DBConstants.BlueprintRootNonMarketGroupID });
+                !m_blueprint.MarketGroup.BelongsIn(DBConstants.BlueprintRootNonMarketGroupID);
             gbInvention.Text = (gbResearching.Visible ? "INVENTION" : "RESEARCHING");
             lblInventionTime.Text = (gbResearching.Visible ? "Invention Time:" : "Research Tech Time:");
             gbInvention.Location = (gbResearching.Visible ? new Point(3, 385) : new Point(3, 225));
@@ -330,8 +332,11 @@ namespace EVEMon.SkillPlanner
 
                         // Calculate the base material quantity
                         int baseMaterialQuantity =
-                            (int)Math.Round(material.Quantity * m_materialMultiplier * GetImplantMultiplier("G"),
-                                            0, MidpointRounding.AwayFromZero);
+                            (int)
+                            Math.Round(
+                                material.Quantity * m_materialMultiplier *
+                                GetImplantMultiplier(DBConstants.MaterialQuantityModifyingImplantIDs),
+                                0, MidpointRounding.AwayFromZero);
 
                         // Calculate the perfect material efficiency level if it's a raw material
                         if (isRawMaterial)
@@ -348,10 +353,10 @@ namespace EVEMon.SkillPlanner
                         // Calculate the needed quantity by the character skills
                         int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
                                                ? (int)Math.Round(
-                                                     baseMaterialQuantity *
-                                                     (1.25 - (0.05 * productionEfficiencyLevel)) +
-                                                     (baseMaterialQuantity * m_waste), 0,
-                                                     MidpointRounding.AwayFromZero)
+                                                   baseMaterialQuantity *
+                                                   (1.25 - (0.05 * productionEfficiencyLevel)) +
+                                                   (baseMaterialQuantity * m_waste), 0,
+                                                   MidpointRounding.AwayFromZero)
                                                : baseMaterialQuantity);
 
                         // Calculate the perfect quantity
@@ -378,7 +383,8 @@ namespace EVEMon.SkillPlanner
 
                         // Add the damage per run for every item (empty string if it's 1)
                         string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
-                                                   ? String.Format(CultureConstants.DefaultCulture, "{0:P1}", material.DamagePerJob)
+                                                   ? String.Format(CultureConstants.DefaultCulture, "{0:P1}",
+                                                                   material.DamagePerJob)
                                                    : String.Empty);
                         ListViewItem.ListViewSubItem subItemDamagePerRun =
                             new ListViewItem.ListViewSubItem(item, damagePerRun);
@@ -433,20 +439,20 @@ namespace EVEMon.SkillPlanner
                 switch (m_activity)
                 {
                     case BlueprintActivity.Manufacturing:
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.DronesMarketGroupID })
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID)
                             && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
                             cbFacility.Items.Add("Drone Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.AmmosAndChargesMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID))
                             cbFacility.Items.Add("Ammunition Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.ShipEquipmentsMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID))
                         {
                             cbFacility.Items.Add("Equipment Assembly Array");
                             cbFacility.Items.Add("Rapid Equipment Assembly Array");
                         }
 
-                        if (producedItem.MarketGroup.BelongsIn(new[] { DBConstants.ComponentsMarketGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.ComponentsMarketGroupID))
                             cbFacility.Items.Add("Component Assembly Array");
 
                         if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsMarketGroupIDs))
@@ -679,21 +685,18 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the multiplier of an implant.
         /// </summary>
-        /// <param name="implantType"></param>
         /// <returns></returns>
-        private double GetImplantMultiplier(string implantType)
+        private double GetImplantMultiplier(ICollection<int> implantIDs)
         {
             ImplantSet implantSet = (ImplantSet)cbImplantSet.Tag;
-            string implantSubname = String.Format(CultureConstants.DefaultCulture, "Zainou 'Beancounter' {0}", implantType);
 
-            Implant implant = implantSet.FirstOrDefault(x => x.Name.Contains(implantSubname));
+            Implant implant = implantSet.FirstOrDefault(x => implantIDs.Contains(x.ID));
 
             if (implant == null)
                 return 1.0d;
 
-            double bonus =
-                implant.Properties.FirstOrDefault(
-                    x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).IntValue;
+            double bonus = implant.Properties.FirstOrDefault(
+                x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).IntValue;
             double multiplier = 1.0d + (bonus / 100);
 
             return multiplier;

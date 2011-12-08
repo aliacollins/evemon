@@ -62,7 +62,7 @@ namespace EVEMon
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
                 DialogResult result = DialogResult.Yes;
-                while (!DownloadUpdate() && result == DialogResult.Yes)
+                while (result == DialogResult.Yes && !DownloadUpdate())
                 {
                     // File download failed
                     string message = String.Format(CultureConstants.DefaultCulture,
@@ -201,7 +201,7 @@ namespace EVEMon
             // Set the detailed update information (from the XML)
             string updMessage = m_args.UpdateMessage;
             updMessage = updMessage.Replace("\r", String.Empty);
-            textBox1.Lines = updMessage.Split('\n');
+            updateNotesTextBox.Lines = updMessage.Split('\n');
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;
         }

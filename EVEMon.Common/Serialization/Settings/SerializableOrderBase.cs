@@ -22,13 +22,13 @@ namespace EVEMon.Common.Serialization.Settings
         public long OrderID { get; set; }
 
         [XmlAttribute("itemID")]
-        public long ItemID { get; set; }
+        public int ItemID { get; set; }
 
         [XmlAttribute("item")]
         public string Item { get; set; }
 
         [XmlAttribute("stationID")]
-        public long StationID { get; set; }
+        public int StationID { get; set; }
 
         [XmlAttribute("volEntered")]
         public int InitialVolume { get; set; }

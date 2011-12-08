@@ -158,6 +158,8 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">Filename of resource .xml.gz</param>
         internal static void CreateMD5SumsFile(string filename)
         {
+            ResetCounters();
+
             const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
             string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
 

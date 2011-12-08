@@ -193,6 +193,14 @@
     <Compile Include="Data\MaterialCollection.cs" />
     <Compile Include="Data\NPCCorporation.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
+    <Compile Include="EmailProvider\DefaultProvider.cs" />
+    <Compile Include="EmailProvider\EmailProviders.cs" />
+    <Compile Include="EmailProvider\GmxProvider.cs" />
+    <Compile Include="EmailProvider\GoogleProvider.cs" />
+    <Compile Include="EmailProvider\HotmailProvider.cs" />
+    <Compile Include="EmailProvider\IEmailProvider.cs" />
+    <Compile Include="EmailProvider\YahooPlusProvider.cs" />
+    <Compile Include="EmailProvider\YahooProvider.cs" />
     <Compile Include="EmploymentHistoryCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />
     <Compile Include="EveMailingList.cs" />
@@ -291,6 +299,11 @@
     <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFitting.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittingDescription.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
+    <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
@@ -334,7 +347,7 @@
     <Compile Include="ListViewExporter.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
-    <Compile Include="PlanSorter.cs" />
+    <Compile Include="PlanEntrySorter.cs" />
     <Compile Include="ResearchPoint.cs" />
     <Compile Include="ResearchPointCollection.cs" />
     <Compile Include="ResearchPointComparer.cs" />
@@ -516,11 +529,11 @@
     <Compile Include="Controls\ApiErrorTroubleshooter.Designer.cs">
       <DependentUpon>ApiErrorTroubleshooter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MsgBoxCustom.cs">
+    <Compile Include="Controls\MessageBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\MsgBoxCustom.Designer.cs">
-      <DependentUpon>MsgBoxCustom.cs</DependentUpon>
+    <Compile Include="Controls\MessageBoxCustom.Designer.cs">
+      <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ResolutionAction.cs" />
     <Compile Include="CultureConstants.cs" />
@@ -794,8 +807,8 @@
       <DependentUpon>EveFolderWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MsgBoxCustom.resx">
-      <DependentUpon>MsgBoxCustom.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\MessageBoxCustom.resx">
+      <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Resources\Skill_Select\Group0\Default.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

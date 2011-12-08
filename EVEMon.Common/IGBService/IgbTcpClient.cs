@@ -27,7 +27,7 @@ namespace EVEMon.Common.IgbService
         #region Constructor and Close
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="client">Client information</param>
         public IgbTcpClient(TcpClient client)
@@ -70,7 +70,7 @@ namespace EVEMon.Common.IgbService
         #region Reading
 
         /// <summary>
-        /// Start reading from the client
+        /// Start reading from the client.
         /// </summary>
         public void Start()
         {
@@ -84,7 +84,7 @@ namespace EVEMon.Common.IgbService
         }
 
         /// <summary>
-        /// Begin reading from the client
+        /// Begin reading from the client.
         /// </summary>
         /// <param name="acquireLock">lock the object</param>
         private void BeginRead(bool acquireLock)
@@ -110,7 +110,7 @@ namespace EVEMon.Common.IgbService
         }
 
         /// <summary>
-        /// Async called when reading has finished
+        /// Async called when reading has finished.
         /// </summary>
         /// <param name="ar">result</param>
         private void EndRead(IAsyncResult ar)
@@ -136,7 +136,7 @@ namespace EVEMon.Common.IgbService
         }
 
         /// <summary>
-        /// Event triggered on data read
+        /// Event triggered on data read.
         /// </summary>
         /// <param name="buffer">buffer</param>
         /// <param name="count">bytes read</param>
@@ -154,11 +154,9 @@ namespace EVEMon.Common.IgbService
         /// <summary>
         /// Writes the specified string.
         /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
-        public void Write(string format, params object[] args)
+        /// <param name="str">The string.</param>
+        public void Write(string str)
         {
-            string str = String.Format(CultureConstants.DefaultCulture, format, args);
             byte[] outbuf = Encoding.UTF8.GetBytes(str);
             m_stream.Write(outbuf, 0, outbuf.Length);
         }

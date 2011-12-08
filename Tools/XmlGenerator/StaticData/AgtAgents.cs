@@ -21,5 +21,8 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("agentTypeID")]
         public int AgentTypeID { get; set; }
+
+        [XmlElement("isLocator")]
+        public bool IsLocator { get; set; }
     }
 }

@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Action.cs" />
     <Compile Include="DatafileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -63,6 +64,7 @@
       <DependentUpon>DatafileControl.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="PatchXmlCreatorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
