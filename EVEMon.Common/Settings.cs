@@ -204,7 +204,7 @@ namespace EVEMon.Common
         {
             // Add missing notification behaviours
             foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>().Where(
-                    category => !Notifications.Categories.ContainsKey(category)))
+                category => !Notifications.Categories.ContainsKey(category)))
             {
                 Notifications.Categories[category] = new NotificationCategorySettings();
             }
@@ -225,12 +225,19 @@ namespace EVEMon.Common
             InitializeOrAddMissingColumns();
 
             // Removes reduntant windows locations
-            List<KeyValuePair<string, WindowLocationSettings>> locations = new List<KeyValuePair<string, WindowLocationSettings>>();
-            locations.AddRange(UI.WindowLocations);
+            List<KeyValuePair<string, WindowLocationSettings>> locations = UI.WindowLocations.ToList();
             foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
                 windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);
+            }
+
+            // Remove redundant splitters
+            List<KeyValuePair<string, int>> splitters = UI.Splitters.ToList();
+            foreach (KeyValuePair<string, int> splitter in splitters.Where(
+                splitter => splitter.Key == "EFTLoadoutImportationForm"))
+            {
+                UI.Splitters.Remove(splitter.Key);
             }
         }
 

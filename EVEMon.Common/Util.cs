@@ -726,7 +726,7 @@ namespace EVEMon.Common
 
             StringBuilder builder = new StringBuilder();
 
-            Stream fileStream = GetFileStream(filename, FileMode.Open);
+            Stream fileStream = GetFileStream(filename, FileMode.Open, FileAccess.Read);
             int bufferSize = Convert.ToInt32(fileStream.Length);
             using (Stream bufferedStream = new BufferedStream(fileStream, bufferSize))
             {
