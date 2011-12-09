@@ -75,7 +75,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public StaticCertificate HighestGradeCertificate
         {
-            get { return m_certificates.Where(cert => cert != null).FirstOrDefault(); }
+            get { return m_certificates.Where(cert => cert != null).LastOrDefault(); }
         }
 
         #endregion
