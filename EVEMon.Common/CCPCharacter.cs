@@ -227,9 +227,6 @@ namespace EVEMon.Common
             // Skill queue
             serial.SkillQueue.AddRange(SkillQueue.Export());
 
-            // Standings
-            serial.Standings.AddRange(Standings.Export());
-
             // Market orders
             serial.MarketOrders.AddRange(MarketOrdersExport());
 
@@ -284,9 +281,6 @@ namespace EVEMon.Common
 
             // Skill queue
             SkillQueue.Import(serial.SkillQueue);
-
-            // Standings
-            Standings.Import(serial.Standings);
 
             // Market orders
             MarketOrdersImport(serial.MarketOrders);

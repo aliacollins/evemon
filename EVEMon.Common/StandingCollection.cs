@@ -35,28 +35,5 @@ namespace EVEMon.Common
             // Fires the event regarding standings update
             EveMonClient.OnCharacterStandingsUpdated(m_character);
         }
-
-        /// <summary>
-        /// Imports an enumeration of serialization objects.
-        /// </summary>
-        /// <param name="src">The enumeration of serializable standings from the API.</param>
-        internal void Import(IEnumerable<SerializableStanding> src)
-        {
-            Items.Clear();
-
-            foreach (SerializableStanding srcStanding in src)
-            {
-                Items.Add(new Standing(m_character, srcStanding));
-            }
-        }
-
-        /// <summary>
-        /// Exports the standings to a serialization object for the settings file.
-        /// </summary>
-        /// <returns>List of serializable research points.</returns>
-        internal IEnumerable<SerializableStanding> Export()
-        {
-            return Items.Select(standing => standing.Export());
-        }
     }
 }

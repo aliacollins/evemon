@@ -53,7 +53,7 @@ namespace EVEMon.Common
 
             m_charStandingsMonitor =
                 new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
-                                                                    OnStandingsUpdated);
+                                                                    OnStandingsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charStandingsMonitor);
 
             m_charMarketOrdersMonitor =
@@ -69,7 +69,6 @@ namespace EVEMon.Common
             m_charResearchPointsMonitor =
                 new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, APICharacterMethods.ResearchPoints,
                                                                    OnCharacterResearchPointsUpdated) { QueryOnStartup = true };
-            
             m_characterQueryMonitors.Add(m_charResearchPointsMonitor);
 
             m_charEVEMailMessagesMonitor =
