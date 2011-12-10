@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>07 December 2011</date>
-    <version>1.5.3.3289</version>
-    <md5>613f34772c218ccd036fa4c2add22b8a</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,155902.0.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.5.3.3289.exe</autopatchurl>
+    <date>10 December 2011</date>
+    <version>1.5.4.3315</version>
+    <md5>6a8ce704420e42732a296fa75ba5030b</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,156082.0.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.5.4.3315.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,26 +14,20 @@
 
 == Bug Fixes ==
 
-* Fixed a crash bug caused when EVEMon doesn't find implants previously used.
-* Fixed a potential crash bug caused when EVEMon doesn't find implants from the API.
-* Fixed a bug where plans where not exported in a correct format.
-* Fixed a crash bag when selecting to show a skill in skill browser.
-* Fixed a crash bug when EVEMon doesn't find the produced item from an industry job.
-* Fixed a visual bug where in rare cases the tray tooltip was not shown on top of all windows.
-* Fixed a memory leak and crash bug in EVE Mail monitor.
-* Fixed a bug when trying to add a skill level to a plan from a character's skill list or skill queue.
+* Fixed an issue where tip window was not displayed when reseting settings.
+* Fixed an issue where EVEMon was not prompting to backup the settings file with the correct revision number when re-starting after an update.
+* Fixed a crash bug when parsing email credentials in Emailer.
+* Fixed a bug where "Time to Elite Grade" was shown incorrectly in Certificate browser.
+* Fixed a serious bug when assigning the installation of an industry job.
+* Fixed a crash bug in Attributes Optimizer.
 
 == Enhancements ==
 
-* Exporting in HTML, TXT format have been brought in line with EVE changes.
-* Improved the handling of the Skill Planner skill selector.
-* Added a close window function for the Blank Character Creator.
-* Added prefix settings for various Email provider in EVEMon Emailer.
-* All password will now be stored encrypted in settings file, thus increasing user data security.
-* Redesigned the EFT Loadout Importation window and added support for XMl and DNA formatted loadouts.
+* EVEMon will always prompt for new data files even if the latest release has been denied.
 
 == Misc ==
 
+* Removed the storaging of a character's standings in settings file, thus reducing the size of it.
 * Several improvements have been done to the base code to make EVEMon a better and more stable application.]]></message>
   </newest>
   <datafiles>

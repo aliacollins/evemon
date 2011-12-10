@@ -307,7 +307,7 @@ namespace EVEMon.SkillPlanner
                 if (Util.GetXmlRootElement(reader) != xmlRoot.ElementName)
                     return false;
             }
-            
+
             s_fittings = Util.DeserializeXMLFromString<SerializableFittings>(text);
             return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == s_fittings.Fitting.ShipType.Name);
         }

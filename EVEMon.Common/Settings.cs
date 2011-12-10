@@ -213,7 +213,7 @@ namespace EVEMon.Common
             foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null).Where(
                 method => !Updates.Periods.ContainsKey(method.ToString())))
             {
-                Updates.Periods[method.ToString()] = method.GetUpdatePeriod().DefaultPeriod;
+                Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
                 // Bind the APIKeyInfo and CharacterList update period
                 if ((APIGenericMethods)method == APIGenericMethods.APIKeyInfo &&
@@ -225,19 +225,12 @@ namespace EVEMon.Common
             InitializeOrAddMissingColumns();
 
             // Removes reduntant windows locations
-            List<KeyValuePair<string, WindowLocationSettings>> locations = UI.WindowLocations.ToList();
-            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
+            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
+            locations.AddRange(UI.WindowLocations);
+            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
                 windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);
-            }
-
-            // Remove redundant splitters
-            List<KeyValuePair<string, int>> splitters = UI.Splitters.ToList();
-            foreach (KeyValuePair<string, int> splitter in splitters.Where(
-                splitter => splitter.Key == "EFTLoadoutImportationForm"))
-            {
-                UI.Splitters.Remove(splitter.Key);
             }
         }
 
@@ -372,7 +365,8 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(settingsFile)
-                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile, SettingsTransform);
+                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile,
+                                                                                                            SettingsTransform);
 
                     // If the settings loaded OK, make a backup as 'last good settings' and return
                     if (settings != null)
@@ -432,7 +426,8 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(backupFile)
-                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile, SettingsTransform);
+                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile,
+                                                                                                            SettingsTransform);
 
                     // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
                     if (settings != null)
@@ -463,7 +458,8 @@ namespace EVEMon.Common
         private static SerializableSettings DeserializeOldFormat(string filename)
         {
             OldSettings oldSerial = Util.DeserializeXMLFromFile<OldSettings>(filename,
-                                                                     Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
+                                                                             Util.LoadXSLT(
+                                                                                 Properties.Resources.SettingsAndPlanImport));
 
             if (oldSerial == null)
                 return null;
@@ -517,7 +513,6 @@ namespace EVEMon.Common
             int revision = Assembly.GetExecutingAssembly().GetName().Version.Revision;
             if (revision == settings.Revision)
                 return;
-
             DialogResult backupSettings =
                 MessageBox.Show("The current EVEMon settings file is from a previous version of EVEMon.\n" +
                                 "Backup the current file before proceeding (recommended)?",
@@ -531,9 +526,9 @@ namespace EVEMon.Common
             {
                 fileDialog.Title = "Settings file backup";
                 fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", settings.Revision);
+                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture,
+                                                    "EVEMon_Settings_{0}.xml.bak", settings.Revision);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                
                 if (fileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
