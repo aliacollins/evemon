@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +13,6 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Importation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using System.Collections.ObjectModel;
 
 namespace EVEMon.Common
 {
