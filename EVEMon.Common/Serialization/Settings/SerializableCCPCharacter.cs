@@ -11,7 +11,6 @@ namespace EVEMon.Common.Serialization.Settings
     {
         private readonly Collection<SerializableQueuedSkill> m_skillQueue;
         private readonly Collection<SerializableAPIUpdate> m_lastUpdates;
-        private readonly Collection<SerializableStanding> m_standings;
         private readonly Collection<SerializableOrderBase> m_marketOrders;
         private readonly Collection<SerializableJob> m_industryJobs;
 
@@ -19,7 +18,6 @@ namespace EVEMon.Common.Serialization.Settings
         {
             m_skillQueue = new Collection<SerializableQueuedSkill>();
             m_lastUpdates = new Collection<SerializableAPIUpdate>();
-            m_standings = new Collection<SerializableStanding>();
             m_marketOrders = new Collection<SerializableOrderBase>();
             m_industryJobs = new Collection<SerializableJob>();
         }

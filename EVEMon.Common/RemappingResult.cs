@@ -32,7 +32,7 @@ namespace EVEMon.Common
             : this(baseScratchpad)
         {
             if (point == null)
-                throw new ArgumentNullException("point");
+                return;
 
             Point = point;
         }
