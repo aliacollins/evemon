@@ -31,7 +31,7 @@ namespace EVEMon.Common
             Runs = src.Runs;
             Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
             BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
-            Installation = GetInstallation(src.OutputLocationID);
+            Installation = GetInstallation(src.InstalledItemLocationID);
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             InstalledTime = src.InstallTime;
             InstalledME = src.InstalledItemMaterialLevel;
@@ -345,13 +345,20 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The ID of the installation.</param>
         /// <returns>Name of the installation.</returns>
-        private string GetInstallation(int id)
+        private string GetInstallation(long id)
         {
-            // Look for the station in datafile, if not found check if it's a conquerable outpost station
-            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
+            Station station = null;
 
-            // Still nothing ? Then it's a starbase structure
-            // and will be assigned manually based on activity
+            // If 'id' is a 32bit number then it's a station or conquerable outpost station,
+            // so we look it up in our datafile
+            if (id <= Int32.MaxValue)
+            {
+                Int32 stationId = (int)id;
+                station = StaticGeography.GetStationByID(stationId) ?? ConquerableStation.GetStationByID(stationId);
+            }
+
+            // In case the 'id' doesn't correspond to a station, it's a starbase structure
+            // and installation will be assigned manually based on activity
             if (station == null)
                 return (Activity == BlueprintActivity.Manufacturing ? "POS - Assembly Array" : "POS - Laboratory");
 

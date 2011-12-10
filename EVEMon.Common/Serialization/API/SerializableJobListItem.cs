@@ -9,10 +9,7 @@ namespace EVEMon.Common.Serialization.API
         public long JobID { get; set; }
 
         [XmlAttribute("installedItemLocationID")]
-        public int InstalledItemLocationID { get; set; }
-
-        [XmlAttribute("outputLocationID")]
-        public int OutputLocationID { get; set; }
+        public long InstalledItemLocationID { get; set; }
 
         [XmlAttribute("installedInSolarSystemID")]
         public int SolarSystemID { get; set; }

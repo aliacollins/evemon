@@ -31,14 +31,6 @@ namespace EVEMon.Common.Serialization.Settings
             get { return m_skillQueue; }
         }
 
-        [XmlArray("standings")]
-        [XmlArrayItem("standing")]
-        public Collection<SerializableStanding> Standings
-        {
-            get { return m_standings; }
-        }
-
-
         [XmlArray("marketOrders")]
         [XmlArrayItem("buy", typeof(SerializableBuyOrder))]
         [XmlArrayItem("sell", typeof(SerializableSellOrder))]
@@ -47,14 +39,12 @@ namespace EVEMon.Common.Serialization.Settings
             get { return m_marketOrders; }
         }
 
-
         [XmlArray("industryJobs")]
         [XmlArrayItem("job")]
         public Collection<SerializableJob> IndustryJobs
         {
             get { return m_industryJobs; }
         }
-
 
         [XmlElement("eveMailMessages")]
         public string EveMailMessagesIDs { get; set; }
@@ -68,6 +58,5 @@ namespace EVEMon.Common.Serialization.Settings
         {
             get { return m_lastUpdates; }
         }
-
     }
 }
