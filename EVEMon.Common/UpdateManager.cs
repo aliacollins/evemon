@@ -182,10 +182,16 @@ namespace EVEMon.Common
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             Version newestVersion = new Version(result.Release.Version);
+            Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
+                                                  ? new Version(Settings.Updates.MostRecentDeniedUpgrade)
+                                                  : new Version();
 
-            // Is the program out of date ?
-            if (newestVersion > currentVersion)
+            // Is the program out of date and user has not previously denied this version?
+            if (currentVersion < newestVersion & mostRecentDeniedVersion < newestVersion)
             {
+                // Reset the most recent denied version
+                Settings.Updates.MostRecentDeniedUpgrade = String.Empty;
+
                 Uri forumUrl = new Uri(result.Release.TopicAddress);
                 Uri installerUrl = new Uri(result.Release.PatchAddress);
                 string updateMessage = result.Release.Message;
@@ -204,6 +210,7 @@ namespace EVEMon.Common
                 // Requests a notification to subscribers and quit
                 EveMonClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
                                                newestVersion, md5Sum, canAutoInstall, installArgs);
+
                 return;
             }
 

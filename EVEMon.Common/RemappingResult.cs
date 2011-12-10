@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace EVEMon.Common
@@ -33,7 +32,7 @@ namespace EVEMon.Common
             : this(baseScratchpad)
         {
             if (point == null)
-                throw new ArgumentNullException("point");
+                return;
 
             Point = point;
         }

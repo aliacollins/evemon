@@ -600,6 +600,9 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string GetSortedListData(ref IEnumerable<CertificateClass> classes, ref IEnumerable<string> labels)
         {
+            IEnumerable<TimeSpan> times;
+            string columnHeader;
+
             switch ((CertificateSort)cbSorting.SelectedIndex)
             {
                     // Sort by name, default, occurs on initialization
@@ -607,42 +610,57 @@ namespace EVEMon.SkillPlanner
                     return String.Empty;
                     // Sort by time to next grade
                 case CertificateSort.TimeToNextGrade:
-                    IEnumerable<TimeSpan> times = classes.Select(x =>
-                                                                     {
-                                                                         Certificate nextUntrained = x.LowestUntrainedGrade;
-                                                                         return (nextUntrained == null
-                                                                                     ? TimeSpan.Zero
-                                                                                     : nextUntrained.GetTrainingTime);
-                                                                     });
-
-                    CertificateClass[] classesArray = classes.ToArray();
-                    TimeSpan[] timesArray = times.ToArray();
-                    Array.Sort(timesArray, classesArray);
-                    classes = classesArray;
-                    labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
-                    return "Time";
-                    // Sort by time to elite (or highest) grade
+                    {
+                        times = classes.Select(GetTimeToNextGrade);
+                        columnHeader = "Time";
+                        break;
+                    } // Sort by time to elite (or highest) grade
                 case CertificateSort.TimeToEliteGrade:
-                    times = classes.Select(x =>
-                                               {
-                                                   Certificate lastGrade = x.HighestGradeCertificate;
-                                                   CertificateStatus status = lastGrade.Status;
-
-                                                   if (status == CertificateStatus.Granted ||
-                                                       status == CertificateStatus.Claimable)
-                                                       return TimeSpan.Zero;
-
-                                                   return lastGrade.GetTrainingTime;
-                                               });
-                    classesArray = classes.ToArray();
-                    timesArray = times.ToArray();
-                    Array.Sort(timesArray, classesArray);
-                    classes = classesArray;
-                    labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
-                    return "Time to Elite";
+                    {
+                        times = classes.Select(GetTimeToEliteGrade);
+                        columnHeader = "Time to Elite";
+                        break;
+                    }
                 default:
                     throw new NotImplementedException();
             }
+
+            CertificateClass[] classesArray = classes.ToArray();
+            TimeSpan[] timesArray = times.ToArray();
+            Array.Sort(timesArray, classesArray);
+            classes = classesArray;
+            labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+            return columnHeader;
+        }
+
+        /// <summary>
+        /// Gets the time to next grade.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
+        private static TimeSpan GetTimeToNextGrade(CertificateClass x)
+        {
+            Certificate nextUntrained = x.LowestUntrainedGrade;
+            return (nextUntrained == null
+                        ? TimeSpan.Zero
+                        : nextUntrained.GetTrainingTime);
+        }
+
+        /// <summary>
+        /// Gets the time to elite grade.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
+        private static TimeSpan GetTimeToEliteGrade(CertificateClass x)
+        {
+            Certificate lastGrade = x.HighestGradeCertificate;
+            CertificateStatus status = lastGrade.Status;
+
+            if (status == CertificateStatus.Granted ||
+                status == CertificateStatus.Claimable)
+                return TimeSpan.Zero;
+
+            return lastGrade.GetTrainingTime;
         }
 
         /// <summary>
@@ -691,7 +709,7 @@ namespace EVEMon.SkillPlanner
             const int MaxLetterWidth = 6;
 
             Bitmap bmp;
-            using(Bitmap tempBitmap = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb))
+            using (Bitmap tempBitmap = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb))
             {
                 bmp = (Bitmap)tempBitmap.Clone();
             }

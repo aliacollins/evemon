@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +13,6 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Importation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using System.Collections.ObjectModel;
 
 namespace EVEMon.Common
 {
@@ -204,7 +204,7 @@ namespace EVEMon.Common
         {
             // Add missing notification behaviours
             foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>().Where(
-                    category => !Notifications.Categories.ContainsKey(category)))
+                category => !Notifications.Categories.ContainsKey(category)))
             {
                 Notifications.Categories[category] = new NotificationCategorySettings();
             }
@@ -365,7 +365,8 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(settingsFile)
-                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile, SettingsTransform);
+                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile,
+                                                                                                            SettingsTransform);
 
                     // If the settings loaded OK, make a backup as 'last good settings' and return
                     if (settings != null)
@@ -425,7 +426,8 @@ namespace EVEMon.Common
                     // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
                                                         ? DeserializeOldFormat(backupFile)
-                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile, SettingsTransform);
+                                                        : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile,
+                                                                                                            SettingsTransform);
 
                     // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
                     if (settings != null)
@@ -456,7 +458,8 @@ namespace EVEMon.Common
         private static SerializableSettings DeserializeOldFormat(string filename)
         {
             OldSettings oldSerial = Util.DeserializeXMLFromFile<OldSettings>(filename,
-                                                                     Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport));
+                                                                             Util.LoadXSLT(
+                                                                                 Properties.Resources.SettingsAndPlanImport));
 
             if (oldSerial == null)
                 return null;
@@ -511,10 +514,10 @@ namespace EVEMon.Common
             if (revision == settings.Revision)
                 return;
             DialogResult backupSettings =
-                MessageBox.Show(
-                    "The current EVEMon settings file is from a previous version of EVEMon. Backup the current file before proceeding (recommended)?",
-                    "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1);
+                MessageBox.Show("The current EVEMon settings file is from a previous version of EVEMon.\n" +
+                                "Backup the current file before proceeding (recommended)?",
+                                "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button1);
 
             if (backupSettings != DialogResult.Yes)
                 return;
@@ -523,10 +526,10 @@ namespace EVEMon.Common
             {
                 fileDialog.Title = "Settings file backup";
                 fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision);
+                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture,
+                                                    "EVEMon_Settings_{0}.xml.bak", settings.Revision);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                DialogResult saveFile = fileDialog.ShowDialog();
-                if (saveFile != DialogResult.OK)
+                if (fileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
                 FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);

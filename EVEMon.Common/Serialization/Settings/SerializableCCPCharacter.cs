@@ -11,7 +11,6 @@ namespace EVEMon.Common.Serialization.Settings
     {
         private readonly Collection<SerializableQueuedSkill> m_skillQueue;
         private readonly Collection<SerializableAPIUpdate> m_lastUpdates;
-        private readonly Collection<SerializableStanding> m_standings;
         private readonly Collection<SerializableOrderBase> m_marketOrders;
         private readonly Collection<SerializableJob> m_industryJobs;
 
@@ -19,7 +18,6 @@ namespace EVEMon.Common.Serialization.Settings
         {
             m_skillQueue = new Collection<SerializableQueuedSkill>();
             m_lastUpdates = new Collection<SerializableAPIUpdate>();
-            m_standings = new Collection<SerializableStanding>();
             m_marketOrders = new Collection<SerializableOrderBase>();
             m_industryJobs = new Collection<SerializableJob>();
         }
@@ -31,14 +29,6 @@ namespace EVEMon.Common.Serialization.Settings
             get { return m_skillQueue; }
         }
 
-        [XmlArray("standings")]
-        [XmlArrayItem("standing")]
-        public Collection<SerializableStanding> Standings
-        {
-            get { return m_standings; }
-        }
-
-
         [XmlArray("marketOrders")]
         [XmlArrayItem("buy", typeof(SerializableBuyOrder))]
         [XmlArrayItem("sell", typeof(SerializableSellOrder))]
@@ -47,14 +37,12 @@ namespace EVEMon.Common.Serialization.Settings
             get { return m_marketOrders; }
         }
 
-
         [XmlArray("industryJobs")]
         [XmlArrayItem("job")]
         public Collection<SerializableJob> IndustryJobs
         {
             get { return m_industryJobs; }
         }
-
 
         [XmlElement("eveMailMessages")]
         public string EveMailMessagesIDs { get; set; }
@@ -68,6 +56,5 @@ namespace EVEMon.Common.Serialization.Settings
         {
             get { return m_lastUpdates; }
         }
-
     }
 }
