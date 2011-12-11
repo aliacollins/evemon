@@ -47,11 +47,6 @@ namespace EVEMon.SettingsUI
                 {
                     NotificationCategory cat = (NotificationCategory)combo.Tag;
                     int index = (int)m_settings.Categories[cat].ToolTipBehaviour;
-
-                    // TODO: Remove the following code line after deprecating ToolTipNotificationBehaviour.RepeatUntiClicked
-                    if (index > 2)
-                        index = 2;
-
                     combo.SelectedIndex = index;
                 }
 
