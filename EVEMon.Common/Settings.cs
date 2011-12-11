@@ -224,12 +224,19 @@ namespace EVEMon.Common
             InitializeOrAddMissingColumns();
 
             // Removes reduntant windows locations
-            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
-            locations.AddRange(UI.WindowLocations);
-            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
+            List<KeyValuePair<string, WindowLocationSettings>> locations = UI.WindowLocations.ToList();
+            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
                 windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);
+            }
+
+            // Removes reduntant splitters
+            List<KeyValuePair<string, int>> splitters = UI.Splitters.ToList();
+            foreach (KeyValuePair<string, int> splitter in splitters.Where(
+                splitter => splitter.Key == "EFTLoadoutImportationForm"))
+            {
+                UI.Splitters.Remove(splitter.Key);
             }
         }
 
