@@ -189,7 +189,8 @@ namespace EVEMon.Common.Data
                             // A reference to an item or a skill (typeID)
                         case DBConstants.TypeUnitID:
                             int id = Int32.Parse(value, CultureConstants.InvariantCulture);
-                            return StaticItems.GetItemByID(id).Name;
+                            Item item = StaticItems.GetItemByID(id);
+                            return item != null ? item.Name : "Unknown";
 
                             // Format a Sizeclass ("1=small 2=medium 3=l")
                         case DBConstants.SizeclassUnitID:
