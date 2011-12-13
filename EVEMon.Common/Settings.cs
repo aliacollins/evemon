@@ -370,7 +370,7 @@ namespace EVEMon.Common
 
                     // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
-                                                        ? ShowNoSupportMessage()
+                                                        ? (SerializableSettings)ShowNoSupportMessage()
                                                         : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile,
                                                                                                             SettingsTransform);
 
@@ -431,7 +431,7 @@ namespace EVEMon.Common
 
                     // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
-                                                        ? ShowNoSupportMessage()
+                                                        ? (SerializableSettings)ShowNoSupportMessage()
                                                         : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile,
                                                                                                             SettingsTransform);
 
@@ -460,12 +460,13 @@ namespace EVEMon.Common
         /// Shows a no support message.
         /// </summary>
         /// <returns></returns>
-        private static SerializableSettings ShowNoSupportMessage()
+        internal static object ShowNoSupportMessage()
         {
             MessageBox.Show(
-                "The settings file is probably from a EVEMon version prior to 1.3.0.\n" +
-                "This type of settings file is no longer supported.",
-                "Settings file not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "The file is probably from an EVEMon version prior to 1.3.0.\n" +
+                "This type of file is no longer supported.",
+                "File type not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             return null;
         }
 

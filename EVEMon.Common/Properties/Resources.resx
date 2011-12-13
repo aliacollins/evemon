@@ -121,9 +121,6 @@
   <data name="RowsetsXSLT" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Serialization\API\rowsets-transform.xslt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="SettingsAndPlanImport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Serialization\importation\input-settings-and-plan.xslt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="SkillTrained" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\audio\skilltrained.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
