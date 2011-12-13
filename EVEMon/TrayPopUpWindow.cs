@@ -120,7 +120,7 @@ namespace EVEMon
         /// Draws the rounded rectangle border.
         /// </summary>
         /// <param name="e"></param>
-        private static void DrawBorder(PaintEventArgs e)
+        private void DrawBorder(PaintEventArgs e)
         {
             // Create graphics object to work with
             Graphics g = e.Graphics;
@@ -151,6 +151,8 @@ namespace EVEMon
                 path.AddArc(new Rectangle(0, e.ClipRectangle.Height - 1 - cornerSize.Height,
                                           cornerSize.Width, cornerSize.Height), 90, 90);
                 path.CloseFigure();
+
+                Region = new Region(path);
 
                 // Draw the background
                 using (Brush fillBrush = new SolidBrush(SystemColors.ControlLightLight))
