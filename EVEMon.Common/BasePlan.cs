@@ -890,18 +890,5 @@ namespace EVEMon.Common
 
         #endregion
 
-
-        #region Enumerator
-
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator GetEnumerator()
-        {
-            return m_lookup.GetEnumerator();
-        }
-
-        #endregion
     }
 }
