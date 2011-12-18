@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Attributes;
@@ -16,8 +17,11 @@ namespace EVEMon.Common
     {
         private readonly PlanEntry[] m_lookup;
 
+
+        #region Constructor
+
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         protected BasePlan(BaseCharacter character)
@@ -25,6 +29,11 @@ namespace EVEMon.Common
             m_lookup = new PlanEntry[StaticSkills.ArrayIndicesCount * 5];
             Character = character;
         }
+
+        #endregion
+
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the implant set chosen by the user.
@@ -35,6 +44,8 @@ namespace EVEMon.Common
         /// Gets the owner of this plan
         /// </summary>
         public BaseCharacter Character { get; private set; }
+
+
 
         /// <summary>
         /// Does the plan contain obsolete entries.
@@ -68,6 +79,8 @@ namespace EVEMon.Common
                 }
             }
         }
+
+        #endregion
 
 
         #region Event firing and suppression
@@ -873,6 +886,20 @@ namespace EVEMon.Common
                 if (trainSkills)
                     scratchpad.Train(entry.Skill, entry.Level);
             }
+        }
+
+        #endregion
+
+
+        #region Enumerator
+
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
+        {
+            return m_lookup.GetEnumerator();
         }
 
         #endregion
