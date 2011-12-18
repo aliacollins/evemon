@@ -190,7 +190,11 @@ namespace EVEMon.Common.Data
                         case DBConstants.TypeUnitID:
                             int id = Int32.Parse(value, CultureConstants.InvariantCulture);
                             Item item = StaticItems.GetItemByID(id);
-                            return item != null ? item.Name : "Unknown";
+                            return id == 0
+                                       ? String.Empty
+                                       : item != null
+                                             ? item.Name
+                                             : "Unknown";
 
                             // Format a Sizeclass ("1=small 2=medium 3=l")
                         case DBConstants.SizeclassUnitID:
