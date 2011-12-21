@@ -36,7 +36,7 @@
     <row refTypeID="32" refTypeName="Container password retrieval" />
     <row refTypeID="33" refTypeName="Contraband or low standings cause an attack or items being confiscated" />
     <row refTypeID="34" refTypeName="First ship insurance" />
-    <row refTypeID="35" refTypeName="Ship destroyed, insurance payed" />
+    <row refTypeID="35" refTypeName="Ship destroyed, insurance paid" />
     <row refTypeID="36" refTypeName="Insurance contract invalidated/runs out" />
     <row refTypeID="37" refTypeName="Sovereignty claim fails (alliance)" />
     <row refTypeID="38" refTypeName="Sovereignty claim fails (corporation)" />

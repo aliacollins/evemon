@@ -444,7 +444,7 @@ namespace EVEMon.SkillPlanner
 
                 // Reset if the node doesn't exist anymore
                 if (selectedNode == null)
-                    SelectedSkill = null;
+                    tvItems.SelectNodeWithTag(null);
             }
             finally
             {
