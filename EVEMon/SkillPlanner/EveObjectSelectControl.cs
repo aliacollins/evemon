@@ -309,7 +309,7 @@ namespace EVEMon.SkillPlanner
             if (tvItems.SelectedNodes.Count != 0)
             {
                 List<Item> selectedObjects =
-                    (tvItems.SelectedNodes.Cast<TreeNode>().Select(node => node.Tag)).OfType<Item>().ToList();
+                    (tvItems.SelectedNodes.Select(node => node.Tag)).OfType<Item>().ToList();
                 SetSelectedObjects(selectedObjects);
                 return;
             }
