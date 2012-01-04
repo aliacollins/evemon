@@ -434,44 +434,48 @@ namespace EVEMon.SkillPlanner
 
             Item producedItem = m_blueprint.ProducesItem;
 
-            if (producedItem != null) // This should not happen but be prepared if something changes in CCP DB
+            // This should not happen but be prepared if something changes in CCP DB
+            if (producedItem == null)
             {
-                switch (m_activity)
-                {
-                    case BlueprintActivity.Manufacturing:
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID)
-                            && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
-                            cbFacility.Items.Add("Drone Assembly Array");
+                cbFacility.SelectedIndex = 0;
+                return;
+            }
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID))
-                            cbFacility.Items.Add("Ammunition Assembly Array");
+            switch (m_activity)
+            {
+                case BlueprintActivity.Manufacturing:
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID)
+                        && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
+                        cbFacility.Items.Add("Drone Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID))
-                        {
-                            cbFacility.Items.Add("Equipment Assembly Array");
-                            cbFacility.Items.Add("Rapid Equipment Assembly Array");
-                        }
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID))
+                        cbFacility.Items.Add("Ammunition Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.ComponentsMarketGroupID))
-                            cbFacility.Items.Add("Component Assembly Array");
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID))
+                    {
+                        cbFacility.Items.Add("Equipment Assembly Array");
+                        cbFacility.Items.Add("Rapid Equipment Assembly Array");
+                    }
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsMarketGroupIDs))
-                            cbFacility.Items.Add("Subsystem Assembly Array");
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.ComponentsMarketGroupID))
+                        cbFacility.Items.Add("Component Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
-                            cbFacility.Items.Add("Ship Assembly Array (Ship Size)");
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.StrategicComponentsMarketGroupIDs))
+                        cbFacility.Items.Add("Subsystem Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.CapitalShipsMarketGroupIDs))
-                            cbFacility.Items.Add("Capital Assembly Array");
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
+                        cbFacility.Items.Add("Ship Assembly Array (Ship Size)");
 
-                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedSmallToLargeShipsMarketGroupIDs))
-                            cbFacility.Items.Add("Advanced Ship Assembly Array (Ship Size)");
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.CapitalShipsMarketGroupIDs))
+                        cbFacility.Items.Add("Capital Assembly Array");
 
-                        break;
-                    default:
-                        cbFacility.Items.AddRange(m_laboratories);
-                        break;
-                }
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedSmallToLargeShipsMarketGroupIDs))
+                        cbFacility.Items.Add("Advanced Ship Assembly Array (Ship Size)");
+
+                    break;
+                default:
+                    cbFacility.Items.AddRange(m_laboratories);
+                    break;
             }
 
             // Update the selected index

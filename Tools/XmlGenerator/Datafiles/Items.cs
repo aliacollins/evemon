@@ -79,7 +79,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add the items in this group; excluding the implants we are adding below
                 List<SerializableItem> items = new List<SerializableItem>();
                 foreach (InvType srcItem in Database.InvTypeTable.Where(
-                    x => x.Published && x.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Where(
+                    item => item.Published && item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Where(
                         srcItem => marketGroup.ID != DBConstants.RootNonMarketGroupID ||
                                    Database.InvGroupTable[srcItem.GroupID].CategoryID != DBConstants.ImplantCategoryID ||
                                    srcItem.GroupID == DBConstants.CyberLearningImplantsGroupID))

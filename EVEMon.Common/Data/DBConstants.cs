@@ -105,7 +105,7 @@ namespace EVEMon.Common.Data
             new ReadOnlyCollection<int>(new[] { PosCargobayAcceptGroupPropertyID });
 
         // Group of MarketGroupIDs
-        public static readonly ReadOnlyCollection<int> StategicComponentsMarketGroupIDs =
+        public static readonly ReadOnlyCollection<int> StrategicComponentsMarketGroupIDs =
             new ReadOnlyCollection<int>(new[] { SubsystemsMarketGroupID, StrategicCruisersMarketGroupID });
 
         public static readonly ReadOnlyCollection<int> SmallToXLargeShipsMarketGroupIDs =

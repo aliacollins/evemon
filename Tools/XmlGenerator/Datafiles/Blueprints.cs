@@ -79,7 +79,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add the items in this group
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
                 foreach (InvType item in Database.InvTypeTable.Where(
-                    item => item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Select(
+                    item => item.Published && item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Select(
                         item => new { item, group = Database.InvGroupTable[item.GroupID] }).Where(
                             itemGroup => itemGroup.group.CategoryID == DBConstants.BlueprintCategoryID
                                          && itemGroup.group.Published).Select(itemGroup => itemGroup.item))
