@@ -329,7 +329,7 @@ namespace EVEMon.SettingsUI
             rbGoogle.Checked = m_settings.Calendar.Provider == CalendarProvider.Google;
 
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
-            tbGooglePassword.Text = m_settings.Calendar.GooglePassword;
+            tbGooglePassword.Text = Util.Decrypt(m_settings.Calendar.GooglePassword, m_settings.Calendar.GoogleEmail);
             tbGoogleURI.Text = m_settings.Calendar.GoogleAddress;
             cbGoogleReminder.SelectedIndex = (int)m_settings.Calendar.GoogleReminder;
             cbSetReminder.Checked = m_settings.Calendar.UseReminding;
@@ -490,9 +490,9 @@ namespace EVEMon.SettingsUI
             m_settings.Calendar.Enabled = externalCalendarCheckbox.Checked;
             m_settings.Calendar.Provider = (rbMSOutlook.Checked ? CalendarProvider.Outlook : CalendarProvider.Google);
 
-            m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text;
-            m_settings.Calendar.GooglePassword = tbGooglePassword.Text;
-            m_settings.Calendar.GoogleAddress = tbGoogleURI.Text;
+            m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text.Trim();
+            m_settings.Calendar.GooglePassword = Util.Encrypt(tbGooglePassword.Text.Trim(), tbGoogleEmail.Text.Trim());
+            m_settings.Calendar.GoogleAddress = tbGoogleURI.Text.Trim();
             m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1
                                                      ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex
                                                      : GoogleCalendarReminder.None;

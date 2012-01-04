@@ -119,7 +119,9 @@ namespace EVEMon.Common.ExternalCalendar
                 GoogleAppointmentFilter googleAppointmentFilter = new GoogleAppointmentFilter
                                                                       {
                                                                           UserName = Settings.Calendar.GoogleEmail,
-                                                                          Password = Settings.Calendar.GooglePassword,
+                                                                          Password =
+                                                                              Util.Decrypt(Settings.Calendar.GooglePassword,
+                                                                                           Settings.Calendar.GoogleEmail),
                                                                           Uri = new Uri(Settings.Calendar.GoogleAddress),
                                                                           StartDate = DateTime.Now.AddDays(-40),
                                                                           EndDate = DateTime.Now.AddDays(100),
@@ -155,15 +157,11 @@ namespace EVEMon.Common.ExternalCalendar
                 googleAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
                 googleAppointmentFilter.ReminderMethod = (int)Settings.Calendar.GoogleReminder;
 
-                try
-                {
-                    googleAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.LogRethrowException(ex);
-                    throw;
-                }
+                googleAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition);
+            }
+            catch (GDataRequestException ex)
+            {
+                MessageBox.Show(ex.Message, "Google says:");
             }
             catch (InvalidCredentialsException ex)
             {

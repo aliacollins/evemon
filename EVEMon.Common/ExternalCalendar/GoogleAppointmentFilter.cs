@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Windows.Forms;
 using Google.GData.Calendar;
+using Google.GData.Client;
 using Google.GData.Extensions;
 
 namespace EVEMon.Common.ExternalCalendar
@@ -205,10 +207,17 @@ namespace EVEMon.Common.ExternalCalendar
 
             AppointmentArray.Clear();
 
-            EventFeed myResultsFeed = m_service.Query(myQuery);
-            foreach (EventEntry eventEntry in myResultsFeed.Entries.OfType<EventEntry>())
+            try
             {
-                AppointmentArray.Add(eventEntry);
+                EventFeed myResultsFeed = m_service.Query(myQuery);
+                foreach (EventEntry eventEntry in myResultsFeed.Entries.OfType<EventEntry>())
+                {
+                    AppointmentArray.Add(eventEntry);
+                }
+            }
+            catch(GDataRequestException ex)
+            {
+                MessageBox.Show(ex.Message, "Google says:");
             }
         }
 
