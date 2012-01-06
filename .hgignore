@@ -1,13 +1,14 @@
 syntax: glob
 *.ReSharper
+*.DotSettings
 *.ncb
 *.suo
 *.user
+*.patch
+*.diff
 Thumbs.db
 UpgradeLog.XML
 _ReSharper.*
 _UpgradeReport_Files
 bin
 obj
-*.patch
-*.diff
