@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -180,15 +181,8 @@ namespace EVEMon
                     stackTraceBuilder.Append(ex.ToString()).AppendLine();
                 }
 
-                // Richard Slater's local installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"D:\EVEMon\", String.Empty);
-                // Jimi's local installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\Projects\Csharp\EVEMon\Repo\Mercurial\EVEMon", String.Empty);
-                // TeamCity's installer builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"f:\tmp\evemon_installer\", String.Empty);
-                // TeamCity's snapshot builder path
-                stackTraceBuilder = stackTraceBuilder.Replace(@"f:\tmp\evemon\", String.Empty);
-                return stackTraceBuilder.ToString();
+                // Replace local path to project
+                return Regex.Replace(stackTraceBuilder.ToString(), @"[a-zA-Z]+:.*\\(?=EVEMon)", String.Empty, RegexOptions.IgnoreCase);
             }
         }
 
