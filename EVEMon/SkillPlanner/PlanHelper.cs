@@ -160,7 +160,10 @@ namespace EVEMon.SkillPlanner
                 return;
 
             if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
+            {
                 Perform(operation);
+                return;
+            }
 
             PerformSilently(operation);
         }

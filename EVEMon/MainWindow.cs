@@ -1094,6 +1094,7 @@ namespace EVEMon
                 if (f.DialogResult == DialogResult.OK)
                 {
                     m_isUpdating = true;
+
                     // Save the settings to make sure we don't loose anything
                     Settings.SaveImmediate();
                     Close();
