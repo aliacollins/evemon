@@ -11,7 +11,7 @@ namespace EVEMon.Common.Serialization.API
     {
         private readonly Collection<SerializableCharacterSkill> m_skills;
         private readonly Collection<SerializableCharacterCertificate> m_certificates;
-        private readonly Collection<SerializableEmploymentHistory> m_employmentHistorys;
+        private readonly Collection<SerializableEmploymentHistory> m_employmentHistory;
 
         protected SerializableCharacterSheetBase()
         {
@@ -19,7 +19,7 @@ namespace EVEMon.Common.Serialization.API
             Attributes = new SerializableCharacterAttributes();
             m_skills = new Collection<SerializableCharacterSkill>();
             m_certificates = new Collection<SerializableCharacterCertificate>();
-            m_employmentHistorys = new Collection<SerializableEmploymentHistory>();
+            m_employmentHistory = new Collection<SerializableEmploymentHistory>();
         }
 
         [XmlElement("characterID")]
@@ -79,9 +79,8 @@ namespace EVEMon.Common.Serialization.API
         [XmlArrayItem("record")]
         public Collection<SerializableEmploymentHistory> EmploymentHistory
         {
-            get { return m_employmentHistorys; }
+            get { return m_employmentHistory; }
         }
-
 
         [XmlElement("attributes")]
         public SerializableCharacterAttributes Attributes { get; set; }
@@ -93,14 +92,12 @@ namespace EVEMon.Common.Serialization.API
             get { return m_skills; }
         }
 
-
         [XmlArray("certificates")]
         [XmlArrayItem("certificate")]
         public Collection<SerializableCharacterCertificate> Certificates
         {
             get { return m_certificates; }
         }
-
 
         /// <summary>
         /// The date and time the character was created.
