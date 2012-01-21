@@ -277,7 +277,8 @@ namespace EVEMon.Common.Net
                     case ProxyAuthentication.Specified:
                         proxy.UseDefaultCredentials = false;
                         proxy.Credentials = new NetworkCredential(m_webServiceState.Proxy.Username,
-                                                                  m_webServiceState.Proxy.Password);
+                                                                  Util.Decrypt(m_webServiceState.Proxy.Password,
+                                                                               m_webServiceState.Proxy.Username));
                         break;
                 }
                 request.Proxy = proxy;
