@@ -106,6 +106,21 @@ namespace EVEMon.Common
                                                                              ex.Message)));
                         }
                         break;
+                    case "serializableuricharacter":
+                        try
+                        {
+                            SerializableUriCharacter uriCharacterResult = Util.DeserializeXMLFromFile<SerializableUriCharacter>(uri.LocalPath);
+                            callback(null, new UriCharacterEventArgs(uri, uriCharacterResult));
+                        }
+                        catch (NullReferenceException ex)
+                        {
+                            callback(null,
+                                     new UriCharacterEventArgs(uri,
+                                                               String.Format(CultureConstants.DefaultCulture,
+                                                                             "Unable to load file (SerializableUriCharacter). ({0})",
+                                                                             ex.Message)));
+                        }
+                        break;
                     case "character":
                         try
                         {

@@ -260,6 +260,7 @@ namespace EVEMon.Controls
                 try
                 {
                     CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
+
                     // Save character with the chosen format to our file
                     FileHelper.OverwriteOrWarnTheUser(
                         characterSaveDialog.FileName,

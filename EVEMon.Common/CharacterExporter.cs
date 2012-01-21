@@ -311,8 +311,8 @@ namespace EVEMon.Common
                     x => GetMergedSkill(plan, x)));
             }
 
-            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableSettingsCharacter), serial);
-            return Util.GetXMLStringRepresentation(doc);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
+            return doc != null ? Util.GetXMLStringRepresentation(doc) : null;
         }
 
         /// <summary>
