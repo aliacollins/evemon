@@ -38,7 +38,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                Quantity = srcMaterial.Quantity
                                            });
 
-                if (materials.Count() == 0)
+                if (!materials.Any())
                     continue;
 
                 SerializableItemMaterials itemMaterials = new SerializableItemMaterials { ID = typeID };

@@ -159,7 +159,7 @@ namespace EVEMon.LogitechG15
         {
             get
             {
-                if (MonitoredCharacters.Count() == 0 || !MonitoredCharacters.Contains(m_currentCharacter))
+                if (!MonitoredCharacters.Any() || !MonitoredCharacters.Contains(m_currentCharacter))
                     return null;
 
                 return m_currentCharacter;
@@ -543,7 +543,7 @@ namespace EVEMon.LogitechG15
         {
             m_lcdLines.Clear();
 
-            if (MonitoredCharacters.Count() == 0)
+            if (!MonitoredCharacters.Any())
             {
                 m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
@@ -814,7 +814,7 @@ namespace EVEMon.LogitechG15
             if ((press & NativeMethods.LGLcdButton1) != 0)
             {
                 // Select next skill ready char
-                if (MonitoredCharacters.Count() == 0)
+                if (!MonitoredCharacters.Any())
                     return 0;
 
                 CurrentCharacter = FirstCharacterToCompleteSkill;
@@ -860,7 +860,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void MoveToNextChar()
         {
-            if (MonitoredCharacters.Count() == 0)
+            if (!MonitoredCharacters.Any())
                 return;
 
             // Move to next char

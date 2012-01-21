@@ -481,7 +481,7 @@ namespace EVEMon.Common
                                                                                       !x.HasCharacterInTraining);
 
             // All accounts are training ?
-            if (accountsNotTraining.Count() == 0)
+            if (!accountsNotTraining.Any())
                 return false;
 
             // Creates the string, scrolling through every not training account
@@ -673,7 +673,7 @@ namespace EVEMon.Common
         public override string ToString()
         {
             // If no characters on this API key, return only the API key ID
-            if (CharacterIdentities.Count() == 0)
+            if (!CharacterIdentities.Any())
                 return ID.ToString(CultureConstants.DefaultCulture);
 
             // Otherwise, return the chars' names into parenthesis

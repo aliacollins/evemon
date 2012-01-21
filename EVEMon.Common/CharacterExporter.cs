@@ -59,7 +59,7 @@ namespace EVEMon.Common
 
             // Implants
             IEnumerable<Implant> implants = character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5);
-            if (implants.Count() > 0)
+            if (implants.Any())
             {
                 builder.AppendLine("IMPLANTS");
                 builder.AppendLine(Separator);
