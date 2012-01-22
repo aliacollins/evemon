@@ -365,7 +365,7 @@ namespace EVEMon.SkillPlanner
             float max = 0f;
             bool allEqual = true;
 
-            if (values.Count() > 0)
+            if (values.Any())
             {
                 min = values.Min();
                 max = values.Max();

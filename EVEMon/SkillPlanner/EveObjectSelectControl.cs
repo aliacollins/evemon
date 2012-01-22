@@ -264,7 +264,7 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (SelectedObjects == null || SelectedObjects.Count() == 0)
+                if (SelectedObjects == null || !SelectedObjects.Any())
                     return null;
 
                 return SelectedObjects.First();

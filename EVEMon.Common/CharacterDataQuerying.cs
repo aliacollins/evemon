@@ -239,7 +239,7 @@ namespace EVEMon.Common
 
             // Check for claimable certificates
             IEnumerable<Certificate> claimableCertificates = m_ccpCharacter.Certificates.Where(x => x.CanBeClaimed);
-            if (m_ccpCharacter.Monitored && claimableCertificates.Count() > 0)
+            if (m_ccpCharacter.Monitored && claimableCertificates.Any())
                 EveMonClient.Notifications.NotifyClaimableCertificate(m_ccpCharacter, claimableCertificates);
             else
                 EveMonClient.Notifications.InvalidateClaimableCertificate(m_ccpCharacter);

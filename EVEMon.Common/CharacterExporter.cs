@@ -59,7 +59,7 @@ namespace EVEMon.Common
 
             // Implants
             IEnumerable<Implant> implants = character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5);
-            if (implants.Count() > 0)
+            if (implants.Any())
             {
                 builder.AppendLine("IMPLANTS");
                 builder.AppendLine(Separator);
@@ -311,8 +311,8 @@ namespace EVEMon.Common
                     x => GetMergedSkill(plan, x)));
             }
 
-            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableSettingsCharacter), serial);
-            return Util.GetXMLStringRepresentation(doc);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
+            return doc != null ? Util.GetXMLStringRepresentation(doc) : null;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Importation;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
@@ -103,6 +104,36 @@ namespace EVEMon.Common
                                                                String.Format(CultureConstants.DefaultCulture,
                                                                              "Unable to load file (SerializableCCPCharacter). ({0})",
                                                                              ex.Message)));
+                        }
+                        break;
+                    case "serializableuricharacter":
+                        try
+                        {
+                            SerializableUriCharacter uriCharacterResult = Util.DeserializeXMLFromFile<SerializableUriCharacter>(uri.LocalPath);
+                            callback(null, new UriCharacterEventArgs(uri, uriCharacterResult));
+                        }
+                        catch (NullReferenceException ex)
+                        {
+                            callback(null,
+                                     new UriCharacterEventArgs(uri,
+                                                               String.Format(CultureConstants.DefaultCulture,
+                                                                             "Unable to load file (SerializableUriCharacter). ({0})",
+                                                                             ex.Message)));
+                        }
+                        break;
+                    case "character":
+                        try
+                        {
+                            OldExportedCharacter oldCharacterResult = Util.DeserializeXMLFromFile<OldExportedCharacter>(uri.LocalPath);
+                            SerializableCCPCharacter ccpCharacterResult = oldCharacterResult.ToSerializableCCPCharacter();
+                            callback(null, new UriCharacterEventArgs(uri, ccpCharacterResult));
+                        }
+                        catch (NullReferenceException ex)
+                        {
+                            callback(null,
+                                     new UriCharacterEventArgs(uri,
+                                                               String.Format(CultureConstants.DefaultCulture,
+                                                                             "Unable to load file (Character). ({0})", ex.Message)));
                         }
                         break;
                     default:

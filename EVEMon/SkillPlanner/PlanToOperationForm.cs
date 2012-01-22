@@ -147,7 +147,7 @@ namespace EVEMon.SkillPlanner
             if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage)
                 isFinal = true;
             else
-                isFinal = (m_operation.RemovablePrerequisites.Count() == 0);
+                isFinal = (!m_operation.RemovablePrerequisites.Any());
 
             // Final page ? 
             if (isFinal)

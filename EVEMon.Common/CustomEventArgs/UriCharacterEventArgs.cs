@@ -34,7 +34,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">Serialized Result</param>
-        public UriCharacterEventArgs(Uri uri, SerializableCCPCharacter result)
+        public UriCharacterEventArgs(Uri uri, SerializableCharacterSheetBase result)
         {
             Uri = uri;
             m_result = result;
@@ -85,16 +85,12 @@ namespace EVEMon.Common.CustomEventArgs
             CharacterIdentity identity = GetIdentity(m_result);
 
             // Instantiates characters, adds, notify
-            UriCharacter uriCharacter;
-            if (m_apiResult != null)
-                uriCharacter = new UriCharacter(identity, Uri, m_apiResult);
-            else
-            {
-                SerializableCCPCharacter ccpCharacter = m_result as SerializableCCPCharacter;
-                uriCharacter = new UriCharacter(identity, Uri, ccpCharacter);
-            }
+            UriCharacter uriCharacter = m_apiResult != null
+                                            ? new UriCharacter(identity, Uri, m_apiResult)
+                                            : new UriCharacter(identity, Uri, m_result as SerializableSettingsCharacter);
 
             EveMonClient.Characters.Add(uriCharacter);
+
             return uriCharacter;
         }
 

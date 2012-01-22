@@ -133,7 +133,7 @@ namespace EVEMon.Common
             {
                 // Fires the event regarding the corporation industry jobs completion, issued by the character
                 IEnumerable<IndustryJob> characterJobs = jobsCompleted.Where(job => job.InstallerID == m_character.CharacterID);
-                if (characterJobs.Count() > 0)
+                if (characterJobs.Any())
                     EveMonClient.OnCharacterIndustryJobsCompleted(m_character, characterJobs);
 
                 // Fires the event regarding the corporation industry jobs completion
