@@ -15,7 +15,6 @@ namespace EVEMon.Common.Serialization.API
 
         protected SerializableCharacterSheetBase()
         {
-            Info = new SerializableAPICharacterInfo();
             Attributes = new SerializableCharacterAttributes();
             m_skills = new Collection<SerializableCharacterSkill>();
             m_certificates = new Collection<SerializableCharacterCertificate>();
@@ -72,8 +71,17 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("balance")]
         public Decimal Balance { get; set; }
 
-        [XmlElement("info")]
-        public SerializableAPICharacterInfo Info { get; set; }
+        [XmlElement("shipName")]
+        public string ShipName { get; set; }
+
+        [XmlElement("shipTypeName")]
+        public string ShipTypeName { get; set; }
+
+        [XmlElement("lastKnownLocation")]
+        public string LastKnownLocation { get; set; }
+
+        [XmlElement("securityStatus")]
+        public double SecurityStatus { get; set; }
 
         [XmlArray("employmentHistory")]
         [XmlArrayItem("record")]

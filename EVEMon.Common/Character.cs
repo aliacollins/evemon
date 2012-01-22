@@ -433,10 +433,10 @@ namespace EVEMon.Common
             serial.Balance = Balance;
 
             // Info
-            serial.Info.ShipName = ShipName;
-            serial.Info.ShipTypeName = ShipTypeName;
-            serial.Info.SecurityStatus = SecurityStatus;
-            serial.Info.LastKnownLocation = LastKnownLocation;
+            serial.ShipName = ShipName;
+            serial.ShipTypeName = ShipTypeName;
+            serial.SecurityStatus = SecurityStatus;
+            serial.LastKnownLocation = LastKnownLocation;
 
             // Employment History
             serial.EmploymentHistory.AddRange(EmploymentHistory.Export());
@@ -533,10 +533,10 @@ namespace EVEMon.Common
             CloneSkillPoints = serial.CloneSkillPoints;
 
             // Info
-            ShipName = serial.Info.ShipName;
-            ShipTypeName = serial.Info.ShipTypeName;
-            SecurityStatus = serial.Info.SecurityStatus;
-            LastKnownLocation = serial.Info.LastKnownLocation;
+            ShipName = serial.ShipName;
+            ShipTypeName = serial.ShipTypeName;
+            SecurityStatus = serial.SecurityStatus;
+            LastKnownLocation = serial.LastKnownLocation;
 
             // Employment History
             EmploymentHistory.Import(serial.EmploymentHistory);
