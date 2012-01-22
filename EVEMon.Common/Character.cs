@@ -532,14 +532,17 @@ namespace EVEMon.Common
             CloneName = serial.CloneName;
             CloneSkillPoints = serial.CloneSkillPoints;
 
-            // Info
-            ShipName = serial.ShipName;
-            ShipTypeName = serial.ShipTypeName;
-            SecurityStatus = serial.SecurityStatus;
-            LastKnownLocation = serial.LastKnownLocation;
+            if (serial is SerializableSettingsCharacter)
+            {
+                // Info
+                ShipName = serial.ShipName;
+                ShipTypeName = serial.ShipTypeName;
+                SecurityStatus = serial.SecurityStatus;
+                LastKnownLocation = serial.LastKnownLocation;
 
-            // Employment History
-            EmploymentHistory.Import(serial.EmploymentHistory);
+                // Employment History
+                EmploymentHistory.Import(serial.EmploymentHistory);
+            }
 
             // Attributes
             m_attributes[(int)EveAttribute.Intelligence].Base = serial.Attributes.Intelligence;

@@ -56,6 +56,7 @@ namespace EVEMon
             Header.Character = character;
             skillsList.Character = character;
             skillQueueList.Character = character;
+            employmentList.Character = character;
             standingsList.Character = character;
             ordersList.Character = character;
             jobsList.Character = character;
@@ -67,8 +68,8 @@ namespace EVEMon
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, ordersIcon, jobsIcon, researchIcon, mailMessagesIcon,
-                                                eveNotificationsIcon
+                                                standingsIcon, ordersIcon, jobsIcon, researchIcon,
+                                                mailMessagesIcon, eveNotificationsIcon
                                             });
 
             // Hide all advanced features related controls
@@ -86,6 +87,7 @@ namespace EVEMon
                 pnlTraining.Visible = false;
                 skillQueuePanel.Visible = false;
                 skillQueueIcon.Visible = false;
+                employmentIcon.Visible = false;
             }
 
             // Subscribe events
@@ -151,16 +153,21 @@ namespace EVEMon
             // Picks the last selected page
             multiPanel.SelectedPage = null;
             string tag = Character.UISettings.SelectedPage;
-            ToolStripItem item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x =>
-                                                                                              tag == (string)x.Tag);
+            ToolStripItem item = null;
 
-            // If it's not a advanced feature page make it visible
-            if (item != null && !m_advancedFeatures.Contains(item))
-                item.Visible = true;
+            // Only for CCP characters
+            if (Character is CCPCharacter)
+            {
+                item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == (string)x.Tag);
 
-            // If it's an advanced feature page reset to skills page
-            if (item != null && m_advancedFeatures.Contains(item))
-                item = skillsIcon;
+                // If it's not an advanced feature page make it visible
+                if (item != null && !m_advancedFeatures.Contains(item))
+                    item.Visible = true;
+
+                // If it's an advanced feature page reset to skills page
+                if (item != null && m_advancedFeatures.Contains(item))
+                    item = skillsIcon;
+            }
 
             toolbarIcon_Click((item ?? skillsIcon), EventArgs.Empty);
         }
@@ -545,7 +552,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When the scheduler changed, we need to check the conflicts
+        /// When the scheduler changed, we need to check the conflicts.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -555,7 +562,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occur when the character changed. We update all the controls' content.
+        /// Occur when the character updates. We update all the controls' content.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
@@ -567,6 +574,11 @@ namespace EVEMon
             UpdateInfrequentControls();
         }
 
+        /// <summary>
+        /// Occur when the character skill queue updates.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
@@ -714,7 +726,8 @@ namespace EVEMon
             // Update the buttons visibility
             toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
             tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
-            toolStripContextual.Visible = (e.NewPage != skillsPage && e.NewPage != skillQueuePage && e.NewPage != standingsPage);
+            toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
+                                                                           (string)button.Tag == e.NewPage.Text);
 
             // Update the page controls
             UpdatePageControls();

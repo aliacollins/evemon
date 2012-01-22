@@ -67,7 +67,7 @@ namespace EVEMon
         /// </summary>
         private int GetItemHeight
         {
-            get { return Math.Max((m_skillsQueueFont.Height * 2) + PadTop * 2 + LowerBoxHeight, MinimumHeight); }
+            get { return Math.Max(m_skillsQueueFont.Height * 2 + PadTop * 2 + LowerBoxHeight, MinimumHeight); }
         }
 
 
