@@ -142,6 +142,8 @@ namespace EVEMon.APITester
         /// </summary>
         private void UpdateControlsVisibility()
         {
+            LoadDocument(new Uri("about:blank"));
+
             UpdateCharacterSelectionEnabling();
             UpdateExternalInfoControlsEnabling();
 
@@ -371,8 +373,6 @@ namespace EVEMon.APITester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void APITesterWindow_Load(object sender, EventArgs e)
         {           
-            LoadDocument(new Uri("about:blank"));
-
             UpdateAPIMethodsList();
             UpdateCharacterList();
 
@@ -435,8 +435,6 @@ namespace EVEMon.APITester
             cbCharacter.SelectedItem = null;
             tbIDOrName.ResetText();
 
-            LoadDocument(new Uri("about:blank"));
-
             UpdateControlsVisibility();
 
             if (APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem) && !tbIDOrName.Visible)
@@ -475,9 +473,8 @@ namespace EVEMon.APITester
         private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             // Enable "Save" button on condition
-            if (m_url == e.Url && e.Url.AbsoluteUri != "about:blank" &&
-                webBrowser.Document != null && webBrowser.Document.Body != null)
-                saveButton.Enabled = true;
+            saveButton.Enabled = (m_url == e.Url && e.Url.AbsoluteUri != "about:blank" &&
+                                 webBrowser.Document != null && webBrowser.Document.Body != null);
         }
 
         /// <summary>
@@ -676,10 +673,10 @@ namespace EVEMon.APITester
                     tbCharID.ResetText();
                 else
                 {
-                    tbIDOrName.CausesValidation =
-                        tbKeyID.CausesValidation =
-                        tbVCode.CausesValidation =
-                        tbCharID.CausesValidation = false;
+                    foreach (TextBox textBox in HeaderPanel.Controls.OfType<TextBox>())
+                    {
+                        textBox.CausesValidation = false;
+                    }
 
                     Close();
                 }
