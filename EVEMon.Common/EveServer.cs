@@ -30,9 +30,9 @@ namespace EVEMon.Common
         {
             get
             {
-                return (EveMonClient.APIProviders.CurrentProvider != APIProvider.TestProvider
+                return EveMonClient.APIProviders.CurrentProvider.Url.Host != APIProvider.TestProvider.Url.Host
                             ? "Tranquility"
-                            : "Sinqularity");
+                            : "Sinqularity";
             }
         }
 

@@ -113,15 +113,7 @@ namespace EVEMon.Common
         /// </summary>
         public static APIProvider DefaultProvider
         {
-            get
-            {
-                if (s_ccpProvider != null)
-                    return s_ccpProvider;
-
-                s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" };
-
-                return s_ccpProvider;
-            }
+            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
         }
 
         /// <summary>
@@ -131,12 +123,8 @@ namespace EVEMon.Common
         {
             get
             {
-                if (s_ccpTestProvider != null)
-                    return s_ccpTestProvider;
-
-                s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" };
-
-                return s_ccpTestProvider;
+                return s_ccpTestProvider ??
+                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
             }
         }
 
