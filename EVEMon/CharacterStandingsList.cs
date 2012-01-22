@@ -12,7 +12,7 @@ using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
-    public partial class MainWindowStandingsList : UserControl
+    public partial class CharacterStandingsList : UserControl
     {
         private CCPCharacter m_ccpCharacter;
 
@@ -32,7 +32,7 @@ namespace EVEMon
         private readonly Font m_standingsBoldFont;
         private readonly List<string> m_collapsedGroups = new List<string>();
 
-        public MainWindowStandingsList()
+        public CharacterStandingsList()
         {
             InitializeComponent();
 

@@ -58,21 +58,21 @@ namespace EVEMon
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
             this.standingsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.standingsList = new EVEMon.MainWindowStandingsList();
+            this.standingsList = new EVEMon.CharacterStandingsList();
             this.skillsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.skillsList = new EVEMon.MainWindowSkillsList();
+            this.skillsList = new EVEMon.CharacterSkillsList();
             this.ordersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.ordersList = new EVEMon.CharacterMarketOrdersList();
             this.skillQueuePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
+            this.skillQueueList = new EVEMon.CharacterSkillsQueueList();
             this.jobsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
+            this.jobsList = new EVEMon.CharacterIndustryJobsList();
             this.researchPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.researchList = new EVEMon.MainWindowResearchPointsList();
+            this.researchList = new EVEMon.CharacterResearchPointsList();
             this.mailMessagesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.mailMessagesList = new EVEMon.MainWindowEveMailMessagesList();
+            this.mailMessagesList = new EVEMon.CharacterEveMailMessagesList();
             this.eveNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.eveNotificationsList = new EVEMon.MainWindowEveNotificationsList();
+            this.eveNotificationsList = new EVEMon.CharacterEveNotificationsList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.NotificationList();
             this.toolstripPanel = new System.Windows.Forms.Panel();
@@ -1009,7 +1009,7 @@ namespace EVEMon
         }
         #endregion
 
-        private MainWindowSkillsList skillsList;
+        private CharacterSkillsList skillsList;
         private System.Windows.Forms.Panel pnlTraining;
         private System.Windows.Forms.Label lblTrainingEst;
         private System.Windows.Forms.Label lblTrainingRemain;
@@ -1035,7 +1035,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton toggleSkillsIcon;
         private System.Windows.Forms.Panel lowerPanel;
         private MultiPanelPage ordersPage;
-        private MainWindowMarketOrdersList ordersList;
+        private CharacterMarketOrdersList ordersList;
         private System.Windows.Forms.Label warningLabel;
         private System.Windows.Forms.Label lblQueueRemaining;
         private System.Windows.Forms.Label lblQueueCompletionTime;
@@ -1054,18 +1054,18 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem hideInactiveMenuItem;
         private System.Windows.Forms.ToolStripMenuItem numberAbsFormatMenuItem;
         private MultiPanelPage skillQueuePage;
-        private MainWindowSkillsQueueList skillQueueList;
+        private CharacterSkillsQueueList skillQueueList;
         private System.Windows.Forms.ToolStripButton skillQueueIcon;
         private System.Windows.Forms.ToolStripButton jobsIcon;
         private MultiPanelPage jobsPage;
-        private MainWindowIndustryJobsList jobsList;
+        private CharacterIndustryJobsList jobsList;
         private CharacterMonitorHeader Header;
         private System.Windows.Forms.Panel toolstripPanel;
         private System.Windows.Forms.ToolStripButton researchIcon;
         private MultiPanelPage researchPage;
-        private MainWindowResearchPointsList researchList;
+        private CharacterResearchPointsList researchList;
         private MultiPanelPage mailMessagesPage;
-        private MainWindowEveMailMessagesList mailMessagesList;
+        private CharacterEveMailMessagesList mailMessagesList;
         private System.Windows.Forms.ToolStripButton mailMessagesIcon;
         private System.Windows.Forms.ToolStripSeparator tsReadingPaneSeparator;
         private System.Windows.Forms.ToolStripMenuItem readingPaneMenuItem;
@@ -1074,10 +1074,10 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem paneOffMenuItem;
         private System.Windows.Forms.ToolStripButton eveNotificationsIcon;
         private MultiPanelPage eveNotificationsPage;
-        private MainWindowEveNotificationsList eveNotificationsList;
+        private CharacterEveNotificationsList eveNotificationsList;
         private System.Windows.Forms.ToolStripButton standingsIcon;
         private MultiPanelPage standingsPage;
-        private MainWindowStandingsList standingsList;
+        private CharacterStandingsList standingsList;
         private System.Windows.Forms.ToolStripSeparator tsPagesSeparator;
         private System.Windows.Forms.ToolStripSeparator tsOptionsSeparator;
         private System.Windows.Forms.ToolStripMenuItem showOnlyCharMenuItem;

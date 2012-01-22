@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class MainWindowEveMailMessagesList
+    partial class CharacterEveMailMessagesList
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowEveMailMessagesList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEveMailMessagesList));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noEVEMailMessagesLabel = new System.Windows.Forms.Label();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);

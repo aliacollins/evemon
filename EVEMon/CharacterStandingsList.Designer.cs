@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon
 {
-    partial class MainWindowStandingsList
+    partial class CharacterStandingsList
     {
         /// <summary> 
         /// Required designer variable.

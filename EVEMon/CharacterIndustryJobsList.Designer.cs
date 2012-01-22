@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon
 {
-    partial class MainWindowIndustryJobsList
+    partial class CharacterIndustryJobsList
     {
         /// <summary> 
         /// Required designer variable.
@@ -31,7 +31,7 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowIndustryJobsList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterIndustryJobsList));
             this.lvJobs = new System.Windows.Forms.ListView();
             this.chState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chTTC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

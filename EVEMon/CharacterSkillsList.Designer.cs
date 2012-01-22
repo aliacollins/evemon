@@ -2,7 +2,7 @@
 
 namespace EVEMon
 {
-    partial class MainWindowSkillsList
+    partial class CharacterSkillsList
     {
         /// <summary> 
         /// Required designer variable.

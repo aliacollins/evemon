@@ -1,6 +1,6 @@
 ﻿namespace EVEMon
 {
-    partial class MainWindowEveNotificationsList
+    partial class CharacterEveNotificationsList
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowEveNotificationsList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEveNotificationsList));
             this.splitContainerNotifications = new System.Windows.Forms.SplitContainer();
             this.lvNotifications = new System.Windows.Forms.ListView();
             this.chSenderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

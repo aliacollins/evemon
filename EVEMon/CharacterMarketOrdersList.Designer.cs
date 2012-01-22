@@ -2,7 +2,7 @@
 
 namespace EVEMon
 {
-    partial class MainWindowMarketOrdersList
+    partial class CharacterMarketOrdersList
     {
         /// <summary> 
         /// Required designer variable.
@@ -33,7 +33,7 @@ namespace EVEMon
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Sell Orders", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Buy Orders", System.Windows.Forms.HorizontalAlignment.Left);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowMarketOrdersList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterMarketOrdersList));
             this.lvOrders = new System.Windows.Forms.ListView();
             this.itemColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

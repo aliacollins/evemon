@@ -14,7 +14,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowEveNotificationsList : UserControl, IListView
+    public partial class CharacterEveNotificationsList : UserControl, IListView
     {
         #region Fields
 
@@ -39,7 +39,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MainWindowEveNotificationsList()
+        public CharacterEveNotificationsList()
         {
             InitializeComponent();
 

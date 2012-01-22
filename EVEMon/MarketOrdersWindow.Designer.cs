@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.ordersList = new EVEMon.CharacterMarketOrdersList();
             this.SuspendLayout();
             // 
             // ordersList
@@ -57,6 +57,6 @@
 
         #endregion
 
-        private MainWindowMarketOrdersList ordersList;
+        private CharacterMarketOrdersList ordersList;
     }
 }

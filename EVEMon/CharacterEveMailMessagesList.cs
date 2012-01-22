@@ -14,7 +14,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowEveMailMessagesList : UserControl, IListView
+    public partial class CharacterEveMailMessagesList : UserControl, IListView
     {
         #region Fields
 
@@ -39,7 +39,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MainWindowEveMailMessagesList()
+        public CharacterEveMailMessagesList()
         {
             InitializeComponent();
 

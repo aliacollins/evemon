@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class MainWindowResearchPointsList
+    partial class CharacterResearchPointsList
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowResearchPointsList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterResearchPointsList));
             this.noResearchLabel = new System.Windows.Forms.Label();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.chAgentName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

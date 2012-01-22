@@ -14,7 +14,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowIndustryJobsList : UserControl, IListView
+    public partial class CharacterIndustryJobsList : UserControl, IListView
     {
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
@@ -50,7 +50,7 @@ namespace EVEMon
 
         # region Constructor
 
-        public MainWindowIndustryJobsList()
+        public CharacterIndustryJobsList()
         {
             InitializeComponent();
             InitializeExpandablePanelControls();

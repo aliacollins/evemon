@@ -12,7 +12,7 @@ using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
-    public partial class MainWindowSkillsQueueList : UserControl
+    public partial class CharacterSkillsQueueList : UserControl
     {
         // Skills drawing - Region & text padding
         private const int PadTop = 2;
@@ -40,7 +40,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MainWindowSkillsQueueList()
+        public CharacterSkillsQueueList()
         {
             InitializeComponent();
 

@@ -13,7 +13,7 @@ using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
-    public partial class MainWindowSkillsList : UserControl
+    public partial class CharacterSkillsList : UserControl
     {
         private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
         private const byte SkillsSummaryTextWidth = 75;
@@ -48,7 +48,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainWindowSkillsList()
+        public CharacterSkillsList()
         {
             InitializeComponent();
 

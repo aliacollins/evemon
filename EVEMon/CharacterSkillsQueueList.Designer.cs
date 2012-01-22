@@ -2,7 +2,7 @@
 
 namespace EVEMon
 {
-    partial class MainWindowSkillsQueueList
+    partial class CharacterSkillsQueueList
     {
         /// <summary> 
         /// Required designer variable.

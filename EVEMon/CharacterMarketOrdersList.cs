@@ -17,7 +17,7 @@ namespace EVEMon
     /// <summary>
     /// Displays a list of market orders.
     /// </summary>
-    public partial class MainWindowMarketOrdersList : UserControl, IListView
+    public partial class CharacterMarketOrdersList : UserControl, IListView
     {
         private readonly List<MarketOrderColumnSettings> m_columns = new List<MarketOrderColumnSettings>();
         private readonly List<MarketOrder> m_list = new List<MarketOrder>();
@@ -73,7 +73,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MainWindowMarketOrdersList()
+        public CharacterMarketOrdersList()
         {
             InitializeComponent();
             InitializeExpandablePanelControls();

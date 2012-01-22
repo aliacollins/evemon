@@ -12,7 +12,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowResearchPointsList : UserControl, IListView
+    public partial class CharacterResearchPointsList : UserControl, IListView
     {
         #region Fields
 
@@ -35,7 +35,7 @@ namespace EVEMon
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MainWindowResearchPointsList()
+        public CharacterResearchPointsList()
         {
             InitializeComponent();
 
