@@ -104,7 +104,7 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    TForm uniqueWindow = (TForm)s_uniqueWindow;
+                    TForm uniqueWindow = s_uniqueWindow as TForm;
 
                     // Does it already exist ?
                     if (uniqueWindow != null && !uniqueWindow.IsDisposed)
@@ -316,11 +316,11 @@ namespace EVEMon.Common
                     {
                         try
                         {
-                            if (existingWindow.Tag == otag)
-                            {
-                                formToRemove = existingWindow;
-                                break;
-                            }
+                            if (existingWindow.Tag != otag)
+                                continue;
+
+                            formToRemove = existingWindow;
+                            break;
                         }
                             // Catch exception when the window was disposed - we will remove it also by the way
                         catch (ObjectDisposedException ex)
