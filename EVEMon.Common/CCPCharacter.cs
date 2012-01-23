@@ -412,12 +412,12 @@ namespace EVEMon.Common
         private void NotifyEndedOrders()
         {
             // Notify ended orders issued by the character
-            if (m_endedOrdersForCharacter.Count != 0)
+            if (m_endedOrdersForCharacter.Any())
                 EveMonClient.Notifications.NotifyCharacterMarkerOrdersEnded(this, m_endedOrdersForCharacter);
 
             // Uncomment upon implementing an exclusive corporation monitor
             // Notify ended orders issued for the corporation
-            //if (m_endedOrdersForCorporation.Count != 0)
+            //if (m_endedOrdersForCorporation.Any())
                 //EveMonClient.Notifications.NotifyCorporationMarketOrdersEnded(Corporation, m_endedOrdersForCorporation);
         }
 
