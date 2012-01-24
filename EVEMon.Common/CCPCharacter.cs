@@ -37,12 +37,13 @@ namespace EVEMon.Common
             Standings = new StandingCollection(this);
             CharacterMarketOrders = new MarketOrderCollection(this);
             CorporationMarketOrders = new MarketOrderCollection(this);
+            CharacterContracts = new ContractCollection(this);
             CharacterIndustryJobs = new IndustryJobCollection(this);
             CorporationIndustryJobs = new IndustryJobCollection(this);
             ResearchPoints = new ResearchPointCollection(this);
-            EVEMailMessages = new EveMailMessagesCollection(this);
-            EVEMailingLists = new EveMailingListsCollection(this);
-            EVENotifications = new EveNotificationsCollection(this);
+            EVEMailMessages = new EveMailMessageCollection(this);
+            EVEMailingLists = new EveMailingListCollection(this);
+            EVENotifications = new EveNotificationCollection(this);
 
             m_characterDataQuerying = new CharacterDataQuerying(this);
             m_corporationDataQuerying = new CorporationDataQuerying(this);
@@ -133,6 +134,12 @@ namespace EVEMon.Common
         public MarketOrderCollection CorporationMarketOrders { get; private set; }
 
         /// <summary>
+        /// Gets or sets the character market contracts.
+        /// </summary>
+        /// <value>The character contracts.</value>
+        public ContractCollection CharacterContracts { get; private set; }
+
+        /// <summary>
         /// Gets the collection of industry jobs.
         /// </summary>
         public IEnumerable<IndustryJob> IndustryJobs
@@ -160,17 +167,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public EveMailMessagesCollection EVEMailMessages { get; private set; }
+        public EveMailMessageCollection EVEMailMessages { get; private set; }
 
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public EveMailingListsCollection EVEMailingLists { get; private set; }
+        public EveMailingListCollection EVEMailingLists { get; private set; }
 
         /// <summary>
         /// Gets the collection of EVE notifications.
         /// </summary>
-        public EveNotificationsCollection EVENotifications { get; private set; }
+        public EveNotificationCollection EVENotifications { get; private set; }
 
         /// <summary>
         /// Gets the query monitors enumeration.
@@ -297,7 +304,10 @@ namespace EVEMon.Common
             // Last API updates
             foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
             {
-                Enum method = APIMethods.Methods.First(x => x.ToString() == lastUpdate.Method);
+                Enum method = APIMethods.Methods.FirstOrDefault(apiMethod => apiMethod.ToString() == lastUpdate.Method);
+                if (method == null)
+                    continue;
+
                 IQueryMonitorEx monitor = QueryMonitors[method.ToString()] as IQueryMonitorEx;
                 if (monitor != null)
                     monitor.Reset(lastUpdate.Time);

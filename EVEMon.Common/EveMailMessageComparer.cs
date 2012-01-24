@@ -8,17 +8,17 @@ namespace EVEMon.Common
     /// <summary>
     /// Performs a comparison between two <see cref="EveMailMessage"/> types.
     /// </summary>
-    public sealed class EveMailMessagesComparer : Comparer<EveMailMessage>
+    public sealed class EveMailMessageComparer : Comparer<EveMailMessage>
     {
         private readonly EveMailMessagesColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EveMailMessagesComparer"/> class.
+        /// Initializes a new instance of the <see cref="EveMailMessageComparer"/> class.
         /// </summary>
         /// <param name="column">The industry job column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public EveMailMessagesComparer(EveMailMessagesColumn column, bool isAscending)
+        public EveMailMessageComparer(EveMailMessagesColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;

@@ -440,7 +440,7 @@ namespace EVEMon
         private void UpdateSort()
         {
             lvNotifications.ListViewItemSorter = new ListViewItemComparerByTag<EveNotification>(
-                new EveNotificationsComparer(m_sortCriteria, m_sortAscending));
+                new EveNotificationComparer(m_sortCriteria, m_sortAscending));
 
             UpdateSortVisualFeedback();
         }

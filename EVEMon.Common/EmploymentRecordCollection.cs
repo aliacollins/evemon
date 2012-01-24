@@ -5,14 +5,14 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public class EmploymentHistoryCollection : ReadonlyCollection<EmploymentRecord>
+    public class EmploymentRecordCollection : ReadonlyCollection<EmploymentRecord>
     {
         private readonly Character m_character;
 
 
         #region Constructor
 
-        public EmploymentHistoryCollection(Character character)
+        public EmploymentRecordCollection(Character character)
         {
             m_character = character;
         }

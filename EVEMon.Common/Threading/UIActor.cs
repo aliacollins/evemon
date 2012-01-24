@@ -51,19 +51,16 @@ namespace EVEMon.Common.Threading
             try
             {
                 m_applicationForm.Invoke(action);
-                return;
             }
             catch (ObjectDisposedException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return;
             }
             catch (AccessViolationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return;
             }
         }
 
@@ -79,19 +76,16 @@ namespace EVEMon.Common.Threading
             try
             {
                 m_applicationForm.BeginInvoke(action);
-                return;
             }
             catch (ObjectDisposedException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return;
             }
             catch (AccessViolationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return;
             }
         }
 
@@ -139,13 +133,11 @@ namespace EVEMon.Common.Threading
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return;
             }
             catch (AccessViolationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 Interlocked.Increment(ref m_shutdown);
-                return;
             }
         }
 

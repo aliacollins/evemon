@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class EveNotificationsCollection : ReadonlyCollection<EveNotification>
+    public sealed class EveNotificationCollection : ReadonlyCollection<EveNotification>
     {
         private readonly CCPCharacter m_ccpCharacter;
 
@@ -16,7 +16,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal EveNotificationsCollection(CCPCharacter ccpCharacter)
+        internal EveNotificationCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
         }

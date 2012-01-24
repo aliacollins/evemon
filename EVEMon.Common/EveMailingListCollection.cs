@@ -4,7 +4,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class EveMailingListsCollection : ReadonlyCollection<EveMailingList>
+    public sealed class EveMailingListCollection : ReadonlyCollection<EveMailingList>
     {
         private readonly CCPCharacter m_ccpCharacter;
 
@@ -12,7 +12,7 @@ namespace EVEMon.Common
         /// Internal constructor.
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
-        public EveMailingListsCollection(CCPCharacter ccpCharacter)
+        public EveMailingListCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
         }

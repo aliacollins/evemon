@@ -37,7 +37,7 @@ namespace EVEMon.Common
             ID = src.OrderID;
             m_itemID = src.ItemID;
             Item = StaticItems.GetItemByID(src.ItemID);
-            Station = GetStationByID(src.StationID);
+            Station = Station.GetByID(src.StationID);
             UnitaryPrice = src.UnitaryPrice;
             InitialVolume = src.InitialVolume;
             RemainingVolume = src.RemainingVolume;
@@ -62,7 +62,7 @@ namespace EVEMon.Common
             m_state = src.State;
             m_itemID = GetItemID(src);
             Item = GetItem(src);
-            Station = GetStationByID(src.StationID);
+            Station = Station.GetByID(src.StationID);
             UnitaryPrice = src.UnitaryPrice;
             InitialVolume = src.InitialVolume;
             RemainingVolume = src.RemainingVolume;
@@ -319,29 +319,6 @@ namespace EVEMon.Common
         {
             // Try get item by its ID, if we fail try get it by its name
             return StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
-        }
-
-        /// <summary>
-        /// Gets the station of an order.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private static Station GetStationByID(int id)
-        {
-            // Look for the station in datafile, if we fail then it may be a conquerable outpost station
-            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
-
-            // We failed again ? It's not in any data we can access
-            // We set it to a fixed one and notify about it in the trace file
-            if (station == null)
-            {
-                station = StaticGeography.GetStationByID(60013747);
-                EveMonClient.Trace("Could not find station id {0}", id);
-                if (station != null)
-                    EveMonClient.Trace("Setting to {0}", station.Name);
-            }
-
-            return station;
         }
 
         /// <summary>

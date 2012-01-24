@@ -7,17 +7,17 @@ namespace EVEMon.Common
     /// <summary>
     /// Performs a comparison between two <see cref="EveNotification"/> types.
     /// </summary>
-    public sealed class EveNotificationsComparer : Comparer<EveNotification>
+    public sealed class EveNotificationComparer : Comparer<EveNotification>
     {
         private readonly EveNotificationsColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EveNotificationsComparer"/> class.
+        /// Initializes a new instance of the <see cref="EveNotificationComparer"/> class.
         /// </summary>
         /// <param name="column">The industry job column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public EveNotificationsComparer(EveNotificationsColumn column, bool isAscending)
+        public EveNotificationComparer(EveNotificationsColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;

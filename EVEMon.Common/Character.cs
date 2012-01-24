@@ -52,7 +52,7 @@ namespace EVEMon.Common
             SkillGroups = new SkillGroupCollection(this);
             Skills = new SkillCollection(this);
 
-            EmploymentHistory = new EmploymentHistoryCollection(this);
+            EmploymentHistory = new EmploymentRecordCollection(this);
             CertificateCategories = new CertificateCategoryCollection(this);
             CertificateClasses = new CertificateClassCollection(this);
             Certificates = new CertificateCollection(this);
@@ -231,7 +231,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the character's  employment history.
         /// </summary>
-        public EmploymentHistoryCollection EmploymentHistory { get; set; }
+        public EmploymentRecordCollection EmploymentHistory { get; set; }
 
         #endregion
 

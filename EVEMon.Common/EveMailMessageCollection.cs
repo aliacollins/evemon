@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class EveMailMessagesCollection : ReadonlyCollection<EveMailMessage>
+    public sealed class EveMailMessageCollection : ReadonlyCollection<EveMailMessage>
     {
         private readonly CCPCharacter m_ccpCharacter;
         private long m_highestID;
@@ -17,7 +17,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal EveMailMessagesCollection(CCPCharacter ccpCharacter)
+        internal EveMailMessageCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
         }

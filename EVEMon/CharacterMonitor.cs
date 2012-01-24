@@ -486,8 +486,10 @@ namespace EVEMon
             foreach (ToolStripButton button in m_advancedFeatures)
             {
                 List<IQueryMonitor> monitors = ButtonToMonitors(button).ToList();
+
                 if (monitors.IsEmpty())
                     continue;
+
                 foreach (IQueryMonitor monitor in monitors)
                 {
                     monitor.Enabled = IsEnabledFeature(button.Text);

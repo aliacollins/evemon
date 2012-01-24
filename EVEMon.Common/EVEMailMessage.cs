@@ -285,11 +285,11 @@ namespace EVEMon.Common
             }
 
             // Quit if for any reason there is no text
-            if (result.Result.Bodies.Count == 0)
+            if (!result.Result.Bodies.Any())
                 return;
 
             // Import the data
-            EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
+            EVEMailBody = new EveMailBody(result.Result.Bodies.First());
 
             EveMonClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
         }

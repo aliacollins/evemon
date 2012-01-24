@@ -482,7 +482,7 @@ namespace EVEMon
         private void UpdateSort()
         {
             lvMailMessages.ListViewItemSorter = new ListViewItemComparerByTag<EveMailMessage>(
-                new EveMailMessagesComparer(m_sortCriteria, m_sortAscending));
+                new EveMailMessageComparer(m_sortCriteria, m_sortAscending));
 
             UpdateSortVisualFeedback();
         }
