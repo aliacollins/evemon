@@ -17,6 +17,7 @@ namespace EVEMon.SkillPlanner
         private Func<Item, Boolean> m_metaGroupPredicate = x => true;
         private Func<Item, Boolean> m_fittingPredicate = x => true;
 
+        private bool m_init;
 
         #region Initialization
 
@@ -94,6 +95,9 @@ namespace EVEMon.SkillPlanner
                         throw new NotImplementedException();
                 }
 
+                // Subscribe the 'ItemCheck' event
+                ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
+
                 // Metagroups combo
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
@@ -115,8 +119,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            // We subscribe the 'ItemCheck' here to avoid event triggering while initializing
-            ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
+            m_init = true;
         }
 
         #endregion
@@ -207,12 +210,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void ccbGroupFilter_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // Update the settings
-            Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.None;
-            for (int i = 0; i < m_metaGroups.Count; i++)
+            if (m_init)
             {
-                if (ccbGroupFilter.GetItemChecked(i))
-                    Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
+                // Update the settings
+                Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.None;
+                for (int i = 0; i < m_metaGroups.Count; i++)
+                {
+                    if (ccbGroupFilter.GetItemChecked(i))
+                        Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
+                }
             }
 
             // Update the predicate
