@@ -518,6 +518,7 @@ namespace EVEMon.Common.Data
 
         #region Icon IDs
 
+        public const int UnknownIconID = 0; 
         public const int UnknownShipIconID = 1443;
         public const int UnknownBlueprintBackdropIconID = 2703;
 
