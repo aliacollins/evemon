@@ -9,7 +9,6 @@
         <EntityContainer Name="EveStaticDataModelStoreContainer">
           <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.Store.agtConfig" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables" Schema="dbo" />
@@ -81,7 +80,6 @@
           <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="translationLaguages" EntityType="EveStaticDataModel.Store.translationLaguages" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="translationTables" EntityType="EveStaticDataModel.Store.translationTables" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="trnTranslationLanguages" EntityType="EveStaticDataModel.Store.trnTranslationLanguages" store:Type="Tables" Schema="dbo" />
@@ -108,15 +106,6 @@
           </Key>
           <Property Name="agentTypeID" Type="int" Nullable="false" />
           <Property Name="agentType" Type="varchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="agtConfig">
-          <Key>
-            <PropertyRef Name="agentID" />
-            <PropertyRef Name="k" />
-          </Key>
-          <Property Name="agentID" Type="int" Nullable="false" />
-          <Property Name="k" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="v" Type="varchar" MaxLength="4000" />
         </EntityType>
         <EntityType Name="agtResearchAgents">
           <Key>
@@ -722,7 +711,7 @@
             <PropertyRef Name="locationID" />
           </Key>
           <Property Name="locationID" Type="int" Nullable="false" />
-          <Property Name="sceneID" Type="tinyint" />
+          <Property Name="graphicID" Type="int" />
         </EntityType>
         <EntityType Name="mapLocationWormholeClasses">
           <Key>
@@ -1017,14 +1006,6 @@
           <Property Name="reprocessingEfficiency" Type="float" />
           <Property Name="conquerable" Type="bit" />
         </EntityType>
-        <EntityType Name="translationLaguages">
-          <Key>
-            <PropertyRef Name="numericLanguageID" />
-          </Key>
-          <Property Name="numericLanguageID" Type="int" Nullable="false" />
-          <Property Name="languageID" Type="varchar" MaxLength="50" />
-          <Property Name="languageName" Type="nvarchar" MaxLength="200" />
-        </EntityType>
         <EntityType Name="translationTables">
           <Key>
             <PropertyRef Name="sourceTable" />
@@ -1089,7 +1070,6 @@
         <EntityContainer Name="EveStaticDataEntities">
           <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.agtAgentTypes" />
           <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.agtAgents" />
-          <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.agtConfig" />
           <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.agtResearchAgents" />
           <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.chrAncestries" />
           <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.chrAttributes" />
@@ -1167,7 +1147,6 @@
           <EntitySet Name="invNames" EntityType="EveStaticDataModel.invNames" />
           <EntitySet Name="invPositions" EntityType="EveStaticDataModel.invPositions" />
           <EntitySet Name="invUniqueNames" EntityType="EveStaticDataModel.invUniqueNames" />
-          <EntitySet Name="translationLaguages" EntityType="EveStaticDataModel.translationLaguages" />
           <EntitySet Name="translationTables" EntityType="EveStaticDataModel.translationTables" />
           <EntitySet Name="trnTranslationLanguages" EntityType="EveStaticDataModel.trnTranslationLanguages" />
           <EntitySet Name="warCombatZones" EntityType="EveStaticDataModel.warCombatZones" />
@@ -1192,15 +1171,6 @@
           <Property Name="quality" Type="Int16" />
           <Property Name="agentTypeID" Type="Byte" />
           <Property Type="Boolean" Name="isLocator" />
-        </EntityType>
-        <EntityType Name="agtConfig">
-          <Key>
-            <PropertyRef Name="agentID" />
-            <PropertyRef Name="k" />
-          </Key>
-          <Property Name="agentID" Type="Int32" Nullable="false" />
-          <Property Name="k" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="v" Type="String" MaxLength="4000" Unicode="false" FixedLength="false" />
         </EntityType>
         <EntityType Name="agtResearchAgents">
           <Key>
@@ -1746,7 +1716,7 @@
             <PropertyRef Name="locationID" />
           </Key>
           <Property Name="locationID" Type="Int32" Nullable="false" />
-          <Property Name="sceneID" Type="Byte" />
+          <Property Type="Int32" Name="graphicID" />
         </EntityType>
         <EntityType Name="mapLocationWormholeClasses">
           <Key>
@@ -2125,14 +2095,6 @@
           <Property Type="String" Name="itemName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="groupID" />
         </EntityType>
-        <EntityType Name="translationLaguages">
-          <Key>
-            <PropertyRef Name="numericLanguageID" />
-          </Key>
-          <Property Type="Int32" Name="numericLanguageID" Nullable="false" />
-          <Property Type="String" Name="languageID" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="languageName" MaxLength="200" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="translationTables">
           <Key>
             <PropertyRef Name="sourceTable" />
@@ -2195,15 +2157,6 @@
                 <ScalarProperty Name="level" ColumnName="level" />
                 <ScalarProperty Name="quality" ColumnName="quality" />
                 <ScalarProperty Name="agentTypeID" ColumnName="agentTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="agtConfig">
-            <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.agtConfig)">
-              <MappingFragment StoreEntitySet="agtConfig">
-                <ScalarProperty Name="agentID" ColumnName="agentID" />
-                <ScalarProperty Name="k" ColumnName="k" />
-                <ScalarProperty Name="v" ColumnName="v" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2779,8 +2732,8 @@
           <EntitySetMapping Name="mapLocationScenes">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.mapLocationScenes)">
               <MappingFragment StoreEntitySet="mapLocationScenes">
+                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="locationID" ColumnName="locationID" />
-                <ScalarProperty Name="sceneID" ColumnName="sceneID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3175,15 +3128,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="translationLaguages">
-            <EntityTypeMapping TypeName="EveStaticDataModel.translationLaguages">
-              <MappingFragment StoreEntitySet="translationLaguages">
-                <ScalarProperty Name="languageName" ColumnName="languageName" />
-                <ScalarProperty Name="languageID" ColumnName="languageID" />
-                <ScalarProperty Name="numericLanguageID" ColumnName="numericLanguageID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="translationTables">
             <EntityTypeMapping TypeName="EveStaticDataModel.translationTables">
               <MappingFragment StoreEntitySet="translationTables">
@@ -3248,8 +3192,6 @@
                          Height="1.4033821614583331" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgents" Width="1.5" PointX="2.75" PointY="0.75"
                          Height="2.3648893229166665" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.agtConfig" Width="1.5" PointX="4.75" PointY="0.75"
-                         Height="1.5956835937499998" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtResearchAgents" Width="1.5" PointX="0.75" PointY="4.75"
                          Height="1.4033821614583335" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.chrAncestries" Width="1.5" PointX="2.75" PointY="4.75"
@@ -3335,7 +3277,7 @@
         <EntityTypeShape EntityType="EveStaticDataModel.mapLandmarks" Width="1.5" PointX="0.75" PointY="18.75"
                          Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapLocationScenes" Width="1.5" PointX="18.75" PointY="3.75"
-                         Height="1.4033821614583335" IsExpanded="true" />
+                         Height="1.4033821614583326" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapLocationWormholeClasses" Width="1.5" PointX="18.75"
                          PointY="6.75" Height="1.4033821614583326" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapRegionJumps" Width="1.5" PointX="18.75" PointY="9.75"
@@ -3392,8 +3334,7 @@
                          Height="2.1725878906249818" />
         <EntityTypeShape EntityType="EveStaticDataModel.invNames" Width="1.5" PointX="4.75" PointY="12.75" Height="1.4033821614583246" />
         <EntityTypeShape EntityType="EveStaticDataModel.invPositions" Width="1.5" PointX="4.75" PointY="10.125" Height="2.3648893229166674" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invUniqueNames" Width="1.5" PointX="0.5" PointY="14.875" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="EveStaticDataModel.translationLaguages" Width="1.5" PointX="7.375" PointY="24.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invUniqueNames" Width="1.5" PointX="0.625" PointY="11.875" Height="1.5956835937499818" />
         <EntityTypeShape EntityType="EveStaticDataModel.translationTables" Width="1.5" PointX="25.375" PointY="0.75" Height="1.9802864583333246" />
         <EntityTypeShape EntityType="EveStaticDataModel.trnTranslationLanguages" Width="1.5" PointX="25.375" PointY="3.75" Height="1.5956835937499818" />
         <EntityTypeShape EntityType="EveStaticDataModel.warCombatZones" Width="1.5" PointX="25.375" PointY="6.75" Height="1.9802864583333246" />

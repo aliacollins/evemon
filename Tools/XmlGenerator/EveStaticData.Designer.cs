@@ -97,22 +97,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<agtConfig> agtConfig
-        {
-            get
-            {
-                if ((_agtConfig == null))
-                {
-                    _agtConfig = base.CreateObjectSet<agtConfig>("agtConfig");
-                }
-                return _agtConfig;
-            }
-        }
-        private ObjectSet<agtConfig> _agtConfig;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<agtResearchAgents> agtResearchAgents
         {
             get
@@ -1281,22 +1265,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<translationLaguages> translationLaguages
-        {
-            get
-            {
-                if ((_translationLaguages == null))
-                {
-                    _translationLaguages = base.CreateObjectSet<translationLaguages>("translationLaguages");
-                }
-                return _translationLaguages;
-            }
-        }
-        private ObjectSet<translationLaguages> _translationLaguages;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<translationTables> translationTables
         {
             get
@@ -1375,14 +1343,6 @@ namespace EVEMon.XmlGenerator
         public void AddToagtAgents(agtAgents agtAgents)
         {
             base.AddObject("agtAgents", agtAgents);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the agtConfig EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToagtConfig(agtConfig agtConfig)
-        {
-            base.AddObject("agtConfig", agtConfig);
         }
     
         /// <summary>
@@ -1970,14 +1930,6 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the translationLaguages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTotranslationLaguages(translationLaguages translationLaguages)
-        {
-            base.AddObject("translationLaguages", translationLaguages);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the translationTables EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTotranslationTables(translationTables translationTables)
@@ -2314,114 +2266,6 @@ namespace EVEMon.XmlGenerator
         private global::System.String _agentType;
         partial void OnagentTypeChanging(global::System.String value);
         partial void OnagentTypeChanged();
-
-        #endregion
-    
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="agtConfig")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class agtConfig : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new agtConfig object.
-        /// </summary>
-        /// <param name="agentID">Initial value of the agentID property.</param>
-        /// <param name="k">Initial value of the k property.</param>
-        public static agtConfig CreateagtConfig(global::System.Int32 agentID, global::System.String k)
-        {
-            agtConfig agtConfig = new agtConfig();
-            agtConfig.agentID = agentID;
-            agtConfig.k = k;
-            return agtConfig;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 agentID
-        {
-            get
-            {
-                return _agentID;
-            }
-            set
-            {
-                if (_agentID != value)
-                {
-                    OnagentIDChanging(value);
-                    ReportPropertyChanging("agentID");
-                    _agentID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("agentID");
-                    OnagentIDChanged();
-                }
-            }
-        }
-        private global::System.Int32 _agentID;
-        partial void OnagentIDChanging(global::System.Int32 value);
-        partial void OnagentIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String k
-        {
-            get
-            {
-                return _k;
-            }
-            set
-            {
-                if (_k != value)
-                {
-                    OnkChanging(value);
-                    ReportPropertyChanging("k");
-                    _k = StructuralObject.SetValidValue(value, false);
-                    ReportPropertyChanged("k");
-                    OnkChanged();
-                }
-            }
-        }
-        private global::System.String _k;
-        partial void OnkChanging(global::System.String value);
-        partial void OnkChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String v
-        {
-            get
-            {
-                return _v;
-            }
-            set
-            {
-                OnvChanging(value);
-                ReportPropertyChanging("v");
-                _v = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("v");
-                OnvChanged();
-            }
-        }
-        private global::System.String _v;
-        partial void OnvChanging(global::System.String value);
-        partial void OnvChanged();
 
         #endregion
     
@@ -12395,24 +12239,24 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Byte> sceneID
+        public Nullable<global::System.Int32> graphicID
         {
             get
             {
-                return _sceneID;
+                return _graphicID;
             }
             set
             {
-                OnsceneIDChanging(value);
-                ReportPropertyChanging("sceneID");
-                _sceneID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("sceneID");
-                OnsceneIDChanged();
+                OngraphicIDChanging(value);
+                ReportPropertyChanging("graphicID");
+                _graphicID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("graphicID");
+                OngraphicIDChanged();
             }
         }
-        private Nullable<global::System.Byte> _sceneID;
-        partial void OnsceneIDChanging(Nullable<global::System.Byte> value);
-        partial void OnsceneIDChanged();
+        private Nullable<global::System.Int32> _graphicID;
+        partial void OngraphicIDChanging(Nullable<global::System.Int32> value);
+        partial void OngraphicIDChanged();
 
         #endregion
     
@@ -17278,109 +17122,6 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Boolean> _conquerable;
         partial void OnconquerableChanging(Nullable<global::System.Boolean> value);
         partial void OnconquerableChanged();
-
-        #endregion
-    
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="translationLaguages")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class translationLaguages : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new translationLaguages object.
-        /// </summary>
-        /// <param name="numericLanguageID">Initial value of the numericLanguageID property.</param>
-        public static translationLaguages CreatetranslationLaguages(global::System.Int32 numericLanguageID)
-        {
-            translationLaguages translationLaguages = new translationLaguages();
-            translationLaguages.numericLanguageID = numericLanguageID;
-            return translationLaguages;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 numericLanguageID
-        {
-            get
-            {
-                return _numericLanguageID;
-            }
-            set
-            {
-                if (_numericLanguageID != value)
-                {
-                    OnnumericLanguageIDChanging(value);
-                    ReportPropertyChanging("numericLanguageID");
-                    _numericLanguageID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("numericLanguageID");
-                    OnnumericLanguageIDChanged();
-                }
-            }
-        }
-        private global::System.Int32 _numericLanguageID;
-        partial void OnnumericLanguageIDChanging(global::System.Int32 value);
-        partial void OnnumericLanguageIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String languageID
-        {
-            get
-            {
-                return _languageID;
-            }
-            set
-            {
-                OnlanguageIDChanging(value);
-                ReportPropertyChanging("languageID");
-                _languageID = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("languageID");
-                OnlanguageIDChanged();
-            }
-        }
-        private global::System.String _languageID;
-        partial void OnlanguageIDChanging(global::System.String value);
-        partial void OnlanguageIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String languageName
-        {
-            get
-            {
-                return _languageName;
-            }
-            set
-            {
-                OnlanguageNameChanging(value);
-                ReportPropertyChanging("languageName");
-                _languageName = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("languageName");
-                OnlanguageNameChanged();
-            }
-        }
-        private global::System.String _languageName;
-        partial void OnlanguageNameChanging(global::System.String value);
-        partial void OnlanguageNameChanged();
 
         #endregion
     
