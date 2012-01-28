@@ -35,50 +35,50 @@
       <name>eve-blueprints-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>a78f3f6a892fdc736b1f68691c4986f2</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) blueprints data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>8b1c3b46966fd62212a7093d6288cf19</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) certificates data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>903cc7207361c53103695a8bf61b8825</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) geography data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>3cc1f9744bfe088f0efe43fa84bb26d8</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) items data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>3b61ca8fa41bc1cfba832f910086cfb1</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) properties data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>a25e7b170c1ec2b799de37b516b22a19</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) reprocessing data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
       <date>27 January 2012</date>
       <md5>98d27698b66f714f32fb7fa9b0f331b4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/337741b</url>
-      <message><![CDATA[Crucible 1.1 (337741b) skills data file by the EVEMon Development Team]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/334471b</url>
+      <message><![CDATA[Crucible 1.1 (334471b) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
