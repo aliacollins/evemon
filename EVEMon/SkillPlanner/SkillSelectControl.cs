@@ -608,7 +608,7 @@ namespace EVEMon.SkillPlanner
 
                 // Reset if the node doesn't exist anymore
                 if (selectedItem == null)
-                    SelectedSkill = null;
+                    tvItems.SelectNodeWithTag(null);
 
                 // Auto adjust column widths
                 chSortKey.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
