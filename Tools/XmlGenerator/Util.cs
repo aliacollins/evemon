@@ -232,6 +232,9 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         internal static void ResetCounters()
         {
+            if (Debugger.IsAttached)
+                Console.WriteLine(s_counter);
+            
             s_counter = 0;
             s_percentOld = 0;
             s_text = String.Empty;

@@ -119,10 +119,10 @@ namespace EVEMon.XmlGenerator
         internal static Bag<InvBlueprintTypes> InvBlueprintTypesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the inv market group table.
+        /// Gets or sets the inv categories table.
         /// </summary>
-        /// <value>The inv market group table.</value>
-        internal static Bag<InvMarketGroup> InvMarketGroupTable { get; private set; }
+        /// <value>The inv categories table.</value>
+        internal static Bag<InvCategories> InvCategoriesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv group table.
@@ -131,16 +131,22 @@ namespace EVEMon.XmlGenerator
         internal static Bag<InvGroup> InvGroupTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the inv type table.
+        /// Gets or sets the inv market group table.
         /// </summary>
-        /// <value>The inv type table.</value>
-        internal static Bag<InvType> InvTypeTable { get; private set; }
+        /// <value>The inv market group table.</value>
+        internal static Bag<InvMarketGroup> InvMarketGroupTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv meta type table.
         /// </summary>
         /// <value>The inv meta type table.</value>
         internal static RelationSet<InvMetaType> InvMetaTypeTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the inv type table.
+        /// </summary>
+        /// <value>The inv type table.</value>
+        internal static Bag<InvType> InvTypeTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv type materials table.
@@ -196,7 +202,7 @@ namespace EVEMon.XmlGenerator
         /// <value>The total tables count.</value>
         internal static int TotalTablesCount
         {
-            get { return 28; }
+            get { return 29; }
         }
 
         #endregion
@@ -318,6 +324,8 @@ namespace EVEMon.XmlGenerator
             DgmTypeEffectsTable = TypeEffects();
             Util.UpdateProgress();
             InvBlueprintTypesTable = BlueprintTypes();
+            Util.UpdateProgress();
+            InvCategoriesTable = Categories();
             Util.UpdateProgress();
             InvGroupTable = Groups();
             Util.UpdateProgress();
@@ -795,6 +803,35 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Inventory Item Categories.
+        /// </summary>
+        /// <returns><c>Bag</c> of Inventory Categories.</returns>
+        private static Bag<InvCategories> Categories()
+        {
+            IndexedCollection<InvCategories> collection = new IndexedCollection<InvCategories>();
+
+            foreach (invCategories category in Context.invCategories)
+            {
+                InvCategories item = new InvCategories
+                {
+                    ID = category.categoryID,
+                    Name = category.categoryName,
+                    Description = category.description
+                };
+
+                if (category.iconID.HasValue)
+                    item.IconID = category.iconID.Value;
+
+                if (category.published.HasValue)
+                    item.Published = category.published.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return new Bag<InvCategories>(collection);
+        }
+
+        /// <summary>
         /// Inventory Item Groups.
         /// </summary>
         /// <returns><c>Bag</c> of Inventory Groups.</returns>
@@ -807,7 +844,7 @@ namespace EVEMon.XmlGenerator
                 InvGroup item = new InvGroup
                                     {
                                         ID = group.groupID,
-                                        Name = group.groupName,
+                                        Name = group.groupName
                                     };
 
                 if (group.published.HasValue)

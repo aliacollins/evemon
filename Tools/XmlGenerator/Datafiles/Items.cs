@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Items
     {
-        private const int ItemGenTotal = 11462;
+        private const int ItemGenTotal = 11466;
 
         private static DateTime s_startTime;
         private static List<InvMarketGroup> s_injectedMarketGroups;
@@ -213,6 +213,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                                          };
 
             // Manually set some items attributes
+            Database.InvTypeTable[DBConstants.CivilianGatlingPulseLaserID].Published = true;
+            Database.InvTypeTable[DBConstants.CivilianGatlingAutocannonID].Published = true;
+            Database.InvTypeTable[DBConstants.CivilianGatlingRailgunID].Published = true;
+            Database.InvTypeTable[DBConstants.CivilianLightElectronBlasterID].Published = true;
             Database.InvTypeTable[DBConstants.TemperatePlanetID].Published = true;
             Database.InvTypeTable[DBConstants.IcePlanetID].Published = true;
             Database.InvTypeTable[DBConstants.GasPlanetID].Published = true;
@@ -307,6 +311,8 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             srcItem.Generated = true;
 
+            InvGroup itemGroup = Database.InvGroupTable[srcItem.GroupID];
+
             // Creates the item with base informations
             SerializableItem item = new SerializableItem
                                         {
@@ -318,9 +324,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                      ? Database.EveIconsTable[srcItem.IconID.Value].Icon
                                                      : String.Empty),
                                             PortionSize = srcItem.PortionSize,
-                                            MetaGroup = ItemMetaGroup.None
+                                            MetaGroup = ItemMetaGroup.None,
+                                            Group = itemGroup.Name,
+                                            Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name
                                         };
-
 
             // Add the properties and prereqs
             IEnumerable<SerializablePropertyValue> props = AddItemPropsAndPrereq(srcItem, item);
@@ -450,7 +457,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Is it a prereq skill ?
                 int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (prereqIndex >= 0)
+                if (prereqIndex > -1)
                 {
                     prereqSkills[prereqIndex] = propIntValue;
                     continue;
@@ -458,7 +465,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Is it a prereq level ?
                 prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (prereqIndex >= 0)
+                if (prereqIndex > -1)
                 {
                     prereqLevels[prereqIndex] = propIntValue;
                     continue;
@@ -466,7 +473,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Launcher group ?
                 int launcherIndex = DBConstants.LauncherGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (launcherIndex >= 0)
+                if (launcherIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {
@@ -478,7 +485,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Charge group ?
                 int chargeIndex = DBConstants.ChargeGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (chargeIndex >= 0)
+                if (chargeIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {
@@ -490,7 +497,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // CanFitShip group ?
                 int canFitShipIndex = DBConstants.CanFitShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (canFitShipIndex >= 0)
+                if (canFitShipIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {
@@ -502,7 +509,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // ModuleShip group ?
                 int moduleShipIndex = DBConstants.ModuleShipGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (moduleShipIndex >= 0)
+                if (moduleShipIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {
@@ -514,7 +521,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // SpecialisationAsteroid group ?
                 int specialisationAsteroidIndex = DBConstants.SpecialisationAsteroidGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (specialisationAsteroidIndex >= 0)
+                if (specialisationAsteroidIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {
@@ -526,7 +533,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Reaction group ?
                 int reactionIndex = DBConstants.ReactionGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (reactionIndex >= 0)
+                if (reactionIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {
@@ -538,7 +545,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // PosCargobayAccept group ?
                 int posCargobayAcceptIndex = DBConstants.PosCargobayAcceptGroupPropertyIDs.IndexOf(srcProp.AttributeID);
-                if (posCargobayAcceptIndex >= 0)
+                if (posCargobayAcceptIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
                                   {

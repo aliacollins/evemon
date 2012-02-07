@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Blueprints
     {
-        private const int BlueprintGenTotal = 3846;
+        private const int BlueprintGenTotal = 4084;
 
         private static DateTime s_startTime;
         private static List<InvMarketGroup> s_injectedMarketGroups;
@@ -165,18 +165,19 @@ namespace EVEMon.XmlGenerator.Datafiles
             s_nullMarketBlueprints = new List<InvType>();
             foreach (InvType srcItem in Database.InvTypeTable.Where(
                 item => (item.MarketGroupID == null) && !item.Name.Contains("TEST") &&
-                        Database.InvBlueprintTypesTable.Any(blueprintTypes => blueprintTypes.ID == item.ID)).Select(
-                            item => new
+                        Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
+                            blueprint => new
                                         {
-                                            item,
-                                            ID = Database.InvBlueprintTypesTable[item.ID].ProductTypeID
+                                            blueprint,
+                                            productedItemID = Database.InvBlueprintTypesTable[blueprint.ID].ProductTypeID
                                         }).Where(
-                                            producedItem => Database.InvTypeTable.Any(item => item.ID == producedItem.ID) &&
-                                                            Database.InvTypeTable[producedItem.ID].Published).Select(
-                                                                producedItem => producedItem.item))
+                                            blueprint => Database.InvTypeTable.Any(item => item.ID == blueprint.productedItemID) &&
+                                                            Database.InvTypeTable[blueprint.productedItemID].Published).Select(
+                                                                item => item.blueprint))
             {
                 Util.UpdatePercentDone(BlueprintGenTotal);
 
+                srcItem.Published = true;
                 s_nullMarketBlueprints.Add(srcItem);
             }
 
