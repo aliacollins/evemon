@@ -431,11 +431,11 @@ namespace EVEMon.Common
                          ? (CCPContractStatus)Enum.Parse(typeof(CCPContractStatus), src.Status)
                          : CCPContractStatus.None;
 
-            Issuer = src.IssuerID == Character.CharacterID
-                         ? Character.Name
-                         : src.IssuerID == Character.CorporationID
-                                 ? Character.Corporation.Name
-                                 : EveIDToName.GetIDToName(src.IssuerID);
+            Issuer = src.ForCorp
+                         ? Character.Corporation.Name
+                         : src.IssuerID == Character.CharacterID
+                               ? Character.Name
+                               : EveIDToName.GetIDToName(src.IssuerID);
 
             Assignee = src.AssigneeID == Character.CharacterID
                            ? Character.Name

@@ -10,7 +10,6 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
@@ -931,5 +930,7 @@ namespace EVEMon
 
         #endregion
 
+
+        // TODO: Implement expandable panel for additional info regarding number of contracts left
     }
 }

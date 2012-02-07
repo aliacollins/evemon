@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractDetailsWindow));
             this.ButtonPanel = new System.Windows.Forms.Panel();
             this.BidsButton = new System.Windows.Forms.Button();
-            this.DetailsPanel = new System.Windows.Forms.Panel();
+            this.DetailsPanel = new Common.Controls.NoFlickerPanel();
             this.ImageList = new System.Windows.Forms.ImageList(this.components);
             this.ImageListIcons = new System.Windows.Forms.ImageList(this.components);
             this.RoutePanel = new System.Windows.Forms.Panel();
@@ -194,7 +194,7 @@
 
         private System.Windows.Forms.Panel ButtonPanel;
         private System.Windows.Forms.Button BidsButton;
-        private System.Windows.Forms.Panel DetailsPanel;
+        private Common.Controls.NoFlickerPanel DetailsPanel;
         private System.Windows.Forms.ImageList ImageList;
         private System.Windows.Forms.ImageList ImageListIcons;
         private System.Windows.Forms.Panel RoutePanel;

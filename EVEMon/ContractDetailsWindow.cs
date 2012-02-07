@@ -95,8 +95,6 @@ namespace EVEMon
                 m_lvIncludedItems = new ContractItemsListView(m_contractItems.Where(x => x.Included))
                                         { SmallImageList = ImageListIcons };
                 Controls.Add(m_lvIncludedItems);
-                m_lvIncludedItems.BringToFront();
-                m_lvIncludedItems.Size = new Size(DetailsPanel.Width - FirstIntendPosition * 2, 0);
             }
 
             // Initialize a control for the contract's incoming items
@@ -105,7 +103,6 @@ namespace EVEMon
                 m_lvNotIncludedItems = new ContractItemsListView(m_contractItems.Where(x => !x.Included))
                                            { SmallImageList = ImageListIcons };
                 Controls.Add(m_lvNotIncludedItems);
-                m_lvNotIncludedItems.BringToFront();
             }
 
             // Adjust the control's height to our needs
@@ -208,8 +205,8 @@ namespace EVEMon
                     int left = DetailsPanel.Left + FirstIntendPosition + Pad * 2;
                     ItemImage.EveItem = contractItem.Item;
                     ItemImage.Location = new Point(left, m_height);
-                    ItemImage.Visible = true;
                     ItemImage.BringToFront();
+                    ItemImage.Visible = true;
 
                     // Draw the item's name and quantity
                     m_height += Pad * 2;
@@ -266,8 +263,10 @@ namespace EVEMon
         private void DisplayListView(Control listView)
         {
             m_height += Pad;
-            ItemImage.Visible = !m_contract.IsBuyOnly && m_contractItems.Count(x => x.Included) == 1;
             listView.Location = new Point(FirstIntendPosition, m_height);
+            listView.BringToFront();
+            listView.Visible = true;
+
             int listViewHeight = m_contract.IsTrading && listView == m_lvIncludedItems
                                      ? ListViewHeight
                                      : DetailsPanel.Height - m_height - Pad * 2;
@@ -575,8 +574,8 @@ namespace EVEMon
                 if (startToEndSystemJumps != 0)
                 {
                     CurrentToStartLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
-                    CurrentToStartLinkLabel.Visible = true;
                     CurrentToStartLinkLabel.BringToFront();
+                    CurrentToStartLinkLabel.Visible = true;
                 }
 
                 DrawText(e, String.Empty, jumpsText, Font);
@@ -600,8 +599,8 @@ namespace EVEMon
                 if (startToEndSystemJumps != 0)
                 {
                     CurrentToEndLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
-                    CurrentToEndLinkLabel.Visible = true;
                     CurrentToEndLinkLabel.BringToFront();
+                    CurrentToEndLinkLabel.Visible = true;
                 }
 
                 DrawText(e, String.Empty, jumpsText, Font);
@@ -623,8 +622,8 @@ namespace EVEMon
                 if (startToEndSystemJumps != 0)
                 {
                     StartToEndLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
-                    StartToEndLinkLabel.Visible = true;
                     StartToEndLinkLabel.BringToFront();
+                    StartToEndLinkLabel.Visible = true;
                 }
 
                 DrawText(e, String.Empty, jumpsText, Font);
@@ -1085,9 +1084,6 @@ namespace EVEMon
             {
                 m_list = items;
                 m_sortCriteria = Columns[0];
-
-                UpdateContent();
-                AdjustColumns();
             }
 
             #endregion
@@ -1101,7 +1097,9 @@ namespace EVEMon
             private void InitializeComponent()
             {
                 ColumnClick += ContractItemsListView_ColumnClick;
+                Size = new Size(0, 0);
                 View = View.Details;
+                Visible = false;
                 FullRowSelect = true;
                 HideSelection = false;
                 Columns.AddRange(new[]
@@ -1115,6 +1113,21 @@ namespace EVEMon
                                              },
                                          new ColumnHeader { Text = "Type", Width = 60 }
                                      });
+            }
+
+            #endregion
+
+
+            #region Inherited Events
+
+            /// <summary>
+            /// When the control gets created, update the content.
+            /// </summary>
+            protected override void OnCreateControl()
+            {
+                base.OnCreateControl();
+                UpdateContent();
+                AdjustColumns();
             }
 
             #endregion
