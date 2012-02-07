@@ -6,8 +6,6 @@ namespace EVEMon.Common
 {
     public sealed class ContractBid
     {
-        private readonly CCPCharacter m_character;
-
         #region Constructor
 
         /// <summary>

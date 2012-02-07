@@ -215,8 +215,6 @@ namespace EVEMon
                     m_height += Pad * 2;
                     string itemText = String.Format(CultureConstants.DefaultCulture, "{0} x {1:N0}",
                                                     contractItem.Item.Name, contractItem.Quantity);
-                    string itemCategoryGroup = String.Format(CultureConstants.DefaultCulture, "{0}  /  {1}",
-                                                             contractItem.Item.CategoryName, contractItem.Item.GroupName);
                     Size itemTextSize = e.Graphics.MeasureString(itemText, m_bigBoldFont).ToSize();
                     int itemTextHeight = itemTextSize.Width < DetailsPanel.Width - SecondIntendPosition
                                              ? itemTextSize.Height
@@ -225,13 +223,21 @@ namespace EVEMon
                                           new Rectangle(left + ItemImage.Width + Pad * 2, m_height,
                                                         DetailsPanel.Width - SecondIntendPosition, itemTextHeight));
 
-                    // Draw the item's category and group
                     m_height += itemTextHeight;
                     int position = left + ItemImage.Width + Pad * 2 - DetailsPanel.Left - SecondIntendPosition;
-                    DrawText(e, String.Empty, itemCategoryGroup, m_mediumBoldFont, true, position);
+
+                    // Draw the item's category and group
+                    if (!String.IsNullOrEmpty(contractItem.Item.CategoryName) &&
+                        !String.IsNullOrEmpty(contractItem.Item.GroupName))
+                    {
+                        string itemCategoryGroup = String.Format(CultureConstants.DefaultCulture, "{0}  /  {1}",
+                                                                 contractItem.Item.CategoryName, contractItem.Item.GroupName);
+                        DrawText(e, String.Empty, itemCategoryGroup, m_mediumBoldFont, true, position);
+                    }
 
                     // Draw additional type info when item is a blueprint
-                    if (contractItem.RawQuantity < 0 && contractItem.Item.MarketGroup.BelongsIn(DBConstants.BlueprintsMarketGroupID))
+                    if (contractItem.RawQuantity < 0 &&
+                        contractItem.Item.MarketGroup.BelongsIn(DBConstants.BlueprintsMarketGroupID))
                     {
                         string itemTypeText = String.Format(CultureConstants.DefaultCulture, "BLUEPRINT {0}",
                                                             contractItem.RawQuantity == -2 ? "COPY" : "ORIGINAL");
@@ -359,8 +365,8 @@ namespace EVEMon
             DrawText(e, "Current Bid", text, Font);
 
             text = m_contract.IsAvailable
-                                      ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
-                                      : m_contract.State.ToString();
+                       ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
+                       : m_contract.State.ToString();
 
             Color color = m_contract.IsAvailable && m_contract.Expiration < DateTime.UtcNow.AddDays(1)
                               ? Color.DarkOrange
