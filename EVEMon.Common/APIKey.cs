@@ -239,7 +239,7 @@ namespace EVEMon.Common
 
             // We trigger the account status check when we have the character list of the API key
             // in order to have better API key related info in the trace file
-            m_accountStatusMonitor.Enabled = IsTypeCorporation && Type != APIKeyType.Unknown &&
+            m_accountStatusMonitor.Enabled = !IsTypeCorporation && Type != APIKeyType.Unknown &&
                                               m_characterListUpdated && Monitored;
         }
 
