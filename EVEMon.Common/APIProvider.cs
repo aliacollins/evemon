@@ -199,7 +199,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query a method with the provided arguments for a character messages.
+        /// Query a method with the provided arguments for a character messages and contracts.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="method">The method.</param>
@@ -211,8 +211,8 @@ namespace EVEMon.Common
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, long messageID,
                                         QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   NetworkConstants.PostDataWithCharIDAndIDS, id, verificationCode,
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture, GetPostDataURL(method),
+                                                                   id, verificationCode,
                                                                    characterID, messageID));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
@@ -278,9 +278,15 @@ namespace EVEMon.Common
                 url, postData, transform,
                 result =>
                     {
-                        // On failure with a custom method, fallback to CCP
+                        // On failure with a custom provider, fallback to CCP
                         if (ShouldRetryWithCCP(result))
-                            result = s_ccpProvider.QueryMethod<T>(method, postData, transform);
+                        {
+                            APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
+                                                          ? s_ccpProvider
+                                                          : s_ccpTestProvider;
+                            ccpProvider.QueryMethodAsync(method, postData, transform, callback);
+                            return;
+                        }
 
                         // If the result is a character sheet, we store the result
                         if (method is APICharacterMethods && (APICharacterMethods)method == APICharacterMethods.CharacterSheet &&
@@ -317,6 +323,18 @@ namespace EVEMon.Common
         internal static XslCompiledTransform RowsetsTransform
         {
             get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT)); }
+        }
+
+        /// <summary>
+        /// Gets the post data URL.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        private static string GetPostDataURL(Enum method)
+        {
+            return (method.GetType() == typeof(APICharacterMethods))
+                       ? NetworkConstants.PostDataWithCharIDAndIDS
+                       : NetworkConstants.PostDataWithCharIDAndContractID;
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace EVEMon
         /// Initializes a new instance of the <see cref="EveNotificationsColumnsSelectWindow"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public EveNotificationsColumnsSelectWindow(IEnumerable<EveNotificationsColumnSettings> settings)
+        public EveNotificationsColumnsSelectWindow(IEnumerable<EveNotificationColumnSettings> settings)
             : base(settings)
         {
         }
@@ -24,7 +24,7 @@ namespace EVEMon
         /// <returns></returns>
         protected override string GetHeader(int key)
         {
-            return ((EveNotificationsColumn)key).GetDescription();
+            return ((EveNotificationColumn)key).GetDescription();
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace EVEMon
         {
             get
             {
-                return EnumExtensions.GetValues<EveNotificationsColumn>().Where(
-                    x => x != EveNotificationsColumn.None).Select(x => (int)x);
+                return EnumExtensions.GetValues<EveNotificationColumn>().Where(
+                    x => x != EveNotificationColumn.None).Select(x => (int)x);
             }
         }
 
@@ -48,7 +48,7 @@ namespace EVEMon
         {
             get
             {
-                EveNotificationsSettings settings = new EveNotificationsSettings();
+                EveNotificationSettings settings = new EveNotificationSettings();
                 return settings.DefaultColumns;
             }
         }

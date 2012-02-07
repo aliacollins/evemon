@@ -111,7 +111,7 @@ namespace EVEMon.Common.Data
         /// Gets all the immediate children paths.
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<PathFinder> GetChildren(int depth, Dictionary<SolarSystem, int> bestDepthes)
+        private IEnumerable<PathFinder> GetChildren(int depth, IDictionary<SolarSystem, int> bestDepthes)
         {
             // Check this system is not already present with a lesser range.
             foreach (SolarSystem neighbor in m_system.Neighbors)

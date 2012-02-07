@@ -12,6 +12,8 @@ namespace EVEMon.Common.Serialization.Settings
         private readonly Collection<SerializableQueuedSkill> m_skillQueue;
         private readonly Collection<SerializableAPIUpdate> m_lastUpdates;
         private readonly Collection<SerializableOrderBase> m_marketOrders;
+        private readonly Collection<SerializableContract> m_contracts;
+        private readonly Collection<SerializableContractBid> m_contractBids;
         private readonly Collection<SerializableJob> m_industryJobs;
 
         public SerializableCCPCharacter()
@@ -19,6 +21,8 @@ namespace EVEMon.Common.Serialization.Settings
             m_skillQueue = new Collection<SerializableQueuedSkill>();
             m_lastUpdates = new Collection<SerializableAPIUpdate>();
             m_marketOrders = new Collection<SerializableOrderBase>();
+            m_contracts = new Collection<SerializableContract>();
+            m_contractBids = new Collection<SerializableContractBid>();
             m_industryJobs = new Collection<SerializableJob>();
         }
 
@@ -35,6 +39,20 @@ namespace EVEMon.Common.Serialization.Settings
         public Collection<SerializableOrderBase> MarketOrders
         {
             get { return m_marketOrders; }
+        }
+
+        [XmlArray("contracts")]
+        [XmlArrayItem("contract")]
+        public Collection<SerializableContract> Contracts
+        {
+            get { return m_contracts; }
+        }
+
+        [XmlArray("contractBids")]
+        [XmlArrayItem("bid")]
+        public Collection<SerializableContractBid> ContractBids
+        {
+            get { return m_contractBids; }
         }
 
         [XmlArray("industryJobs")]

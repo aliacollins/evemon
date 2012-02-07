@@ -80,6 +80,18 @@ namespace EVEMon.Common.Notifications
         MarketOrdersEnding,
 
         /// <summary>
+        /// Some contracts expired since the last time.
+        /// </summary>
+        [Header("Contracts expired/fulfilled")]
+        ContractsEnded,
+
+        /// <summary>
+        /// Some contracts are assigned to the character.
+        /// </summary>
+        [Header("Contracts assigned")]
+        ContractsAssigned,
+
+        /// <summary>
         /// An industry job has been completed.
         /// </summary>
         [Header("Industry jobs completion")]

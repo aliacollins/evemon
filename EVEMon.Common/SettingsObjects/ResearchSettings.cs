@@ -53,12 +53,12 @@ namespace EVEMon.Common.SettingsObjects
                                                       };
 
                 return EnumExtensions.GetValues<ResearchColumn>().Where(
-                    planColumn => planColumn != ResearchColumn.None).Where(
-                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
-                            planColumn => new ResearchColumnSettings
+                    column => column != ResearchColumn.None).Where(
+                        column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
+                            column => new ResearchColumnSettings
                                               {
-                                                  Column = planColumn,
-                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Column = column,
+                                                  Visible = defaultColumns.Contains(column),
                                                   Width = -2
                                               });
             }

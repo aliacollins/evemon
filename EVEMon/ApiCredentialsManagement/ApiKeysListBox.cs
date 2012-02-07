@@ -145,7 +145,7 @@ namespace EVEMon.ApiCredentialsManagement
             g.DrawImage(icon, new Rectangle(left, top + Margin.Top, icon.Width, icon.Height));
 
             // Texts drawing
-            DrawTexts(top, g, apiKey, left, fontBrush, icon);
+            DrawTexts(g, apiKey, left, top, fontBrush, icon);
 
             e.DrawFocusRectangle();
         }
@@ -159,40 +159,40 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="left">The left.</param>
         /// <param name="fontBrush">The font brush.</param>
         /// <param name="icon">The icon.</param>
-        private void DrawTexts(int top, Graphics g, APIKey apiKey, int left, Brush fontBrush, Image icon)
+        private void DrawTexts(Graphics g, APIKey apiKey, int left, int top, Brush fontBrush, Image icon)
         {
             // Draws the texts on the upper third
             left += icon.Width + Margin.Left;
             string apiKeyId = apiKey.ID.ToString(CultureConstants.DefaultCulture);
-            g.DrawString(apiKeyId, m_boldFont, fontBrush, new PointF(left, top));
-            int indentedLeft = left + (int)g.MeasureString(apiKeyId, m_boldFont).Width + Margin.Left;
+            g.DrawString(apiKeyId, m_boldFont, fontBrush, new Point(left, top + 2));
+            int indentedLeft = left + g.MeasureString(apiKeyId, m_boldFont).ToSize().Width + Margin.Left;
 
-            g.DrawString(apiKey.VerificationCode, Font, fontBrush, new PointF(indentedLeft, top));
-            indentedLeft += (int)g.MeasureString(apiKey.VerificationCode, Font).Width + Margin.Left * 4;
+            g.DrawString(apiKey.VerificationCode, Font, fontBrush, new Point(indentedLeft, top));
+            indentedLeft += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Width + Margin.Left * 4;
 
             string apiKeyExpiration = String.Format(CultureConstants.DefaultCulture, "Expires: {0}",
                                                     (apiKey.Expiration != DateTime.MinValue
                                                          ? apiKey.Expiration.ToLocalTime().ToString()
                                                          : "Never"));
-            g.DrawString(apiKeyExpiration, Font, fontBrush, new PointF(indentedLeft, top));
+            g.DrawString(apiKeyExpiration, Font, fontBrush, new Point(indentedLeft, top));
 
             // Draw the texts on the middle third
-            top = ItemHeight / 3;
+            top += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Height;
             string accountCreated = String.Format(CultureConstants.DefaultCulture, "Account Created: {0}",
                                                   (apiKey.AccountCreated != DateTime.MinValue
                                                        ? apiKey.AccountCreated.ToLocalTime().ToString()
                                                        : "-"));
-            g.DrawString(accountCreated, m_middleFont, fontBrush, new PointF(left, top));
-            indentedLeft = left + (int)g.MeasureString(accountCreated, m_middleFont).Width + Margin.Left * 4;
+            g.DrawString(accountCreated, m_middleFont, fontBrush, new Point(left, top));
+            indentedLeft = left + g.MeasureString(accountCreated, m_middleFont).ToSize().Width + Margin.Left * 4;
 
             string accountExpires = String.Format(CultureConstants.DefaultCulture, "Account Paid Until: {0}",
                                                   (apiKey.AccountExpires != DateTime.MinValue
                                                        ? apiKey.AccountExpires.ToLocalTime().ToString()
                                                        : "-"));
-            g.DrawString(accountExpires, m_middleFont, fontBrush, new PointF(indentedLeft, top));
+            g.DrawString(accountExpires, m_middleFont, fontBrush, new Point(indentedLeft, top));
 
             // Draws the texts on the lower third
-            top *= 2;
+            top += g.MeasureString(accountCreated, m_middleFont).ToSize().Height;
             bool isFirst = true;
 
             foreach (CharacterIdentity identity in apiKey.CharacterIdentities)
@@ -200,8 +200,8 @@ namespace EVEMon.ApiCredentialsManagement
                 // Draws "; " between ids
                 if (!isFirst)
                 {
-                    g.DrawString("; ", m_smallFont, fontBrush, new PointF(left, top));
-                    left += (int)g.MeasureString("; ", Font).Width;
+                    g.DrawString("; ", m_smallFont, fontBrush, new Point(left, top));
+                    left += g.MeasureString("; ", Font).ToSize().Width;
                 }
                 isFirst = false;
 
@@ -214,8 +214,8 @@ namespace EVEMon.ApiCredentialsManagement
                     font = m_smallBoldFont;
 
                 // Draws character's name
-                g.DrawString(identity.CharacterName, font, fontBrush, new PointF(left, top));
-                left += (int)g.MeasureString(identity.CharacterName, font).Width;
+                g.DrawString(identity.CharacterName, font, fontBrush, new Point(left, top));
+                left += g.MeasureString(identity.CharacterName, font).ToSize().Width;
             }
         }
 

@@ -151,10 +151,10 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         internal static Station GetByID(int id)
         {
-            // Look for the station in datafile, if we fail then it may be a conquerable outpost station
-            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
+            // Check if it's a conquerable outpost station, if not look in our data
+            Station station = ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
 
-            // We failed again ? It's not in any data we can access
+            // We failed ? It's not in any data we can access
             // We set it to a fixed one and notify about it in the trace file
             if (station == null)
             {
@@ -165,6 +165,17 @@ namespace EVEMon.Common.Data
             }
 
             return station;
+        }
+
+        /// <summary>
+        /// Gets the station by the provided name.
+        /// </summary>
+        /// <param name="name">The station's name.</param>
+        /// <returns>The station or null</returns>
+        internal static Station GetByName(string name)
+        {
+            // Check if it's a conquerable outpost station, if not look in our data
+            return ConquerableStation.GetStationByName(name) ?? StaticGeography.GetStationByName(name);
         }
 
         #endregion

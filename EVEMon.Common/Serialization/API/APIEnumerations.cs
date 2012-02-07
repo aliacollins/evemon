@@ -1,4 +1,6 @@
-﻿namespace EVEMon.Common.Serialization.API
+﻿using System.ComponentModel;
+
+namespace EVEMon.Common.Serialization.API
 {
 
 
@@ -66,6 +68,47 @@
         GM_Aborted = 3,
         Inflight_Unanchored = 4,
         Destroyed = 5
+    }
+
+    #endregion
+
+
+    #region API Contracts
+
+    public enum CCPContractStatus
+    {
+        [Description("None")]
+        None,
+
+        [Description("Outstanding")]
+        Outstanding,
+
+        [Description("In Progress")]
+        InProgress,
+
+        [Description("Deleted")]
+        Deleted,
+
+        [Description("Completed")]
+        Completed,
+
+        [Description("Failed")]
+        Failed,
+
+        [Description("Completed By Issuer")]
+        CompletedByIssuer,
+
+        [Description("Completed By Contractor")]
+        CompletedByContractor,
+
+        [Description("Canceled")]
+        Canceled,
+
+        [Description("Rejected")]
+        Rejected,
+
+        [Description("Reversed")]
+        Reversed
     }
 
     #endregion

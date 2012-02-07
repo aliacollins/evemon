@@ -68,12 +68,12 @@ namespace EVEMon.Common.SettingsObjects
                                                          };
 
                 return EnumExtensions.GetValues<MarketOrderColumn>().Where(
-                    planColumn => planColumn != MarketOrderColumn.None).Where(
-                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
-                            planColumn => new MarketOrderColumnSettings
+                    column => column != MarketOrderColumn.None).Where(
+                        column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
+                            column => new MarketOrderColumnSettings
                                               {
-                                                  Column = planColumn,
-                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Column = column,
+                                                  Visible = defaultColumns.Contains(column),
                                                   Width = -2
                                               });
             }

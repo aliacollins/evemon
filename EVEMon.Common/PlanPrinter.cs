@@ -94,11 +94,11 @@ namespace EVEMon.Common
             // Print header
             if (m_settings.IncludeHeader)
             {
-                SizeF size = g.MeasureString(s, m_boldFont);
-                m_point.X = (int)((e.MarginBounds.Width - size.Width) / 2);
+                Size size = g.MeasureString(s, m_boldFont).ToSize();
+                m_point.X = (e.MarginBounds.Width - size.Width) / 2;
 
                 size = PrintBold(g, s);
-                m_point.Y += (int)(2 * size.Height);
+                m_point.Y += size.Height * 2;
                 m_point.X = 5;
             }
 
@@ -157,41 +157,41 @@ namespace EVEMon.Common
         /// <param name="pe">The plan entry.</param>
         private void PrintEntry(Graphics g, int index, PlanEntry pe)
         {
-            SizeF size;
+            Size size;
 
             // Print entry index
             if (m_settings.EntryNumber)
             {
                 size = Print(g, String.Format(CultureConstants.DefaultCulture, "{0}: ", index));
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
             }
 
             // Print skill name and level
             size = PrintBold(g, pe.ToString());
-            m_point.X += (int)size.Width;
+            m_point.X += size.Width;
 
             // Print Notes ?
             if (m_settings.EntryNotes)
             {
                 // Jump to next line
-                m_point.Y += (int)size.Height;
+                m_point.Y += size.Height;
                 m_point.X = 20;
 
                 // Note
                 size = Print(g, pe.Notes);
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
             }
 
             // Print additional infos below
             if (m_settings.EntryTrainingTimes || m_settings.EntryStartDate || m_settings.EntryFinishDate)
             {
                 // Jump to next line
-                m_point.Y += (int)size.Height;
+                m_point.Y += size.Height;
                 m_point.X = 20;
 
                 // Open parenthesis
                 size = Print(g, " (");
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
 
                 // Training time ?
                 bool needComma = false;
@@ -201,7 +201,7 @@ namespace EVEMon.Common
                         DescriptiveTextOptions.FullText |
                         DescriptiveTextOptions.IncludeCommas |
                         DescriptiveTextOptions.SpaceText));
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
                     needComma = true;
                 }
 
@@ -211,14 +211,14 @@ namespace EVEMon.Common
                     if (needComma)
                     {
                         size = Print(g, "; ");
-                        m_point.X += (int)size.Width;
+                        m_point.X += size.Width;
                     }
 
                     size = Print(g, "Start: ");
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
 
                     size = Print(g, pe.StartTime.ToString());
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
 
                     needComma = true;
                 }
@@ -229,23 +229,23 @@ namespace EVEMon.Common
                     if (needComma)
                     {
                         size = Print(g, "; ");
-                        m_point.X += (int)size.Width;
+                        m_point.X += size.Width;
                     }
                     size = Print(g, "Finish: ");
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
 
                     size = Print(g, pe.EndTime.ToString());
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
                 }
 
                 // Close parenthesis
                 size = Print(g, ")");
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
             }
 
             // Jump to next line
             m_point.X = 5;
-            m_point.Y += (int)size.Height;
+            m_point.Y += size.Height;
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace EVEMon.Common
         /// <param name="index">The index.</param>
         private void PrintPageFooter(Graphics g, int index)
         {
-            SizeF size = SizeF.Empty;
+            Size size = Size.Empty;
             bool needComma = false;
 
             if (!m_settings.FooterCount && !m_settings.FooterTotalTime && !m_settings.FooterDate)
@@ -269,11 +269,11 @@ namespace EVEMon.Common
             if (m_settings.FooterCount)
             {
                 size = Print(g, index.ToString(CultureConstants.DefaultCulture));
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
 
                 size = Print(g, index > 1 ? " skill levels" : " skill level");
 
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
                 needComma = true;
             }
 
@@ -283,17 +283,17 @@ namespace EVEMon.Common
                 if (needComma)
                 {
                     size = Print(g, "; ");
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
                 }
                 size = Print(g, "Total time: ");
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
 
                 size = Print(g, m_trainingTime.ToDescriptiveText(
                     DescriptiveTextOptions.FullText
                     | DescriptiveTextOptions.IncludeCommas
                     | DescriptiveTextOptions.SpaceText));
 
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
 
                 needComma = true;
             }
@@ -304,17 +304,17 @@ namespace EVEMon.Common
                 if (needComma)
                 {
                     size = Print(g, "; ");
-                    m_point.X += (int)size.Width;
+                    m_point.X += size.Width;
                 }
                 size = Print(g, "Completion: ");
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
                 size = Print(g, m_completionDate.ToString());
-                m_point.X += (int)size.Width;
+                m_point.X += size.Width;
             }
 
             // Jump line
             m_point.X = 5;
-            m_point.Y += (int)size.Height;
+            m_point.Y += size.Height;
         }
 
         /// <summary>
@@ -323,13 +323,13 @@ namespace EVEMon.Common
         /// <param name="g">The graphics canvas.</param>
         /// <param name="s">The string to print.</param>
         /// <returns></returns>
-        private SizeF PrintBold(Graphics g, string s)
+        private Size PrintBold(Graphics g, string s)
         {
             using (SolidBrush brush = new SolidBrush(Color.Black))
             {
                 g.DrawString(s, m_boldFont, brush, m_point);
             }
-            return g.MeasureString(s, m_boldFont);
+            return g.MeasureString(s, m_boldFont).ToSize();
         }
 
         /// <summary>
@@ -338,13 +338,13 @@ namespace EVEMon.Common
         /// <param name="g">The graphics canvas.</param>
         /// <param name="s">The string to print.</param>
         /// <returns></returns>
-        private SizeF Print(Graphics g, string s)
+        private Size Print(Graphics g, string s)
         {
             using (SolidBrush brush = new SolidBrush(Color.Black))
             {
                 g.DrawString(s, m_font, brush, m_point);
             }
-            return g.MeasureString(s, m_font);
+            return g.MeasureString(s, m_font).ToSize();
         }
     }
 }

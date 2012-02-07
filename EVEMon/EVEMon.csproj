@@ -63,6 +63,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutWindow.cs">
@@ -141,6 +142,12 @@
     <Compile Include="BlankCharacter\BlankCharacterWindow.Designer.cs">
       <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterContractsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterContractsList.Designer.cs">
+      <DependentUpon>CharacterContractsList.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterEmploymentHistoryList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -164,6 +171,21 @@
     </Compile>
     <Compile Include="ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContractDetailsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractDetailsWindow.Designer.cs">
+      <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContractsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractsWindow.Designer.cs">
+      <DependentUpon>ContractsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\UIHelper.cs" />
@@ -358,12 +380,21 @@
     <EmbeddedResource Include="BlankCharacter\BlankCharacterWindow.resx">
       <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterContractsList.resx">
+      <DependentUpon>CharacterContractsList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharacterEmploymentHistoryList.resx">
       <DependentUpon>CharacterEmploymentHistoryList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitor.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContractDetailsWindow.resx">
+      <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContractsWindow.resx">
+      <DependentUpon>ContractsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

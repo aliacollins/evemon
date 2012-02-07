@@ -724,7 +724,7 @@ namespace EVEMon
                     bool senderIsCorporation = (notification.Sender != null) &&
                                                (notification.Sender == notification.SenderCorporation);
 
-                    string tooltipText = notification.Description;
+                    string tooltipText = notification.ToString();
                     maxlevel = Math.Max(maxlevel, (int)notification.Priority);
                     int level = (int)notification.Priority;
 

@@ -96,6 +96,13 @@
     <Compile Include="CharacterIdentityIgnoreList.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
+    <Compile Include="Contract.cs" />
+    <Compile Include="ContractBid.cs" />
+    <Compile Include="ContractBidsCollection.cs" />
+    <Compile Include="ContractCollection.cs" />
+    <Compile Include="ContractComparer.cs" />
+    <Compile Include="ContractItem.cs" />
+    <Compile Include="ContractItemComparer.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">
       <SubType>Component</SubType>
@@ -173,6 +180,7 @@
     <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\ContractsEventArgs.cs" />
     <Compile Include="CustomEventArgs\DataUpdateAvailableEventArgs.cs" />
     <Compile Include="CustomEventArgs\DaySelectedEventArgs.cs" />
     <Compile Include="CustomEventArgs\DropDownMouseMoveEventArgs.cs" />
@@ -201,21 +209,22 @@
     <Compile Include="EmailProvider\IEmailProvider.cs" />
     <Compile Include="EmailProvider\YahooPlusProvider.cs" />
     <Compile Include="EmailProvider\YahooProvider.cs" />
-    <Compile Include="EmploymentHistoryCollection.cs" />
+    <Compile Include="EmploymentRecordCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />
     <Compile Include="EveMailingList.cs" />
-    <Compile Include="EveMailingListsCollection.cs" />
+    <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
     <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
+    <Compile Include="FormatHelper.cs" />
     <Compile Include="GlobalAPIKeyCollection.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IEveMessage.cs" />
     <Compile Include="EveNotification.cs" />
-    <Compile Include="EveNotificationsCollection.cs" />
-    <Compile Include="EveNotificationsComparer.cs" />
+    <Compile Include="EveNotificationCollection.cs" />
+    <Compile Include="EveNotificationComparer.cs" />
     <Compile Include="EveNotificationText.cs" />
     <Compile Include="IListView.cs" />
     <Compile Include="IPlanOrderPluggable.cs" />
@@ -224,6 +233,7 @@
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
     <Compile Include="Notifications\APIErrorNotificationEventArgs.cs" />
     <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs" />
+    <Compile Include="Notifications\ContractsNotificationEventArgs.cs" />
     <Compile Include="Notifications\IndustryJobsNotificationEventArgs.cs" />
     <Compile Include="Notifications\MarketOrdersNotificationEventArgs.cs" />
     <Compile Include="Notifications\NewEveMailMessageNotificationEventArgs.cs" />
@@ -241,8 +251,14 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
+    <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
+    <Compile Include="Serialization\API\SerializableContractBidsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableContractItemsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAPIContracts.cs" />
     <Compile Include="Serialization\API\SerializableAPIKeyInfo.cs" />
     <Compile Include="Serialization\API\SerializableAPIKeyItem.cs" />
+    <Compile Include="Serialization\API\SerializableContractListItem.cs" />
     <Compile Include="Serialization\API\SerializableEmploymentHistory.cs" />
     <Compile Include="Serialization\API\SerializableAgentStanding.cs" />
     <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
@@ -308,11 +324,16 @@
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
+    <Compile Include="Serialization\Settings\SerializableContract.cs" />
+    <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
+    <Compile Include="SettingsObjects\ContractColumn.cs" />
+    <Compile Include="SettingsObjects\ContractColumnSettings.cs" />
+    <Compile Include="SettingsObjects\ContractSettings.cs" />
     <Compile Include="SettingsObjects\ModifiedSerializableDictionary.cs" />
-    <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
-    <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
-    <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
+    <Compile Include="SettingsObjects\EveNotificationColumn.cs" />
+    <Compile Include="SettingsObjects\EveNotificationColumnSettings.cs" />
+    <Compile Include="SettingsObjects\EveNotificationSettings.cs" />
     <Compile Include="SettingsObjects\IColumnSettings.cs" />
     <Compile Include="SettingsObjects\UpdatePeriodExtensions.cs" />
     <Compile Include="Standing.cs" />
@@ -340,10 +361,10 @@
     <Compile Include="EveIDToName.cs" />
     <Compile Include="EveMailBody.cs" />
     <Compile Include="EveMailMessage.cs" />
-    <Compile Include="EveMailMessagesComparer.cs" />
+    <Compile Include="EveMailMessageComparer.cs" />
     <Compile Include="FontFactory.cs" />
     <Compile Include="ImageService.cs" />
-    <Compile Include="EveMailMessagesCollection.cs" />
+    <Compile Include="EveMailMessageCollection.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="ListViewExporter.cs" />
     <Compile Include="Pair.cs" />
@@ -394,9 +415,9 @@
     <Compile Include="Serialization\Settings\SerializableUriCharacter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsObjects\Enumerations.cs" />
-    <Compile Include="SettingsObjects\EveMailMessagesColumn.cs" />
-    <Compile Include="SettingsObjects\EveMailMessagesColumnSettings.cs" />
-    <Compile Include="SettingsObjects\EveMailMessagesSettings.cs" />
+    <Compile Include="SettingsObjects\EveMailMessageColumn.cs" />
+    <Compile Include="SettingsObjects\EveMailMessageColumnSettings.cs" />
+    <Compile Include="SettingsObjects\EveMailMessageSettings.cs" />
     <Compile Include="SettingsObjects\ProxyAuthentication.cs" />
     <Compile Include="SettingsObjects\ResearchColumn.cs" />
     <Compile Include="SettingsObjects\ResearchColumnSettings.cs" />

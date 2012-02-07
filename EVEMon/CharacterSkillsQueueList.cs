@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -60,6 +61,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
+        [Browsable(false)]
         public Character Character { get; set; }
 
         /// <summary>

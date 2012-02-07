@@ -10,7 +10,7 @@ namespace EVEMon
 {
     public sealed partial class EveMessageWindow : EVEMonForm
     {
-        private Timer m_timer = new Timer();
+        private readonly Timer m_timer = new Timer();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.

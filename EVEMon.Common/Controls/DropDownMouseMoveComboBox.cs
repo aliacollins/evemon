@@ -227,7 +227,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Draws the item that appears on the textbox
+        /// Draws the item that appears on the textbox.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -244,10 +244,10 @@ namespace EVEMon.Common.Controls
             {
                 using (Brush foreBrush = new SolidBrush(ForeColor))
                 {
-                    const float Offset = 3.0f;
-                    SizeF size = e.Graphics.MeasureString(m_displayText, Font);
-                    RectangleF rect = new RectangleF(Offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - Offset,
-                                                     size.Height);
+                    const int Offset = 3;
+                    Size size = e.Graphics.MeasureString(m_displayText, Font).ToSize();
+                    Rectangle rect = new Rectangle(Offset, (Bounds.Height - size.Height) / 2, e.Bounds.Width - Offset,
+                                                   size.Height);
                     e.Graphics.DrawString(m_displayText, Font, foreBrush, rect, StringFormat.GenericTypographic);
                 }
             }

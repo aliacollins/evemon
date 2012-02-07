@@ -109,8 +109,8 @@ namespace EVEMon
         {
             int maxTextLength = 0;
 
-            foreach (Size textSize in listBox.Items.Cast<object>().Select(item => item.ToString())
-                .Select(text => TextRenderer.MeasureText(text, font)).Where(textSize => textSize.Width > maxTextLength))
+            foreach (Size textSize in listBox.Items.Cast<object>().Select(item => item.ToString()).Select(
+                text => TextRenderer.MeasureText(text, font)).Where(textSize => textSize.Width > maxTextLength))
             {
                 maxTextLength = textSize.Width;
             }
@@ -262,9 +262,9 @@ namespace EVEMon
             using (SolidBrush foreBrush = new SolidBrush(ForeColor))
             {
                 string text = notification.ToString();
-                SizeF size = g.MeasureString(text, Font);
+                Size size = g.MeasureString(text, Font).ToSize();
                 g.DrawString(text, Font, foreBrush,
-                             new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
+                             new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
@@ -313,7 +313,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void listBox_MouseDown(object sender, MouseEventArgs e)
         {
-            // First test whether the "delete" and "magnifier" icons have been clicked
+            // First test whether the "delete" or the "magnifier" icons have been clicked
             for (int i = 0; i < listBox.Items.Count; i++)
             {
                 Rectangle rect = listBox.GetItemRectangle(i);
@@ -395,6 +395,19 @@ namespace EVEMon
                 return;
             }
 
+            // Contracts ?
+            ContractsNotificationEventArgs contractsNotification = notification as ContractsNotificationEventArgs;
+            if (contractsNotification != null)
+            {
+                ContractsWindow window =
+                    WindowsFactory.ShowByTag<ContractsWindow, ContractsNotificationEventArgs>(contractsNotification);
+                window.Contracts = contractsNotification.Contracts;
+                window.Columns = Settings.UI.MainWindow.Contracts.Columns;
+                window.Grouping = ContractGrouping.State;
+                window.ShowIssuedFor = IssuedFor.All;
+                return;
+            }
+
             // Industry jobs ?
             IndustryJobsNotificationEventArgs jobsNotification = notification as IndustryJobsNotificationEventArgs;
             if (jobsNotification != null)
@@ -454,6 +467,14 @@ namespace EVEMon
                 return;
             }
 
+            // Contracts ?
+            ContractsNotificationEventArgs contractsNotification = notification as ContractsNotificationEventArgs;
+            if (contractsNotification != null)
+            {
+                SetToolTip(true, ContractsEndedMessage(contractsNotification));
+                return;
+            }
+
             // Industry jobs ?
             IndustryJobsNotificationEventArgs jobsNotification = notification as IndustryJobsNotificationEventArgs;
             if (jobsNotification != null)
@@ -464,18 +485,33 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Builds the completed industry jobs message.
+        /// Builds the skill completion message.
         /// </summary>
-        /// <param name="jobsNotification">The <see cref="EVEMon.Common.Notifications.IndustryJobsNotificationEventArgs"/> instance containing the event data.</param>
+        /// <param name="skillNotifications">The <see cref="EVEMon.Common.Notifications.SkillCompletionNotificationEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
-        private static String IndustryJobsCompletedMessage(IndustryJobsNotificationEventArgs jobsNotification)
+        private static String SkillCompletionMessage(SkillCompletionNotificationEventArgs skillNotifications)
         {
             StringBuilder builder = new StringBuilder();
-            foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
+            foreach (QueuedSkill skill in skillNotifications.Skills)
             {
-                builder.Append(job.InstalledItem.Name).Append(" at ");
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
-                    job.SolarSystem.Name, job.Installation).AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.SkillName,
+                                     Skill.GetRomanFromInt(skill.Level)).AppendLine();
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Builds the claimable certificates message.
+        /// </summary>
+        /// <param name="certNotifications">The <see cref="EVEMon.Common.Notifications.ClaimableCertificateNotificationEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private static String CertificateClaimableMessage(ClaimableCertificateNotificationEventArgs certNotifications)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (Certificate cert in certNotifications.Certificates)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture,
+                                     "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
             }
             return builder.ToString();
         }
@@ -501,9 +537,9 @@ namespace EVEMon
                     // Expired :    12k/15k invulnerability fields at Pator V - Tech School
                     // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                     if (order.State == OrderState.Expired)
-                        builder.Append(MarketOrder.Format(order.RemainingVolume, Format)).Append("/");
+                        builder.Append(FormatHelper.Format(order.RemainingVolume, Format)).Append("/");
 
-                    builder.Append(MarketOrder.Format(order.InitialVolume, Format)).Append(" ");
+                    builder.Append(FormatHelper.Format(order.InitialVolume, Format)).Append(" ");
                     builder.Append(order.Item.Name).Append(" at ");
                     builder.AppendLine(order.Station.Name);
                 }
@@ -512,33 +548,47 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Builds the claimable certificates message.
+        /// Builds the ended contracts message.
         /// </summary>
-        /// <param name="certNotifications">The <see cref="EVEMon.Common.Notifications.ClaimableCertificateNotificationEventArgs"/> instance containing the event data.</param>
+        /// <param name="contractsNotification">The <see cref="EVEMon.Common.Notifications.ContractsNotificationEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
-        private static String CertificateClaimableMessage(ClaimableCertificateNotificationEventArgs certNotifications)
+        private static String ContractsEndedMessage(ContractsNotificationEventArgs contractsNotification)
         {
             StringBuilder builder = new StringBuilder();
-            foreach (Certificate cert in certNotifications.Certificates)
+            foreach (IGrouping<ContractState, Contract> contractGroup in contractsNotification.Contracts.GroupBy(x => x.State))
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture,
-                                     "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
+                if (builder.Length != 0)
+                    builder.AppendLine();
+                builder.AppendLine(contractGroup.Key.GetHeader());
+
+                foreach (Contract contract in contractGroup.Where(contract => !String.IsNullOrEmpty(contract.Issuer)))
+                {
+                    builder.Append(contract.ContractText).Append(" | ");
+                    builder.Append(contract.ContractType).Append(" | ");
+                    builder.Append(contract.Status);
+
+                    if (contract.State == ContractState.Finished)
+                        builder.Append(" accepted by  ").Append(contract.Acceptor);
+
+                    builder.Append(" at ").AppendLine(contract.StartStation.Name);
+                }
             }
             return builder.ToString();
         }
 
         /// <summary>
-        /// Builds the skill completion message.
+        /// Builds the completed industry jobs message.
         /// </summary>
-        /// <param name="skillNotifications">The <see cref="EVEMon.Common.Notifications.SkillCompletionNotificationEventArgs"/> instance containing the event data.</param>
+        /// <param name="jobsNotification">The <see cref="EVEMon.Common.Notifications.IndustryJobsNotificationEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
-        private static String SkillCompletionMessage(SkillCompletionNotificationEventArgs skillNotifications)
+        private static String IndustryJobsCompletedMessage(IndustryJobsNotificationEventArgs jobsNotification)
         {
             StringBuilder builder = new StringBuilder();
-            foreach (QueuedSkill skill in skillNotifications.Skills)
+            foreach (IndustryJob job in jobsNotification.Jobs.Where(job => job.InstalledItem != null))
             {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.SkillName,
-                                     Skill.GetRomanFromInt(skill.Level)).AppendLine();
+                builder.Append(job.InstalledItem.Name).Append(" at ");
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
+                    job.SolarSystem.Name, job.Installation).AppendLine();
             }
             return builder.ToString();
         }

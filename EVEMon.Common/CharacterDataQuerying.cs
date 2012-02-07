@@ -16,6 +16,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIContracts> m_charContractsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
@@ -60,6 +61,11 @@ namespace EVEMon.Common
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
                                                                        OnCharacterMarketOrdersUpdated);
             m_characterQueryMonitors.Add(m_charMarketOrdersMonitor);
+
+            m_charContractsMonitor =
+                new CharacterQueryMonitor<SerializableAPIContracts>(ccpCharacter, APICharacterMethods.Contracts,
+                                                                    OnCharacterContractsUpdated) { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charContractsMonitor);
 
             m_charIndustryJobsMonitor =
                 new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
@@ -208,6 +214,28 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Queries the character's contract bids.
+        /// </summary>
+        private void QueryCharacterContractBids()
+        {
+            // Quits if no network
+            if (!NetworkMonitor.IsNetworkAvailable)
+                return;
+
+            // Quits if access denied
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+            if (apiKey == null)
+                return;
+
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractBids>(
+                APIGenericMethods.ContractBids,
+                apiKey.ID,
+                apiKey.VerificationCode,
+                m_ccpCharacter.CharacterID,
+                OnCharacterContractBidsUpdated);
+        }
+
+        /// <summary>
         /// Processed the queried skill queue information.
         /// </summary>
         /// <param name="result"></param>
@@ -329,7 +357,7 @@ namespace EVEMon.Common
         /// Processes the queried character's personal market orders.
         /// </summary>
         /// <param name="result"></param>
-        /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
+        /// <remarks>This method is sensitive to which "issued for" orders gets queried first</remarks>
         private void OnCharacterMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
@@ -354,6 +382,58 @@ namespace EVEMon.Common
 
             // Fires the event regarding character market orders update
             EveMonClient.OnCharacterMarketOrdersUpdated(m_ccpCharacter, endedOrders);
+        }
+
+        /// <summary>
+        /// Processes the queried character's personal contracts.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <remarks>This method is sensitive to which "issued for" contracts gets queried first</remarks>
+        private void OnCharacterContractsUpdated(APIResult<SerializableAPIContracts> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null)
+                return;
+            
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Contracts))
+                EveMonClient.Notifications.NotifyCharacterContractsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Query the contracts bids
+            QueryCharacterContractBids();
+
+            // Import the data
+            List<Contract> endedContracts = new List<Contract>();
+            m_ccpCharacter.CharacterContracts.Import(result.Result.Contracts, endedContracts);
+
+            // Fires the event regarding character contracts update
+            EveMonClient.OnCharacterContractsUpdated(m_ccpCharacter, endedContracts);
+        }
+
+        /// <summary>
+        /// Processes the queried character's contract bids.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        private void OnCharacterContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null)
+                return;
+
+            // Notify an error occured
+            if (m_ccpCharacter.ShouldNotifyError(result, APIGenericMethods.ContractBids))
+                EveMonClient.Notifications.NotifyCharacterContractBidsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.CharacterContractBids.Import(result.Result.ContractBids);
         }
 
         /// <summary>

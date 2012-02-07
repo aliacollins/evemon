@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Resources;
@@ -21,12 +22,14 @@ namespace EVEMon.Common.Controls
     /// </remarks>
     public partial class EveImage : UserControl
     {
+        private readonly Timer m_timer = new Timer();
+        private MouseEventArgs m_mouseEvent;
+
         /// <summary>
         /// Holds configuration data for different image types.
         /// </summary>
         private Dictionary<ImageType, ImageTypeData> m_imageTypeAttributes;
 
-        private bool m_popUpEnabled;
         private bool m_popUpActive;
         private EveImageSize m_imageSize;
         private EveImageSizeMode m_sizeMode;
@@ -48,6 +51,9 @@ namespace EVEMon.Common.Controls
             ImageSize = EveImageSize.x64;
             PopUpEnabled = true;
             ShowBlankImage();
+
+            m_timer.Interval = 500;
+            m_timer.Tick += m_timer_Tick;
         }
 
         #endregion
@@ -58,15 +64,12 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Gets or sets the state of the pop-up ability.
         /// </summary>
-        public bool PopUpEnabled
-        {
-            get { return m_popUpEnabled; }
-            set { m_popUpEnabled = value; }
-        }
+        public bool PopUpEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the item to display an image for.
         /// </summary>
+        [Browsable(false)]
         public Item EveItem
         {
             get { return m_item; }
@@ -88,11 +91,11 @@ namespace EVEMon.Common.Controls
             {
                 m_imageSize = value;
 
-                if (m_sizeMode == EveImageSizeMode.AutoSize)
-                {
-                    pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
-                    Size = pbImage.Size;
-                }
+                if (m_sizeMode != EveImageSizeMode.AutoSize)
+                    return;
+
+                pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
+                Size = pbImage.Size;
             }
         }
 
@@ -240,7 +243,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Enable pop up if required
-            if (m_popUpEnabled && typeData.ValidSizes.Contains(EveImageSize.x256))
+            if (PopUpEnabled && typeData.ValidSizes.Contains(EveImageSize.x256))
             {
                 toolTip.Active = true;
                 m_popUpActive = true;
@@ -421,20 +424,75 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region Public Event Handlers
+        #region Local Event Handlers
+
+        /// <summary>
+        /// Handles the Tick event of the m_timer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void m_timer_Tick(object sender, EventArgs e)
+        {
+            m_timer.Stop();
+
+            if (!Enabled)
+                return;
+
+            // Actions according to mouse clicks
+            switch (m_mouseEvent.Clicks)
+            {
+                case 1:
+                    {
+                        base.OnMouseClick(m_mouseEvent);
+                    }
+                    break;
+                case 2:
+                    {
+                        base.OnMouseDoubleClick(m_mouseEvent);
+
+                        WindowsFactory.ShowByTag<EveImagePopUp, Item>(m_item);
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Event handler for image click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbImage_MouseClick(object sender, MouseEventArgs e)
+        {
+            // If item does not support pop-up trigger the event immediately
+            if (!m_popUpActive)
+            {
+                base.OnMouseClick(e);
+                return;
+            }
+
+            // Store the single mouse click event
+            m_mouseEvent = e;
+            m_timer.Start();
+        }
 
         /// <summary>
         /// Event handler for image double click.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void pbImage_DoubleClick(object sender, EventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbImage_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            // Only display the pop up form if pop-ups are enabled and a suitable image can be retrieved
+            // Display the pop up form if pop-ups are enabled and a suitable image can be retrieved
+            // otherwise trigger a single mouse click event
             if (!m_popUpActive)
+            {
+                base.OnMouseClick(e);
                 return;
+            }
 
-            WindowsFactory.ShowUnique(() => new EveImagePopUp(m_item));
+            // Store the double mouse click event
+            m_mouseEvent = e;
+            m_timer.Start();
         }
 
         #endregion

@@ -17,6 +17,7 @@ namespace EVEMon.Common
         private readonly CorporationDataQuerying m_corporationDataQuerying;
         private readonly List<MarketOrder> m_endedOrdersForCharacter;
         private readonly List<MarketOrder> m_endedOrdersForCorporation;
+        private readonly List<Contract> m_endedContractsForCharacter;
         private readonly List<IndustryJob> m_jobsCompletedForCharacter;
 
         private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
@@ -38,6 +39,7 @@ namespace EVEMon.Common
             CharacterMarketOrders = new MarketOrderCollection(this);
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
+            CharacterContractBids = new ContractBidsCollection(this);
             CharacterIndustryJobs = new IndustryJobCollection(this);
             CorporationIndustryJobs = new IndustryJobCollection(this);
             ResearchPoints = new ResearchPointCollection(this);
@@ -51,10 +53,13 @@ namespace EVEMon.Common
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
 
+            m_endedContractsForCharacter = new List<Contract>();
+
             m_jobsCompletedForCharacter = new List<IndustryJob>();
 
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated += EveMonClient_CorporationMarketOrdersUpdated;
+            EveMonClient.CharacterContractsUpdated += EveMonClient_CharacterContractsUpdated;
             EveMonClient.CharacterIndustryJobsUpdated += EveMonClient_CharacterIndustryJobsUpdated;
             EveMonClient.CorporationIndustryJobsUpdated += EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
@@ -134,10 +139,16 @@ namespace EVEMon.Common
         public MarketOrderCollection CorporationMarketOrders { get; private set; }
 
         /// <summary>
-        /// Gets or sets the character market contracts.
+        /// Gets or sets the character contracts.
         /// </summary>
         /// <value>The character contracts.</value>
         public ContractCollection CharacterContracts { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the character contract bids.
+        /// </summary>
+        /// <value>The character contract bids.</value>
+        public ContractBidsCollection CharacterContractBids { get; private set; }
 
         /// <summary>
         /// Gets the collection of industry jobs.
@@ -237,6 +248,12 @@ namespace EVEMon.Common
             // Market orders
             serial.MarketOrders.AddRange(MarketOrdersExport());
 
+            // Contracts
+            serial.Contracts.AddRange(CharacterContracts.Export());
+
+            // ContractBids
+            serial.ContractBids.AddRange(CharacterContractBids.Export());
+
             // Industry jobs
             serial.IndustryJobs.AddRange(IndustryJobsExport());
 
@@ -291,6 +308,12 @@ namespace EVEMon.Common
 
             // Market orders
             MarketOrdersImport(serial.MarketOrders);
+
+            // Contracts
+            CharacterContracts.Import(serial.Contracts);
+
+            // Contract Bids
+            CharacterContractBids.Import(serial.ContractBids);
 
             // Industry jobs
             IndustryJobsImport(serial.IndustryJobs);
@@ -432,6 +455,55 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies for contracts related events.
+        /// </summary>
+        private void NotifyForContractsRelatedEvents()
+        {
+            // Notify for ended contracts
+            NotifyEndedContracts();
+
+            // Notify for assigned contracts
+            NotifyAssignedContracts();
+
+            m_endedContractsForCharacter.Clear();
+        }
+
+        /// <summary>
+        /// Notifies for ended contracts.
+        /// </summary>
+        private void NotifyEndedContracts()
+        {
+            // Notify ended contracts issued by the character
+            if (m_endedContractsForCharacter.Any(x => !x.NotificationSend))
+            {
+                EveMonClient.Notifications.NotifyCharacterContractsEnded(this, m_endedContractsForCharacter);
+                m_endedContractsForCharacter.ForEach(x => x.NotificationSend = true);
+            }
+
+            // Uncomment upon implementing an exclusive corporation monitor
+            // Notify ended contracts issued for the corporation
+            //if (m_endedContractsForCorporation.Any())
+            //EveMonClient.Notifications.NotifyCorporationContractsEnded(Corporation, m_endedContractsForCorporation);
+        }
+
+        /// <summary>
+        /// Notifies for assigned contracts.
+        /// </summary>
+        private void NotifyAssignedContracts()
+        {
+            if (CharacterContracts.Any(contract => contract.State == ContractState.Assigned))
+            {
+                EveMonClient.Notifications.NotifyCharacterContractsAssigned(this,
+                                                                            CharacterContracts.Count(contracts =>
+                                                                                                     contracts.State ==
+                                                                                                     ContractState.Assigned));
+                return;
+            }
+
+            EveMonClient.Notifications.InvalidateCharacterContractsAssigned(this);
+        }
+
+        /// <summary>
         /// Notifies for insufficient balance.
         /// </summary>
         private void NotifyInsufficientBalance()
@@ -473,7 +545,7 @@ namespace EVEMon.Common
         /// Handles the CharacterMarketOrdersUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.MarketOrdersEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterMarketOrdersUpdated(object sender, MarketOrdersEventArgs e)
         {
             if (e.Character != this)
@@ -488,7 +560,7 @@ namespace EVEMon.Common
         /// Handles the CorporationMarketOrdersUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.MarketOrdersEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CorporationMarketOrdersUpdated(object sender, MarketOrdersEventArgs e)
         {
             if (e.Character != this)
@@ -498,6 +570,21 @@ namespace EVEMon.Common
             m_endedOrdersForCorporation.AddRange(e.EndedOrders);
 
             NotifyForMarketOrdersRelatedEvents();
+        }
+
+        /// <summary>
+        /// Handles the CharacterContractsUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.ContractsEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterContractsUpdated(object sender, ContractsEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            m_endedContractsForCharacter.AddRange(e.EndedContracts);
+
+            NotifyForContractsRelatedEvents();
         }
 
         /// <summary>

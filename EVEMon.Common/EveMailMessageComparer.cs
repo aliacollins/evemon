@@ -10,15 +10,15 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class EveMailMessageComparer : Comparer<EveMailMessage>
     {
-        private readonly EveMailMessagesColumn m_column;
+        private readonly EveMailMessageColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveMailMessageComparer"/> class.
         /// </summary>
-        /// <param name="column">The industry job column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public EveMailMessageComparer(EveMailMessagesColumn column, bool isAscending)
+        public EveMailMessageComparer(EveMailMessageColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;
@@ -64,24 +64,18 @@ namespace EVEMon.Common
         {
             switch (m_column)
             {
-                case EveMailMessagesColumn.SenderName:
+                case EveMailMessageColumn.SenderName:
                     return String.Compare(x.Sender, y.Sender, StringComparison.CurrentCulture);
-
-                case EveMailMessagesColumn.Title:
+                case EveMailMessageColumn.Title:
                     return String.Compare(x.Title, y.Title, StringComparison.CurrentCulture);
-
-                case EveMailMessagesColumn.SentDate:
+                case EveMailMessageColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);
-
-                case EveMailMessagesColumn.ToCharacters:
+                case EveMailMessageColumn.ToCharacters:
                     return String.Compare(x.ToCharacters.First(), y.ToCharacters.First(), StringComparison.CurrentCulture);
-
-                case EveMailMessagesColumn.ToCorpOrAlliance:
+                case EveMailMessageColumn.ToCorpOrAlliance:
                     return String.Compare(x.ToCorpOrAlliance, y.ToCorpOrAlliance, StringComparison.CurrentCulture);
-
-                case EveMailMessagesColumn.ToMailingList:
+                case EveMailMessageColumn.ToMailingList:
                     return String.Compare(x.ToMailingLists.First(), y.ToMailingLists.First(), StringComparison.CurrentCulture);
-
                 default:
                     return 0;
             }

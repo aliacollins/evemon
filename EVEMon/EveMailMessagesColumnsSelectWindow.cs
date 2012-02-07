@@ -12,7 +12,7 @@ namespace EVEMon
         /// Initializes a new instance of the <see cref="EveMailMessagesColumnsSelectWindow"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public EveMailMessagesColumnsSelectWindow(IEnumerable<EveMailMessagesColumnSettings> settings)
+        public EveMailMessagesColumnsSelectWindow(IEnumerable<EveMailMessageColumnSettings> settings)
             : base(settings)
         {
         }
@@ -24,7 +24,7 @@ namespace EVEMon
         /// <returns></returns>
         protected override string GetHeader(int key)
         {
-            return ((EveMailMessagesColumn)key).GetDescription();
+            return ((EveMailMessageColumn)key).GetDescription();
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace EVEMon
         {
             get
             {
-                return EnumExtensions.GetValues<EveMailMessagesColumn>().Where(
-                    x => x != EveMailMessagesColumn.None).Select(x => (int)x);
+                return EnumExtensions.GetValues<EveMailMessageColumn>().Where(
+                    x => x != EveMailMessageColumn.None).Select(x => (int)x);
             }
         }
 
@@ -48,7 +48,7 @@ namespace EVEMon
         {
             get
             {
-                EveMailMessagesSettings settings = new EveMailMessagesSettings();
+                EveMailMessageSettings settings = new EveMailMessageSettings();
                 return settings.DefaultColumns;
             }
         }

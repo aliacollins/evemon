@@ -18,11 +18,11 @@ namespace EVEMon
     {
         #region Fields
 
-        private readonly List<EveNotificationsColumnSettings> m_columns = new List<EveNotificationsColumnSettings>();
+        private readonly List<EveNotificationColumnSettings> m_columns = new List<EveNotificationColumnSettings>();
         private readonly List<EveNotification> m_list = new List<EveNotification>();
 
         private EVENotificationsGrouping m_grouping;
-        private EveNotificationsColumn m_sortCriteria;
+        private EveNotificationColumn m_sortCriteria;
         private ReadingPanePositioning m_panePosition;
 
         private string m_textFilter = String.Empty;
@@ -143,11 +143,11 @@ namespace EVEMon
             get
             {
                 // Add the visible columns; matching the display order
-                List<EveNotificationsColumnSettings> newColumns = new List<EveNotificationsColumnSettings>();
+                List<EveNotificationColumnSettings> newColumns = new List<EveNotificationColumnSettings>();
                 foreach (ColumnHeader header in lvNotifications.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    EveNotificationsColumnSettings columnSetting =
-                        m_columns.First(x => x.Column == (EveNotificationsColumn)header.Tag);
+                    EveNotificationColumnSettings columnSetting =
+                        m_columns.First(x => x.Column == (EveNotificationColumn)header.Tag);
                     if (columnSetting.Width > -1)
                         columnSetting.Width = header.Width;
 
@@ -163,7 +163,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value.Cast<EveNotificationsColumnSettings>());
+                    m_columns.AddRange(value.Cast<EveNotificationColumnSettings>());
 
                 if (m_init)
                     UpdateColumns();
@@ -235,7 +235,7 @@ namespace EVEMon
             {
                 lvNotifications.Columns.Clear();
 
-                foreach (EveNotificationsColumnSettings column in m_columns.Where(x => x.Visible))
+                foreach (EveNotificationColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     ColumnHeader header = lvNotifications.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = column.Column;
@@ -388,7 +388,7 @@ namespace EVEMon
                     for (int i = 0; i < lvNotifications.Columns.Count; i++)
                     {
                         ColumnHeader header = lvNotifications.Columns[i];
-                        EveNotificationsColumn column = (EveNotificationsColumn)header.Tag;
+                        EveNotificationColumn column = (EveNotificationColumn)header.Tag;
                         SetColumn(eveNotification, item.SubItems[i], column);
                     }
 
@@ -421,7 +421,7 @@ namespace EVEMon
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (column.ImageIndex > -1)
+                if (lvNotifications.SmallImageList != null && column.ImageIndex > -1)
                     columnHeaderWidth += lvNotifications.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
@@ -452,7 +452,7 @@ namespace EVEMon
         {
             foreach (ColumnHeader columnHeader in lvNotifications.Columns.Cast<ColumnHeader>())
             {
-                EveNotificationsColumn column = (EveNotificationsColumn)columnHeader.Tag;
+                EveNotificationColumn column = (EveNotificationColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
                     columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
@@ -466,17 +466,17 @@ namespace EVEMon
         /// <param name="eveNotification"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private static void SetColumn(EveNotification eveNotification, ListViewItem.ListViewSubItem item, EveNotificationsColumn column)
+        private static void SetColumn(EveNotification eveNotification, ListViewItem.ListViewSubItem item, EveNotificationColumn column)
         {
             switch (column)
             {
-                case EveNotificationsColumn.SenderName:
+                case EveNotificationColumn.SenderName:
                     item.Text = eveNotification.Sender;
                     break;
-                case EveNotificationsColumn.Type:
+                case EveNotificationColumn.Type:
                     item.Text = eveNotification.Type;
                     break;
-                case EveNotificationsColumn.SentDate:
+                case EveNotificationColumn.SentDate:
                     item.Text = String.Format(CultureConstants.DefaultCulture,
                                               "{0:ddd} {0:G}", eveNotification.SentDate.ToLocalTime());
                     break;
@@ -635,7 +635,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void lvNotifications_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            EveNotificationsColumn column = (EveNotificationsColumn)lvNotifications.Columns[e.Column].Tag;
+            EveNotificationColumn column = (EveNotificationColumn)lvNotifications.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
                 m_sortAscending = !m_sortAscending;
             else
@@ -663,7 +663,7 @@ namespace EVEMon
                 return;
 
             Settings.UI.MainWindow.EVENotifications.Columns.Clear();
-            Settings.UI.MainWindow.EVENotifications.Columns.AddRange(Columns.Cast<EveNotificationsColumnSettings>());
+            Settings.UI.MainWindow.EVENotifications.Columns.AddRange(Columns.Cast<EveNotificationColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;

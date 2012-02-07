@@ -60,6 +60,8 @@ namespace EVEMon
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
 
+            m_showIssuedFor = IssuedFor.All;
+
             noJobsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             industryExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             industryExpPanelControl.Visible = false;
@@ -537,7 +539,7 @@ namespace EVEMon
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (column.ImageIndex > -1)
+                if (lvJobs.SmallImageList != null && column.ImageIndex > -1)
                     columnHeaderWidth += lvJobs.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column

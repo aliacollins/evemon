@@ -64,11 +64,13 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
+        [Browsable(false)]
         public Character Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
+        [Browsable(false)]
         public string TextFilter
         {
             get { return m_textFilter; }
@@ -102,6 +104,7 @@ namespace EVEMon
         /// Gets or sets the grouping of a listview.
         /// </summary>
         /// <value></value>
+        [Browsable(false)]
         public Enum Grouping { get; set; }
 
         /// <summary>
@@ -329,7 +332,7 @@ namespace EVEMon
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (column.ImageIndex > -1)
+                if (lvResearchPoints.SmallImageList != null && column.ImageIndex > -1)
                     columnHeaderWidth += lvResearchPoints.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column

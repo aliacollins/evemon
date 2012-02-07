@@ -60,9 +60,9 @@ namespace EVEMon.Common
             if (String.IsNullOrEmpty(id))
                 return String.Empty;
 
-            // If it's a zero ID return "Unknown"
+            // If it's a zero ID return "(None)"
             if (id == "0")
-                return "Unknown";
+                return "(None)";
 
             List<string> list = new List<string> { id };
 

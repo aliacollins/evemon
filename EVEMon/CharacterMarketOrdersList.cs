@@ -83,6 +83,8 @@ namespace EVEMon
             lvOrders.AllowColumnReorder = true;
             lvOrders.Columns.Clear();
 
+            m_showIssuedFor = IssuedFor.All;
+
             noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             marketExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             marketExpPanelControl.Visible = false;
@@ -139,6 +141,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
+        [Browsable(false)]
         public Enum Grouping
         {
             get { return m_grouping; }
@@ -153,6 +156,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets which "Issued for" orders to display.
         /// </summary>
+        [Browsable(false)]
         public IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
@@ -309,6 +313,7 @@ namespace EVEMon
                         case MarketOrderColumn.RemainingVolume:
                         case MarketOrderColumn.TotalPrice:
                         case MarketOrderColumn.Escrow:
+                        case MarketOrderColumn.Duration:
                         case MarketOrderColumn.UnitaryPrice:
                             header.TextAlign = HorizontalAlignment.Right;
                             break;
@@ -546,7 +551,7 @@ namespace EVEMon
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (column.ImageIndex > -1)
+                if (lvOrders.SmallImageList != null && column.ImageIndex > -1)
                     columnHeaderWidth += lvOrders.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
@@ -603,13 +608,13 @@ namespace EVEMon
                                               (order.Duration > 1 ? "s" : String.Empty));
                     break;
                 case MarketOrderColumn.Expiration:
-                    CellFormat format = FormatExpiration(order);
+                    ListViewItemFormat format = FormatExpiration(order);
                     item.Text = format.Text;
                     item.ForeColor = format.TextColor;
                     break;
                 case MarketOrderColumn.InitialVolume:
                     item.Text = (m_numberFormat
-                                     ? MarketOrder.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
+                                     ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.Issued:
@@ -631,7 +636,7 @@ namespace EVEMon
                     break;
                 case MarketOrderColumn.MinimumVolume:
                     item.Text = (m_numberFormat
-                                     ? MarketOrder.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
+                                     ? FormatHelper.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.MinVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.Region:
@@ -639,7 +644,7 @@ namespace EVEMon
                     break;
                 case MarketOrderColumn.RemainingVolume:
                     item.Text = (m_numberFormat
-                                     ? MarketOrder.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
+                                     ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.SolarSystem:
@@ -652,13 +657,13 @@ namespace EVEMon
                     break;
                 case MarketOrderColumn.TotalPrice:
                     item.Text = (m_numberFormat
-                                     ? MarketOrder.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
+                                     ? FormatHelper.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : order.TotalPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
                     item.Text = (m_numberFormat
-                                     ? MarketOrder.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
+                                     ? FormatHelper.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : order.UnitaryPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
@@ -666,10 +671,10 @@ namespace EVEMon
                     item.Text = String.Format(
                         CultureConstants.DefaultCulture, "{0} / {1}",
                         (m_numberFormat
-                             ? MarketOrder.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
+                             ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
                              : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture)),
                         (m_numberFormat
-                             ? MarketOrder.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
+                             ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
                              : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture)));
                     break;
                 case MarketOrderColumn.LastStateChange:
@@ -683,7 +688,7 @@ namespace EVEMon
                     if (buyOrder != null)
                     {
                         item.Text = (m_numberFormat
-                                         ? MarketOrder.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
+                                         ? FormatHelper.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
                                          : buyOrder.Escrow.ToString("N2", CultureConstants.DefaultCulture));
                         item.ForeColor = Color.DarkBlue;
                     }
@@ -719,17 +724,17 @@ namespace EVEMon
         /// Gets the text and formatting for the expiration cell
         /// </summary>
         /// <param name="order">Order to generate a format for</param>
-        /// <returns>CellFormat object describing the format of the cell</returns>
-        private static CellFormat FormatExpiration(MarketOrder order)
+        /// <returns>ListViewItemFormat object describing the format of the cell</returns>
+        private static ListViewItemFormat FormatExpiration(MarketOrder order)
         {
             // Initialize to sensible defaults
-            CellFormat format = new CellFormat
-                                    {
-                                        TextColor = Color.Black,
-                                        Text =
-                                            order.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc).ToUpper(
-                                                CultureConstants.DefaultCulture)
-                                    };
+            ListViewItemFormat format = new ListViewItemFormat
+                                            {
+                                                TextColor = Color.Black,
+                                                Text =
+                                                    order.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc).ToUpper(
+                                                        CultureConstants.DefaultCulture)
+                                            };
 
             // Order is expiring soon
             if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
@@ -1253,12 +1258,22 @@ namespace EVEMon
 
         #region Helper Classes
 
-        private class CellFormat
+        private class ListViewItemFormat
         {
+            /// <summary>
+            /// Gets or sets the color of the text.
+            /// </summary>
+            /// <value>The color of the text.</value>
             public Color TextColor { get; set; }
+
+            /// <summary>
+            /// Gets or sets the text.
+            /// </summary>
+            /// <value>The text.</value>
             public string Text { get; set; }
         }
 
         #endregion
+
     }
 }

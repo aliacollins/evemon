@@ -67,6 +67,8 @@ namespace EVEMon.Common.Data
             FittingSlot = src.Slot == ItemSlot.None ? ItemSlot.NoSlot : src.Slot;
             Family = src.Family;
             Description = src.Description;
+            CategoryName = src.Category;
+            GroupName = src.Group;
 
             PortionSize = src.PortionSize;
             MetaLevel = src.MetaLevel;
@@ -129,6 +131,16 @@ namespace EVEMon.Common.Data
         /// Gets the metalevel this item belong to.
         /// </summary>
         public int MetaLevel { get; private set; }
+
+        /// <summary>
+        /// Gets the category this item belong to.
+        /// </summary>
+        public string CategoryName { get; private set; }
+
+        /// <summary>
+        /// Gets the group this item belong to.
+        /// </summary>
+        public string GroupName { get; private set; }
 
         /// <summary>
         /// Gets the metagroup this item belong to.

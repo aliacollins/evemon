@@ -60,14 +60,14 @@ namespace EVEMon.SettingsUI
             {
                 // Fills empty path with the default one
                 if (String.IsNullOrEmpty(method.Path))
-                    method.Path = APIProvider.DefaultProvider.Methods.First(x => x.Method.ToString() == method.Method).Path;
+                    method.Path = APIProvider.DefaultProvider.Methods.First(x => x.Method.ToString() == method.MethodName).Path;
 
                 // Skip method with no path
                 if (String.IsNullOrWhiteSpace(method.Path))
                     continue;
 
                 // Add row
-                int rowIndex = dgMethods.Rows.Add(method.Method, method.Path);
+                int rowIndex = dgMethods.Rows.Add(method.MethodName, method.Path);
                 dgMethods.Rows[rowIndex].Tag = method;
             }
         }
@@ -84,7 +84,7 @@ namespace EVEMon.SettingsUI
             {
                 SerializableAPIMethod rowMethod = (SerializableAPIMethod)row.Tag;
                 foreach (APIMethod defaultMethod in defaultMethods.Where(
-                    defaultMethod => defaultMethod.Method.ToString() == rowMethod.Method))
+                    defaultMethod => defaultMethod.Method.ToString() == rowMethod.MethodName))
                 {
                     row.Cells[1].Value = defaultMethod.Path;
                 }

@@ -83,8 +83,6 @@ namespace EVEMon.Common.SettingsObjects
                     if (valueType.GetProperties().Length == 0)
                     {
                         TypeConverter converter = TypeDescriptor.GetConverter(valueType);
-                        if (converter == null)
-                            break;
 
                         string attribute = reader.GetAttribute(0);
 
@@ -107,8 +105,6 @@ namespace EVEMon.Common.SettingsObjects
                                 property.GetCustomAttributesData().First().ConstructorArguments.First().Value.ToString();
 
                             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
-                            if (converter == null)
-                                break;
 
                             string attribute = reader.GetAttribute(propertyName);
 
@@ -125,15 +121,13 @@ namespace EVEMon.Common.SettingsObjects
                 reader.Read();
 
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(typeof(TKey));
-                if (typeConverter == null)
-                    break;
 
                 TKey key = default(TKey);
 
                 // Assign the key
                 object keyValue = typeConverter.ConvertFrom(reader.Value);
-                if(keyValue != null)
-                    key = (TKey) keyValue;
+                if (keyValue != null)
+                    key = (TKey)keyValue;
 
                 Add(key, value);
 

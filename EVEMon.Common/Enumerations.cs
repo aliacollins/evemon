@@ -175,10 +175,10 @@ namespace EVEMon.Common
         /// The advanced character features of APIMethods.
         /// </summary>
         AdvancedCharacterFeatures =
-            APICharacterMethods.AccountStatus | APICharacterMethods.MarketOrders | APICharacterMethods.IndustryJobs |
-            APICharacterMethods.ResearchPoints | APICharacterMethods.Standings | APICharacterMethods.MailMessages |
-            APICharacterMethods.MailBodies | APICharacterMethods.MailingLists | APICharacterMethods.Notifications |
-            APICharacterMethods.NotificationTexts,
+            APICharacterMethods.AccountStatus | APICharacterMethods.MarketOrders | APICharacterMethods.Contracts |
+            APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
+            APICharacterMethods.MailMessages | APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
+            APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts,
 
         /// <summary>
         /// The advanced corporation features of APIMethods.
@@ -241,6 +241,14 @@ namespace EVEMon.Common
         [Description("The market orders of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
         MarketOrders = 1 << 12,
+
+        /// <summary>
+        /// The personal issued contracts of a character.
+        /// </summary>
+        [Header("Contracts")]
+        [Description("The contracts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        Contracts = 1 << 26,
 
         /// <summary>
         /// The personal issued industry jobs of a character.
@@ -381,6 +389,16 @@ namespace EVEMon.Common
         /// The character name. Used to convert IDs to Names.
         /// </summary>
         CharacterName,
+
+        /// <summary>
+        /// The items contained in a contract.
+        /// </summary>
+        ContractItems,
+
+        /// <summary>
+        /// The bids for an auctioned contract.
+        /// </summary>
+        ContractBids
     }
 
     public enum ThrobberState
@@ -951,6 +969,41 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// The contract type.
+    /// </summary>
+    public enum ContractType
+    {
+        None,
+
+        [Description("Item Exchange")]
+        ItemExchange,
+
+        [Description("Courier")]
+        Courier,
+
+        [Description("Loan")]
+        Loan,
+
+        [Description("Auction")]
+        Auction
+    }
+
+
+    /// <summary>
+    /// The contract availability.
+    /// </summary>
+    public enum ContractAvailability
+    {
+        None,
+
+        [Description("Public")]
+        Public,
+
+        [Description("Private")]
+        Private
+    }
+
+    /// <summary>
     /// The status of a market order.
     /// </summary>
     /// <remarks>The integer value determines the sort order.</remarks>
@@ -970,6 +1023,37 @@ namespace EVEMon.Common
 
         [Header("Modified orders")]
         Modified = 4
+    }
+
+    /// <summary>
+    /// The status of a contract.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum ContractState
+    {
+        [Header("Assigned contracts")]
+        Assigned = 0,
+
+        [Header("Created contracts")]
+        Created = 1,
+
+        [Header("Canceled contracts")]
+        Canceled = 2,
+
+        [Header("Deleted contracts")]
+        Deleted = 3,
+
+        [Header("Expired contracts")]
+        Expired = 4,
+
+        [Header("Rejected contracts")]
+        Rejected = 5,
+
+        [Header("Finished contracts")]
+        Finished = 6,
+
+        [Header("Unknown contracts")]
+        Unknown = 7
     }
 
     /// <summary>

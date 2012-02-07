@@ -1358,7 +1358,7 @@ namespace EVEMon.SkillPlanner
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (column.ImageIndex > -1)
+                if (lvSkills.SmallImageList != null && column.ImageIndex > -1)
                     columnHeaderWidth += lvSkills.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column

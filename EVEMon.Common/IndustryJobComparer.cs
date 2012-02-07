@@ -15,7 +15,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="IndustryJobComparer"/> class.
         /// </summary>
-        /// <param name="column">The industry job column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
         public IndustryJobComparer(IndustryJobColumn column, bool isAscending)
         {
@@ -65,64 +65,46 @@ namespace EVEMon.Common
             {
                 case IndustryJobColumn.State:
                     return x.State == JobState.Active ? x.ActiveJobState.CompareTo(y.ActiveJobState) : x.State.CompareTo(y.State);
-
                 case IndustryJobColumn.TTC:
                     return x.EndProductionTime.CompareTo(y.EndProductionTime);
-
                 case IndustryJobColumn.InstalledItem:
                     return String.Compare(x.InstalledItem.Name, y.InstalledItem.Name, StringComparison.CurrentCulture);
-
                 case IndustryJobColumn.InstalledItemType:
-                    return String.Compare(x.InstalledItem.MarketGroup.Name, y.InstalledItem.MarketGroup.Name, StringComparison.CurrentCulture);
-
+                    return String.Compare(x.InstalledItem.MarketGroup.Name, y.InstalledItem.MarketGroup.Name,
+                                          StringComparison.CurrentCulture);
                 case IndustryJobColumn.OutputItem:
                     return String.Compare(x.OutputItem.Name, y.OutputItem.Name, StringComparison.CurrentCulture);
-
                 case IndustryJobColumn.OutputItemType:
-                    return String.Compare(x.OutputItem.MarketGroup.Name, y.OutputItem.MarketGroup.Name, StringComparison.CurrentCulture);
-
+                    return String.Compare(x.OutputItem.MarketGroup.Name, y.OutputItem.MarketGroup.Name,
+                                          StringComparison.CurrentCulture);
                 case IndustryJobColumn.Activity:
                     return x.Activity.CompareTo(y.Activity);
-
                 case IndustryJobColumn.InstallTime:
                     return x.InstalledTime.CompareTo(y.InstalledTime);
-
                 case IndustryJobColumn.EndTime:
                     return x.EndProductionTime.CompareTo(y.EndProductionTime);
-
                 case IndustryJobColumn.OriginalOrCopy:
                     return x.BlueprintType.CompareTo(y.BlueprintType);
-
                 case IndustryJobColumn.InstalledME:
                     return x.InstalledME.CompareTo(y.InstalledME);
-
                 case IndustryJobColumn.EndME:
                     return (x.InstalledME + x.Runs).CompareTo(y.InstalledME + y.Runs);
-
                 case IndustryJobColumn.InstalledPE:
                     return x.InstalledPE.CompareTo(y.InstalledPE);
-
                 case IndustryJobColumn.EndPE:
                     return (x.InstalledPE + x.Runs).CompareTo(y.InstalledPE + y.Runs);
-
                 case IndustryJobColumn.Location:
                     return String.Compare(x.FullLocation, y.FullLocation, StringComparison.CurrentCulture);
-
                 case IndustryJobColumn.Region:
                     return x.SolarSystem.Constellation.Region.CompareTo(y.SolarSystem.Constellation.Region);
-
                 case IndustryJobColumn.SolarSystem:
                     return x.SolarSystem.CompareTo(y.SolarSystem);
-
                 case IndustryJobColumn.Installation:
                     return String.Compare(x.Installation, y.Installation, StringComparison.CurrentCulture);
-
                 case IndustryJobColumn.IssuedFor:
                     return x.IssuedFor.CompareTo(y.IssuedFor);
-
                 case IndustryJobColumn.LastStateChange:
                     return x.LastStateChange.CompareTo(y.LastStateChange);
-
                 default:
                     return 0;
             }

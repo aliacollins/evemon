@@ -28,10 +28,11 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EveImage));
             this.pbImage = new System.Windows.Forms.PictureBox();
-            this.toolTip = new System.Windows.Forms.ToolTip();
-            this.overlayImageList = new System.Windows.Forms.ImageList();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.overlayImageList = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,8 +46,9 @@ namespace EVEMon.Common.Controls
             this.pbImage.Size = new System.Drawing.Size(64, 64);
             this.pbImage.TabIndex = 0;
             this.pbImage.TabStop = false;
+            this.pbImage.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pbImage_MouseDoubleClick);
+            this.pbImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbImage_MouseClick);
             this.toolTip.SetToolTip(this.pbImage, "Double-click to view a larger image");
-            this.pbImage.DoubleClick += new System.EventHandler(this.pbImage_DoubleClick);
             // 
             // overlayImageList
             // 

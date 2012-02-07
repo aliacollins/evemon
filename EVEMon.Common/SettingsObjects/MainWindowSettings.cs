@@ -12,10 +12,11 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverview = true;
             ShowMenuBar = true;
             MarketOrders = new MarketOrderSettings();
+            Contracts = new ContractSettings();
             IndustryJobs = new IndustryJobSettings();
             Research = new ResearchSettings();
-            EVEMailMessages = new EveMailMessagesSettings();
-            EVENotifications = new EveNotificationsSettings();
+            EVEMailMessages = new EveMailMessageSettings();
+            EVENotifications = new EveNotificationSettings();
             OverviewItemSize = PortraitSizes.x96;
             TitleFormat = MainWindowTitleFormat.NextCharToFinish;
             ShowOverviewSkillQueueTrainingTime = true;
@@ -183,6 +184,13 @@ namespace EVEMon.Common.SettingsObjects
         public MarketOrderSettings MarketOrders { get; set; }
 
         /// <summary>
+        /// Gets or sets the contracts.
+        /// </summary>
+        /// <value>The contracts.</value>
+        [XmlElement("contracts")]
+        public ContractSettings Contracts { get; set; }
+
+        /// <summary>
         /// Gets or sets the industry jobs.
         /// </summary>
         /// <value>The industry jobs.</value>
@@ -201,13 +209,13 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The EVE mail messages.</value>
         [XmlElement("eveMailMessages")]
-        public EveMailMessagesSettings EVEMailMessages { get; set; }
+        public EveMailMessageSettings EVEMailMessages { get; set; }
 
         /// <summary>
         /// Gets or sets the EVE notifications.
         /// </summary>
         /// <value>The EVE notifications.</value>
         [XmlElement("eveNotifications")]
-        public EveNotificationsSettings EVENotifications { get; set; }
+        public EveNotificationSettings EVENotifications { get; set; }
     }
 }

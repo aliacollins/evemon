@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -81,6 +83,47 @@ namespace EVEMon.Common.Data
         /// Gets something like Region > Constellation > Solar System.
         /// </summary>
         public string FullLocation { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the color of the security level.
+        /// </summary>
+        /// <value>The color of the security level.</value>
+        public Color SecurityLevelColor
+        {
+            get
+            {
+                if (IsNullSec)
+                    return Color.Red;
+
+                return IsLowSec ? Color.DarkOrange : Color.Green;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this solar system is in low sec.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this solar system is in low sec; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsLowSec
+        {
+            get
+            {
+                double secLevel = Math.Round(SecurityLevel, 1);
+                return secLevel > 0 && secLevel < 0.5;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this solar system is in null sec.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this solar system is in null sec; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsNullSec
+        {
+            get { return Math.Round(SecurityLevel, 1) <= 0; }
+        }
 
         #endregion
 
@@ -176,7 +219,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return (int)ID;
+            return ID;
         }
 
         #endregion

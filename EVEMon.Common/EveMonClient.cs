@@ -305,7 +305,7 @@ namespace EVEMon.Common
             DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
             DirectoryInfo[] filesInEveCache = di.GetDirectories("*_tranquility");
 
-            if (filesInEveCache.Length == 0)
+            if (!filesInEveCache.Any())
                 return;
 
             EvePortraitCacheFolders = filesInEveCache.Select(
@@ -541,6 +541,16 @@ namespace EVEMon.Common
         /// Occurs when corporation market orders of a character have been updated.
         /// </summary>
         public static event EventHandler<MarketOrdersEventArgs> CorporationMarketOrdersUpdated;
+
+        /// <summary>
+        /// Occurs when personal contracts of a character have been updated.
+        /// </summary>
+        public static event EventHandler<ContractsEventArgs> CharacterContractsUpdated;
+
+        /// <summary>
+        /// Occurs when items list of a character's contract have been downloaded.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterContractItemsDownloaded;
 
         /// <summary>
         /// Occurs when industry jobs of a character have been updated.
@@ -821,6 +831,29 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCorporationMarketOrdersUpdated - {0}", character.Name);
             if (CorporationMarketOrdersUpdated != null)
                 CorporationMarketOrdersUpdated(null, new MarketOrdersEventArgs(character, endedOrders));
+        }
+
+        /// <summary>
+        /// Called when the personal contracts of a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="endedContracts">The ended contracts.</param>
+        internal static void OnCharacterContractsUpdated(Character character, IEnumerable<Contract> endedContracts)
+        {
+            Trace("EveMonClient.OnCharacterContractsUpdated - {0}", character.Name);
+            if (CharacterContractsUpdated != null)
+                CharacterContractsUpdated(null, new ContractsEventArgs(character, endedContracts));
+        }
+
+        /// <summary>
+        /// Called when the item list of a character's contract has been downloaed.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterContractItemsDownloaded(Character character)
+        {
+            Trace("EveMonClient.OnCharacterContractItemsDownloaded - {0}", character.Name);
+            if (CharacterContractItemsDownloaded != null)
+                CharacterContractItemsDownloaded(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

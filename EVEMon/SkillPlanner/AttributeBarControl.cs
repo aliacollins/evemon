@@ -310,8 +310,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseClick(MouseEventArgs e)
         {
-            base.OnMouseClick(e);
-
             // Store the single mouse click event
             m_mouseEvent = e;
             m_timer.Start();
@@ -323,8 +321,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            base.OnMouseDoubleClick(e);
-
             // Store the double mouse click event
             m_mouseEvent = e;
             m_timer.Start();
@@ -372,6 +368,8 @@ namespace EVEMon.SkillPlanner
             {
                 case 1:
                     {
+                        base.OnMouseClick(m_mouseEvent);
+
                         int newValue = GetValueAt(m_mouseEvent.Location);
 
                         if (newValue == -1)
@@ -396,7 +394,11 @@ namespace EVEMon.SkillPlanner
                     }
                     break;
                 case 2:
-                    Value = m_baseValue;
+                    {
+                        base.OnMouseDoubleClick(m_mouseEvent);
+
+                        Value = m_baseValue;
+                    }
                     break;
             }
 

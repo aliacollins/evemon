@@ -102,12 +102,12 @@ namespace EVEMon.Common.Notifications
         /// <param name="other"></param>
         public virtual void Append(NotificationEventArgs other)
         {
-            // Must have to be implemented by inheritors.
+            // Must have to be implemented by inheritors
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Gets the description for this 
+        /// Gets the description for this notification.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

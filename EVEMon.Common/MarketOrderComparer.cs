@@ -15,7 +15,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketOrderComparer"/> class.
         /// </summary>
-        /// <param name="column">The market order column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
         public MarketOrderComparer(MarketOrderColumn column, bool isAscending)
         {
@@ -68,63 +68,45 @@ namespace EVEMon.Common
             {
                 case MarketOrderColumn.Duration:
                     return x.Duration.CompareTo(y.Duration);
-
                 case MarketOrderColumn.Expiration:
                     return x.Expiration.CompareTo(y.Expiration);
-
                 case MarketOrderColumn.InitialVolume:
                     return x.InitialVolume.CompareTo(y.InitialVolume);
-
                 case MarketOrderColumn.Issued:
                     return x.Issued.CompareTo(y.Issued);
-
                 case MarketOrderColumn.IssuedFor:
                     return x.IssuedFor.CompareTo(y.IssuedFor);
-
                 case MarketOrderColumn.Item:
                     return String.Compare(x.Item.Name, y.Item.Name, StringComparison.CurrentCulture);
-
                 case MarketOrderColumn.ItemType:
                     return String.Compare(x.Item.MarketGroup.Name, y.Item.MarketGroup.Name, StringComparison.CurrentCulture);
-
                 case MarketOrderColumn.Location:
                     return x.Station.CompareTo(y.Station);
-
                 case MarketOrderColumn.MinimumVolume:
                     return x.MinVolume.CompareTo(y.MinVolume);
-
                 case MarketOrderColumn.Region:
                     return x.Station.SolarSystem.Constellation.Region.CompareTo(y.Station.SolarSystem.Constellation.Region);
-
                 case MarketOrderColumn.RemainingVolume:
                     return x.RemainingVolume.CompareTo(y.RemainingVolume);
-
                 case MarketOrderColumn.SolarSystem:
                     return x.Station.SolarSystem.CompareTo(y.Station.SolarSystem);
-
                 case MarketOrderColumn.Station:
                     return x.Station.CompareTo(y.Station);
-
                 case MarketOrderColumn.TotalPrice:
                     return x.TotalPrice.CompareTo(y.TotalPrice);
-
                 case MarketOrderColumn.UnitaryPrice:
                     return x.UnitaryPrice.CompareTo(y.UnitaryPrice);
-
                 case MarketOrderColumn.Volume:
                     // Compare the percent left
                     return (x.InitialVolume * y.RemainingVolume - x.RemainingVolume * y.InitialVolume);
-
                 case MarketOrderColumn.LastStateChange:
                     return x.LastStateChange.CompareTo(y.LastStateChange);
-
                 case MarketOrderColumn.OrderRange:
                     // Compare applies only to BuyOrder 
                     return (buyOrderX != null && buyOrderY != null ? buyOrderX.Range.CompareTo(buyOrderY.Range) : 0);
                 case MarketOrderColumn.Escrow:
                     // Compare applies only to BuyOrder 
                     return (buyOrderX != null && buyOrderY != null ? buyOrderX.Escrow.CompareTo(buyOrderY.Escrow) : 0);
-
                 default:
                     return 0;
             }

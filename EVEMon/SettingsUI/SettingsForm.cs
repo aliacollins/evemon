@@ -804,7 +804,7 @@ namespace EVEMon.SettingsUI
             newProvider.Methods.AddRange(APIMethod.CreateDefaultSet().Select(
                 apiMethod => new SerializableAPIMethod
                                  {
-                                     Method = apiMethod.Method.ToString(),
+                                     MethodName = apiMethod.Method.ToString(),
                                      Path = apiMethod.Path
                                  }));
 

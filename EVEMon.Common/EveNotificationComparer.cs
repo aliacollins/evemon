@@ -9,15 +9,15 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class EveNotificationComparer : Comparer<EveNotification>
     {
-        private readonly EveNotificationsColumn m_column;
+        private readonly EveNotificationColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveNotificationComparer"/> class.
         /// </summary>
-        /// <param name="column">The industry job column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public EveNotificationComparer(EveNotificationsColumn column, bool isAscending)
+        public EveNotificationComparer(EveNotificationColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;
@@ -63,15 +63,12 @@ namespace EVEMon.Common
         {
             switch (m_column)
             {
-                case EveNotificationsColumn.SenderName:
+                case EveNotificationColumn.SenderName:
                     return String.Compare(x.Sender, y.Sender, StringComparison.CurrentCulture);
-
-                case EveNotificationsColumn.Type:
+                case EveNotificationColumn.Type:
                     return String.Compare(x.Type, y.Type, StringComparison.CurrentCulture);
-
-                case EveNotificationsColumn.SentDate:
+                case EveNotificationColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);
-
                 default:
                     return 0;
             }

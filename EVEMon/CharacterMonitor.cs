@@ -59,6 +59,7 @@ namespace EVEMon
             employmentList.Character = character;
             standingsList.Character = character;
             ordersList.Character = character;
+            contractsList.Character = character;
             jobsList.Character = character;
             researchList.Character = character;
             mailMessagesList.Character = character;
@@ -68,8 +69,8 @@ namespace EVEMon
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, ordersIcon, jobsIcon, researchIcon,
-                                                mailMessagesIcon, eveNotificationsIcon
+                                                standingsIcon, ordersIcon, contractsIcon, jobsIcon,
+                                                researchIcon, mailMessagesIcon, eveNotificationsIcon
                                             });
 
             // Hide all advanced features related controls
@@ -402,13 +403,14 @@ namespace EVEMon
         /// <param name="button">The button.</param>
         private void SetVisibility(ToolStripButton button)
         {
-            List<IQueryMonitor> monitors = ButtonToMonitors(button).ToList();
-            button.Visible = IsEnabledFeature(button.Text) && !monitors.IsEmpty() && monitors.Any(monitor => monitor.HasAccess);
+            IEnumerable<IQueryMonitor> monitors = ButtonToMonitors(button);
+            bool visible = IsEnabledFeature(button.Text) && !monitors.IsEmpty() && monitors.Any(monitor => monitor.HasAccess);
+            button.Visible = visible;
 
             // Quit if the button should stay visible
             // (Do not use the buttons' 'Visible' property as condition,
-            // because there is a .Net bug when returning from minimized state) 
-            if (IsEnabledFeature(button.Text) && !monitors.IsEmpty() && monitors.Any(monitor => monitor.HasAccess))
+            // because there is a .NET bug when returning from minimized state) 
+            if (visible)
                 return;
 
             // Buttons' related monitor lost access to data while it was enabled, so...
@@ -452,6 +454,10 @@ namespace EVEMon
             // Enables / Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)
                 toolStripContextual.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
+
+            // Enables / Disables the contracts page related controls
+            if (multiPanel.SelectedPage == contractsPage)
+                toolStripContextual.Enabled = !ccpCharacter.CharacterContracts.IsEmpty();
 
             // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
@@ -519,13 +525,11 @@ namespace EVEMon
         /// </summary>
         private void UpdateSelectedPage()
         {
-            if ((multiPanel.SelectedPage == standingsPage && !standingsIcon.Visible)
-                || (multiPanel.SelectedPage == ordersPage && !ordersIcon.Visible)
-                || (multiPanel.SelectedPage == jobsPage && !jobsIcon.Visible)
-                || (multiPanel.SelectedPage == researchPage && !researchIcon.Visible)
-                || (multiPanel.SelectedPage == mailMessagesPage && !mailMessagesIcon.Visible)
-                || (multiPanel.SelectedPage == eveNotificationsPage && !eveNotificationsIcon.Visible))
+            if (m_advancedFeatures.Any(featureIcon =>
+                                       multiPanel.SelectedPage.Text == (string)featureIcon.Tag && !featureIcon.Visible))
+            {
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
+            }
         }
 
         #endregion
@@ -797,13 +801,14 @@ namespace EVEMon
         private IEnumerable<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
         {
             MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)button.Tag);
+            CCPCharacter ccpCharacter = (CCPCharacter)Character;
 
             List<IQueryMonitor> monitors = new List<IQueryMonitor>();
             if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
             {
                 APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
-                if (((CCPCharacter)Character).QueryMonitors[method.ToString()] != null)
-                    monitors.Add(((CCPCharacter)Character).QueryMonitors[method.ToString()]);
+                if (ccpCharacter.QueryMonitors[method.ToString()] != null)
+                    monitors.Add(ccpCharacter.QueryMonitors[method.ToString()]);
             }
 
             if (Enum.IsDefined(typeof(APICorporationMethods), String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
@@ -811,8 +816,8 @@ namespace EVEMon
                 APICorporationMethods method =
                     (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
                                                       String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag));
-                if (((CCPCharacter)Character).QueryMonitors[method.ToString()] != null)
-                    monitors.Add(((CCPCharacter)Character).QueryMonitors[method.ToString()]);
+                if (ccpCharacter.QueryMonitors[method.ToString()] != null)
+                    monitors.Add(ccpCharacter.QueryMonitors[method.ToString()]);
             }
 
             return monitors;
@@ -912,12 +917,9 @@ namespace EVEMon
             ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
             item.Checked = !item.Checked;
 
-            standingsIcon.Visible = (item.Text == standingsIcon.Text ? item.Checked : standingsIcon.Visible);
-            ordersIcon.Visible = (item.Text == ordersIcon.Text ? item.Checked : ordersIcon.Visible);
-            jobsIcon.Visible = (item.Text == jobsIcon.Text ? item.Checked : jobsIcon.Visible);
-            researchIcon.Visible = (item.Text == researchIcon.Text ? item.Checked : researchIcon.Visible);
-            mailMessagesIcon.Visible = (item.Text == mailMessagesIcon.Text ? item.Checked : mailMessagesIcon.Visible);
-            eveNotificationsIcon.Visible = (item.Text == eveNotificationsIcon.Text ? item.Checked : eveNotificationsIcon.Visible);
+            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = (item.Text == featureIcon.Text
+                                                                                 ? item.Checked
+                                                                                 : featureIcon.Visible));
 
             UpdateAdvancedFeaturesPagesSettings();
             ToggleAdvancedFeaturesMonitoring();
@@ -934,6 +936,9 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == ordersPage)
                 CreateGroupMenuList<MarketOrderGrouping, Enum>(ordersList);
+
+            if (multiPanel.SelectedPage == contractsPage)
+                CreateGroupMenuList<ContractGrouping, Enum>(contractsList);
 
             if (multiPanel.SelectedPage == jobsPage)
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
@@ -956,6 +961,9 @@ namespace EVEMon
             if (multiPanel.SelectedPage == ordersPage)
                 GroupMenuSetting<MarketOrderGrouping, Enum>(item, ordersList);
 
+            if (multiPanel.SelectedPage == contractsPage)
+                GroupMenuSetting<ContractGrouping, Enum>(item, contractsList);
+
             if (multiPanel.SelectedPage == jobsPage)
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
 
@@ -975,6 +983,9 @@ namespace EVEMon
         {
             if (multiPanel.SelectedPage == ordersPage)
                 ordersList.TextFilter = searchTextBox.Text;
+
+            if (multiPanel.SelectedPage == contractsPage)
+                contractsList.TextFilter = searchTextBox.Text;
 
             if (multiPanel.SelectedPage == jobsPage)
                 jobsList.TextFilter = searchTextBox.Text;
@@ -1015,6 +1026,23 @@ namespace EVEMon
                 showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
+            if (multiPanel.SelectedPage == contractsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.Contracts.NumberAbsFormat;
+                hideInactive = Settings.UI.MainWindow.Contracts.HideInactiveContracts;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+                showOnlyCharMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Character;
+                showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -1036,6 +1064,7 @@ namespace EVEMon
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
                 preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
+                return;
             }
 
             if (multiPanel.SelectedPage == mailMessagesPage || multiPanel.SelectedPage == eveNotificationsPage)
@@ -1045,6 +1074,7 @@ namespace EVEMon
                 preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
                 preferencesMenu.DropDownItems.Add(tsReadingPaneSeparator);
                 preferencesMenu.DropDownItems.Add(readingPaneMenuItem);
+                return;
             }
 
             hideInactiveMenuItem.Text = (hideInactive ? "Unhide Inactive" : "Hide Inactive");
@@ -1068,6 +1098,21 @@ namespace EVEMon
                         ordersList.Columns = f.Columns;
                         Settings.UI.MainWindow.MarketOrders.Columns.Clear();
                         Settings.UI.MainWindow.MarketOrders.Columns.AddRange(ordersList.Columns.Cast<MarketOrderColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == contractsPage)
+            {
+                using (ContractsColumnsSelectWindow f =
+                    new ContractsColumnsSelectWindow(contractsList.Columns.Cast<ContractColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        contractsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.Contracts.Columns.Clear();
+                        Settings.UI.MainWindow.Contracts.Columns.AddRange(contractsList.Columns.Cast<ContractColumnSettings>());
                     }
                 }
             }
@@ -1105,7 +1150,7 @@ namespace EVEMon
             if (multiPanel.SelectedPage == mailMessagesPage)
             {
                 using (EveMailMessagesColumnsSelectWindow f =
-                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>()))
+                    new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Cast<EveMailMessageColumnSettings>()))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -1113,7 +1158,7 @@ namespace EVEMon
                         mailMessagesList.Columns = f.Columns;
                         Settings.UI.MainWindow.EVEMailMessages.Columns.Clear();
                         Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(
-                            mailMessagesList.Columns.Cast<EveMailMessagesColumnSettings>());
+                            mailMessagesList.Columns.Cast<EveMailMessageColumnSettings>());
                     }
                 }
             }
@@ -1121,7 +1166,7 @@ namespace EVEMon
             if (multiPanel.SelectedPage == eveNotificationsPage)
             {
                 using (EveNotificationsColumnsSelectWindow f =
-                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>()))
+                    new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Cast<EveNotificationColumnSettings>()))
                 {
                     DialogResult dr = f.ShowDialog();
                     if (dr == DialogResult.OK)
@@ -1129,7 +1174,7 @@ namespace EVEMon
                         eveNotificationsList.Columns = f.Columns;
                         Settings.UI.MainWindow.EVENotifications.Columns.Clear();
                         Settings.UI.MainWindow.EVENotifications.Columns.AddRange(
-                            eveNotificationsList.Columns.Cast<EveNotificationsColumnSettings>());
+                            eveNotificationsList.Columns.Cast<EveNotificationColumnSettings>());
                     }
                 }
             }
@@ -1164,6 +1209,13 @@ namespace EVEMon
                 ordersList.UpdateColumns();
             }
 
+            if (multiPanel.SelectedPage == contractsPage)
+            {
+                hideInactive = Settings.UI.MainWindow.Contracts.HideInactiveContracts;
+                Settings.UI.MainWindow.Contracts.HideInactiveContracts = !hideInactive;
+                contractsList.UpdateColumns();
+            }
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -1180,10 +1232,21 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
         {
-            bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
-            numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
-            Settings.UI.MainWindow.MarketOrders.NumberAbsFormat = !numberFormat;
-            ordersList.UpdateColumns();
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.MarketOrders.NumberAbsFormat = !numberFormat;
+                ordersList.UpdateColumns();
+            }
+
+            if (multiPanel.SelectedPage == contractsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.Contracts.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.Contracts.NumberAbsFormat = !numberFormat;
+                contractsList.UpdateColumns();
+            }
         }
 
         /// <summary>
@@ -1197,14 +1260,19 @@ namespace EVEMon
             {
                 ordersList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
                 showOnlyCorpMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Corporation);
-                return;
             }
 
-            if (multiPanel.SelectedPage != jobsPage)
-                return;
+            if (multiPanel.SelectedPage == contractsPage)
+            {
+                contractsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
+                showOnlyCorpMenuItem.Checked = (contractsList.ShowIssuedFor == IssuedFor.Corporation);
+            }
 
-            jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-            showOnlyCorpMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Corporation);
+            if (multiPanel.SelectedPage == jobsPage)
+            {
+                jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
+                showOnlyCorpMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Corporation);
+            }
         }
 
         /// <summary>
@@ -1218,14 +1286,19 @@ namespace EVEMon
             {
                 ordersList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
                 showOnlyCharMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Character);
-                return;
+            }
+
+            if (multiPanel.SelectedPage == contractsPage)
+            {
+                contractsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
+                showOnlyCharMenuItem.Checked = (contractsList.ShowIssuedFor == IssuedFor.Character);
             }
 
             if (multiPanel.SelectedPage != jobsPage)
-                return;
-
-            jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-            showOnlyCharMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Character);
+            {
+                jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
+                showOnlyCharMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Character);
+            }
         }
 
         /// <summary>

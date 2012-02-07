@@ -251,6 +251,9 @@ namespace EVEMon.Common
             // Initializes the market order columns or adds missing ones
             UI.MainWindow.MarketOrders.Columns.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
 
+            // Initializes the contracts columns or adds missing ones
+            UI.MainWindow.Contracts.Columns.AddRange(UI.MainWindow.Contracts.DefaultColumns);
+
             // Initializes the industry jobs columns or adds missing ones
             UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
 

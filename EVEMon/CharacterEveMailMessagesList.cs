@@ -18,11 +18,11 @@ namespace EVEMon
     {
         #region Fields
 
-        private readonly List<EveMailMessagesColumnSettings> m_columns = new List<EveMailMessagesColumnSettings>();
+        private readonly List<EveMailMessageColumnSettings> m_columns = new List<EveMailMessageColumnSettings>();
         private readonly List<EveMailMessage> m_list = new List<EveMailMessage>();
 
         private EVEMailMessagesGrouping m_grouping;
-        private EveMailMessagesColumn m_sortCriteria;
+        private EveMailMessageColumn m_sortCriteria;
         private ReadingPanePositioning m_panePosition;
 
         private string m_textFilter = String.Empty;
@@ -144,11 +144,11 @@ namespace EVEMon
             get
             {
                 // Add the visible columns; matching the display order
-                List<EveMailMessagesColumnSettings> newColumns = new List<EveMailMessagesColumnSettings>();
+                List<EveMailMessageColumnSettings> newColumns = new List<EveMailMessageColumnSettings>();
                 foreach (ColumnHeader header in lvMailMessages.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    EveMailMessagesColumnSettings columnSetting =
-                        m_columns.First(x => x.Column == (EveMailMessagesColumn)header.Tag);
+                    EveMailMessageColumnSettings columnSetting =
+                        m_columns.First(x => x.Column == (EveMailMessageColumn)header.Tag);
                     if (columnSetting.Width > -1)
                         columnSetting.Width = header.Width;
 
@@ -164,7 +164,7 @@ namespace EVEMon
             {
                 m_columns.Clear();
                 if (value != null)
-                    m_columns.AddRange(value.Cast<EveMailMessagesColumnSettings>());
+                    m_columns.AddRange(value.Cast<EveMailMessageColumnSettings>());
 
                 if (m_init)
                     UpdateColumns();
@@ -237,7 +237,7 @@ namespace EVEMon
             {
                 lvMailMessages.Columns.Clear();
 
-                foreach (EveMailMessagesColumnSettings column in m_columns.Where(x => x.Visible))
+                foreach (EveMailMessageColumnSettings column in m_columns.Where(x => x.Visible))
                 {
                     ColumnHeader header = lvMailMessages.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = column.Column;
@@ -430,7 +430,7 @@ namespace EVEMon
                     for (int i = 0; i < lvMailMessages.Columns.Count; i++)
                     {
                         ColumnHeader header = lvMailMessages.Columns[i];
-                        EveMailMessagesColumn column = (EveMailMessagesColumn)header.Tag;
+                        EveMailMessageColumn column = (EveMailMessageColumn)header.Tag;
                         SetColumn(eveMailMessage, item.SubItems[i], column);
                     }
 
@@ -463,7 +463,7 @@ namespace EVEMon
                 int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
 
                 // If there is an image assigned to the header, add its width with padding
-                if (column.ImageIndex > -1)
+                if (lvMailMessages.SmallImageList != null && column.ImageIndex > -1)
                     columnHeaderWidth += lvMailMessages.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
@@ -494,7 +494,7 @@ namespace EVEMon
         {
             foreach (ColumnHeader columnHeader in lvMailMessages.Columns.Cast<ColumnHeader>())
             {
-                EveMailMessagesColumn column = (EveMailMessagesColumn)columnHeader.Tag;
+                EveMailMessageColumn column = (EveMailMessageColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
                     columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
@@ -508,27 +508,27 @@ namespace EVEMon
         /// <param name="eveMailMessage"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private static void SetColumn(EveMailMessage eveMailMessage, ListViewItem.ListViewSubItem item, EveMailMessagesColumn column)
+        private static void SetColumn(EveMailMessage eveMailMessage, ListViewItem.ListViewSubItem item, EveMailMessageColumn column)
         {
             switch (column)
             {
-                case EveMailMessagesColumn.SenderName:
+                case EveMailMessageColumn.SenderName:
                     item.Text = eveMailMessage.Sender;
                     break;
-                case EveMailMessagesColumn.Title:
+                case EveMailMessageColumn.Title:
                     item.Text = eveMailMessage.Title;
                     break;
-                case EveMailMessagesColumn.SentDate:
+                case EveMailMessageColumn.SentDate:
                     item.Text = String.Format(CultureConstants.DefaultCulture,
                                               "{0:ddd} {0:G}", eveMailMessage.SentDate.ToLocalTime());
                     break;
-                case EveMailMessagesColumn.ToCharacters:
+                case EveMailMessageColumn.ToCharacters:
                     item.Text = string.Join(", ", eveMailMessage.ToCharacters);
                     break;
-                case EveMailMessagesColumn.ToCorpOrAlliance:
+                case EveMailMessageColumn.ToCorpOrAlliance:
                     item.Text = eveMailMessage.ToCorpOrAlliance;
                     break;
-                case EveMailMessagesColumn.ToMailingList:
+                case EveMailMessageColumn.ToMailingList:
                     item.Text = string.Join(", ", eveMailMessage.ToMailingLists);
                     break;
                 default:
@@ -639,7 +639,7 @@ namespace EVEMon
                    || x.Title.ToLowerInvariant().Contains(text)
                    || x.ToCorpOrAlliance.ToLowerInvariant().Contains(text)
                    || x.ToCharacters.Any(y => y.ToLowerInvariant().Contains(text))
-                   || (x.EVEMailBody.BodyText.ToLowerInvariant().Contains(text));
+                   || x.EVEMailBody.BodyText.ToLowerInvariant().Contains(text);
         }
 
         /// <summary>
@@ -750,7 +750,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void lvMailMessages_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            EveMailMessagesColumn column = (EveMailMessagesColumn)lvMailMessages.Columns[e.Column].Tag;
+            EveMailMessageColumn column = (EveMailMessageColumn)lvMailMessages.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
                 m_sortAscending = !m_sortAscending;
             else
@@ -763,7 +763,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Picking "Open mail" in the context menu.
+        /// Picking "Read" in the context menu.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -773,7 +773,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Picking "Open" in the EVE Gate context menu.
+        /// Picking "Read" in the EVE Gate context menu.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -828,7 +828,7 @@ namespace EVEMon
                 return;
 
             Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
-            Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(Columns.Cast<EveMailMessagesColumnSettings>());
+            Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(Columns.Cast<EveMailMessageColumnSettings>());
 
             // Recreate the columns
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;

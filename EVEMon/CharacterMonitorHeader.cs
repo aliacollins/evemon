@@ -806,14 +806,13 @@ namespace EVEMon
             string location = "Lost in space";
 
             // Check if in an NPC station or in an outpost
-            Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation) ??
-                              ConquerableStation.GetStationByName(m_character.LastKnownLocation);
+            Station station = m_character.LastKnownStation;
 
             // Not in any station ?
             if (station == null)
             {
                 // Has to be in a solar system at least
-                SolarSystem system = StaticGeography.GetSolarSystemByName(m_character.LastKnownLocation);
+                SolarSystem system = m_character.LastKnownSolarSystem;
 
                 // Not in a solar system ??? Then show default location
                 if (system != null)

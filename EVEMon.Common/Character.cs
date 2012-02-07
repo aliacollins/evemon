@@ -231,7 +231,24 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the character's  employment history.
         /// </summary>
-        public EmploymentRecordCollection EmploymentHistory { get; set; }
+        public EmploymentRecordCollection EmploymentHistory { get; private set; }
+
+        /// <summary>
+        /// Gets the character's last known station location.
+        /// </summary>
+        public Station LastKnownStation
+        {
+            get { return Station.GetByName(LastKnownLocation); }
+        }
+
+        /// <summary>
+        /// Gets the character's last known solar system location.
+        /// </summary>
+        public SolarSystem LastKnownSolarSystem
+        {
+            get { return StaticGeography.GetSolarSystemByName(LastKnownLocation); }
+        }
+
 
         #endregion
 
