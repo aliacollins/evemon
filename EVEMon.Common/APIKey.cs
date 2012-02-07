@@ -180,6 +180,14 @@ namespace EVEMon.Common
             get { return TrainingCharacter != null; }
         }
 
+        /// <summary>
+        /// Gets true if this API key is a corporation type.
+        /// </summary>
+        public bool IsTypeCorporation
+        {
+            get { return Type == APIKeyType.Corporation; }
+        }
+
         #endregion
 
 
@@ -231,7 +239,8 @@ namespace EVEMon.Common
 
             // We trigger the account status check when we have the character list of the API key
             // in order to have better API key related info in the trace file
-            m_accountStatusMonitor.Enabled = (m_characterListUpdated && Monitored);
+            m_accountStatusMonitor.Enabled = IsTypeCorporation && Type != APIKeyType.Unknown &&
+                                              m_characterListUpdated && Monitored;
         }
 
 
