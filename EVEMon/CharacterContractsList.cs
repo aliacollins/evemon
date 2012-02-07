@@ -62,7 +62,7 @@ namespace EVEMon
             lvContracts.ColumnReordered += lvContracts_ColumnReordered;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.CharacterContractsUpdated += EveMonClient_CharacterContractsUpdated;
+            EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
             EveMonClient.CharacterContractItemsDownloaded += EveMonClient_CharacterContractItemsDownloaded;
             Disposed += OnDisposed;
         }
@@ -200,7 +200,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
+            EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
             EveMonClient.CharacterContractItemsDownloaded -= EveMonClient_CharacterContractItemsDownloaded;
             Disposed -= OnDisposed;
         }
@@ -223,7 +223,7 @@ namespace EVEMon
             m_init = false;
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
-            Contracts = (ccpCharacter == null ? null : ccpCharacter.CharacterContracts);
+            Contracts = (ccpCharacter == null ? null : ccpCharacter.Contracts);
             Columns = Settings.UI.MainWindow.Contracts.Columns;
 
             UpdateColumns();
@@ -883,13 +883,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.ContractsEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterContractsUpdated(object sender, ContractsEventArgs e)
+        private void EveMonClient_ContractsUpdated(object sender, CharacterChangedEventArgs e)
         {
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null || e.Character != ccpCharacter)
                 return;
 
-            Contracts = ccpCharacter.CharacterContracts;
+            Contracts = ccpCharacter.Contracts;
             UpdateColumns();
         }
 

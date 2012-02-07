@@ -543,9 +543,19 @@ namespace EVEMon.Common
         public static event EventHandler<MarketOrdersEventArgs> CorporationMarketOrdersUpdated;
 
         /// <summary>
+        /// Occurs when both personal and corporation contracts of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> ContractsUpdated;
+
+        /// <summary>
         /// Occurs when personal contracts of a character have been updated.
         /// </summary>
         public static event EventHandler<ContractsEventArgs> CharacterContractsUpdated;
+
+        /// <summary>
+        /// Occurs when corporation contracts of a character have been updated.
+        /// </summary>
+        public static event EventHandler<ContractsEventArgs> CorporationContractsUpdated;
 
         /// <summary>
         /// Occurs when items list of a character's contract have been downloaded.
@@ -798,7 +808,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the personal market orders of a character updated.
+        /// Called when both character and corporation issued market orders of a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
         internal static void OnMarketOrdersUpdated(Character character)
@@ -834,6 +844,18 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when both character and corporation issued contracts of a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnContractsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnContractsUpdated - {0}", character.Name);
+            Settings.Save();
+            if (ContractsUpdated != null)
+                ContractsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
         /// Called when the personal contracts of a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -843,6 +865,18 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterContractsUpdated - {0}", character.Name);
             if (CharacterContractsUpdated != null)
                 CharacterContractsUpdated(null, new ContractsEventArgs(character, endedContracts));
+        }
+
+        /// <summary>
+        /// Called when the corporation contracts of a character updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="endedContracts">The ended contracts.</param>
+        internal static void OnCorporationContractsUpdated(Character character, IEnumerable<Contract> endedContracts)
+        {
+            Trace("EveMonClient.OnCorporationContractsUpdated - {0}", character.Name);
+            if (CorporationContractsUpdated != null)
+                CorporationContractsUpdated(null, new ContractsEventArgs(character, endedContracts));
         }
 
         /// <summary>
@@ -1172,6 +1206,10 @@ namespace EVEMon.Common
             StackFrame frame = stackTrace.GetFrame(1);
             MethodBase method = frame.GetMethod();
             string parameters = FormatParameters(method.GetParameters());
+
+            if (method.DeclaringType == null)
+                return;
+
             string declaringType = method.DeclaringType.ToString().Replace("EVEMon.", String.Empty);
 
             Trace("{0}.{1}({2})", declaringType, method.Name, parameters);

@@ -347,7 +347,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a market orders querying error.
+        /// Notifies the character market orders querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -364,7 +364,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a market orders querying error.
+        /// Notifies a corporation market orders querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -381,7 +381,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies the character contracts error.
+        /// Notifies the character contracts querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -398,7 +398,24 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies the contract items error.
+        /// Notifies the corporation contracts querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCorporationContractsError(CCPCharacter character, APIResult<SerializableAPIContracts> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the corporation contracts.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a contract items querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -415,7 +432,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies the contract bids error.
+        /// Notifies a character contract bids querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -424,7 +441,7 @@ namespace EVEMon.Common
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
                     {
-                        Description = "An error occurred while querying a contract's bids.",
+                        Description = "An error occurred while querying the personal contract bids.",
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Error
                     };
@@ -432,7 +449,24 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies an industry jobs querying error.
+        /// Notifies a corporation contract bids querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCorporationContractBidsError(CCPCharacter character, APIResult<SerializableAPIContractBids> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the corporation contract bids.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character industry jobs querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -449,7 +483,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies an industry jobs querying error.
+        /// Notifies a corporation industry jobs querying error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -941,6 +975,22 @@ namespace EVEMon.Common
                         Behaviour = NotificationBehaviour.Merge,
                         Priority = NotificationPriority.Information
                     };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notify some corporation contracts have been expired or fulfilled.
+        /// </summary>
+        /// <param name="corporation">The corporation.</param>
+        /// <param name="endedContracts">The ended contracts.</param>
+        public void NotifyCorporationContractsEnded(Corporation corporation, IEnumerable<Contract> endedContracts)
+        {
+            ContractsNotificationEventArgs notification =
+                new ContractsNotificationEventArgs(corporation, endedContracts)
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 

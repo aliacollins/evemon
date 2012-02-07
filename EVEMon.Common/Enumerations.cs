@@ -332,6 +332,14 @@ namespace EVEMon.Common
         CorporationMarketOrders = 1 << 12,
 
         /// <summary>
+        /// The corporation issued contracts of a character.
+        /// </summary>
+        [Header("Contracts")]
+        [Description("The corporation contracts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationContracts = 1 << 23,
+
+        /// <summary>
         /// The corporation issued industry jobs of a character.
         /// </summary>
         [Header("Industry Jobs")]
@@ -391,14 +399,24 @@ namespace EVEMon.Common
         CharacterName,
 
         /// <summary>
-        /// The items contained in a contract.
+        /// The items contained in a personal contract.
         /// </summary>
         ContractItems,
 
         /// <summary>
-        /// The bids for an auctioned contract.
+        /// The items contained in a corporation contract.
         /// </summary>
-        ContractBids
+        CorporationContractItems,
+
+        /// <summary>
+        /// The bids for personal auctioned contracts.
+        /// </summary>
+        ContractBids,
+
+        /// <summary>
+        /// The bids for corporation auctioned contracts.
+        /// </summary>
+        CorporationContractBids
     }
 
     public enum ThrobberState

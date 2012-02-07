@@ -494,17 +494,18 @@ namespace EVEMon.Common
             m_queryPending = true;
 
             // Quits if access denied
-            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+            APIKey apiKey = IssuedFor == IssuedFor.Corporation
+                                ? Character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts)
+                                : Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
             if (apiKey == null)
                 return;
 
+            APIGenericMethods method = IssuedFor == IssuedFor.Corporation
+                                           ? APIGenericMethods.CorporationContractItems
+                                           : APIGenericMethods.ContractItems;
+
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractItems>(
-                APIGenericMethods.ContractItems,
-                apiKey.ID,
-                apiKey.VerificationCode,
-                Character.CharacterID,
-                ID,
-                OnContractItemsDownloaded);
+                method, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, ID, OnContractItemsDownloaded);
         }
 
         /// <summary>

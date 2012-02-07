@@ -344,8 +344,11 @@ namespace EVEMon
                     !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
                     ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
                         monitor =>
-                        !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null))
+                        !monitor.Method.Equals(APICorporationMethods.CorporationContracts) ||
+                        ccpCharacter.QueryMonitors[APICharacterMethods.Contracts.ToString()] == null).Where(
+                            monitor =>
+                            !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
+                            ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -696,9 +699,12 @@ namespace EVEMon
                 !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
                 ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
                     monitor =>
-                    !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null).Select(
-                        CreateNewMonitorToolStripMenuItem))
+                    !monitor.Method.Equals(APICorporationMethods.CorporationContracts) ||
+                    ccpCharacter.QueryMonitors[APICharacterMethods.Contracts.ToString()] == null).Where(
+                        monitor =>
+                        !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
+                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null).Select(
+                            CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menu);
             }

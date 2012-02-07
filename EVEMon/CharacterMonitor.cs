@@ -457,7 +457,7 @@ namespace EVEMon
 
             // Enables / Disables the contracts page related controls
             if (multiPanel.SelectedPage == contractsPage)
-                toolStripContextual.Enabled = !ccpCharacter.CharacterContracts.IsEmpty();
+                toolStripContextual.Enabled = !ccpCharacter.Contracts.IsEmpty();
 
             // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)

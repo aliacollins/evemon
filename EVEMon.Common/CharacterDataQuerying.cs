@@ -25,6 +25,7 @@ namespace EVEMon.Common
         private readonly CCPCharacter m_ccpCharacter;
 
         private bool m_charMarketOrdersQueried;
+        private bool m_charContractsQueried;
         private bool m_charIndustryJobsQueried;
 
         #endregion
@@ -125,10 +126,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [character market orders queried].
+        /// Gets or sets a value indicating whether the character market orders have been queried.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [character market orders queried]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the character market orders have been queried; otherwise, <c>false</c>.
         /// </value>
         internal bool CharacterMarketOrdersQueried
         {
@@ -145,10 +146,30 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [character industry jobs queried].
+        /// Gets or sets a value indicating whether the character contracts have been queried.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [character industry jobs queried]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the character contracts have been queried; otherwise, <c>false</c>.
+        /// </value>
+        internal bool CharacterContractsQueried
+        {
+            get
+            {
+                // If character can not query character related data
+                // or character contracts monitor is not enabled
+                // we switch the flag
+                IQueryMonitor charContractsMonitor =
+                    m_ccpCharacter.QueryMonitors[APICharacterMethods.Contracts.ToString()];
+                return m_charContractsQueried |= charContractsMonitor == null || !charContractsMonitor.Enabled;
+            }
+            set { m_charContractsQueried = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the character industry jobs have been queried.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the character industry jobs have been queried; otherwise, <c>false</c>.
         /// </value>
         internal bool CharacterIndustryJobsQueried
         {
@@ -394,6 +415,8 @@ namespace EVEMon.Common
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null)
                 return;
+
+            CharacterContractsQueried = true;
             
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Contracts))
@@ -405,6 +428,8 @@ namespace EVEMon.Common
 
             // Query the contracts bids
             QueryCharacterContractBids();
+
+            result.Result.Contracts.ToList().ForEach(x => x.IssuedFor = IssuedFor.Character);
 
             // Import the data
             List<Contract> endedContracts = new List<Contract>();

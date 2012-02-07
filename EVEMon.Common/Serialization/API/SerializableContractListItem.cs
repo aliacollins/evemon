@@ -114,5 +114,11 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlIgnore]
         public DateTime DateCompleted { get; set; }
+
+        /// <summary>
+        /// Which this contract was issued for.
+        /// </summary>
+        [XmlIgnore]
+        public IssuedFor IssuedFor { get; set; }
     }
 }
