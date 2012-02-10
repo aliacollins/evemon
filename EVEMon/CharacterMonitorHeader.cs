@@ -226,35 +226,20 @@ namespace EVEMon
 
             if (nextMonitor == null)
             {
-                UpdateLabel.Visible = false;
+                UpdateLabel.Text = String.Empty;
                 return;
             }
 
-            UpdateLabel.Visible = true;
-
             TimeSpan timeLeft = nextMonitor.NextUpdate.Subtract(DateTime.UtcNow);
 
-            if (timeLeft < TimeSpan.Zero)
+            if (timeLeft <= TimeSpan.Zero)
             {
                 UpdateLabel.Text = "Pending...";
                 return;
             }
 
-            UpdateLabel.Text = GetCountdownFormat(timeLeft);
-        }
-
-        /// <summary>
-        /// Gets the countdown format.
-        /// </summary>
-        /// <param name="timeLeft">The time left.</param>
-        /// <returns>String formatted as a countdown timer.</returns>
-        /// <remarks>Hours are formatted accumulatively when "Week" is selected</remarks>
-        private static string GetCountdownFormat(TimeSpan timeLeft)
-        {
-            double hours = Math.Floor(timeLeft.TotalHours);
-            int minutes = timeLeft.Minutes;
-            int seconds = timeLeft.Seconds;
-            return String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}", hours, minutes, seconds);
+            UpdateLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}",
+                                             Math.Floor(timeLeft.TotalHours), timeLeft.Minutes, timeLeft.Seconds);
         }
 
         /// <summary>
@@ -284,7 +269,7 @@ namespace EVEMon
         /// <param name="status">The status.</param>
         private void SetThrobberStrobing(string status)
         {
-            UpdateLabel.Visible = false;
+            UpdateLabel.Text = String.Empty;
             UpdateThrobber.Visible = true;
             UpdateThrobber.State = ThrobberState.Strobing;
             ToolTip.SetToolTip(UpdateThrobber, status);
@@ -295,7 +280,7 @@ namespace EVEMon
         /// </summary>
         private void SetThrobberUpdating()
         {
-            UpdateLabel.Visible = false;
+            UpdateLabel.Text = String.Empty;
             UpdateThrobber.State = ThrobberState.Rotating;
             UpdateThrobber.Visible = true;
             ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
@@ -306,7 +291,7 @@ namespace EVEMon
         /// </summary>
         private void HideThrobber()
         {
-            UpdateLabel.Visible = false;
+            UpdateLabel.Text = String.Empty;
             UpdateThrobber.Visible = false;
             UpdateThrobber.State = ThrobberState.Stopped;
         }
