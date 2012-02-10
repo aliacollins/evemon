@@ -508,7 +508,7 @@ namespace EVEMon.Common
             // Uncomment upon implementing an exclusive corporation monitor
             // Notify ended orders issued for the corporation
             //if (m_endedOrdersForCorporation.Any())
-            //EveMonClient.Notifications.NotifyCorporationMarketOrdersEnded(Corporation, m_endedOrdersForCorporation);
+            //    EveMonClient.Notifications.NotifyCorporationMarketOrdersEnded(Corporation, m_endedOrdersForCorporation);
         }
 
         /// <summary>
@@ -544,14 +544,17 @@ namespace EVEMon.Common
             NotifyAssignedContracts();
 
             // Reset flags
-            if (m_characterDataQuerying != null)
+            if (m_characterDataQuerying != null && m_corporationDataQuerying != null && m_corporationDataQuerying.CorporationContractsQueried)
+            {
                 m_characterDataQuerying.CharacterContractsQueried = false;
+                m_endedContractsForCharacter.Clear();
+            }
 
-            if (m_corporationDataQuerying != null)
+            if (m_corporationDataQuerying != null && m_characterDataQuerying != null && m_characterDataQuerying.CharacterContractsQueried)
+            {
                 m_corporationDataQuerying.CorporationContractsQueried = false;
-
-            m_endedContractsForCharacter.Clear();
-            m_endedContractsForCorporation.Clear();
+                m_endedContractsForCorporation.Clear();
+            }
 
             // Fires the event regarding contracts update
             EveMonClient.OnContractsUpdated(this);
