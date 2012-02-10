@@ -827,7 +827,7 @@ namespace EVEMon
             if (!Visible || !m_columnsChanged)
                 return;
 
-            Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
+            Settings.UI.MainWindow.EVEMailMessages.Columns.Clear();
             Settings.UI.MainWindow.EVEMailMessages.Columns.AddRange(Columns.Cast<EveMailMessageColumnSettings>());
 
             // Recreate the columns

@@ -19,14 +19,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true when at least one of the monitors is being updated.
-        /// </summary>
-        public bool AnyUpdating
-        {
-            get { return Items.Any(x => x.IsUpdating); }
-        }
-
-        /// <summary>
         /// Gets true when at least one of the monitors encountered an error on last try.
         /// </summary>
         public bool HasErrors

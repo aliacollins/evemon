@@ -74,11 +74,21 @@ namespace EVEMon.Common
             endedContracts.AddRange(newContracts.Where(newContract => newContract.NeedsAttention));
 
             // Add the items that are no longer marked for deletion
-            newContracts.AddRange(Items.Where(x => !x. MarkedForDeletion));
+            newContracts.AddRange(Items.Where(x => !x.MarkedForDeletion));
 
             // Replace the old list with the new one
             Items.Clear();
             Items.AddRange(newContracts);
+        }
+
+        /// <summary>
+        /// Exports only the character issued contracts to a serialization object for the settings file.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Used to export only the corporation contracts issued by a character.</remarks>
+        internal IEnumerable<SerializableContract> ExportOnlyIssuedByCharacter()
+        {
+            return Items.Where(contract => contract.IssuerID == m_character.CharacterID).Select(contract => contract.Export());
         }
 
         /// <summary>
@@ -87,7 +97,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal IEnumerable<SerializableContract> Export()
         {
-            return Items.Select(contract => contract.Export());
+            return Items.Where(contract => contract.IssuerID != 0).Select(contract => contract.Export());
         }
 
         #endregion

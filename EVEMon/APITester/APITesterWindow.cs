@@ -204,7 +204,7 @@ namespace EVEMon.APITester
 
                     Character character = (Character)cbCharacter.SelectedItem;
                     APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(
-                        key => key.Type == APIKeyType.Account || key.Type == APIKeyType.Character);
+                        key => key.IsCharacterOrAccountType);
 
                     return apiKey == null
                                ? String.Empty

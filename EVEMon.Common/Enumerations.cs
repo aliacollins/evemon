@@ -183,7 +183,8 @@ namespace EVEMon.Common
         /// <summary>
         /// The advanced corporation features of APIMethods.
         /// </summary>
-        //AdvancedCorporationFeatures = None,
+        AdvancedCorporationFeatures = APICorporationMethods.CorporationMarketOrders | APICorporationMethods.CorporationContracts
+                                      | APICorporationMethods.CorporationIndustryJobs,
 
         /// <summary>
         /// All character features of APIMethods.

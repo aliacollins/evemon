@@ -9,5 +9,8 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlAttribute("contractState")]
         public ContractState ContractState { get; set; }
+
+        [XmlAttribute("issuedFor")]
+        public IssuedFor IssuedFor { get; set; }
     }
 }

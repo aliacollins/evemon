@@ -63,7 +63,8 @@ namespace EVEMon
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
-            EveMonClient.CharacterContractItemsDownloaded += EveMonClient_CharacterContractItemsDownloaded;
+            EveMonClient.CharacterContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
+            EveMonClient.CorporationContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
             Disposed += OnDisposed;
         }
 
@@ -201,7 +202,8 @@ namespace EVEMon
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
-            EveMonClient.CharacterContractItemsDownloaded -= EveMonClient_CharacterContractItemsDownloaded;
+            EveMonClient.CharacterContractItemsDownloaded -= EveMonClient_ContractItemsDownloaded;
+            EveMonClient.CorporationContractItemsDownloaded -= EveMonClient_ContractItemsDownloaded;
             Disposed -= OnDisposed;
         }
 
@@ -750,6 +752,7 @@ namespace EVEMon
             ListViewItem item = lvContracts.SelectedItems[0];
             Contract contract = (Contract)item.Tag;
 
+            // Quit if for any reason the contract's item list is empty
             if (contract.ContractType != ContractType.Courier && !contract.ContractItems.Any())
                 return;
 
@@ -898,7 +901,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterContractItemsDownloaded(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_ContractItemsDownloaded(object sender, CharacterChangedEventArgs e)
         {
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             if (ccpCharacter == null || e.Character != ccpCharacter)

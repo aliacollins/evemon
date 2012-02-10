@@ -14,14 +14,7 @@ namespace EVEMon.Common
     public sealed class GlobalMonitoredCharacterCollection : ReadonlyCollection<Character>
     {
         /// <summary>
-        /// 
-        /// </summary>
-        internal GlobalMonitoredCharacterCollection()
-        {
-        }
-
-        /// <summary>
-        /// Update the order from the given list
+        /// Update the order from the given list.
         /// </summary>
         /// <param name="order"></param>
         public void Update(IEnumerable<Character> order)
@@ -82,7 +75,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports the given characters
+        /// Imports the given characters.
         /// </summary>
         /// <param name="monitoredCharacters"></param>
         internal void Import(IEnumerable<MonitoredCharacterSettings> monitoredCharacters)

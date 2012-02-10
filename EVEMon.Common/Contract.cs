@@ -11,6 +11,7 @@ namespace EVEMon.Common
     {
         private readonly List<ContractItem> m_contractItems = new List<ContractItem>();
         private ContractState m_state;
+        private APIGenericMethods m_apiMethod;
 
         private bool m_queryPending;
 
@@ -33,7 +34,6 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("src");
 
             Character = ccpCharacter;
-            ID = src.ContractID;
             PopulateContractInfo(src);
             m_state = GetState(src);
         }
@@ -47,6 +47,9 @@ namespace EVEMon.Common
         {
             Character = ccpCharacter;
             ID = src.ContractID;
+            IssuedFor = src.IssuedFor;
+            if (IssuedFor == IssuedFor.Corporation)
+                IssuerID = Character.CharacterID;
             m_state = src.ContractState;
         }
 
@@ -62,6 +65,12 @@ namespace EVEMon.Common
         /// </summary>
         /// <value>The ID.</value>
         public long ID { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the issuer ID.
+        /// </summary>
+        /// <value>The issuer ID.</value>
+        public long IssuerID { get; private set; }
 
         /// <summary>
         /// Gets or sets the start station.
@@ -394,6 +403,8 @@ namespace EVEMon.Common
             return true;
         }
 
+        private Enum m_method;
+
         /// <summary>
         /// Populates the serialization object contract with the info from the API.
         /// </summary>
@@ -403,6 +414,10 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
+            m_method = src.APIMethod;
+
+            ID = src.ContractID;
+            IssuerID = src.IssuerID;
             StartStation = Station.GetByID(src.StartStationID);
             EndStation = Station.GetByID(src.EndStationID);
             Description = String.IsNullOrWhiteSpace(src.Title) ? "(None)" : src.Title;
@@ -449,7 +464,8 @@ namespace EVEMon.Common
                                  ? Character.Corporation.Name
                                  : EveIDToName.GetIDToName(src.AcceptorID);
 
-            GetContractItems();       
+            if (ContractType != ContractType.Courier)
+                GetContractItems();
         }
 
         /// <summary>
@@ -473,7 +489,8 @@ namespace EVEMon.Common
             return new SerializableContract
                        {
                            ContractID = ID,
-                           ContractState = m_state
+                           ContractState = m_state,
+                           IssuedFor = IssuedFor
                        };
         }
 
@@ -493,19 +510,22 @@ namespace EVEMon.Common
 
             m_queryPending = true;
 
-            // Quits if access denied
-            APIKey apiKey = IssuedFor == IssuedFor.Corporation
+            // Special condition to identify corporation contracts in character query
+            APIKey apiKey = IssuedFor == IssuedFor.Corporation && APICorporationMethods.CorporationContracts.Equals(m_method)
                                 ? Character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts)
                                 : Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+
+            // Quits if access denied
             if (apiKey == null)
                 return;
 
-            APIGenericMethods method = IssuedFor == IssuedFor.Corporation
-                                           ? APIGenericMethods.CorporationContractItems
-                                           : APIGenericMethods.ContractItems;
+            // Special condition to identify corporation contracts in character query and determine the correct api method to call
+            m_apiMethod = IssuedFor == IssuedFor.Corporation && APICorporationMethods.CorporationContracts.Equals(m_method)
+                              ? APIGenericMethods.CorporationContractItems
+                              : APIGenericMethods.ContractItems;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractItems>(
-                method, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, ID, OnContractItemsDownloaded);
+                m_apiMethod, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, ID, OnContractItemsDownloaded);
         }
 
         /// <summary>
@@ -517,21 +537,28 @@ namespace EVEMon.Common
             m_queryPending = false;
 
             // Notify an error occured
-            if (Character.ShouldNotifyError(result, APIGenericMethods.ContractItems))
+            if (Character.ShouldNotifyError(result, m_apiMethod))
                 EveMonClient.Notifications.NotifyContractItemsError(Character, result);
 
             // Quits if there is an error
             if (result.HasError)
                 return;
 
-            // Quit if for any reason there is no data
+            // Re-fetch the items if for any reason a previous attempt failed
             if (!result.Result.ContractItems.Any())
+            {
+                GetContractItems();
                 return;
+            }
 
             // Import the data
             Import(result.Result.ContractItems);
 
-            EveMonClient.OnCharacterContractItemsDownloaded(Character);
+            // Fires the event regarding contract items downloaded
+            if (m_apiMethod == APIGenericMethods.ContractItems)
+                EveMonClient.OnCharacterContractItemsDownloaded(Character);
+            else
+                EveMonClient.OnCorporationContractItemsDownloaded(Character);
         }
 
         #endregion

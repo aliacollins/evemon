@@ -76,7 +76,6 @@ namespace EVEMon
 
             RoutePanelParent.Width = 160;
             RoutePanelParent.BorderStyle = BorderStyle.FixedSingle;
-            RoutePanel.Size = RoutePanelParent.Size;
             Size = m_startingSize;
 
             // TODO: Implement a listView to show the contracts bids
@@ -186,7 +185,7 @@ namespace EVEMon
         {
             m_height += Pad;
 
-            string exclamation = m_contract.Issuer == m_contract.Character.Name ? "Buyer" : "You";
+            string exclamation = m_contract.IssuerID == m_contract.Character.CharacterID ? "Buyer" : "You";
 
             if (m_contractItems.Any(x => x.Included))
             {
@@ -287,7 +286,7 @@ namespace EVEMon
             m_height += Pad;
 
             string labelText = String.Format(CultureConstants.DefaultCulture, "{0} Will {1}",
-                                             m_contract.Issuer == m_contract.Character.Name ? "Buyer" : "You",
+                                             m_contract.IssuerID == m_contract.Character.CharacterID ? "Buyer" : "You",
                                              m_contract.Price > 0 ? "Pay" : "Get");
 
             if (m_contract.Price > 0)

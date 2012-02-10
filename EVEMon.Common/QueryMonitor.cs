@@ -141,11 +141,16 @@ namespace EVEMon.Common
         public bool IsUpdating { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this monitor has access to data.
+        /// Gets true when the monitor encountered an error on last try.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this monitor has access; otherwise, <c>false</c>.
-        /// </value>
+        public bool HasError
+        {
+            get { return LastResult != null && LastResult.HasError; }
+        }
+
+        /// <summary>
+        /// Gets true if this monitor has access to data.
+        /// </summary>
         public virtual bool HasAccess
         {
             get { return true; }

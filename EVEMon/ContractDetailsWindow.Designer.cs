@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractDetailsWindow));
             this.ButtonPanel = new System.Windows.Forms.Panel();
             this.BidsButton = new System.Windows.Forms.Button();
-            this.DetailsPanel = new Common.Controls.NoFlickerPanel();
+            this.DetailsPanel = new EVEMon.Common.Controls.NoFlickerPanel();
             this.ImageList = new System.Windows.Forms.ImageList(this.components);
             this.ImageListIcons = new System.Windows.Forms.ImageList(this.components);
             this.RoutePanel = new System.Windows.Forms.Panel();
@@ -97,7 +97,7 @@
             this.RoutePanel.Location = new System.Drawing.Point(0, 0);
             this.RoutePanel.Margin = new System.Windows.Forms.Padding(0);
             this.RoutePanel.Name = "RoutePanel";
-            this.RoutePanel.Size = new System.Drawing.Size(0, 0);
+            this.RoutePanel.Size = new System.Drawing.Size(10, 10);
             this.RoutePanel.TabIndex = 7;
             this.RoutePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.RoutePanel_Paint);
             // 

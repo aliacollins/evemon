@@ -196,7 +196,7 @@ namespace EVEMon
                 return;
             }
 
-            if (ccpCharacter.QueryMonitors.AnyUpdating)
+            if (ccpCharacter.QueryMonitors.Any(monitor => monitor.IsUpdating))
             {
                 SetThrobberUpdating();
                 return;
@@ -269,7 +269,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (ccpCharacter.Identity.APIKeys.IsEmpty() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
+            if (ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ToolTip.SetToolTip(UpdateThrobber, String.Empty);
                 return;
@@ -284,10 +284,10 @@ namespace EVEMon
         /// <param name="status">The status.</param>
         private void SetThrobberStrobing(string status)
         {
+            UpdateLabel.Visible = false;
             UpdateThrobber.Visible = true;
             UpdateThrobber.State = ThrobberState.Strobing;
             ToolTip.SetToolTip(UpdateThrobber, status);
-            UpdateLabel.Visible = false;
         }
 
         /// <summary>
@@ -295,10 +295,10 @@ namespace EVEMon
         /// </summary>
         private void SetThrobberUpdating()
         {
-            UpdateThrobber.Visible = true;
-            UpdateThrobber.State = ThrobberState.Rotating;
-            ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
             UpdateLabel.Visible = false;
+            UpdateThrobber.State = ThrobberState.Rotating;
+            UpdateThrobber.Visible = true;
+            ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
         }
 
         /// <summary>
@@ -306,9 +306,9 @@ namespace EVEMon
         /// </summary>
         private void HideThrobber()
         {
-            UpdateThrobber.State = ThrobberState.Stopped;
-            UpdateThrobber.Visible = false;
             UpdateLabel.Visible = false;
+            UpdateThrobber.Visible = false;
+            UpdateThrobber.State = ThrobberState.Stopped;
         }
 
         /// <summary>
@@ -336,19 +336,13 @@ namespace EVEMon
 
             StringBuilder output = new StringBuilder();
 
-            // Skip character's corporation market orders and industry jobs monitor
-            // if they are bound with the character's personal monitor
+            // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
                 monitor => monitor.HasAccess).Where(
-                    monitor =>
-                    !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
-                        monitor =>
-                        !monitor.Method.Equals(APICorporationMethods.CorporationContracts) ||
-                        ccpCharacter.QueryMonitors[APICharacterMethods.Contracts.ToString()] == null).Where(
-                            monitor =>
-                            !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                            ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null))
+                monitor =>
+                (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
+                 monitor.Method.GetType() != typeof(APICharacterMethods))))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -513,6 +507,7 @@ namespace EVEMon
             // Subscribe to events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.APIKeyMonitoredChanged += EveMonClient_APIKeyMonitoredChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
@@ -545,7 +540,9 @@ namespace EVEMon
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.APIKeyMonitoredChanged -= EveMonClient_APIKeyMonitoredChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
@@ -575,6 +572,16 @@ namespace EVEMon
             if (!Visible)
                 return;
 
+            UpdateInfrequentControls();
+        }
+
+        /// <summary>
+        /// Handles the APIKeyMonitoredChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyMonitoredChanged(object sender, EventArgs e)
+        {
             UpdateInfrequentControls();
         }
 
@@ -678,7 +685,7 @@ namespace EVEMon
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // Exit for non-CCP characters or no associated API key
-            if (ccpCharacter == null || ccpCharacter.Identity.APIKeys.IsEmpty() || ccpCharacter.QueryMonitors.IsEmpty())
+            if (ccpCharacter == null || !ccpCharacter.Identity.APIKeys.Any() || !ccpCharacter.QueryMonitors.Any())
             {
                 QueryEverythingMenuItem.Enabled = false;
                 return;
@@ -692,21 +699,14 @@ namespace EVEMon
                 ThrobberContextMenu.Items.Add(ThrobberSeparator);
 
             // Add monitor items
-            // Skip character's corporation market orders and industry jobs monitor
-            // if they are bound with the character's personal monitor
-            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
+            // Skip character's corporation monitors if they are bound with the character's personal monitor
+            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
                 monitor =>
-                !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
-                ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
-                    monitor =>
-                    !monitor.Method.Equals(APICorporationMethods.CorporationContracts) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.Contracts.ToString()] == null).Where(
-                        monitor =>
-                        !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null).Select(
-                            CreateNewMonitorToolStripMenuItem))
+                (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
+                 monitor.Method.GetType() != typeof(APICharacterMethods))).Select(CreateNewMonitorToolStripMenuItem))
             {
-                ThrobberContextMenu.Items.Add(menu);
+                ThrobberContextMenu.Items.Add(menuItem);
             }
         }
 

@@ -14,13 +14,6 @@ namespace EVEMon.Common
     public sealed class GlobalCharacterCollection : ReadonlyCollection<Character>
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        internal GlobalCharacterCollection()
-        {
-        }
-
-        /// <summary>
         /// Gets a character by its guid.
         /// </summary>
         /// <param name="guid"></param>
@@ -93,7 +86,8 @@ namespace EVEMon.Common
                     case "serializableccpcharacter":
                         try
                         {
-                            SerializableCCPCharacter ccpResult = Util.DeserializeXMLFromFile<SerializableCCPCharacter>(uri.LocalPath);
+                            SerializableCCPCharacter ccpResult =
+                                Util.DeserializeXMLFromFile<SerializableCCPCharacter>(uri.LocalPath);
                             callback(null, new UriCharacterEventArgs(uri, ccpResult));
                         }
                         catch (NullReferenceException ex)
@@ -108,7 +102,8 @@ namespace EVEMon.Common
                     case "serializableuricharacter":
                         try
                         {
-                            SerializableUriCharacter uriCharacterResult = Util.DeserializeXMLFromFile<SerializableUriCharacter>(uri.LocalPath);
+                            SerializableUriCharacter uriCharacterResult =
+                                Util.DeserializeXMLFromFile<SerializableUriCharacter>(uri.LocalPath);
                             callback(null, new UriCharacterEventArgs(uri, uriCharacterResult));
                         }
                         catch (NullReferenceException ex)

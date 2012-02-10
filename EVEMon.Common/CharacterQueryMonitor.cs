@@ -30,7 +30,7 @@ namespace EVEMon.Common
         /// <returns>False if an API key was required and not found.</returns>
         protected override bool HasAPIKey
         {
-            get { return m_character.Identity.APIKeys.Any(apiKey => !apiKey.IsTypeCorporation && apiKey.Type != APIKeyType.Unknown); }
+            get { return m_character.Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType); }
         }
 
         /// <summary>

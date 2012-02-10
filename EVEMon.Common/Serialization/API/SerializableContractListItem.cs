@@ -120,5 +120,8 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         [XmlIgnore]
         public IssuedFor IssuedFor { get; set; }
+
+        [XmlIgnore]
+        public Enum APIMethod { get; set; }
     }
 }

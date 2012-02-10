@@ -622,6 +622,11 @@ namespace EVEMon.ApiCredentialsManagement
             m_refreshingCharactersCounter--;
         }
 
+        #endregion
+
+
+        #region Local Events
+
         /// <summary>
         /// Close on "close" button click.
         /// </summary>
@@ -633,6 +638,5 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         #endregion
-
     }
 }

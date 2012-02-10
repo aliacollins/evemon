@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 
@@ -15,10 +14,6 @@ namespace EVEMon.Common
         private readonly CorporationQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
         private readonly List<IQueryMonitorEx> m_corporationQueryMonitors;
         private readonly CCPCharacter m_ccpCharacter;
-
-        private bool m_corpMarketOrdersQueried;
-        private bool m_corpContractsQueried;
-        private bool m_corpIndustryJobsQueried;
 
         #endregion
 
@@ -39,18 +34,17 @@ namespace EVEMon.Common
 
             m_corpContractsMonitor =
                 new CorporationQueryMonitor<SerializableAPIContracts>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationContracts,
-                                                                         OnCorporationContractsUpdated) { QueryOnStartup = true };
+                                                                      APICorporationMethods.CorporationContracts,
+                                                                      OnCorporationContractsUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpContractsMonitor);
 
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationIndustryJobs, OnCorporationIndustryJobsUpdated);
+                                                                         APICorporationMethods.CorporationIndustryJobs,
+                                                                         OnCorporationIndustryJobsUpdated);
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
-
-            EveMonClient.CharacterListUpdated += EveMonClient_CharacterListUpdated;
         }
 
         #endregion
@@ -64,19 +58,7 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if the corporation market orders have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationMarketOrdersQueried
-        {
-            get
-            {
-                // If character can not query corporation related data
-                // or corporation market orders monitor is not enabled
-                // we switch the flag
-                IQueryMonitor corpMarketOrdersMonitor =
-                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationMarketOrders.ToString()];
-                return m_corpMarketOrdersQueried |= corpMarketOrdersMonitor == null || !corpMarketOrdersMonitor.Enabled;
-            }
-            set { m_corpMarketOrdersQueried = value; }
-        }
+        internal bool CorporationMarketOrdersQueried { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the corporation contracts have been queried.
@@ -84,19 +66,7 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if the corporation contracts have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationContractsQueried
-        {
-            get
-            {
-                // If character can not query corporation related data
-                // or corporation contracts monitor is not enabled
-                // we switch the flag
-                IQueryMonitor corpContractsMonitor =
-                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationContracts.ToString()];
-                return m_corpContractsQueried |= corpContractsMonitor == null || !corpContractsMonitor.Enabled;
-            }
-            set { m_corpContractsQueried = value; }
-        }
+        internal bool CorporationContractsQueried { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the corporation industry jobs have been queried.
@@ -104,19 +74,7 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if the corporation industry jobs have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationIndustryJobsQueried
-        {
-            get
-            {
-                // If character can not query corporation related data
-                // or corporation industry jobs monitor is not enabled
-                // we switch the flag
-                IQueryMonitor corpIndustryJobsMonitor =
-                    m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs.ToString()];
-                return m_corpIndustryJobsQueried |= corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled;
-            }
-            set { m_corpIndustryJobsQueried = value; }
-        }
+        internal bool CorporationIndustryJobsQueried { get; set; }
 
         #endregion
 
@@ -197,10 +155,11 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            // Query the contracts bids
+            // Query the contract bids
             QueryCorporationContractBids();
 
             result.Result.Contracts.ToList().ForEach(x => x.IssuedFor = IssuedFor.Corporation);
+            result.Result.Contracts.ToList().ForEach(x => x.APIMethod = APICorporationMethods.CorporationContracts);
 
             // Import the data
             List<Contract> endedContracts = new List<Contract>();
@@ -209,7 +168,7 @@ namespace EVEMon.Common
             // Fires the event regarding corporation contracts update
             EveMonClient.OnCorporationContractsUpdated(m_ccpCharacter, endedContracts);
         }
-        
+
         /// <summary>
         /// Processes the queried character's corporation contract bids.
         /// </summary>
@@ -229,6 +188,9 @@ namespace EVEMon.Common
 
             // Import the data
             m_ccpCharacter.CorporationContractBids.Import(result.Result.ContractBids);
+
+            // Fires the event regarding corporation contract bids update
+            EveMonClient.OnCorporationContractBidsUpdated(m_ccpCharacter);
         }
 
         /// <summary>
@@ -259,37 +221,6 @@ namespace EVEMon.Common
 
             // Fires the event regarding corporation industry jobs update
             EveMonClient.OnCorporationIndustryJobsUpdated(m_ccpCharacter);
-        }
-
-        #endregion
-
-
-        #region Event Handlers
-
-        /// <summary>
-        /// Handles the CharacterListUpdated event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.APIKeyInfoChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterListUpdated(object sender, APIKeyInfoChangedEventArgs e)
-        {
-            if (!m_ccpCharacter.Identity.APIKeys.Contains(e.APIKey))
-                return;
-
-            if ((e.APIKey.Type == APIKeyType.Account || e.APIKey.Type == APIKeyType.Character) &&
-                m_ccpCharacter.Identity.APIKeys.All(
-                    apiKey => apiKey.Type == APIKeyType.Account || apiKey.Type == APIKeyType.Character) &&
-                m_corporationQueryMonitors.Exists(monitor => m_ccpCharacter.QueryMonitors.Contains(monitor)))
-            {
-                m_corporationQueryMonitors.ForEach(monitor => m_ccpCharacter.QueryMonitors.Remove(monitor));
-                return;
-            }
-
-            if (e.APIKey.Type != APIKeyType.Corporation ||
-                m_corporationQueryMonitors.Exists(monitor => m_ccpCharacter.QueryMonitors.Contains(monitor)))
-                return;
-
-            m_corporationQueryMonitors.ForEach(monitor => m_ccpCharacter.QueryMonitors.Add(monitor));
         }
 
         #endregion

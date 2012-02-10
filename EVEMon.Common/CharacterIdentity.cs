@@ -67,7 +67,7 @@ namespace EVEMon.Common
         /// <value>The character type API keys.</value>
         public IEnumerable<APIKey> CharacterTypeAPIKeys
         {
-            get { return APIKeys.Where(apikey => apikey.Type == APIKeyType.Account || apikey.Type == APIKeyType.Character); }
+            get { return APIKeys.Where(apikey => apikey.IsCharacterOrAccountType); }
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace EVEMon.Common
         /// <value>The corporation type API keys.</value>
         public IEnumerable<APIKey> CorporationTypeAPIKeys
         {
-            get { return APIKeys.Where(apikey => apikey.Type == APIKeyType.Corporation); }
+            get { return APIKeys.Where(apikey => apikey.IsCorporationType); }
         }
 
         /// <summary>
@@ -85,9 +85,9 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if this instance can query character related info; otherwise, <c>false</c>.
         /// </value>
-        public bool CanQueryCharacterRelatedInfo
+        public bool CanQueryCharacterInfo
         {
-            get { return !CharacterTypeAPIKeys.IsEmpty(); }
+            get { return CharacterTypeAPIKeys.Any(apiKey => apiKey.Monitored); }
         }
 
 
@@ -97,9 +97,9 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if this instance can query corporation related info; otherwise, <c>false</c>.
         /// </value>
-        public bool CanQueryCorporationRelatedInfo
+        public bool CanQueryCorporationInfo
         {
-            get { return !CorporationTypeAPIKeys.IsEmpty(); }
+            get { return CorporationTypeAPIKeys.Any(apiKey => apiKey.Monitored); }
         }
 
         /// <summary>
@@ -109,8 +109,8 @@ namespace EVEMon.Common
         {
             get
             {
-                return EveMonClient.Characters.OfType<CCPCharacter>().Where(
-                    character => character.CharacterID == CharacterID).FirstOrDefault();
+                return EveMonClient.Characters.OfType<CCPCharacter>().FirstOrDefault(
+                    character => character.CharacterID == CharacterID);
             }
         }
 
@@ -139,7 +139,8 @@ namespace EVEMon.Common
         /// <returns>The API key with access to the specified method or null if non found.</returns>
         public APIKey FindAPIKeyWithAccess(APICharacterMethods method)
         {
-            return CharacterTypeAPIKeys.FirstOrDefault(apiKey => (int)method == (apiKey.AccessMask & (int)method));
+            return CharacterTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
+                                                                 (int)method == (apiKey.AccessMask & (int)method));
         }
 
         /// <summary>
@@ -149,7 +150,8 @@ namespace EVEMon.Common
         /// <returns>The API key with access to the specified method or null if non found.</returns>
         public APIKey FindAPIKeyWithAccess(APICorporationMethods method)
         {
-            return CorporationTypeAPIKeys.FirstOrDefault(apiKey => (int)method == (apiKey.AccessMask & (int)method));
+            return CorporationTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
+                                                                   (int)method == (apiKey.AccessMask & (int)method));
         }
     }
 }
