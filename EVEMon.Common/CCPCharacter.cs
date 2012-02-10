@@ -483,8 +483,12 @@ namespace EVEMon.Common
             NotifyInsufficientBalance();
 
             // Reset flags
-            m_characterDataQuerying.CharacterMarketOrdersQueried = false;
-            m_corporationDataQuerying.CorporationMarketOrdersQueried = false;
+            if (m_characterDataQuerying != null)
+                m_characterDataQuerying.CharacterMarketOrdersQueried = false;
+
+            if (m_corporationDataQuerying != null)
+                m_corporationDataQuerying.CorporationMarketOrdersQueried = false;
+
             m_endedOrdersForCharacter.Clear();
             m_endedOrdersForCorporation.Clear();
 
@@ -590,8 +594,11 @@ namespace EVEMon.Common
         private void NotifyForIndustryJobsRelatedEvents()
         {
             // Reset flags
-            m_characterDataQuerying.CharacterIndustryJobsQueried = false;
-            m_corporationDataQuerying.CorporationIndustryJobsQueried = false;
+            if (m_characterDataQuerying != null)
+                m_characterDataQuerying.CharacterIndustryJobsQueried = false;
+
+            if (m_corporationDataQuerying != null)
+                m_corporationDataQuerying.CorporationIndustryJobsQueried = false;
 
             // Fires the event regarding industry jobs update
             EveMonClient.OnIndustryJobsUpdated(this);
