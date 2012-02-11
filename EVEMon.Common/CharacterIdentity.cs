@@ -129,7 +129,15 @@ namespace EVEMon.Common
         /// <returns>The API key with access to the specified method or null if non found.</returns>
         public APIKey FindAPIKeyWithAccess(APIGenericMethods method)
         {
-            return CharacterTypeAPIKeys.FirstOrDefault(apiKey => (int)method == (apiKey.AccessMask & (int)method));
+            if (APIMethods.CharacterSupplementalMethods.Contains(method))
+                return CharacterTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
+                                                                     (int)method == (apiKey.AccessMask & (int)method));
+
+            if (APIMethods.CorporationSupplementalMethods.Contains(method))
+                return CorporationTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
+                                                                     (int)method == (apiKey.AccessMask & (int)method));
+            
+            return null;
         }
 
         /// <summary>

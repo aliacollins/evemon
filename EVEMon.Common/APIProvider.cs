@@ -90,7 +90,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="requestMethod">An APIMethods enumeration member specifying the method for which the URL is required.</param>
         /// <returns>A String representing the full URL path of the specified method.</returns>
-        private Uri GetMethodUrl(Enum requestMethod)
+        public Uri GetMethodUrl(Enum requestMethod)
         {
             // Gets the proper data
             Uri url = Url;

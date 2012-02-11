@@ -14,7 +14,6 @@ namespace EVEMon.APITester
     public partial class APITesterWindow : EVEMonForm
     {
         private Uri m_url;
-        private string m_path;
 
 
         #region Constructor
@@ -40,24 +39,13 @@ namespace EVEMon.APITester
         {
             get
             {
-                // Gets the proper data
-                string url = EveMonClient.APIProviders.CurrentProvider.Url.AbsoluteUri;
-                m_path = EveMonClient.APIProviders.CurrentProvider.GetMethod((Enum)cbAPIMethod.SelectedItem).Path;
-                if (String.IsNullOrEmpty(m_path) || String.IsNullOrEmpty(url))
-                {
-                    url = APIProvider.DefaultProvider.Url.AbsoluteUri;
-                    m_path = APIProvider.DefaultProvider.GetMethod((Enum)cbAPIMethod.SelectedItem).Path;
-                }
+                string uriString =
+                    EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)cbAPIMethod.SelectedItem).AbsoluteUri;
+                string postData = GetPostData();
+                if (!String.IsNullOrWhiteSpace(postData))
+                    uriString += String.Format(CultureConstants.InvariantCulture, "?{0}", postData);
 
-                // Build the uri
-                Uri baseUri = new Uri(url);
-                UriBuilder uriBuilder = new UriBuilder(baseUri);
-                uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + m_path;
-
-                // Add the postdata to the path
-                uriBuilder.Query = GetPostData();
-
-                return uriBuilder.Uri;
+                return new Uri(uriString);
             }
         }
 
@@ -77,24 +65,26 @@ namespace EVEMon.APITester
 
             // Add the non Account type methods
             apiMethods.AddRange(APIMethods.Methods.OfType<APIGenericMethods>().Where(
-                method => !apiMethods.Contains(method) && APIMethods.NonAccountGenericMethods.Contains(method)).OrderBy(
-                    method => method.ToString()).Cast<Enum>());
+                method => !apiMethods.Contains(method) &&
+                          APIMethods.NonAccountGenericMethods.Contains(method)).Cast<Enum>().OrderBy(method => method.ToString()));
 
             // Add the Account type methods
             apiMethods.AddRange(APIMethods.Methods.OfType<APIGenericMethods>().Where(
-                method => !apiMethods.Contains(method) && !APIMethods.NonAccountGenericMethods.Contains(method)).OrderBy(
-                    method => method.ToString()).Cast<Enum>());
+                method => !apiMethods.Contains(method) && !APIMethods.NonAccountGenericMethods.Contains(method) &&
+                          !APIMethods.AllSupplementalMethods.Contains(method)).Cast<Enum>().OrderBy(method => method.ToString()));
 
             // Add the character methods
-            apiMethods.AddRange(APIMethods.Methods.OfType<APICharacterMethods>().OrderBy(
-                method => method.ToString()).Cast<Enum>());
+            apiMethods.AddRange(
+                APIMethods.Methods.OfType<APICharacterMethods>().Cast<Enum>().Concat(APIMethods.CharacterSupplementalMethods).
+                    OrderBy(method => method.ToString()));
 
             // Add the corporation methods
-            apiMethods.AddRange(APIMethods.Methods.OfType<APICorporationMethods>().OrderBy(
-                method => method.ToString()).Cast<Enum>());
+            apiMethods.AddRange(
+                APIMethods.Methods.OfType<APICorporationMethods>().Cast<Enum>().Concat(APIMethods.CorporationSupplementalMethods)
+                    .OrderBy(method => method.ToString()));
 
             cbAPIMethod.Items.Clear();
-            cbAPIMethod.Items.AddRange(apiMethods.ToArray());
+            cbAPIMethod.Items.AddRange(apiMethods.ToArray<Object>());
         }
 
         /// <summary>
@@ -104,8 +94,7 @@ namespace EVEMon.APITester
         {
             cbCharacter.Items.Clear();
             cbCharacter.Items.AddRange(EveMonClient.Characters.OfType<CCPCharacter>().Where(
-                character => !character.Identity.APIKeys.IsEmpty()).OrderBy(
-                    character => character.Name).ToArray());
+                character => character.Identity.APIKeys.Any()).OrderBy(character => character.Name).ToArray<Object>());
 
             UpdateCharacterSelectionEnabling();
         }
@@ -131,7 +120,8 @@ namespace EVEMon.APITester
                                                 !APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem);
 
             lblCharID.Visible = tbCharID.Visible = rbExternal.Checked && cbAPIMethod.SelectedItem != null &&
-                                                   !(cbAPIMethod.SelectedItem is APIGenericMethods);
+                                                   (!(cbAPIMethod.SelectedItem is APIGenericMethods) ||
+                                                    APIMethods.AllSupplementalMethods.Contains(cbAPIMethod.SelectedItem));
 
             if (!tbCharID.Visible)
                 tbCharID.ResetText();
@@ -149,11 +139,20 @@ namespace EVEMon.APITester
 
             lblIDOrName.Visible = tbIDOrName.Visible = cbAPIMethod.SelectedItem != null &&
                                                        (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
+                                                        cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                                                        cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems) ||
                                                         cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
                                                         cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts));
 
             if (cbAPIMethod.SelectedItem != null && lblIDOrName.Visible)
-                lblIDOrName.Text = cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName) ? "ID:" : "Message IDs:";
+            {
+                lblIDOrName.Text = cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName)
+                                       ? "ID:"
+                                       : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                                         cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems)
+                                             ? "Contract ID:"
+                                             : "Message IDs:";
+            }
         }
 
         /// <summary>
@@ -172,16 +171,16 @@ namespace EVEMon.APITester
         /// Gets the post data.
         /// </summary>
         /// <returns></returns>
-        private String GetPostData()
+        private string GetPostData()
         {
             if (cbAPIMethod.SelectedItem is APIGenericMethods)
                 return GetPostDataForGenericAPIMethods();
 
             if (cbAPIMethod.SelectedItem is APICharacterMethods)
-                return GetPostDataForCharacterAPIMethods();
+                return GetCharacterAPIMethodsPostData();
 
             if (cbAPIMethod.SelectedItem is APICorporationMethods)
-                return GetPostDataForCorporationAPIMethods();
+                return GetCorporationAPIMethodsPostData();
             
             return String.Empty;
         }
@@ -190,10 +189,13 @@ namespace EVEMon.APITester
         /// Gets the post data for generic API methods.
         /// </summary>
         /// <returns></returns>
-        private String GetPostDataForGenericAPIMethods()
+        private string GetPostDataForGenericAPIMethods()
         {
             if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName))
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, tbIDOrName.Text);
+
+            if (APIMethods.AllSupplementalMethods.Contains(cbAPIMethod.SelectedItem))
+                return SupplementalAPIMethodsPostData();
 
             if (!APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem))
             {
@@ -203,8 +205,7 @@ namespace EVEMon.APITester
                         return String.Empty;
 
                     Character character = (Character)cbCharacter.SelectedItem;
-                    APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(
-                        key => key.IsCharacterOrAccountType);
+                    APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
 
                     return apiKey == null
                                ? String.Empty
@@ -221,10 +222,49 @@ namespace EVEMon.APITester
         }
 
         /// <summary>
+        /// Gets the post data for the supplemental API methods.
+        /// </summary>
+        /// <returns></returns>
+        private string SupplementalAPIMethodsPostData()
+        {
+            if (rbInternal.Checked)
+            {
+                if (cbCharacter.SelectedItem == null)
+                    return String.Empty;
+
+                Character character = (Character)cbCharacter.SelectedItem;
+                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APIGenericMethods)cbAPIMethod.SelectedItem);
+
+                if (apiKey == null)
+                    return String.Empty;
+
+                if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                    cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+                {
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
+                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, tbIDOrName.Text);
+                }
+
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                     apiKey.ID, apiKey.VerificationCode, character.CharacterID);
+            }
+
+            if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
+                                     tbKeyID.Text, tbVCode.Text, tbCharID.Text, tbIDOrName.Text);
+            }
+
+            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                 tbKeyID.Text, tbVCode.Text, tbCharID.Text);
+        }
+
+        /// <summary>
         /// Gets the post data for character API methods.
         /// </summary>
         /// <returns></returns>
-        private String GetPostDataForCharacterAPIMethods()
+        private String GetCharacterAPIMethodsPostData()
         {
             if (rbInternal.Checked)
             {
@@ -248,34 +288,29 @@ namespace EVEMon.APITester
                                      apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
-            if (rbExternal.Checked)
+            if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
+                (tbKeyID.Text.Length == 0 || tbVCode.Text.Length == 0))
             {
-                if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
-                    (tbKeyID.Text.Length == 0 || tbVCode.Text.Length == 0))
-                {
-                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly,
-                                         tbCharID.Text);
-                }
-
-                if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                    cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
-                {
-                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                         tbKeyID.Text, tbVCode.Text, tbCharID.Text, tbIDOrName.Text);
-                }
-
-                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                     tbKeyID.Text, tbVCode.Text, tbCharID.Text);
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly,
+                                     tbCharID.Text);
             }
 
-            return String.Empty;
+            if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
+                                     tbKeyID.Text, tbVCode.Text, tbCharID.Text, tbIDOrName.Text);
+            }
+
+            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                 tbKeyID.Text, tbVCode.Text, tbCharID.Text);
         }
 
         /// <summary>
         /// Gets the post data for corporation API methods.
         /// </summary>
         /// <returns></returns>
-        private String GetPostDataForCorporationAPIMethods()
+        private String GetCorporationAPIMethodsPostData()
         {
             if (rbInternal.Checked)
             {
@@ -291,10 +326,8 @@ namespace EVEMon.APITester
                                            apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
-            return rbExternal.Checked
-                       ? String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                       tbKeyID.Text, tbVCode.Text, tbCharID.Text)
-                       : String.Empty;
+            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                 tbKeyID.Text, tbVCode.Text, tbCharID.Text);
         }
 
         /// <summary>
@@ -317,10 +350,12 @@ namespace EVEMon.APITester
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
+                string path = Url.AbsolutePath;
+
                 sfd.Filter = "XML (*.xml)|*.xml";
-                sfd.FileName = m_path.Substring(m_path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1,
-                                                m_path.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) -
-                                                m_path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) - 1);
+                sfd.FileName = path.Substring(path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1,
+                                                path.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) -
+                                                path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) - 1);
 
                 if (sfd.ShowDialog() != DialogResult.OK)
                     return;
