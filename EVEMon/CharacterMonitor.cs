@@ -22,8 +22,7 @@ namespace EVEMon
     {
         private readonly List<ToolStripButton> m_advancedFeatures = new List<ToolStripButton>();
         private readonly ToolStripItem[] m_preferenceMenu;
-
-        private Character m_character;
+        private readonly Character m_character;
 
 
         #region Constructor

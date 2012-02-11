@@ -708,7 +708,11 @@ namespace EVEMon
                 return;
 
             if (e.ClickedItem == QueryEverythingMenuItem)
+            {
+                SetThrobberUpdating();
                 ccpCharacter.QueryMonitors.QueryEverything();
+                return;
+            }
 
             Enum method = e.ClickedItem.Tag as Enum;
 
