@@ -58,7 +58,10 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if the corporation market orders have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationMarketOrdersQueried { get; set; }
+        internal bool CorporationMarketOrdersQueried
+        {
+            get { return !m_corpMarketOrdersMonitor.IsUpdating; }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the corporation contracts have been queried.
@@ -66,7 +69,10 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if the corporation contracts have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationContractsQueried { get; set; }
+        internal bool CorporationContractsQueried
+        {
+            get { return !m_corpContractsMonitor.IsUpdating; }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the corporation industry jobs have been queried.
@@ -74,7 +80,10 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if the corporation industry jobs have been queried; otherwise, <c>false</c>.
         /// </value>
-        internal bool CorporationIndustryJobsQueried { get; set; }
+        internal bool CorporationIndustryJobsQueried
+        {
+            get { return !m_corpIndustryJobsMonitor.IsUpdating; }
+        }
 
         #endregion
 
@@ -114,8 +123,6 @@ namespace EVEMon.Common
             if (m_ccpCharacter == null)
                 return;
 
-            CorporationMarketOrdersQueried = true;
-
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationMarketOrders))
                 EveMonClient.Notifications.NotifyCorporationMarketOrdersError(m_ccpCharacter, result);
@@ -144,8 +151,6 @@ namespace EVEMon.Common
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null)
                 return;
-
-            CorporationContractsQueried = true;
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationContracts))
@@ -203,8 +208,6 @@ namespace EVEMon.Common
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null)
                 return;
-
-            CorporationIndustryJobsQueried = true;
 
             // Notify an error occurred
             if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationIndustryJobs))

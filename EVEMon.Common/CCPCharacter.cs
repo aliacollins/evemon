@@ -423,20 +423,6 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
-        /// Forces an update on the selected query monitor.
-        /// </summary>
-        /// <param name="queryMonitor">The query monitor.</param>
-        public void ForceUpdate(IQueryMonitor queryMonitor)
-        {
-            if (queryMonitor == null)
-                throw new ArgumentNullException("queryMonitor");
-
-            IQueryMonitorEx monitor = QueryMonitors[queryMonitor.Method.ToString()] as IQueryMonitorEx;
-            if (monitor != null)
-                monitor.ForceUpdate(false);
-        }
-
-        /// <summary>
         /// Checks whether we should notify an error.
         /// </summary>
         /// <param name="result"></param>
@@ -482,13 +468,7 @@ namespace EVEMon.Common
             // Notify for insufficient balance
             NotifyInsufficientBalance();
 
-            // Reset flags
-            if (m_characterDataQuerying != null)
-                m_characterDataQuerying.CharacterMarketOrdersQueried = false;
-
-            if (m_corporationDataQuerying != null)
-                m_corporationDataQuerying.CorporationMarketOrdersQueried = false;
-
+            // Reset helper lists
             m_endedOrdersForCharacter.Clear();
             m_endedOrdersForCorporation.Clear();
 
@@ -512,6 +492,36 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies for contracts related events.
+        /// </summary>
+        private void NotifyForContractsRelatedEvents()
+        {
+            // Notify for ended contracts
+            NotifyEndedContracts();
+
+            // Notify for assigned contracts
+            NotifyAssignedContracts();
+
+            // Reset helper lists
+            // Note: Special condition logic is applied due to the fact that CCP
+            // includes coproration related contracts in character API feed
+            if (m_characterDataQuerying != null && m_corporationDataQuerying != null &&
+                m_corporationDataQuerying.CorporationContractsQueried)
+            {
+                m_endedContractsForCharacter.Clear();
+            }
+
+            if (m_corporationDataQuerying != null && m_characterDataQuerying != null &&
+                m_characterDataQuerying.CharacterContractsQueried)
+            {
+                m_endedContractsForCorporation.Clear();
+            }
+
+            // Fires the event regarding contracts update
+            EveMonClient.OnContractsUpdated(this);
+        }
+
+        /// <summary>
         /// Notifies for ended contracts.
         /// </summary>
         private void NotifyEndedContracts()
@@ -530,34 +540,6 @@ namespace EVEMon.Common
 
             //EveMonClient.Notifications.NotifyCorporationContractsEnded(Corporation, m_endedContractsForCorporation);
             //m_endedContractsForCorporation.ForEach(x => x.NotificationSend = true);
-        }
-
-        /// <summary>
-        /// Notifies for contracts related events.
-        /// </summary>
-        private void NotifyForContractsRelatedEvents()
-        {
-            // Notify for ended contracts
-            NotifyEndedContracts();
-
-            // Notify for assigned contracts
-            NotifyAssignedContracts();
-
-            // Reset flags
-            if (m_characterDataQuerying != null && m_corporationDataQuerying != null && m_corporationDataQuerying.CorporationContractsQueried)
-            {
-                m_characterDataQuerying.CharacterContractsQueried = false;
-                m_endedContractsForCharacter.Clear();
-            }
-
-            if (m_corporationDataQuerying != null && m_characterDataQuerying != null && m_characterDataQuerying.CharacterContractsQueried)
-            {
-                m_corporationDataQuerying.CorporationContractsQueried = false;
-                m_endedContractsForCorporation.Clear();
-            }
-
-            // Fires the event regarding contracts update
-            EveMonClient.OnContractsUpdated(this);
         }
 
         /// <summary>
@@ -596,13 +578,6 @@ namespace EVEMon.Common
         /// </summary>
         private void NotifyForIndustryJobsRelatedEvents()
         {
-            // Reset flags
-            if (m_characterDataQuerying != null)
-                m_characterDataQuerying.CharacterIndustryJobsQueried = false;
-
-            if (m_corporationDataQuerying != null)
-                m_corporationDataQuerying.CorporationIndustryJobsQueried = false;
-
             // Fires the event regarding industry jobs update
             EveMonClient.OnIndustryJobsUpdated(this);
         }
