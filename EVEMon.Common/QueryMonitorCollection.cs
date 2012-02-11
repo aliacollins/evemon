@@ -94,7 +94,7 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("method");
 
             IQueryMonitorEx monitor = this[method.ToString()] as IQueryMonitorEx;
-            if (monitor != null)
+            if (monitor != null && monitor.HasAccess)
                 monitor.ForceUpdate(false);
         }
 
@@ -104,8 +104,8 @@ namespace EVEMon.Common
         /// <param name="methods">The methods.</param>
         public void Query(IEnumerable<Enum> methods)
         {
-            IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod.ToString()]).OfType<IQueryMonitorEx>();
-            foreach (IQueryMonitorEx monitor in monitors)
+            IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod.ToString()]).Cast<IQueryMonitorEx>();
+            foreach (IQueryMonitorEx monitor in monitors.Where(monitor => monitor.HasAccess))
             {
                 monitor.ForceUpdate(false);
             }
@@ -116,7 +116,7 @@ namespace EVEMon.Common
         /// </summary>
         public void QueryEverything()
         {
-            foreach (IQueryMonitorEx monitor in Items)
+            foreach (IQueryMonitorEx monitor in Items.Where(monitor => monitor.HasAccess))
             {
                 monitor.ForceUpdate(false);
             }

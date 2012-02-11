@@ -133,6 +133,8 @@
             this.UpdateThrobber.ContextMenuStrip = this.ThrobberContextMenu;
             this.UpdateThrobber.Location = new System.Drawing.Point(22, 3);
             this.UpdateThrobber.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
+            this.UpdateThrobber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.UpdateThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.Name = "UpdateThrobber";
             this.UpdateThrobber.Size = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.State = EVEMon.Common.ThrobberState.Stopped;
