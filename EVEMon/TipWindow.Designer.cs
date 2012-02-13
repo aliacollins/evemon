@@ -32,7 +32,7 @@ namespace EVEMon
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.cbDontShowAgain = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.TipLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -49,7 +49,7 @@ namespace EVEMon
             this.tableLayoutPanel1.Controls.Add(this.pictureBox, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.btnOk, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.cbDontShowAgain, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.TipLabel, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
@@ -59,7 +59,7 @@ namespace EVEMon
             this.tableLayoutPanel1.Size = new System.Drawing.Size(263, 102);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // pictureBox1
+            // pictureBox
             // 
             this.pictureBox.Location = new System.Drawing.Point(3, 3);
             this.pictureBox.Name = "pictureBox";
@@ -91,17 +91,17 @@ namespace EVEMon
             this.cbDontShowAgain.Text = "Don\'t show this tip again";
             this.cbDontShowAgain.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // TipLabel
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(41, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 38);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "label1";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TipLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.TipLabel.AutoSize = true;
+            this.TipLabel.Location = new System.Drawing.Point(41, 0);
+            this.TipLabel.Name = "TipLabel";
+            this.TipLabel.Size = new System.Drawing.Size(42, 38);
+            this.TipLabel.TabIndex = 3;
+            this.TipLabel.Text = "Tip text";
+            this.TipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel1
             // 
@@ -142,7 +142,7 @@ namespace EVEMon
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.CheckBox cbDontShowAgain;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label TipLabel;
         private System.Windows.Forms.Panel panel1;
 
     }

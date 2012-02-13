@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
@@ -721,12 +722,9 @@ namespace EVEMon.SettingsUI
             }
 
             // Queries Updater
-            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.OfType<CCPCharacter>())
-            {
-                // If any monitor's last update is found to exceed the max period,
-                // enable the queries updater button
-                btnResetUpdateQueryTimers.Enabled |= character.QueryMonitors.Any(x => x.LastUpdate > DateTime.UtcNow.AddDays(7));
-            }
+            // If any monitor's last update is found to exceed the max period,
+            // enable the queries updater button
+            btnResetUpdateQueryTimers.Enabled = EveMonClient.MonitoredCharacters.HasExcessUpdateTimer;
         }
 
         #endregion

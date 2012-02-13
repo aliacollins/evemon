@@ -14,6 +14,19 @@ namespace EVEMon.Common
     public sealed class GlobalMonitoredCharacterCollection : ReadonlyCollection<Character>
     {
         /// <summary>
+        /// Gets true if any timer exceeds maximun update time.
+        /// </summary>
+        public bool HasExcessUpdateTimer
+        {
+            get
+            {
+                return Items.OfType<CCPCharacter>().Any(
+                    character => character.LastAPIUpdates.Any(
+                        update => update.Time > DateTime.UtcNow.Add(UpdatePeriod.Week.ToDuration())));
+            }
+        }
+
+        /// <summary>
         /// Update the order from the given list.
         /// </summary>
         /// <param name="order"></param>

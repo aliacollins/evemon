@@ -183,8 +183,7 @@ namespace EVEMon
             TipWindow.ShowTip(this, "startup",
                               "Getting Started",
                               "To begin using EVEMon, click the File|Add API key... menu option, " +
-                              "enter your CCP API information " +
-                              "and choose the characters to monitor.");
+                              "enter your CCP API information and choose the characters to monitor.");
         }
 
         /// <summary>
@@ -891,6 +890,15 @@ namespace EVEMon
             // Checks whether the tooltip must be displayed
             if (m_popupNotifications.Count != 0 && DateTime.UtcNow > m_nextPopupUpdate)
                 DisplayTooltipNotifications();
+
+            // Chech for excess monitor update timer and show a tip if so
+            if (!TipWindow.IsShown && EveMonClient.MonitoredCharacters.HasExcessUpdateTimer)
+            {
+                TipWindow.ShowTip(this, String.Empty, "Excess Update Timer",
+                                  "EVEMon detected that an update timer exceeds the maximum period.\nTo fix this go to" +
+                                  "'Tools > Options > General > Updates > Queries Updater' and click the 'Update All' button.",
+                                  false);
+            }
         }
 
         /// <summary>
