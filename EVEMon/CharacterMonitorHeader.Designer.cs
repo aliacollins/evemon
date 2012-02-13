@@ -137,7 +137,7 @@
             this.UpdateThrobber.State = EVEMon.Common.ThrobberState.Stopped;
             this.UpdateThrobber.TabIndex = 4;
             this.UpdateThrobber.TabStop = false;
-            this.UpdateThrobber.Click += new System.EventHandler(this.UpdateThrobber_Click);
+            this.UpdateThrobber.MouseClick += new System.Windows.Forms.MouseEventHandler(this.UpdateThrobber_Click);
             // 
             // ThrobberContextMenu
             // 

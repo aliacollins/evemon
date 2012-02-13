@@ -13,9 +13,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public IQueryMonitor this[string method]
+        public IQueryMonitor this[Enum method]
         {
-            get { return Items.FirstOrDefault(monitor => monitor.Method.ToString() == method); }
+            get { return Items.FirstOrDefault(monitor => method.Equals(monitor.Method)); }
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace EVEMon.Common
             if (method == null)
                 throw new ArgumentNullException("method");
 
-            IQueryMonitorEx monitor = this[method.ToString()] as IQueryMonitorEx;
+            IQueryMonitorEx monitor = this[method] as IQueryMonitorEx;
             if (monitor != null && monitor.HasAccess)
                 monitor.ForceUpdate(false);
         }
@@ -104,7 +104,7 @@ namespace EVEMon.Common
         /// <param name="methods">The methods.</param>
         public void Query(IEnumerable<Enum> methods)
         {
-            IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod.ToString()]).Cast<IQueryMonitorEx>();
+            IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod]).Cast<IQueryMonitorEx>();
             foreach (IQueryMonitorEx monitor in monitors.Where(monitor => monitor.HasAccess))
             {
                 monitor.ForceUpdate(false);

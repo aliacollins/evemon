@@ -79,6 +79,7 @@ namespace EVEMon.Common
             : this(identity, serial.Guid)
         {
             Import(serial);
+            LastAPIUpdates = serial.LastUpdates;
         }
 
         /// <summary>
@@ -224,6 +225,11 @@ namespace EVEMon.Common
         public QueryMonitorCollection QueryMonitors { get; private set; }
 
         /// <summary>
+        /// Gets the query monitors last API updates enumeration.
+        /// </summary>
+        public IEnumerable<SerializableAPIUpdate> LastAPIUpdates { get; private set; }
+
+        /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
         /// </summary>
         public override bool IsTraining
@@ -298,15 +304,17 @@ namespace EVEMon.Common
             serial.EveNotificationsIDs = EVENotifications.Export();
 
             // Last API updates
-            foreach (SerializableAPIUpdate update in QueryMonitors.Select(
+            if (QueryMonitors.Any())
+            {
+                LastAPIUpdates = QueryMonitors.Select(
                 monitor => new SerializableAPIUpdate
                                {
                                    Method = monitor.Method.ToString(),
                                    Time = monitor.LastUpdate
-                               }))
-            {
-                serial.LastUpdates.Add(update);
+                               });
             }
+
+            serial.LastUpdates.AddRange(LastAPIUpdates);
 
             return serial;
         }
@@ -328,7 +336,6 @@ namespace EVEMon.Common
         private IEnumerable<SerializableContract> ContractsExport()
         {
             IEnumerable<SerializableContract> corporationContractsExport = CorporationContracts.ExportOnlyIssuedByCharacter();
-
             return CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
                 corpContract => corpContract.ContractID != charContract.ContractID)).Concat(corporationContractsExport);
         }
@@ -370,18 +377,6 @@ namespace EVEMon.Common
 
             // EVE notifications IDs
             EVENotifications.Import(serial.EveNotificationsIDs);
-
-            // Last API updates
-            foreach (SerializableAPIUpdate lastUpdate in serial.LastUpdates)
-            {
-                Enum method = APIMethods.Methods.FirstOrDefault(apiMethod => apiMethod.ToString() == lastUpdate.Method);
-                if (method == null)
-                    continue;
-
-                IQueryMonitorEx monitor = QueryMonitors[method.ToString()] as IQueryMonitorEx;
-                if (monitor != null)
-                    monitor.Reset(lastUpdate.Time);
-            }
 
             // Fire the global event
             EveMonClient.OnCharacterUpdated(this);
@@ -582,6 +577,24 @@ namespace EVEMon.Common
             EveMonClient.OnIndustryJobsUpdated(this);
         }
 
+        /// <summary>
+        /// Resets the last API updates.
+        /// </summary>
+        /// <param name="lastUpdates">The last updates.</param>
+        private void ResetLastAPIUpdates(IEnumerable<SerializableAPIUpdate> lastUpdates)
+        {
+            foreach (SerializableAPIUpdate lastUpdate in lastUpdates)
+            {
+                Enum method = APIMethods.Methods.FirstOrDefault(apiMethod => apiMethod.ToString() == lastUpdate.Method);
+                if (method == null)
+                    continue;
+
+                IQueryMonitorEx monitor = QueryMonitors[method] as IQueryMonitorEx;
+                if (monitor != null)
+                    monitor.Reset(lastUpdate.Time);
+            }
+        }
+
         #endregion
 
 
@@ -604,10 +617,16 @@ namespace EVEMon.Common
                 return;
 
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
+            {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
+                ResetLastAPIUpdates(LastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
+            }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
+            {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
+                ResetLastAPIUpdates(LastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
+            }
         }
 
         /// <summary>

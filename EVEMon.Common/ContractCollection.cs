@@ -97,7 +97,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal IEnumerable<SerializableContract> Export()
         {
-            return Items.Where(contract => contract.IssuerID != 0).Select(contract => contract.Export());
+            return Items.Select(contract => contract.Export());
         }
 
         #endregion
