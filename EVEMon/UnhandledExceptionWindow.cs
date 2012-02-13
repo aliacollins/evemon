@@ -12,7 +12,7 @@ using CommonProperties = EVEMon.Common.Properties;
 namespace EVEMon
 {
     /// <summary>
-    /// Form to handle the display of the error report for easy bug reporting
+    /// Form to handle the display of the error report for easy bug reporting.
     /// </summary>
     public partial class UnhandledExceptionWindow : EVEMonForm
     {

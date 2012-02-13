@@ -28,6 +28,7 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UnhandledExceptionWindow));
             this.MainPanel = new System.Windows.Forms.Panel();
             this.TechnicalDetailsPanel = new System.Windows.Forms.Panel();
             this.TechnicalDetailsTextBox = new System.Windows.Forms.TextBox();
@@ -57,9 +58,9 @@ namespace EVEMon
             // 
             // MainPanel
             // 
-            this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.MainPanel.BackColor = System.Drawing.Color.White;
             this.MainPanel.Controls.Add(this.TechnicalDetailsPanel);
             this.MainPanel.Controls.Add(this.BugPictureBox);
@@ -77,9 +78,9 @@ namespace EVEMon
             // 
             // TechnicalDetailsPanel
             // 
-            this.TechnicalDetailsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TechnicalDetailsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TechnicalDetailsPanel.AutoSize = true;
             this.TechnicalDetailsPanel.Controls.Add(this.TechnicalDetailsTextBox);
             this.TechnicalDetailsPanel.Location = new System.Drawing.Point(12, 104);
@@ -112,15 +113,15 @@ namespace EVEMon
             this.DescriptionLabel.AutoSize = true;
             this.DescriptionLabel.Location = new System.Drawing.Point(13, 35);
             this.DescriptionLabel.Name = "DescriptionLabel";
-            this.DescriptionLabel.Size = new System.Drawing.Size(422, 26);
+            this.DescriptionLabel.Size = new System.Drawing.Size(409, 26);
             this.DescriptionLabel.TabIndex = 12;
             this.DescriptionLabel.Text = "I think Little Fluffy is dead, Jimmy. \r\nEVEMon will be shut down. Restart and try" +
-                " again to test whether the problem repeats.";
+    " again to test whether the problem repeats.";
             // 
             // WhatCanYouDoTableLayoutPanel
             // 
-            this.WhatCanYouDoTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.WhatCanYouDoTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.WhatCanYouDoTableLayoutPanel.ColumnCount = 2;
             this.WhatCanYouDoTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.WhatCanYouDoTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -141,9 +142,9 @@ namespace EVEMon
             // 
             // KnownProblemsLinkLabel
             // 
-            this.KnownProblemsLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.KnownProblemsLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.KnownProblemsLinkLabel.AutoSize = true;
             this.KnownProblemsLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(12, 14);
             this.KnownProblemsLinkLabel.Location = new System.Drawing.Point(33, 0);
@@ -158,9 +159,9 @@ namespace EVEMon
             // 
             // ReportLinkLabel
             // 
-            this.ReportLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ReportLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ReportLinkLabel.AutoSize = true;
             this.ReportLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(31, 9);
             this.ReportLinkLabel.Location = new System.Drawing.Point(33, 68);
@@ -175,25 +176,24 @@ namespace EVEMon
             // 
             // LatestBinariesLinkLabel
             // 
-            this.LatestBinariesLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.LatestBinariesLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.LatestBinariesLinkLabel.AutoSize = true;
-            this.LatestBinariesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(88, 24);
+            this.LatestBinariesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(8, 24);
             this.LatestBinariesLinkLabel.Location = new System.Drawing.Point(33, 34);
             this.LatestBinariesLinkLabel.Name = "LatestBinariesLinkLabel";
             this.LatestBinariesLinkLabel.Size = new System.Drawing.Size(519, 34);
             this.LatestBinariesLinkLabel.TabIndex = 11;
             this.LatestBinariesLinkLabel.TabStop = true;
-            this.LatestBinariesLinkLabel.Text = "Delete your settings and cache (start menu > run > \"%APPDATA%\\EVEMon\").\r\nOr insta" +
-                "ll the latest snapshot binaries (beta), the problem may have been solved.";
+            this.LatestBinariesLinkLabel.Text = resources.GetString("LatestBinariesLinkLabel.Text");
             this.LatestBinariesLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LatestBinariesLinkLabel.UseCompatibleTextRendering = true;
             this.LatestBinariesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblLatestBinaries_LinkClicked);
             // 
             // KnownProblemsPictureBox
             // 
-            this.KnownProblemsPictureBox.Image = global::EVEMon.Common.Properties.Resources.Problem;
+            this.KnownProblemsPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("KnownProblemsPictureBox.Image")));
             this.KnownProblemsPictureBox.Location = new System.Drawing.Point(3, 3);
             this.KnownProblemsPictureBox.Name = "KnownProblemsPictureBox";
             this.KnownProblemsPictureBox.Size = new System.Drawing.Size(24, 28);
@@ -203,7 +203,7 @@ namespace EVEMon
             // 
             // LatestBinariesPictureBox
             // 
-            this.LatestBinariesPictureBox.Image = global::EVEMon.Common.Properties.Resources.Settings;
+            this.LatestBinariesPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("LatestBinariesPictureBox.Image")));
             this.LatestBinariesPictureBox.Location = new System.Drawing.Point(3, 37);
             this.LatestBinariesPictureBox.Name = "LatestBinariesPictureBox";
             this.LatestBinariesPictureBox.Size = new System.Drawing.Size(24, 28);
@@ -213,7 +213,7 @@ namespace EVEMon
             // 
             // ReportPictureBox
             // 
-            this.ReportPictureBox.Image = global::EVEMon.Common.Properties.Resources.Comment;
+            this.ReportPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("ReportPictureBox.Image")));
             this.ReportPictureBox.Location = new System.Drawing.Point(3, 71);
             this.ReportPictureBox.Name = "ReportPictureBox";
             this.ReportPictureBox.Size = new System.Drawing.Size(24, 30);
@@ -223,12 +223,12 @@ namespace EVEMon
             // 
             // WhatCanYouDoLabel
             // 
-            this.WhatCanYouDoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.WhatCanYouDoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.WhatCanYouDoLabel.AutoSize = true;
             this.WhatCanYouDoLabel.Location = new System.Drawing.Point(16, 312);
             this.WhatCanYouDoLabel.Name = "WhatCanYouDoLabel";
-            this.WhatCanYouDoLabel.Size = new System.Drawing.Size(97, 13);
+            this.WhatCanYouDoLabel.Size = new System.Drawing.Size(98, 13);
             this.WhatCanYouDoLabel.TabIndex = 9;
             this.WhatCanYouDoLabel.Text = "What can you do ?";
             // 
@@ -238,7 +238,7 @@ namespace EVEMon
             this.CopyDetailsLinkLabel.AutoSize = true;
             this.CopyDetailsLinkLabel.Location = new System.Drawing.Point(505, 88);
             this.CopyDetailsLinkLabel.Name = "CopyDetailsLinkLabel";
-            this.CopyDetailsLinkLabel.Size = new System.Drawing.Size(66, 13);
+            this.CopyDetailsLinkLabel.Size = new System.Drawing.Size(64, 13);
             this.CopyDetailsLinkLabel.TabIndex = 6;
             this.CopyDetailsLinkLabel.TabStop = true;
             this.CopyDetailsLinkLabel.Text = "Copy details";
@@ -249,7 +249,7 @@ namespace EVEMon
             this.TitleLabel.AutoSize = true;
             this.TitleLabel.Location = new System.Drawing.Point(13, 13);
             this.TitleLabel.Name = "TitleLabel";
-            this.TitleLabel.Size = new System.Drawing.Size(231, 13);
+            this.TitleLabel.Size = new System.Drawing.Size(230, 13);
             this.TitleLabel.TabIndex = 0;
             this.TitleLabel.Text = "EVEMon has encountered an unexpected error";
             // 
@@ -258,7 +258,7 @@ namespace EVEMon
             this.TechnicalDetailsLabel.AutoSize = true;
             this.TechnicalDetailsLabel.Location = new System.Drawing.Point(12, 88);
             this.TechnicalDetailsLabel.Name = "TechnicalDetailsLabel";
-            this.TechnicalDetailsLabel.Size = new System.Drawing.Size(149, 13);
+            this.TechnicalDetailsLabel.Size = new System.Drawing.Size(145, 13);
             this.TechnicalDetailsLabel.TabIndex = 2;
             this.TechnicalDetailsLabel.Text = "Technical details of this error:";
             // 
