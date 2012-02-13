@@ -176,14 +176,6 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public IXPathNavigable XmlDocument { get; set; }
 
-        /// <summary>
-        /// Gets the time left before a new version is available.
-        /// </summary>
-        public TimeSpan RemainingTime
-        {
-            get { return CachedUntil.Subtract(DateTime.UtcNow); }
-        }
-
         #endregion
 
 

@@ -303,12 +303,12 @@ namespace EVEMon.Common
             // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
-            DirectoryInfo[] filesInEveCache = di.GetDirectories("*_tranquility");
+            DirectoryInfo[] foldersInEveCache = di.GetDirectories("e_ccp_eve*_tranquility");
 
-            if (!filesInEveCache.Any())
+            if (!foldersInEveCache.Any())
                 return;
 
-            EvePortraitCacheFolders = filesInEveCache.Select(
+            EvePortraitCacheFolders = foldersInEveCache.Select(
                 eveDataPath => eveDataPath.Name).Select(
                     portraitCache => String.Format(
                         CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
