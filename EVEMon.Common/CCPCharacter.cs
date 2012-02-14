@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -50,6 +51,8 @@ namespace EVEMon.Common
             EVEMailMessages = new EveMailMessageCollection(this);
             EVEMailingLists = new EveMailingListCollection(this);
             EVENotifications = new EveNotificationCollection(this);
+
+            LastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
