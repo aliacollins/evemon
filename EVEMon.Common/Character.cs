@@ -42,7 +42,7 @@ namespace EVEMon.Common
             CharacterID = identity.CharacterID;
             m_name = identity.CharacterName;
             CorporationID = identity.CorporationID;
-            CorporationName = identity.CharacterName;
+            CorporationName = identity.CorporationName;
 
             Identity = identity;
             Guid = guid;

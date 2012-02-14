@@ -737,11 +737,10 @@ namespace EVEMon
                         switch (level)
                         {
                             case 0:
-                                tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "for {0}.",
-                                                             senderIsCharacter
-                                                                 ? notification.SenderCharacter.Name
-                                                                 : notification.SenderCorporation.Name);
+                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " for {0}.",
+                                                                                     senderIsCharacter
+                                                                                         ? notification.SenderCharacter.Name
+                                                                                         : notification.SenderCorporation.Name));
                                 break;
                             case 1:
                                 tooltipText = tooltipText.Replace("This character", senderIsCharacter
@@ -750,14 +749,10 @@ namespace EVEMon
 
                                 break;
                             case 2:
-                                tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.", senderIsCharacter
-                                                                                                             ? notification.
-                                                                                                                   SenderCharacter
-                                                                                                                   .Name
-                                                                                                             : notification.
-                                                                                                                   SenderCorporation
-                                                                                                                   .Name);
+                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " of {0}.",
+                                                                                     senderIsCharacter
+                                                                                         ? notification.SenderCharacter.Name
+                                                                                         : notification.SenderCorporation.Name));
                                 break;
                         }
                     }
