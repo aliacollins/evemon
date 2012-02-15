@@ -115,32 +115,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the enumeration of the uri characters representing this identity.
-        /// </summary>
-        public static IEnumerable<UriCharacter> UriCharacters
-        {
-            get { return EveMonClient.Characters.OfType<UriCharacter>(); }
-        }
-
-        /// <summary>
-        /// Finds the API key with access to the specified API method.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        /// <returns>The API key with access to the specified method or null if non found.</returns>
-        public APIKey FindAPIKeyWithAccess(APIGenericMethods method)
-        {
-            if (APIMethods.CharacterSupplementalMethods.Contains(method))
-                return CharacterTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
-                                                                     (int)method == (apiKey.AccessMask & (int)method));
-
-            if (APIMethods.CorporationSupplementalMethods.Contains(method))
-                return CorporationTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
-                                                                     (int)method == (apiKey.AccessMask & (int)method));
-            
-            return null;
-        }
-
-        /// <summary>
         /// Finds the API key with access to the specified API method.
         /// </summary>
         /// <param name="method">The method.</param>

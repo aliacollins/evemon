@@ -233,7 +233,13 @@ namespace EVEMon.APITester
                     return String.Empty;
 
                 Character character = (Character)cbCharacter.SelectedItem;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APIGenericMethods)cbAPIMethod.SelectedItem);
+                APIKey apiKey = null;
+
+                if (cbAPIMethod.SelectedItem.ToString().StartsWith("CorporationContract"))
+                    apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
+
+                if (cbAPIMethod.SelectedItem.ToString().StartsWith("Contract"))
+                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
 
                 if (apiKey == null)
                     return String.Empty;
