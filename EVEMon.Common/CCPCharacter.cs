@@ -52,8 +52,6 @@ namespace EVEMon.Common
             EVEMailingLists = new EveMailingListCollection(this);
             EVENotifications = new EveNotificationCollection(this);
 
-            LastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
-
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
 
@@ -93,6 +91,7 @@ namespace EVEMon.Common
             : this(identity, Guid.NewGuid())
         {
             ForceUpdateBasicFeatures = true;
+            LastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
         }
 
         #endregion
@@ -433,7 +432,7 @@ namespace EVEMon.Common
                 return false;
 
             // We don't want to be notified about corp roles error
-            if (result.CCPError != null && !result.CCPError.IsCorpRolesError)
+            if (result.CCPError != null && result.CCPError.IsCorpRolesError)
                 return false;
 
             // Notify an error occurred
@@ -447,7 +446,7 @@ namespace EVEMon.Common
             }
 
             // Removes the previous error notification
-            if (m_errorNotifiedMethod == method)
+            if (m_errorNotifiedMethod.Equals(method))
             {
                 EveMonClient.Notifications.InvalidateCharacterAPIError(this);
                 m_errorNotifiedMethod = APIMethodsExtensions.None;

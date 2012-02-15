@@ -36,7 +36,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsLimitedKeyError
         {
-            get { return (ErrorCode == 200); }
+            get { return ErrorCode == 200; }
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsCorpRolesError
         {
-            get { return (ErrorCode >= 206 && ErrorCode <= 209 || ErrorCode == 213); }
+            get { return (ErrorCode >= 206 && ErrorCode <= 209) || ErrorCode == 213; }
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsUnexpectedDatabaseFailure
         {
-            get { return (ErrorCode == 520); }
+            get { return ErrorCode == 520; }
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsEVEBackendDatabaseDisabled
         {
-            get { return (ErrorCode == 901); }
+            get { return ErrorCode == 901; }
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsWebSiteDatabaseDisabled
         {
-            get { return (ErrorCode == 902); }
+            get { return ErrorCode == 902; }
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsAuthenticationFailure
         {
-            get { return (ErrorCode == 203); }
+            get { return ErrorCode == 203; }
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsLoginDeniedByAccountStatus
         {
-            get { return (ErrorCode == 211); }
+            get { return ErrorCode == 211; }
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public bool IsAPIKeyExpired
         {
-            get { return (ErrorCode == 222); }
+            get { return ErrorCode == 222; }
         }
     }
 }

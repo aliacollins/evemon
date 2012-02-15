@@ -354,15 +354,12 @@ namespace EVEMon.Common
             // Return on error
             if (result.HasError)
             {
-                if (ccpCharacter != null)
+                if (ccpCharacter != null && ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterSkillInTraining))
                     EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
 
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
                 return;
             }
-
-            if (ccpCharacter != null)
-                EveMonClient.Notifications.InvalidateCharacterAPIError(ccpCharacter);
 
             m_skillInTrainingCache[characterName].State = result.Result.SkillInTraining == 1
                                                               ? ResponseState.Training
@@ -372,7 +369,7 @@ namespace EVEMon.Common
             // and characters have been removed from the API key since they were queried
             // remove those characters from the cache
             IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
-                m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.CharacterName == x.Key));
+                m_skillInTrainingCache.Where(x => CharacterIdentities.All(y => y.CharacterName != x.Key));
 
             foreach (KeyValuePair<string, SkillInTrainingResponse> charToRemove in toRemove)
             {
