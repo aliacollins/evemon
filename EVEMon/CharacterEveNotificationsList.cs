@@ -228,6 +228,10 @@ namespace EVEMon
         /// </summary>
         public void UpdateColumns()
         {
+            // Returns if not visible
+            if (!Visible)
+                return;
+
             lvNotifications.BeginUpdate();
             m_isUpdatingColumns = true;
 
@@ -292,9 +296,9 @@ namespace EVEMon
                 // Display or hide the "no EVE mail messages" label
                 if (m_init)
                 {
-                    noEVENotificationsLabel.Visible = eveNotifications.IsEmpty() ||
+                    noEVENotificationsLabel.Visible = !eveNotifications.Any() ||
                                                       eveNotifications.All(x => x.SentDate == DateTime.MinValue);
-                    lvNotifications.Visible = !eveNotifications.IsEmpty();
+                    lvNotifications.Visible = eveNotifications.Any();
                     splitContainerNotifications.Visible = !noEVENotificationsLabel.Visible;
                 }
             }

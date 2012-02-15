@@ -245,6 +245,10 @@ namespace EVEMon
         /// </summary>
         public void UpdateColumns()
         {
+            // Returns if not visible
+            if (!Visible)
+                return;
+
             lvContracts.BeginUpdate();
             m_isUpdatingColumns = true;
 
@@ -331,8 +335,8 @@ namespace EVEMon
                 // Display or hide the "no contracts" label
                 if (m_init)
                 {
-                    noContractsLabel.Visible = contracts.IsEmpty();
-                    lvContracts.Visible = !contracts.IsEmpty();
+                    noContractsLabel.Visible = !contracts.Any();
+                    lvContracts.Visible = contracts.Any();
                 }
             }
             finally

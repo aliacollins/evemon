@@ -384,8 +384,8 @@ namespace EVEMon
                 // Display or hide the "no orders" label
                 if (m_init)
                 {
-                    noOrdersLabel.Visible = orders.IsEmpty();
-                    lvOrders.Visible = !orders.IsEmpty();
+                    noOrdersLabel.Visible = !orders.Any();
+                    lvOrders.Visible = orders.Any();
                     marketExpPanelControl.Visible = true;
                     marketExpPanelControl.Header.Visible = true;
                 }

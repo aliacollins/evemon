@@ -197,6 +197,10 @@ namespace EVEMon
         /// </summary>
         public void UpdateColumns()
         {
+            // Returns if not visible
+            if (!Visible)
+                return;
+
             lvResearchPoints.BeginUpdate();
             m_isUpdatingColumns = true;
 
@@ -298,8 +302,8 @@ namespace EVEMon
                 // Display or hide the "no research points" label
                 if (m_init)
                 {
-                    noResearchLabel.Visible = researhPoints.IsEmpty();
-                    lvResearchPoints.Visible = !researhPoints.IsEmpty();
+                    noResearchLabel.Visible = !researhPoints.Any();
+                    lvResearchPoints.Visible = researhPoints.Any();
                 }
             }
             finally

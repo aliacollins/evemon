@@ -230,6 +230,10 @@ namespace EVEMon
         /// </summary>
         public void UpdateColumns()
         {
+            // Returns if not visible
+            if (!Visible)
+                return;
+
             lvMailMessages.BeginUpdate();
             m_isUpdatingColumns = true;
 
@@ -271,7 +275,6 @@ namespace EVEMon
                                     : 0);
 
             lvMailMessages.BeginUpdate();
-            splitContainerMailMessages.Visible = false;
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
@@ -294,9 +297,9 @@ namespace EVEMon
                 // Display or hide the "no EVE mail messages" label
                 if (m_init)
                 {
-                    noEVEMailMessagesLabel.Visible = eveMailMessages.IsEmpty() ||
+                    noEVEMailMessagesLabel.Visible = !eveMailMessages.Any() ||
                                                      eveMailMessages.All(x => x.SentDate == DateTime.MinValue);
-                    lvMailMessages.Visible = !eveMailMessages.IsEmpty();
+                    lvMailMessages.Visible = eveMailMessages.Any();
                     splitContainerMailMessages.Visible = !noEVEMailMessagesLabel.Visible;
                 }
             }

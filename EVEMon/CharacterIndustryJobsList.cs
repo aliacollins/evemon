@@ -273,6 +273,10 @@ namespace EVEMon
         /// </summary>
         public void UpdateColumns()
         {
+            // Returns if not visible
+            if (!Visible)
+                return;
+
             lvJobs.BeginUpdate();
             m_isUpdatingColumns = true;
 
@@ -347,13 +351,12 @@ namespace EVEMon
                 // Display or hide the "no jobs" label
                 if (m_init)
                 {
-                    noJobsLabel.Visible = jobs.IsEmpty();
-                    lvJobs.Visible = !jobs.IsEmpty();
+                    noJobsLabel.Visible = !jobs.Any();
+                    lvJobs.Visible = jobs.Any();
+                    m_timer.Enabled = jobs.Any();
                     industryExpPanelControl.Visible = true;
                     industryExpPanelControl.Header.Visible = true;
-                    m_timer.Enabled = !jobs.IsEmpty();
                 }
-
             }
             finally
             {
