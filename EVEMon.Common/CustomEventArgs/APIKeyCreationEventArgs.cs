@@ -46,7 +46,11 @@ namespace EVEMon.Common.CustomEventArgs
                 // Look for an existing character ID and update its name
                 CharacterIdentity identity = EveMonClient.CharacterIdentities[character.ID];
                 if (identity != null)
+                {
                     identity.CharacterName = character.Name;
+                    identity.CorporationID = character.CorporationID;
+                    identity.CorporationName = character.CorporationName;
+                }
                 else
                 {
                     // Create an identity if necessary
