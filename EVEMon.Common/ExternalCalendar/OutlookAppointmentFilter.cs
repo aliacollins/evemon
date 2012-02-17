@@ -17,8 +17,7 @@ namespace EVEMon.Common.ExternalCalendar
         private static MAPIFolder s_mapiFolder;
 
 
-        #region Private Properties
-
+        #region Properties
 
         /// <summary>
         /// Gets the Outlook application.
@@ -172,9 +171,6 @@ namespace EVEMon.Common.ExternalCalendar
             return GetMapiFolder(useDefaultCalendar, path, OutlookApplication.Session.Folders);
         }
 
-        #endregion
-
-
         /// <summary>
         /// Gets the mapi folder.
         /// </summary>
@@ -202,6 +198,8 @@ namespace EVEMon.Common.ExternalCalendar
 
             return s_mapiFolder != null && s_mapiFolder.FolderPath == folderPath;
         }
+
+        #endregion
 
 
         #region Private Methods
