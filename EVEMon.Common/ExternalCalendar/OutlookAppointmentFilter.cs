@@ -38,9 +38,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Add a new appointment or Update the appropriate appointment in the calendar.
         /// </summary>
-        /// <param name="appointmentExists">if set to <c>true</c> [appointment exists].</param>
+        /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
         /// <param name="queuePosition">The queue position.</param>
-        public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition)
+        /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
+        public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
         {
             AppointmentItem appointmentItem = (appointmentExists
                                                    ? (AppointmentItem)AppointmentArray[0]
@@ -51,18 +52,18 @@ namespace EVEMon.Common.ExternalCalendar
             appointmentItem.Start = StartDate;
             appointmentItem.End = EndDate;
 
-            string queuePositionString = (queuePosition == 99 ? "End Of Queue" : queuePosition.ToString(CultureConstants.DefaultCulture));
+            string queuePositionText = lastSkillInQueue ? "End Of Queue" : queuePosition.ToString(CultureConstants.DefaultCulture);
 
-            appointmentItem.Body = (appointmentExists
+            appointmentItem.Body = appointmentExists
                                         ? String.Format(CultureConstants.DefaultCulture,
                                                         "{0} {3}Updated: {1} Queue Position: {2}",
                                                         appointmentItem.Body, DateTime.Now,
-                                                        queuePositionString,
+                                                        queuePositionText,
                                                         Environment.NewLine)
                                         : String.Format(CultureConstants.DefaultCulture,
                                                         "Added: {0} Queue Position: {1}",
                                                         DateTime.Now,
-                                                        queuePositionString));
+                                                        queuePositionText);
 
             appointmentItem.ReminderSet = ItemReminder || AlternateReminder;
             appointmentItem.BusyStatus = OlBusyStatus.olBusy;

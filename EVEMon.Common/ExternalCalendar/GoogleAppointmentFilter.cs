@@ -95,9 +95,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Add a new appointment or Update the appropriate appointment in the calendar.
         /// </summary>
-        /// <param name="appointmentExists">if set to <c>true</c> [appointment exists].</param>
+        /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
         /// <param name="queuePosition">The queue position.</param>
-        public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition)
+        /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
+        public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
         {
             Exception googleProblem = null;
 

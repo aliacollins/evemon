@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
@@ -19,31 +20,22 @@ namespace EVEMon.Common.ExternalCalendar
 
             SkillQueue skillQueue = character.SkillQueue;
 
-            int queuePosition = 0;
             foreach (QueuedSkill queuedSkill in skillQueue)
             {
-                queuePosition++;
-
-                // Check if this is the last skill in the queue
-                if (queuePosition == skillQueue.Count)
-                    queuePosition = 99;
+                bool lastSkillInQueue = queuedSkill == skillQueue.Last();
+                int queuePosition = skillQueue.IndexOf(queuedSkill) + 1;
 
                 // Continue if user has selected 'Last Queued Skill Only'
-                if (Settings.Calendar.LastQueuedSkillOnly && queuePosition != 99)
+                if (Settings.Calendar.LastQueuedSkillOnly && !lastSkillInQueue)
                     continue;
 
                 try
                 {
                     if (Settings.Calendar.Provider == CalendarProvider.Outlook)
-                        DoOutlookAppointment(queuedSkill, queuePosition);
+                        DoOutlookAppointment(queuedSkill, queuePosition, lastSkillInQueue);
 
                     if (Settings.Calendar.Provider == CalendarProvider.Google)
-                        DoGoogleAppointment(queuedSkill, queuePosition);
-                }
-                catch (COMException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                    Settings.Calendar.Enabled = false;
+                        DoGoogleAppointment(queuedSkill, queuePosition, lastSkillInQueue);
                 }
                 catch (Exception ex)
                 {
@@ -58,7 +50,8 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         /// <param name="queuedSkill">The queued skill.</param>
         /// <param name="queuePosition">The queue position.</param>
-        private static void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition)
+        /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
+        private static void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             try
             {
@@ -97,13 +90,18 @@ namespace EVEMon.Common.ExternalCalendar
 
                 try
                 {
-                    outlookAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition);
+                    outlookAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition, lastSkillInQueue);
                 }
                 catch (Exception ex)
                 {
                     ExceptionHandler.LogRethrowException(ex);
                     throw;
                 }
+            }
+            catch (COMException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                Settings.Calendar.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -117,7 +115,8 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         /// <param name="queuedSkill">The queued skill.</param>
         /// <param name="queuePosition">The queue position.</param>
-        private static void DoGoogleAppointment(QueuedSkill queuedSkill, int queuePosition)
+        /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
+        private static void DoGoogleAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             try
             {
@@ -163,7 +162,7 @@ namespace EVEMon.Common.ExternalCalendar
                 googleAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
                 googleAppointmentFilter.ReminderMethod = (int)Settings.Calendar.GoogleReminder;
 
-                googleAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition);
+                googleAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition, lastSkillInQueue);
             }
             catch (GDataRequestException ex)
             {
