@@ -154,7 +154,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </returns>
         private ArrayList RecurringItems()
         {
-            // Filter all the objects we are looking for.
+            // Filter all the objects we are looking for
             MAPIFolder folder = OutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
 
             // Use a Jet Query to filter the details we need initially between the two specified dates

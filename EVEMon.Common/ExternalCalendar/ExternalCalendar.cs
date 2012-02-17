@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
 using Google.GData.Client;
@@ -38,6 +39,11 @@ namespace EVEMon.Common.ExternalCalendar
 
                     if (Settings.Calendar.Provider == CalendarProvider.Google)
                         DoGoogleAppointment(queuedSkill, queuePosition);
+                }
+                catch (COMException ex)
+                {
+                    ExceptionHandler.LogException(ex, true);
+                    Settings.Calendar.Enabled = false;
                 }
                 catch (Exception ex)
                 {
