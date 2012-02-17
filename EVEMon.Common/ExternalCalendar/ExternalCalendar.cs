@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
 using Google.GData.Client;
@@ -9,6 +8,26 @@ namespace EVEMon.Common.ExternalCalendar
 {
     public static class ExternalCalendar
     {
+        /// <summary>
+        /// Gets a value indicating whether MSOutlook is installed.
+        /// </summary>
+        /// <value><c>true</c> if MSOutlook is installed; otherwise, <c>false</c>.</value>
+        public static bool OutlookInstalled
+        {
+            get { return OutlookAppointmentFilter.OutlookApplication != null; }
+        }
+
+        /// <summary>
+        /// Gets true if the Outlook calendar exist.
+        /// </summary>
+        /// <param name="useDefaultCalendar">if set to <c>true</c> [use default].</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        public static bool OutlookCalendarExist(bool useDefaultCalendar, string path)
+        {
+            return OutlookAppointmentFilter.OutlookCalendarExist(useDefaultCalendar, path);
+        }
+
         /// <summary>
         /// Process the selected character skill queue into the selected calendar.
         /// </summary>
@@ -53,6 +72,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
         private static void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
+            OutlookAppointmentFilter.GetMapiFolder(Settings.Calendar.UseOutlookDefaultCalendar,
+                                                   Settings.Calendar.OutlookCustomCalendarPath,
+                                                   OutlookAppointmentFilter.OutlookApplication.Session.Folders);
+
             try
             {
                 // Set the subject to the character name and the skill and level in queue for uniqueness sake
@@ -67,6 +90,7 @@ namespace EVEMon.Common.ExternalCalendar
                                                                                 queuedSkill.SkillName,
                                                                                 Skill.GetRomanFromInt(queuedSkill.Level))
                                                                         };
+
 
                 // Pull the list of appointments, hopefully we should either get 1 or none back
                 outlookAppointmentFilter.ReadAppointments();
@@ -97,11 +121,6 @@ namespace EVEMon.Common.ExternalCalendar
                     ExceptionHandler.LogRethrowException(ex);
                     throw;
                 }
-            }
-            catch (COMException ex)
-            {
-                ExceptionHandler.LogException(ex, true);
-                Settings.Calendar.Enabled = false;
             }
             catch (Exception ex)
             {

@@ -164,7 +164,7 @@ namespace EVEMon.SettingsUI
             try
             {
                 tempCombo = new ComboBox();
-                tempCombo.Items.AddRange(new[] { "Never", "Once", "Repeat until clicked" });
+                tempCombo.Items.AddRange(new object[] { "Never", "Once", "Repeat until clicked" });
                 tempCombo.Tag = cat;
                 tempCombo.SelectedIndex = 0;
                 tempCombo.Margin = new Padding(3);

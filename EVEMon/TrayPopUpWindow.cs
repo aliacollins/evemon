@@ -379,7 +379,7 @@ namespace EVEMon
                 }
             }
             else
-                mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
+                mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray<Control>());
 
             // Skip if the user do not want to be warned about accounts not in training
             if (Settings.UI.SystemTrayPopup.ShowWarning)

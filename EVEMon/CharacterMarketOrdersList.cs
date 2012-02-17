@@ -1188,7 +1188,7 @@ namespace EVEMon
             marketExpPanelControl.SuspendLayout();
 
             // Add basic labels to panel
-            marketExpPanelControl.Controls.AddRange(new[]
+            marketExpPanelControl.Controls.AddRange(new Control[]
                                                         {
                                                             m_lblTotalEscrow,
                                                             m_lblBaseBrokerFee,
@@ -1202,7 +1202,7 @@ namespace EVEMon
                                                         });
 
             // Add supplemental labels to panel
-            marketExpPanelControl.Controls.AddRange(new[]
+            marketExpPanelControl.Controls.AddRange(new Control[]
                                                         {
                                                             m_lblCharTotalEscrow,
                                                             m_lblCorpTotalEscrow,

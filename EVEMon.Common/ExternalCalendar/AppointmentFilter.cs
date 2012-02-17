@@ -104,7 +104,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Method to search for any existing appointments for this skill.
         /// </summary>
-        public abstract void ReadAppointments();
+        internal abstract void ReadAppointments();
 
         /// <summary>
         /// Method to get the relevant appointment item and populate the details.
@@ -112,7 +112,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
         /// </returns>
-        public abstract bool Appointment { get; }
+        internal abstract bool Appointment { get; }
 
         /// <summary>
         /// Add a new appointment or Update the appropriate appointment in the calendar.
@@ -120,13 +120,13 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        public abstract void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue);
+        internal abstract void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue);
 
         /// <summary>
         /// Delete the appropriate appointment.
         /// </summary>
         /// <param name="appointmentIndex">The index of the appointment.</param>
-        public abstract void DeleteAppointment(int appointmentIndex);
+        internal abstract void DeleteAppointment(int appointmentIndex);
 
         #endregion
 
@@ -140,7 +140,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// The date and time of the relevant reminder.
         /// </returns>
-        public DateTime WorkOutAlternateReminders()
+        protected DateTime WorkOutAlternateReminders()
         {
             // See whether the appointment falls within the middle of the two, it it does, set the early reminder
             if ((StartDate >= EarlyReminder) && (StartDate <= LateReminder))

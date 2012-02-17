@@ -1172,7 +1172,7 @@ namespace EVEMon
             industryExpPanelControl.SuspendLayout();
 
             // Add basic labels to panel
-            industryExpPanelControl.Controls.AddRange(new[]
+            industryExpPanelControl.Controls.AddRange(new Control[]
                                                           {
                                                               m_lblActiveManufacturingJobs,
                                                               m_lblActiveResearchingJobs,
@@ -1181,7 +1181,7 @@ namespace EVEMon
                                                           });
 
             // Add supplemental labels to panel
-            industryExpPanelControl.Controls.AddRange(new[]
+            industryExpPanelControl.Controls.AddRange(new Control[]
                                                           {
                                                               m_lblActiveCharManufacturingJobs,
                                                               m_lblActiveCorpManufacturingJobs,

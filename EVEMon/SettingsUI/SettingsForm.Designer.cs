@@ -223,12 +223,18 @@ namespace EVEMon.SettingsUI
             this.dtpEarlyReminder = new System.Windows.Forms.DateTimePicker();
             this.cbLastQueuedSkillOnly = new System.Windows.Forms.CheckBox();
             this.rbMSOutlook = new System.Windows.Forms.RadioButton();
+            this.rbGoogle = new System.Windows.Forms.RadioButton();
             this.gbGoogle = new System.Windows.Forms.GroupBox();
             this.cbGoogleReminder = new System.Windows.Forms.ComboBox();
             this.tbGoogleURI = new System.Windows.Forms.TextBox();
             this.tbGooglePassword = new System.Windows.Forms.TextBox();
             this.tbGoogleEmail = new System.Windows.Forms.TextBox();
-            this.rbGoogle = new System.Windows.Forms.RadioButton();
+            this.gbMSOutlook = new System.Windows.Forms.GroupBox();
+            this.calendarPathExampleLabel = new System.Windows.Forms.Label();
+            this.rbCustomCalendar = new System.Windows.Forms.RadioButton();
+            this.rbDefaultCalendar = new System.Windows.Forms.RadioButton();
+            this.tbCalendarPath = new System.Windows.Forms.TextBox();
+            this.calendarPathLabel = new System.Windows.Forms.Label();
             this.externalCalendarCheckbox = new System.Windows.Forms.CheckBox();
             this.g15Page = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.g15CheckBox = new System.Windows.Forms.CheckBox();
@@ -297,6 +303,7 @@ namespace EVEMon.SettingsUI
             this.externalCalendarPanel.SuspendLayout();
             this.gbReminder.SuspendLayout();
             this.gbGoogle.SuspendLayout();
+            this.gbMSOutlook.SuspendLayout();
             this.g15Page.SuspendLayout();
             this.g15Panel.SuspendLayout();
             this.panelCycleQueueInfo.SuspendLayout();
@@ -1303,7 +1310,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.generalPage;
+            this.multiPanel.SelectedPage = this.externalCalendarPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -2023,8 +2030,9 @@ namespace EVEMon.SettingsUI
             this.externalCalendarPanel.Controls.Add(this.gbReminder);
             this.externalCalendarPanel.Controls.Add(this.cbLastQueuedSkillOnly);
             this.externalCalendarPanel.Controls.Add(this.rbMSOutlook);
-            this.externalCalendarPanel.Controls.Add(this.gbGoogle);
             this.externalCalendarPanel.Controls.Add(this.rbGoogle);
+            this.externalCalendarPanel.Controls.Add(this.gbGoogle);
+            this.externalCalendarPanel.Controls.Add(this.gbMSOutlook);
             this.externalCalendarPanel.Location = new System.Drawing.Point(3, 119);
             this.externalCalendarPanel.Name = "externalCalendarPanel";
             this.externalCalendarPanel.Size = new System.Drawing.Size(429, 292);
@@ -2128,8 +2136,6 @@ namespace EVEMon.SettingsUI
             // cbLastQueuedSkillOnly
             // 
             this.cbLastQueuedSkillOnly.AutoSize = true;
-            this.cbLastQueuedSkillOnly.Checked = true;
-            this.cbLastQueuedSkillOnly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbLastQueuedSkillOnly.Location = new System.Drawing.Point(11, 268);
             this.cbLastQueuedSkillOnly.Name = "cbLastQueuedSkillOnly";
             this.cbLastQueuedSkillOnly.Size = new System.Drawing.Size(133, 17);
@@ -2140,15 +2146,24 @@ namespace EVEMon.SettingsUI
             // rbMSOutlook
             // 
             this.rbMSOutlook.AutoSize = true;
-            this.rbMSOutlook.Checked = true;
             this.rbMSOutlook.Location = new System.Drawing.Point(3, 5);
             this.rbMSOutlook.Name = "rbMSOutlook";
             this.rbMSOutlook.Size = new System.Drawing.Size(81, 17);
             this.rbMSOutlook.TabIndex = 1;
-            this.rbMSOutlook.TabStop = true;
             this.rbMSOutlook.Text = "MS Outlook";
             this.rbMSOutlook.UseVisualStyleBackColor = true;
             this.rbMSOutlook.Click += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // rbGoogle
+            // 
+            this.rbGoogle.AutoSize = true;
+            this.rbGoogle.Location = new System.Drawing.Point(88, 4);
+            this.rbGoogle.Name = "rbGoogle";
+            this.rbGoogle.Size = new System.Drawing.Size(59, 17);
+            this.rbGoogle.TabIndex = 2;
+            this.rbGoogle.Text = "Google";
+            this.rbGoogle.UseVisualStyleBackColor = true;
+            this.rbGoogle.Click += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
             // gbGoogle
             // 
@@ -2162,7 +2177,6 @@ namespace EVEMon.SettingsUI
             this.gbGoogle.Controls.Add(this.tbGoogleEmail);
             this.gbGoogle.Controls.Add(this.lblPassword);
             this.gbGoogle.Controls.Add(this.lblGoogleEmail);
-            this.gbGoogle.Enabled = false;
             this.gbGoogle.Location = new System.Drawing.Point(2, 28);
             this.gbGoogle.Name = "gbGoogle";
             this.gbGoogle.Size = new System.Drawing.Size(423, 137);
@@ -2208,16 +2222,72 @@ namespace EVEMon.SettingsUI
             this.tbGoogleEmail.Size = new System.Drawing.Size(334, 20);
             this.tbGoogleEmail.TabIndex = 3;
             // 
-            // rbGoogle
+            // gbMSOutlook
             // 
-            this.rbGoogle.AutoSize = true;
-            this.rbGoogle.Location = new System.Drawing.Point(88, 4);
-            this.rbGoogle.Name = "rbGoogle";
-            this.rbGoogle.Size = new System.Drawing.Size(59, 17);
-            this.rbGoogle.TabIndex = 2;
-            this.rbGoogle.Text = "Google";
-            this.rbGoogle.UseVisualStyleBackColor = true;
-            this.rbGoogle.Click += new System.EventHandler(this.OnMustEnableOrDisable);
+            this.gbMSOutlook.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbMSOutlook.Controls.Add(this.calendarPathExampleLabel);
+            this.gbMSOutlook.Controls.Add(this.rbCustomCalendar);
+            this.gbMSOutlook.Controls.Add(this.rbDefaultCalendar);
+            this.gbMSOutlook.Controls.Add(this.tbCalendarPath);
+            this.gbMSOutlook.Controls.Add(this.calendarPathLabel);
+            this.gbMSOutlook.Location = new System.Drawing.Point(2, 28);
+            this.gbMSOutlook.Name = "gbMSOutlook";
+            this.gbMSOutlook.Size = new System.Drawing.Size(423, 120);
+            this.gbMSOutlook.TabIndex = 14;
+            this.gbMSOutlook.TabStop = false;
+            this.gbMSOutlook.Text = "MS Outlook Information";
+            // 
+            // calendarPathExampleLabel
+            // 
+            this.calendarPathExampleLabel.AutoSize = true;
+            this.calendarPathExampleLabel.Location = new System.Drawing.Point(6, 80);
+            this.calendarPathExampleLabel.Name = "calendarPathExampleLabel";
+            this.calendarPathExampleLabel.Size = new System.Drawing.Size(347, 26);
+            this.calendarPathExampleLabel.TabIndex = 4;
+            this.calendarPathExampleLabel.Text = "e.g. \'Calendar\\MyCalendar\' if your calendar is under the default calendar\r\n      " +
+    " or \'MyCalendar\' if your calendar is under the root folder.";
+            // 
+            // rbCustomCalendar
+            // 
+            this.rbCustomCalendar.AutoSize = true;
+            this.rbCustomCalendar.Location = new System.Drawing.Point(141, 20);
+            this.rbCustomCalendar.Name = "rbCustomCalendar";
+            this.rbCustomCalendar.Size = new System.Drawing.Size(127, 17);
+            this.rbCustomCalendar.TabIndex = 3;
+            this.rbCustomCalendar.TabStop = true;
+            this.rbCustomCalendar.Text = "Use Custom Calendar";
+            this.rbCustomCalendar.UseVisualStyleBackColor = true;
+            this.rbCustomCalendar.Click += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // rbDefaultCalendar
+            // 
+            this.rbDefaultCalendar.AutoSize = true;
+            this.rbDefaultCalendar.Location = new System.Drawing.Point(9, 20);
+            this.rbDefaultCalendar.Name = "rbDefaultCalendar";
+            this.rbDefaultCalendar.Size = new System.Drawing.Size(126, 17);
+            this.rbDefaultCalendar.TabIndex = 2;
+            this.rbDefaultCalendar.TabStop = true;
+            this.rbDefaultCalendar.Text = "Use Default Calendar";
+            this.rbDefaultCalendar.UseVisualStyleBackColor = true;
+            this.rbDefaultCalendar.Click += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // tbCalendarPath
+            // 
+            this.tbCalendarPath.Location = new System.Drawing.Point(95, 53);
+            this.tbCalendarPath.Name = "tbCalendarPath";
+            this.tbCalendarPath.Size = new System.Drawing.Size(295, 20);
+            this.tbCalendarPath.TabIndex = 1;
+            this.tbCalendarPath.Validating += new System.ComponentModel.CancelEventHandler(this.tbCalendarName_Validating);
+            // 
+            // calendarPathLabel
+            // 
+            this.calendarPathLabel.AutoSize = true;
+            this.calendarPathLabel.Location = new System.Drawing.Point(6, 56);
+            this.calendarPathLabel.Name = "calendarPathLabel";
+            this.calendarPathLabel.Size = new System.Drawing.Size(77, 13);
+            this.calendarPathLabel.TabIndex = 0;
+            this.calendarPathLabel.Text = "Calendar Path:";
             // 
             // externalCalendarCheckbox
             // 
@@ -2722,6 +2792,8 @@ namespace EVEMon.SettingsUI
             this.gbReminder.PerformLayout();
             this.gbGoogle.ResumeLayout(false);
             this.gbGoogle.PerformLayout();
+            this.gbMSOutlook.ResumeLayout(false);
+            this.gbMSOutlook.PerformLayout();
             this.g15Page.ResumeLayout(false);
             this.g15Page.PerformLayout();
             this.g15Panel.ResumeLayout(false);
@@ -2944,5 +3016,11 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Button btnEVEMonDataDir;
         private EmailNotificationsControl emailNotificationsControl;
         private System.Windows.Forms.CheckBox mailNotificationCheckBox;
+        private System.Windows.Forms.GroupBox gbMSOutlook;
+        private System.Windows.Forms.RadioButton rbCustomCalendar;
+        private System.Windows.Forms.RadioButton rbDefaultCalendar;
+        private System.Windows.Forms.TextBox tbCalendarPath;
+        private System.Windows.Forms.Label calendarPathLabel;
+        private System.Windows.Forms.Label calendarPathExampleLabel;
     }
 }
