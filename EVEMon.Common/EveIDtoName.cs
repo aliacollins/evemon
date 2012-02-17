@@ -12,11 +12,11 @@ namespace EVEMon.Common
     public static class EveIDToName
     {
         private static readonly string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
+        private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
+        private static readonly List<string> s_listOfNames = new List<string>();
 
         private static List<string> s_listOfIDs = new List<string>();
         private static List<string> s_listOfIDsToQuery = new List<string>();
-        private static readonly List<string> s_listOfNames = new List<string>();
-        private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
         private static bool s_savePending;
         private static DateTime s_lastSaveTime;
@@ -90,9 +90,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Ensures the cache file is loaded.
         /// </summary>
-        private static void EnsureCacheFileLoad()
+        public static void EnsureCacheFileLoad()
         {
-            if (!File.Exists(s_file) || !s_cacheList.IsEmpty())
+            if (!File.Exists(s_file) || s_cacheList.Any())
                 return;
 
             TryDeserializeCacheFile();
@@ -236,7 +236,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Saves this cache list to a file.
         /// </summary>
-        private static void SaveImmediate()
+        public static void SaveImmediate()
         {
             SerializableEveIDToName serial = Export();
             XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
