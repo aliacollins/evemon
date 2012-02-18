@@ -78,8 +78,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                     };
 
                 // Export skill atributes
-                Dictionary<int, int> skillAttributes = Database.DgmTypeAttributesTable.Where(x => x.ItemID == skill.ID).
-                    ToDictionary(
+                Dictionary<int, int> skillAttributes = Database.DgmTypeAttributesTable.Where(
+                    x => x.ItemID == skill.ID).ToDictionary(
                         attribute => attribute.AttributeID, attribute => attribute.GetIntValue);
 
                 singleSkill.Rank = skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
@@ -94,7 +94,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                      ? IntToEveAttribute(
                                                          skillAttributes[DBConstants.SecondaryAttributePropertyID])
                                                      : EveAttribute.None;
-                singleSkill.CanTrainOnTrial = skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) &&
+                singleSkill.CanTrainOnTrial = !skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) ||
                                               skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0;
 
                 // Export prerequesities
