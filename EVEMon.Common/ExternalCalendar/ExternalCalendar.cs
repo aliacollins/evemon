@@ -77,7 +77,8 @@ namespace EVEMon.Common.ExternalCalendar
                                                         Settings.Calendar.OutlookCustomCalendarPath,
                                                         OutlookAppointmentFilter.OutlookApplication.Session.Folders))
             {
-                MessageBox.Show("Unknown Outlook calendar. Please check your settings.", "EVEMon"); 
+                MessageBox.Show("Outlook calendar does not exist. Please check your settings.", "Outlook Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

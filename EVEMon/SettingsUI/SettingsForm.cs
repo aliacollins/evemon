@@ -593,7 +593,7 @@ namespace EVEMon.SettingsUI
                 !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text);
             
             if(e.Cancel)
-                ShowErrorMessage("MS Outlook", "A calendar with that name could not be found.");
+                ShowErrorMessage("MS Outlook", "A calendar at that path could not be found.");
         }
 
         /// <summary>

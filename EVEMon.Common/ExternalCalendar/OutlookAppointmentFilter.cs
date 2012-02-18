@@ -168,6 +168,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns></returns>
         internal static bool OutlookCalendarExist(bool useDefaultCalendar, string path)
         {
+            s_mapiFolder = null;
             return GetMapiFolder(useDefaultCalendar, path, OutlookApplication.Session.Folders);
         }
 
@@ -187,10 +188,15 @@ namespace EVEMon.Common.ExternalCalendar
             }
 
             string folderPath = System.IO.Path.Combine(RootFolderPath, path);
-            foreach (Folder folder in folders.Cast<Folder>().Where(folder => folder.FolderPath.StartsWith(RootFolderPath)))
+
+            foreach (Folder folder in folders.Cast<Folder>().Where(
+                folder => folder.FolderPath.StartsWith(RootFolderPath) && s_mapiFolder == null))
             {
                 if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == folderPath)
+                {
                     s_mapiFolder = folder;
+                    return true;
+                }
 
                 if (folder.Folders.Cast<Folder>().Any())
                     GetMapiFolder(false, path, folder.Folders);
