@@ -186,7 +186,7 @@ namespace EVEMon.Common.ExternalCalendar
                 return true;
             }
 
-            string folderPath = System.IO.Path.Combine(@"\\Personal Folders", path);
+            string folderPath = System.IO.Path.Combine(RootFolderPath, path);
             foreach (Folder folder in folders.Cast<Folder>().Where(folder => folder.FolderPath.StartsWith(RootFolderPath)))
             {
                 if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == folderPath)

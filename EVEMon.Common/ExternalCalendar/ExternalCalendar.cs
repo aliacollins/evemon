@@ -50,7 +50,7 @@ namespace EVEMon.Common.ExternalCalendar
 
                 try
                 {
-                    if (Settings.Calendar.Provider == CalendarProvider.Outlook)
+                    if (Settings.Calendar.Provider == CalendarProvider.Outlook && OutlookInstalled)
                         DoOutlookAppointment(queuedSkill, queuePosition, lastSkillInQueue);
 
                     if (Settings.Calendar.Provider == CalendarProvider.Google)
@@ -72,9 +72,14 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
         private static void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
-            OutlookAppointmentFilter.GetMapiFolder(Settings.Calendar.UseOutlookDefaultCalendar,
-                                                   Settings.Calendar.OutlookCustomCalendarPath,
-                                                   OutlookAppointmentFilter.OutlookApplication.Session.Folders);
+            // Get the calendar
+            if (!OutlookAppointmentFilter.GetMapiFolder(Settings.Calendar.UseOutlookDefaultCalendar,
+                                                        Settings.Calendar.OutlookCustomCalendarPath,
+                                                        OutlookAppointmentFilter.OutlookApplication.Session.Folders))
+            {
+                MessageBox.Show("Unknown Outlook calendar. Please check your settings.", "EVEMon"); 
+                return;
+            }
 
             try
             {
