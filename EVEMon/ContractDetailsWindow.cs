@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -511,6 +512,7 @@ namespace EVEMon
         private void DrawStationText(PaintEventArgs e, string labelText, Station station)
         {
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             string secLevelText = station.SolarSystem.SecurityLevel.ToString("N1");
 
@@ -659,6 +661,7 @@ namespace EVEMon
                 return;
 
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             const string RouteText = "Route will take you through: ";
             Size routeTextSize = g.MeasureString(RouteText, Font).ToSize();
@@ -701,6 +704,7 @@ namespace EVEMon
         private void DrawColoredText(PaintEventArgs e, string text, Font font, PointF point, Color color,
                                      bool increaseHeight = true)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             SizeF textSize = e.Graphics.MeasureString(text, font);
             DrawColoredText(e, text, font, new RectangleF(point, textSize), color, increaseHeight);
         }
@@ -718,6 +722,7 @@ namespace EVEMon
                                      bool increaseHeight = true)
         {
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             using (Brush secLevelBrush = new SolidBrush(color))
             {
@@ -741,6 +746,7 @@ namespace EVEMon
                               int position = 0)
         {
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             Size textSize = g.MeasureString(text, font).ToSize();
 
@@ -761,8 +767,9 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
         private void DrawHeader(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
             Image headerImage;
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             // Select image according to contract type
             switch (m_contract.ContractType)
@@ -807,6 +814,8 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
         private void DrawLine(PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
             using (Pen pen = new Pen(ForeColor))
             {
                 e.Graphics.DrawLine(pen, DetailsPanel.Left + FirstIntendPosition, m_height,
@@ -830,6 +839,7 @@ namespace EVEMon
                 return;
 
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             m_height = Pad;
             const string Message = "* Route is based on shortest\n  distance rather than fewer\n  gate jumps";
@@ -869,6 +879,8 @@ namespace EVEMon
         private int DrawSolarSystemText(PaintEventArgs e, SolarSystem solarSystem, int left)
         {
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
             string secLevelText = solarSystem.SecurityLevel.ToString("N1");
             int intend = g.MeasureString(secLevelText, Font).ToSize().Width;
             Size systemTextSize = g.MeasureString(solarSystem.Name, Font).ToSize();

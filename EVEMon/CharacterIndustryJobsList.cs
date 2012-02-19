@@ -980,6 +980,9 @@ namespace EVEMon
                 return;
             }
 
+            // Calculate the related info for the panel
+            CalculatePanelInfo();
+
             // Update the Header text of the panel
             UpdateHeaderText();
 
@@ -1018,9 +1021,6 @@ namespace EVEMon
         /// </summary>
         private void UpdatePanelInfo()
         {
-            // Calculate the related info for the panel
-            CalculatePanelInfo();
-
             // Basic label text
             m_lblActiveManufacturingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Active Manufacturing Jobs: {0}",
                                                               m_activeManufJobsIssuedForCharacterCount +
@@ -1119,21 +1119,21 @@ namespace EVEMon
         /// </summary>
         private void CalculatePanelInfo()
         {
-            m_activeManufJobsIssuedForCharacterCount = m_list.Where(
+            m_activeManufJobsIssuedForCharacterCount = m_list.Count(
                 x => x.State == JobState.Active && x.Activity == BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Character).Count();
+                     x.IssuedFor == IssuedFor.Character);
 
-            m_activeManufJobsIssuedForCorporationCount = m_list.Where(
+            m_activeManufJobsIssuedForCorporationCount = m_list.Count(
                 x => x.State == JobState.Active && x.Activity == BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Corporation).Count();
+                     x.IssuedFor == IssuedFor.Corporation);
 
-            m_activeResearchJobsIssuedForCharacterCount = m_list.Where(
+            m_activeResearchJobsIssuedForCharacterCount = m_list.Count(
                 x => x.State == JobState.Active && x.Activity != BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Character).Count();
+                     x.IssuedFor == IssuedFor.Character);
 
-            m_activeResearchJobsIssuedForCorporationCount = m_list.Where(
+            m_activeResearchJobsIssuedForCorporationCount = m_list.Count(
                 x => x.State == JobState.Active && x.Activity != BlueprintActivity.Manufacturing &&
-                     x.IssuedFor == IssuedFor.Corporation).Count();
+                     x.IssuedFor == IssuedFor.Corporation);
 
             // Calculate character's max manufacturing jobs
             m_skillBasedManufacturingJobs = Character.Skills[DBConstants.MassProductionSkillID].LastConfirmedLvl

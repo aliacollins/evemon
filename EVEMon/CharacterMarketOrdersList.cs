@@ -886,6 +886,9 @@ namespace EVEMon
                 return;
             }
 
+            // Calculate the related info for the panel
+            CalculatePanelInfo();
+
             // Update the Header text of the panel
             UpdateHeaderText();
 
@@ -924,9 +927,6 @@ namespace EVEMon
         /// </summary>
         private void UpdatePanelInfo()
         {
-            // Calculate the related info for the panel
-            CalculatePanelInfo();
-
             // Update the basic label text
             m_lblTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture,
                                                   "Total in Escrow: {0:N} ISK (additional {1:N} ISK to cover)",
