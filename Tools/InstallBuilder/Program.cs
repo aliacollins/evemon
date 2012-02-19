@@ -49,14 +49,14 @@ namespace InstallBuilder
             {
                 if (!String.IsNullOrEmpty(s_nsisExe))
                 {
-                    // Create an installer on the developers desktop
+                    // Create an installer in the installers folder
                     Console.WriteLine("Starting Installer creation.");
                     BuildInstaller();
                     Console.WriteLine("Installer creation finished.");
                     Console.WriteLine();
                 }
 
-                // Create a zip file on the developers desktop
+                // Create a zip file in the binaries folder
                 Console.WriteLine("Starting zip installer creation.");
                 BuildZip();
                 Console.WriteLine("Zip installer creation finished.");
@@ -149,15 +149,14 @@ namespace InstallBuilder
         /// Builds the zip.
         /// </summary>
         private static void BuildZip()
-        {
-            string zipFileName = String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version);
-            zipFileName = Path.Combine(s_binariesDir, zipFileName);
+        {            
+            // Delete any existing binaries files
+            DeleteFiles(s_binariesDir);
+
+            string zipFileName = Path.Combine(s_binariesDir,
+                                              String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version));
 
             string[] filenames = Directory.GetFiles(s_sourceFilesDir, "*", SearchOption.AllDirectories);
-
-            FileInfo zipFile = new FileInfo(zipFileName);
-            if (zipFile.Exists)
-                zipFile.Delete();
 
             Stream stream = null;
             try
@@ -209,6 +208,9 @@ namespace InstallBuilder
         /// </summary>
         private static void BuildInstaller()
         {
+            // Delete any existing installer files
+            DeleteFiles(s_installerDir);
+
             try
             {
                 string nsisScript = Path.Combine(s_projectDir,
@@ -216,8 +218,8 @@ namespace InstallBuilder
                                                      ? "bin\\x86\\Debug\\EVEMonInstallerScript.nsi"
                                                      : "bin\\x86\\Release\\EVEMonInstallerScript.nsi");
 
-                string param =
-                    String.Format(CultureInfo.InvariantCulture, "/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_installerDir, nsisScript);
+                string param = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"",
+                                             s_version, s_installerDir, nsisScript);
 
                 Console.WriteLine("NSIS script : {0}", nsisScript);
                 Console.WriteLine("Output directory : {0}", s_installerDir);
@@ -240,6 +242,27 @@ namespace InstallBuilder
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the files in the specified directory.
+        /// </summary>
+        /// <param name="directoryPath">The directory path.</param>
+        private static void DeleteFiles(string directoryPath)
+        {
+            Console.WriteLine("Deleting all files in {0}", directoryPath);
+
+            foreach (string file in Directory.GetFiles(directoryPath))
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }
