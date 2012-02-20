@@ -11,13 +11,13 @@ namespace InstallBuilder
 {
     internal static class Program
     {
+        private static readonly string s_sourceFilesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
         private static readonly string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
         private static readonly string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
         private static readonly string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
         private static string s_projectDir;
         private static string s_version;
-        private static string s_sourceFilesDir;
         private static string s_nsisExe;
 
         private static bool s_isDebug;
@@ -32,10 +32,16 @@ namespace InstallBuilder
         {
             CheckIsDebug();
 
-            bool nsisExist = PopulateEnvironment(args);
-
-            if (!nsisExist)
+            if (!HasVersion())
                 return 0;
+
+            if (args[0] == "-version" || args[0] == "-v")
+            {
+                Console.WriteLine(s_version.Substring(0, s_version.LastIndexOf('.')));
+                return 0;
+            }
+
+            CheckNsisInstalled(args);
 
             // Create the installer folder if it doesn't exist
             if (!Directory.Exists(s_installerDir))
@@ -108,14 +114,31 @@ namespace InstallBuilder
         }
 
         /// <summary>
-        /// Populates the environment.
+        /// Checks that NSIS is installed.
         /// </summary>
         /// <param name="args">The args.</param>
-        /// <returns></returns>
-        private static bool PopulateEnvironment(string[] args)
+        private static void CheckNsisInstalled(string[] args)
         {
-            s_projectDir = args.Length == 0 ? Path.GetFullPath(@"..\..\..") : String.Join(" ", args);
+            s_nsisExe = FindMakeNsisExe();
+            Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
+                                                ? "Not Found - Installer will not be created."
+                                                : s_nsisExe);
 
+            Console.WriteLine();
+
+            s_projectDir = args.Length == 0 ? Path.GetFullPath(@"..\..\..") : String.Join(" ", args);
+            Console.WriteLine("Project directory : {0}", s_projectDir);
+            Console.WriteLine("Source directory : {0}", s_sourceFilesDir);
+            Console.WriteLine("Installer directory : {0}", s_installerDir);
+            Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Gets true if a release version has been compiled.
+        /// </summary>
+        private static bool HasVersion()
+        {
             try
             {
                 s_version = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version.ToString();
@@ -127,21 +150,6 @@ namespace InstallBuilder
                 Console.ReadLine();
                 return false;
             }
-
-            Console.WriteLine("Project directory : {0}", s_projectDir);
-
-            s_sourceFilesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
-            Console.WriteLine("Source directory : {0}", s_sourceFilesDir);
-            Console.WriteLine("Installer directory : {0}", s_installerDir);
-            Console.WriteLine("Binaries directory : {0}", s_binariesDir);
-            Console.WriteLine();
-
-            s_nsisExe = FindMakeNsisExe();
-            Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
-                                                ? "Not Found - Installer will not be created."
-                                                : s_nsisExe);
-            Console.WriteLine();
-
             return true;
         }
 
