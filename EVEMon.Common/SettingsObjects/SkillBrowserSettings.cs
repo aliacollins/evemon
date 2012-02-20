@@ -12,6 +12,13 @@ namespace EVEMon.Common.SettingsObjects
         public SkillFilter Filter { get; set; }
 
         /// <summary>
+        /// Gets or sets the filter by attributes.
+        /// </summary>
+        /// <value>The filter by attributes.</value>
+        [XmlElement("filterByAttributesIndex")]
+        public int FilterByAttributesIndex { get; set; }
+
+        /// <summary>
         /// Gets or sets the sort.
         /// </summary>
         /// <value>The sort.</value>

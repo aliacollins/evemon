@@ -61,6 +61,7 @@ namespace EVEMon.SkillPlanner
             if (Settings.UI.UseStoredSearchFilters)
             {
                 cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
+                cbFilterBy.SelectedIndex = Settings.UI.SkillBrowser.FilterByAttributesIndex;
                 cbSkillFilter.SelectedIndex = (int)Settings.UI.SkillBrowser.Filter;
                 cbSorting.SelectedIndex = (int)Settings.UI.SkillBrowser.Sort;
 
@@ -70,6 +71,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cbShowNonPublic.Checked = false;
+                cbFilterBy.SelectedIndex = 0;
                 cbSkillFilter.SelectedIndex = 0;
                 cbSorting.SelectedIndex = 0;
             }
@@ -292,7 +294,7 @@ namespace EVEMon.SkillPlanner
             if (m_plan == null)
                 return;
 
-            IEnumerable<Skill> skills = GetFilteredData().ToArray();
+            IEnumerable<Skill> skills = GetFilteredData();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -363,13 +365,24 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private Func<Skill, bool> GetFilter()
         {
-            if (cbSkillFilter.SelectedIndex == -1)
-                return x => true;
+            lblFilterBy.Enabled = cbFilterBy.Enabled = (SkillFilter)cbSkillFilter.SelectedIndex == SkillFilter.ByAttributes;
+
+            EveAttribute primary = EveAttribute.None;
+            EveAttribute secondary = EveAttribute.None;
+            if (cbFilterBy.Enabled)
+            {
+                string[] attributes = cbFilterBy.SelectedItem.ToString().Split('-');
+                primary = (EveAttribute)Enum.Parse(typeof(EveAttribute), attributes.First().Trim());
+                secondary = (EveAttribute)Enum.Parse(typeof(EveAttribute), attributes.Last().Trim());
+            }
 
             switch ((SkillFilter)cbSkillFilter.SelectedIndex)
             {
+                case SkillFilter.None:
                 case SkillFilter.All:
                     return x => true;
+                case SkillFilter.ByAttributes:
+                    return x => x.PrimaryAttribute == primary && x.SecondaryAttribute == secondary;
                 case SkillFilter.Known:
                     return x => x.IsKnown;
                 case SkillFilter.TrailAccountFriendly:
@@ -804,6 +817,17 @@ namespace EVEMon.SkillPlanner
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Sort = (SkillSort)cbSorting.SelectedIndex;
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// When the filter by attributes combo box changes, we update settings and the content.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbFilterBy_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Settings.UI.SkillBrowser.FilterByAttributesIndex = cbFilterBy.SelectedIndex;
             UpdateContent();
         }
 

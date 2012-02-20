@@ -714,21 +714,23 @@ namespace EVEMon.Common
     /// </summary>
     public enum SkillFilter
     {
+        None = -1,
         All = 0,
-        NoLv5 = 1,
-        Known = 2,
-        Lv1Ready = 3,
-        Unknown = 4,
-        UnknownButOwned = 5,
-        UnknownButTrainable = 6,
-        UnknownAndNotOwned = 7,
-        UnknownAndNotTrainable = 8,
-        NotPlanned = 9,
-        NotPlannedButTrainable = 10,
-        PartiallyTrained = 11,
-        Planned = 12,
-        Trainable = 13,
-        TrailAccountFriendly = 14
+        ByAttributes = 1,
+        NoLv5 = 2,
+        Known = 3,
+        Lv1Ready = 4,
+        Unknown = 5,
+        UnknownButOwned = 6,
+        UnknownButTrainable = 7,
+        UnknownAndNotOwned = 8,
+        UnknownAndNotTrainable = 9,
+        NotPlanned = 10,
+        NotPlannedButTrainable = 11,
+        PartiallyTrained = 12,
+        Planned = 13,
+        Trainable = 14,
+        TrailAccountFriendly = 15
     }
 
     /// <summary>
@@ -925,7 +927,7 @@ namespace EVEMon.Common
         /// <summary>
         /// The API key has no access to query the call.
         /// </summary>
-        [Description("No access via the  API key.")]
+        [Description("No access via the API key.")]
         NoAccess
     }
 
@@ -935,23 +937,23 @@ namespace EVEMon.Common
     /// </summary>
     public enum EveAttribute
     {
-        [XmlEnum("perception")]
-        Perception = 1,
-
-        [XmlEnum("memory")]
-        Memory = 4,
-
-        [XmlEnum("willpower")]
-        Willpower = 3,
+        [XmlEnum("none")]
+        None = -1,
 
         [XmlEnum("intelligence")]
         Intelligence = 0,
 
+        [XmlEnum("perception")]
+        Perception = 1,
+
         [XmlEnum("charisma")]
         Charisma = 2,
 
-        [XmlEnum("none")]
-        None = -1
+        [XmlEnum("willpower")]
+        Willpower = 3,
+
+        [XmlEnum("memory")]
+        Memory = 4
     }
 
     /// <summary>
