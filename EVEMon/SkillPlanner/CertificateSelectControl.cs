@@ -614,7 +614,8 @@ namespace EVEMon.SkillPlanner
                         times = classes.Select(GetTimeToNextGrade);
                         columnHeader = "Time";
                         break;
-                    } // Sort by time to elite (or highest) grade
+                    }
+                    // Sort by time to elite (or highest) grade
                 case CertificateSort.TimeToEliteGrade:
                     {
                         times = classes.Select(GetTimeToEliteGrade);
@@ -709,7 +710,7 @@ namespace EVEMon.SkillPlanner
             const int MaxLetterWidth = 6;
 
             Bitmap bmp;
-            using (Bitmap tempBitmap = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb))
+            using(Bitmap tempBitmap = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb))
             {
                 bmp = (Bitmap)tempBitmap.Clone();
             }

@@ -99,6 +99,9 @@ namespace EVEMon.SettingsUI
             if (method.Equals(APICharacterMethods.MarketOrders))
                 m_settings.Periods[APICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
 
+            if (method.Equals(APICharacterMethods.Contracts))
+                m_settings.Periods[APICorporationMethods.CorporationContracts.ToString()] = periods[combo.SelectedIndex];
+
             if (method.Equals(APICharacterMethods.IndustryJobs))
                 m_settings.Periods[APICorporationMethods.CorporationIndustryJobs.ToString()] = periods[combo.SelectedIndex];
 

@@ -98,7 +98,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
+        internal override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
         {
             Exception googleProblem = null;
 
@@ -163,7 +163,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
         /// </returns>
-        public override bool Appointment
+        internal override bool Appointment
         {
             get
             {
@@ -197,7 +197,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Read the Google appointments.
         /// </summary>
-        public override void ReadAppointments()
+        internal override void ReadAppointments()
         {
             EventQuery myQuery = new EventQuery(Uri.AbsoluteUri)
                                      {
@@ -226,7 +226,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Delete the relevant appointment.
         /// </summary>
         /// <param name="appointmentIndex">The appointment index.</param>
-        public override void DeleteAppointment(int appointmentIndex)
+        internal override void DeleteAppointment(int appointmentIndex)
         {
             ((EventEntry)AppointmentArray[appointmentIndex]).Delete();
         }

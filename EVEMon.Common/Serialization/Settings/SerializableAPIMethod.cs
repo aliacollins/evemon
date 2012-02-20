@@ -7,8 +7,8 @@ namespace EVEMon.Common.Serialization.Settings
     /// </summary>
     public sealed class SerializableAPIMethod
     {
-        [XmlAttribute("code")]
-        public string Method { get; set; }
+        [XmlAttribute("name")]
+        public string MethodName { get; set; }
 
         [XmlAttribute("path")]
         public string Path { get; set; }

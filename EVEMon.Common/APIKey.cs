@@ -24,6 +24,7 @@ namespace EVEMon.Common
         private readonly Dictionary<string, SkillInTrainingResponse> m_skillInTrainingCache =
             new Dictionary<string, SkillInTrainingResponse>();
 
+        private bool m_monitored;
         private bool m_updatePending;
         private bool m_characterListUpdated;
 
@@ -58,7 +59,7 @@ namespace EVEMon.Common
             Type = serial.Type;
             Expiration = serial.Expiration;
             AccessMask = serial.AccessMask;
-            Monitored = serial.Monitored;
+            m_monitored = serial.Monitored;
             IdentityIgnoreList.Import(serial.IgnoreList);
         }
 
@@ -71,7 +72,7 @@ namespace EVEMon.Common
         {
             ID = id;
             VerificationCode = String.Empty;
-            Monitored = true;
+            m_monitored = true;
         }
 
         #endregion
@@ -83,31 +84,36 @@ namespace EVEMon.Common
         /// Gets or sets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public long ID { get; set; }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets or sets the verification code.
         /// </summary>
         /// <value>The verification code.</value>
-        public string VerificationCode { get; set; }
+        public string VerificationCode { get; private set; }
 
         /// <summary>
         /// Gets or sets the access mask.
         /// </summary>
         /// <value>The access mask.</value>
-        public long AccessMask { get; set; }
+        public long AccessMask { get; private set; }
 
         /// <summary>
         /// Gets or sets the type of the key.
         /// </summary>
         /// <value>The type of the key.</value>
-        public APIKeyType Type { get; set; }
+        public APIKeyType Type { get; private set; }
 
         /// <summary>
         /// Gets or sets the key expiration.
         /// </summary>
         /// <value>The key expiration.</value>
-        public DateTime Expiration { get; set; }
+        public DateTime Expiration { get; private set; }
+
+        /// <summary>
+        /// Gets the list of items to never import.
+        /// </summary>
+        public CharacterIdentityIgnoreList IdentityIgnoreList { get; private set; }
 
         /// <summary>
         /// Gets the account expiration date and time.
@@ -118,11 +124,6 @@ namespace EVEMon.Common
         /// Gets the account creation date and time.
         /// </summary>
         public DateTime AccountCreated { get; set; }
-
-        /// <summary>
-        /// Gets the list of items to never import.
-        /// </summary>
-        public CharacterIdentityIgnoreList IdentityIgnoreList { get; set; }
 
         /// <summary>
         /// Gets the character identities for this API key.
@@ -144,7 +145,15 @@ namespace EVEMon.Common
         /// Gets or sets a value indicating whether this <see cref="APIKey"/> is monitored.
         /// </summary>
         /// <value><c>true</c> if monitored; otherwise, <c>false</c>.</value>
-        public bool Monitored { get; set; }
+        public bool Monitored
+        {
+            get { return m_monitored; }
+            set
+            {
+                m_monitored = value;
+                EveMonClient.OnAPIKeyMonitoredChanged();
+            }
+        }
 
         /// <summary>
         /// Gets true if at least one of the CCP characters is monitored.
@@ -178,6 +187,30 @@ namespace EVEMon.Common
         public bool HasCharacterInTraining
         {
             get { return TrainingCharacter != null; }
+        }
+
+        /// <summary>
+        /// Gets true if this API key is a corporation type.
+        /// </summary>
+        public bool IsCorporationType
+        {
+            get { return Type == APIKeyType.Corporation; }
+        }
+
+        /// <summary>
+        /// Gets true if this API key is a character or account type.
+        /// </summary>
+        public bool IsCharacterOrAccountType
+        {
+            get { return Type == APIKeyType.Account || Type == APIKeyType.Character; }
+        }
+
+        /// <summary>
+        /// Gets true if this API key is updated or not monitored.
+        /// </summary>
+        public bool IsProcessed
+        {
+            get { return m_characterListUpdated || !m_monitored; }
         }
 
         #endregion
@@ -231,7 +264,7 @@ namespace EVEMon.Common
 
             // We trigger the account status check when we have the character list of the API key
             // in order to have better API key related info in the trace file
-            m_accountStatusMonitor.Enabled = (m_characterListUpdated && Monitored);
+            m_accountStatusMonitor.Enabled = m_characterListUpdated && Monitored && IsCharacterOrAccountType;
         }
 
 
@@ -321,15 +354,12 @@ namespace EVEMon.Common
             // Return on error
             if (result.HasError)
             {
-                if (ccpCharacter != null)
+                if (ccpCharacter != null && ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterSkillInTraining))
                     EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
 
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
                 return;
             }
-
-            if (ccpCharacter != null)
-                EveMonClient.Notifications.InvalidateCharacterAPIError(ccpCharacter);
 
             m_skillInTrainingCache[characterName].State = result.Result.SkillInTraining == 1
                                                               ? ResponseState.Training
@@ -339,7 +369,7 @@ namespace EVEMon.Common
             // and characters have been removed from the API key since they were queried
             // remove those characters from the cache
             IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
-                m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.CharacterName == x.Key));
+                m_skillInTrainingCache.Where(x => CharacterIdentities.All(y => y.CharacterName != x.Key));
 
             foreach (KeyValuePair<string, SkillInTrainingResponse> charToRemove in toRemove)
             {
@@ -520,14 +550,10 @@ namespace EVEMon.Common
             AccessMask = result.Result.Key.AccessMask;
             Expiration = result.Result.Key.Expiration;
 
-            // Fires the event regarding the API key info update
-            EveMonClient.OnAPIKeyInfoUpdated(this);
-
             ImportIdentities(result.HasError ? null : result.Result.Key.Characters);
 
-            // Fires the event regarding the character list update
-            EveMonClient.OnCharacterListUpdated(this);
-            m_characterListUpdated = true;
+            // Fires the event regarding the API key info update
+            EveMonClient.OnAPIKeyInfoUpdated(this);
         }
 
         /// <summary>
@@ -553,8 +579,9 @@ namespace EVEMon.Common
                                                                  serialID.CorporationID, serialID.CorporationName)))
             {
                 // Update the corporation info as they may have changed
-                id.CorporationID = identities.First(x => x.ID == id.CharacterID).CorporationID;
-                id.CorporationName = identities.First(x => x.ID == id.CharacterID).CorporationName;
+                ISerializableCharacterIdentity characterIdentity = identities.First(x => x.ID == id.CharacterID);
+                id.CorporationID = characterIdentity.CorporationID;
+                id.CorporationName = characterIdentity.CorporationName;
 
                 // Add the API key to the identity
                 id.APIKeys.Add(this);
@@ -569,6 +596,11 @@ namespace EVEMon.Common
                 // Notify subscribers
                 EveMonClient.OnCharacterUpdated(id.CCPCharacter);
             }
+
+            m_characterListUpdated = true;
+
+            // Fires the event regarding the character list update
+            EveMonClient.OnCharacterListUpdated(this);
         }
 
         /// <summary>

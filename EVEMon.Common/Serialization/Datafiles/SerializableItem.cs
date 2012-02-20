@@ -46,6 +46,20 @@ namespace EVEMon.Common.Serialization.Datafiles
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>The category.</value>
+        [XmlAttribute("category")]
+        public string Category { get; set; }
+
+        /// <summary>
+        /// Gets or sets the group.
+        /// </summary>
+        /// <value>The group.</value>
+        [XmlAttribute("group")]
+        public string Group { get; set; }
+
+        /// <summary>
         /// Gets or sets the icon.
         /// </summary>
         /// <value>The icon.</value>

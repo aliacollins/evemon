@@ -100,8 +100,17 @@ namespace EVEMon
         {
             base.OnPaint(e);
 
-            // Draw the border and background
-            DrawBorder(e);
+            // Create graphics object to work with
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            // Define the size of the rectangle used for each of the 4 corner arcs.
+            const int Radius = 4;
+            Size cornerSize = new Size(Radius * 2, Radius * 2);
+
+            // Draw the background and border line
+            DrawBackground(e, g, cornerSize);
+            DrawBorder(e, g, cornerSize);
         }
 
         /// <summary>
@@ -117,20 +126,14 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Draws the rounded rectangle border.
+        /// Draws the rounded background.
         /// </summary>
-        /// <param name="e"></param>
-        private static void DrawBorder(PaintEventArgs e)
+        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
+        /// <param name="g">The g.</param>
+        /// <param name="cornerSize">Size of the corner.</param>
+        private void DrawBackground(PaintEventArgs e, Graphics g, Size cornerSize)
         {
-            // Create graphics object to work with
-            Graphics g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            // Define the size of the rectangle used for each of the 4 corner arcs.
-            const int Radius = 4;
-            Size cornerSize = new Size(Radius * 2, Radius * 2);
-
-            // Construct a GraphicsPath for the outline
+            // Construct a GraphicsPath for the form
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.StartFigure();
@@ -139,26 +142,61 @@ namespace EVEMon
                 path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
 
                 // Top Right
-                path.AddArc(new Rectangle(e.ClipRectangle.Width - 1 - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height),
+                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height),
                             270, 90);
 
                 // Bottom right
-                path.AddArc(new Rectangle(e.ClipRectangle.Width - 1 - cornerSize.Width,
-                                          e.ClipRectangle.Height - 1 - cornerSize.Height, cornerSize.Width, cornerSize.Height),
+                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width,
+                                          e.ClipRectangle.Height - cornerSize.Height, cornerSize.Width, cornerSize.Height),
                             0, 90);
 
                 // Bottom Left
-                path.AddArc(new Rectangle(0, e.ClipRectangle.Height - 1 - cornerSize.Height,
+                path.AddArc(new Rectangle(0, e.ClipRectangle.Height - cornerSize.Height,
                                           cornerSize.Width, cornerSize.Height), 90, 90);
                 path.CloseFigure();
 
-                // Draw the background
+                Region = new Region(path);
+
+                // Fill the background
                 using (Brush fillBrush = new SolidBrush(SystemColors.ControlLightLight))
                 {
                     g.FillPath(fillBrush, path);
                 }
+            }
+        }
 
-                // Now the border
+        /// <summary>
+        /// Draws the rounded rectangle border.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="g"></param>
+        /// <param name="cornerSize"></param>
+        private static void DrawBorder(PaintEventArgs e, Graphics g, Size cornerSize)
+        {
+            // Construct a GraphicsPath for the border line
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.StartFigure();
+
+                // Top left
+                path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
+
+                // Top Right
+                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width - 1, 0, cornerSize.Width, cornerSize.Height),
+                            270, 90);
+
+                // Bottom right
+                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width - 1,
+                                          e.ClipRectangle.Height - cornerSize.Height - 1, cornerSize.Width,
+                                          cornerSize.Height),
+                            0, 90);
+
+                // Bottom Left
+                path.AddArc(new Rectangle(0, e.ClipRectangle.Height - cornerSize.Height - 1,
+                                          cornerSize.Width, cornerSize.Height), 90, 90);
+                path.CloseFigure();
+
+                // Draw the border
                 g.DrawPath(SystemPens.WindowFrame, path);
             }
         }
@@ -341,7 +379,7 @@ namespace EVEMon
                 }
             }
             else
-                mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
+                mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray<Control>());
 
             // Skip if the user do not want to be warned about accounts not in training
             if (Settings.UI.SystemTrayPopup.ShowWarning)

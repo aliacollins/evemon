@@ -12,7 +12,7 @@ namespace EVEMon.SettingsUI
     /// </summary>
     public partial class TrayPopupConfigForm : EVEMonForm
     {
-        private readonly string[] m_characterGrouping = {
+        private readonly object[] m_characterGrouping = {
                                                             "None", "Training / Not Training", "Not Training / Training",
                                                             "Account"
                                                         };
@@ -25,7 +25,7 @@ namespace EVEMon.SettingsUI
                                                 };
 
         private readonly TrayPopupSettings m_settings;
-        private readonly string[] m_portraitSize;
+        private readonly object[] m_portraitSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrayPopupConfigForm"/> class.
@@ -40,7 +40,7 @@ namespace EVEMon.SettingsUI
                             // Transforms x64 to 64 by 64
                             string size = x.ToString().Substring(1);
                             return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
-                        }).ToArray();
+                        }).ToArray<object>();
         }
 
         /// <summary>

@@ -286,7 +286,7 @@ namespace lgLcdClassLibrary
         /// </summary>
         /// <param name="priority"></param>
         /// <returns></returns>
-        public static uint LGLcdSyncUpdate(uint priority)
+        public static uint LgLcdSyncUpdate(uint priority)
         {
             return 0x80000000 | priority;
         }
@@ -296,7 +296,7 @@ namespace lgLcdClassLibrary
         /// </summary>
         /// <param name="priority"></param>
         /// <returns></returns>
-        public static uint LGLcdAsyncUpdate(uint priority)
+        public static uint LgLcdAsyncUpdate(uint priority)
         {
             return priority;
         }

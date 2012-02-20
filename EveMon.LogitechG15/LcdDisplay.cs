@@ -746,11 +746,11 @@ namespace EVEMon.LogitechG15
         #region Helper Methods
 
         /// <summary>
-        /// Formats the wallet balance value in an abbreviation form
+        /// Formats the wallet balance value in an abbreviation form.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="width"></param>
-        /// <returns>Abbriaviated balance value</returns>
+        /// <returns>Abbreviated balance value</returns>
         private string AbbreviationFormat(decimal value, float width)
         {
             string balance;
@@ -759,7 +759,7 @@ namespace EVEMon.LogitechG15
 
             do
             {
-                value /= 1000;
+                value /= 1000M;
                 suffixIndex++;
 
                 switch (suffixIndex)

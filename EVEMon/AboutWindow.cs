@@ -15,7 +15,7 @@ namespace EVEMon
     public partial class AboutWindow : EVEMonForm
     {
         private readonly SortedList m_headers;
-        private readonly SortedList m_developers;
+        private readonly SortedList m_developersList;
 
         /// <summary>
         /// Setup the list of developers and the standard font
@@ -31,117 +31,117 @@ namespace EVEMon
             // list of headings
             m_headers = new SortedList
                             {
-                                { "01", "Guru" },
-                                { "02", "Guru (Retired)" },
-                                { "03", "Developers" },
-                                { "04", "Developers (Retired)" },
-                                { "05", "Contributors" }
+                                { 1, "Guru" },
+                                { 2, "Guru (Retired)" },
+                                { 3, "Developers" },
+                                { 4, "Developers (Retired)" },
+                                { 5, "Contributors" }
                             };
 
             // list of developers by heading
-            m_developers = new SortedList
+            m_developersList = new SortedList
                                {
                                    // EVEMon Guru
-                                   { "Jimi", "01" },
+                                   { "Jimi", 1 },
                                    // Guru (Retired)
-                                   { "Araan Sunn", "02" },
-                                   { "Six Anari", "02" },
-                                   { "Anders Chydenius", "02" },
-                                   { "Brad Stone", "02" },
-                                   { "Eewec Ourbyni", "02" },
-                                   { "Richard Slater", "02" },
-                                   { "Vehlin", "02" },
+                                   { "Araan Sunn", 2 },
+                                   { "Six Anari", 2 },
+                                   { "Anders Chydenius", 2 },
+                                   { "Brad Stone", 2 },
+                                   { "Eewec Ourbyni", 2 },
+                                   { "Richard Slater", 2 },
+                                   { "Vehlin", 2 },
                                    // Developers
-                                   { "MrCue", "03" },
-                                   { "Nericus Demeeny", "03" },
-                                   { "Tonto Auri", "03" },
+                                   { "MrCue", 3 },
+                                   { "Nericus Demeeny", 3 },
+                                   { "Tonto Auri", 3 },
                                    // Developers (Retired)
-                                   { "Collin Grady", "04" },
-                                   { "DCShadow", "04" },
-                                   { "DonQuiche", "04" },
-                                   { "Grauw", "04" },
-                                   { "Jalon Mevek", "04" },
-                                   { "Labogh", "04" },
-                                   { "romanl", "04" },
-                                   { "Safrax", "04" },
-                                   { "Stevil Knevil", "04" },
-                                   { "TheBelgarion", "04" },
+                                   { "Collin Grady", 4 },
+                                   { "DCShadow", 4 },
+                                   { "DonQuiche", 4 },
+                                   { "Grauw", 4 },
+                                   { "Jalon Mevek", 4 },
+                                   { "Labogh", 4 },
+                                   { "romanl", 4 },
+                                   { "Safrax", 4 },
+                                   { "Stevil Knevil", 4 },
+                                   { "TheBelgarion", 4 },
                                    // Contributors
-                                   { "Abomb", "05" },
-                                   { "Adam Butt", "05" },
-                                   { "Aethlyn", "05" },
-                                   { "Aevum Decessus", "05" },
-                                   { "aliceturing", "05" },
-                                   { "aMUSiC", "05" },
-                                   { "Arengor", "05" },
-                                   { "ATGardner", "05" },
-                                   { "Barend", "05" },
-                                   { "bugusnot", "05" },
-                                   { "Candle", "05" },
-                                   { "coeus", "05" },
-                                   { "CrazyMahone", "05" },
-                                   { "CyberTech", "05" },
-                                   { "Dariana", "05" },
-                                   { "Eviro", "05" },
-                                   { "exi", "05" },
-                                   { "FangVV", "05" },
-                                   { "Femaref", "05" },
-                                   { "Flash", "05" },
-                                   { "Galideeth", "05" },
-                                   { "gareth", "05" },
-                                   { "gavinl", "05" },
-                                   { "GoneWacko", "05" },
-                                   { "happyslinky", "05" },
-                                   { "jdread", "05" },
-                                   { "Jeff Zellner", "05" },
-                                   { "jthiesen", "05" },
-                                   { "justinian", "05" },
-                                   { "Kelos Pelmand", "05" },
-                                   { "Kingdud", "05" },
-                                   { "Kw4h", "05" },
-                                   { "lerthe61", "05" },
-                                   { "Lexiica", "05" },
-                                   { "Master of Dice", "05" },
-                                   { "Maximilian Kernbach", "05" },
-                                   { "MaZ", "05" },
-                                   { "mexx24", "05" },
-                                   { "Michayel Lyon", "05" },
-                                   { "mintoko", "05" },
-                                   { "misterilla", "05" },
-                                   { "Moq", "05" },
-                                   { "morgangreenacre", "05" },
-                                   { "Namistai", "05" },
-                                   { "Nascent Nimbus", "05" },
-                                   { "NetMage", "05" },
-                                   { "Nagapito", "05" },
-                                   { "Nilyen", "05" },
-                                   { "Nimrel", "05" },
-                                   { "Niom", "05" },
-                                   { "Pharazon", "05" },
-                                   { "Phoenix Flames", "05" },
-                                   { "phorge", "05" },
-                                   { "Optica", "05" },
-                                   { "Risako", "05" },
-                                   { "Ruldar", "05" },
-                                   { "Safarian Lanar", "05" },
-                                   { "scoobyrich", "05" },
-                                   { "Sertan Deras", "05" },
-                                   { "shaver", "05" },
-                                   { "Shocky", "05" },
-                                   { "Shwehan Juanis", "05" },
-                                   { "skolima", "05" },
-                                   { "Spiff Nutter", "05" },
-                                   { "Subkahnshus", "05" },
-                                   { "The_Assimilator", "05" },
-                                   { "TheConstructor", "05" },
-                                   { "Trin", "05" },
-                                   { "vardoj", "05" },
-                                   { "Waste Land", "05" },
-                                   { "wrok", "05" },
-                                   { "xNomeda", "05" },
-                                   { "ykoehler", "05" },
-                                   { "Zarra Kri", "05" },
-                                   { "Zofu", "05" }
+                                   { "Abomb", 5 },
+                                   { "Adam Butt", 5 },
+                                   { "Aethlyn", 5 },
+                                   { "Aevum Decessus", 5 },
+                                   { "aliceturing", 5 },
+                                   { "aMUSiC", 5 },
+                                   { "Arengor", 5 },
+                                   { "ATGardner", 5 },
+                                   { "Barend", 5 },
+                                   { "bugusnot", 5 },
+                                   { "Candle", 5 },
+                                   { "coeus", 5 },
+                                   { "CrazyMahone", 5 },
+                                   { "CyberTech", 5 },
+                                   { "Dariana", 5 },
+                                   { "Eviro", 5 },
+                                   { "exi", 5 },
+                                   { "FangVV", 5 },
+                                   { "Femaref", 5 },
+                                   { "Flash", 5 },
+                                   { "Galideeth", 5 },
+                                   { "gareth", 5 },
+                                   { "gavinl", 5 },
+                                   { "GoneWacko", 5 },
+                                   { "happyslinky", 5 },
+                                   { "jdread", 5 },
+                                   { "Jeff Zellner", 5 },
+                                   { "jthiesen", 5 },
+                                   { "justinian", 5 },
+                                   { "Kelos Pelmand", 5 },
+                                   { "Kingdud", 5 },
+                                   { "Kw4h", 5 },
+                                   { "lerthe61", 5 },
+                                   { "Lexiica", 5 },
+                                   { "Master of Dice", 5 },
+                                   { "Maximilian Kernbach", 5 },
+                                   { "MaZ", 5 },
+                                   { "mexx24", 5 },
+                                   { "Michayel Lyon", 5 },
+                                   { "mintoko", 5 },
+                                   { "misterilla", 5 },
+                                   { "Moq", 5 },
+                                   { "morgangreenacre", 5 },
+                                   { "Namistai", 5 },
+                                   { "Nascent Nimbus", 5 },
+                                   { "NetMage", 5 },
+                                   { "Nagapito", 5 },
+                                   { "Nilyen", 5 },
+                                   { "Nimrel", 5 },
+                                   { "Niom", 5 },
+                                   { "Pharazon", 5 },
+                                   { "Phoenix Flames", 5 },
+                                   { "phorge", 5 },
+                                   { "Optica", 5 },
+                                   { "Risako", 5 },
+                                   { "Ruldar", 5 },
+                                   { "Safarian Lanar", 5 },
+                                   { "scoobyrich", 5 },
+                                   { "Sertan Deras", 5 },
+                                   { "shaver", 5 },
+                                   { "Shocky", 5 },
+                                   { "Shwehan Juanis", 5 },
+                                   { "skolima", 5 },
+                                   { "Spiff Nutter", 5 },
+                                   { "Subkahnshus", 5 },
+                                   { "The_Assimilator", 5 },
+                                   { "TheConstructor", 5 },
+                                   { "Trin", 5 },
+                                   { "vardoj", 5 },
+                                   { "Waste Land", 5 },
+                                   { "wrok", 5 },
+                                   { "xNomeda", 5 },
+                                   { "ykoehler", 5 },
+                                   { "Zarra Kri", 5 },
+                                   { "Zofu", 5 }
                                };
         }
 
@@ -218,17 +218,18 @@ namespace EVEMon
         {
             devsList.Columns.Add(new ColumnHeader());
 
-            // Set up the list of developers.
+            // Set up the list of developers
             for (int i = 0; i < m_headers.Count; i++)
             {
                 ListViewGroup group = new ListViewGroup(m_headers.GetByIndex(i).ToString());
                 devsList.Groups.Add(group);
 
-                for (int j = 0; j < m_developers.Count; j++)
+                for (int j = 0; j < m_developersList.Count; j++)
                 {
-                    if (m_headers.GetKey(i) != m_developers.GetByIndex(j))
+                    if (!m_headers.GetKey(i).Equals(m_developersList.GetByIndex(j)))
                         continue;
-                    ListViewItem item = new ListViewItem(m_developers.GetKey(j).ToString(), group);
+
+                    ListViewItem item = new ListViewItem(m_developersList.GetKey(j).ToString(), group);
                     devsList.Items.Add(item);
                 }
             }

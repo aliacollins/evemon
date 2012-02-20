@@ -171,7 +171,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()];
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 BalanceLabel.ForeColor = Color.Orange;
@@ -196,7 +196,7 @@ namespace EVEMon
                 return;
             }
 
-            if (ccpCharacter.QueryMonitors.AnyUpdating)
+            if (ccpCharacter.QueryMonitors.Any(monitor => monitor.IsUpdating))
             {
                 SetThrobberUpdating();
                 return;
@@ -226,35 +226,20 @@ namespace EVEMon
 
             if (nextMonitor == null)
             {
-                UpdateLabel.Visible = false;
+                UpdateLabel.Text = String.Empty;
                 return;
             }
 
-            UpdateLabel.Visible = true;
-
             TimeSpan timeLeft = nextMonitor.NextUpdate.Subtract(DateTime.UtcNow);
 
-            if (timeLeft < TimeSpan.Zero)
+            if (timeLeft <= TimeSpan.Zero)
             {
                 UpdateLabel.Text = "Pending...";
                 return;
             }
 
-            UpdateLabel.Text = GetCountdownFormat(timeLeft);
-        }
-
-        /// <summary>
-        /// Gets the countdown format.
-        /// </summary>
-        /// <param name="timeLeft">The time left.</param>
-        /// <returns>String formatted as a countdown timer.</returns>
-        /// <remarks>Hours are formatted accumulatively when "Week" is selected</remarks>
-        private static string GetCountdownFormat(TimeSpan timeLeft)
-        {
-            double hours = Math.Floor(timeLeft.TotalHours);
-            int minutes = timeLeft.Minutes;
-            int seconds = timeLeft.Seconds;
-            return String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}", hours, minutes, seconds);
+            UpdateLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}",
+                                             Math.Floor(timeLeft.TotalHours), timeLeft.Minutes, timeLeft.Seconds);
         }
 
         /// <summary>
@@ -269,7 +254,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (ccpCharacter.Identity.APIKeys.IsEmpty() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
+            if (!ccpCharacter.Identity.APIKeys.Any() || ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ToolTip.SetToolTip(UpdateThrobber, String.Empty);
                 return;
@@ -284,10 +269,10 @@ namespace EVEMon
         /// <param name="status">The status.</param>
         private void SetThrobberStrobing(string status)
         {
+            UpdateLabel.Text = String.Empty;
             UpdateThrobber.Visible = true;
             UpdateThrobber.State = ThrobberState.Strobing;
             ToolTip.SetToolTip(UpdateThrobber, status);
-            UpdateLabel.Visible = false;
         }
 
         /// <summary>
@@ -295,10 +280,10 @@ namespace EVEMon
         /// </summary>
         private void SetThrobberUpdating()
         {
-            UpdateThrobber.Visible = true;
+            UpdateLabel.Text = String.Empty;
             UpdateThrobber.State = ThrobberState.Rotating;
+            UpdateThrobber.Visible = true;
             ToolTip.SetToolTip(UpdateThrobber, "Retrieving data from API...");
-            UpdateLabel.Visible = false;
         }
 
         /// <summary>
@@ -306,9 +291,9 @@ namespace EVEMon
         /// </summary>
         private void HideThrobber()
         {
-            UpdateThrobber.State = ThrobberState.Stopped;
+            UpdateLabel.Text = String.Empty;
             UpdateThrobber.Visible = false;
-            UpdateLabel.Visible = false;
+            UpdateThrobber.State = ThrobberState.Stopped;
         }
 
         /// <summary>
@@ -336,16 +321,13 @@ namespace EVEMon
 
             StringBuilder output = new StringBuilder();
 
-            // Skip character's corporation market orders and industry jobs monitor
-            // if they are bound with the character's personal monitor
+            // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
                 monitor => monitor.HasAccess).Where(
-                    monitor =>
-                    !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
-                        monitor =>
-                        !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                        ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null))
+                monitor =>
+                (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
+                 monitor.Method.GetType() != typeof(APICharacterMethods))))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -510,6 +492,7 @@ namespace EVEMon
             // Subscribe to events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.APIKeyMonitoredChanged += EveMonClient_APIKeyMonitoredChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
@@ -542,7 +525,9 @@ namespace EVEMon
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.APIKeyMonitoredChanged -= EveMonClient_APIKeyMonitoredChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
@@ -572,6 +557,16 @@ namespace EVEMon
             if (!Visible)
                 return;
 
+            UpdateInfrequentControls();
+        }
+
+        /// <summary>
+        /// Handles the APIKeyMonitoredChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyMonitoredChanged(object sender, EventArgs e)
+        {
             UpdateInfrequentControls();
         }
 
@@ -623,7 +618,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void UpdateThrobber_Click(object sender, EventArgs e)
+        private void UpdateThrobber_Click(object sender, MouseEventArgs e)
         {
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
@@ -634,13 +629,15 @@ namespace EVEMon
             // There has been an error in the past (Authorization, Server Error, etc.)
             // or updating now will return the same data because the cache has not expired
             // or character has no associated API key
-            if (UpdateThrobber.State == ThrobberState.Strobing ||
-                ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate) ||
-                ccpCharacter.Identity.APIKeys.IsEmpty())
+            if (UpdateThrobber.State == ThrobberState.Strobing || !ccpCharacter.Identity.APIKeys.Any() ||
+                ccpCharacter.QueryMonitors.Any(x => !x.CanForceUpdate))
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
             }
+
+            if (e.Button == MouseButtons.Right)
+                return;
 
             // All checks out query everything
             ccpCharacter.QueryMonitors.QueryEverything();
@@ -675,7 +672,7 @@ namespace EVEMon
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             // Exit for non-CCP characters or no associated API key
-            if (ccpCharacter == null || ccpCharacter.Identity.APIKeys.IsEmpty() || ccpCharacter.QueryMonitors.IsEmpty())
+            if (ccpCharacter == null || !ccpCharacter.Identity.APIKeys.Any() || !ccpCharacter.QueryMonitors.Any())
             {
                 QueryEverythingMenuItem.Enabled = false;
                 return;
@@ -689,18 +686,14 @@ namespace EVEMon
                 ThrobberContextMenu.Items.Add(ThrobberSeparator);
 
             // Add monitor items
-            // Skip character's corporation market orders and industry jobs monitor
-            // if they are bound with the character's personal monitor
-            foreach (ToolStripMenuItem menu in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
+            // Skip character's corporation monitors if they are bound with the character's personal monitor
+            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
                 monitor =>
-                !monitor.Method.Equals(APICorporationMethods.CorporationMarketOrders) ||
-                ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders.ToString()] == null).Where(
-                    monitor =>
-                    !monitor.Method.Equals(APICorporationMethods.CorporationIndustryJobs) ||
-                    ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs.ToString()] == null).Select(
-                        CreateNewMonitorToolStripMenuItem))
+                (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
+                 monitor.Method.GetType() != typeof(APICharacterMethods))).Select(CreateNewMonitorToolStripMenuItem))
             {
-                ThrobberContextMenu.Items.Add(menu);
+                ThrobberContextMenu.Items.Add(menuItem);
             }
         }
 
@@ -717,7 +710,11 @@ namespace EVEMon
                 return;
 
             if (e.ClickedItem == QueryEverythingMenuItem)
+            {
+                SetThrobberUpdating();
                 ccpCharacter.QueryMonitors.QueryEverything();
+                return;
+            }
 
             Enum method = e.ClickedItem.Tag as Enum;
 
@@ -806,14 +803,13 @@ namespace EVEMon
             string location = "Lost in space";
 
             // Check if in an NPC station or in an outpost
-            Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation) ??
-                              ConquerableStation.GetStationByName(m_character.LastKnownLocation);
+            Station station = m_character.LastKnownStation;
 
             // Not in any station ?
             if (station == null)
             {
                 // Has to be in a solar system at least
-                SolarSystem system = StaticGeography.GetSolarSystemByName(m_character.LastKnownLocation);
+                SolarSystem system = m_character.LastKnownSolarSystem;
 
                 // Not in a solar system ??? Then show default location
                 if (system != null)

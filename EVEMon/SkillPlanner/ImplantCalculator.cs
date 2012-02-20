@@ -133,7 +133,6 @@ namespace EVEMon.SkillPlanner
             if (m_isUpdating)
                 return;
 
-
             if (m_planEditor != null)
             {
                 m_characterScratchpad = m_character.After(m_set);
@@ -202,13 +201,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="lblSpan"></param>
         /// <param name="lblDate"></param>
         /// <returns></returns>
-        private TimeSpan UpdateTimesForCharacter(BaseCharacter character, Label lblSpan, Label lblDate)
+        private TimeSpan UpdateTimesForCharacter(BaseCharacter character, Control lblSpan, Control lblDate)
         {
             TimeSpan ts = character.GetTrainingTimeToMultipleSkills(m_plan);
-            DateTime dt = DateTime.Now + ts;
 
             lblSpan.Text = ts.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-            lblDate.Text = dt.ToString();
+            lblDate.Text = DateTime.Now.Add(ts).ToString();
 
             return ts;
         }

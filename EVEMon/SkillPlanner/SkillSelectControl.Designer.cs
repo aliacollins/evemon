@@ -72,6 +72,8 @@ namespace EVEMon.SkillPlanner
             this.chSortKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilSkillIcons = new System.Windows.Forms.ImageList(this.components);
             this.pnlFilter = new System.Windows.Forms.Panel();
+            this.cbFilterBy = new System.Windows.Forms.ComboBox();
+            this.lblFilterBy = new System.Windows.Forms.Label();
             this.pnlResults = new System.Windows.Forms.Panel();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
@@ -83,12 +85,13 @@ namespace EVEMon.SkillPlanner
             // 
             // cbSkillFilter
             // 
-            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSkillFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSkillFilter.FormattingEnabled = true;
             this.cbSkillFilter.Items.AddRange(new object[] {
             "All",
+            "By Attributes",
             "Hide Level V Skills",
             "Known",
             "Level I Ready",
@@ -109,18 +112,18 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter.Name = "cbSkillFilter";
             this.cbSkillFilter.Size = new System.Drawing.Size(182, 21);
             this.cbSkillFilter.Sorted = true;
-            this.cbSkillFilter.TabIndex = 1;
+            this.cbSkillFilter.TabIndex = 0;
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSearchText.Location = new System.Drawing.Point(45, 54);
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearchText.Location = new System.Drawing.Point(45, 76);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tbSearchText.Name = "tbSearchText";
             this.tbSearchText.Size = new System.Drawing.Size(182, 20);
-            this.tbSearchText.TabIndex = 36;
+            this.tbSearchText.TabIndex = 3;
             this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearch_Enter);
             this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
@@ -130,7 +133,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
             this.pbSearchImage.InitialImage = null;
-            this.pbSearchImage.Location = new System.Drawing.Point(9, 54);
+            this.pbSearchImage.Location = new System.Drawing.Point(9, 76);
             this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2);
             this.pbSearchImage.Name = "pbSearchImage";
             this.pbSearchImage.Size = new System.Drawing.Size(20, 20);
@@ -272,8 +275,8 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Location = new System.Drawing.Point(0, 0);
             this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
             this.lbSearchList.Name = "lbSearchList";
-            this.lbSearchList.Size = new System.Drawing.Size(227, 321);
-            this.lbSearchList.TabIndex = 46;
+            this.lbSearchList.Size = new System.Drawing.Size(227, 299);
+            this.lbSearchList.TabIndex = 1;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             this.lbSearchList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSearchList_MouseDown);
@@ -367,12 +370,10 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSearchTextHint
             // 
-            this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
             this.lbSearchTextHint.AutoSize = true;
             this.lbSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
             this.lbSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbSearchTextHint.Location = new System.Drawing.Point(49, 57);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(49, 79);
             this.lbSearchTextHint.Name = "lbSearchTextHint";
             this.lbSearchTextHint.Size = new System.Drawing.Size(65, 13);
             this.lbSearchTextHint.TabIndex = 22;
@@ -389,8 +390,8 @@ namespace EVEMon.SkillPlanner
             this.lbNoMatches.Margin = new System.Windows.Forms.Padding(0);
             this.lbNoMatches.Name = "lbNoMatches";
             this.lbNoMatches.Padding = new System.Windows.Forms.Padding(4, 30, 4, 4);
-            this.lbNoMatches.Size = new System.Drawing.Size(227, 321);
-            this.lbNoMatches.TabIndex = 23;
+            this.lbNoMatches.Size = new System.Drawing.Size(227, 299);
+            this.lbNoMatches.TabIndex = 1;
             this.lbNoMatches.Text = "No skills match your search.";
             this.lbNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lbNoMatches.Visible = false;
@@ -403,7 +404,7 @@ namespace EVEMon.SkillPlanner
             this.cbShowNonPublic.Name = "cbShowNonPublic";
             this.cbShowNonPublic.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
             this.cbShowNonPublic.Size = new System.Drawing.Size(227, 22);
-            this.cbShowNonPublic.TabIndex = 50;
+            this.cbShowNonPublic.TabIndex = 2;
             this.cbShowNonPublic.Text = "Show Non-Public Skills";
             this.cbShowNonPublic.UseVisualStyleBackColor = true;
             this.cbShowNonPublic.CheckedChanged += new System.EventHandler(this.cbShowNonPublic_CheckedChanged);
@@ -420,8 +421,8 @@ namespace EVEMon.SkillPlanner
             // 
             // cbSorting
             // 
-            this.cbSorting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSorting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSorting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSorting.FormattingEnabled = true;
             this.cbSorting.Items.AddRange(new object[] {
@@ -430,17 +431,17 @@ namespace EVEMon.SkillPlanner
             "Time to Level V",
             "Skill rank",
             "Skill Points per Hour"});
-            this.cbSorting.Location = new System.Drawing.Point(45, 29);
+            this.cbSorting.Location = new System.Drawing.Point(45, 51);
             this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSorting.Name = "cbSorting";
             this.cbSorting.Size = new System.Drawing.Size(182, 21);
-            this.cbSorting.TabIndex = 26;
+            this.cbSorting.TabIndex = 2;
             this.cbSorting.SelectedIndexChanged += new System.EventHandler(this.cbSorting_SelectedIndexChanged);
             // 
             // lblSort
             // 
             this.lblSort.AutoSize = true;
-            this.lblSort.Location = new System.Drawing.Point(9, 32);
+            this.lblSort.Location = new System.Drawing.Point(9, 54);
             this.lblSort.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSort.Name = "lblSort";
             this.lblSort.Size = new System.Drawing.Size(29, 13);
@@ -460,8 +461,8 @@ namespace EVEMon.SkillPlanner
             this.lvSortedSkillList.Margin = new System.Windows.Forms.Padding(2);
             this.lvSortedSkillList.MultiSelect = false;
             this.lvSortedSkillList.Name = "lvSortedSkillList";
-            this.lvSortedSkillList.Size = new System.Drawing.Size(227, 321);
-            this.lvSortedSkillList.TabIndex = 28;
+            this.lvSortedSkillList.Size = new System.Drawing.Size(227, 299);
+            this.lvSortedSkillList.TabIndex = 1;
             this.lvSortedSkillList.TileSize = new System.Drawing.Size(16, 16);
             this.lvSortedSkillList.UseCompatibleStateImageBehavior = false;
             this.lvSortedSkillList.View = System.Windows.Forms.View.Details;
@@ -493,6 +494,8 @@ namespace EVEMon.SkillPlanner
             // 
             // pnlFilter
             // 
+            this.pnlFilter.Controls.Add(this.cbFilterBy);
+            this.pnlFilter.Controls.Add(this.lblFilterBy);
             this.pnlFilter.Controls.Add(this.cbSorting);
             this.pnlFilter.Controls.Add(this.cbSkillFilter);
             this.pnlFilter.Controls.Add(this.lblSort);
@@ -504,8 +507,44 @@ namespace EVEMon.SkillPlanner
             this.pnlFilter.Location = new System.Drawing.Point(0, 0);
             this.pnlFilter.Margin = new System.Windows.Forms.Padding(2);
             this.pnlFilter.Name = "pnlFilter";
-            this.pnlFilter.Size = new System.Drawing.Size(227, 78);
-            this.pnlFilter.TabIndex = 29;
+            this.pnlFilter.Size = new System.Drawing.Size(227, 100);
+            this.pnlFilter.TabIndex = 0;
+            // 
+            // cbFilterBy
+            // 
+            this.cbFilterBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbFilterBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFilterBy.FormattingEnabled = true;
+            this.cbFilterBy.Items.AddRange(new object[] {
+            "Charisma - Intelligence",
+            "Charisma - Memory",
+            "Charisma - Willpower",
+            "Intelligence - Memory",
+            "Intelligence - Perception",
+            "Memory - Charisma",
+            "Memory - Intelligence",
+            "Memory - Perception",
+            "Perception - Memory",
+            "Perception - Willpower",
+            "Willpower - Charisma",
+            "Willpower - Intelligence",
+            "Willpower - Perception"});
+            this.cbFilterBy.Location = new System.Drawing.Point(45, 27);
+            this.cbFilterBy.Name = "cbFilterBy";
+            this.cbFilterBy.Size = new System.Drawing.Size(182, 21);
+            this.cbFilterBy.Sorted = true;
+            this.cbFilterBy.TabIndex = 1;
+            this.cbFilterBy.SelectedIndexChanged += new System.EventHandler(this.cbFilterBy_SelectedIndexChanged);
+            // 
+            // lblFilterBy
+            // 
+            this.lblFilterBy.AutoSize = true;
+            this.lblFilterBy.Location = new System.Drawing.Point(16, 30);
+            this.lblFilterBy.Name = "lblFilterBy";
+            this.lblFilterBy.Size = new System.Drawing.Size(22, 13);
+            this.lblFilterBy.TabIndex = 37;
+            this.lblFilterBy.Text = "By:";
             // 
             // pnlResults
             // 
@@ -515,11 +554,11 @@ namespace EVEMon.SkillPlanner
             this.pnlResults.Controls.Add(this.tvItems);
             this.pnlResults.Controls.Add(this.lvSortedSkillList);
             this.pnlResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlResults.Location = new System.Drawing.Point(0, 78);
+            this.pnlResults.Location = new System.Drawing.Point(0, 100);
             this.pnlResults.Margin = new System.Windows.Forms.Padding(0);
             this.pnlResults.Name = "pnlResults";
-            this.pnlResults.Size = new System.Drawing.Size(227, 321);
-            this.pnlResults.TabIndex = 30;
+            this.pnlResults.Size = new System.Drawing.Size(227, 299);
+            this.pnlResults.TabIndex = 1;
             // 
             // tvItems
             // 
@@ -531,8 +570,8 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Name = "tvItems";
             this.tvItems.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.SingleSelect;
-            this.tvItems.Size = new System.Drawing.Size(227, 321);
-            this.tvItems.TabIndex = 20;
+            this.tvItems.Size = new System.Drawing.Size(227, 299);
+            this.tvItems.TabIndex = 0;
             this.tvItems.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvItems_ItemDrag);
             this.tvItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
             this.tvItems.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvItems_NodeMouseClick);
@@ -605,5 +644,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem level0ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel0;
+        private System.Windows.Forms.ComboBox cbFilterBy;
+        private System.Windows.Forms.Label lblFilterBy;
     }
 }

@@ -10,6 +10,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public CalendarSettings()
         {
+            UseOutlookDefaultCalendar = true;
             GoogleAddress = NetworkConstants.GoogleCalendarURL;
             GoogleReminder = GoogleCalendarReminder.Email;
             RemindingInterval = 10;
@@ -32,6 +33,20 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The provider.</value>
         [XmlElement("provider")]
         public CalendarProvider Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the usage of the MSOutlook default calendar.
+        /// </summary>
+        /// <value><c>true</c> if use default calendar; otherwise, <c>false</c>.</value>
+        [XmlElement("useOutlookDefaultCalendar")]
+        public bool UseOutlookDefaultCalendar { get; set; }
+
+        /// <summary>
+        /// Gets or sets the MSOutlook custom calendar path.
+        /// </summary>
+        /// <value>The custom calendar path.</value>
+        [XmlElement("outlookCustomCalendarPath")]
+        public string OutlookCustomCalendarPath { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [use reminding].

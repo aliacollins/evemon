@@ -63,6 +63,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutWindow.cs">
@@ -123,6 +124,12 @@
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </Compile>
     <None Include="Properties\AssemblyInfo.template.cs" />
+    <Compile Include="APITester\APITesterWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="APITester\APITesterWindow.Designer.cs">
+      <DependentUpon>APITesterWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="BlankCharacter\BlankCharacterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -134,6 +141,18 @@
     </Compile>
     <Compile Include="BlankCharacter\BlankCharacterWindow.Designer.cs">
       <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterContractsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterContractsList.Designer.cs">
+      <DependentUpon>CharacterContractsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterEmploymentHistoryList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterEmploymentHistoryList.Designer.cs">
+      <DependentUpon>CharacterEmploymentHistoryList.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitor.cs">
       <SubType>UserControl</SubType>
@@ -153,17 +172,32 @@
     <Compile Include="ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ContractDetailsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractDetailsWindow.Designer.cs">
+      <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContractsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractsWindow.Designer.cs">
+      <DependentUpon>ContractsWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="MainWindowStandingsList.cs">
+    <Compile Include="CharacterStandingsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowStandingsList.Designer.cs">
-      <DependentUpon>MainWindowStandingsList.cs</DependentUpon>
+    <Compile Include="CharacterStandingsList.Designer.cs">
+      <DependentUpon>CharacterStandingsList.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -194,29 +228,29 @@
     <Compile Include="IndustryJobsWindow.Designer.cs">
       <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowEveNotificationsList.cs">
+    <Compile Include="CharacterEveNotificationsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowEveNotificationsList.Designer.cs">
-      <DependentUpon>MainWindowEveNotificationsList.cs</DependentUpon>
+    <Compile Include="CharacterEveNotificationsList.Designer.cs">
+      <DependentUpon>CharacterEveNotificationsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowIndustryJobsList.cs">
+    <Compile Include="CharacterIndustryJobsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowIndustryJobsList.Designer.cs">
-      <DependentUpon>MainWindowIndustryJobsList.cs</DependentUpon>
+    <Compile Include="CharacterIndustryJobsList.Designer.cs">
+      <DependentUpon>CharacterIndustryJobsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowEveMailMessagesList.cs">
+    <Compile Include="CharacterEveMailMessagesList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowEveMailMessagesList.Designer.cs">
-      <DependentUpon>MainWindowEveMailMessagesList.cs</DependentUpon>
+    <Compile Include="CharacterEveMailMessagesList.Designer.cs">
+      <DependentUpon>CharacterEveMailMessagesList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowResearchPointsList.cs">
+    <Compile Include="CharacterResearchPointsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowResearchPointsList.Designer.cs">
-      <DependentUpon>MainWindowResearchPointsList.cs</DependentUpon>
+    <Compile Include="CharacterResearchPointsList.Designer.cs">
+      <DependentUpon>CharacterResearchPointsList.cs</DependentUpon>
     </Compile>
     <Compile Include="ResearchColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -257,17 +291,17 @@
     <Compile Include="ImplantControls\ImplantTooltip.Designer.cs">
       <DependentUpon>ImplantTooltip.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowMarketOrdersList.cs">
+    <Compile Include="CharacterMarketOrdersList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowMarketOrdersList.Designer.cs">
-      <DependentUpon>MainWindowMarketOrdersList.cs</DependentUpon>
+    <Compile Include="CharacterMarketOrdersList.Designer.cs">
+      <DependentUpon>CharacterMarketOrdersList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowSkillsList.cs">
+    <Compile Include="CharacterSkillsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowSkillsList.Designer.cs">
-      <DependentUpon>MainWindowSkillsList.cs</DependentUpon>
+    <Compile Include="CharacterSkillsList.Designer.cs">
+      <DependentUpon>CharacterSkillsList.cs</DependentUpon>
     </Compile>
     <Compile Include="MarketOrdersColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -337,15 +371,30 @@
     <EmbeddedResource Include="ApiCredentialsManagement\EveMonFeaturesWindow.resx">
       <DependentUpon>EveMonFeaturesWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="APITester\APITesterWindow.resx">
+      <DependentUpon>APITesterWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BlankCharacter\BlankCharacterControl.resx">
       <DependentUpon>BlankCharacterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BlankCharacter\BlankCharacterWindow.resx">
       <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterContractsList.resx">
+      <DependentUpon>CharacterContractsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterEmploymentHistoryList.resx">
+      <DependentUpon>CharacterEmploymentHistoryList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitor.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContractDetailsWindow.resx">
+      <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContractsWindow.resx">
+      <DependentUpon>ContractsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -354,8 +403,8 @@
     <EmbeddedResource Include="ClaimableCertificateWindow.resx">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowStandingsList.resx">
-      <DependentUpon>MainWindowStandingsList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterStandingsList.resx">
+      <DependentUpon>CharacterStandingsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReadingPane.resx">
       <DependentUpon>ReadingPane.cs</DependentUpon>
@@ -368,14 +417,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowEveMailMessagesList.resx">
-      <DependentUpon>MainWindowEveMailMessagesList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterEveMailMessagesList.resx">
+      <DependentUpon>CharacterEveMailMessagesList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowEveNotificationsList.resx">
-      <DependentUpon>MainWindowEveNotificationsList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterEveNotificationsList.resx">
+      <DependentUpon>CharacterEveNotificationsList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowResearchPointsList.resx">
-      <DependentUpon>MainWindowResearchPointsList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterResearchPointsList.resx">
+      <DependentUpon>CharacterResearchPointsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\BattleClinicAPIControl.resx">
       <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
@@ -703,11 +752,11 @@
     <Compile Include="UpdateNotifyForm.Designer.cs">
       <DependentUpon>UpdateNotifyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowSkillsQueueList.cs">
+    <Compile Include="CharacterSkillsQueueList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowSkillsQueueList.Designer.cs">
-      <DependentUpon>MainWindowSkillsQueueList.cs</DependentUpon>
+    <Compile Include="CharacterSkillsQueueList.Designer.cs">
+      <DependentUpon>CharacterSkillsQueueList.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -715,8 +764,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowSkillsList.resx">
-      <DependentUpon>MainWindowSkillsList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterSkillsList.resx">
+      <DependentUpon>CharacterSkillsList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Overview.resx">
@@ -896,8 +945,8 @@
       <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowIndustryJobsList.resx">
-      <DependentUpon>MainWindowIndustryJobsList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterIndustryJobsList.resx">
+      <DependentUpon>CharacterIndustryJobsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillCompletionWindow.resx">
       <DependentUpon>SkillCompletionWindow.cs</DependentUpon>
@@ -907,12 +956,12 @@
       <DependentUpon>ImplantTooltip.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowMarketOrdersList.resx">
-      <DependentUpon>MainWindowMarketOrdersList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterMarketOrdersList.resx">
+      <DependentUpon>CharacterMarketOrdersList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowSkillsQueueList.resx">
-      <DependentUpon>MainWindowSkillsQueueList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterSkillsQueueList.resx">
+      <DependentUpon>CharacterSkillsQueueList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MarketOrdersWindow.resx">
       <DependentUpon>MarketOrdersWindow.cs</DependentUpon>

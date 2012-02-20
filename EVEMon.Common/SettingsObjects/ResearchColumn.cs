@@ -3,6 +3,9 @@ using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.SettingsObjects
 {
+    /// <summary>
+    /// Represents the available column types.
+    /// </summary>
     public enum ResearchColumn
     {
         None = -1,

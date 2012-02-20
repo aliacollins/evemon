@@ -6,6 +6,7 @@ syntax: glob
 *.user
 *.patch
 *.diff
+*.bat
 Thumbs.db
 UpgradeLog.XML
 _ReSharper.*

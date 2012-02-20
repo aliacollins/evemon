@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Outlook;
 
 namespace EVEMon.Common.ExternalCalendar
@@ -9,31 +11,48 @@ namespace EVEMon.Common.ExternalCalendar
     /// </summary>
     public sealed class OutlookAppointmentFilter : AppointmentFilter
     {
-        #region Private Internals
+        private const string RootFolderPath = @"\\Personal Folders";
 
-        /// <summary>
-        /// Outlook Application.
-        /// </summary>
         private static Application s_outlookApplication;
+        private static MAPIFolder s_mapiFolder;
 
-        #endregion
 
-
-        #region Private Properties
+        #region Properties
 
         /// <summary>
         /// Gets the Outlook application.
         /// </summary>
         /// <value>The outlook application.</value>
-        private static Application OutlookApplication
+        internal static Application OutlookApplication
         {
-            get { return s_outlookApplication ?? (s_outlookApplication = new Application()); }
+            get { return s_outlookApplication ?? GetApplication; }
+        }
+
+        /// <summary>
+        /// Gets the Outlook application.
+        /// </summary>
+        /// <value>The outlook application.</value>
+        private static Application GetApplication
+        {
+            get
+            {
+                try
+                {
+                    s_outlookApplication = new Application();
+                }
+                catch (COMException ex)
+                {
+                    ExceptionHandler.LogException(ex, true);
+                    return null;
+                }
+                return s_outlookApplication;
+            }
         }
 
         #endregion
 
 
-        #region Public Methods
+        #region Internal Methods
 
         /// <summary>
         /// Add a new appointment or Update the appropriate appointment in the calendar.
@@ -41,12 +60,11 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        public override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
+        internal override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
         {
-            AppointmentItem appointmentItem = (appointmentExists
-                                                   ? (AppointmentItem)AppointmentArray[0]
-                                                   : (AppointmentItem)
-                                                     OutlookApplication.CreateItem(OlItemType.olAppointmentItem));
+            AppointmentItem appointmentItem = appointmentExists
+                                                  ? (AppointmentItem)AppointmentArray[0]
+                                                  : (AppointmentItem)s_mapiFolder.Items.Add(OlItemType.olAppointmentItem);
 
             appointmentItem.Subject = Subject;
             appointmentItem.Start = StartDate;
@@ -55,15 +73,15 @@ namespace EVEMon.Common.ExternalCalendar
             string queuePositionText = lastSkillInQueue ? "End Of Queue" : queuePosition.ToString(CultureConstants.DefaultCulture);
 
             appointmentItem.Body = appointmentExists
-                                        ? String.Format(CultureConstants.DefaultCulture,
-                                                        "{0} {3}Updated: {1} Queue Position: {2}",
-                                                        appointmentItem.Body, DateTime.Now,
-                                                        queuePositionText,
-                                                        Environment.NewLine)
-                                        : String.Format(CultureConstants.DefaultCulture,
-                                                        "Added: {0} Queue Position: {1}",
-                                                        DateTime.Now,
-                                                        queuePositionText);
+                                       ? String.Format(CultureConstants.DefaultCulture,
+                                                       "{0} {3}Updated: {1} Queue Position: {2}",
+                                                       appointmentItem.Body, DateTime.Now,
+                                                       queuePositionText,
+                                                       Environment.NewLine)
+                                       : String.Format(CultureConstants.DefaultCulture,
+                                                       "Added: {0} Queue Position: {1}",
+                                                       DateTime.Now,
+                                                       queuePositionText);
 
             appointmentItem.ReminderSet = ItemReminder || AlternateReminder;
             appointmentItem.BusyStatus = OlBusyStatus.olBusy;
@@ -104,7 +122,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns>
         /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
         /// </returns>
-        public override bool Appointment
+        internal override bool Appointment
         {
             get
             {
@@ -125,7 +143,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Pull all the appointments and populate the appointment array.
         /// </summary>
-        public override void ReadAppointments()
+        internal override void ReadAppointments()
         {
             // Appointment Filter class that will handle any data attached
             // to the appointment with which we are currently dealing
@@ -137,9 +155,54 @@ namespace EVEMon.Common.ExternalCalendar
         /// Delete the specified appointment.
         /// </summary>
         /// <param name="appointmentIndex">The appointment index.</param>
-        public override void DeleteAppointment(int appointmentIndex)
+        internal override void DeleteAppointment(int appointmentIndex)
         {
             ((AppointmentItem)AppointmentArray[appointmentIndex]).Delete();
+        }
+
+        /// <summary>
+        /// Gets true if the Outlook calendar exist.
+        /// </summary>
+        /// <param name="useDefaultCalendar">if set to <c>true</c> [use default calendar].</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        internal static bool OutlookCalendarExist(bool useDefaultCalendar, string path)
+        {
+            s_mapiFolder = null;
+            return GetMapiFolder(useDefaultCalendar, path, OutlookApplication.Session.Folders);
+        }
+
+        /// <summary>
+        /// Gets the mapi folder.
+        /// </summary>
+        /// <param name="useDefaultCalendar">if set to <c>true</c> [use default calendar].</param>
+        /// <param name="path">The path.</param>
+        /// <param name="folders">The folders.</param>
+        /// <returns></returns>
+        internal static bool GetMapiFolder(bool useDefaultCalendar, string path, IEnumerable folders)
+        {
+            if (useDefaultCalendar)
+            {
+                s_mapiFolder = OutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+                return true;
+            }
+
+            string folderPath = System.IO.Path.Combine(RootFolderPath, path);
+
+            foreach (Folder folder in folders.Cast<Folder>().Where(
+                folder => folder.FolderPath.StartsWith(RootFolderPath) && s_mapiFolder == null))
+            {
+                if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == folderPath)
+                {
+                    s_mapiFolder = folder;
+                    return true;
+                }
+
+                if (folder.Folders.Cast<Folder>().Any())
+                    GetMapiFolder(false, path, folder.Folders);
+            }
+
+            return s_mapiFolder != null && s_mapiFolder.FolderPath == folderPath;
         }
 
         #endregion
@@ -155,16 +218,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// </returns>
         private ArrayList RecurringItems()
         {
-            // Filter all the objects we are looking for
-            MAPIFolder folder = OutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
-
             // Use a Jet Query to filter the details we need initially between the two specified dates
-            string dateFilter = String.Format(
-                CultureConstants.DefaultCulture,
-                "[Start] >= '{0:g}' and [End] <= '{1:g}'",
-                StartDate,
-                EndDate);
-            Items calendarItems = folder.Items.Restrict(dateFilter);
+            string dateFilter = String.Format(CultureConstants.DefaultCulture, "[Start] >= '{0:g}' and [End] <= '{1:g}'",
+                                              StartDate, EndDate);
+            Items calendarItems = s_mapiFolder.Items.Restrict(dateFilter);
             calendarItems.Sort("[Start]", Type.Missing);
             calendarItems.IncludeRecurrences = true;
 
@@ -189,5 +246,6 @@ namespace EVEMon.Common.ExternalCalendar
         }
 
         #endregion
+
     }
 }

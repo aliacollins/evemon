@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using EVEMon.APITester;
 using EVEMon.ApiCredentialsManagement;
 using EVEMon.BlankCharacter;
 using EVEMon.Common;
@@ -182,8 +183,7 @@ namespace EVEMon
             TipWindow.ShowTip(this, "startup",
                               "Getting Started",
                               "To begin using EVEMon, click the File|Add API key... menu option, " +
-                              "enter your CCP API information " +
-                              "and choose the characters to monitor.");
+                              "enter your CCP API information and choose the characters to monitor.");
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace EVEMon
             }
             finally
             {
-                if(tempPage!=null)
+                if (tempPage != null)
                     tempPage.Dispose();
             }
 
@@ -494,7 +494,7 @@ namespace EVEMon
             }
             finally
             {
-                if(tempMonitor != null)
+                if (tempMonitor != null)
                     tempMonitor.Dispose();
             }
         }
@@ -721,9 +721,9 @@ namespace EVEMon
                                              (notification.Sender == notification.SenderCharacter);
 
                     bool senderIsCorporation = (notification.Sender != null) &&
-                         (notification.Sender == notification.SenderCorporation);
+                                               (notification.Sender == notification.SenderCorporation);
 
-                    string tooltipText = notification.Description;
+                    string tooltipText = notification.ToString();
                     maxlevel = Math.Max(maxlevel, (int)notification.Priority);
                     int level = (int)notification.Priority;
 
@@ -737,11 +737,10 @@ namespace EVEMon
                         switch (level)
                         {
                             case 0:
-                                tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "for {0}.",
-                                                             senderIsCharacter
-                                                                 ? notification.SenderCharacter.Name
-                                                                 : notification.SenderCorporation.Name);
+                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " for {0}.",
+                                                                                     senderIsCharacter
+                                                                                         ? notification.SenderCharacter.Name
+                                                                                         : notification.SenderCorporation.Name));
                                 break;
                             case 1:
                                 tooltipText = tooltipText.Replace("This character", senderIsCharacter
@@ -750,10 +749,10 @@ namespace EVEMon
 
                                 break;
                             case 2:
-                                tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.", senderIsCharacter
-                                                                                        ? notification.SenderCharacter.Name
-                                                                                        : notification.SenderCorporation.Name);
+                                tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " of {0}.",
+                                                                                     senderIsCharacter
+                                                                                         ? notification.SenderCharacter.Name
+                                                                                         : notification.SenderCorporation.Name));
                                 break;
                         }
                     }
@@ -886,6 +885,15 @@ namespace EVEMon
             // Checks whether the tooltip must be displayed
             if (m_popupNotifications.Count != 0 && DateTime.UtcNow > m_nextPopupUpdate)
                 DisplayTooltipNotifications();
+
+            // Chech for excess monitor update timer and show a tip if so
+            if (!TipWindow.IsShown && EveMonClient.MonitoredCharacters.HasExcessUpdateTimer)
+            {
+                TipWindow.ShowTip(this, String.Empty, "Excess Update Timer",
+                                  "EVEMon detected that an update timer exceeds the maximum period.\nTo fix this go to" +
+                                  "'Tools > Options > General > Updates > Queries Updater' and click the 'Update All' button.",
+                                  false);
+            }
         }
 
         /// <summary>
@@ -1317,9 +1325,8 @@ namespace EVEMon
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show("Are you sure you want to clear the cache ?",
-                                              "Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                                              MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show("Are you sure you want to clear the cache ?", "Confirm Cache Clearing",
+                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 EveMonClient.ClearCache();
@@ -1334,10 +1341,9 @@ namespace EVEMon
         private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr =
-                MessageBox.Show("Are you sure you want to reset the settings ?\r\nEverything will be lost, including the plans.",
-                                "Confirm Settings Reseting", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                                MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show("Are you sure you want to reset the settings ?\r\n" +
+                                              "Everything will be lost, including the plans.", "Confirm Settings Reseting",
+                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 Settings.Reset();
@@ -1539,6 +1545,28 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Tools > API Tester.
+        /// Open the API tester window.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void apiTesterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory.ShowUnique<APITesterWindow>();
+        }
+
+        /// <summary>
+        /// Tools > Blank Character Creator.
+        /// Open the blank character creation window.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void blankCharacterMenu_Click(object sender, EventArgs e)
+        {
+            WindowsFactory.ShowUnique<BlankCharacterWindow>();
+        }
+
+        /// <summary>
         /// Tools > Mineral Worksheet.
         /// Open the worksheet window.
         /// </summary>
@@ -1547,6 +1575,17 @@ namespace EVEMon
         private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WindowsFactory.ShowUnique<MineralWorksheet>();
+        }
+
+        /// <summary>
+        /// Tools > Scheduler.
+        /// Open the scheduler window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory.ShowUnique<ScheduleEditorWindow>();
         }
 
         /// <summary>
@@ -1564,28 +1603,6 @@ namespace EVEMon
 
             // Create the window
             WindowsFactory.ShowByTag<SkillsPieChart, Character>(character);
-        }
-
-        /// <summary>
-        /// Tools > Scheduler.
-        /// Open the scheduler window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory.ShowUnique<ScheduleEditorWindow>();
-        }
-
-        /// <summary>
-        /// Tools > Blank Character Creator.
-        /// Open the blank character creation window.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void blankCharacterMenu_Click(object sender, EventArgs e)
-        {
-            WindowsFactory.ShowUnique<BlankCharacterWindow>();
         }
 
         /// <summary>

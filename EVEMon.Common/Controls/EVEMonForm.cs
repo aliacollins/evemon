@@ -89,7 +89,7 @@ namespace EVEMon.Common.Controls
 
             Rectangle r = new Rectangle(Location, Size);
             if (WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
-                Settings.UI.WindowLocations[RememberPositionKey] = (SerializableRectangle)new Rectangle(Location, Size);
+                Settings.UI.WindowLocations[RememberPositionKey] = (WindowLocationSettings)new Rectangle(Location, Size);
         }
 
         /// <summary>

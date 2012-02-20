@@ -47,11 +47,6 @@ namespace EVEMon.SettingsUI
                 {
                     NotificationCategory cat = (NotificationCategory)combo.Tag;
                     int index = (int)m_settings.Categories[cat].ToolTipBehaviour;
-
-                    // TODO: Remove the following code line after deprecating ToolTipNotificationBehaviour.RepeatUntiClicked
-                    if (index > 2)
-                        index = 2;
-
                     combo.SelectedIndex = index;
                 }
 
@@ -169,7 +164,7 @@ namespace EVEMon.SettingsUI
             try
             {
                 tempCombo = new ComboBox();
-                tempCombo.Items.AddRange(new[] { "Never", "Once", "Repeat until clicked" });
+                tempCombo.Items.AddRange(new object[] { "Never", "Once", "Repeat until clicked" });
                 tempCombo.Tag = cat;
                 tempCombo.SelectedIndex = 0;
                 tempCombo.Margin = new Padding(3);

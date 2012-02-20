@@ -184,9 +184,6 @@ namespace EVEMon.Common.Threading
                 // Wait for the action to be executed
                 if (waitForCompletion)
                     msg.Wait();
-
-                if (IsShutdown)
-                    return;
             }
         }
 

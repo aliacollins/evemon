@@ -21,7 +21,7 @@ namespace EVEMon.LogitechG15
         #region Initialize
 
         /// <summary>
-        /// Initialises the G15 event handles
+        /// Initialises the G15 event handles.
         /// </summary>
         public static void Initialize()
         {
@@ -41,7 +41,7 @@ namespace EVEMon.LogitechG15
         #region LCD Updater
 
         /// <summary>
-        /// Update on every second (and when some of the G15 buttons are pressed)
+        /// Update on every second (and when some of the G15 buttons are pressed).
         /// </summary>
         private static void UpdateOnTimerTick()
         {

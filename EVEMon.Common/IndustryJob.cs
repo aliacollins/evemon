@@ -21,6 +21,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal IndustryJob(SerializableJobListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             State = GetState(src);
             ID = src.JobID;
             InstallerID = src.InstallerID;
@@ -50,6 +53,9 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal IndustryJob(SerializableJob src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             Ignored = src.Ignored;
             ID = src.JobID;
             State = src.State;
@@ -353,16 +359,18 @@ namespace EVEMon.Common
             // so we look it up in our datafile
             if (id <= Int32.MaxValue)
             {
-                Int32 stationId = (int)id;
-                station = StaticGeography.GetStationByID(stationId) ?? ConquerableStation.GetStationByID(stationId);
+                int stationID = (int)id;
+                station = Station.GetByID(stationID);
             }
 
             // In case the 'id' doesn't correspond to a station, it's a starbase structure
             // and installation will be assigned manually based on activity
-            if (station == null)
-                return (Activity == BlueprintActivity.Manufacturing ? "POS - Assembly Array" : "POS - Laboratory");
-
-            return station.Name;
+            // otherwise assigns the station name
+            return station == null
+                       ? Activity == BlueprintActivity.Manufacturing
+                             ? "POS - Assembly Array"
+                             : "POS - Laboratory"
+                       : station.Name;
         }
 
         /// <summary>

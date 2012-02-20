@@ -70,6 +70,7 @@
     <Compile Include="StaticData\AgtAgentTypes.cs" />
     <Compile Include="StaticData\AgtResearchAgents.cs" />
     <Compile Include="StaticData\CrpNPCDivisions.cs" />
+    <Compile Include="StaticData\InvCategories.cs" />
     <Compile Include="StaticData\InvNames.cs" />
     <Compile Include="StaticData\InvBlueprintTypes.cs" />
     <Compile Include="StaticData\InvTypeMaterials.cs" />

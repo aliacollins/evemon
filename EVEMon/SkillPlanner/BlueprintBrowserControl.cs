@@ -10,12 +10,11 @@ namespace EVEMon.SkillPlanner
 {
     public partial class BlueprintBrowserControl : EveObjectBrowserControl
     {
-        private readonly string[] m_laboratories = new[]
-                                                       {
-                                                           "Mobile Laboratory",
-                                                           "Advance Mobile Laboratory",
-                                                           "Any Other Laboratory"
-                                                       };
+        private readonly object[] m_laboratories = {
+                                                       "Mobile Laboratory",
+                                                       "Advance Mobile Laboratory",
+                                                       "Any Other Laboratory"
+                                                   };
 
         private double m_timeMultiplier;
         private double m_materialMultiplier;

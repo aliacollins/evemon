@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -13,9 +14,6 @@ namespace EVEMon.Common
     {
         private static readonly Dictionary<int, ConquerableStation> s_conqStationsByID =
             new Dictionary<int, ConquerableStation>();
-
-        private static readonly Dictionary<string, ConquerableStation> s_conqStationsByName =
-            new Dictionary<string, ConquerableStation>();
 
         private const string Filename = "ConquerableStationList";
 
@@ -168,12 +166,10 @@ namespace EVEMon.Common
         {
             EveMonClient.Trace("ConquerableStationList.Import - begin");
             s_conqStationsByID.Clear();
-            s_conqStationsByName.Clear();
 
             foreach (SerializableOutpost outpost in outposts)
             {
                 s_conqStationsByID[outpost.StationID] = new ConquerableStation(outpost);
-                s_conqStationsByName[outpost.StationName] = new ConquerableStation(outpost);
             }
 
             s_loaded = true;
@@ -205,10 +201,7 @@ namespace EVEMon.Common
         {
             // Ensure list importation
             EnsureImportation();
-
-            ConquerableStation result;
-            s_conqStationsByName.TryGetValue(name, out result);
-            return result;
+            return s_conqStationsByID.Values.FirstOrDefault(station => station.Name == name);
         }
 
         #endregion

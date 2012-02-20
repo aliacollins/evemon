@@ -15,7 +15,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="ResearchPointComparer"/> class.
         /// </summary>
-        /// <param name="column">The industry job column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
         public ResearchPointComparer(ResearchColumn column, bool isAscending)
         {
@@ -65,34 +65,24 @@ namespace EVEMon.Common
             {
                 case ResearchColumn.Agent:
                     return String.Compare(x.AgentName, y.AgentName, StringComparison.CurrentCulture);
-
                 case ResearchColumn.Field:
                     return String.Compare(x.Field, y.Field, StringComparison.CurrentCulture);
-
                 case ResearchColumn.Level:
                     return x.AgentLevel.CompareTo(y.AgentLevel);
-
                 case ResearchColumn.CurrentRP:
                     return x.CurrentRP.CompareTo(y.CurrentRP);
-
                 case ResearchColumn.PointsPerDay:
                     return x.PointsPerDay.CompareTo(y.PointsPerDay);
-
                 case ResearchColumn.StartDate:
                     return x.StartDate.CompareTo(y.StartDate);
-
                 case ResearchColumn.Location:
                     return x.Station.CompareTo(y.Station);
-
                 case ResearchColumn.Region:
                     return x.Station.SolarSystem.Constellation.Region.CompareTo(y.Station.SolarSystem.Constellation.Region);
-
                 case ResearchColumn.SolarSystem:
                     return x.Station.SolarSystem.CompareTo(y.Station.SolarSystem);
-
                 case ResearchColumn.Station:
                     return x.Station.CompareTo(y.Station);
-
                 default:
                     return 0;
             }

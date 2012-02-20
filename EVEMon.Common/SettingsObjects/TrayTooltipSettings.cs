@@ -23,7 +23,7 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets or sets a value indicating whether [display order].
         /// </summary>
         /// <value><c>true</c> if [display order]; otherwise, <c>false</c>.</value>
-        [XmlElement("DisplayOrder")]
+        [XmlElement("displayOrder")]
         public bool DisplayOrder { get; set; }
     }
 }

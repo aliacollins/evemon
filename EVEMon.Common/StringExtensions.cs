@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -71,6 +72,19 @@ namespace EVEMon.Common
                                                        NumberStyles.HexNumber,
                                                        CultureConstants.InvariantCulture)).ToString(
                                                            CultureConstants.DefaultCulture));
+        }
+
+        /// <summary>
+        /// Converts the upper to lower camel case.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static string ConvertUpperToLowerCamelCase(this string text)
+        {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
+            return String.Concat(text.Substring(0, 1).ToLowerInvariant(), text.Substring(1, text.Length - 1));
         }
     }
 }

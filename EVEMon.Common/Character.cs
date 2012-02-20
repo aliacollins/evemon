@@ -42,7 +42,7 @@ namespace EVEMon.Common
             CharacterID = identity.CharacterID;
             m_name = identity.CharacterName;
             CorporationID = identity.CorporationID;
-            CorporationName = identity.CharacterName;
+            CorporationName = identity.CorporationName;
 
             Identity = identity;
             Guid = guid;
@@ -52,7 +52,7 @@ namespace EVEMon.Common
             SkillGroups = new SkillGroupCollection(this);
             Skills = new SkillCollection(this);
 
-            EmploymentHistory = new EmploymentHistoryCollection(this);
+            EmploymentHistory = new EmploymentRecordCollection(this);
             CertificateCategories = new CertificateCategoryCollection(this);
             CertificateClasses = new CertificateClassCollection(this);
             Certificates = new CertificateCollection(this);
@@ -231,7 +231,24 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the character's  employment history.
         /// </summary>
-        public EmploymentHistoryCollection EmploymentHistory { get; set; }
+        public EmploymentRecordCollection EmploymentHistory { get; private set; }
+
+        /// <summary>
+        /// Gets the character's last known station location.
+        /// </summary>
+        public Station LastKnownStation
+        {
+            get { return Station.GetByName(LastKnownLocation); }
+        }
+
+        /// <summary>
+        /// Gets the character's last known solar system location.
+        /// </summary>
+        public SolarSystem LastKnownSolarSystem
+        {
+            get { return StaticGeography.GetSolarSystemByName(LastKnownLocation); }
+        }
+
 
         #endregion
 
@@ -433,10 +450,10 @@ namespace EVEMon.Common
             serial.Balance = Balance;
 
             // Info
-            serial.Info.ShipName = ShipName;
-            serial.Info.ShipTypeName = ShipTypeName;
-            serial.Info.SecurityStatus = SecurityStatus;
-            serial.Info.LastKnownLocation = LastKnownLocation;
+            serial.ShipName = ShipName;
+            serial.ShipTypeName = ShipTypeName;
+            serial.SecurityStatus = SecurityStatus;
+            serial.LastKnownLocation = LastKnownLocation;
 
             // Employment History
             serial.EmploymentHistory.AddRange(EmploymentHistory.Export());
@@ -532,14 +549,17 @@ namespace EVEMon.Common
             CloneName = serial.CloneName;
             CloneSkillPoints = serial.CloneSkillPoints;
 
-            // Info
-            ShipName = serial.Info.ShipName;
-            ShipTypeName = serial.Info.ShipTypeName;
-            SecurityStatus = serial.Info.SecurityStatus;
-            LastKnownLocation = serial.Info.LastKnownLocation;
+            if (serial is SerializableSettingsCharacter)
+            {
+                // Info
+                ShipName = serial.ShipName;
+                ShipTypeName = serial.ShipTypeName;
+                SecurityStatus = serial.SecurityStatus;
+                LastKnownLocation = serial.LastKnownLocation;
 
-            // Employment History
-            EmploymentHistory.Import(serial.EmploymentHistory);
+                // Employment History
+                EmploymentHistory.Import(serial.EmploymentHistory);
+            }
 
             // Attributes
             m_attributes[(int)EveAttribute.Intelligence].Base = serial.Attributes.Intelligence;

@@ -90,7 +90,7 @@ namespace EVEMon.SkillPlanner
             m_manuallyEditedRemappingPoint = point;
             m_strategy = AttributeOptimizationStrategy.ManualRemappingPointEdition;
             m_description = "Manual editing of a remapping point";
-            base.Text = "Remapping point manual editing (" + plan.Name + ")";
+            base.Text = String.Format(CultureConstants.DefaultCulture, "Remapping point manual editing ({0})", plan.Name);
         }
 
         /// <summary>

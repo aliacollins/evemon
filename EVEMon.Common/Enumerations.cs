@@ -175,15 +175,16 @@ namespace EVEMon.Common
         /// The advanced character features of APIMethods.
         /// </summary>
         AdvancedCharacterFeatures =
-            APICharacterMethods.AccountStatus | APICharacterMethods.MarketOrders | APICharacterMethods.IndustryJobs |
-            APICharacterMethods.ResearchPoints | APICharacterMethods.Standings | APICharacterMethods.MailMessages |
-            APICharacterMethods.MailBodies | APICharacterMethods.MailingLists | APICharacterMethods.Notifications |
-            APICharacterMethods.NotificationTexts,
+            APICharacterMethods.AccountStatus | APICharacterMethods.MarketOrders | APICharacterMethods.Contracts |
+            APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
+            APICharacterMethods.MailMessages | APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
+            APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts,
 
         /// <summary>
         /// The advanced corporation features of APIMethods.
         /// </summary>
-        //AdvancedCorporationFeatures = None,
+        AdvancedCorporationFeatures = APICorporationMethods.CorporationMarketOrders | APICorporationMethods.CorporationContracts
+                                      | APICorporationMethods.CorporationIndustryJobs,
 
         /// <summary>
         /// All character features of APIMethods.
@@ -241,6 +242,14 @@ namespace EVEMon.Common
         [Description("The market orders of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
         MarketOrders = 1 << 12,
+
+        /// <summary>
+        /// The personal issued contracts of a character.
+        /// </summary>
+        [Header("Contracts")]
+        [Description("The contracts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        Contracts = 1 << 26,
 
         /// <summary>
         /// The personal issued industry jobs of a character.
@@ -324,6 +333,14 @@ namespace EVEMon.Common
         CorporationMarketOrders = 1 << 12,
 
         /// <summary>
+        /// The corporation issued contracts of a character.
+        /// </summary>
+        [Header("Contracts")]
+        [Description("The corporation contracts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationContracts = 1 << 23,
+
+        /// <summary>
         /// The corporation issued industry jobs of a character.
         /// </summary>
         [Header("Industry Jobs")]
@@ -381,6 +398,26 @@ namespace EVEMon.Common
         /// The character name. Used to convert IDs to Names.
         /// </summary>
         CharacterName,
+
+        /// <summary>
+        /// The items contained in a personal contract.
+        /// </summary>
+        ContractItems,
+
+        /// <summary>
+        /// The items contained in a corporation contract.
+        /// </summary>
+        CorporationContractItems,
+
+        /// <summary>
+        /// The bids for personal auctioned contracts.
+        /// </summary>
+        ContractBids,
+
+        /// <summary>
+        /// The bids for corporation auctioned contracts.
+        /// </summary>
+        CorporationContractBids
     }
 
     public enum ThrobberState
@@ -677,21 +714,23 @@ namespace EVEMon.Common
     /// </summary>
     public enum SkillFilter
     {
+        None = -1,
         All = 0,
-        NoLv5 = 1,
-        Known = 2,
-        Lv1Ready = 3,
-        Unknown = 4,
-        UnknownButOwned = 5,
-        UnknownButTrainable = 6,
-        UnknownAndNotOwned = 7,
-        UnknownAndNotTrainable = 8,
-        NotPlanned = 9,
-        NotPlannedButTrainable = 10,
-        PartiallyTrained = 11,
-        Planned = 12,
-        Trainable = 13,
-        TrailAccountFriendly = 14
+        ByAttributes = 1,
+        NoLv5 = 2,
+        Known = 3,
+        Lv1Ready = 4,
+        Unknown = 5,
+        UnknownButOwned = 6,
+        UnknownButTrainable = 7,
+        UnknownAndNotOwned = 8,
+        UnknownAndNotTrainable = 9,
+        NotPlanned = 10,
+        NotPlannedButTrainable = 11,
+        PartiallyTrained = 12,
+        Planned = 13,
+        Trainable = 14,
+        TrailAccountFriendly = 15
     }
 
     /// <summary>
@@ -888,7 +927,7 @@ namespace EVEMon.Common
         /// <summary>
         /// The API key has no access to query the call.
         /// </summary>
-        [Description("No access via the  API key.")]
+        [Description("No access via the API key.")]
         NoAccess
     }
 
@@ -898,23 +937,23 @@ namespace EVEMon.Common
     /// </summary>
     public enum EveAttribute
     {
-        [XmlEnum("perception")]
-        Perception = 1,
-
-        [XmlEnum("memory")]
-        Memory = 4,
-
-        [XmlEnum("willpower")]
-        Willpower = 3,
+        [XmlEnum("none")]
+        None = -1,
 
         [XmlEnum("intelligence")]
         Intelligence = 0,
 
+        [XmlEnum("perception")]
+        Perception = 1,
+
         [XmlEnum("charisma")]
         Charisma = 2,
 
-        [XmlEnum("none")]
-        None = -1
+        [XmlEnum("willpower")]
+        Willpower = 3,
+
+        [XmlEnum("memory")]
+        Memory = 4
     }
 
     /// <summary>
@@ -951,6 +990,41 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// The contract type.
+    /// </summary>
+    public enum ContractType
+    {
+        None,
+
+        [Description("Item Exchange")]
+        ItemExchange,
+
+        [Description("Courier")]
+        Courier,
+
+        [Description("Loan")]
+        Loan,
+
+        [Description("Auction")]
+        Auction
+    }
+
+
+    /// <summary>
+    /// The contract availability.
+    /// </summary>
+    public enum ContractAvailability
+    {
+        None,
+
+        [Description("Public")]
+        Public,
+
+        [Description("Private")]
+        Private
+    }
+
+    /// <summary>
     /// The status of a market order.
     /// </summary>
     /// <remarks>The integer value determines the sort order.</remarks>
@@ -970,6 +1044,37 @@ namespace EVEMon.Common
 
         [Header("Modified orders")]
         Modified = 4
+    }
+
+    /// <summary>
+    /// The status of a contract.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum ContractState
+    {
+        [Header("Assigned contracts")]
+        Assigned = 0,
+
+        [Header("Created contracts")]
+        Created = 1,
+
+        [Header("Canceled contracts")]
+        Canceled = 2,
+
+        [Header("Deleted contracts")]
+        Deleted = 3,
+
+        [Header("Expired contracts")]
+        Expired = 4,
+
+        [Header("Rejected contracts")]
+        Rejected = 5,
+
+        [Header("Finished contracts")]
+        Finished = 6,
+
+        [Header("Unknown contracts")]
+        Unknown = 7
     }
 
     /// <summary>

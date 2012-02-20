@@ -60,7 +60,7 @@ namespace EVEMon.Common.Collections
     #region EmptyEnumerable<T>
 
     /// <summary>
-    /// Cette classe implémente une collection vide et immuable.
+    /// This class implements an empty collection and immutable.
     /// </summary>
     public class EmptyEnumerable<T> : IEnumerable<T>
     {

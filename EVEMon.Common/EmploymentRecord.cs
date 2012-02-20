@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -6,7 +7,17 @@ namespace EVEMon.Common
 {
     public sealed class EmploymentRecord
     {
+        public event EventHandler EmploymentRecordImageUpdated;
+
+
+        #region Fields
+
         private readonly Character m_character;
+        private readonly long m_corporationId;
+        private Image m_image;
+
+        #endregion
+
 
         #region Constructor
 
@@ -21,6 +32,7 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("src");
 
             m_character = character;
+            m_corporationId = src.CorporationID;
             CorporationName = GetIDToName(src.CorporationID);
             StartDate = src.StartDate;
         }
@@ -36,6 +48,7 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("src");
 
             m_character = character;
+            m_corporationId = src.CorporationID;
             CorporationName = src.CorporationName;
             StartDate = src.StartDate.TimeStringToDateTime();
         }
@@ -57,22 +70,19 @@ namespace EVEMon.Common
         /// <value>The start date.</value>
         public DateTime StartDate { get; private set; }
 
-        #endregion
-
-
-        #region Export Method
-
         /// <summary>
-        /// Exports the given object to a serialization object.
+        /// Gets the corporation image.
         /// </summary>
-        public SerializableEmploymentHistory Export()
+        /// <value>The corporation image.</value>
+        public Image CorporationImage
         {
-            SerializableEmploymentHistory serial = new SerializableEmploymentHistory
-                                                       {
-                                                           CorporationName = CorporationName,
-                                                           StartDate = StartDate.DateTimeToTimeString()
-                                                       };
-            return serial;
+            get
+            {
+                if (m_image == null)
+                    GetImage();
+
+                return m_image;
+            }
         }
 
         #endregion
@@ -81,7 +91,7 @@ namespace EVEMon.Common
         #region Helper Method
 
         /// <summary>
-        /// Gets the Corporation name from the provided ID.
+        /// Gets the corporation name from the provided ID.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
@@ -94,6 +104,59 @@ namespace EVEMon.Common
             return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;
         }
 
+        /// <summary>
+        /// Gets the corporation image.
+        /// </summary>
+        private void GetImage()
+        {
+            m_image = Properties.Resources.DefaultCorporationImage32;
+            ImageService.GetImageAsync(GetImageUrl(), true, img =>
+                                                                {
+                                                                    if (img == null)
+                                                                        return;
+
+                                                                    m_image = img;
+
+                                                                    // Notify the subscriber that we got the image
+                                                                    // Note that if the image is in cache the event doesn't get fired
+                                                                    // as the event object is null
+                                                                    if (EmploymentRecordImageUpdated != null)
+                                                                        EmploymentRecordImageUpdated(this, EventArgs.Empty);
+                                                                });
+        }
+
+        /// <summary>
+        /// Gets the image URL.
+        /// </summary>
+        /// <returns></returns>
+        private Uri GetImageUrl()
+        {
+            return new Uri(String.Format(CultureConstants.InvariantCulture,
+                                         NetworkConstants.CCPIconsFromImageServer, "corporation", m_corporationId,
+                                         (int)EveImageSize.x32));
+        }
+
+
         #endregion
+
+
+        #region Export Method
+
+        /// <summary>
+        /// Exports the given object to a serialization object.
+        /// </summary>
+        public SerializableEmploymentHistory Export()
+        {
+            SerializableEmploymentHistory serial = new SerializableEmploymentHistory
+                                                       {
+                                                           CorporationID = m_corporationId,
+                                                           CorporationName = CorporationName,
+                                                           StartDate = StartDate.DateTimeToTimeString()
+                                                       };
+            return serial;
+        }
+
+        #endregion
+
     }
 }

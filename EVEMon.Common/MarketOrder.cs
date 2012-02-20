@@ -37,7 +37,7 @@ namespace EVEMon.Common
             ID = src.OrderID;
             m_itemID = src.ItemID;
             Item = StaticItems.GetItemByID(src.ItemID);
-            Station = GetStationByID(src.StationID);
+            Station = Station.GetByID(src.StationID);
             UnitaryPrice = src.UnitaryPrice;
             InitialVolume = src.InitialVolume;
             RemainingVolume = src.RemainingVolume;
@@ -62,7 +62,7 @@ namespace EVEMon.Common
             m_state = src.State;
             m_itemID = GetItemID(src);
             Item = GetItem(src);
-            Station = GetStationByID(src.StationID);
+            Station = Station.GetByID(src.StationID);
             UnitaryPrice = src.UnitaryPrice;
             InitialVolume = src.InitialVolume;
             RemainingVolume = src.RemainingVolume;
@@ -184,7 +184,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsExpired
         {
-            get { return Issued.AddDays(Duration) < DateTime.UtcNow; }
+            get { return Expiration < DateTime.UtcNow; }
         }
 
         /// <summary>
@@ -322,29 +322,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the station of an order.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private static Station GetStationByID(int id)
-        {
-            // Look for the station in datafile, if we fail then it may be a conquerable outpost station
-            Station station = StaticGeography.GetStationByID(id) ?? ConquerableStation.GetStationByID(id);
-
-            // We failed again ? It's not in any data we can access
-            // We set it to a fixed one and notify about it in the trace file
-            if (station == null)
-            {
-                station = StaticGeography.GetStationByID(60013747);
-                EveMonClient.Trace("Could not find station id {0}", id);
-                if (station != null)
-                    EveMonClient.Trace("Setting to {0}", station.Name);
-            }
-
-            return station;
-        }
-
-        /// <summary>
         /// Gets the state of an order.
         /// </summary>
         /// <param name="src"></param>
@@ -387,55 +364,6 @@ namespace EVEMon.Common
             return src.RemainingVolume != 0
                    && ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued)
                        || src.RemainingVolume != RemainingVolume);
-        }
-
-        /// <summary>
-        /// Formats the given price to a readable string.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        public static string Format(decimal value, AbbreviationFormat format)
-        {
-            decimal abs = Math.Abs(value);
-            if (format == AbbreviationFormat.AbbreviationWords)
-            {
-                if (abs >= 1E9M)
-                    return Format("Billions", value / 1E9M);
-                if (abs >= 1E6M)
-                    return Format("Millions", value / 1E6M);
-
-                return abs >= 1E3M ? Format("Thousands", value / 1E3M) : Format("", value);
-            }
-
-            if (abs >= 1E9M)
-                return Format("B", value / 1E9M);
-            if (abs >= 1E6M)
-                return Format("M", value / 1E6M);
-
-            return abs >= 1E3M ? Format("K", value / 1E3M) : Format("", value);
-        }
-
-        /// <summary>
-        /// Formats the given value and suffix the way we want.
-        /// </summary>
-        /// <param name="suffix"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static string Format(string suffix, decimal value)
-        {
-            // Explanations : 999.99 was displayed as 1000 because only three digits were required.
-            // So we do the truncation at hand for the number of digits we exactly request.
-
-            decimal abs = Math.Abs(value);
-            if (abs < 1.0M)
-                return (((int)value * 100) / 100.0M).ToString("0.##", CultureConstants.DefaultCulture) + suffix;
-            if (abs < 10.0M)
-                return (((int)value * 1000) / 1000.0M).ToString("#.##", CultureConstants.DefaultCulture) + suffix;
-            if (abs < 100.0M)
-                return (((int)value * 1000) / 1000.0M).ToString("##.#", CultureConstants.DefaultCulture) + suffix;
-
-            return (((int)value * 1000) / 1000.0M).ToString("###", CultureConstants.DefaultCulture) + suffix;
         }
 
         #endregion

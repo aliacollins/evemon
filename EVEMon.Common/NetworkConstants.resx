@@ -313,4 +313,28 @@
   <data name="APICorporationMarketOrders" xml:space="preserve">
     <value>/corp/MarketOrders.xml.aspx</value>
   </data>
+  <data name="PostDataCharacterIDOnly" xml:space="preserve">
+    <value>characterID={0}</value>
+  </data>
+  <data name="APIContractBids" xml:space="preserve">
+    <value>/char/ContractBids.xml.aspx</value>
+  </data>
+  <data name="APIContractItems" xml:space="preserve">
+    <value>/char/ContractItems.xml.aspx</value>
+  </data>
+  <data name="APIContracts" xml:space="preserve">
+    <value>/char/Contracts.xml.aspx</value>
+  </data>
+  <data name="APICorporationContractBids" xml:space="preserve">
+    <value>/corp/ContractBids.xml.aspx</value>
+  </data>
+  <data name="APICorporationContractItems" xml:space="preserve">
+    <value>/corp/ContractItems.xml.aspx</value>
+  </data>
+  <data name="APICorporationContracts" xml:space="preserve">
+    <value>/corp/Contracts.xml.aspx</value>
+  </data>
+  <data name="PostDataWithCharIDAndContractID" xml:space="preserve">
+    <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;contractID={3}</value>
+  </data>
 </root>

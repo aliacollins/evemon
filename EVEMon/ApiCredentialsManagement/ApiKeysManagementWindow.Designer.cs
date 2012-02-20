@@ -117,7 +117,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeyListLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.apiKeyListLabel.Location = new System.Drawing.Point(0, 0);
             this.apiKeyListLabel.Name = "apiKeyListLabel";
-            this.apiKeyListLabel.Size = new System.Drawing.Size(643, 370);
+            this.apiKeyListLabel.Size = new System.Drawing.Size(806, 363);
             this.apiKeyListLabel.TabIndex = 0;
             this.apiKeyListLabel.Text = "First add your API key using the above buttons.";
             this.apiKeyListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -355,7 +355,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysMultiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.apiKeysMultiPanel.Location = new System.Drawing.Point(0, 25);
             this.apiKeysMultiPanel.Name = "apiKeysMultiPanel";
-            this.apiKeysMultiPanel.SelectedPage = this.apiKeysListPage;
+            this.apiKeysMultiPanel.SelectedPage = this.noAPIKeysPage;
             this.apiKeysMultiPanel.Size = new System.Drawing.Size(806, 363);
             this.apiKeysMultiPanel.TabIndex = 16;
             // 
@@ -376,7 +376,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.apiKeysListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.apiKeysListBox.FormattingEnabled = true;
-            this.apiKeysListBox.ItemHeight = 40;
+            this.apiKeysListBox.ItemHeight = 43;
             this.apiKeysListBox.Location = new System.Drawing.Point(0, 0);
             this.apiKeysListBox.Name = "apiKeysListBox";
             this.apiKeysListBox.Size = new System.Drawing.Size(806, 363);
@@ -392,7 +392,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.noAPIKeysPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.noAPIKeysPage.Location = new System.Drawing.Point(0, 0);
             this.noAPIKeysPage.Name = "noAPIKeysPage";
-            this.noAPIKeysPage.Size = new System.Drawing.Size(643, 370);
+            this.noAPIKeysPage.Size = new System.Drawing.Size(806, 363);
             this.noAPIKeysPage.TabIndex = 1;
             this.noAPIKeysPage.Text = "noAPIKeysPage";
             // 

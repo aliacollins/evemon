@@ -10,7 +10,6 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
-using EVEMon.Common.Serialization.Importation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 
@@ -225,12 +224,19 @@ namespace EVEMon.Common
             InitializeOrAddMissingColumns();
 
             // Removes reduntant windows locations
-            List<KeyValuePair<string, SerializableRectangle>> locations = new List<KeyValuePair<string, SerializableRectangle>>();
-            locations.AddRange(UI.WindowLocations);
-            foreach (KeyValuePair<string, SerializableRectangle> windowLocation in locations.Where(
+            List<KeyValuePair<string, WindowLocationSettings>> locations = UI.WindowLocations.ToList();
+            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
                 windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);
+            }
+
+            // Removes reduntant splitters
+            List<KeyValuePair<string, int>> splitters = UI.Splitters.ToList();
+            foreach (KeyValuePair<string, int> splitter in splitters.Where(
+                splitter => splitter.Key == "EFTLoadoutImportationForm"))
+            {
+                UI.Splitters.Remove(splitter.Key);
             }
         }
 
@@ -244,6 +250,9 @@ namespace EVEMon.Common
 
             // Initializes the market order columns or adds missing ones
             UI.MainWindow.MarketOrders.Columns.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
+
+            // Initializes the contracts columns or adds missing ones
+            UI.MainWindow.Contracts.Columns.AddRange(UI.MainWindow.Contracts.DefaultColumns);
 
             // Initializes the industry jobs columns or adds missing ones
             UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
@@ -364,7 +373,7 @@ namespace EVEMon.Common
 
                     // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
-                                                        ? DeserializeOldFormat(settingsFile)
+                                                        ? (SerializableSettings)ShowNoSupportMessage()
                                                         : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile,
                                                                                                             SettingsTransform);
 
@@ -406,10 +415,10 @@ namespace EVEMon.Common
                         String fileDate = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
                                                         backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
                                                         backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
-                        DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                                                                        "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?",
-                                                                        fileDate),
-                                                          "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        DialogResult dr = MessageBox.Show(
+                            String.Format(CultureConstants.DefaultCulture,
+                                          "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?",
+                                          fileDate), "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                         if (dr == DialogResult.No)
                         {
@@ -425,7 +434,7 @@ namespace EVEMon.Common
 
                     // Try to load from a file (when no revison found then it's a pre 1.3.0 version file)
                     SerializableSettings settings = revision == 0
-                                                        ? DeserializeOldFormat(backupFile)
+                                                        ? (SerializableSettings)ShowNoSupportMessage()
                                                         : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile,
                                                                                                             SettingsTransform);
 
@@ -451,54 +460,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserializes a settings file from an old format.
+        /// Shows a no support message.
         /// </summary>
-        /// <param name="filename"></param>
         /// <returns></returns>
-        private static SerializableSettings DeserializeOldFormat(string filename)
+        internal static object ShowNoSupportMessage()
         {
-            OldSettings oldSerial = Util.DeserializeXMLFromFile<OldSettings>(filename,
-                                                                             Util.LoadXSLT(
-                                                                                 Properties.Resources.SettingsAndPlanImport));
+            MessageBox.Show(
+                "The file is probably from an EVEMon version prior to 1.3.0.\n" +
+                "This type of file is no longer supported.",
+                "File type not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            if (oldSerial == null)
-                return null;
-
-            SerializableSettings serial = new SerializableSettings();
-
-            // Characters
-            foreach (SerializableCCPCharacter character in oldSerial.Characters.Select(
-                oldCharacter => new SerializableCCPCharacter
-                                    {
-                                        ID = oldCharacter.ID,
-                                        Name = oldCharacter.Name,
-                                        Guid = Guid.NewGuid()
-                                    }))
-            {
-                serial.MonitoredCharacters.Add(new MonitoredCharacterSettings { CharacterGuid = character.Guid });
-                serial.Characters.Add(character);
-            }
-
-            // Plans
-            foreach (OldSettingsPlan oldPlan in oldSerial.Plans)
-            {
-                // Look for the owner by his name
-                SerializableSettingsCharacter owner = serial.Characters.SingleOrDefault(x => x.Name == oldPlan.Owner);
-                if (owner == null)
-                    continue;
-
-                // Imports the plan
-                SerializablePlan plan = new SerializablePlan
-                                            {
-                                                Owner = owner.Guid,
-                                                Name = oldPlan.Name,
-                                                Description = String.Empty,
-                                            };
-                plan.Entries.AddRange(oldPlan.Entries);
-                serial.Plans.Add(plan);
-            }
-
-            return serial;
+            return null;
         }
 
         /// <summary>

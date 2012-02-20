@@ -61,12 +61,12 @@ namespace EVEMon.Common.SettingsObjects
                                                          };
 
                 return EnumExtensions.GetValues<IndustryJobColumn>().Where(
-                    planColumn => planColumn != IndustryJobColumn.None).Where(
-                        planColumn => Columns.All(columnSetting => columnSetting.Column != planColumn)).Select(
-                            planColumn => new IndustryJobColumnSettings
+                    column => column != IndustryJobColumn.None).Where(
+                        column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
+                            column => new IndustryJobColumnSettings
                                               {
-                                                  Column = planColumn,
-                                                  Visible = defaultColumns.Contains(planColumn),
+                                                  Column = column,
+                                                  Visible = defaultColumns.Contains(column),
                                                   Width = -2
                                               });
 

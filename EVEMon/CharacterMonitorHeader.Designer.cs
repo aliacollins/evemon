@@ -115,31 +115,29 @@
             // 
             // ThrobberFlowLayoutPanel
             // 
-            this.ThrobberFlowLayoutPanel.AutoSize = true;
-            this.ThrobberFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateThrobber);
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateLabel);
-            this.ThrobberFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ThrobberFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ThrobberFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(377, 0);
+            this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(366, 0);
             this.ThrobberFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ThrobberFlowLayoutPanel.Name = "ThrobberFlowLayoutPanel";
-            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(52, 91);
+            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(63, 91);
             this.ThrobberFlowLayoutPanel.TabIndex = 10;
             // 
             // UpdateThrobber
             // 
             this.UpdateThrobber.ContextMenuStrip = this.ThrobberContextMenu;
             this.UpdateThrobber.Dock = System.Windows.Forms.DockStyle.Right;
-            this.UpdateThrobber.Location = new System.Drawing.Point(23, 3);
-            this.UpdateThrobber.MaximumSize = new System.Drawing.Size(26, 26);
-            this.UpdateThrobber.MinimumSize = new System.Drawing.Size(26, 26);
+            this.UpdateThrobber.Location = new System.Drawing.Point(36, 3);
+            this.UpdateThrobber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.UpdateThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.Name = "UpdateThrobber";
-            this.UpdateThrobber.Size = new System.Drawing.Size(26, 26);
+            this.UpdateThrobber.Size = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.State = EVEMon.Common.ThrobberState.Stopped;
             this.UpdateThrobber.TabIndex = 4;
             this.UpdateThrobber.TabStop = false;
-            this.UpdateThrobber.Click += new System.EventHandler(this.UpdateThrobber_Click);
+            this.UpdateThrobber.MouseClick += new System.Windows.Forms.MouseEventHandler(this.UpdateThrobber_Click);
             // 
             // ThrobberContextMenu
             // 
@@ -174,14 +172,13 @@
             // 
             this.UpdateLabel.AutoSize = true;
             this.UpdateLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ThrobberFlowLayoutPanel.SetFlowBreak(this.UpdateLabel, true);
             this.UpdateLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.UpdateLabel.Location = new System.Drawing.Point(0, 32);
-            this.UpdateLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.UpdateLabel.Location = new System.Drawing.Point(2, 30);
+            this.UpdateLabel.Margin = new System.Windows.Forms.Padding(0);
             this.UpdateLabel.Name = "UpdateLabel";
-            this.UpdateLabel.Size = new System.Drawing.Size(49, 13);
+            this.UpdateLabel.Size = new System.Drawing.Size(61, 13);
             this.UpdateLabel.TabIndex = 5;
-            this.UpdateLabel.Text = "00:00:00";
+            this.UpdateLabel.Text = "0000:00:00";
             this.UpdateLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.UpdateLabel.MouseHover += new System.EventHandler(this.UpdateLabel_MouseHover);
             // 
@@ -201,7 +198,7 @@
             this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(246, 91);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(235, 91);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel

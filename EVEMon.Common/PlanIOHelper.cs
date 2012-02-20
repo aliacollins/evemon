@@ -344,8 +344,7 @@ namespace EVEMon.Common
 
                 // Old format
                 result = revision == 0
-                             ? Util.DeserializeXMLFromFile<SerializablePlan>(filename,
-                                                                     Util.LoadXSLT(Properties.Resources.SettingsAndPlanImport))
+                             ? (SerializablePlan)Settings.ShowNoSupportMessage()
                              : Util.DeserializeXMLFromFile<OutputPlan>(filename);
             }
             catch (UnauthorizedAccessException exc)

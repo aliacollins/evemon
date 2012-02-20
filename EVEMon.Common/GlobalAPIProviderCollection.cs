@@ -118,7 +118,7 @@ namespace EVEMon.Common
                 // Providers' methods
                 foreach (SerializableAPIMethod sMethod in sProvider.Methods)
                 {
-                    Enum method = APIMethods.Methods.FirstOrDefault(x => x.ToString() == sMethod.Method);
+                    Enum method = APIMethods.Methods.FirstOrDefault(x => x.ToString() == sMethod.MethodName);
                     if (method == null)
                         continue;
 
@@ -160,7 +160,7 @@ namespace EVEMon.Common
                 serialProvider.Methods.Clear();
                 foreach (APIMethod method in provider.Methods.Where(method => !String.IsNullOrWhiteSpace(method.Path)))
                 {
-                    serialProvider.Methods.Add(new SerializableAPIMethod { Method = method.Method.ToString(), Path = method.Path });
+                    serialProvider.Methods.Add(new SerializableAPIMethod { MethodName = method.Method.ToString(), Path = method.Path });
                 }
             }
 

@@ -54,8 +54,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-
-
+        
         #region Public Properties
 
         /// <summary>

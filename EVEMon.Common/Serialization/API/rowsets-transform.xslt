@@ -43,6 +43,27 @@
           <xsl:with-param name="rowName" select="'record'" />
         </xsl:call-template>
       </xsl:when>
+      <!-- (contractList, row) are transformed into (contracts, contract) -->
+      <xsl:when test="@name='contractList'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'contracts'" />
+          <xsl:with-param name="rowName" select="'contract'" />
+        </xsl:call-template>
+      </xsl:when>
+      <!-- (itemList, row) are transformed into (contractItems, contractItem) -->
+      <xsl:when test="@name='itemList'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'contractItems'" />
+          <xsl:with-param name="rowName" select="'contractItem'" />
+        </xsl:call-template>
+      </xsl:when>
+      <!-- (bidList, row) are transformed into (bids, bid) -->
+      <xsl:when test="@name='bidList'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'bids'" />
+          <xsl:with-param name="rowName" select="'bid'" />
+        </xsl:call-template>
+      </xsl:when>
       <!-- By default behaviour, the rowset is a plural so we just remove the last character to get the row name-->
       <xsl:otherwise>
         <xsl:call-template name="rowsets">

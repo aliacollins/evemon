@@ -28,7 +28,7 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
+            this.jobsList = new EVEMon.CharacterIndustryJobsList();
             this.SuspendLayout();
             // 
             // jobsList
@@ -57,6 +57,6 @@ namespace EVEMon
 
         #endregion
 
-        private MainWindowIndustryJobsList jobsList;
+        private CharacterIndustryJobsList jobsList;
     }
 }

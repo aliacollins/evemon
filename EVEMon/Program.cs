@@ -51,6 +51,7 @@ namespace EVEMon
             // Initialization
             EveMonClient.Initialize();
             Settings.InitializeFromFile();
+            EveIDToName.EnsureCacheFileLoad();
 
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested)
@@ -67,6 +68,7 @@ namespace EVEMon
             finally
             {
                 Settings.SaveImmediate();
+                EveIDToName.SaveImmediate();
                 BCAPI.UploadSettingsFile();
                 EveMonClient.Trace("Closed");
                 EveMonClient.StopTraceLogging();

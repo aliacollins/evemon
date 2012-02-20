@@ -151,6 +151,60 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/ContractBids.xml.aspx.
+        /// </summary>
+        public static string APIContractBids {
+            get {
+                return ResourceManager.GetString("APIContractBids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/ContractItems.xml.aspx.
+        /// </summary>
+        public static string APIContractItems {
+            get {
+                return ResourceManager.GetString("APIContractItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/Contracts.xml.aspx.
+        /// </summary>
+        public static string APIContracts {
+            get {
+                return ResourceManager.GetString("APIContracts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /corp/ContractBids.xml.aspx.
+        /// </summary>
+        public static string APICorporationContractBids {
+            get {
+                return ResourceManager.GetString("APICorporationContractBids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /corp/ContractItems.xml.aspx.
+        /// </summary>
+        public static string APICorporationContractItems {
+            get {
+                return ResourceManager.GetString("APICorporationContractItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /corp/Contracts.xml.aspx.
+        /// </summary>
+        public static string APICorporationContracts {
+            get {
+                return ResourceManager.GetString("APICorporationContracts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /corp/IndustryJobs.xml.aspx.
         /// </summary>
         public static string APICorporationIndustryJobs {
@@ -601,6 +655,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to characterID={0}.
+        /// </summary>
+        public static string PostDataCharacterIDOnly {
+            get {
+                return ResourceManager.GetString("PostDataCharacterIDOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ids={0}.
         /// </summary>
         public static string PostDataIDsOnly {
@@ -615,6 +678,15 @@ namespace EVEMon.Common {
         public static string PostDataWithCharID {
             get {
                 return ResourceManager.GetString("PostDataWithCharID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;contractID={3}.
+        /// </summary>
+        public static string PostDataWithCharIDAndContractID {
+            get {
+                return ResourceManager.GetString("PostDataWithCharIDAndContractID", resourceCulture);
             }
         }
         

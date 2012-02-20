@@ -144,6 +144,40 @@ namespace EVEMon.Common.Data
                        : String.Format(CultureConstants.DefaultCulture, "{0} > {1}", solarSystem.FullLocation, name);
         }
 
+        /// <summary>
+        /// Gets the station by the provided ID.
+        /// </summary>
+        /// <param name="id">The station's id.</param>
+        /// <returns></returns>
+        internal static Station GetByID(int id)
+        {
+            // Check if it's a conquerable outpost station, if not look in our data
+            Station station = ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
+
+            // We failed ? It's not in any data we can access
+            // We set it to a fixed one and notify about it in the trace file
+            if (station == null)
+            {
+                EveMonClient.Trace("Could not find station id {0}", id);
+                station = StaticGeography.GetStationByID(60013747);
+                if (station != null)
+                    EveMonClient.Trace("Setting to {0}", station.Name);
+            }
+
+            return station;
+        }
+
+        /// <summary>
+        /// Gets the station by the provided name.
+        /// </summary>
+        /// <param name="name">The station's name.</param>
+        /// <returns>The station or null</returns>
+        internal static Station GetByName(string name)
+        {
+            // Check if it's a conquerable outpost station, if not look in our data
+            return ConquerableStation.GetStationByName(name) ?? StaticGeography.GetStationByName(name);
+        }
+
         #endregion
 
 

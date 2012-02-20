@@ -74,6 +74,7 @@ namespace EVEMon
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apiTesterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addBlankCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mineralWorksheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.schedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -469,6 +470,7 @@ namespace EVEMon
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.apiTesterToolStripMenuItem,
             this.addBlankCharacterMenu,
             this.mineralWorksheetToolStripMenuItem,
             this.schedulerToolStripMenuItem,
@@ -481,6 +483,14 @@ namespace EVEMon
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // apiTesterToolStripMenuItem
+            // 
+            this.apiTesterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("apiTesterToolStripMenuItem.Image")));
+            this.apiTesterToolStripMenuItem.Name = "apiTesterToolStripMenuItem";
+            this.apiTesterToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.apiTesterToolStripMenuItem.Text = "API Tester...";
+            this.apiTesterToolStripMenuItem.Click += new System.EventHandler(this.apiTesterToolStripMenuItem_Click);
             // 
             // addBlankCharacterMenu
             // 
@@ -1016,5 +1026,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem addBlankCharacterMenu;
         private System.Windows.Forms.ToolStripMenuItem clearCacheToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansSeparator;
+        private System.Windows.Forms.ToolStripMenuItem apiTesterToolStripMenuItem;
     }
 }

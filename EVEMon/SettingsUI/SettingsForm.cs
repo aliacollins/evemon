@@ -51,6 +51,9 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            tbCalendarPath.CausesValidation = false;
+
+
             // Update settings
             Settings.Import(m_oldSettings, true);
             Settings.Save();
@@ -122,7 +125,7 @@ namespace EVEMon.SettingsUI
                         // Transforms x64 to 64 by 64
                         string size = x.ToString().Substring(1);
                         return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
-                    }).ToArray());
+                    }).ToArray<Object>());
 
             // Expands the left panel and selects the first page and node
             treeView.ExpandAll();
@@ -325,8 +328,14 @@ namespace EVEMon.SettingsUI
         {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            rbMSOutlook.Checked = m_settings.Calendar.Provider == CalendarProvider.Outlook;
-            rbGoogle.Checked = m_settings.Calendar.Provider == CalendarProvider.Google;
+            rbMSOutlook.Enabled = ExternalCalendar.OutlookInstalled;
+            rbMSOutlook.Checked = rbMSOutlook.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook;
+            rbGoogle.Checked = !rbMSOutlook.Checked;
+            
+            rbDefaultCalendar.Checked = m_settings.Calendar.UseOutlookDefaultCalendar;
+            rbCustomCalendar.Checked = !rbDefaultCalendar.Checked;
+            calendarPathExampleLabel.Visible = rbCustomCalendar.Checked;
+            tbCalendarPath.Text = m_settings.Calendar.OutlookCustomCalendarPath;
 
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
             tbGooglePassword.Text = Util.Decrypt(m_settings.Calendar.GooglePassword, m_settings.Calendar.GoogleEmail);
@@ -490,6 +499,9 @@ namespace EVEMon.SettingsUI
             m_settings.Calendar.Enabled = externalCalendarCheckbox.Checked;
             m_settings.Calendar.Provider = (rbMSOutlook.Checked ? CalendarProvider.Outlook : CalendarProvider.Google);
 
+            m_settings.Calendar.UseOutlookDefaultCalendar = rbDefaultCalendar.Checked;
+            m_settings.Calendar.OutlookCustomCalendarPath = tbCalendarPath.Text.Trim();
+
             m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text.Trim();
             m_settings.Calendar.GooglePassword = Util.Encrypt(tbGooglePassword.Text.Trim(), tbGoogleEmail.Text.Trim());
             m_settings.Calendar.GoogleAddress = tbGoogleURI.Text.Trim();
@@ -571,6 +583,20 @@ namespace EVEMon.SettingsUI
         #region Validation
 
         /// <summary>
+        /// Outlook custom calendar name validation.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void tbCalendarName_Validating(object sender, CancelEventArgs e)
+        {
+            e.Cancel = String.IsNullOrWhiteSpace(tbCalendarPath.Text.Trim()) ||
+                !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text);
+            
+            if(e.Cancel)
+                ShowErrorMessage("MS Outlook", "A calendar at that path could not be found.");
+        }
+
+        /// <summary>
         /// Reminder value validation.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -578,11 +604,10 @@ namespace EVEMon.SettingsUI
         private void tbReminder_Validating(object sender, CancelEventArgs e)
         {
             int value;
-            if (Int32.TryParse(tbReminder.Text, out value) && value > 0)
-                return;
 
-            e.Cancel = true;
-            ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer.");
+            e.Cancel = !Int32.TryParse(tbReminder.Text, out value) && value > 0;
+            if (e.Cancel)
+                ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer.");
         }
 
         /// <summary>
@@ -697,7 +722,12 @@ namespace EVEMon.SettingsUI
 
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
-            gbGoogle.Enabled = rbGoogle.Checked;
+            gbMSOutlook.Visible = rbMSOutlook.Checked;
+            gbGoogle.Visible = rbGoogle.Checked;
+            calendarPathLabel.Enabled = tbCalendarPath.Enabled = rbCustomCalendar.Checked;
+            calendarPathExampleLabel.Visible = rbCustomCalendar.Checked;
+            if (rbCustomCalendar.Checked)
+                tbCalendarPath.Focus();
             cbSetReminder.Enabled = lblMinutes.Enabled = !cbUseAlterateReminder.Checked;
             tbReminder.Enabled = cbSetReminder.Checked;
             cbUseAlterateReminder.Enabled = lblEarlyReminder.Enabled = lblLateReminder.Enabled = !cbSetReminder.Checked;
@@ -721,12 +751,9 @@ namespace EVEMon.SettingsUI
             }
 
             // Queries Updater
-            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.OfType<CCPCharacter>())
-            {
-                // If any monitor's last update is found to exceed the max period,
-                // enable the queries updater button
-                btnResetUpdateQueryTimers.Enabled |= character.QueryMonitors.Any(x => x.LastUpdate > DateTime.UtcNow.AddDays(7));
-            }
+            // If any monitor's last update is found to exceed the max period,
+            // enable the queries updater button
+            btnResetUpdateQueryTimers.Enabled = EveMonClient.MonitoredCharacters.HasExcessUpdateTimer;
         }
 
         #endregion
@@ -804,7 +831,7 @@ namespace EVEMon.SettingsUI
             newProvider.Methods.AddRange(APIMethod.CreateDefaultSet().Select(
                 apiMethod => new SerializableAPIMethod
                                  {
-                                     Method = apiMethod.Method.ToString(),
+                                     MethodName = apiMethod.Method.ToString(),
                                      Path = apiMethod.Path
                                  }));
 
