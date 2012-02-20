@@ -516,20 +516,6 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbFilterBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFilterBy.FormattingEnabled = true;
-            this.cbFilterBy.Items.AddRange(new object[] {
-            "Charisma - Intelligence",
-            "Charisma - Memory",
-            "Charisma - Willpower",
-            "Intelligence - Memory",
-            "Intelligence - Perception",
-            "Memory - Charisma",
-            "Memory - Intelligence",
-            "Memory - Perception",
-            "Perception - Memory",
-            "Perception - Willpower",
-            "Willpower - Charisma",
-            "Willpower - Intelligence",
-            "Willpower - Perception"});
             this.cbFilterBy.Location = new System.Drawing.Point(45, 27);
             this.cbFilterBy.Name = "cbFilterBy";
             this.cbFilterBy.Size = new System.Drawing.Size(182, 21);

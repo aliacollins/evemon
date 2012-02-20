@@ -55,6 +55,16 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            // Create the attributes combinations and add them to the combo box
+            // (This complex LINQ expression ensures the automatic catch of all present attributes combinations
+            // and the ones that CCP may introduce in the future)
+            cbFilterBy.Items.AddRange(EnumExtensions.GetValues<EveAttribute>().OrderBy(
+                x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills.Where(
+                    x => x.PrimaryAttribute == primaryAttribute).Select(x => x.SecondaryAttribute).Distinct().OrderBy(
+                        x => x.ToString()).Select(secondaryAttribute =>
+                                                  String.Format("{0} - {1}",
+                                                                primaryAttribute, secondaryAttribute))).ToArray<object>());
+
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
