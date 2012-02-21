@@ -230,7 +230,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.VerificationCodeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.VerificationCodeTextBox.Location = new System.Drawing.Point(41, 141);
-            this.VerificationCodeTextBox.MaxLength = 32;
+            this.VerificationCodeTextBox.MaxLength = 48;
             this.VerificationCodeTextBox.Name = "VerificationCodeTextBox";
             this.VerificationCodeTextBox.Size = new System.Drawing.Size(443, 20);
             this.VerificationCodeTextBox.TabIndex = 4;
