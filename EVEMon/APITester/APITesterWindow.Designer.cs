@@ -1,6 +1,6 @@
-﻿namespace EVEMon.APITester
+﻿namespace EVEMon.ApiTester
 {
-    partial class APITesterWindow
+    partial class ApiTesterWindow
     {
         /// <summary>
         /// Required designer variable.

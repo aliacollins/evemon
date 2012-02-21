@@ -1,4 +1,5 @@
 using EVEMon.Common.Controls;
+using EVEMon.Controls;
 
 namespace EVEMon
 {
@@ -118,8 +119,8 @@ namespace EVEMon
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.tcCharacterTabs = new EVEMon.Common.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
-            this.overview = new EVEMon.Overview();
-            this.notificationList = new EVEMon.NotificationList();
+            this.overview = new Overview();
+            this.notificationList = new Controls.NotificationList();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -1002,7 +1003,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem knownProblemsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forumsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolsOwnedOptionsToolStripSeparator;
-        private NotificationList notificationList;
+        private Controls.NotificationList notificationList;
         private System.Windows.Forms.NotifyIcon niAlertIcon;
         private System.Windows.Forms.ToolStripMenuItem addAPIKeyMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteCharacterMenu;

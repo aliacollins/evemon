@@ -62,7 +62,7 @@ namespace EVEMon.SkillPlanner
                 x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills.Where(
                     x => x.PrimaryAttribute == primaryAttribute).Select(x => x.SecondaryAttribute).Distinct().OrderBy(
                         x => x.ToString()).Select(secondaryAttribute =>
-                                                  String.Format("{0} - {1}",
+                                                  String.Format(CultureConstants.InvariantCulture, "{0} - {1}",
                                                                 primaryAttribute, secondaryAttribute))).ToArray<object>());
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;

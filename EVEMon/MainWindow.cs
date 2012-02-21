@@ -9,9 +9,11 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.APITester;
+using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
+using EVEMon.ApiTester;
 using EVEMon.BlankCharacter;
+using EVEMon.CharacterMonitoring;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -26,11 +28,13 @@ using EVEMon.Common.Threading;
 using EVEMon.Controls;
 using EVEMon.ImplantControls;
 using EVEMon.LogitechG15;
+using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.Sales;
 using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
+using EVEMon.Updater;
 using EVEMon.WindowsApi;
 
 namespace EVEMon
@@ -1552,7 +1556,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void apiTesterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WindowsFactory.ShowUnique<APITesterWindow>();
+            WindowsFactory.ShowUnique<ApiTesterWindow>();
         }
 
         /// <summary>
@@ -1825,7 +1829,7 @@ namespace EVEMon
 
             // Create the popup
             if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm)
-                m_trayPopup = new TrayPopUpWindow();
+                m_trayPopup = new TrayPopupWindow();
             else
                 m_trayPopup = new TrayTooltipWindow();
 

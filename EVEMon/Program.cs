@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
+using EVEMon.ExceptionHandling;
 using EVEMon.WindowsApi;
 
 namespace EVEMon

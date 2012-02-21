@@ -9,9 +9,9 @@ using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
-namespace EVEMon.APITester
+namespace EVEMon.ApiTester
 {
-    public partial class APITesterWindow : EVEMonForm
+    public partial class ApiTesterWindow : EVEMonForm
     {
         private Uri m_url;
 
@@ -19,9 +19,9 @@ namespace EVEMon.APITester
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="APITesterWindow"/> class.
+        /// Initializes a new instance of the <see cref="ApiTesterWindow"/> class.
         /// </summary>
-        public APITesterWindow()
+        public ApiTesterWindow()
         {
             InitializeComponent();
         }
@@ -235,10 +235,10 @@ namespace EVEMon.APITester
                 Character character = (Character)cbCharacter.SelectedItem;
                 APIKey apiKey = null;
 
-                if (cbAPIMethod.SelectedItem.ToString().StartsWith("CorporationContract"))
+                if (cbAPIMethod.SelectedItem.ToString().StartsWith("CorporationContract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
 
-                if (cbAPIMethod.SelectedItem.ToString().StartsWith("Contract"))
+                if (cbAPIMethod.SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
 
                 if (apiKey == null)
