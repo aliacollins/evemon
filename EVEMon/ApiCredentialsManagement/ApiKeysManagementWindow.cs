@@ -15,7 +15,7 @@ namespace EVEMon.ApiCredentialsManagement
         private int m_refreshingCharactersCounter;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public ApiKeysManagementWindow()
         {
