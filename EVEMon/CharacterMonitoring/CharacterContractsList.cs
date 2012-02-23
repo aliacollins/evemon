@@ -228,6 +228,7 @@ namespace EVEMon.CharacterMonitoring
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             Contracts = (ccpCharacter == null ? null : ccpCharacter.Contracts);
             Columns = Settings.UI.MainWindow.Contracts.Columns;
+            Grouping = (Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy);
 
             UpdateColumns();
 

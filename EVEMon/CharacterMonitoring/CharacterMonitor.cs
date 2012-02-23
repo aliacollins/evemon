@@ -1485,6 +1485,9 @@ namespace EVEMon.CharacterMonitoring
             if (obj is IndustryJobGrouping)
                 m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
 
+            if (obj is ContractGrouping)
+                m_character.UISettings.ContractsGroupBy = (ContractGrouping)grouping;
+
             if (obj is EVEMailMessagesGrouping)
                 m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;
 
