@@ -61,7 +61,7 @@ namespace EVEMon.SkillPlanner
             this.btnPlan = new System.Windows.Forms.Button();
             this.cmNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
-            this.miExportToEFT = new System.Windows.Forms.ToolStripMenuItem();
+            this.miExportToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.eveImage = new EVEMon.Common.Controls.EveImage();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
@@ -342,23 +342,23 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miShowInBrowser,
-            this.miExportToEFT});
+            this.miExportToClipboard});
             this.cmNode.Name = "cmNode";
-            this.cmNode.Size = new System.Drawing.Size(203, 48);
+            this.cmNode.Size = new System.Drawing.Size(227, 70);
             // 
             // miShowInBrowser
             // 
             this.miShowInBrowser.Name = "miShowInBrowser";
-            this.miShowInBrowser.Size = new System.Drawing.Size(202, 22);
+            this.miShowInBrowser.Size = new System.Drawing.Size(226, 22);
             this.miShowInBrowser.Text = "Show in Items Browser...";
             this.miShowInBrowser.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
-            // miExportToEFT
+            // miExportToClipboard
             // 
-            this.miExportToEFT.Name = "miExportToEFT";
-            this.miExportToEFT.Size = new System.Drawing.Size(202, 22);
-            this.miExportToEFT.Text = "Export Loadout To EFT";
-            this.miExportToEFT.Click += new System.EventHandler(this.miExportToEFT_Click);
+            this.miExportToClipboard.Name = "miExportToClipboard";
+            this.miExportToClipboard.Size = new System.Drawing.Size(226, 22);
+            this.miExportToClipboard.Text = "Export Loadout To Clipboard";
+            this.miExportToClipboard.Click += new System.EventHandler(this.miExportToClipboard_Click);
             // 
             // eveImage
             // 
@@ -438,7 +438,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Button btnPlan;
         private System.Windows.Forms.ContextMenuStrip cmNode;
         private System.Windows.Forms.ToolStripMenuItem miShowInBrowser;
-        private System.Windows.Forms.ToolStripMenuItem miExportToEFT;
+        private System.Windows.Forms.ToolStripMenuItem miExportToClipboard;
         private Common.Controls.EveImage eveImage;
         private System.Windows.Forms.ImageList ilIcons;
         private Throbber throbberLoadouts;

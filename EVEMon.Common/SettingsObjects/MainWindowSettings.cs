@@ -49,13 +49,6 @@ namespace EVEMon.Common.SettingsObjects
         public bool ShowMenuBar { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [show tool bar].
-        /// </summary>
-        /// <value><c>true</c> if [show tool bar]; otherwise, <c>false</c>.</value>
-        [XmlElement("showToolBar")]
-        public bool ShowToolBar { get; set; }
-
-        /// <summary>
         /// Gets or sets the title format.
         /// </summary>
         /// <value>The title format.</value>

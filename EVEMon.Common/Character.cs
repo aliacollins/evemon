@@ -333,7 +333,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public int GetSkillCountAtLevel(int level)
         {
-            return Skills.Where(x => x.IsKnown).Count(skill => skill.LastConfirmedLvl == level);
+            return Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
         }
 
         /// <summary>

@@ -46,6 +46,7 @@ namespace EVEMon.SkillPlanner
         private LoadoutImportationForm()
         {
             InitializeComponent();
+            RememberPositionKey = "LoadoutImportationForm";
         }
 
         /// <summary>

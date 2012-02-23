@@ -377,7 +377,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Unselects all selected nodes.
         /// </summary>
-        public void UnselectAllNodes()
+        internal void UnselectAllNodes()
         {
             UnselectAllNodesExceptNode(null, TreeViewAction.Unknown);
         }

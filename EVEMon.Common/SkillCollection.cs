@@ -14,7 +14,6 @@ namespace EVEMon.Common
     public sealed class SkillCollection : ReadonlyKeyedCollection<long, Skill>
     {
         private readonly Skill[] m_itemsArray = new Skill[StaticSkills.ArrayIndicesCount];
-        private readonly Dictionary<string, Skill> m_itemsByName = new Dictionary<string, Skill>();
 
         /// <summary>
         /// Constructor.
@@ -25,7 +24,6 @@ namespace EVEMon.Common
             foreach (Skill skill in character.SkillGroups.SelectMany(group => group))
             {
                 Items[skill.ID] = skill;
-                m_itemsByName[skill.Name] = skill;
                 m_itemsArray[skill.ArrayIndex] = skill;
             }
 
@@ -33,21 +31,6 @@ namespace EVEMon.Common
             foreach (Skill skill in m_itemsArray)
             {
                 skill.CompleteInitialization(m_itemsArray);
-            }
-        }
-
-        /// <summary>
-        /// Gets the skill with the provided name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public Skill this[string name]
-        {
-            get
-            {
-                Skill skill;
-                m_itemsByName.TryGetValue(name, out skill);
-                return skill;
             }
         }
 
@@ -60,16 +43,6 @@ namespace EVEMon.Common
         {
             get { return GetByKey(id); }
         }
-
-        ///// <summary>
-        ///// Gets the skill representing the given static skill.
-        ///// </summary>
-        ///// <param name="skill"></param>
-        ///// <returns></returns>
-        //public Skill this[StaticSkill skill]
-        //{
-        //    get { return GetByArrayIndex(skill.ArrayIndex); }
-        //}
 
         /// <summary>
         /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>).

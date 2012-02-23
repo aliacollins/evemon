@@ -282,11 +282,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Selects the given nodes.
         /// </summary>
-        /// <param name="s"></param>
-        private void SetSelectedObjects(IEnumerable<Item> s)
+        /// <param name="items"></param>
+        private void SetSelectedObjects(IEnumerable<Item> items)
         {
             // Updates selection
-            SelectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
+            SelectedObjects = (items == null ? new List<Item>() : new List<Item>(items));
 
             // Selects the proper nodes
             if (SelectedObjects.Count() == 1)
@@ -308,8 +308,7 @@ namespace EVEMon.SkillPlanner
         {
             if (tvItems.SelectedNodes.Count != 0)
             {
-                List<Item> selectedObjects =
-                    (tvItems.SelectedNodes.Select(node => node.Tag)).OfType<Item>().ToList();
+                List<Item> selectedObjects = tvItems.SelectedNodes.Select(node => node.Tag).OfType<Item>().ToList();
                 SetSelectedObjects(selectedObjects);
                 return;
             }

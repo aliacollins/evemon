@@ -408,6 +408,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cbHistory
             // 
+            this.cbHistory.DisplayMember = "Name";
             this.cbHistory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbHistory.FormattingEnabled = true;
             this.cbHistory.Location = new System.Drawing.Point(5, 19);

@@ -931,11 +931,11 @@ namespace EVEMon.CharacterMonitoring
             // Maximas are computed on public skills only
             int totalValidSP = group.Where(x => x.IsPublic).Sum(x => x.SkillPoints);
             int maxSP = group.Where(x => x.IsPublic).Sum(x => x.StaticData.GetPointsRequiredForLevel(5));
-            int maxKnown = group.Where(x => x.IsPublic).Count();
+            int maxKnown = group.Count(x => x.IsPublic);
 
             // Current achievements are computed on every skill, including non-public
             int totalSP = group.Sum(x => x.SkillPoints);
-            int known = group.Where(x => x.IsKnown).Count();
+            int known = group.Count(x => x.IsKnown);
 
             // If the group is not completed yet
             if (totalValidSP < maxSP)

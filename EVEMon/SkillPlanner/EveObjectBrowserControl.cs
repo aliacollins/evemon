@@ -355,11 +355,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Adds the value for selected objects.
         /// </summary>
-        /// <param name="obj">The evaluated object.</param>
+        /// <param name="prop">The evaluated EveProperty.</param>
         /// <param name="item">The list of items.</param>
         /// <param name="labels">The labels.</param>
         /// <param name="values">The values.</param>
-        private void AddValueForSelectedObjects(Object obj, ListViewItem item, IList<string> labels, IList<float> values)
+        private void AddValueForSelectedObjects(EveProperty prop, ListViewItem item, IList<string> labels, IList<float> values)
         {
             float min = 0f;
             float max = 0f;
@@ -370,7 +370,6 @@ namespace EVEMon.SkillPlanner
                 min = values.Min();
                 max = values.Max();
                 allEqual = values.All(x => Math.Abs(x - min) < float.Epsilon);
-                EveProperty prop = obj as EveProperty;
                 if (prop != null && !prop.HigherIsBetter)
                 {
                     float temp = min;
@@ -467,7 +466,7 @@ namespace EVEMon.SkillPlanner
         {
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
-                if (!reprocessingMaterials.Any(x => x.Item == item))
+                if (reprocessingMaterials.All(x => x.Item != item))
                     continue;
 
                 // Create the list of reprocessing materials we need to scroll through
@@ -555,23 +554,19 @@ namespace EVEMon.SkillPlanner
 
                 // Due to .NET design we need to prevent the last colummn to resize to the right end
 
-                // Return if it's not the last column and not set to auto-resize
+                // Return if it's not the last column
                 if (column.Index != PropertiesList.Columns.Count - 1)
                     continue;
 
                 const int ColumnPad = 4;
 
-                // Calculate the width of the header and the items of the column
-                int columnMaxWidth;
-                using (Graphics g = CreateGraphics())
-                {
-                    // Calculate column header text width with padding
-                    int columnHeaderWidth = TextRenderer.MeasureText(g, column.Text, Font).Width + ColumnPad * 2;
+                // Calculate column header text width with padding
+                int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + ColumnPad * 2;
 
-                    columnMaxWidth = PropertiesList.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
-                        item => TextRenderer.MeasureText(g, item.SubItems[column.Index].Text, Font).Width).Concat(
-                            new[] { columnHeaderWidth }).Max() + ColumnPad + 1;
-                }
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth = PropertiesList.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                        new[] { columnHeaderWidth }).Max() + ColumnPad + 1;
 
                 // Assign the width found
                 column.Width = columnMaxWidth;

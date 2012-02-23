@@ -14,6 +14,7 @@ using EVEMon.ApiCredentialsManagement;
 using EVEMon.ApiTester;
 using EVEMon.BlankCharacter;
 using EVEMon.CharacterMonitoring;
+using EVEMon.CharactersComparison;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -123,7 +124,7 @@ namespace EVEMon
 
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
-            standardToolStripMenuItem.Checked = standardToolbar.Visible = Settings.UI.MainWindow.ShowToolBar;
+            toolbarToolStripMenuItem.Checked = mainToolBar.Visible = !Settings.UI.MainWindow.ShowMenuBar;
 
             // Subscribe events
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
@@ -542,7 +543,8 @@ namespace EVEMon
                                                                 hideCharacterMenu, miImportPlanFromFile,
                                                                 skillsPieChartMenu, deleteCharacterMenu, showOwnedSkillbooksMenu,
                                                                 exportCharacterMenu, implantsMenu, skillsPieChartTbMenu,
-                                                                hideCharacterTbMenu, plansTbMenu
+                                                                manageCharacterTbMenu, tsbManagePlans, plansTbMenu,
+                                                                tsbImplantGroups, tsbShowOwned
                                                             };
 
             // Enable or disable the menu buttons
@@ -559,9 +561,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void overview_CharacterClicked(object sender, CharacterChangedEventArgs e)
         {
-            foreach (TabPage tab in tcCharacterTabs.TabPages.Cast<TabPage>()
-                .Select(tab => new { tab, character = tab.Tag as Character })
-                .Where(tab => tab.character == e.Character).Select(character => character.tab))
+            foreach (TabPage tab in tcCharacterTabs.TabPages.Cast<TabPage>().Select(
+                tab => new { tab, character = tab.Tag as Character }).Where(
+                    tab => tab.character == e.Character).Select(character => character.tab))
             {
                 tcCharacterTabs.SelectedTab = tab;
                 return;
@@ -898,6 +900,8 @@ namespace EVEMon
                                   "'Tools > Options > General > Updates > Queries Updater' and click the 'Update All' button.",
                                   false);
             }
+
+            charactersComparisonToolStripMenuItem.Enabled = EveMonClient.Characters.Any();
         }
 
         /// <summary>
@@ -1571,6 +1575,17 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Tools > Characters Comparison.
+        /// Open the Characters Comparison window.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void charactersComparisonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory.ShowUnique<CharactersComparisonWindow>();
+        }
+
+        /// <summary>
         /// Tools > Mineral Worksheet.
         /// Open the worksheet window.
         /// </summary>
@@ -1730,6 +1745,7 @@ namespace EVEMon
         private void menubarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mainMenuBar.Visible = !mainMenuBar.Visible;
+            mainToolBar.Visible = !mainMenuBar.Visible;
             Settings.UI.MainWindow.ShowMenuBar = mainMenuBar.Visible;
         }
 
@@ -1739,10 +1755,11 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void standardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolbarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            standardToolbar.Visible = !standardToolbar.Visible;
-            Settings.UI.MainWindow.ShowToolBar = standardToolbar.Visible;
+            mainToolBar.Visible = !mainToolBar.Visible;
+            mainMenuBar.Visible = !mainToolBar.Visible;
+            Settings.UI.MainWindow.ShowMenuBar = mainToolBar.Visible;
         }
 
         /// <summary>
@@ -1770,8 +1787,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void toolbarContext_Opening(object sender, CancelEventArgs e)
         {
-            menubarToolStripMenuItem.Enabled = standardToolbar.Visible;
-            standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
+            menubarToolStripMenuItem.Enabled = toolbarToolStripMenuItem.Checked = mainToolBar.Visible;
+            toolbarToolStripMenuItem.Enabled = menubarToolStripMenuItem.Checked = mainMenuBar.Visible;
         }
 
         #endregion
