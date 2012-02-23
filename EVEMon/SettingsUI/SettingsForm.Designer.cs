@@ -197,8 +197,6 @@ namespace EVEMon.SettingsUI
             this.trayTooltipRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipButton = new System.Windows.Forms.Button();
             this.updatesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnResetUpdateQueryTimers = new System.Windows.Forms.Button();
             this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
             this.lblUpdatesPage = new System.Windows.Forms.Label();
             this.cbCheckTimeOnStartup = new System.Windows.Forms.CheckBox();
@@ -297,7 +295,6 @@ namespace EVEMon.SettingsUI
             this.mainWindowBehaviourGroupBox.SuspendLayout();
             this.trayIconPopupGroupBox.SuspendLayout();
             this.updatesPage.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.schedulerUIPage.SuspendLayout();
             this.externalCalendarPage.SuspendLayout();
             this.externalCalendarPanel.SuspendLayout();
@@ -1310,7 +1307,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.externalCalendarPage;
+            this.multiPanel.SelectedPage = this.generalPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1846,7 +1843,6 @@ namespace EVEMon.SettingsUI
             // 
             // updatesPage
             // 
-            this.updatesPage.Controls.Add(this.groupBox1);
             this.updatesPage.Controls.Add(this.updateSettingsControl);
             this.updatesPage.Controls.Add(this.lblUpdatesPage);
             this.updatesPage.Controls.Add(this.cbCheckTimeOnStartup);
@@ -1858,26 +1854,6 @@ namespace EVEMon.SettingsUI
             this.updatesPage.TabIndex = 9;
             this.updatesPage.Text = "updatesPage";
             this.updatesPage.Visible = false;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.btnResetUpdateQueryTimers);
-            this.groupBox1.Location = new System.Drawing.Point(320, 35);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(105, 45);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Queries Updater";
-            // 
-            // btnResetUpdateQueryTimers
-            // 
-            this.btnResetUpdateQueryTimers.Location = new System.Drawing.Point(15, 15);
-            this.btnResetUpdateQueryTimers.Name = "btnResetUpdateQueryTimers";
-            this.btnResetUpdateQueryTimers.Size = new System.Drawing.Size(75, 23);
-            this.btnResetUpdateQueryTimers.TabIndex = 11;
-            this.btnResetUpdateQueryTimers.Text = "Update All";
-            this.btnResetUpdateQueryTimers.UseVisualStyleBackColor = true;
-            this.btnResetUpdateQueryTimers.Click += new System.EventHandler(this.btnResetUpdateQueryTimers_Click);
             // 
             // updateSettingsControl
             // 
@@ -2781,7 +2757,6 @@ namespace EVEMon.SettingsUI
             this.trayIconPopupGroupBox.PerformLayout();
             this.updatesPage.ResumeLayout(false);
             this.updatesPage.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
             this.schedulerUIPage.ResumeLayout(false);
             this.schedulerUIPage.PerformLayout();
             this.externalCalendarPage.ResumeLayout(false);
@@ -2963,8 +2938,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.GroupBox gbMessageBox;
         private System.Windows.Forms.Label lblPrioritesConflict;
         private System.Windows.Forms.Button btnPrioritiesReset;
-        private System.Windows.Forms.Button btnResetUpdateQueryTimers;
-        private System.Windows.Forms.GroupBox groupBox1;
         private MultiPanelPage battleClinicServicePage;
         private System.Windows.Forms.GroupBox bcCredentialsGroupBox;
         private BattleClinicAPIControl battleClinicAPIControl;

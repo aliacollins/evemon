@@ -135,9 +135,6 @@ namespace EVEMon.SettingsUI
             cbWorksafeMode.Checked = m_settings.UI.SafeForWork;
             compatibilityCombo.SelectedIndex = (int)m_settings.Compatibility;
 
-            // Queries Updater
-            btnResetUpdateQueryTimers.Enabled = false;
-
             // Skills icon sets
             cbSkillIconSet.Items.Clear();
             for (int i = 1; i < IconSettings.Default.Properties.Count; i++)
@@ -749,11 +746,6 @@ namespace EVEMon.SettingsUI
                 cbShowPrereqMetSkills.Enabled = true;
                 cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
             }
-
-            // Queries Updater
-            // If any monitor's last update is found to exceed the max period,
-            // enable the queries updater button
-            btnResetUpdateQueryTimers.Enabled = EveMonClient.MonitoredCharacters.HasExcessUpdateTimer;
         }
 
         #endregion
@@ -903,22 +895,6 @@ namespace EVEMon.SettingsUI
         {
             Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = true;
             Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = DialogResult.None;
-        }
-
-        /// <summary>
-        /// Updates the timers of the query monitors.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnResetUpdateQueryTimers_Click(object sender, EventArgs e)
-        {
-            // Disable the button to prevent spamming
-            btnResetUpdateQueryTimers.Enabled = false;
-
-            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
-            {
-                character.QueryMonitors.QueryEverything();
-            }
         }
 
         /// <summary>

@@ -892,15 +892,6 @@ namespace EVEMon
             if (m_popupNotifications.Count != 0 && DateTime.UtcNow > m_nextPopupUpdate)
                 DisplayTooltipNotifications();
 
-            // Chech for excess monitor update timer and show a tip if so
-            if (!TipWindow.IsShown && EveMonClient.MonitoredCharacters.HasExcessUpdateTimer)
-            {
-                TipWindow.ShowTip(this, String.Empty, "Excess Update Timer",
-                                  "EVEMon detected that an update timer exceeds the maximum period.\nTo fix this go to" +
-                                  "'Tools > Options > General > Updates > Queries Updater' and click the 'Update All' button.",
-                                  false);
-            }
-
             charactersComparisonToolStripMenuItem.Enabled = EveMonClient.Characters.Any();
         }
 

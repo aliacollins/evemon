@@ -22,6 +22,7 @@ namespace EVEMon.Common
 
         private CharacterDataQuerying m_characterDataQuerying;
         private CorporationDataQuerying m_corporationDataQuerying;
+        private IEnumerable<SerializableAPIUpdate> m_lastAPIUpdates;
 
         private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
 
@@ -80,7 +81,7 @@ namespace EVEMon.Common
             : this(identity, serial.Guid)
         {
             Import(serial);
-            LastAPIUpdates = serial.LastUpdates;
+            m_lastAPIUpdates = serial.LastUpdates;
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace EVEMon.Common
             : this(identity, Guid.NewGuid())
         {
             ForceUpdateBasicFeatures = true;
-            LastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
+            m_lastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
         }
 
         #endregion
@@ -193,13 +194,13 @@ namespace EVEMon.Common
         /// Gets or sets the character industry jobs.
         /// </summary>
         /// <value>The character industry jobs.</value>
-        public IndustryJobCollection CharacterIndustryJobs { get; set; }
+        public IndustryJobCollection CharacterIndustryJobs { get; private set; }
 
         /// <summary>
         /// Gets or sets the corporation industry jobs.
         /// </summary>
         /// <value>The corporation industry jobs.</value>
-        public IndustryJobCollection CorporationIndustryJobs { get; set; }
+        public IndustryJobCollection CorporationIndustryJobs { get; private set; }
 
         /// <summary>
         /// Gets the collection of research points.
@@ -225,11 +226,6 @@ namespace EVEMon.Common
         /// Gets the query monitors enumeration.
         /// </summary>
         public QueryMonitorCollection QueryMonitors { get; private set; }
-
-        /// <summary>
-        /// Gets the query monitors last API updates enumeration.
-        /// </summary>
-        public IEnumerable<SerializableAPIUpdate> LastAPIUpdates { get; private set; }
 
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
@@ -308,15 +304,15 @@ namespace EVEMon.Common
             // Last API updates
             if (QueryMonitors.Any())
             {
-                LastAPIUpdates = QueryMonitors.Select(
-                monitor => new SerializableAPIUpdate
-                               {
-                                   Method = monitor.Method.ToString(),
-                                   Time = monitor.LastUpdate
-                               });
+                m_lastAPIUpdates = QueryMonitors.Select(
+                    monitor => new SerializableAPIUpdate
+                                   {
+                                       Method = monitor.Method.ToString(),
+                                       Time = monitor.LastUpdate
+                                   });
             }
 
-            serial.LastUpdates.AddRange(LastAPIUpdates);
+            serial.LastUpdates.AddRange(m_lastAPIUpdates);
 
             return serial;
         }
@@ -615,19 +611,23 @@ namespace EVEMon.Common
             if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == APIKeyType.Unknown))
                 return;
 
-            if (m_characterDataQuerying != null & m_corporationDataQuerying != null)
-                return;
+            // Force update a monitor if the last update exceed the current datetime
+            foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
+                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow))
+            {
+                monitor.ForceUpdate(true);
+            }
 
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(LastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(LastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
             }
         }
 
