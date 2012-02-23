@@ -6,10 +6,10 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Properties;
-using EVEMon.Controls;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -292,9 +292,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Setting character spacing
-            IntPtr hdc = g.GetHdc();
-            NativeMethods.SetTextCharacterExtra(hdc, 4);
-            g.ReleaseHdc();
+            NativeMethods.SetTextCharacterSpacing(g, 4);
 
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;

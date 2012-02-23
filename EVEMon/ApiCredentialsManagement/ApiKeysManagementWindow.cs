@@ -39,7 +39,6 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
-            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
 
@@ -61,7 +60,6 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.APIKeyCollectionChanged -= EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
             base.OnClosing(e);
@@ -111,16 +109,6 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
-        {
-            UpdateCharactersList();
-        }
-
-        /// <summary>
-        /// When the monitored characters collection changed, we update the characters list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateCharactersList();
         }
@@ -328,6 +316,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         private void UpdateCharactersListContent()
         {
+            int position = charactersListView.GetScrollBarPosition(NativeMethods.ScrollBarDirection.SB_VERT);
+
             charactersListView.BeginUpdate();
             try
             {
@@ -408,6 +398,7 @@ namespace EVEMon.ApiCredentialsManagement
             finally
             {
                 charactersListView.EndUpdate();
+                charactersListView.SetScrollBarPosition(position);
             }
 
             // Forces a refresh of the enabled/disabled items

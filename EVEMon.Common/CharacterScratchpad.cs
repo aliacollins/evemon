@@ -15,15 +15,18 @@ namespace EVEMon.Common
         private readonly int[] m_skillLevels;
         private readonly int[] m_skillSP;
 
+        private readonly BaseCharacter m_character;
+        private int m_skillPoints;
+
         /// <summary>
-        /// Constructor from a character
+        /// Constructor from a character.
         /// </summary>
         /// <param name="character"></param>
         public CharacterScratchpad(BaseCharacter character)
         {
             TrainedSkills = new Collection<StaticSkillLevel>();
             TrainingTime = TimeSpan.Zero;
-            Character = character;
+            m_character = character;
             m_skillSP = new int[StaticSkills.ArrayIndicesCount];
             m_skillLevels = new int[StaticSkills.ArrayIndicesCount];
 
@@ -34,21 +37,6 @@ namespace EVEMon.Common
 
             Reset();
         }
-
-
-        #region Core properties
-
-        /// <summary>
-        /// Gets the character used to build this scratchpad
-        /// </summary>
-        public BaseCharacter Character { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the total SP.
-        /// </summary>
-        public new int SkillPoints { get; set; }
-
-        #endregion
 
 
         #region Attributes
@@ -141,7 +129,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override int TotalSkillPoints
         {
-            get { return SkillPoints; }
+            get { return m_skillPoints; }
         }
 
         /// <summary>
@@ -324,7 +312,7 @@ namespace EVEMon.Common
             int difference = targetSP - m_skillSP[staticSkill.ArrayIndex];
 
             m_skillSP[staticSkill.ArrayIndex] = targetSP;
-            SkillPoints += difference;
+            m_skillPoints += difference;
         }
 
         #endregion
@@ -347,7 +335,7 @@ namespace EVEMon.Common
                 m_skillLevels[i] = 0;
             }
 
-            SkillPoints = 0;
+            m_skillPoints = 0;
             TrainingTime = TimeSpan.Zero;
 
             foreach (CharacterAttributeScratchpad attribute in m_attributes)
@@ -370,8 +358,8 @@ namespace EVEMon.Common
         /// </summary>
         public void Reset()
         {
-            if (Character is CharacterScratchpad)
-                Reset((CharacterScratchpad)Character);
+            if (m_character is CharacterScratchpad)
+                Reset((CharacterScratchpad)m_character);
             else
                 ResetFromCharacter();
         }
@@ -382,7 +370,7 @@ namespace EVEMon.Common
         /// <param name="scratchpad"></param>
         private void Reset(CharacterScratchpad scratchpad)
         {
-            SkillPoints = scratchpad.SkillPoints;
+            m_skillPoints = scratchpad.m_skillPoints;
             TrainingTime = scratchpad.TrainingTime;
 
             TrainedSkills.Clear();
@@ -408,18 +396,18 @@ namespace EVEMon.Common
             // Initialize attributes-related stuff
             for (int i = 0; i < m_attributes.Length; i++)
             {
-                ICharacterAttribute attrib = Character[(EveAttribute)i];
+                ICharacterAttribute attrib = m_character[(EveAttribute)i];
                 m_attributes[i].Reset(attrib.Base, attrib.ImplantBonus);
             }
 
             // Initialize skills
-            SkillPoints = 0;
+            m_skillPoints = 0;
             foreach (StaticSkill skill in StaticSkills.AllSkills)
             {
-                int sp = Character.GetSkillPoints(skill);
-                int level = Character.GetSkillLevel(skill);
+                int sp = m_character.GetSkillPoints(skill);
+                int level = m_character.GetSkillLevel(skill);
 
-                SkillPoints += sp;
+                m_skillPoints += sp;
                 m_skillSP[skill.ArrayIndex] = sp;
                 m_skillLevels[skill.ArrayIndex] = level;
             }

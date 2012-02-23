@@ -25,7 +25,7 @@ namespace EVEMon.Common.Controls
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
-                                               Int32 cx, Int32 cy, uint uFlags);
+                                                Int32 cx, Int32 cy, uint uFlags);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -74,6 +74,101 @@ namespace EVEMon.Common.Controls
             BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
                    src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
+
+
+        #region Graphic Text Character Spacing
+
+        /// <summary>
+        /// Sets the text character spacing.
+        /// </summary>
+        /// <param name="g">The g.</param>
+        /// <param name="spacing">The spacing.</param>
+        public static void SetTextCharacterSpacing(Graphics g, int spacing)
+        {
+            IntPtr hdc = g.GetHdc();
+            SetTextCharacterExtra(hdc, spacing);
+            g.ReleaseHdc();
+        }
+
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+        private static extern int SetTextCharacterExtra(IntPtr hdc, int nCharExtra);
+
+        #endregion
+
+
+        #region ListView ScrollBar positioning
+
+        /// <summary>
+        /// Gets the sroll bar position of the list view.
+        /// </summary>
+        /// <param name="control">The list view.</param>
+        /// <param name="direction">The scroll bar direction.</param>
+        /// <returns>The scroll bar position.</returns>
+        public static int GetScrollBarPosition(this ListView control, ScrollBarDirection direction)
+        {
+            Scrollinfo currentInfo = new Scrollinfo();
+            currentInfo.cbSize = Marshal.SizeOf(currentInfo);
+            currentInfo.fMask = (int)ScrollInfoMask.SIF_ALL;
+
+            GetScrollInfo(control.Handle, (int)direction, ref currentInfo);
+            return currentInfo.nPos;
+        }
+
+        /// <summary>
+        /// Sets the scroll bar position of the list view.
+        /// </summary>
+        /// <param name="control">The ist view.</param>
+        /// <param name="position">The scroll bar position.</param>
+        public static void SetScrollBarPosition(this ListView control, int position)
+        {
+            SendMessage(new HandleRef(null, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero,
+                        (IntPtr)position);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct Scrollinfo
+        {
+            public int cbSize;
+            public uint fMask;
+            public int nMin;
+            public int nMax;
+            public uint nPage;
+            public int nPos;
+            public int nTrackPos;
+        }
+
+        public enum ScrollBarDirection
+        {
+            SB_HORZ = 0,
+            SB_VERT = 1,
+            SB_CTL = 2,
+            SB_BOTH = 3
+        }
+
+        [Flags]
+        private enum ScrollInfoMask
+        {
+            SIF_RANGE = 0x1,
+            SIF_PAGE = 0x2,
+            SIF_POS = 0x4,
+            SIF_DISABLENOSCROLL = 0x8,
+            SIF_TRACKPOS = 0x10,
+            SIF_ALL = SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS
+        }
+
+        private enum ListViewMessages
+        {
+            LVM_FIRST = 0x1000,
+            LVM_SCROLL = (LVM_FIRST + 20)
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern int GetScrollInfo(IntPtr hwnd, int fnBar, ref Scrollinfo lpsi);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        private static extern IntPtr SendMessage(HandleRef hwnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        #endregion
 
 
         #region Tray Icon

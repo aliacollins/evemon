@@ -65,7 +65,7 @@ namespace EVEMon.Controls
                 CleanUp();
 
                 // Updates the visibility of the label for when no characters are loaded
-                bool noCharacters = EveMonClient.MonitoredCharacters.IsEmpty();
+                bool noCharacters = !EveMonClient.MonitoredCharacters.Any();
 
                 labelNoCharacters.Visible = noCharacters;
 
@@ -110,7 +110,7 @@ namespace EVEMon.Controls
         /// </summary>
         private void CleanUp()
         {
-            List<Control> itemsToRemove = Controls.Cast<Control>().Where(item => item != labelNoCharacters).ToList();
+            IEnumerable<Control> itemsToRemove = Controls.Cast<Control>().Where(item => item != labelNoCharacters);
 
             // Compile a list of items to remove, if we remove them
             // within the loop one object will be leaked every time
