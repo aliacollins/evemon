@@ -78,8 +78,19 @@ namespace EVEMon.Controls
         {
             if (plan == null)
                 throw new ArgumentNullException("plan");
+            
+            ExportPlan(plan, (Character)plan.Character);
+        }
 
-            Character character = (Character)plan.Character;
+        /// <summary>
+        /// Displays the plan exportation window and then exports it.
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <param name="character"></param>
+        public static void ExportPlan(Plan plan, Character character)
+        {
+            if (plan == null)
+                throw new ArgumentNullException("plan");
 
             // Assemble an initial filename and remove prohibited characters
             string planSaveName = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", character.Name, plan.Name);

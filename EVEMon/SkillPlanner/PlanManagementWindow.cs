@@ -393,7 +393,7 @@ namespace EVEMon.SkillPlanner
                 // Prompt the user for the new plan's name
                 using (NewPlanWindow f = new NewPlanWindow())
                 {
-                    f.PlanName = m_character.Name + "-" + plan.Name;
+                    f.PlanName = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_character.Name, plan.Name);
                     f.Text = "Save Plan As";
 
                     dr = f.ShowDialog();
@@ -410,7 +410,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Edit > Export Plan...
+        /// File > Export Plan...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -421,6 +421,30 @@ namespace EVEMon.SkillPlanner
 
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             UIHelper.ExportPlan(plan);
+        }
+
+        /// <summary>
+        /// File > Export Character Skills as Plan...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miExportCharacterSkillsAsPlan_Click(object sender, EventArgs e)
+        {
+            // Create a character without any skill
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
+            scratchpad.ClearSkills();
+
+            // Create a new plan
+            Plan plan = new Plan(scratchpad);
+            plan.Name = "Skills Plan";
+
+            // Add all trained skill levels that the character has trained so far
+            foreach (Skill skill in m_character.Skills.Where(skill => skill.IsKnown))
+            {
+                plan.PlanTo(skill, skill.Level);
+            }
+
+            UIHelper.ExportPlan(plan, m_character);
         }
 
         /// <summary>

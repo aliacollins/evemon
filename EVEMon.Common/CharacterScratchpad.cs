@@ -232,7 +232,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs the given training. Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training.
+        /// Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="training"></param>
         public void Train(ISkillLevel training)
@@ -254,7 +255,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Changes the level of the provided skill, updating the results
+        /// Changes the level of the provided skill, updating the results.
         /// </summary>
         /// <param name="skill">The skill.</param>
         /// <param name="level">The level.</param>
@@ -321,7 +322,7 @@ namespace EVEMon.Common
         #region Cloning, reseting, temporary changes
 
         /// <summary>
-        /// Clear all the skills
+        /// Clear all the skills.
         /// </summary>
         public void ClearSkills()
         {
@@ -345,7 +346,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Returns a clone of this scratchpad
+        /// Returns a clone of this scratchpad.
         /// </summary>
         /// <returns></returns>
         public CharacterScratchpad Clone()
