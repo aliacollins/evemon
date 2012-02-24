@@ -535,9 +535,10 @@ namespace EVEMon.SkillPlanner
                                                  : new CharacterScratchpad(Character);
 
             TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
+            int entriesCount = m_plan.Count;
 
-            UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(m_plan.Count, totalTime);
+            UpdateSkillStatusLabel(false, entriesCount, m_plan.UniqueSkillsCount);
+            UpdateTimeStatusLabel(entriesCount, totalTime);
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
         }
 

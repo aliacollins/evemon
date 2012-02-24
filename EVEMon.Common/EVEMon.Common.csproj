@@ -244,6 +244,7 @@
     <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
     <Compile Include="Notifications\NotificationPriority.cs" />
     <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs" />
+    <Compile Include="PlanEntryComparer.cs" />
     <Compile Include="PlanPrinter.cs" />
     <Compile Include="RemappingResult.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
