@@ -528,7 +528,6 @@ namespace EVEMon
         private void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateControlsOnTabSelectionChange();
-            UIHelper.CharacterMonitorScreenshot = GetCurrentMonitor().GetCharacterScreenshot();
         }
 
         /// <summary>
@@ -1262,6 +1261,7 @@ namespace EVEMon
             if (character == null)
                 return;
 
+            UIHelper.CharacterMonitorScreenshot = GetCurrentMonitor().GetCharacterScreenshot();
             UIHelper.ExportCharacter(character);
         }
 
