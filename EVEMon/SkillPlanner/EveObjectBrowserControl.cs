@@ -207,9 +207,6 @@ namespace EVEMon.SkillPlanner
                 // View help message
                 lblHelp.Visible = true;
 
-                // Listview
-                PropertiesList.Items.Clear();
-
                 // Done
                 return;
             }
@@ -239,6 +236,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePropertiesList()
         {
+            int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
+
             PropertiesList.BeginUpdate();
             try
             {
@@ -263,6 +262,7 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 PropertiesList.EndUpdate();
+                PropertiesList.SetVerticalScrollBarPosition(scrollBarPosition);
             }
         }
 

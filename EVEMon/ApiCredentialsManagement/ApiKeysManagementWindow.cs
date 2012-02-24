@@ -316,7 +316,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         private void UpdateCharactersListContent()
         {
-            int position = charactersListView.GetScrollBarPosition(NativeMethods.ScrollBarDirection.SB_VERT);
+            int position = charactersListView.GetVerticalScrollBarPosition();
 
             charactersListView.BeginUpdate();
             try
@@ -398,7 +398,7 @@ namespace EVEMon.ApiCredentialsManagement
             finally
             {
                 charactersListView.EndUpdate();
-                charactersListView.SetScrollBarPosition(position);
+                charactersListView.SetVerticalScrollBarPosition(position);
             }
 
             // Forces a refresh of the enabled/disabled items

@@ -102,24 +102,23 @@ namespace EVEMon.Common.Controls
         /// Gets the sroll bar position of the list view.
         /// </summary>
         /// <param name="control">The list view.</param>
-        /// <param name="direction">The scroll bar direction.</param>
         /// <returns>The scroll bar position.</returns>
-        public static int GetScrollBarPosition(this ListView control, ScrollBarDirection direction)
+        public static int GetVerticalScrollBarPosition(this ListView control)
         {
             Scrollinfo currentInfo = new Scrollinfo();
             currentInfo.cbSize = Marshal.SizeOf(currentInfo);
             currentInfo.fMask = (int)ScrollInfoMask.SIF_ALL;
 
-            GetScrollInfo(control.Handle, (int)direction, ref currentInfo);
+            GetScrollInfo(control.Handle, (int)NativeMethods.ScrollBarDirection.SB_VERT, ref currentInfo);
             return currentInfo.nPos;
         }
 
         /// <summary>
         /// Sets the scroll bar position of the list view.
         /// </summary>
-        /// <param name="control">The ist view.</param>
+        /// <param name="control">The list view.</param>
         /// <param name="position">The scroll bar position.</param>
-        public static void SetScrollBarPosition(this ListView control, int position)
+        public static void SetVerticalScrollBarPosition(this ListView control, int position)
         {
             SendMessage(new HandleRef(null, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero,
                         (IntPtr)position);
