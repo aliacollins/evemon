@@ -164,6 +164,12 @@
     <Compile Include="Controls\Throbber.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\TipWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TipWindow.Designer.cs">
+      <DependentUpon>TipWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TrayIcon.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -774,6 +780,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\PrintOptionsDialog.resx">
       <DependentUpon>PrintOptionsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TipWindow.resx">
+      <DependentUpon>TipWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TrayIcon.resx">

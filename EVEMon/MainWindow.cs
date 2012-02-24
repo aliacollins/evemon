@@ -26,7 +26,6 @@ using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
-using EVEMon.Controls;
 using EVEMon.ImplantControls;
 using EVEMon.LogitechG15;
 using EVEMon.NotificationWindow;

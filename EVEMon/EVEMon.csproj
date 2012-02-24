@@ -723,12 +723,6 @@
     <Compile Include="NotificationWindow\TimeCheckNotification.Designer.cs">
       <DependentUpon>TimeCheckNotification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TipWindow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\TipWindow.Designer.cs">
-      <DependentUpon>TipWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUI\TrayPopupWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -914,10 +908,6 @@
     <EmbeddedResource Include="NotificationWindow\TimeCheckNotification.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TimeCheckNotification.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TipWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>TipWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\TrayPopupWindow.resx">
       <DependentUpon>TrayPopupWindow.cs</DependentUpon>

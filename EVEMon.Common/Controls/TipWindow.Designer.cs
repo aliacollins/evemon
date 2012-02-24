@@ -1,4 +1,4 @@
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     sealed partial class TipWindow
     {

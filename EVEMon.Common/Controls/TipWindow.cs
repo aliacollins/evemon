@@ -1,9 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using EVEMon.Common;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common.Controls
 {
     public sealed partial class TipWindow : UserControl
     {
@@ -33,11 +32,6 @@ namespace EVEMon.Controls
             m_key = key;
             cbDontShowAgain.Visible = checkboxVisible;
         }
-
-        /// <summary>
-        /// Gets true if the tip window is shown.
-        /// </summary>
-        internal static bool IsShown { get; private set; }
 
         /// <summary>
         /// Handles the Click event of the btnOk control.
@@ -89,7 +83,6 @@ namespace EVEMon.Controls
                 tipWindow.Anchor = AnchorStyles.Top | AnchorStyles.Right;
                 tipWindow.BringToFront();
                 tipWindow.Show();
-                IsShown = true;
 
                 Settings.Save();
             }
