@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharactersComparisonWindow));
             this.persistentSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
             this.lvCharacterList = new System.Windows.Forms.ListView();
             this.chCharacters = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -39,12 +41,18 @@
             this.chAttribute = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCharacter = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lblHelp = new System.Windows.Forms.Label();
+            this.characterInfoContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.characterListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportCharacterSkillsAsPlanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
             this.persistentSplitContainer.Panel1.SuspendLayout();
             this.persistentSplitContainer.Panel2.SuspendLayout();
             this.persistentSplitContainer.SuspendLayout();
             this.filterPanel.SuspendLayout();
             this.gbAttributes.SuspendLayout();
+            this.characterInfoContextMenu.SuspendLayout();
+            this.characterListContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // persistentSplitContainer
@@ -87,6 +95,7 @@
             this.lvCharacterList.UseCompatibleStateImageBehavior = false;
             this.lvCharacterList.View = System.Windows.Forms.View.Details;
             this.lvCharacterList.SelectedIndexChanged += new System.EventHandler(this.lvCharacterList_SelectedIndexChanged);
+            this.lvCharacterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCharacterList_MouseClick);
             // 
             // chCharacters
             // 
@@ -153,6 +162,7 @@
             this.lvCharacterInfo.TabIndex = 0;
             this.lvCharacterInfo.UseCompatibleStateImageBehavior = false;
             this.lvCharacterInfo.View = System.Windows.Forms.View.Details;
+            this.lvCharacterInfo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCharacterInfo_MouseClick);
             // 
             // chAttribute
             // 
@@ -178,6 +188,36 @@
     "n the CTRL key and click the characters you wish to compare.\r\nYou may compare se" +
     "veral characters at once.";
             // 
+            // characterInfoContextMenu
+            // 
+            this.characterInfoContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem});
+            this.characterInfoContextMenu.Name = "characterInfoContextMenu";
+            this.characterInfoContextMenu.Size = new System.Drawing.Size(262, 48);
+            this.characterInfoContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.characterInfoContextMenu_Opening);
+            // 
+            // exportSelectedSkillsAsPlanFromToolStripMenuItem
+            // 
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem.Name = "exportSelectedSkillsAsPlanFromToolStripMenuItem";
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem.Text = "Export Selected Skills as Plan from...";
+            this.exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked);
+            // 
+            // characterListContextMenu
+            // 
+            this.characterListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportCharacterSkillsAsPlanToolStripMenuItem});
+            this.characterListContextMenu.Name = "characterListContextMenu";
+            this.characterListContextMenu.Size = new System.Drawing.Size(240, 26);
+            this.characterListContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.characterListContextMenu_ItemClicked);
+            // 
+            // exportCharacterSkillsAsPlanToolStripMenuItem
+            // 
+            this.exportCharacterSkillsAsPlanToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exportCharacterSkillsAsPlanToolStripMenuItem.Image")));
+            this.exportCharacterSkillsAsPlanToolStripMenuItem.Name = "exportCharacterSkillsAsPlanToolStripMenuItem";
+            this.exportCharacterSkillsAsPlanToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.exportCharacterSkillsAsPlanToolStripMenuItem.Text = "Export Character Skills as Plan...";
+            // 
             // CharactersComparisonWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,6 +236,8 @@
             this.filterPanel.ResumeLayout(false);
             this.filterPanel.PerformLayout();
             this.gbAttributes.ResumeLayout(false);
+            this.characterInfoContextMenu.ResumeLayout(false);
+            this.characterListContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -213,5 +255,9 @@
         private System.Windows.Forms.ColumnHeader chCharacter;
         private System.Windows.Forms.Label lblHelp;
         private System.Windows.Forms.ColumnHeader chCharacters;
+        private System.Windows.Forms.ContextMenuStrip characterListContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportCharacterSkillsAsPlanToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip characterInfoContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportSelectedSkillsAsPlanFromToolStripMenuItem;
     }
 }

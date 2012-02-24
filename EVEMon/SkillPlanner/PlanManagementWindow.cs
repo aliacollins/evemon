@@ -429,21 +429,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miExportCharacterSkillsAsPlan_Click(object sender, EventArgs e)
         {
-            // Create a character without any skill
-            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
-            scratchpad.ClearSkills();
-
-            // Create a new plan
-            Plan plan = new Plan(scratchpad);
-            plan.Name = "Skills Plan";
-
-            // Add all trained skill levels that the character has trained so far
-            foreach (Skill skill in m_character.Skills.Where(skill => skill.IsKnown))
-            {
-                plan.PlanTo(skill, skill.Level);
-            }
-
-            UIHelper.ExportPlan(plan, m_character);
+            UIHelper.ExportCharacterSkillsAsPlan(m_character);
         }
 
         /// <summary>

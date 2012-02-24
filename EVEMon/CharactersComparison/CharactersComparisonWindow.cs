@@ -110,6 +110,8 @@ namespace EVEMon.CharactersComparison
         /// </summary>
         private void UpdateCharacterInfo()
         {
+            int scrollBarPosition = lvCharacterInfo.GetVerticalScrollBarPosition();
+
             lvCharacterInfo.BeginUpdate();
             try
             {
@@ -135,6 +137,7 @@ namespace EVEMon.CharactersComparison
             finally
             {
                 lvCharacterInfo.EndUpdate();
+                lvCharacterInfo.SetVerticalScrollBarPosition(scrollBarPosition);
             }
         }
 
@@ -378,5 +381,76 @@ namespace EVEMon.CharactersComparison
 
         #endregion
 
+        /// <summary>
+        /// Handles the MouseClick event of the lvCharacterList control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvCharacterList_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                return;
+
+            ListViewItem item = lvCharacterList.GetItemAt(e.X, e.Y);
+            if (item == null)
+                return;
+
+            characterListContextMenu.Items[0].Tag = item.Tag;
+            characterListContextMenu.Show(lvCharacterList, e.X, e.Y);
+        }
+
+        /// <summary>
+        /// Handles the ItemClicked event of the characterListContextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
+        private void characterListContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            Character character = e.ClickedItem.Tag as Character;
+            characterListContextMenu.Close();
+
+            if (character != null)
+                UIHelper.ExportCharacterSkillsAsPlan(character);
+        }
+
+        private void lvCharacterInfo_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left || lvCharacterInfo.SelectedItems.Count == 0 ||
+                lvCharacterInfo.SelectedItems.Cast<ListViewItem>().Any(item => item.Group.Header == "Miscellaneous"))
+            {
+                return;
+            }
+
+            characterInfoContextMenu.Show(lvCharacterInfo, e.X, e.Y);
+        }
+
+        private void characterInfoContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItems.Clear();
+
+
+            foreach (Character character in lvCharacterList.SelectedItems.Cast<ListViewItem>().Select(
+                item => item.Tag).Cast<Character>())
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem(character.Name);
+                exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItems.Add(item);
+                item.Tag = character;
+            }
+        }
+
+        private void exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            Character character = e.ClickedItem.Tag as Character;
+            characterInfoContextMenu.Close();
+
+            if (character == null)
+                return;
+
+            IEnumerable<Skill> skills = lvCharacterInfo.SelectedItems.Cast<ListViewItem>().SelectMany(
+                item => character.Skills.Where(skill => skill.Name == item.Text && skill.Level != 0));
+
+            if (skills.Any())
+                UIHelper.ExportCharacterSkillsAsPlan(character, skills);
+        }
     }
 }

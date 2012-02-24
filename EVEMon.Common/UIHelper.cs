@@ -81,11 +81,37 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Exports the character's selected skills as plan.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="selectedSkills">The selected skills.</param>
+        public static void ExportCharacterSkillsAsPlan(Character character, IEnumerable<Skill> selectedSkills = null)
+        {
+            // Create a character without any skill
+            CharacterScratchpad scratchpad = new CharacterScratchpad(character);
+            scratchpad.ClearSkills();
+
+            // Create a new plan
+            Plan plan = new Plan(scratchpad);
+            plan.Name = "Skills Plan";
+
+            IEnumerable<Skill> skills = selectedSkills ?? character.Skills.Where(skill => skill.IsKnown);
+
+            // Add all trained skill levels that the character has trained so far
+            foreach (Skill skill in skills)
+            {
+                plan.PlanTo(skill, skill.Level);
+            }
+
+            ExportPlan(plan, character);
+        }
+
+        /// <summary>
         /// Displays the plan exportation window and then exports it.
         /// </summary>
         /// <param name="plan"></param>
         /// <param name="character"></param>
-        public static void ExportPlan(Plan plan, Character character)
+        private static void ExportPlan(Plan plan, Character character)
         {
             if (plan == null)
                 throw new ArgumentNullException("plan");
