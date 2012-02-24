@@ -7,7 +7,6 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.Settings;
-using EVEMon.Controls;
 using SortOrder = EVEMon.Common.SortOrder;
 
 namespace EVEMon.SkillPlanner

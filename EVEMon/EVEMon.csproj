@@ -193,7 +193,6 @@
     <Compile Include="NotificationWindow\ContractsWindow.Designer.cs">
       <DependentUpon>ContractsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="CharacterMonitoring\EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>

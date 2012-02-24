@@ -342,6 +342,7 @@
     <Compile Include="Data\StaticSkillExtensions.cs" />
     <Compile Include="APIKey.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="UIHelper.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />

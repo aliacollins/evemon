@@ -7,19 +7,17 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.CharacterMonitoring;
-using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Controls
+namespace EVEMon.Common
 {
     /// <summary>
     /// Saves a couple of repetitive tasks.
     /// </summary>
     public static class UIHelper
     {
-        public static CharacterMonitor CurrentMonitor { get; set; }
+        public static Bitmap CharacterMonitorScreenshot { private get; set; }
 
         /// <summary>
         /// Saves the plans to a file.
@@ -280,8 +278,7 @@ namespace EVEMon.Controls
                             {
                                 if (format == CharacterSaveFormat.PNG)
                                 {
-                                    CharacterMonitor monitor = CurrentMonitor;
-                                    Bitmap bmp = monitor.GetCharacterScreenshot();
+                                    Bitmap bmp = CharacterMonitorScreenshot;// monitor.GetCharacterScreenshot();
                                     bmp.Save(fs, ImageFormat.Png);
                                     return true;
                                 }

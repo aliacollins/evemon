@@ -529,7 +529,7 @@ namespace EVEMon
         private void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateControlsOnTabSelectionChange();
-            UIHelper.CurrentMonitor = GetCurrentMonitor();
+            UIHelper.CharacterMonitorScreenshot = GetCurrentMonitor().GetCharacterScreenshot();
         }
 
         /// <summary>
