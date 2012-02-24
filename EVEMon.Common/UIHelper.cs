@@ -95,7 +95,7 @@ namespace EVEMon.Common
             Plan plan = new Plan(scratchpad);
             plan.Name = "Skills Plan";
 
-            IEnumerable<Skill> skills = selectedSkills ?? character.Skills.Where(skill => skill.IsKnown);
+            IEnumerable<Skill> skills = selectedSkills ?? character.Skills.Where(skill => skill.IsPublic);
 
             // Add all trained skill levels that the character has trained so far
             foreach (Skill skill in skills)

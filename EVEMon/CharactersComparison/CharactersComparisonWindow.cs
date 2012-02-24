@@ -379,8 +379,6 @@ namespace EVEMon.CharactersComparison
                 UpdateSelectedItems();
         }
 
-        #endregion
-
         /// <summary>
         /// Handles the MouseClick event of the lvCharacterList control.
         /// </summary>
@@ -413,6 +411,11 @@ namespace EVEMon.CharactersComparison
                 UIHelper.ExportCharacterSkillsAsPlan(character);
         }
 
+        /// <summary>
+        /// Handles the MouseClick event of the lvCharacterInfo control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lvCharacterInfo_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left || lvCharacterInfo.SelectedItems.Count == 0 ||
@@ -424,6 +427,11 @@ namespace EVEMon.CharactersComparison
             characterInfoContextMenu.Show(lvCharacterInfo, e.X, e.Y);
         }
 
+        /// <summary>
+        /// Handles the Opening event of the characterInfoContextMenu control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void characterInfoContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             exportSelectedSkillsAsPlanFromToolStripMenuItem.DropDownItems.Clear();
@@ -438,6 +446,11 @@ namespace EVEMon.CharactersComparison
             }
         }
 
+        /// <summary>
+        /// Handles the DropDownItemClicked event of the exportSelectedSkillsAsPlanFromToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
         private void exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             Character character = e.ClickedItem.Tag as Character;
@@ -452,5 +465,7 @@ namespace EVEMon.CharactersComparison
             if (skills.Any())
                 UIHelper.ExportCharacterSkillsAsPlan(character, skills);
         }
+
+        #endregion
     }
 }
