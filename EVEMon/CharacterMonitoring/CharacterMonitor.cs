@@ -838,25 +838,18 @@ namespace EVEMon.CharacterMonitoring
         /// <returns>Screenshot of a character.</returns>
         internal Bitmap GetCharacterScreenshot()
         {
-            int cachedHeight = skillsList.Height;
-            int preferredHeight = skillsList.PreferredSize.Height;
-
+            skillsList.Height = skillsList.PreferredSize.Height;
             skillsList.Dock = DockStyle.None;
-            skillsList.Height = preferredHeight;
-            skillsList.Update();
 
             Bitmap bitmap;
-            using (Bitmap tempBitmap = new Bitmap(skillsList.Width, preferredHeight))
+            using (Bitmap tempBitmap = new Bitmap(skillsList.Width, skillsList.Height))
             {
-                skillsList.DrawToBitmap(tempBitmap, new Rectangle(0, 0, skillsList.Width, preferredHeight));
+                skillsList.DrawToBitmap(tempBitmap, new Rectangle(0, 0, skillsList.Width, skillsList.Height));
                 bitmap = (Bitmap)tempBitmap.Clone();
             }
 
             skillsList.Dock = DockStyle.Fill;
-            skillsList.Height = cachedHeight;
-            skillsList.Update();
 
-            Invalidate();
             return bitmap;
         }
 
