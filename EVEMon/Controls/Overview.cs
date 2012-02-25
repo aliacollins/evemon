@@ -30,7 +30,6 @@ namespace EVEMon.Controls
                 return;
 
             DoubleBuffered = true;
-            //AutoScroll = true;
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
@@ -137,15 +136,13 @@ namespace EVEMon.Controls
 
             const int Pad = 20;
 
-            // Store the scroll bar position
+            // Store and reset the scroll bar position
             int scrollBarPosition = VerticalScroll.Value;
+            VerticalScroll.Value = 0;
 
             SuspendLayout();
             try
             {
-                // Reset the scroll bar position
-                VerticalScroll.Value = 0;
-
                 // Retrieve the item width (should be the same for all controls) and compute the item and row width
                 OverviewItem firstItem = Controls.OfType<OverviewItem>().First();
                 int itemWidth = firstItem.PreferredSize.Width;
