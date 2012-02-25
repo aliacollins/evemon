@@ -83,7 +83,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Constructor used in-code
+        /// Constructor used in-code.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="portraitSize"></param>
@@ -460,6 +460,7 @@ namespace EVEMon.Controls
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            DoubleBuffered = true;
             UpdateContent();
 
             base.OnLoad(e);
@@ -562,14 +563,7 @@ namespace EVEMon.Controls
             bool showPortrait = (m_showPortrait && !Settings.UI.SafeForWork);
             int portraitSize = m_portraitSize;
 
-            // Retrieve margin
-            int margin = 10;
-            if (portraitSize <= 48)
-                margin = 1;
-            else if (portraitSize <= 64)
-                margin = 3;
-            else if (portraitSize <= 80)
-                margin = 6;
+            const int Pad = 10;
 
             // Label height
             int labelHeight = 18;
@@ -582,7 +576,7 @@ namespace EVEMon.Controls
             // Label width
             int labelWidth = 0;
             if (!tooltip)
-                labelWidth = 215;
+                labelWidth = 250;
 
             // Big font size
             float bigFontSize = 11.25f;
@@ -602,19 +596,17 @@ namespace EVEMon.Controls
                 verticalMargin = 0;
 
             // Adjust portrait
-            pbCharacterPortrait.Location = new Point(margin, margin);
+            pbCharacterPortrait.Location = new Point(Pad, Pad);
             pbCharacterPortrait.Size = new Size(portraitSize, portraitSize);
             pbCharacterPortrait.Visible = showPortrait;
 
             // Adjust the top labels
-            int top = margin - 2;
-            int left = (showPortrait ? portraitSize + margin * 2 : margin);
-            const int RightPad = 10;
+            int top = Pad - 2;
+            int left = (showPortrait ? portraitSize + Pad * 2 : Pad);
 
             lblCharName.Font = FontFactory.GetFont(lblCharName.Font.FontFamily, bigFontSize, lblCharName.Font.Style);
             lblCharName.Location = new Point(left, top);
-            if (lblCharName.PreferredWidth + RightPad > labelWidth)
-                labelWidth = lblCharName.PreferredWidth + RightPad;
+            labelWidth = Math.Max(labelWidth, lblCharName.PreferredWidth);
             labelHeight = Math.Max(labelHeight, lblCharName.Font.Height);
             lblCharName.Size = new Size(labelWidth, labelHeight);
             top += labelHeight;
@@ -623,8 +615,7 @@ namespace EVEMon.Controls
             {
                 lblBalance.Font = FontFactory.GetFont(lblBalance.Font.FontFamily, mediumFontSize, lblBalance.Font.Style);
                 lblBalance.Location = new Point(left, top);
-                if (lblBalance.PreferredWidth + RightPad > labelWidth)
-                    labelWidth = lblBalance.PreferredWidth + RightPad;
+                labelWidth = Math.Max(labelWidth, lblBalance.PreferredWidth);
                 labelHeight = Math.Max(labelHeight, lblBalance.Font.Height);
                 lblBalance.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
@@ -638,8 +629,7 @@ namespace EVEMon.Controls
                 lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize,
                                                             lblRemainingTime.Font.Style);
                 lblRemainingTime.Location = new Point(left, top);
-                if (lblRemainingTime.PreferredWidth + RightPad > labelWidth)
-                    labelWidth = lblRemainingTime.PreferredWidth + RightPad;
+                labelWidth = Math.Max(labelWidth, lblRemainingTime.PreferredWidth);
                 labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
                 lblRemainingTime.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
@@ -648,8 +638,7 @@ namespace EVEMon.Controls
             if (lblSkillInTraining.Visible)
             {
                 lblSkillInTraining.Location = new Point(left, top);
-                if (lblSkillInTraining.PreferredWidth + RightPad > labelWidth)
-                    labelWidth = lblSkillInTraining.PreferredWidth + RightPad;
+                labelWidth = Math.Max(labelWidth, lblSkillInTraining.PreferredWidth);
                 smallLabelHeight = Math.Max(smallLabelHeight, lblSkillInTraining.Font.Height);
                 lblSkillInTraining.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
@@ -658,8 +647,7 @@ namespace EVEMon.Controls
             if (lblCompletionTime.Visible)
             {
                 lblCompletionTime.Location = new Point(left, top);
-                if (lblCompletionTime.PreferredWidth + RightPad > labelWidth)
-                    labelWidth = lblCompletionTime.PreferredWidth + RightPad;
+                labelWidth = Math.Max(labelWidth, lblCompletionTime.PreferredWidth);
                 smallLabelHeight = Math.Max(smallLabelHeight, lblCompletionTime.Font.Height);
                 lblCompletionTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
@@ -668,16 +656,15 @@ namespace EVEMon.Controls
             if (lblSkillQueueTrainingTime.Visible)
             {
                 lblSkillQueueTrainingTime.Location = new Point(left, top);
-                if (lblSkillQueueTrainingTime.PreferredWidth + RightPad > labelWidth)
-                    labelWidth = lblSkillQueueTrainingTime.PreferredWidth + RightPad;
+                labelWidth = Math.Max(labelWidth, lblSkillQueueTrainingTime.PreferredWidth);
                 smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueTrainingTime.Font.Height);
                 lblSkillQueueTrainingTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
 
-            Height = (pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin);
+            Height = (pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * Pad, top + Pad) : top + Pad);
 
-            Width = left + labelWidth + margin;
+            Width = left + labelWidth + Pad;
             m_preferredHeight = Height;
             m_preferredWidth = Width;
         }

@@ -12,7 +12,7 @@ namespace EVEMon.Controls
         public event EventHandler<CharacterChangedEventArgs> CharacterClicked;
 
         /// <summary>
-        /// Default constructor
+        /// Default constructor.
         /// </summary>
         public Overview()
         {
@@ -20,7 +20,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// On load, update the controls
+        /// On load, update the controls.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
@@ -30,7 +30,7 @@ namespace EVEMon.Controls
                 return;
 
             DoubleBuffered = true;
-            AutoScroll = true;
+            //AutoScroll = true;
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
@@ -55,7 +55,7 @@ namespace EVEMon.Controls
         #region Content creation and layout
 
         /// <summary>
-        /// Updates the characters' list with the provided monitors
+        /// Updates the characters' list with the provided monitors.
         /// </summary>
         private void UpdateContent()
         {
@@ -106,18 +106,12 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Cleans up the existing controls
+        /// Cleans up the existing controls.
         /// </summary>
         private void CleanUp()
         {
-            IEnumerable<Control> itemsToRemove = Controls.Cast<Control>().Where(item => item != labelNoCharacters);
-
-            // Compile a list of items to remove, if we remove them
-            // within the loop one object will be leaked every time
-            // we call this method
-
-            // Dispose every one of the control to prevent timer's execution
-            foreach (Control item in itemsToRemove)
+            // Dispose every one of the control to prevent event triggering
+            foreach (OverviewItem item in Controls.OfType<OverviewItem>())
             {
                 item.Click -= item_Click;
                 item.Dispose();
@@ -129,27 +123,29 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Updates the number of rows and columns
+        /// Updates the number of rows and columns.
         /// </summary>
         /// <remarks>
         /// Cannot use a tableLayoutPanel in the end : too slow, too buggy.
         /// </remarks>
         private void PerformCustomLayout()
         {
+            // Check there is at least one control
+            int numControls = Controls.OfType<OverviewItem>().Count();
+            if (numControls == 0)
+                return;
+
             const int Pad = 20;
+
+            // Store and reset the scroll bar position
+            int scrollBarPosition = VerticalScroll.Value;
+            VerticalScroll.Value = 0;
+
             SuspendLayout();
             try
             {
-                // Check there is at least one control
-                int numControls = Controls.Count - 1;
-                if (numControls <= 0)
-                    return;
-
-                // Reset the scroll bar position
-                VerticalScroll.Value = 0;
-
                 // Retrieve the item width (should be the same for all controls) and compute the item and row width
-                OverviewItem firstItem = (OverviewItem)Controls[1];
+                OverviewItem firstItem = Controls.OfType<OverviewItem>().First();
                 int itemWidth = firstItem.PreferredSize.Width;
 
                 // Computes the number of columns and rows we need
@@ -157,22 +153,20 @@ namespace EVEMon.Controls
 
                 // Computes the horizontal margin
                 int neededWidth = numColumns * (itemWidth + Pad) - Pad;
-                int marginH = Math.Max(0, (ClientSize.Width - neededWidth) >> 1);
+                int marginH = Math.Max(0, (ClientSize.Width - neededWidth) / 2);
 
                 // Measure the total height
-                int index = 0;
                 int rowIndex = 0;
                 int rowHeight = 0;
                 int height = 0;
-                foreach (Control ctl in Controls.Cast<Control>().Where(ctl => ctl != labelNoCharacters))
+                foreach (OverviewItem control in Controls.OfType<OverviewItem>())
                 {
                     // Add the item to the row
-                    rowHeight = Math.Max(rowHeight, ctl.PreferredSize.Height);
+                    rowHeight = Math.Max(rowHeight, control.PreferredSize.Height);
                     rowIndex++;
-                    index++;
 
                     // Skip if row not complete yet
-                    if (rowIndex != numColumns && index != Controls.Count)
+                    if (rowIndex != numColumns)
                         continue;
 
                     height += rowHeight + Pad;
@@ -182,23 +176,22 @@ namespace EVEMon.Controls
 
                 // Computes the vertical margin
                 height -= Pad;
-                int marginV = Math.Max(0, (ClientSize.Height - height) / 3); // We puts 1/3 at the top, 2/3 at the bottom
-
+                int marginV = Math.Max(0, (ClientSize.Height - height) / 3); // We put 1/3 at the top, 2/3 at the bottom
 
                 // Adjust the controls bounds
                 rowIndex = 0;
                 rowHeight = 0;
                 height = marginV;
-                foreach (Control ctl in Controls.Cast<Control>().Where(ctl => ctl != labelNoCharacters))
+                foreach (OverviewItem control in Controls.OfType<OverviewItem>())
                 {
                     // Set the control bound
-                    ctl.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, ctl.PreferredSize.Width,
-                                  ctl.PreferredSize.Height);
-                    rowHeight = Math.Max(rowHeight, ctl.PreferredSize.Height);
+                    control.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, control.PreferredSize.Width,
+                                      control.PreferredSize.Height);
+                    rowHeight = Math.Max(rowHeight, control.PreferredSize.Height);
                     rowIndex++;
 
                     // Skip if row not complete yet
-                    if (rowIndex != numColumns && index != Controls.Count)
+                    if (rowIndex != numColumns)
                         continue;
 
                     height += rowHeight + Pad;
@@ -209,6 +202,9 @@ namespace EVEMon.Controls
             finally
             {
                 ResumeLayout(true);
+
+                // Restore the scroll bar position
+                VerticalScroll.Value = scrollBarPosition;
             }
         }
 
@@ -228,7 +224,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Occur when the monitored characters collection changed. We update the layout
+        /// Occur when the monitored characters collection changed. We update the layout.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
