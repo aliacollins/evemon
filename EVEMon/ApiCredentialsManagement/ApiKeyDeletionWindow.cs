@@ -53,7 +53,7 @@ namespace EVEMon.ApiCredentialsManagement
                           {
                               Tag = id.CCPCharacter,
                               Checked = id.CCPCharacter != null &&
-                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != m_apiKey),
+                                        id.CCPCharacter.Identity.APIKeys.All(key => key == m_apiKey),
                           }))
             {
                 // Gray out a character with another associated API key

@@ -109,7 +109,7 @@ namespace EVEMon.Common.Controls
             currentInfo.cbSize = Marshal.SizeOf(currentInfo);
             currentInfo.fMask = (int)ScrollInfoMask.SIF_ALL;
 
-            GetScrollInfo(control.Handle, (int)NativeMethods.ScrollBarDirection.SB_VERT, ref currentInfo);
+            GetScrollInfo(control.Handle, (int)ScrollBarDirection.SB_VERT, ref currentInfo);
             return currentInfo.nPos;
         }
 

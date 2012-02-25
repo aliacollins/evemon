@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Properties;
-using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
@@ -118,12 +117,11 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
-            // When no character, we just clear the list
+            // When no character, we just hide the list
             if (Character == null)
             {
                 noSkillsLabel.Visible = true;
                 lbSkills.Visible = false;
-                lbSkills.Items.Clear();
                 return;
             }
 
@@ -133,11 +131,10 @@ namespace EVEMon.CharacterMonitoring
             {
                 IEnumerable<Skill> skills = GetCharacterSkills();
                 IOrderedEnumerable<IGrouping<SkillGroup, Skill>> groups =
-                    skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name);
+                    skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name);
 
-                Graphics g = CreateGraphics();
                 m_maxGroupNameWidth = (groups.Select(
-                    group => TextRenderer.MeasureText(g, group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
+                    group => TextRenderer.MeasureText(group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
                                                  groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
 
                 // Scroll through groups
@@ -150,15 +147,15 @@ namespace EVEMon.CharacterMonitoring
                     if (Character.UISettings.CollapsedGroups.Contains(group.Key.Name))
                         continue;
 
-                    foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
+                    foreach (Skill skill in group.OrderBy(x => x.Name))
                     {
                         lbSkills.Items.Add(skill);
                     }
                 }
 
                 // Display or hide the "no skills" label.
-                noSkillsLabel.Visible = skills.IsEmpty();
-                lbSkills.Visible = !skills.IsEmpty();
+                noSkillsLabel.Visible = !skills.Any();
+                lbSkills.Visible = skills.Any();
 
                 // Invalidate display
                 lbSkills.Invalidate();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -101,18 +100,17 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
-            // When no character, we just clear the list
+            // When no character, we just hide the list
             if (Character == null)
             {
                 noEmploymentHistoryLabel.Visible = true;
                 lbEmploymentHistory.Visible = false;
-                lbEmploymentHistory.Items.Clear();
                 return;
             }
 
             m_ccpCharacter = Character as CCPCharacter;
 
-            // If the character is not a CCPCharacter it does not have a skill queue
+            // If the character is not a CCPCharacter it does not have employment history
             if (m_ccpCharacter == null)
                 return;
 
@@ -120,19 +118,17 @@ namespace EVEMon.CharacterMonitoring
             lbEmploymentHistory.BeginUpdate();
             try
             {
-                IEnumerable<EmploymentRecord> employmentRecords = m_ccpCharacter.EmploymentHistory;
-
+                // Add items in the list
                 lbEmploymentHistory.Items.Clear();
-
-                foreach (EmploymentRecord employmentRecord in employmentRecords)
+                foreach (EmploymentRecord employmentRecord in m_ccpCharacter.EmploymentHistory)
                 {
                     employmentRecord.EmploymentRecordImageUpdated += record_EmploymentRecordImageUpdated;
                     lbEmploymentHistory.Items.Add(employmentRecord);
                 }
 
                 // Display or hide the "no skills" label.
-                noEmploymentHistoryLabel.Visible = employmentRecords.IsEmpty();
-                lbEmploymentHistory.Visible = !employmentRecords.IsEmpty();
+                noEmploymentHistoryLabel.Visible = !m_ccpCharacter.EmploymentHistory.Any();
+                lbEmploymentHistory.Visible = m_ccpCharacter.EmploymentHistory.Any();
 
                 // Invalidate display
                 lbEmploymentHistory.Invalidate();

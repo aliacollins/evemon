@@ -8,7 +8,6 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Properties;
-using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
@@ -115,12 +114,11 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
-            // When no character, we just clear the list
+            // When no character, we just hide the list
             if (Character == null)
             {
                 noSkillsQueueLabel.Visible = true;
                 lbSkillsQueue.Visible = false;
-                lbSkillsQueue.Items.Clear();
                 return;
             }
 
@@ -142,8 +140,8 @@ namespace EVEMon.CharacterMonitoring
                 }
 
                 // Display or hide the "no queue skills" label.
-                noSkillsQueueLabel.Visible = m_ccpCharacter.SkillQueue.IsEmpty();
-                lbSkillsQueue.Visible = !m_ccpCharacter.SkillQueue.IsEmpty();
+                noSkillsQueueLabel.Visible = !m_ccpCharacter.SkillQueue.Any();
+                lbSkillsQueue.Visible = m_ccpCharacter.SkillQueue.Any();
 
                 // Invalidate display
                 lbSkillsQueue.Invalidate();

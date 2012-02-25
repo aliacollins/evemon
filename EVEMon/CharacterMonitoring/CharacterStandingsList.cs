@@ -98,18 +98,17 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
-            // When no character, we just clear the list
+            // When no character, we just hide the list
             if (Character == null)
             {
                 noStandingsLabel.Visible = true;
                 lbStandings.Visible = false;
-                lbStandings.Items.Clear();
                 return;
             }
 
             m_ccpCharacter = Character as CCPCharacter;
 
-            // If the character is not a CCPCharacter it does not have a skill queue
+            // If the character is not a CCPCharacter it does not have standings
             if (m_ccpCharacter == null)
                 return;
 
@@ -119,7 +118,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 IEnumerable<Standing> standings = m_ccpCharacter.Standings;
                 IEnumerable<IGrouping<string, Standing>> groups = standings.GroupBy(
-                    x => x.Group).ToArray().Reverse();
+                    x => x.Group).Reverse();
 
                 // Scroll through groups
                 lbStandings.Items.Clear();
@@ -131,7 +130,7 @@ namespace EVEMon.CharacterMonitoring
                     if (m_collapsedGroups.Contains(group.Key))
                         continue;
 
-                    foreach (Standing standing in group.ToArray().OrderByDescending(x => x.EffectiveStanding))
+                    foreach (Standing standing in group.OrderByDescending(x => x.EffectiveStanding))
                     {
                         standing.StandingImageUpdated += standing_StandingImageUpdated;
                         lbStandings.Items.Add(standing);
@@ -139,8 +138,8 @@ namespace EVEMon.CharacterMonitoring
                 }
 
                 // Display or hide the "no skills" label.
-                noStandingsLabel.Visible = standings.IsEmpty();
-                lbStandings.Visible = !standings.IsEmpty();
+                noStandingsLabel.Visible = !standings.Any();
+                lbStandings.Visible = standings.Any();
 
                 // Invalidate display
                 lbStandings.Invalidate();
