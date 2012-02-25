@@ -120,8 +120,7 @@ namespace EVEMon.Common.Controls
         /// <param name="position">The scroll bar position.</param>
         public static void SetVerticalScrollBarPosition(this ListView control, int position)
         {
-            SendMessage(new HandleRef(null, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero,
-                        (IntPtr)position);
+            SendMessage(new HandleRef(null, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero, (IntPtr)position);
         }
 
         [StructLayout(LayoutKind.Sequential)]
