@@ -107,6 +107,7 @@ namespace EVEMon.SkillPlanner
             this.lvItemProperties.ContextMenuStrip = this.ItemAttributeContextMenu;
             this.lvItemProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvItemProperties.FullRowSelect = true;
+            this.lvItemProperties.HideSelection = false;
             this.lvItemProperties.Location = new System.Drawing.Point(3, 16);
             this.lvItemProperties.Name = "lvItemProperties";
             this.lvItemProperties.Size = new System.Drawing.Size(232, 324);

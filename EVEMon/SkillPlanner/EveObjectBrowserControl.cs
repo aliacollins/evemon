@@ -238,6 +238,11 @@ namespace EVEMon.SkillPlanner
         {
             int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
 
+            // Store the selected item (if any) to restore it after the update
+            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+                                    ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
+                                    : 0);
+
             PropertiesList.BeginUpdate();
             try
             {
@@ -258,6 +263,16 @@ namespace EVEMon.SkillPlanner
 
                 if (PropertiesList.Items.Count > 0)
                     AdjustColumns();
+
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
+                    {
+                        lvItem.Selected = true;
+                    }
+                }
             }
             finally
             {
@@ -346,7 +361,7 @@ namespace EVEMon.SkillPlanner
             float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name };
+            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name, Tag = prop.ID};
             items.Add(item);
 
             AddValueForSelectedObjects(prop, item, labels, values);
@@ -412,7 +427,7 @@ namespace EVEMon.SkillPlanner
             string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) { ToolTipText = "The slot that this item fits in", Text = "Fitting Slot" };
+            ListViewItem item = new ListViewItem(group) { ToolTipText = "The slot that this item fits in", Text = "Fitting Slot", Tag = Text};
             items.Add(item);
 
             // Add the value for every selected item
@@ -499,7 +514,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Create the list view item
-                ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name };
+                ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name, Tag = item.ID };
                 items.Add(lvItem);
 
                 AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
@@ -535,6 +550,7 @@ namespace EVEMon.SkillPlanner
             {
                 item.ToolTipText = property.Description;
                 item.Text = property.Name;
+                item.Tag = property.ID;
             }
 
             items.Add(item);

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
@@ -289,6 +290,12 @@ namespace EVEMon.SkillPlanner
         private void UpdateRequiredMaterialsList()
         {
             int productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
+            int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
+
+            // Store the selected item (if any) to restore it after the update
+            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+                                    ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
+                                    : 0);
 
             PropertiesList.BeginUpdate();
             try
@@ -314,8 +321,8 @@ namespace EVEMon.SkillPlanner
                     // Create the groups
                     ListViewGroup group = new ListViewGroup(marketGroup.CategoryPath);
                     bool hasItem = false;
-                    foreach (StaticRequiredMaterial material in m_blueprint.MaterialRequirements
-                        .Where(x => x.Activity == m_activity && marketGroup.Items.Any(y => y.ID == x.ID)))
+                    foreach (StaticRequiredMaterial material in m_blueprint.MaterialRequirements.Where(
+                        x => x.Activity == m_activity && marketGroup.Items.Any(y => y.ID == x.ID)))
                     {
                         hasItem = true;
 
@@ -415,10 +422,21 @@ namespace EVEMon.SkillPlanner
 
                 if (PropertiesList.Items.Count > 0)
                     AdjustColumns();
+
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
+                    {
+                        lvItem.Selected = true;
+                    }
+                }
             }
             finally
             {
                 PropertiesList.EndUpdate();
+                PropertiesList.SetVerticalScrollBarPosition(scrollBarPosition);
             }
         }
 

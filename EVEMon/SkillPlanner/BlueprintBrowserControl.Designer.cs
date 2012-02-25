@@ -258,6 +258,8 @@ namespace EVEMon.SkillPlanner
             this.chDamagePerRun});
             this.lvManufacturing.ContextMenuStrip = this.ActivityContextMenu;
             this.lvManufacturing.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvManufacturing.FullRowSelect = true;
+            this.lvManufacturing.HideSelection = false;
             this.lvManufacturing.Location = new System.Drawing.Point(3, 16);
             this.lvManufacturing.MultiSelect = false;
             this.lvManufacturing.Name = "lvManufacturing";
