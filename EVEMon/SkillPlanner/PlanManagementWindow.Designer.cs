@@ -62,13 +62,13 @@ namespace EVEMon.SkillPlanner
             this.miImportPlanFromCharacter = new System.Windows.Forms.ToolStripMenuItem();
             this.miExportPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportExportPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.miExportCharacterSkillsAsPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExportCharAsPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.miRestorePlans = new System.Windows.Forms.ToolStripMenuItem();
             this.miSavePlans = new System.Windows.Forms.ToolStripMenuItem();
             this.mEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miRenameEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExportCharAsPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.miExportCharacterSkillsAsPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.contextMenu.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -168,14 +168,14 @@ namespace EVEMon.SkillPlanner
             this.cmiRenameEdit,
             this.cmiDelete});
             this.contextMenu.Name = "contextMenuStrip1";
-            this.contextMenu.Size = new System.Drawing.Size(153, 120);
+            this.contextMenu.Size = new System.Drawing.Size(127, 98);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // cmiOpen
             // 
             this.cmiOpen.Image = ((System.Drawing.Image)(resources.GetObject("cmiOpen.Image")));
             this.cmiOpen.Name = "cmiOpen";
-            this.cmiOpen.Size = new System.Drawing.Size(152, 22);
+            this.cmiOpen.Size = new System.Drawing.Size(126, 22);
             this.cmiOpen.Text = "Open...";
             this.cmiOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
@@ -183,20 +183,20 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmiExport.Image = ((System.Drawing.Image)(resources.GetObject("cmiExport.Image")));
             this.cmiExport.Name = "cmiExport";
-            this.cmiExport.Size = new System.Drawing.Size(152, 22);
+            this.cmiExport.Size = new System.Drawing.Size(126, 22);
             this.cmiExport.Text = "Export...";
             this.cmiExport.Click += new System.EventHandler(this.miExportPlan_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(123, 6);
             // 
             // cmiRenameEdit
             // 
             this.cmiRenameEdit.Image = ((System.Drawing.Image)(resources.GetObject("cmiRenameEdit.Image")));
             this.cmiRenameEdit.Name = "cmiRenameEdit";
-            this.cmiRenameEdit.Size = new System.Drawing.Size(152, 22);
+            this.cmiRenameEdit.Size = new System.Drawing.Size(126, 22);
             this.cmiRenameEdit.Text = "Rename...";
             this.cmiRenameEdit.Click += new System.EventHandler(this.miRenameEdit_Click);
             // 
@@ -204,7 +204,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmiDelete.Image = ((System.Drawing.Image)(resources.GetObject("cmiDelete.Image")));
             this.cmiDelete.Name = "cmiDelete";
-            this.cmiDelete.Size = new System.Drawing.Size(152, 22);
+            this.cmiDelete.Size = new System.Drawing.Size(126, 22);
             this.cmiDelete.Text = "Delete";
             this.cmiDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
@@ -318,8 +318,8 @@ namespace EVEMon.SkillPlanner
             this.NewPlanToolStripSeparator,
             this.miImportPlanFromFile,
             this.miImportPlanFromCharacter,
-            this.miExportPlan,
             this.ImportExportPlanToolStripSeparator,
+            this.miExportPlan,
             this.miExportCharacterSkillsAsPlan,
             this.ExportCharAsPlanToolStripSeparator,
             this.miRestorePlans,
@@ -371,6 +371,19 @@ namespace EVEMon.SkillPlanner
             this.ImportExportPlanToolStripSeparator.Name = "ImportExportPlanToolStripSeparator";
             this.ImportExportPlanToolStripSeparator.Size = new System.Drawing.Size(236, 6);
             // 
+            // miExportCharacterSkillsAsPlan
+            // 
+            this.miExportCharacterSkillsAsPlan.Image = ((System.Drawing.Image)(resources.GetObject("miExportCharacterSkillsAsPlan.Image")));
+            this.miExportCharacterSkillsAsPlan.Name = "miExportCharacterSkillsAsPlan";
+            this.miExportCharacterSkillsAsPlan.Size = new System.Drawing.Size(239, 22);
+            this.miExportCharacterSkillsAsPlan.Text = "Export Character &Skills as Plan...";
+            this.miExportCharacterSkillsAsPlan.Click += new System.EventHandler(this.miExportCharacterSkillsAsPlan_Click);
+            // 
+            // ExportCharAsPlanToolStripSeparator
+            // 
+            this.ExportCharAsPlanToolStripSeparator.Name = "ExportCharAsPlanToolStripSeparator";
+            this.ExportCharAsPlanToolStripSeparator.Size = new System.Drawing.Size(236, 6);
+            // 
             // miRestorePlans
             // 
             this.miRestorePlans.Image = ((System.Drawing.Image)(resources.GetObject("miRestorePlans.Image")));
@@ -414,19 +427,6 @@ namespace EVEMon.SkillPlanner
             this.miDelete.Size = new System.Drawing.Size(145, 22);
             this.miDelete.Text = "&Delete";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
-            // 
-            // ExportCharAsPlanToolStripSeparator
-            // 
-            this.ExportCharAsPlanToolStripSeparator.Name = "ExportCharAsPlanToolStripSeparator";
-            this.ExportCharAsPlanToolStripSeparator.Size = new System.Drawing.Size(236, 6);
-            // 
-            // miExportCharacterSkillsAsPlan
-            // 
-            this.miExportCharacterSkillsAsPlan.Image = ((System.Drawing.Image)(resources.GetObject("miExportCharacterSkillsAsPlan.Image")));
-            this.miExportCharacterSkillsAsPlan.Name = "miExportCharacterSkillsAsPlan";
-            this.miExportCharacterSkillsAsPlan.Size = new System.Drawing.Size(239, 22);
-            this.miExportCharacterSkillsAsPlan.Text = "Export Character &Skills as Plan...";
-            this.miExportCharacterSkillsAsPlan.Click += new System.EventHandler(this.miExportCharacterSkillsAsPlan_Click);
             // 
             // PlanManagementWindow
             // 
