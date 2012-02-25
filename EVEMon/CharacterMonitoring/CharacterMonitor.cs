@@ -197,7 +197,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 // Hides or shows the warning about a character with no API key
-                warningLabel.Visible = (m_character.Identity.APIKeys.IsEmpty());
+                warningLabel.Visible = !m_character.Identity.APIKeys.Any();
 
                 // Update the training controls
                 UpdateTrainingControls();
@@ -448,30 +448,30 @@ namespace EVEMon.CharacterMonitoring
 
             // Enables / Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)
-                toolStripContextual.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
+                toolStripContextual.Enabled = ccpCharacter.MarketOrders.Any();
 
             // Enables / Disables the contracts page related controls
             if (multiPanel.SelectedPage == contractsPage)
-                toolStripContextual.Enabled = !ccpCharacter.Contracts.IsEmpty();
+                toolStripContextual.Enabled = ccpCharacter.Contracts.Any();
 
             // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
-                toolStripContextual.Enabled = !ccpCharacter.IndustryJobs.IsEmpty();
+                toolStripContextual.Enabled = ccpCharacter.IndustryJobs.Any();
 
             // Enables / Disables the research points page related controls
             if (multiPanel.SelectedPage == researchPage)
             {
-                toolStripContextual.Enabled = !ccpCharacter.ResearchPoints.IsEmpty();
+                toolStripContextual.Enabled = ccpCharacter.ResearchPoints.Any();
                 groupMenu.Visible = false;
             }
 
             // Enables / Disables the EVE mail messages page related controls
             if (multiPanel.SelectedPage == mailMessagesPage)
-                toolStripContextual.Enabled = !ccpCharacter.EVEMailMessages.IsEmpty();
+                toolStripContextual.Enabled = ccpCharacter.EVEMailMessages.Any();
 
             // Enables / Disables the EVE notifications page related controls
             if (multiPanel.SelectedPage == eveNotificationsPage)
-                toolStripContextual.Enabled = !ccpCharacter.EVENotifications.IsEmpty();
+                toolStripContextual.Enabled = ccpCharacter.EVENotifications.Any();
         }
 
         /// <summary>
@@ -488,7 +488,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 List<IQueryMonitor> monitors = ButtonToMonitors(button).ToList();
 
-                if (monitors.IsEmpty())
+                if (!monitors.Any())
                     continue;
 
                 foreach (IQueryMonitor monitor in monitors)

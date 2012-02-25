@@ -312,7 +312,7 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = false;
 
             // Nothing to display ?
-            if (skills.IsEmpty())
+            if (!skills.Any())
             {
                 lbNoMatches.Visible = true;
                 SelectedSkill = null;

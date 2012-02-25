@@ -339,7 +339,7 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = false;
 
             // Nothing to display ?
-            if (classes.IsEmpty())
+            if (!classes.Any())
             {
                 lbNoMatches.Visible = true;
                 UpdateSelection(null);

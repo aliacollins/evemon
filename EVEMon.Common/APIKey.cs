@@ -507,7 +507,7 @@ namespace EVEMon.Common
             message = String.Empty;
 
             IEnumerable<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == APIKeyType.Account &&
-                                                                                      !x.CharacterIdentities.IsEmpty() &&
+                                                                                      x.CharacterIdentities.Any() &&
                                                                                       !x.HasCharacterInTraining);
 
             // All accounts are training ?

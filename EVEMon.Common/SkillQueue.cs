@@ -42,10 +42,7 @@ namespace EVEMon.Common
         {
             get
             {
-                if (IsPaused)
-                    return false;
-
-                return Items.Count != 0;
+                return !IsPaused && Items.Any();
             }
         }
 
@@ -59,7 +56,7 @@ namespace EVEMon.Common
         /// </summary>
         public DateTime EndTime
         {
-            get { return Items.IsEmpty() ? DateTime.UtcNow : Items[Items.Count - 1].EndTime; }
+            get { return !Items.Any() ? DateTime.UtcNow : Items.Last().EndTime; }
         }
 
         /// <summary>
@@ -67,7 +64,7 @@ namespace EVEMon.Common
         /// </summary>
         public QueuedSkill CurrentlyTraining
         {
-            get { return Items.Count == 0 ? null : Items[0]; }
+            get { return Items.FirstOrDefault(); }
         }
 
         /// <summary>

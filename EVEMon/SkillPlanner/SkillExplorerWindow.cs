@@ -268,8 +268,8 @@ namespace EVEMon.SkillPlanner
                     // Gets the enabled skills and check it's not empty
                     List<Skill> enabledSkills = m_skill.Character.Skills.Where(
                         x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToList();
-                    
-                    if (enabledSkills.IsEmpty())
+
+                    if (!enabledSkills.Any())
                         continue;
 
                     // Add a node for this skill level
@@ -364,7 +364,7 @@ namespace EVEMon.SkillPlanner
                     // Gets the enabled objects and check it's not empty
                     IEnumerable<Item> enabledObjects =
                         items.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData && y.Level == i));
-                    if (enabledObjects.IsEmpty())
+                    if (!enabledObjects.Any())
                         continue;
 
                     // Add a node for this skill level
@@ -489,7 +489,7 @@ namespace EVEMon.SkillPlanner
             foreach (BlueprintMarketGroup category in blueprintMarketGroup.SubGroups)
             {
                 IEnumerable<TreeNode> children = CreateMarketGroupsNode(category, blueprints, level);
-                if (children.IsEmpty())
+                if (!children.Any())
                     continue;
 
                 TreeNode node = new TreeNode(category.Name);
@@ -526,7 +526,7 @@ namespace EVEMon.SkillPlanner
             foreach (MarketGroup category in marketGroup.SubGroups)
             {
                 IEnumerable<TreeNode> children = CreateMarketGroupsNode(category, items);
-                if (children.IsEmpty())
+                if (!children.Any())
                     continue;
 
                 TreeNode node = new TreeNode(category.Name);

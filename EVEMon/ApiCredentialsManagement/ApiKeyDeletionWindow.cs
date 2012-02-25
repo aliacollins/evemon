@@ -108,7 +108,7 @@ namespace EVEMon.ApiCredentialsManagement
             foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
                 item => item.Checked).Select(item => item.Tag as CCPCharacter).Where(
                     ccpCharacter => ccpCharacter != null).Where(
-                        ccpCharacter => ccpCharacter.Identity.APIKeys.IsEmpty()))
+                        ccpCharacter => !ccpCharacter.Identity.APIKeys.Any()))
             {
                 EveMonClient.Characters.Remove(ccpCharacter);
             }

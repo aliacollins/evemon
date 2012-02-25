@@ -150,7 +150,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             apiKeysListBox.APIKeys = EveMonClient.APIKeys;
-            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.IsEmpty() ? noAPIKeysPage : apiKeysListPage);
+            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.Any() ? apiKeysListPage : noAPIKeysPage);
         }
 
         /// <summary>
@@ -345,9 +345,9 @@ namespace EVEMon.ApiCredentialsManagement
 
                     // Retrieve the texts for the different columns
                     IEnumerable<APIKey> apiKeys = character.Identity.APIKeys.OrderBy(apiKey => apiKey.ID);
-                    string apiKeyIDText = (apiKeys.IsEmpty()
-                                               ? String.Empty
-                                               : String.Join(", ", apiKeys.Select(apiKey => apiKey.ID)));
+                    string apiKeyIDText = apiKeys.Any()
+                                              ? String.Join(", ", apiKeys.Select(apiKey => apiKey.ID))
+                                              : String.Empty;
                     string typeText = "CCP";
                     string uriText = "-";
 
@@ -363,7 +363,7 @@ namespace EVEMon.ApiCredentialsManagement
                         // Grouping CCP characters
                     else if (isGrouping)
                     {
-                        if (apiKeys.IsEmpty())
+                        if (!apiKeys.Any())
                             item.Group = noAPIKeyGroup;
                         else
                         {
@@ -435,7 +435,7 @@ namespace EVEMon.ApiCredentialsManagement
                     // CCP character ?
                 else
                 {
-                    if (character.Identity.APIKeys.IsEmpty())
+                    if (!character.Identity.APIKeys.Any())
                         hasNoAPIKey = true;
                     else
                     {

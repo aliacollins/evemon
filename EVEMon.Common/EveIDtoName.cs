@@ -126,12 +126,12 @@ namespace EVEMon.Common
         /// </summary>
         private static void LookupForName()
         {
-            if (!s_cacheList.IsEmpty())
+            if (s_cacheList.Any())
                 QueryCacheList();
             else
                 s_listOfIDsToQuery = s_listOfIDs;
 
-            if (!s_listOfIDsToQuery.IsEmpty())
+            if (s_listOfIDsToQuery.Any())
                 QueryAPICharacterName();
 
             // In case the list is empty, add an "Unknown" entry

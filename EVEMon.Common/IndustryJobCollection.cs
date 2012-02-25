@@ -115,7 +115,7 @@ namespace EVEMon.Common
         private void UpdateOnTimerTick()
         {
             // We exit if there are no jobs
-            if (Items.IsEmpty())
+            if (!Items.Any())
                 return;
 
             // Add the not notified "Ready" jobs to the completed list
@@ -125,7 +125,7 @@ namespace EVEMon.Common
             jobsCompleted.ForEach(job => job.NotificationSend = true);
 
             // We exit if no jobs have been completed
-            if (jobsCompleted.IsEmpty())
+            if (!jobsCompleted.Any())
                 return;
 
             // Sends a notification

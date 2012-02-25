@@ -126,7 +126,7 @@ namespace EVEMon.Schedule
             lbEntries.Items.Clear();
             m_lbEntriesData.ForEach(x => lbEntries.Items.Add(x));
 
-            lbEntries.SelectedIndex = (m_lbEntriesData.IsEmpty() ? -1 : 0);
+            lbEntries.SelectedIndex = (m_lbEntriesData.Any() ? 0 : -1);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace EVEMon.Schedule
             Scheduler.Remove(entry);
 
             // When no entries left, clear the description label
-            if (m_lbEntriesData.IsEmpty())
+            if (!m_lbEntriesData.Any())
                 lbEntries_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
@@ -493,7 +493,7 @@ namespace EVEMon.Schedule
             Scheduler.ClearExpired();
 
             // When no entries left, clear the description label
-            if (m_lbEntriesData.IsEmpty())
+            if (!m_lbEntriesData.Any())
                 lbEntries_SelectedIndexChanged(null, EventArgs.Empty);
         }
 

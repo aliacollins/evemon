@@ -317,7 +317,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlanningControls()
         {
-            if (m_prerequisites.IsEmpty())
+            if (!m_prerequisites.Any())
                 return;
 
             // Are all the prerequisites trained ?

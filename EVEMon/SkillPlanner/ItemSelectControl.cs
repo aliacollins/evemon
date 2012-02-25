@@ -46,7 +46,7 @@ namespace EVEMon.SkillPlanner
             m_metaGroups.AddRange(EnumExtensions.GetBitValues<ItemMetaGroup>());
 
             // Set the preset groups
-            if (!StaticItems.MarketGroups.IsEmpty())
+            if (StaticItems.MarketGroups.Any())
             {
                 m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesMarketGroupID));
                 m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ImplantsAndBoostersMarketGroupID));

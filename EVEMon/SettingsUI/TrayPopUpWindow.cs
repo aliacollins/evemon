@@ -292,7 +292,7 @@ namespace EVEMon.SettingsUI
                     case TrayPopupGrouping.None:
                         return charactersList;
                     case TrayPopupGrouping.Account:
-                        newCharacters.AddRange(charactersList.Where(x => !x.Identity.APIKeys.IsEmpty()));
+                        newCharacters.AddRange(charactersList.Where(x => x.Identity.APIKeys.Any()));
                         return newCharacters.GroupBy(AccountAPIKeyOrDefault).SelectMany(y => y);
                     case TrayPopupGrouping.TrainingAtTop:
                         newCharacters.AddRange(charactersList.Where(x => x.IsTraining));

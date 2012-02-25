@@ -34,7 +34,7 @@ namespace EVEMon.NotificationWindow
                     return;
 
                 contractsList.UpdateColumns();
-                contractsList.Visibility = !contractsList.Contracts.IsEmpty();
+                contractsList.Visibility = contractsList.Contracts.Any();
             }
         }
 
@@ -53,7 +53,7 @@ namespace EVEMon.NotificationWindow
                     return;
 
                 contractsList.UpdateColumns();
-                contractsList.Visible = !contractsList.Contracts.IsEmpty();
+                contractsList.Visible = contractsList.Contracts.Any();
             }
         }
 
@@ -84,7 +84,7 @@ namespace EVEMon.NotificationWindow
                     return;
 
                 contractsList.UpdateColumns();
-                contractsList.Visibility = !contractsList.Contracts.IsEmpty();
+                contractsList.Visibility = contractsList.Contracts.Any();
             }
         }
     }

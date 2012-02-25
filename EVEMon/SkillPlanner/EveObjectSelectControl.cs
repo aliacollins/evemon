@@ -465,7 +465,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Item doesn't have prerequisites skills
-            if (prerequisites.IsEmpty())
+            if (!prerequisites.Any())
                 return true;
 
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
@@ -493,7 +493,7 @@ namespace EVEMon.SkillPlanner
                                       }).Select(y => y.level >= y.prereq.Level));
 
                     // Has the character trained all prereq skills for this activity ?
-                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x))
+                    if (!prerequisites.Any() || prereqTrained.All(x => x))
                         return true;
                 }
                 return false;

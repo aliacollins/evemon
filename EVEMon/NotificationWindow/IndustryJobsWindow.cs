@@ -34,7 +34,7 @@ namespace EVEMon.NotificationWindow
                     return;
 
                 jobsList.UpdateColumns();
-                jobsList.Visibility = !jobsList.Jobs.IsEmpty();
+                jobsList.Visibility = jobsList.Jobs.Any();
             }
         }
 
@@ -53,7 +53,7 @@ namespace EVEMon.NotificationWindow
                     return;
 
                 jobsList.UpdateColumns();
-                jobsList.Visible = !jobsList.Jobs.IsEmpty();
+                jobsList.Visible = jobsList.Jobs.Any();
             }
         }
 
@@ -84,7 +84,7 @@ namespace EVEMon.NotificationWindow
                     return;
 
                 jobsList.UpdateColumns();
-                jobsList.Visibility = !jobsList.Jobs.IsEmpty();
+                jobsList.Visibility = jobsList.Jobs.Any();
             }
         }
     }

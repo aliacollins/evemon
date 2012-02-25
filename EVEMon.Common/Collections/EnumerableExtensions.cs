@@ -5,16 +5,6 @@ namespace System.Linq
     public static class EnumerableExtensions
     {
         /// <summary>
-        /// Checks whether this enumerable is empty.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="src"></param>
-        public static bool IsEmpty<T>(this IEnumerable<T> src)
-        {
-            return !src.Any();
-        }
-
-        /// <summary>
         /// Uses an insertion sort algorithm to perform a stable sort (keep the initial order of the keys with equal values).
         /// </summary>
         /// <typeparam name="T"></typeparam>

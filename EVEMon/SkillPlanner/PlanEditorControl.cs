@@ -1655,7 +1655,7 @@ namespace EVEMon.SkillPlanner
         private void miChangeNote_Click(object sender, EventArgs e)
         {
             IEnumerable<PlanEntry> entries = SelectedEntries;
-            if (entries.IsEmpty())
+            if (!entries.Any())
                 return;
 
             // We get the current skill's note and call the note editor window with this initial value
@@ -1689,7 +1689,7 @@ namespace EVEMon.SkillPlanner
         private void miCopyToNewPlan_Click(object sender, EventArgs e)
         {
             IEnumerable<PlanEntry> entries = SelectedEntries;
-            if (entries.IsEmpty())
+            if (!entries.Any())
                 return;
 
             // Ask the user for a new name
