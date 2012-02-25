@@ -255,7 +255,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Prepare properties list
-                List<ListViewItem> items = AddPropertyGroups();
+                IEnumerable<ListViewItem> items = AddPropertyGroups();
 
                 // Fetch the new items to the list view
                 PropertiesList.Items.Clear();
@@ -285,7 +285,7 @@ namespace EVEMon.SkillPlanner
         /// Adds the property groups.
         /// </summary>
         /// <returns></returns>
-        private List<ListViewItem> AddPropertyGroups()
+        private IEnumerable<ListViewItem> AddPropertyGroups()
         {
             PropertiesList.Groups.Clear();
             List<ListViewItem> items = new List<ListViewItem>();

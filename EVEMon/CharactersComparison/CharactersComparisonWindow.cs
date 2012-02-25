@@ -159,7 +159,7 @@ namespace EVEMon.CharactersComparison
                     items.Add(item);
 
                     string[] labels = m_selectedCharacters.Select(
-                        character => skill.ToCharacter(character).Level.ToString()).ToArray();
+                        character => skill.ToCharacter(character).Level.ToString(CultureConstants.DefaultCulture)).ToArray();
                     int[] values = m_selectedCharacters.Select(character => skill.ToCharacter(character).Level).ToArray();
 
                     // Retrieve the data to put in the columns

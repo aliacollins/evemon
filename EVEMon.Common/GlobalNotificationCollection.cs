@@ -1018,10 +1018,10 @@ namespace EVEMon.Common
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.ContractsAssigned)
                     {
-                        Description = String.Format("{0} assigned contract{1}.", assignedContracts,
-                                                    assignedContracts > 1
-                                                        ? "s"
-                                                        : String.Empty),
+                        Description = String.Format(CultureConstants.DefaultCulture, "{0} assigned contract{1}.",
+                                                    assignedContracts, assignedContracts > 1
+                                                                           ? "s"
+                                                                           : String.Empty),
                         Behaviour = NotificationBehaviour.Overwrite,
                         Priority = NotificationPriority.Information
                     };

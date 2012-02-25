@@ -10,7 +10,6 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
-using NativeMethods = EVEMon.Common.Controls.NativeMethods;
 
 namespace EVEMon.SettingsUI
 {

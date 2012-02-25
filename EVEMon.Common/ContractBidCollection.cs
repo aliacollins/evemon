@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
-    public sealed class ContractBidsCollection : ReadonlyCollection<ContractBid>
+    public sealed class ContractBidCollection : ReadonlyCollection<ContractBid>
     {
         private readonly CCPCharacter m_character;
 
@@ -16,7 +16,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        public ContractBidsCollection(CCPCharacter character)
+        public ContractBidCollection(CCPCharacter character)
         {
             m_character = character;
         }
@@ -30,7 +30,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of serializable objects.
         /// </summary>
         /// <param name="src">The source.</param>
-        public void Import(IEnumerable<SerializableContractBid> src)
+        internal void Import(IEnumerable<SerializableContractBid> src)
         {
             Items.Clear();
             foreach (SerializableContractBid srcContractBid in src)
@@ -43,7 +43,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The source.</param>
-        public void Import(IEnumerable<SerializableContractBidsListItem> src)
+        internal void Import(IEnumerable<SerializableContractBidsListItem> src)
         {
             // Add new bids to collection
             foreach (SerializableContractBidsListItem item in src)
@@ -65,7 +65,7 @@ namespace EVEMon.Common
         /// Exports the contract bids to a serialization object for the settings file.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<SerializableContractBid> Export()
+        internal IEnumerable<SerializableContractBid> Export()
         {
             return Items.Select(contractBid => contractBid.Export());
         }

@@ -190,7 +190,7 @@ namespace EVEMon.Common.ExternalCalendar
             string folderPath = System.IO.Path.Combine(RootFolderPath, path);
 
             foreach (Folder folder in folders.Cast<Folder>().Where(
-                folder => folder.FolderPath.StartsWith(RootFolderPath) && s_mapiFolder == null))
+                folder => folder.FolderPath.StartsWith(RootFolderPath, StringComparison.Ordinal) && s_mapiFolder == null))
             {
                 if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == folderPath)
                 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 

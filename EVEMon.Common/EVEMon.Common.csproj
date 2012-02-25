@@ -98,7 +98,7 @@
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractBid.cs" />
-    <Compile Include="ContractBidsCollection.cs" />
+    <Compile Include="ContractBidCollection.cs" />
     <Compile Include="ContractCollection.cs" />
     <Compile Include="ContractComparer.cs" />
     <Compile Include="ContractItem.cs" />

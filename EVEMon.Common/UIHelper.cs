@@ -17,7 +17,7 @@ namespace EVEMon.Common
     /// </summary>
     public static class UIHelper
     {
-        public static Bitmap CharacterMonitorScreenshot { private get; set; }
+        public static Bitmap CharacterMonitorScreenshot { get; set; }
 
         /// <summary>
         /// Saves the plans to a file.
@@ -87,6 +87,9 @@ namespace EVEMon.Common
         /// <param name="selectedSkills">The selected skills.</param>
         public static void ExportCharacterSkillsAsPlan(Character character, IEnumerable<Skill> selectedSkills = null)
         {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
             // Create a character without any skill
             CharacterScratchpad scratchpad = new CharacterScratchpad(character);
             scratchpad.ClearSkills();

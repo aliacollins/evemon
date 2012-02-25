@@ -27,18 +27,18 @@ namespace EVEMon.Common
         /// <summary>
         /// Returns a hash code for this entry.
         /// </summary>
-        /// <param name="entry">The entry.</param>
+        /// <param name="obj">The entry.</param>
         /// <returns>
         /// A hash code for this entry, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        public int GetHashCode(PlanEntry entry)
+        public int GetHashCode(PlanEntry obj)
         {
             // Check whether the entry is null
-            if (ReferenceEquals(entry, null))
+            if (ReferenceEquals(obj, null))
                 return 0;
 
             // Get hash code for the entry's skill, if it is not null
-            return entry.Skill == null ? 0 : entry.Skill.GetHashCode();
+            return obj.Skill == null ? 0 : obj.Skill.GetHashCode();
         }
 
     }

@@ -85,6 +85,9 @@ namespace EVEMon.Common.Controls
         /// <param name="spacing">The spacing.</param>
         public static void SetTextCharacterSpacing(Graphics g, int spacing)
         {
+            if (g == null)
+                throw new ArgumentNullException("g");
+
             IntPtr hdc = g.GetHdc();
             SetTextCharacterExtra(hdc, spacing);
             g.ReleaseHdc();
@@ -105,6 +108,9 @@ namespace EVEMon.Common.Controls
         /// <returns>The scroll bar position.</returns>
         public static int GetVerticalScrollBarPosition(this ListView control)
         {
+            if (control == null)
+                throw new ArgumentNullException("control");
+
             Scrollinfo currentInfo = new Scrollinfo();
             currentInfo.cbSize = Marshal.SizeOf(currentInfo);
             currentInfo.fMask = (int)ScrollInfoMask.SIF_ALL;
@@ -120,6 +126,9 @@ namespace EVEMon.Common.Controls
         /// <param name="position">The scroll bar position.</param>
         public static void SetVerticalScrollBarPosition(this ListView control, int position)
         {
+            if (control == null)
+                throw new ArgumentNullException("control");
+
             SendMessage(new HandleRef(null, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero, (IntPtr)position);
         }
 
@@ -135,7 +144,7 @@ namespace EVEMon.Common.Controls
             public int nTrackPos;
         }
 
-        public enum ScrollBarDirection
+        private enum ScrollBarDirection
         {
             SB_HORZ = 0,
             SB_VERT = 1,

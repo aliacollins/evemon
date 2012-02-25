@@ -44,8 +44,8 @@ namespace EVEMon.Common
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
             CorporationContracts = new ContractCollection(this);
-            CharacterContractBids = new ContractBidsCollection(this);
-            CorporationContractBids = new ContractBidsCollection(this);
+            CharacterContractBids = new ContractBidCollection(this);
+            CorporationContractBids = new ContractBidCollection(this);
             CharacterIndustryJobs = new IndustryJobCollection(this);
             CorporationIndustryJobs = new IndustryJobCollection(this);
             ResearchPoints = new ResearchPointCollection(this);
@@ -174,13 +174,13 @@ namespace EVEMon.Common
         /// Gets or sets the character contract bids.
         /// </summary>
         /// <value>The character contract bids.</value>
-        public ContractBidsCollection CharacterContractBids { get; private set; }
+        public ContractBidCollection CharacterContractBids { get; private set; }
 
         /// <summary>
         /// Gets or sets the corporation contract bids.
         /// </summary>
         /// <value>The character contract bids.</value>
-        public ContractBidsCollection CorporationContractBids { get; private set; }
+        public ContractBidCollection CorporationContractBids { get; private set; }
 
         /// <summary>
         /// Gets the collection of industry jobs.
