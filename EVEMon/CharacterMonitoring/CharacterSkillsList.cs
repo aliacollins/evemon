@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Properties;
 using EVEMon.SkillPlanner;
@@ -125,6 +126,8 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
+            int scrollBarPosition = lbSkills.TopIndex;
+
             // Update the skills list
             lbSkills.BeginUpdate();
             try
@@ -163,6 +166,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 lbSkills.EndUpdate();
+                lbSkills.TopIndex = scrollBarPosition;
             }
         }
 

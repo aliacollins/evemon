@@ -79,7 +79,9 @@ namespace EVEMon.ApiCredentialsManagement
             }
             m_pendingUpdate = false;
 
+            int scrollBarPosition = TopIndex;
             APIKey oldSelection = SelectedItem as APIKey;
+
             BeginUpdate();
             try
             {
@@ -94,6 +96,7 @@ namespace EVEMon.ApiCredentialsManagement
             finally
             {
                 EndUpdate();
+                TopIndex = scrollBarPosition;
             }
         }
 

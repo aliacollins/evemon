@@ -128,6 +128,8 @@ namespace EVEMon.CharacterMonitoring
             if (m_ccpCharacter == null)
                 return;
 
+            int scrollBarPosition = lbSkillsQueue.TopIndex;
+
             // Update the skills queue list
             lbSkillsQueue.BeginUpdate();
             try
@@ -149,6 +151,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 lbSkillsQueue.EndUpdate();
+                lbSkillsQueue.TopIndex = scrollBarPosition;
             }
         }
 

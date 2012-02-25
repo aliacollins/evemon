@@ -112,6 +112,8 @@ namespace EVEMon.CharacterMonitoring
             if (m_ccpCharacter == null)
                 return;
 
+            int scrollBarPosition = lbStandings.TopIndex;
+
             // Update the skills list
             lbStandings.BeginUpdate();
             try
@@ -147,6 +149,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 lbStandings.EndUpdate();
+                lbStandings.TopIndex = scrollBarPosition;
             }
         }
 
