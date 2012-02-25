@@ -811,6 +811,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
+            if (e.Character != Character)
+                return;
+
             UpdateContent();
         }
 

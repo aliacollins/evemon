@@ -16,6 +16,9 @@ namespace EVEMon.Common
         private readonly CCPCharacter m_character;
         private readonly DateTime m_startTime = DateTime.UtcNow;
 
+
+        #region Constructor
+
         /// <summary>
         /// Default constructor, only used by <see cref="Character"/>
         /// </summary>
@@ -27,18 +30,10 @@ namespace EVEMon.Common
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
-        /// <summary>
-        /// Handles the TimerTick event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            if (IsPaused || !m_character.Monitored)
-                return;
+        #endregion
 
-            UpdateOnTimerTick();
-        }
+
+        #region Properties
 
         /// <summary>
         /// Gets true when the character is currently training (non-empty and non-paused skill queue), false otherwise.
@@ -80,6 +75,11 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsPaused { get; private set; }
 
+        #endregion
+
+
+        #region Update
+
         /// <summary>
         /// When the timer ticks, on every second, we update the skill.
         /// </summary>
@@ -88,9 +88,9 @@ namespace EVEMon.Common
             List<QueuedSkill> skillsCompleted = new List<QueuedSkill>();
 
             // Pops all the completed skills
-            while (Items.Count != 0)
+            while (Items.Any())
             {
-                QueuedSkill skill = Items[0];
+                QueuedSkill skill = Items.First();
 
                 // If the skill is not completed, we jump out of the loop
                 if (skill.EndTime > DateTime.UtcNow)
@@ -102,7 +102,7 @@ namespace EVEMon.Common
 
                 skillsCompleted.Add(skill);
                 LastCompleted = skill;
-                Items.RemoveAt(0);
+                Items.Remove(skill);
 
                 // Sends an email alert
                 if (!Settings.IsRestoringSettings && Settings.Notifications.SendMailAlert)
@@ -113,9 +113,32 @@ namespace EVEMon.Common
             }
 
             // At least one skill completed ?
-            if (skillsCompleted.Count != 0)
+            if (skillsCompleted.Any())
                 EveMonClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
         }
+
+        #endregion
+
+
+        #region Global Event Handlers
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            if (IsPaused || !m_character.Monitored)
+                return;
+
+            UpdateOnTimerTick();
+        }
+
+        #endregion
+
+
+        #region Importation/Exportation
 
         /// <summary>
         /// Generates a deserialization object.
@@ -154,5 +177,7 @@ namespace EVEMon.Common
             // Fires the event regarding the character skill queue update
             EveMonClient.OnCharacterSkillQueueUpdated(m_character);
         }
+
+        #endregion
     }
 }
