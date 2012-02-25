@@ -312,6 +312,8 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
+            int scrollBarPosition = lvJobs.GetVerticalScrollBarPosition();
+
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (lvJobs.SelectedItems.Count > 0
                                     ? lvJobs.SelectedItems[0].Tag.GetHashCode()
@@ -361,6 +363,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 lvJobs.EndUpdate();
+                lvJobs.SetVerticalScrollBarPosition(scrollBarPosition);
             }
         }
 

@@ -270,6 +270,8 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
+            int scrollBarPosition = lvMailMessages.GetVerticalScrollBarPosition();
+
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (lvMailMessages.SelectedItems.Count > 0
                                     ? lvMailMessages.SelectedItems[0].Tag.GetHashCode()
@@ -307,6 +309,7 @@ namespace EVEMon.CharacterMonitoring
             finally
             {
                 lvMailMessages.EndUpdate();
+                lvMailMessages.SetVerticalScrollBarPosition(scrollBarPosition);
             }
         }
 
@@ -422,7 +425,7 @@ namespace EVEMon.CharacterMonitoring
                         continue;
 
                     ListViewItem item = new ListViewItem(eveMailMessage.Sender, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = eveMailMessage };
+                                            { UseItemStyleForSubItems = false, Tag = eveMailMessage.MessageID };
 
                     // Add enough subitems to match the number of columns
                     while (item.SubItems.Count < lvMailMessages.Columns.Count + 1)

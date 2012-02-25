@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
             float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name, Tag = prop.ID};
+            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name, Tag = prop};
             items.Add(item);
 
             AddValueForSelectedObjects(prop, item, labels, values);
@@ -514,7 +514,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Create the list view item
-                ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name, Tag = item.ID };
+                ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name, Tag = item };
                 items.Add(lvItem);
 
                 AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
