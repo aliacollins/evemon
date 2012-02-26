@@ -425,7 +425,7 @@ namespace EVEMon.CharacterMonitoring
                         continue;
 
                     ListViewItem item = new ListViewItem(eveMailMessage.Sender, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = eveMailMessage.MessageID };
+                                            { UseItemStyleForSubItems = false, Tag = eveMailMessage };
 
                     // Add enough subitems to match the number of columns
                     while (item.SubItems.Count < lvMailMessages.Columns.Count + 1)
