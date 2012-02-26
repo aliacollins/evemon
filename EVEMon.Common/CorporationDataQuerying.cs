@@ -100,7 +100,7 @@ namespace EVEMon.Common
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
             if (apiKey == null)
                 return;
 

@@ -238,6 +238,9 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
+            if (UpdateThrobber.State == ThrobberState.Rotating)
+                return;
+
             UpdateLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}",
                                              Math.Floor(timeLeft.TotalHours), timeLeft.Minutes, timeLeft.Seconds);
         }
