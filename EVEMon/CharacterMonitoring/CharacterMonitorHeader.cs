@@ -417,7 +417,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 tempMenu = new ToolStripMenuItem(menuText);
                 tempMenu.Tag = monitor.Method;
-                tempMenu.Enabled = monitor.CanForceUpdate && monitor.HasAccess;
+                tempMenu.Enabled = monitor.Enabled && monitor.HasAccess && monitor.CanForceUpdate;
 
                 menu = tempMenu;
                 tempMenu = null;
@@ -679,7 +679,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Enables / Disables the "query everything" menu item
-            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.All(x => x.CanForceUpdate);
+            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.Any(x => x.Enabled && x.HasAccess && x.CanForceUpdate);
 
             // Add a separator before monitor items if it doesn't exist already
             if (!ThrobberContextMenu.Items.Contains(ThrobberSeparator))
