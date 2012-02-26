@@ -22,8 +22,11 @@ namespace EVEMon.NotificationWindow
 
         private ContractItemsListView m_lvIncludedItems;
         private ContractItemsListView m_lvNotIncludedItems;
-        private IEnumerable<SolarSystem> m_route;
+        private IEnumerable<SolarSystem> m_characterLastLocationToStartRoute;
+        private IEnumerable<SolarSystem> m_characterLastLocationToEndRoute;
+        private IEnumerable<SolarSystem> m_startToEndRoute;
         private IEnumerable<SolarSystem> m_oldRoute;
+        private IEnumerable<SolarSystem> m_route;
         private Font m_smallFont;
         private Font m_boldFont;
         private Font m_mediumBoldFont;
@@ -143,6 +146,51 @@ namespace EVEMon.NotificationWindow
 
                 return String.Format(CultureConstants.DefaultCulture, "{0} - {1}",
                                      m_contract.Availability.GetDescription(), secondHalfText);
+            }
+        }
+
+        /// <summary>
+        /// Gets the start to end route.
+        /// </summary>
+        /// <value>The start to end route.</value>
+        private IEnumerable<SolarSystem> GetStartToEndRoute
+        {
+            get
+            {
+                return m_startToEndRoute ??
+                       (m_startToEndRoute =
+                        m_contract.StartStation.SolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                             PathSearchCriteria.FewerJumps));
+            }
+        }
+
+        /// <summary>
+        /// Gets the character last location to start route.
+        /// </summary>
+        /// <value>The character last location to start route.</value>
+        private IEnumerable<SolarSystem> GetCharacterLastLocationToStartRoute
+        {
+            get
+            {
+                return m_characterLastLocationToStartRoute ??
+                       (m_characterLastLocationToStartRoute =
+                        m_contract.Character.LastKnownSolarSystem.GetFastestPathTo(m_contract.StartStation.SolarSystem,
+                                                                             PathSearchCriteria.FewerJumps));
+            }
+        }
+
+        /// <summary>
+        /// Gets the character last location to end route.
+        /// </summary>
+        /// <value>The character last location to end route.</value>
+        private IEnumerable<SolarSystem> GetCharacterLastLocationToEndRoute
+        {
+            get
+            {
+                return m_characterLastLocationToEndRoute ??
+                       (m_characterLastLocationToEndRoute =
+                        m_contract.Character.LastKnownSolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                             PathSearchCriteria.FewerJumps));
             }
         }
 
@@ -401,7 +449,8 @@ namespace EVEMon.NotificationWindow
                                             : String.Format(CultureConstants.DefaultCulture, "({0}) ISK",
                                                             FormatHelper.Format(m_contract.Reward,
                                                                                 AbbreviationFormat.AbbreviationWords, false)));
-            int startToEndSystemJumps = GetNumberOfJumps(m_contract.StartStation.SolarSystem, m_contract.EndStation.SolarSystem);
+
+            int startToEndSystemJumps = GetStartToEndRoute.Count(system => system != m_contract.StartStation.SolarSystem);
             decimal iskPerJump = startToEndSystemJumps > 0 ? m_contract.Reward / startToEndSystemJumps : 0;
             string iskPerJumpText = iskPerJump > 0
                                         ? String.Format(CultureConstants.DefaultCulture, "({0} /  Jump)",
@@ -567,10 +616,11 @@ namespace EVEMon.NotificationWindow
             if (station is ConquerableStation)
                 DrawColoredText(e, "Station may be inaccesible!", Font, new Point(SecondIntendPosition, m_height), Color.DarkRed);
 
+            int startToEndSystemJumps;
             // Draw the "jumps from current location to contract's start solar system" info text
             if (m_contract.Character.LastKnownSolarSystem != null && station == m_contract.StartStation)
             {
-                int startToEndSystemJumps = GetNumberOfJumps(m_contract.Character.LastKnownSolarSystem, station.SolarSystem);
+                startToEndSystemJumps = GetCharacterLastLocationToStartRoute.Count(system => system != station.SolarSystem);
                 string jumpsText = m_contract.Character.LastKnownStation == station
                                        ? "Current Station"
                                        : startToEndSystemJumps == 0
@@ -594,7 +644,7 @@ namespace EVEMon.NotificationWindow
             if (m_contract.Character.LastKnownSolarSystem != null && m_contract.StartStation != m_contract.EndStation &&
                 station == m_contract.EndStation)
             {
-                int startToEndSystemJumps = GetNumberOfJumps(m_contract.Character.LastKnownSolarSystem, station.SolarSystem);
+                startToEndSystemJumps = GetCharacterLastLocationToEndRoute.Count(system => system != station.SolarSystem);
                 string jumpsText = m_contract.Character.LastKnownStation == station
                                        ? "Current Station"
                                        : startToEndSystemJumps == 0
@@ -621,7 +671,7 @@ namespace EVEMon.NotificationWindow
                  (m_contract.Character.LastKnownSolarSystem != null &&
                   m_contract.Character.LastKnownSolarSystem != m_contract.StartStation.SolarSystem)))
             {
-                int startToEndSystemJumps = GetNumberOfJumps(m_contract.StartStation.SolarSystem, station.SolarSystem);
+                startToEndSystemJumps = GetStartToEndRoute.Count(system => system != station.SolarSystem);
                 string jumpsText = startToEndSystemJumps == 0
                                        ? "Destination is within same solar system of start location"
                                        : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} from start location - ",
@@ -654,14 +704,14 @@ namespace EVEMon.NotificationWindow
 
             if (m_contract.Character.LastKnownSolarSystem != null && station == m_contract.StartStation)
             {
-                routeThroughNullSec = RouteThroughNullSec(m_contract.Character.LastKnownSolarSystem, station.SolarSystem);
-                routeThroughLowSec = RouteThroughLowSec(m_contract.Character.LastKnownSolarSystem, station.SolarSystem);
+                routeThroughNullSec = GetCharacterLastLocationToStartRoute.Any(system => system.IsNullSec);
+                routeThroughLowSec = GetCharacterLastLocationToStartRoute.Any(system => system.IsLowSec);
             }
 
             if (m_contract.StartStation != m_contract.EndStation && station == m_contract.EndStation)
             {
-                routeThroughNullSec = RouteThroughNullSec(m_contract.StartStation.SolarSystem, station.SolarSystem);
-                routeThroughLowSec = RouteThroughLowSec(m_contract.StartStation.SolarSystem, station.SolarSystem);
+                routeThroughNullSec = GetCharacterLastLocationToEndRoute.Any(system => system.IsNullSec);
+                routeThroughLowSec = GetCharacterLastLocationToEndRoute.Any(system => system.IsLowSec);
             }
 
             // Quit if path is through high sec only
@@ -850,16 +900,11 @@ namespace EVEMon.NotificationWindow
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
             m_height = Pad;
-            const string Message = "* Route is based on shortest\n  distance rather than fewer\n  gate jumps";
-            SizeF messageTextSize = g.MeasureString(Message, m_smallFont);
-            g.DrawString(Message, m_smallFont, Brushes.Black, Pad, m_height);
-            m_height = (int)Math.Ceiling(messageTextSize.Height) + Pad * 3;
-            int width = (int)Math.Ceiling(messageTextSize.Width);
 
             g.DrawString("Start Location:", Font, Brushes.Black, FirstIntendPosition, m_height);
             m_height += g.MeasureString("Start Location:", Font).ToSize().Height;
 
-            width = Math.Max(width, DrawSolarSystemText(e, m_route.First(), FirstIntendPosition + Pad));
+            int width = DrawSolarSystemText(e, m_route.First(), FirstIntendPosition + Pad);
             m_height += Pad * 2;
 
             width = m_route.Where(solarSystem => solarSystem != m_route.First() && solarSystem != m_route.Last()).Select(
@@ -883,7 +928,7 @@ namespace EVEMon.NotificationWindow
         /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
         /// <param name="solarSystem">The solar system.</param>
         /// <param name="left">The left.</param>
-        /// <returns></returns>
+        /// <returns>The width of the drawn text.</returns>
         private int DrawSolarSystemText(PaintEventArgs e, SolarSystem solarSystem, int left)
         {
             Graphics g = e.Graphics;
@@ -934,8 +979,7 @@ namespace EVEMon.NotificationWindow
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CurrentToStartLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            m_route = RoutePath(m_contract.Character.LastKnownSolarSystem,
-                                m_contract.StartStation.SolarSystem);
+            m_route = m_characterLastLocationToStartRoute;
             ShowRoutePanel();
         }
 
@@ -946,8 +990,7 @@ namespace EVEMon.NotificationWindow
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CurrentToEndLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            m_route = RoutePath(m_contract.Character.LastKnownSolarSystem,
-                                m_contract.EndStation.SolarSystem);
+            m_route = m_characterLastLocationToEndRoute;
             ShowRoutePanel();
         }
 
@@ -958,8 +1001,7 @@ namespace EVEMon.NotificationWindow
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void StartToEndLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            m_route = RoutePath(m_contract.StartStation.SolarSystem,
-                                m_contract.EndStation.SolarSystem);
+            m_route = GetStartToEndRoute;
             ShowRoutePanel();
         }
 
@@ -1026,50 +1068,6 @@ namespace EVEMon.NotificationWindow
         private static string GetNumberFormat(decimal number)
         {
             return (number - (long)number == 0) ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
-        }
-
-        /// <summary>
-        /// Gets the route path between two solar systems.
-        /// </summary>
-        /// <param name="startSystem">The start system.</param>
-        /// <param name="endSystem">The end system.</param>
-        /// <returns></returns>
-        private static IEnumerable<SolarSystem> RoutePath(SolarSystem startSystem, SolarSystem endSystem)
-        {
-            return startSystem.GetFastestPathTo(endSystem, -1);
-        }
-
-        /// <summary>
-        /// Gets true if the route path between two solar systems goes through null sec.
-        /// </summary>
-        /// <param name="startSystem">The start system.</param>
-        /// <param name="endSystem">The end system.</param>
-        /// <returns></returns>
-        private static bool RouteThroughNullSec(SolarSystem startSystem, SolarSystem endSystem)
-        {
-            return RoutePath(startSystem, endSystem).Any(x => x.IsNullSec);
-        }
-
-        /// <summary>
-        /// Gets true if the route path between two solar systems goes through low sec.
-        /// </summary>
-        /// <param name="startSystem">The start system.</param>
-        /// <param name="endSystem">The end system.</param>
-        /// <returns></returns>
-        private static bool RouteThroughLowSec(SolarSystem startSystem, SolarSystem endSystem)
-        {
-            return RoutePath(startSystem, endSystem).Any(x => x.IsLowSec);
-        }
-
-        /// <summary>
-        /// Gets the number of jumps between two solar systems.
-        /// </summary>
-        /// <param name="startSystem">The start system.</param>
-        /// <param name="endSystem">The end system.</param>
-        /// <returns></returns>
-        private static int GetNumberOfJumps(SolarSystem startSystem, SolarSystem endSystem)
-        {
-            return RoutePath(startSystem, endSystem).Count(x => x != startSystem);
         }
 
         #endregion

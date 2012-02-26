@@ -123,7 +123,7 @@
             this.CurrentToStartLinkLabel.Size = new System.Drawing.Size(67, 17);
             this.CurrentToStartLinkLabel.TabIndex = 9;
             this.CurrentToStartLinkLabel.TabStop = true;
-            this.CurrentToStartLinkLabel.Text = "show route *";
+            this.CurrentToStartLinkLabel.Text = "show route";
             this.CurrentToStartLinkLabel.UseCompatibleTextRendering = true;
             this.CurrentToStartLinkLabel.Visible = false;
             this.CurrentToStartLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CurrentToStartLinkLabel_LinkClicked);
@@ -137,7 +137,7 @@
             this.CurrentToEndLinkLabel.Size = new System.Drawing.Size(67, 17);
             this.CurrentToEndLinkLabel.TabIndex = 10;
             this.CurrentToEndLinkLabel.TabStop = true;
-            this.CurrentToEndLinkLabel.Text = "show route *";
+            this.CurrentToEndLinkLabel.Text = "show route";
             this.CurrentToEndLinkLabel.UseCompatibleTextRendering = true;
             this.CurrentToEndLinkLabel.Visible = false;
             this.CurrentToEndLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CurrentToEndLinkLabel_LinkClicked);
@@ -151,7 +151,7 @@
             this.StartToEndLinkLabel.Size = new System.Drawing.Size(67, 17);
             this.StartToEndLinkLabel.TabIndex = 11;
             this.StartToEndLinkLabel.TabStop = true;
-            this.StartToEndLinkLabel.Text = "show route *";
+            this.StartToEndLinkLabel.Text = "show route";
             this.StartToEndLinkLabel.UseCompatibleTextRendering = true;
             this.StartToEndLinkLabel.Visible = false;
             this.StartToEndLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.StartToEndLinkLabel_LinkClicked);

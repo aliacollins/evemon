@@ -33,11 +33,13 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="start"></param>
         /// <param name="target"></param>
+        /// <param name="criteria"></param>
         /// <param name="minSecurityLevel">The mininmum, inclusive, security level.</param>
         /// <returns></returns>
-        public static IEnumerable<SolarSystem> FindBestPath(SolarSystem start, SolarSystem target, float minSecurityLevel)
+        public static IEnumerable<SolarSystem> FindBestPath(SolarSystem start, SolarSystem target, PathSearchCriteria criteria,
+                                                            float minSecurityLevel)
         {
-            PathFinder result = FindBestPathCore(start, target, minSecurityLevel);
+            PathFinder result = FindBestPathCore(start, target, criteria, minSecurityLevel);
 
             // Transforms the result into a list
             List<SolarSystem> list = new List<SolarSystem>();
@@ -54,77 +56,87 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="start"></param>
         /// <param name="target"></param>
+        /// <param name="criteria"></param>
         /// <param name="minSecurityLevel">The mininmum, inclusive, security level.</param>
         /// <returns></returns>
-        private static PathFinder FindBestPathCore(SolarSystem start, SolarSystem target, float minSecurityLevel)
+        private static PathFinder FindBestPathCore(SolarSystem start, SolarSystem target, PathSearchCriteria criteria,
+                                                   float minSecurityLevel)
         {
-            Dictionary<SolarSystem, int> bestDepthes = new Dictionary<SolarSystem, int>();
+            Dictionary<SolarSystem, int> bestDepths = new Dictionary<SolarSystem, int>();
             SortedList<float, PathFinder> paths = new SortedList<float, PathFinder>();
             PathFinder root = new PathFinder(start);
-            bestDepthes.Add(start, -1);
+            bestDepths.Add(start, 0);
             paths.Add(0, root);
 
-            while (true)
+            PathFinder best;
+            // Picks the best one, returns if we found our target
+            do
             {
                 if (paths.Count == 0)
                     return null;
-                PathFinder best;
+
+                best = paths.Values[0];
+
+                int bestDepth;
                 int depth;
 
                 // Pick the best candidate path, but ensures it matches the best depth found so far
-                while (true)
+                do
                 {
-                    // Picks the best one, returns if we found our target
-                    best = paths.Values[0];
-                    if (best.m_system == target)
-                        return best;
+                    if (paths.Count == 0)
+                        return null;
 
                     // Removes it from the list
                     paths.RemoveAt(0);
 
-                    int bestDepth;
                     depth = best.Depth;
-                    bestDepthes.TryGetValue(best.m_system, out bestDepth);
-                    if (bestDepth == depth || best.m_system == start)
-                        break;
-                }
+                    bestDepths.TryGetValue(best.m_system, out bestDepth);
+                } while (bestDepth != depth && best.m_system != start);
 
                 // Gets the subpaths for the best path so far
                 depth++;
-                foreach (PathFinder child in best.GetChildren(depth, bestDepthes))
+                foreach (PathFinder child in best.GetChildren(depth, bestDepths))
                 {
-                    // Gets the heuristic key: the shorter, the better the candidate.
-                    float key = child.m_system.GetSquareDistanceWith(target) * (float)(depth * depth);
+                    int criteriaValue = criteria == PathSearchCriteria.ShortestDistance
+                                            ? child.m_system.GetSquareDistanceWith(target)
+                                            : 10;
+
+                    // Gets the heuristic key based on path search criteria
+                    int key = criteriaValue * depth * depth;
                     if (child.m_system.SecurityLevel < minSecurityLevel)
-                        key *= 100.0f;
+                        key *= 100;
+
                     while (paths.ContainsKey(key))
                     {
                         key++;
                     }
+
                     // Stores it in the sorted list
                     paths.Add(key, child);
                 }
-            }
+            } while (best.m_system != target);
+
+            return best;
         }
 
         /// <summary>
         /// Gets all the immediate children paths.
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<PathFinder> GetChildren(int depth, IDictionary<SolarSystem, int> bestDepthes)
+        private IEnumerable<PathFinder> GetChildren(int depth, IDictionary<SolarSystem, int> bestDepths)
         {
-            // Check this system is not already present with a lesser range.
+            // Check this system is not already present with a lesser range
             foreach (SolarSystem neighbor in m_system.Neighbors)
             {
                 // Checks the best depth so far
                 int bestDepth;
-                bestDepthes.TryGetValue(neighbor, out bestDepth);
+                bestDepths.TryGetValue(neighbor, out bestDepth);
 
                 // Enumerates it
                 if (bestDepth != 0 && depth >= bestDepth)
                     continue;
 
-                bestDepthes[neighbor] = depth;
+                bestDepths[neighbor] = depth;
                 yield return new PathFinder(this, neighbor);
             }
         }

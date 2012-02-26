@@ -160,11 +160,15 @@ namespace EVEMon.Common.Data
         /// Find the guessed shortest path using a A* (heuristic) algorithm.
         /// </summary>
         /// <param name="target">The target system.</param>
+        /// <param name="criteria">The path searching criteria.</param>
         /// <param name="minSecurityLevel">The mininmum, inclusive, real security level. Systems have levels between -1 and +1.</param>
-        /// <returns>The list of systems, beginning with this one and ending with the provided target.</returns>
-        public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, float minSecurityLevel)
+        /// <returns>
+        /// The list of systems, beginning with this one and ending with the provided target.
+        /// </returns>
+        public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, PathSearchCriteria criteria,
+                                                         float minSecurityLevel = -1.0f)
         {
-            return PathFinder.FindBestPath(this, target, minSecurityLevel);
+            return PathFinder.FindBestPath(this, target, criteria, minSecurityLevel);
         }
 
         /// <summary>
@@ -242,5 +246,6 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
+
     }
 }
