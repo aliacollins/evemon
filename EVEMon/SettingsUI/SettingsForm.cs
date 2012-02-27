@@ -125,7 +125,7 @@ namespace EVEMon.SettingsUI
                         // Transforms x64 to 64 by 64
                         string size = x.ToString().Substring(1);
                         return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
-                    }).ToArray<Object>());
+                    }).ToArray<object>());
 
             // Expands the left panel and selects the first page and node
             treeView.ExpandAll();
@@ -325,7 +325,7 @@ namespace EVEMon.SettingsUI
         {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            rbMSOutlook.Enabled = ExternalCalendar.OutlookInstalled;
+            rbMSOutlook.Enabled = m_settings.Calendar.Enabled && ExternalCalendar.OutlookInstalled;
             rbMSOutlook.Checked = rbMSOutlook.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook;
             rbGoogle.Checked = !rbMSOutlook.Checked;
             

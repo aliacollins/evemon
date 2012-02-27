@@ -95,5 +95,7 @@
     <row refTypeID="87" refTypeName="Sovereignty Blockade Unit under attack" />
     <row refTypeID="88" refTypeName="Infrastructure Hub under attack" />
     <row refTypeID="89" refTypeName="Contact notification" />
+    <row refTypeID="93" refTypeName="Customs office has been attacked" />
+    <row refTypeID="94" refTypeName="Customs office has entered reinforced" />
   </rowset>
 </NotificationRefTypeIDs>

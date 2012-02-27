@@ -721,7 +721,7 @@ namespace EVEMon.NotificationWindow
                                       GetStartToEndRoute.Any(system => system.IsNullSec);
                 routeThroughLowSec = !m_characterLastSolarSystem.IsLowSec &&
                                      GetStartToEndRoute.Any(system => system.IsLowSec);
-                routeThroughHighSec = m_characterLastSolarSystem.IsHighSec &&
+                routeThroughHighSec = !m_characterLastSolarSystem.IsHighSec &&
                                       GetStartToEndRoute.Any(system => system.IsHighSec);
             }
 
