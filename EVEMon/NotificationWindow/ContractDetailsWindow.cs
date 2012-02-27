@@ -18,6 +18,7 @@ namespace EVEMon.NotificationWindow
 
         private readonly Contract m_contract;
         private readonly Size m_startingSize;
+        private readonly SolarSystem m_characterLastSolarSystem;
         private readonly IEnumerable<ContractItem> m_contractItems;
 
         private ContractItemsListView m_lvIncludedItems;
@@ -27,7 +28,6 @@ namespace EVEMon.NotificationWindow
         private IEnumerable<SolarSystem> m_startToEndRoute;
         private IEnumerable<SolarSystem> m_oldRoute;
         private IEnumerable<SolarSystem> m_route;
-        private Font m_smallFont;
         private Font m_boldFont;
         private Font m_mediumBoldFont;
         private Font m_bigBoldFont;
@@ -66,6 +66,7 @@ namespace EVEMon.NotificationWindow
             m_startingSize = new Size(Width, Height);
             m_contract = contract;
             m_contractItems = contract.ContractItems;
+            m_characterLastSolarSystem = m_contract.Character.LastKnownSolarSystem;
         }
 
         #endregion
@@ -90,7 +91,6 @@ namespace EVEMon.NotificationWindow
             //ButtonPanel.Visible = m_contract.ContractType == ContractType.Auction &&
             //                      m_contract.Character.CharacterContractBids.Any(x => x.ContractID == m_contract.ID);
 
-            m_smallFont = FontFactory.GetDefaultFont(7.5f);
             m_boldFont = FontFactory.GetDefaultFont(FontStyle.Bold);
             m_mediumBoldFont = FontFactory.GetDefaultFont(9.25f, FontStyle.Bold);
             m_bigBoldFont = FontFactory.GetDefaultFont(10.25f, FontStyle.Bold);
@@ -131,8 +131,8 @@ namespace EVEMon.NotificationWindow
             get
             {
                 Common.Data.Region startStationRegion = m_contract.StartStation.SolarSystem.Constellation.Region;
-                Common.Data.Region characterLastKnownRegion = m_contract.Character.LastKnownSolarSystem != null
-                                                                  ? m_contract.Character.LastKnownSolarSystem.Constellation.Region
+                Common.Data.Region characterLastKnownRegion = m_characterLastSolarSystem != null
+                                                                  ? m_characterLastSolarSystem.Constellation.Region
                                                                   : null;
                 string secondHalfText = m_contract.Availability == ContractAvailability.Private
                                             ? m_contract.Assignee
@@ -174,8 +174,8 @@ namespace EVEMon.NotificationWindow
             {
                 return m_characterLastLocationToStartRoute ??
                        (m_characterLastLocationToStartRoute =
-                        m_contract.Character.LastKnownSolarSystem.GetFastestPathTo(m_contract.StartStation.SolarSystem,
-                                                                             PathSearchCriteria.FewerJumps));
+                        m_characterLastSolarSystem.GetFastestPathTo(m_contract.StartStation.SolarSystem,
+                                                                    PathSearchCriteria.FewerJumps));
             }
         }
 
@@ -189,8 +189,8 @@ namespace EVEMon.NotificationWindow
             {
                 return m_characterLastLocationToEndRoute ??
                        (m_characterLastLocationToEndRoute =
-                        m_contract.Character.LastKnownSolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
-                                                                             PathSearchCriteria.FewerJumps));
+                        m_characterLastSolarSystem.GetFastestPathTo(m_contract.EndStation.SolarSystem,
+                                                                    PathSearchCriteria.FewerJumps));
             }
         }
 
@@ -618,7 +618,7 @@ namespace EVEMon.NotificationWindow
 
             int startToEndSystemJumps;
             // Draw the "jumps from current location to contract's start solar system" info text
-            if (m_contract.Character.LastKnownSolarSystem != null && station == m_contract.StartStation)
+            if (m_characterLastSolarSystem != null && station == m_contract.StartStation)
             {
                 startToEndSystemJumps = GetCharacterLastLocationToStartRoute.Count(system => system != station.SolarSystem);
                 string jumpsText = m_contract.Character.LastKnownStation == station
@@ -641,7 +641,7 @@ namespace EVEMon.NotificationWindow
             }
 
             // Draw the "jumps from current location to contract's end solar system" info text
-            if (m_contract.Character.LastKnownSolarSystem != null && m_contract.StartStation != m_contract.EndStation &&
+            if (m_characterLastSolarSystem != null && m_contract.StartStation != m_contract.EndStation &&
                 station == m_contract.EndStation)
             {
                 startToEndSystemJumps = GetCharacterLastLocationToEndRoute.Count(system => system != station.SolarSystem);
@@ -667,9 +667,8 @@ namespace EVEMon.NotificationWindow
 
             // Draw the "jumps between start and end solar system" info text
             if (m_contract.StartStation != m_contract.EndStation && station == m_contract.EndStation &&
-                (m_contract.Character.LastKnownSolarSystem == null ||
-                 (m_contract.Character.LastKnownSolarSystem != null &&
-                  m_contract.Character.LastKnownSolarSystem != m_contract.StartStation.SolarSystem)))
+                (m_characterLastSolarSystem == null ||
+                 (m_characterLastSolarSystem != null && m_characterLastSolarSystem != m_contract.StartStation.SolarSystem)))
             {
                 startToEndSystemJumps = GetStartToEndRoute.Count(system => system != station.SolarSystem);
                 string jumpsText = startToEndSystemJumps == 0
@@ -699,23 +698,35 @@ namespace EVEMon.NotificationWindow
         /// <param name="station">The station.</param>
         private void DrawRouteThroughText(PaintEventArgs e, Station station)
         {
+            if (m_characterLastSolarSystem == null)
+                return;
+
             bool routeThroughNullSec = false;
             bool routeThroughLowSec = false;
+            bool routeThroughHighSec = false;
 
-            if (m_contract.Character.LastKnownSolarSystem != null && station == m_contract.StartStation)
+            if (station == m_contract.StartStation)
             {
-                routeThroughNullSec = GetCharacterLastLocationToStartRoute.Any(system => system.IsNullSec);
-                routeThroughLowSec = GetCharacterLastLocationToStartRoute.Any(system => system.IsLowSec);
+                routeThroughNullSec = !m_characterLastSolarSystem.IsNullSec &&
+                                      GetCharacterLastLocationToStartRoute.Any(system => system.IsNullSec);
+                routeThroughLowSec = !m_characterLastSolarSystem.IsLowSec &&
+                                     GetCharacterLastLocationToStartRoute.Any(system => system.IsLowSec);
+                routeThroughHighSec = !m_characterLastSolarSystem.IsHighSec &&
+                                      GetCharacterLastLocationToStartRoute.Any(system => system.IsHighSec);
             }
 
             if (m_contract.StartStation != m_contract.EndStation && station == m_contract.EndStation)
             {
-                routeThroughNullSec = GetCharacterLastLocationToEndRoute.Any(system => system.IsNullSec);
-                routeThroughLowSec = GetCharacterLastLocationToEndRoute.Any(system => system.IsLowSec);
+                routeThroughNullSec = !m_characterLastSolarSystem.IsNullSec &&
+                                      GetStartToEndRoute.Any(system => system.IsNullSec);
+                routeThroughLowSec = !m_characterLastSolarSystem.IsLowSec &&
+                                     GetStartToEndRoute.Any(system => system.IsLowSec);
+                routeThroughHighSec = m_characterLastSolarSystem.IsHighSec &&
+                                      GetStartToEndRoute.Any(system => system.IsHighSec);
             }
 
-            // Quit if path is through high sec only
-            if (!routeThroughNullSec && !routeThroughLowSec)
+            // Quit if path is through same sec
+            if (!routeThroughNullSec && !routeThroughLowSec && !routeThroughHighSec)
                 return;
 
             Graphics g = e.Graphics;
@@ -745,7 +756,23 @@ namespace EVEMon.NotificationWindow
 
             // Route through "LowSec"
             if (routeThroughLowSec)
-                DrawColoredText(e, "Low Sec", Font, new Point(left, m_height), Color.DarkOrange, false);
+            {
+                const string LowSecText = "Low Sec";
+                DrawColoredText(e, LowSecText, Font, new Point(left, m_height), Color.DarkOrange, false);
+                left += g.MeasureString(LowSecText, Font).ToSize().Width;
+            }
+
+            // Add comma when route through both "Null Sec" and "Low Sec"
+            if ((routeThroughNullSec || routeThroughLowSec) && routeThroughHighSec)
+            {
+                const string CommaText = ", ";
+                DrawText(e, String.Empty, CommaText, Font, false, left - Pad - DetailsPanel.Left - SecondIntendPosition);
+                left += g.MeasureString(CommaText, Font).ToSize().Width;
+            }
+
+            // Route through "HighSec"
+            if (routeThroughHighSec)
+                DrawColoredText(e, "High Sec", Font, new Point(left, m_height), Color.Green, false);
 
             m_height += routeTextSize.Height + Pad;
         }
@@ -1121,7 +1148,7 @@ namespace EVEMon.NotificationWindow
                 HideSelection = false;
                 ColumnHeader chName = GetNewColumnHeader();
                 chName.Text = "Name";
-                chName. Width = 120;
+                chName.Width = 120;
 
                 ColumnHeader chQuantity = GetNewColumnHeader();
                 chQuantity.Text = "Qty";
