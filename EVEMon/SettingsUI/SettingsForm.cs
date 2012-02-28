@@ -719,6 +719,7 @@ namespace EVEMon.SettingsUI
 
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
+            rbMSOutlook.Enabled = externalCalendarCheckbox.Checked && ExternalCalendar.OutlookInstalled;
             gbMSOutlook.Visible = rbMSOutlook.Checked;
             gbGoogle.Visible = rbGoogle.Checked;
             calendarPathLabel.Enabled = tbCalendarPath.Enabled = rbCustomCalendar.Checked;
