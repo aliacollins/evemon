@@ -35,10 +35,13 @@ namespace InstallBuilder
             if (!HasVersion())
                 return 0;
 
-            if (args[0] == "-version" || args[0] == "-v")
+            if (args.Any())
             {
-                Console.WriteLine(s_version.Substring(0, s_version.LastIndexOf('.')));
-                return 0;
+                if (args[0] == "-version" || args[0] == "-v")
+                {
+                    Console.WriteLine(s_version.Substring(0, s_version.LastIndexOf('.')));
+                    return 0;
+                }
             }
 
             CheckNsisInstalled(args);
