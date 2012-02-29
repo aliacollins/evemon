@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -76,7 +75,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Hide all advanced features related controls
             m_advancedFeatures.ForEach(x => x.Visible = false);
-            featuresMenu.Visible = false;
+            featuresMenu.Visible = tsPagesSeparator.Visible = false;
             toggleSkillsIcon.Visible = tsToggleSeparator.Visible = false;
             toolStripContextual.Visible = false;
             warningLabel.Visible = false;
@@ -349,24 +348,19 @@ namespace EVEMon.CharacterMonitoring
                         item.DisplayStyle = ToolStripItemDisplayStyle.Text;
                     }
 
-                    toolStripFeatures.ContextMenuStrip = null;
                     return;
                 }
 
                 // Display image and text of the features according to user preference
                 foreach (ToolStripButton item in toolStripFeatures.Items.OfType<ToolStripButton>())
                 {
-                    item.DisplayStyle = Settings.UI.ShowTextInToolStrip
-                                            ? ToolStripItemDisplayStyle.ImageAndText
-                                            : ToolStripItemDisplayStyle.Image;
+                    item.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 }
 
                 featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-
-                toolStripFeatures.ContextMenuStrip = toolstripContextMenu;
             }
             finally
             {
@@ -386,8 +380,8 @@ namespace EVEMon.CharacterMonitoring
             if (ccpCharacter == null)
                 return;
 
-            featuresMenu.Visible = ccpCharacter.QueryMonitors.Any();
-            tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
+            tsPagesSeparator.Visible = featuresMenu.Visible = ccpCharacter.QueryMonitors.Any();
+            tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             m_advancedFeatures.ForEach(SetVisibility);
             ToggleAdvancedFeaturesMonitoring();
         }
@@ -399,7 +393,7 @@ namespace EVEMon.CharacterMonitoring
         private void SetVisibility(ToolStripButton button)
         {
             IEnumerable<IQueryMonitor> monitors = ButtonToMonitors(button);
-            bool visible = IsEnabledFeature(button.Text) && monitors.Any() && monitors.Any(monitor => monitor.HasAccess);
+            bool visible = monitors.Any(monitor => monitor.HasAccess) && IsEnabledFeature(button.Text);
             button.Visible = visible;
 
             // Quit if the button should stay visible
@@ -726,7 +720,8 @@ namespace EVEMon.CharacterMonitoring
 
             // Update the buttons visibility
             toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
-            tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
+            tsPagesSeparator.Visible = featuresMenu.Visible;
+            tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
@@ -1390,27 +1385,6 @@ namespace EVEMon.CharacterMonitoring
                 eveNotificationsList.PanePosition = ReadingPanePositioning.Off;
                 Settings.UI.MainWindow.EVENotifications.ReadingPanePosition = eveNotificationsList.PanePosition;
             }
-        }
-
-        /// <summary>
-        /// On menu opening we update the menu items.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void toolstripContextMenu_Opening(object sender, CancelEventArgs e)
-        {
-            showTextMenuItem.Checked = Settings.UI.ShowTextInToolStrip;
-        }
-
-        /// <summary>
-        /// Shows or hides the text of the toolstrip items.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void showTextMenuItem_Click(object sender, EventArgs e)
-        {
-            Settings.UI.ShowTextInToolStrip = showTextMenuItem.Checked = !showTextMenuItem.Checked;
-            EveMonClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         # endregion

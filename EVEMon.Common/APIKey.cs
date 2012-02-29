@@ -24,6 +24,7 @@ namespace EVEMon.Common
         private readonly Dictionary<string, SkillInTrainingResponse> m_skillInTrainingCache =
             new Dictionary<string, SkillInTrainingResponse>();
 
+        private bool m_queried;
         private bool m_monitored;
         private bool m_updatePending;
         private bool m_characterListUpdated;
@@ -206,11 +207,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if this API key is updated or not monitored.
+        /// Gets true if this API key got queried or is not monitored.
         /// </summary>
         public bool IsProcessed
         {
-            get { return m_characterListUpdated || !m_monitored; }
+            get { return m_queried || !m_monitored; }
         }
 
         #endregion
@@ -260,11 +261,11 @@ namespace EVEMon.Common
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            m_apiKeyInfoMonitor.Enabled = Monitored;
+            m_apiKeyInfoMonitor.Enabled = m_monitored;
 
             // We trigger the account status check when we have the character list of the API key
             // in order to have better API key related info in the trace file
-            m_accountStatusMonitor.Enabled = m_characterListUpdated && Monitored && IsCharacterOrAccountType;
+            m_accountStatusMonitor.Enabled = m_characterListUpdated && m_monitored && IsCharacterOrAccountType;
         }
 
 
@@ -276,6 +277,8 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         private void OnAPIKeyInfoUpdated(APIResult<SerializableAPIKeyInfo> result)
         {
+            m_queried = true;
+
             // Quit if the API key was deleted while it was updating
             if (!EveMonClient.APIKeys.Contains(this))
                 return;
@@ -616,7 +619,7 @@ namespace EVEMon.Common
                                                 Type = Type,
                                                 AccessMask = AccessMask,
                                                 Expiration = Expiration,
-                                                Monitored = Monitored,
+                                                Monitored = m_monitored,
                                                 LastUpdate = m_apiKeyInfoMonitor.LastUpdate,
                                             };
             serial.IgnoreList.AddRange(IdentityIgnoreList.Export());
