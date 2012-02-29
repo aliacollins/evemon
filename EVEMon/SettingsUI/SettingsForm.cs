@@ -219,7 +219,7 @@ namespace EVEMon.SettingsUI
             SetStartUpSettings();
 
             // API providers
-            InitialiseAPIProvidersDropDown();
+            InitializeAPIProvidersDropDown();
 
             // Enables / disables controls
             m_isLoading = false;
@@ -325,13 +325,12 @@ namespace EVEMon.SettingsUI
         {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            rbMSOutlook.Enabled = m_settings.Calendar.Enabled && ExternalCalendar.OutlookInstalled;
-            rbMSOutlook.Checked = rbMSOutlook.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook;
+            rbMSOutlook.Checked = m_settings.Calendar.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook &&
+                                  ExternalCalendar.OutlookInstalled;
             rbGoogle.Checked = !rbMSOutlook.Checked;
             
             rbDefaultCalendar.Checked = m_settings.Calendar.UseOutlookDefaultCalendar;
             rbCustomCalendar.Checked = !rbDefaultCalendar.Checked;
-            calendarPathExampleLabel.Visible = rbCustomCalendar.Checked;
             tbCalendarPath.Text = m_settings.Calendar.OutlookCustomCalendarPath;
 
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
@@ -539,7 +538,7 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Populates the combobox for API providers.
         /// </summary>
-        private void InitialiseAPIProvidersDropDown()
+        private void InitializeAPIProvidersDropDown()
         {
             cbAPIServer.Items.Clear();
             cbAPIServer.Items.Add(GlobalAPIProviderCollection.DefaultProvider.Name);
@@ -835,7 +834,7 @@ namespace EVEMon.SettingsUI
                     return;
 
                 m_settings.APIProviders.CustomProviders.Add(newProvider);
-                InitialiseAPIProvidersDropDown();
+                InitializeAPIProvidersDropDown();
                 cbAPIServer.SelectedIndex = cbAPIServer.Items.Count - 1;
             }
         }
@@ -883,7 +882,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             m_settings.APIProviders.CustomProviders.Remove(providerToRemove);
-            InitialiseAPIProvidersDropDown();
+            InitializeAPIProvidersDropDown();
             cbAPIServer.SelectedIndex = 0;
         }
 
