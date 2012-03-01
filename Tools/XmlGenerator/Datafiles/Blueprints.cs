@@ -164,7 +164,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             s_nullMarketBlueprints = new List<InvType>();
             foreach (InvType srcItem in Database.InvTypeTable.Where(
-                item => (item.MarketGroupID == null) && !item.Name.Contains("TEST") &&
+                item => item.MarketGroupID == null && !item.Name.Contains("TEST") &&
                         Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
                             blueprint => new
                                         {

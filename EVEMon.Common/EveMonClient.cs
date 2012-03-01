@@ -238,11 +238,11 @@ namespace EVEMon.Common
                         DialogResult result = MessageBox.Show(msg, "EVEMon Error", MessageBoxButtons.RetryCancel,
                                                               MessageBoxIcon.Error);
 
-                        if (result == DialogResult.Cancel)
-                        {
-                            Application.Exit();
-                            return;
-                        }
+                        if (result != DialogResult.Cancel)
+                            continue;
+
+                        Application.Exit();
+                        return;
                     }
                 }
             }
@@ -293,7 +293,7 @@ namespace EVEMon.Common
         {
             DefaultEvePortraitCacheFolders = new ReadOnlyCollection<string>(new string[] { });
             string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE",
+            EVEApplicationDataDir = String.Format(CultureConstants.InvariantCulture, "{1}{0}CCP{0}EVE",
                                                   Path.DirectorySeparatorChar, localApplicationData);
 
             // Check folder exists
@@ -303,7 +303,7 @@ namespace EVEMon.Common
             // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
-            DirectoryInfo[] foldersInEveCache = di.GetDirectories("e_ccp_eve*_tranquility");
+            DirectoryInfo[] foldersInEveCache = di.GetDirectories("*_tranquility");
 
             if (!foldersInEveCache.Any())
                 return;
@@ -311,7 +311,7 @@ namespace EVEMon.Common
             EvePortraitCacheFolders = foldersInEveCache.Select(
                 eveDataPath => eveDataPath.Name).Select(
                     portraitCache => String.Format(
-                        CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
+                        CultureConstants.InvariantCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
                         Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).ToList().AsReadOnly();
 
             DefaultEvePortraitCacheFolders = EvePortraitCacheFolders;
