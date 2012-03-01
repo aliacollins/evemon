@@ -14,6 +14,7 @@ namespace EVEMon.Common
         private static readonly string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
         private static readonly List<string> s_listOfNames = new List<string>();
+        private static readonly List<string> s_queriedIDs = new List<string>();
 
         private static List<string> s_listOfIDs = new List<string>();
         private static List<string> s_listOfIDsToQuery = new List<string>();
@@ -66,8 +67,7 @@ namespace EVEMon.Common
 
             List<string> list = new List<string> { id };
 
-            List<string> name = GetIDsToNames(list);
-            return name[0];
+            return GetIDsToNames(list).First();
         }
 
         /// <summary>
@@ -75,9 +75,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns></returns>
-        internal static List<string> GetIDsToNames(List<string> ids)
+        internal static IEnumerable<string> GetIDsToNames(IEnumerable<string> ids)
         {
-            s_listOfIDs = ids;
+            s_listOfIDs = ids.ToList();
             s_listOfNames.Clear();
             s_listOfIDsToQuery.Clear();
 
@@ -92,10 +92,8 @@ namespace EVEMon.Common
         /// </summary>
         public static void EnsureCacheFileLoad()
         {
-            if (!File.Exists(s_file) || s_cacheList.Any())
-                return;
-
-            TryDeserializeCacheFile();
+            if (File.Exists(s_file) && !s_cacheList.Any())
+                TryDeserializeCacheFile();
         }
 
         /// <summary>
@@ -131,12 +129,15 @@ namespace EVEMon.Common
             else
                 s_listOfIDsToQuery = s_listOfIDs;
 
-            if (s_listOfIDsToQuery.Any())
-                QueryAPICharacterName();
+            // Avoid querying an already querying id
+            if (s_listOfIDsToQuery.Any(id => !s_queriedIDs.Contains(id)))
+                QueryAPICharacterName(s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id)));
 
-            // In case the list is empty, add an "Unknown" entry
-            if (s_listOfNames.Count == 0)
+            // Add an "Unknown" entry for every id we query
+            foreach (string id in s_listOfIDsToQuery)
+            {
                 s_listOfNames.Add("Unknown");
+            }
         }
 
         /// <summary>
@@ -158,11 +159,18 @@ namespace EVEMon.Common
         /// <summary>
         /// Queries the API Character Name.
         /// </summary>
-        private static void QueryAPICharacterName()
+        private static void QueryAPICharacterName(IEnumerable<string> idsToQuery)
         {
-            string ids = string.Join(",", s_listOfIDsToQuery);
-            APIResult<SerializableAPICharacterName> result = EveMonClient.APIProviders.CurrentProvider.QueryCharacterName(ids);
-            OnQueryAPICharacterNameUpdated(result);
+            string ids = string.Join(",", idsToQuery);
+
+            if (String.IsNullOrWhiteSpace(ids))
+                return;
+
+            // Add the ids to the queried list
+            s_queriedIDs.AddRange(idsToQuery);
+
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterName>(
+                APIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
         }
 
         /// <summary>
@@ -198,6 +206,10 @@ namespace EVEMon.Common
         {
             foreach (SerializableCharacterNameListItem entity in entities)
             {
+                // Remove the queried id from the queried list
+                if (s_queriedIDs.Contains(entity.ID.ToString(CultureConstants.InvariantCulture)))
+                    s_queriedIDs.Remove(entity.ID.ToString(CultureConstants.InvariantCulture));
+
                 // Add the name to the list of names
                 s_listOfNames.Add(entity.Name);
 
@@ -207,8 +219,10 @@ namespace EVEMon.Common
             }
 
             // In case the list is empty, add an "Unknown" entry
-            if (s_listOfNames.Count == 0)
+            if (!s_listOfNames.Any())
                 s_listOfNames.Add("Unknown");
+
+            EveMonClient.OnEveIDToNameUpdated();
         }
 
         /// <summary>

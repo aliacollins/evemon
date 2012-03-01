@@ -8,6 +8,9 @@ namespace EVEMon.Common
     public sealed class EveNotification : IEveMessage
     {
         private readonly CCPCharacter m_ccpCharacter;
+        private readonly SerializableNotificationsListItem m_source;
+
+        private string m_sender;
         private bool m_queryPending;
 
 
@@ -21,16 +24,18 @@ namespace EVEMon.Common
         internal EveNotification(CCPCharacter ccpCharacter, SerializableNotificationsListItem src)
         {
             m_ccpCharacter = ccpCharacter;
+            m_source = src;
+
             NotificationID = src.NotificationID;
             Type = EveNotificationType.GetType(src.TypeID);
-            Sender = GetIDToName(src.SenderID);
+            m_sender = GetIDToName(src.SenderID);
             SentDate = src.SentDate;
             Recipient = new List<string> { ccpCharacter.Name };
             EVENotificationText = new EveNotificationText(new SerializableNotificationTextsListItem
-            {
-                NotificationID = 0,
-                NotificationText = String.Empty
-            });
+                                                              {
+                                                                  NotificationID = 0,
+                                                                  NotificationText = String.Empty
+                                                              });
         }
 
         #endregion
@@ -53,8 +58,15 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the EVE notification sender name.
         /// </summary>
-        /// <value>The sender.</value>
-        public string Sender { get; private set; }
+        public string Sender
+        {
+            get
+            {
+                return m_sender == "Unknown"
+                           ? m_sender = GetIDToName(m_source.SenderID)
+                           : m_sender;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the sent date of the EVE notification.
@@ -105,7 +117,7 @@ namespace EVEMon.Common
         private static string GetIDToName(int id)
         {
             if (id == 0)
-                return "Unknown";
+                return "(None)";
 
             // Look into EVEMon's data file if it's an NPC corporation or a players null sec corporation
             Station station = Station.GetByID(id);

@@ -57,6 +57,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
             EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             Disposed += OnDisposed;
         }
@@ -186,6 +187,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_CharacterEVENotificationsUpdated;
             EveMonClient.CharacterEVENotificationTextDownloaded -= EveMonClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             Disposed -= OnDisposed;
         }
@@ -705,6 +707,16 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// When the EveIDToName list updates, update the list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
+            UpdateColumns();
         }
 
         /// <summary>

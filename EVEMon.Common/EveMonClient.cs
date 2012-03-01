@@ -493,6 +493,11 @@ namespace EVEMon.Common
         public static event EventHandler APIKeyInfoUpdated;
 
         /// <summary>
+        /// Occurs when the EveIDToName list has been updated.
+        /// </summary>
+        public static event EventHandler EveIDToNameUpdated;
+
+        /// <summary>
         /// Occurs when the list of characters in an API key has been updated.
         /// </summary>
         public static event EventHandler<APIKeyInfoChangedEventArgs> CharacterListUpdated;
@@ -752,6 +757,16 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnConquerableStationListUpdated");
             if (ConquerableStationListUpdated != null)
                 ConquerableStationListUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the EveIDToName list has been updated.
+        /// </summary>
+        internal static void OnEveIDToNameUpdated()
+        {
+            Trace("EveMonClient.OnEveIDToNameUpdated");
+            if (EveIDToNameUpdated != null)
+                EveIDToNameUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>

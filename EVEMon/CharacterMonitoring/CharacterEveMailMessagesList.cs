@@ -58,6 +58,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
             EveMonClient.CharacterEVEMailingListsUpdated += EveMonClient_CharacterEVEMailingListsUpdated;
             EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             Disposed += OnDisposed;
         }
@@ -188,6 +189,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
             EveMonClient.CharacterEVEMailingListsUpdated -= EveMonClient_CharacterEVEMailingListsUpdated;
             EveMonClient.CharacterEVEMailBodyDownloaded -= EveMonClient_CharacterEVEMailBodyDownloaded;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             Disposed -= OnDisposed;
         }
@@ -363,12 +365,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case EVEMailMessagesGrouping.Recipient:
                     IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups8 =
-                        eveMailMessages.GroupBy(x => x.ToCharacters[0]).OrderBy(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.ToCharacters.First()).OrderBy(x => x.Key);
                     UpdateContent(groups8);
                     break;
                 case EVEMailMessagesGrouping.RecipientDesc:
                     IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups9 =
-                        eveMailMessages.GroupBy(x => x.ToCharacters[0]).OrderByDescending(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.ToCharacters.First()).OrderByDescending(x => x.Key);
                     UpdateContent(groups9);
                     break;
                 case EVEMailMessagesGrouping.CorpOrAlliance:
@@ -383,12 +385,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case EVEMailMessagesGrouping.MailingList:
                     IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups12 =
-                        eveMailMessages.GroupBy(x => x.ToMailingLists[0]).OrderBy(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.ToMailingLists.First()).OrderBy(x => x.Key);
                     UpdateContent(groups12);
                     break;
                 case EVEMailMessagesGrouping.MailingListDesc:
                     IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups13 =
-                        eveMailMessages.GroupBy(x => x.ToMailingLists[0]).OrderByDescending(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.ToMailingLists.First()).OrderByDescending(x => x.Key);
                     UpdateContent(groups13);
                     break;
             }
@@ -864,7 +866,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_CharacterEVEMailingListsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            UpdateContent();
+            UpdateColumns();
         }
 
         /// <summary>
@@ -879,6 +881,16 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// When the EveIDToName list updates, update the list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
+            UpdateColumns();
         }
 
         /// <summary>
