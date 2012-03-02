@@ -353,9 +353,9 @@ namespace EVEMon.CharacterMonitoring
                 // Display or hide the "no jobs" label
                 if (m_init)
                 {
-                    noJobsLabel.Visible = !jobs.Any();
-                    lvJobs.Visible = jobs.Any();
-                    m_timer.Enabled = jobs.Any();
+                    noJobsLabel.Visible = lvJobs.Items.Count == 0;
+                    lvJobs.Visible = !noJobsLabel.Visible;
+                    m_timer.Enabled = lvJobs.Visible;
                     industryExpPanelControl.Visible = true;
                     industryExpPanelControl.Header.Visible = true;
                 }

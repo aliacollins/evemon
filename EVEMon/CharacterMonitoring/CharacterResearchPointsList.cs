@@ -304,8 +304,8 @@ namespace EVEMon.CharacterMonitoring
                 // Display or hide the "no research points" label
                 if (m_init)
                 {
-                    noResearchLabel.Visible = !researhPoints.Any();
-                    lvResearchPoints.Visible = researhPoints.Any();
+                    noResearchLabel.Visible = lvResearchPoints.Items.Count == 0;
+                    lvResearchPoints.Visible = !noResearchLabel.Visible;
                 }
             }
             finally

@@ -314,7 +314,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<Contract> contracts = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<Contract> contracts = m_list.Where(x => x.ContractType != ContractType.None).Where(
+                    x => IsTextMatching(x, text));
 
                 if (Character != null && m_hideInactive)
                     contracts = contracts.Where(x => x.IsAvailable || x.NeedsAttention);
@@ -339,8 +340,8 @@ namespace EVEMon.CharacterMonitoring
                 // Display or hide the "no contracts" label
                 if (m_init)
                 {
-                    noContractsLabel.Visible = !contracts.Any();
-                    lvContracts.Visible = contracts.Any();
+                    noContractsLabel.Visible = lvContracts.Items.Count == 0;
+                    lvContracts.Visible = !noContractsLabel.Visible;
                 }
             }
             finally

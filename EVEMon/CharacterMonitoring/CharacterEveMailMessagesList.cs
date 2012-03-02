@@ -283,7 +283,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<EveMailMessage> eveMailMessages = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<EveMailMessage> eveMailMessages = m_list.Where(
+                    x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
@@ -302,10 +303,8 @@ namespace EVEMon.CharacterMonitoring
                 // Display or hide the "no EVE mail messages" label
                 if (m_init)
                 {
-                    noEVEMailMessagesLabel.Visible = !eveMailMessages.Any() ||
-                                                     eveMailMessages.All(x => x.SentDate == DateTime.MinValue);
-                    lvMailMessages.Visible = eveMailMessages.Any();
-                    splitContainerMailMessages.Visible = !noEVEMailMessagesLabel.Visible;
+                    noEVEMailMessagesLabel.Visible = lvMailMessages.Items.Count == 0;
+                    lvMailMessages.Visible = splitContainerMailMessages.Visible = !noEVEMailMessagesLabel.Visible;
                 }
             }
             finally

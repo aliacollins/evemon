@@ -323,19 +323,44 @@ namespace EVEMon.Common
         /// <returns></returns>
         private IEnumerable<SerializableOrderBase> MarketOrdersExport()
         {
-            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter());
+            // Until we can determine what data the character's API keys can query,
+            // we have to keep the data unprocessed. Once we know, we filter them
+
+            IEnumerable<SerializableOrderBase> corporationMarketOrdersExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                    ? CorporationMarketOrders.ExportOnlyIssuedByCharacter()
+                    : new EmptyEnumerable<SerializableOrderBase>();
+
+            IEnumerable<SerializableOrderBase> characterMarketOrdersExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                    ? CharacterMarketOrders.Export()
+                    : new EmptyEnumerable<SerializableOrderBase>();
+
+            return characterMarketOrdersExport.Concat(corporationMarketOrdersExport);
         }
 
         /// <summary>
         /// Exports the contracts.
         /// </summary>
         /// <returns></returns>
-        /// <remarks>Excludes contracts that appear in both collections</remarks>
+        /// <remarks>Excludes contracts that appear in both collections.</remarks>
         private IEnumerable<SerializableContract> ContractsExport()
         {
-            IEnumerable<SerializableContract> corporationContractsExport = CorporationContracts.ExportOnlyIssuedByCharacter();
-            return CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
-                corpContract => corpContract.ContractID != charContract.ContractID)).Concat(corporationContractsExport);
+            // Until we can determine what data the character's API keys can query,
+            // we have to keep the data unprocessed. Once we know, we filter them
+
+            IEnumerable<SerializableContract> corporationContractsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                    ? CorporationContracts.ExportOnlyIssuedByCharacter()
+                    : new EmptyEnumerable<SerializableContract>();
+
+            IEnumerable<SerializableContract> characterContractsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                    ? CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
+                        corpContract => corpContract.ContractID != charContract.ContractID))
+                    : new EmptyEnumerable<SerializableContract>();
+
+            return characterContractsExport.Concat(corporationContractsExport);
         }
 
         /// <summary>
@@ -344,7 +369,20 @@ namespace EVEMon.Common
         /// <returns></returns>
         private IEnumerable<SerializableJob> IndustryJobsExport()
         {
-            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter());
+            // Until we can determine what data the character's API keys can query,
+            // we have to keep the data unprocessed. Once we know, we filter them
+            
+            IEnumerable<SerializableJob> corporationIndustryJobsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                    ? CorporationIndustryJobs.ExportOnlyIssuedByCharacter()
+                    : new EmptyEnumerable<SerializableJob>();
+
+            IEnumerable<SerializableJob> characterIndustryJobsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                    ? CharacterIndustryJobs.Export()
+                    : new EmptyEnumerable<SerializableJob>();
+
+            return characterIndustryJobsExport.Concat(corporationIndustryJobsExport);
         }
 
         /// <summary>
