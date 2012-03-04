@@ -200,7 +200,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void lbSkills_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0)
+            if (e.Index < 0 || e.Index >= lbSkills.Items.Count)
                 return;
 
             object item = lbSkills.Items[e.Index];

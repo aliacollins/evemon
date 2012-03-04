@@ -148,19 +148,6 @@ namespace EVEMon.CharacterMonitoring
         #region Drawing
 
         /// <summary>
-        /// Handles the DrawItem event of the lbEmploymentHistory control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private void lbEmploymentHistory_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index < 0)
-                return;
-
-            DrawItem(e);
-        }
-
-        /// <summary>
         /// Handles the MeasureItem event of the lbEmploymentHistory control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -176,9 +163,13 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Draws the list item for the given standing
         /// </summary>
-        /// <param name="e"></param>
-        private void DrawItem(DrawItemEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
+        private void lbEmploymentHistory_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index < 0 || e.Index >= lbEmploymentHistory.Items.Count)
+                return;
+
             Graphics g = e.Graphics;
 
             EmploymentRecord record = (EmploymentRecord)lbEmploymentHistory.Items[e.Index];

@@ -204,7 +204,7 @@ namespace EVEMon.Controls
         /// <exception cref="NotImplementedException"></exception>
         private void listBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index == -1)
+            if (e.Index < 0 || e.Index >= listBox.Items.Count)
                 return;
 
             Graphics g = e.Graphics;

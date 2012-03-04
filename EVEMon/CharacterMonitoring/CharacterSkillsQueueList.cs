@@ -167,7 +167,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void lbSkillsQueue_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0)
+            if (e.Index < 0 || e.Index >= lbSkillsQueue.Items.Count)
                 return;
 
             QueuedSkill item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
