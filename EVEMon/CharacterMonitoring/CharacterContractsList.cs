@@ -835,27 +835,6 @@ namespace EVEMon.CharacterMonitoring
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
             e.Cancel = lvContracts.SelectedItems.Count == 0;
-
-            if (e.Cancel)
-                return;
-
-            ListViewItem item = lvContracts.SelectedItems[0];
-            Contract contract = (Contract)item.Tag;
-
-            e.Cancel = contract.ContractType != ContractType.Courier && !contract.ContractItems.Any();
-
-            contextMenu.Items.Clear();
-            contextMenu.Items.AddRange(new ToolStripItem[]
-                                           {
-                                               showDetailsToolStripMenuItem,
-                                               toolStripSeparator, showBidsToolStripMenuItem
-                                           });
-
-            if (contract.ContractType == ContractType.Auction)
-                return;
-
-            contextMenu.Items.Remove(toolStripSeparator);
-            contextMenu.Items.Remove(showBidsToolStripMenuItem);
         }
 
         /// <summary>

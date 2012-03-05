@@ -42,8 +42,6 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.showBidsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,11 +111,9 @@
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showDetailsToolStripMenuItem,
-            this.toolStripSeparator,
-            this.showBidsToolStripMenuItem});
+            this.showDetailsToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(153, 76);
+            this.contextMenu.Size = new System.Drawing.Size(153, 48);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // showDetailsToolStripMenuItem
@@ -135,17 +131,6 @@
             this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
             this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
             this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
-            // 
-            // toolStripSeparator
-            // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
-            // 
-            // showBidsToolStripMenuItem
-            // 
-            this.showBidsToolStripMenuItem.Name = "showBidsToolStripMenuItem";
-            this.showBidsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.showBidsToolStripMenuItem.Text = "Show bids";
             // 
             // CharacterContractsList
             // 
@@ -174,7 +159,5 @@
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem showDetailsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem showBidsToolStripMenuItem;
     }
 }
