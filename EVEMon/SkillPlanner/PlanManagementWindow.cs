@@ -116,8 +116,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateContent(bool restoreSelectionAndFocus)
         {
             // Store selection and focus
-            IEnumerable<Plan> selection =
-                lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan);
+            Plan selection =
+                lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).FirstOrDefault();
             Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
 
             lbPlanList.BeginUpdate();
@@ -139,7 +139,7 @@ namespace EVEMon.SkillPlanner
                     if (!restoreSelectionAndFocus)
                         continue;
 
-                    lvi.Selected = selection.Contains(plan);
+                    lvi.Selected = (selection == plan);
                     lvi.Focused = (focused == plan);
                 }
 
@@ -147,7 +147,7 @@ namespace EVEMon.SkillPlanner
                 AdjustColumns();
 
                 // Enable/disable the button
-                btnOpen.Enabled = (lbPlanList.SelectedItems.Count > 0);
+                btnOpen.Enabled = lbPlanList.SelectedItems.Count > 0;
             }
             finally
             {
@@ -521,11 +521,12 @@ namespace EVEMon.SkillPlanner
             else
             {
                 Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-                planName = "\"" + plan.Name + "\"";
+                planName = String.Format(CultureConstants.InvariantCulture, "\"{0}\"", plan.Name);
             }
 
             // Prompt the user for confirmation with a message box
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete " + planName + "?", title,
+            DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                                                            "Are you sure you want to delete {0}?", planName), title,
                                               MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
