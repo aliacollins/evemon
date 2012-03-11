@@ -138,6 +138,14 @@ namespace EVEMon.Updater
                     {
                         File.Delete(filename);
                     }
+                    catch (ArgumentException ex)
+                    {
+                        ExceptionHandler.LogException(ex, false);
+                    }
+                    catch (IOException ex)
+                    {
+                        ExceptionHandler.LogException(ex, false);
+                    }
                     catch (UnauthorizedAccessException ex)
                     {
                         ExceptionHandler.LogException(ex, false);

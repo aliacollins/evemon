@@ -192,14 +192,20 @@ namespace EVEMon.Common.Controls
                 }
                 return image;
             }
+            catch (ArgumentException e)
+            {
+                ExceptionHandler.LogException(e, true);
+                File.Delete(cacheFileName);
+                return null;
+            }
             catch (IOException e)
             {
-                ExceptionHandler.LogException(e, false);
+                ExceptionHandler.LogException(e, true);
                 return null;
             }
             catch (UnauthorizedAccessException e)
             {
-                ExceptionHandler.LogException(e, false);
+                ExceptionHandler.LogException(e, true);
                 return null;
             }
         }

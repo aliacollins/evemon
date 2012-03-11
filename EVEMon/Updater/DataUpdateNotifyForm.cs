@@ -106,9 +106,17 @@ namespace EVEMon.Updater
                     {
                         File.Delete(newFilename);
                     }
+                    catch (ArgumentException ex)
+                    {
+                        ExceptionHandler.LogException(ex, false);
+                    }
                     catch (IOException ex)
                     {
-                        ExceptionHandler.LogException(ex, true);
+                        ExceptionHandler.LogException(ex, false);
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        ExceptionHandler.LogException(ex, false);
                     }
                 }
 
@@ -126,9 +134,17 @@ namespace EVEMon.Updater
                         {
                             File.Delete(newFilename);
                         }
+                        catch (ArgumentException e)
+                        {
+                            ExceptionHandler.LogException(e, false);
+                        }
                         catch (IOException ex)
                         {
-                            ExceptionHandler.LogException(ex, true);
+                            ExceptionHandler.LogException(ex, false);
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
                         }
                         continue;
                     }
@@ -153,9 +169,17 @@ namespace EVEMon.Updater
                 File.Delete(oldFilename);
                 File.Move(newFilename, oldFilename);
             }
+            catch (ArgumentException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
             catch (IOException ex)
             {
-                ExceptionHandler.LogException(ex, true);
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
             }
         }
 

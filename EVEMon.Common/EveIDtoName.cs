@@ -108,7 +108,22 @@ namespace EVEMon.Common
             if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
             {
                 EveMonClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
-                File.Delete(s_file);
+                try
+                {
+                    File.Delete(s_file);
+                }
+                catch (ArgumentException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+                catch (IOException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
                 return;
             }
 

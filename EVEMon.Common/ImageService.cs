@@ -66,6 +66,11 @@ namespace EVEMon.Common
                     callback(image);
                     return;
                 }
+                catch (ArgumentException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                    File.Delete(cacheFileName);
+                }
                 catch (IOException e)
                 {
                     ExceptionHandler.LogException(e, false);
@@ -102,16 +107,17 @@ namespace EVEMon.Common
                     // Write this image to the cache file
                     EveMonClient.EnsureCacheDirInit();
                     string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
-                    FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
-                                                                         {
-                                                                             // We need to create a copy of the image because GDI+ is locking it
-                                                                             using (Image newImage = new Bitmap(image))
-                                                                             {
-                                                                                 newImage.Save(fs, ImageFormat.Png);
-                                                                                 fs.Flush();
-                                                                             }
-                                                                             return true;
-                                                                         });
+                    FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                                                      fs =>
+                                                          {
+                                                              // We need to create a copy of the image because GDI+ is locking it
+                                                              using (Image newImage = new Bitmap(image))
+                                                              {
+                                                                  newImage.Save(fs, ImageFormat.Png);
+                                                                  fs.Flush();
+                                                              }
+                                                              return true;
+                                                          });
                 }
                 catch (Exception ex)
                 {

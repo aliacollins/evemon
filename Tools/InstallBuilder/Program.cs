@@ -270,6 +270,14 @@ namespace InstallBuilder
                 {
                     File.Delete(file);
                 }
+                catch (ArgumentException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 catch (UnauthorizedAccessException ex)
                 {
                     MessageBox.Show(ex.Message);
