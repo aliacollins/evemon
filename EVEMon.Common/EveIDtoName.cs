@@ -149,10 +149,7 @@ namespace EVEMon.Common
                 QueryAPICharacterName(s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id)));
 
             // Add an "Unknown" entry for every id we query
-            foreach (string id in s_listOfIDsToQuery)
-            {
-                s_listOfNames.Add("Unknown");
-            }
+            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add("Unknown"));
         }
 
         /// <summary>
