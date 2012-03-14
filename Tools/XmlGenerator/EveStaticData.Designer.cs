@@ -7767,7 +7767,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invCategories object.
         /// </summary>
         /// <param name="categoryID">Initial value of the categoryID property.</param>
-        public static invCategories CreateinvCategories(global::System.Byte categoryID)
+        public static invCategories CreateinvCategories(global::System.Int32 categoryID)
         {
             invCategories invCategories = new invCategories();
             invCategories.categoryID = categoryID;
@@ -7782,7 +7782,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Byte categoryID
+        public global::System.Int32 categoryID
         {
             get
             {
@@ -7800,8 +7800,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Byte _categoryID;
-        partial void OncategoryIDChanging(global::System.Byte value);
+        private global::System.Int32 _categoryID;
+        partial void OncategoryIDChanging(global::System.Int32 value);
         partial void OncategoryIDChanged();
     
         /// <summary>
@@ -8484,7 +8484,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invGroups object.
         /// </summary>
         /// <param name="groupID">Initial value of the groupID property.</param>
-        public static invGroups CreateinvGroups(global::System.Int16 groupID)
+        public static invGroups CreateinvGroups(global::System.Int32 groupID)
         {
             invGroups invGroups = new invGroups();
             invGroups.groupID = groupID;
@@ -8499,7 +8499,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 groupID
+        public global::System.Int32 groupID
         {
             get
             {
@@ -8517,8 +8517,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _groupID;
-        partial void OngroupIDChanging(global::System.Int16 value);
+        private global::System.Int32 _groupID;
+        partial void OngroupIDChanging(global::System.Int32 value);
         partial void OngroupIDChanged();
     
         /// <summary>
@@ -8526,7 +8526,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Byte> categoryID
+        public Nullable<global::System.Int32> categoryID
         {
             get
             {
@@ -8541,8 +8541,8 @@ namespace EVEMon.XmlGenerator
                 OncategoryIDChanged();
             }
         }
-        private Nullable<global::System.Byte> _categoryID;
-        partial void OncategoryIDChanging(Nullable<global::System.Byte> value);
+        private Nullable<global::System.Int32> _categoryID;
+        partial void OncategoryIDChanging(Nullable<global::System.Int32> value);
         partial void OncategoryIDChanged();
     
         /// <summary>

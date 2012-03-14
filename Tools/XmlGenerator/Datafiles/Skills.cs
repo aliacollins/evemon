@@ -11,8 +11,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Skills
     {
-        private const int SkillGenTotal = 426;
-
         private static DateTime s_startTime;
 
         /// <summary>
@@ -66,7 +64,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             foreach (InvType skill in Database.InvTypeTable.Where(x => x.GroupID == group.ID))
             {
-                Util.UpdatePercentDone(SkillGenTotal);
+                Util.UpdatePercentDone(Database.SkillsTotalCount);
 
                 SerializableSkill singleSkill = new SerializableSkill
                                                     {

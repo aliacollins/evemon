@@ -11,8 +11,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Certificates
     {
-        private const int CertGenTotal = 4272;
-
         private static DateTime s_startTime;
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="certificate">The certificate.</param>
         private static void ExportCertificate(ICollection<SerializableCertificate> listOfCertificates, CrtCertificates certificate)
         {
-            Util.UpdatePercentDone(CertGenTotal);
+            Util.UpdatePercentDone(Database.CertificatesTotalCount);
 
             SerializableCertificate crtCertificates = new SerializableCertificate
                                                           {
