@@ -60,7 +60,7 @@ namespace InstallBuilder
                 {
                     // Create an installer in the installers folder
                     Console.WriteLine("Starting Installer creation.");
-                    BuildInstaller();
+                    //BuildInstaller();
                     Console.WriteLine("Installer creation finished.");
                     Console.WriteLine();
                 }
@@ -182,11 +182,8 @@ namespace InstallBuilder
 
                     byte[] buffer = new byte[4096];
 
-                    foreach (string file in filenames)
+                    foreach (string file in filenames.Where(file => !file.Contains("vshost") && !file.Contains(".config")))
                     {
-                        if (file.Contains("vshost") || file.Contains(".config"))
-                            continue;
-
                         string entryName = String.Format(CultureInfo.InvariantCulture, "EVEMon{0}",
                                                          file.Remove(0, s_sourceFilesDir.Length));
                         Console.WriteLine("Zipping {0}", entryName);
