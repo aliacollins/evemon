@@ -60,52 +60,52 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>5ce9b64181b334bcb0e77844072bfcd5</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) blueprints data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>71e374b84bde531e5c8936a99fc66f94</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>8b1c3b46966fd62212a7093d6288cf19</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) certificates data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>68e8daa1425118e4d903560f236d89eb</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>903cc7207361c53103695a8bf61b8825</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) geography data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>cc8c4978c99361826543af78c0ac41e4</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>1db0a1ca93e4868d70ab3d79270cc164</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) items data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>bb16280468485f03f6cf16db244b713c</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>cae57d6471257ec2fc7110c638f09778</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) properties data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>0ca8efc6b98414dd8a40f70c3ce626a6</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>a25e7b170c1ec2b799de37b516b22a19</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) reprocessing data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>f10ab3b0b01a26e58b464ad2620e1b90</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>10 March 2012</date>
-      <md5>46661f095c792d021f58cd48409a0f36</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/344784</url>
-      <message><![CDATA[Crucible 1.2 (344784) skills data file by the EVEMon Development Team]]></message>
+      <date>14 March 2012</date>
+      <md5>aa74354942dfad9527ca1da564b525ce</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/350962</url>
+      <message><![CDATA[Crucible 1.5.1 (350962) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
