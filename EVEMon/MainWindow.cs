@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -1144,20 +1143,12 @@ namespace EVEMon
             // Set the updating data flag so EVEMon exits cleanly
             m_isUpdatingData = true;
 
-            // Find the expected path for EVEMon.Watchdog.exe
-            Assembly assembly = Assembly.GetEntryAssembly();
-            string path = Path.GetDirectoryName(assembly.Location);
-            if (path != null)
-            {
-                string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
+            // Get the expected path for EVEMon.Watchdog.exe
+            string executable = Path.Combine(Directory.GetCurrentDirectory(), "EVEMon.Watchdog.exe");
 
-                // If the watchdog doesn't exist just quit
-                if (!File.Exists(executable))
-                    Application.Exit();
-
-                // Start the watchdog process
+            // If the watchdog exist start the process
+            if (File.Exists(executable))
                 StartProcess(executable, Environment.GetCommandLineArgs());
-            }
 
             Application.Exit();
         }

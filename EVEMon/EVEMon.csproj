@@ -1018,6 +1018,10 @@
       <Project>{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}</Project>
       <Name>EVEMon.LogitechG15</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EVEMon.Watchdog\EVEMon.Watchdog.csproj">
+      <Project>{8C4A87A0-780E-4765-ADD0-146091FE26F4}</Project>
+      <Name>EVEMon.Watchdog</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EVEMon.WindowsApi\EVEMon.WindowsApi.csproj">
       <Project>{D942D976-6185-4ECD-A83B-60260100D12E}</Project>
       <Name>EVEMon.WindowsApi</Name>
