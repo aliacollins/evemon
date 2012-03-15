@@ -66,7 +66,7 @@ namespace InstallBuilder
                 {
                     // Create an installer in the installers folder
                     Console.WriteLine("Starting Installer creation.");
-                    //BuildInstaller();
+                    BuildInstaller();
                     Console.WriteLine("Installer creation finished.");
                     Console.WriteLine();
                 }
