@@ -45,7 +45,7 @@ namespace InstallBuilder
 
                 if (args[0] == "-version=tc" || args[0] == "-v=tc")
                 {
-                    Console.WriteLine("##teamcity[buildNumber'{0}']", s_version.Substring(0, s_version.LastIndexOf('.')));
+                    Console.WriteLine("##teamcity[buildNumber '{0}']", s_version.Substring(0, s_version.LastIndexOf('.')));
                     return 0;
                 }
             }
