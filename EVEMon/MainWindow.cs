@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -34,6 +35,7 @@ using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.Updater;
+using EVEMon.Watchdog;
 using EVEMon.WindowsApi;
 
 namespace EVEMon
@@ -1143,10 +1145,10 @@ namespace EVEMon
             // Set the updating data flag so EVEMon exits cleanly
             m_isUpdatingData = true;
 
-            // Get the expected path for EVEMon.Watchdog.exe
-            string executable = Path.Combine(Directory.GetCurrentDirectory(), "EVEMon.Watchdog.exe");
+            // Find the expected path for 'EVEMon.Watchdog.exe'
+            string executable = Assembly.GetAssembly(typeof(WatchdogWindow)).Location;
 
-            // If the watchdog exist start the process
+            // If the 'Watchdog' exist start the process
             if (File.Exists(executable))
                 StartProcess(executable, Environment.GetCommandLineArgs());
 
@@ -1156,7 +1158,7 @@ namespace EVEMon
         /// <summary>
         /// Starts a process with arguments.
         /// </summary>
-        /// <param name="executable">Executable to start (i.e. EVEMon.exe).</param>
+        /// <param name="executable">Executable to start (i.e. EVEMon.Watchdog.exe).</param>
         /// <param name="arguments">Arguments to pass to the executable.</param>
         private static void StartProcess(string executable, string[] arguments)
         {
@@ -1167,10 +1169,10 @@ namespace EVEMon
                                                  UseShellExecute = false
                                              };
 
-            using (Process evemonProc = new Process())
+            using (Process process = new Process())
             {
-                evemonProc.StartInfo = startInfo;
-                evemonProc.Start();
+                process.StartInfo = startInfo;
+                process.Start();
             }
         }
 

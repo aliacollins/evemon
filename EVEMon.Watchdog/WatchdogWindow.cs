@@ -38,7 +38,7 @@ namespace EVEMon.Watchdog
         /// <summary>
         /// Returns true EVEMon process currently executing.
         /// </summary>
-        private static bool IsEvemonRunning
+        private static bool IsEVEMonRunning
         {
             get
             {
@@ -54,34 +54,33 @@ namespace EVEMon.Watchdog
         /// <param name="e"></param>
         private void WaitTimer_Tick(object sender, EventArgs e)
         {
-            // First time through after EVEMon has closed
-            if (!m_executableLaunched && !IsEvemonRunning)
+            // First time through after 'EVEMon' has closed
+            if (!m_executableLaunched && !IsEVEMonRunning)
             {
                 m_executableLaunched = true;
-                StartEvemonProcess();
+                StartEVEMonProcess();
                 StatusLabel.Text = "Restarting EVEMon.";
                 return;
             }
 
-            // EVEMon has been restarted and is running
-            if (m_executableLaunched && IsEvemonRunning)
+            // 'EVEMon' has been restarted and is running
+            if (m_executableLaunched && IsEVEMonRunning)
                 Application.Exit();
         }
 
         /// <summary>
         /// Starts the new EVEMon process.
         /// </summary>
-        private void StartEvemonProcess()
+        private void StartEVEMonProcess()
         {
-            // Find the expected path for EVEMon.exe
-            Assembly assembly = Assembly.GetEntryAssembly();
-            string path = Path.GetDirectoryName(assembly.Location);
+            // Find the expected path for 'EVEMon.exe'
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             if (path == null)
                 return;
 
             string executable = Path.Combine(path, "EVEMon.exe");
 
-            // If EVEMon.exe doesn't exist we don't have anything to do
+            // If 'EVEMon.exe' doesn't exist we don't have anything to do
             if (!File.Exists(executable))
                 Application.Exit();
 
@@ -102,10 +101,10 @@ namespace EVEMon.Watchdog
                                                  UseShellExecute = false
                                              };
 
-            using (Process evemonProc = new Process())
+            using (Process process = new Process())
             {
-                evemonProc.StartInfo = startInfo;
-                evemonProc.Start();
+                process.StartInfo = startInfo;
+                process.Start();
             }
         }
     }
