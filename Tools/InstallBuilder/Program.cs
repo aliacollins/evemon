@@ -42,6 +42,12 @@ namespace InstallBuilder
                     Console.WriteLine(s_version.Substring(0, s_version.LastIndexOf('.')));
                     return 0;
                 }
+
+                if (args[0] == "-version=tc" || args[0] == "-v=tc")
+                {
+                    Console.WriteLine("##teamcity[buildNumber'{0}']", s_version.Substring(0, s_version.LastIndexOf('.')));
+                    return 0;
+                }
             }
 
             CheckNsisInstalled(args);
