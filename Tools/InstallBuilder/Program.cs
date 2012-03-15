@@ -244,11 +244,17 @@ namespace InstallBuilder
                                                UseShellExecute = false,
                                                RedirectStandardOutput = true
                                            };
-                Process makensisProcess = Process.Start(psi);
-                Console.WriteLine(makensisProcess.StandardOutput.ReadToEnd());
-                makensisProcess.WaitForExit();
-                int exitCode = makensisProcess.ExitCode;
-                makensisProcess.Dispose();
+
+                int exitCode;
+                using (Process makensisProcess = new Process())
+                {
+                    makensisProcess.StartInfo = psi;
+                    makensisProcess.Start();
+                    makensisProcess.ProcessorAffinity = (IntPtr)0x3;
+                    Console.WriteLine(makensisProcess.StandardOutput.ReadToEnd());
+                    makensisProcess.WaitForExit();
+                    exitCode = makensisProcess.ExitCode;
+                }
 
                 if (exitCode == 1)
                     MessageBox.Show("MakeNSIS exited with Errors");
