@@ -1029,7 +1029,7 @@
     </SGen>
   </Target>
   <UsingTask TaskName="HgVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
-  <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' ">
+  <Target Name="BeforeBuild" Condition=" '$(Configuration)' != 'Debug' ">
     <HgVersionFile TemplateFile="Properties\AssemblyInfo.template.cs" DestinationFile="Properties\AssemblyInfo.cs" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
