@@ -13,13 +13,16 @@ namespace InstallBuilder
     {
         private static readonly string s_sourceFilesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
         private static readonly string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
+        private static readonly string s_snapshotDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Snapshot");
         private static readonly string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
         private static readonly string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        private static readonly string s_programFilesX86Dir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
         private static string s_projectDir;
         private static string s_version;
         private static string s_nsisExe;
-
+        
+        private static bool s_isSnapshot;
         private static bool s_isDebug;
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace InstallBuilder
         public static int Main(string[] args)
         {
             CheckIsDebug();
+            CheckIsSnapshot();
 
             if (!HasVersion())
                 return 0;
@@ -50,31 +54,31 @@ namespace InstallBuilder
                 }
             }
 
-            CheckNsisInstalled(args);
-
-            // Create the installer folder if it doesn't exist
-            if (!Directory.Exists(s_installerDir))
-                Directory.CreateDirectory(s_installerDir);
-
-            // Create the binaries folder if it doesn't exist
-            if (!Directory.Exists(s_binariesDir))
-                Directory.CreateDirectory(s_binariesDir);
-
             try
             {
-                if (!String.IsNullOrEmpty(s_nsisExe))
+                if (CheckNsisInstalled(args) && !s_isSnapshot)
                 {
-                    // Create an installer in the installers folder
+                    // Create the appropriate folder if it doesn't exist
+                    if (!Directory.Exists(s_installerDir))
+                        Directory.CreateDirectory(s_installerDir);
+
+                    // Create an installer in the appropriate folder
                     Console.WriteLine("Starting Installer creation.");
                     BuildInstaller();
                     Console.WriteLine("Installer creation finished.");
                     Console.WriteLine();
                 }
 
-                // Create a zip file in the binaries folder
-                Console.WriteLine("Starting zip installer creation.");
+                // Create the appropriate folder if it doesn't exist
+                string directory = s_isSnapshot ? s_snapshotDir : s_binariesDir;
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                // Create a zip file in the appropriate folder
+                string description = s_isSnapshot ? "Snapshot" : "Binaries";
+                Console.WriteLine("Starting {0} Zip creation.", description);
                 BuildZip();
-                Console.WriteLine("Zip installer creation finished.");
+                Console.WriteLine("{0} Zip creation finished.", description);
                 Console.WriteLine("Done");
 
                 if (Debugger.IsAttached)
@@ -94,7 +98,7 @@ namespace InstallBuilder
         }
 
         /// <summary>
-        /// Checks the debug.
+        /// Checks the configuration is Debug.
         /// </summary>
         [Conditional("DEBUG")]
         private static void CheckIsDebug()
@@ -103,16 +107,26 @@ namespace InstallBuilder
         }
 
         /// <summary>
+        /// Checks the configuration is Snapshot.
+        /// </summary>
+        [Conditional("SNAPSHOT")]
+        private static void CheckIsSnapshot()
+        {
+            s_isSnapshot = true;
+        }
+
+        /// <summary>
         /// Finds the 'makensis' executable.
         /// </summary>
         /// <returns></returns>
         private static string FindMakeNsisExe()
         {
-            string[] locations = new string[3];
+            string[] locations = new string[4];
 
             locations[0] = String.Format(CultureInfo.InvariantCulture, "{0}\\NSIS\\makensis.exe", s_programFilesDir);
-            locations[1] = @"D:\Program Files\NSIS\makensis.exe"; // Possible location in TeamCity server
-            locations[2] = @"D:\Program Files (x86)\NSIS\makensis.exe"; // Possible location in TeamCity server
+            locations[1] = String.Format(CultureInfo.InvariantCulture, "{0}\\NSIS\\makensis.exe", s_programFilesX86Dir);
+            locations[2] = @"D:\Program Files\NSIS\makensis.exe"; // Possible location in TeamCity server
+            locations[3] = @"D:\Program Files (x86)\NSIS\makensis.exe"; // Possible location in TeamCity server
 
             foreach (string path in locations.Where(File.Exists))
             {
@@ -126,7 +140,7 @@ namespace InstallBuilder
         /// Checks that NSIS is installed.
         /// </summary>
         /// <param name="args">The args.</param>
-        private static void CheckNsisInstalled(string[] args)
+        private static bool CheckNsisInstalled(string[] args)
         {
             s_nsisExe = FindMakeNsisExe();
             Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
@@ -138,9 +152,16 @@ namespace InstallBuilder
             s_projectDir = args.Length == 0 ? Path.GetFullPath(@"..\..\..") : String.Join(" ", args);
             Console.WriteLine("Project directory : {0}", s_projectDir);
             Console.WriteLine("Source directory : {0}", s_sourceFilesDir);
-            Console.WriteLine("Installer directory : {0}", s_installerDir);
-            Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+            if (s_isSnapshot)
+                Console.WriteLine("Snapshot directory : {0}", s_snapshotDir);
+            else
+            {
+                Console.WriteLine("Installer directory : {0}", s_installerDir);
+                Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+            }
             Console.WriteLine();
+
+            return !String.IsNullOrEmpty(s_nsisExe);
         }
 
         /// <summary>
@@ -166,12 +187,20 @@ namespace InstallBuilder
         /// Builds the zip.
         /// </summary>
         private static void BuildZip()
-        {            
-            // Delete any existing binaries files
-            DeleteFiles(s_binariesDir);
+        {
+            string directory = s_isSnapshot ? s_snapshotDir : s_binariesDir;
 
-            string zipFileName = Path.Combine(s_binariesDir,
-                                              String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version));
+            // Delete any existing files in directory
+            DeleteFiles(directory);
+
+            string filename = s_isSnapshot
+                                  ? String.Format(CultureInfo.InvariantCulture, "EVEMon_{0}_{1:yyyy-MM-dd}.zip",
+                                                  s_version.Substring(s_version.LastIndexOf('.') + 1,
+                                                                      s_version.Length - s_version.LastIndexOf('.') - 1),
+                                                  DateTime.Now)
+                                  : String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version);
+
+            string zipFileName = Path.Combine(directory, filename);
 
             string[] filenames = Directory.GetFiles(s_sourceFilesDir, "*", SearchOption.AllDirectories);
 
@@ -222,7 +251,7 @@ namespace InstallBuilder
         /// </summary>
         private static void BuildInstaller()
         {
-            // Delete any existing installer files
+            // Delete any existing files in directory
             DeleteFiles(s_installerDir);
 
             try
