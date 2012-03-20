@@ -51,9 +51,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            tbCalendarPath.CausesValidation = false;
-
-
             // Update settings
             Settings.Import(m_oldSettings, true);
             Settings.Save();
@@ -70,10 +67,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            // If enabled validate email notification settings
-            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return;
-
             // Return settings
             ApplyToSettings();
 
@@ -89,10 +82,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void applyButton_Click(object sender, EventArgs e)
         {
-            // If enabled validate email notification settings
-            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return;
-
             // Return settings
             ApplyToSettings();
         }
@@ -382,6 +371,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void ApplyToSettings()
         {
+            // If enabled validate email notification settings
+            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
+                return;
+
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
             m_settings.UI.SafeForWork = cbWorksafeMode.Checked;
@@ -579,16 +572,18 @@ namespace EVEMon.SettingsUI
         #region Validation
 
         /// <summary>
-        /// Outlook custom calendar name validation.
+        /// Outlook custom calendar path validation.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbCalendarName_Validating(object sender, CancelEventArgs e)
+        private void tbCalendarPath_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = String.IsNullOrWhiteSpace(tbCalendarPath.Text.Trim()) ||
-                !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text);
-            
-            if(e.Cancel)
+            e.Cancel = externalCalendarCheckbox.Checked && rbMSOutlook.Checked && rbCustomCalendar.Checked &&
+                       (tbCalendarPath.Text.Any(x => Path.GetInvalidPathChars().Contains(x)) ||
+                        String.IsNullOrWhiteSpace(tbCalendarPath.Text.Trim()) ||
+                        !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text));
+
+            if (e.Cancel)
                 ShowErrorMessage("MS Outlook", "A calendar at that path could not be found.");
         }
 
