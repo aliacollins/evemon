@@ -585,7 +585,7 @@ namespace EVEMon.Controls
             // Label width
             int labelWidth = 0;
             if (!tooltip)
-                labelWidth = 250;
+                labelWidth = (int)(250 * (Graphics.FromHwnd(Handle).DpiX / EveMonClient.DefaultDpi));
 
             // Big font size
             float bigFontSize = 11.25f;
