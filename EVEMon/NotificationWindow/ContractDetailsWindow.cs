@@ -446,7 +446,7 @@ namespace EVEMon.NotificationWindow
             string text = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Reward), m_contract.Reward,
                                         m_contract.Reward < 10000M
                                             ? String.Empty
-                                            : String.Format(CultureConstants.DefaultCulture, "({0}) ISK",
+                                            : String.Format(CultureConstants.DefaultCulture, "({0})",
                                                             FormatHelper.Format(m_contract.Reward,
                                                                                 AbbreviationFormat.AbbreviationWords, false)));
 

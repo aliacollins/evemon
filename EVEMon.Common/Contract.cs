@@ -218,7 +218,7 @@ namespace EVEMon.Common
             {
                 if (ContractType == ContractType.Courier)
                     return String.Format(CultureConstants.DefaultCulture, "{0} >> {1} ({2} m³)",
-                                         StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Volume);
+                                         StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
 
                 if (!m_contractItems.Any())
                     return "Unknown";
@@ -432,7 +432,7 @@ namespace EVEMon.Common
             Reward = src.Reward;
             Collateral = src.Collateral;
             Buyout = src.Buyout;
-            Volume = Math.Round(src.Volume);
+            Volume = src.Volume;
 
             Availability = Enum.IsDefined(typeof(ContractAvailability), src.Availability)
                                ? (ContractAvailability)Enum.Parse(typeof(ContractAvailability), src.Availability)
