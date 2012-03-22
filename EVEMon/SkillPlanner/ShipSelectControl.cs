@@ -10,7 +10,8 @@ namespace EVEMon.SkillPlanner
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
         private Func<Item, Boolean> m_racePredicate = x => true;
-
+        
+        private bool m_init;
 
         #region Initialization
 
@@ -64,6 +65,11 @@ namespace EVEMon.SkillPlanner
                 cbFaction.Checked = true;
                 cbORE.Checked = true;
             }
+
+            m_init = true;
+
+            // Update the control's content
+            UpdateContent();
         }
 
         #endregion
@@ -102,7 +108,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -134,7 +141,8 @@ namespace EVEMon.SkillPlanner
             m_racePredicate = x => (x.Race & race) != Race.None;
 
             // Update content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
