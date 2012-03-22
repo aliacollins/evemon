@@ -305,13 +305,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all blueprints
-            foreach (TreeNode node in group.Blueprints.Where(x => UsabilityPredicate(x)
-                                                                  && m_metaGroupPredicate(x)).Select(
-                                                                      childItem => new TreeNode
-                                                                                       {
-                                                                                           Text = childItem.Name,
-                                                                                           Tag = childItem
-                                                                                       }))
+            foreach (TreeNode node in group.Blueprints.Where(
+                x => UsabilityPredicate(x) && m_metaGroupPredicate(x)).Select(
+                    childItem => new TreeNode { Text = childItem.Name, Tag = childItem }))
             {
                 nodeCollection.Add(node);
                 result++;

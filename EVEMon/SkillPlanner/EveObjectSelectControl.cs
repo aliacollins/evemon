@@ -519,7 +519,13 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CannotUse(Item item)
         {
-            return !CanUse(item);
+            Blueprint blueprint = item as Blueprint;
+            bool hasActivity = blueprint == null
+                               || (ActivityFilter == ObjectActivityFilter.All || ActivityFilter == ObjectActivityFilter.Any
+                                   || blueprint.Prerequisites.Any(x => x.Activity.ToString() == ActivityFilter.ToString())
+                                   || blueprint.MaterialRequirements.Any(x => x.Activity.ToString() == ActivityFilter.ToString()));
+
+            return !CanUse(item) && hasActivity;
         }
 
         #endregion
