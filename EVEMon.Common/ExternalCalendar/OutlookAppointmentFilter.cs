@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Outlook;
@@ -198,7 +199,15 @@ namespace EVEMon.Common.ExternalCalendar
             if (String.IsNullOrWhiteSpace(path))
                 path = Settings.Calendar.OutlookCustomCalendarPath;
 
-            foreach (Folder folder in folders.Cast<Folder>().TakeWhile(folder => s_mapiFolder == null))
+            if (!path.StartsWith(@"\\", StringComparison.Ordinal))
+                return s_mapiFolder != null;
+
+            string pathRoot = path.Substring(0, path.LastIndexOf(@"\", StringComparison.Ordinal));
+
+            foreach (Folder folder in folders.Cast<Folder>().TakeWhile(
+                folder => s_mapiFolder == null).Select(
+                    folder => new { folder, folderRoot = GetFolderPathRoot(folder.FolderPath) }).Where(
+                        folder => folder.folderRoot == pathRoot).Select(folder => folder.folder))
             {
                 if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == path)
                 {
@@ -251,6 +260,23 @@ namespace EVEMon.Common.ExternalCalendar
             }
 
             return resultArray;
+        }
+
+        /// <summary>
+        /// Gets the folder path root.
+        /// </summary>
+        /// <param name="folderPath">The folder path.</param>
+        /// <returns></returns>
+        private static string GetFolderPathRoot(string folderPath)
+        {
+            // Strip header directory seperator characters
+            folderPath = folderPath.Remove(0, 2);
+
+            // Find the index of a directory seperator character
+            int index = folderPath.IndexOf(Path.DirectorySeparatorChar, 0);
+
+            // Reconstruct the root path according to the index found
+            return String.Format(@"\\{0}", index > 0 ? folderPath.Substring(0, index) : folderPath);
         }
 
         #endregion
