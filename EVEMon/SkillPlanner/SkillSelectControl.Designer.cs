@@ -572,7 +572,6 @@ namespace EVEMon.SkillPlanner
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SkillSelectControl";
             this.Size = new System.Drawing.Size(227, 421);
-            this.Load += new System.EventHandler(this.SkillSelectControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.cmSkills.ResumeLayout(false);
             this.cmListSkills.ResumeLayout(false);
