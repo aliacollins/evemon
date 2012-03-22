@@ -202,7 +202,7 @@ namespace EVEMon.Common.ExternalCalendar
             if (!path.StartsWith(@"\\", StringComparison.Ordinal))
                 return s_mapiFolder != null;
 
-            string pathRoot = path.Substring(0, path.LastIndexOf(@"\", StringComparison.Ordinal));
+            string pathRoot = GetFolderPathRoot(path);
 
             foreach (Folder folder in folders.Cast<Folder>().TakeWhile(
                 folder => s_mapiFolder == null).Select(
