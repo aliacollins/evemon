@@ -131,9 +131,6 @@
     <value>EVEMon can export your current training queue to Microsoft Outlook or Google. This allows you to sync your calendar with your Smart phone, Blackberry etc. so you can take your reminders with you. Early and Late reminders allow you to set the times you will not be available or near EVE to update your queue and the reminder will be set to trigger at these times instead of standard reminder interval.
 </value>
   </data>
-  <metadata name="ttToolTipCodes.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>150, 24</value>
-  </metadata>
   <metadata name="colorDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>289, 24</value>
   </metadata>
@@ -145,7 +142,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAC2
-        PgAAAk1TRnQBSQFMAgEBEAEAAVwBBwFcAQcBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        PgAAAk1TRnQBSQFMAgEBEAEAAWwBBwFsAQcBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABUAMAAQEBAAEgBgABUP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8AIgADEAEVAxEBFwMI
         AQsDAgEDRAADBwEJAzcBWwNZAb8DSAGGAxYBHxgAA0oBigNXAbcDVQGyA1QBrwNUAa8DVAGuA1QBrwNW
         AasDMgFQAwwEEAEVAxABFQMPARQDDQESAwcBCgMBAQIDYQHcA10B7QNdAe0DXQHtA10B7QNdAe0DXQHt
@@ -188,7 +185,7 @@
         Af8BjgIAAf8BkQIAAf8BlgGBAQAB/wGXAYEBAAH/Aa4BnAEAAf8BxgG6AYoB/wGjAY8BAAH/AaEBiwEA
         Af8DVQGwEAADSAGFAc8B3gHoAf8BggGgAbsB/wIAAY8B/wGKAb4B3QH/AYUBswHXAf8BpwHFAd8B/wNI
         AYUQAANWAbMDXAHqA10B8ANfAfMDbQH3A00B+gNNAfoDagH5A2AB3gNZAccDXgHYA2AB3gNeAc4DUgGp
-        AzoBYgMEAQYDXQHtAwAB/wGoAtMB/wMAAf8DAAH/AwAB/wGYAr0B/wEBApoB/wMAAf8BrQLZAf8DAAH/
+        AzoBYgMEAQYDXQHtAwAB/wGoAtMB/wMAAf8DAAH/AwAB/wGYAr0B/wEAApoB/wMAAf8BrQLZAf8DAAH/
         AwAB/wMAAf8DAAH/AwAB/wNdAe0DVQGwAcABtwGYAf8BvQG0AZgB/wHFAb0BmQH/AdsB0gG8Af8BygHD
         AaUB/wG2Aa4BjgH/AakBnQEAAf8BlwGHAQAB/wGUAgAB/wGXAYMBAAH/AZgBgwEAAf8BtAGkAQAB/wHC
         AbEBAAH/AaIBjAEAAf8DVQGwEAADSAGFAdgB4wHtAf8BAAGVAbIB/wEAAYEBpAH/AYcBtAHYAf8BhwG3
