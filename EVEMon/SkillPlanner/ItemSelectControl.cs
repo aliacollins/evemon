@@ -120,6 +120,9 @@ namespace EVEMon.SkillPlanner
             }
 
             m_init = true;
+
+            // Update the control's content
+            UpdateContent();
         }
 
         #endregion
@@ -165,7 +168,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the control's content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -200,7 +204,8 @@ namespace EVEMon.SkillPlanner
             m_slotPredicate = x => (x.FittingSlot & slot) != ItemSlot.None;
 
             // Update the control's content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -226,7 +231,8 @@ namespace EVEMon.SkillPlanner
             m_metaGroupPredicate = x => (x.MetaGroup & filter) != ItemMetaGroup.None;
 
             // Update the control's content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
