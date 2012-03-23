@@ -464,7 +464,7 @@ namespace EVEMon.SkillPlanner
                     prerequisites = prerequisites.Where(x => x.Activity == Activity);
             }
 
-            // Item doesn't have prerequisites skills
+            // Item doesn't have prerequisites
             if (!prerequisites.Any())
                 return true;
 
@@ -493,7 +493,7 @@ namespace EVEMon.SkillPlanner
                                       }).Select(y => y.level >= y.prereq.Level));
 
                     // Has the character trained all prereq skills for this activity ?
-                    if (!prerequisites.Any() || prereqTrained.All(x => x))
+                    if (prereqTrained.All(x => x))
                         return true;
                 }
                 return false;
@@ -508,8 +508,7 @@ namespace EVEMon.SkillPlanner
                               }).Select(y => y.level >= y.prereq.Level));
 
             // Has the character trained all prereq skills ?
-            bool d = (prereqTrained.All(x => x));
-            return d;
+            return prereqTrained.All(x => x);
         }
 
         /// <summary>
@@ -520,10 +519,28 @@ namespace EVEMon.SkillPlanner
         protected bool CannotUse(Item item)
         {
             Blueprint blueprint = item as Blueprint;
-            bool hasActivity = blueprint == null
-                               || (ActivityFilter == ObjectActivityFilter.All || ActivityFilter == ObjectActivityFilter.Any
-                                   || blueprint.Prerequisites.Any(x => x.Activity.ToString() == ActivityFilter.ToString())
-                                   || blueprint.MaterialRequirements.Any(x => x.Activity.ToString() == ActivityFilter.ToString()));
+
+            bool hasActivity = blueprint == null || ActivityFilter == ObjectActivityFilter.All
+                               || blueprint.Prerequisites.Any(x => x.Activity == Activity)
+                               || blueprint.MaterialRequirements.Any(x => x.Activity == Activity);
+
+            // Special condition check for activity 'Any' 
+            // as negative logic returns incorrect results
+            if (ActivityFilter == ObjectActivityFilter.Any)
+            {
+                IEnumerable<StaticSkillLevel> prerequisites =
+                    item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+
+                IEnumerable<Boolean> prereqTrained = prerequisites.Select(
+                    prereq => new
+                                  {
+                                      prereq,
+                                      level = Plan.Character.GetSkillLevel(prereq.Skill)
+                                  }).Select(y => y.level >= y.prereq.Level);
+
+                // Has the character trained all prereq skills for this activity ?
+                return prerequisites.Any() && !prereqTrained.All(x => x);
+            }
 
             return !CanUse(item) && hasActivity;
         }
