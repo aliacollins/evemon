@@ -315,6 +315,42 @@ namespace EVEMon.CharactersComparison
             cbFilter.SelectedIndex = 0;
             chCharacters.Width = lvCharacterList.ClientSize.Width;
 
+            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
+            Disposed += OnDisposed;
+
+            UpdateCharacterList();
+            UpdateSelectedItems(true);
+        }
+
+        /// <summary>
+        /// Called when disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
+            Disposed -= OnDisposed;
+        }
+
+        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        {
+            if (cbFilter.SelectedIndex != 1)
+                return;
+
+            UpdateCharacterList();
+            UpdateSelectedItems(true);
+        }
+
+        /// <summary>
+        /// Handles the CharacterCollectionChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
+        {
             UpdateCharacterList();
             UpdateSelectedItems(true);
         }
