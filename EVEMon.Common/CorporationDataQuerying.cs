@@ -120,7 +120,7 @@ namespace EVEMon.Common
         private void OnCorporationMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occurred
@@ -149,7 +149,7 @@ namespace EVEMon.Common
         private void OnCorporationContractsUpdated(APIResult<SerializableAPIContracts> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occurred
@@ -180,7 +180,7 @@ namespace EVEMon.Common
         private void OnCorporationContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occured
@@ -206,7 +206,7 @@ namespace EVEMon.Common
         private void OnCorporationIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occurred
