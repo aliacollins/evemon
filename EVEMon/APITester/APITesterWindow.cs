@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.ApiTester
 {
@@ -420,6 +421,7 @@ namespace EVEMon.ApiTester
             UpdateControlsVisibility();
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
             Disposed += OnDisposed;
         }
 
@@ -431,6 +433,7 @@ namespace EVEMon.ApiTester
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
             Disposed -= OnDisposed;
         }
 
@@ -438,10 +441,22 @@ namespace EVEMon.ApiTester
         /// Handles the CharacterUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterUpdated(object sender, EventArgs e)
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateCharacterList();
+            UpdateControlsVisibility();
+        }
+
+        /// <summary>
+        /// Handles the CharacterCollectionChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
+        {
+            UpdateCharacterList();
+            UpdateControlsVisibility();
         }
 
         /// <summary>
