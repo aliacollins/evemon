@@ -426,24 +426,34 @@ namespace EVEMon
         /// </summary>
         private void AddOverviewTab()
         {
+            if (tpOverview == null)
+                return;
+
             if (Settings.UI.MainWindow.ShowOverview)
             {
-                if (tpOverview != null && !tcCharacterTabs.TabPages.Contains(tpOverview))
-                {
-                    // Trim the overview page index
-                    int overviewIndex = Settings.UI.MainWindow.OverviewIndex;
-                    overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, overviewIndex));
+                // Trim the overview page index
+                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, Settings.UI.MainWindow.OverviewIndex));
 
-                    // Inserts it
+                // Inserts it if it doesn't exist
+                if (!tcCharacterTabs.TabPages.Contains(tpOverview))
                     tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
 
-                    // Select the Overview tab if it's the first tab
-                    if (overviewIndex == 0)
-                        tcCharacterTabs.SelectedTab = tpOverview;
+                // If it exist insert it at the correct position
+                if (tcCharacterTabs.TabPages.IndexOf(tpOverview) != overviewIndex)
+                {
+                    tcCharacterTabs.TabPages.Remove(tpOverview);
+                    tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
                 }
+
+                // Select the Overview tab if it's the first tab
+                if (Settings.UI.MainWindow.OverviewIndex == 0)
+                    tcCharacterTabs.SelectedTab = tpOverview;
+
+                return;
             }
-                // Or remove it when it should not be here anymore
-            else if (tpOverview != null && tcCharacterTabs.TabPages.Contains(tpOverview))
+
+            // Or remove it when it should not be here anymore
+            if (tcCharacterTabs.TabPages.Contains(tpOverview))
                 tcCharacterTabs.TabPages.Remove(tpOverview);
         }
 
@@ -513,8 +523,8 @@ namespace EVEMon
         {
             Settings.UI.MainWindow.OverviewIndex = tcCharacterTabs.TabPages.IndexOf(tpOverview);
 
-            IEnumerable<Character> order = tcCharacterTabs.TabPages.Cast<TabPage>()
-                .Where(page => page.Tag is Character).Select(page => page.Tag as Character);
+            IEnumerable<Character> order = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
+                page => page.Tag is Character).Select(page => page.Tag as Character);
 
             m_isUpdatingTabOrder = true;
             EveMonClient.MonitoredCharacters.Update(order);

@@ -149,17 +149,6 @@ namespace EVEMon.Common
             {
                 EveMonClient.Trace("Settings.Import - begin");
 
-                // Import the characters, API keys and plans
-                if (!preferencesOnly)
-                {
-                    // The above check prevents the settings form to trigger a 
-                    // characters updates since the last queried infos would be lost
-                    EveMonClient.Characters.Import(serial.Characters);
-                    EveMonClient.Characters.ImportPlans(serial.Plans);
-                    EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-                    EveMonClient.APIKeys.Import(serial.APIKeys);
-                }
-
                 // Global settings
                 Compatibility = serial.Compatibility;
 
@@ -174,10 +163,23 @@ namespace EVEMon.Common
                 G15 = serial.G15;
                 IGB = serial.IGB;
                 Proxy = serial.Proxy;
-                Updates = serial.Updates;
-                Notifications = serial.Notifications;
                 Exportation = serial.Exportation;
                 Calendar = serial.Calendar;
+
+                // Import the characters, API keys and plans
+                if (!preferencesOnly)
+                {
+                    // The above check prevents the settings form to trigger a 
+                    // characters updates since the last queried infos would be lost
+                    EveMonClient.Characters.Import(serial.Characters);
+                    EveMonClient.Characters.ImportPlans(serial.Plans);
+                    EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
+                    EveMonClient.APIKeys.Import(serial.APIKeys);
+                }
+
+                // 'Updates' and 'Notifications' settings should always follow character importation
+                Updates = serial.Updates;
+                Notifications = serial.Notifications;
 
                 // Trim the data
                 OnImportCompleted();
@@ -485,6 +487,7 @@ namespace EVEMon.Common
             int revision = Assembly.GetExecutingAssembly().GetName().Version.Revision;
             if (revision == settings.Revision)
                 return;
+
             DialogResult backupSettings =
                 MessageBox.Show("The current EVEMon settings file is from a previous version of EVEMon.\n" +
                                 "Backup the current file before proceeding (recommended)?",
