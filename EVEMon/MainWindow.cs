@@ -1232,6 +1232,9 @@ namespace EVEMon
             if (character == null)
                 return;
 
+            // Close any open associated windows
+            CloseOpenWindowsOf(character);
+
             character.Monitored = false;
         }
 
@@ -1250,6 +1253,9 @@ namespace EVEMon
             {
                 window.ShowDialog(this);
             }
+
+            // Close any open associated windows
+            CloseOpenWindowsOf(character);
         }
 
         /// <summary>
@@ -1313,6 +1319,9 @@ namespace EVEMon
             if (result != DialogResult.OK)
                 return;
 
+            // Close any open associated windows
+            CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
+
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
 
@@ -1350,8 +1359,13 @@ namespace EVEMon
                                               "Everything will be lost, including the plans.", "Confirm Settings Reseting",
                                               MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
-            if (dr == DialogResult.Yes)
-                Settings.Reset();
+            if (dr != DialogResult.Yes)
+                return;
+
+            // Close any open associated windows
+            CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
+
+            Settings.Reset();
 
             // Trigger the tip window
             OnShown(e);
@@ -1786,6 +1800,44 @@ namespace EVEMon
         {
             menubarToolStripMenuItem.Enabled = toolbarToolStripMenuItem.Checked = mainToolBar.Visible;
             toolbarToolStripMenuItem.Enabled = menubarToolStripMenuItem.Checked = mainMenuBar.Visible;
+        }
+
+        /// <summary>
+        /// Closes any open windows of the specified characters.
+        /// </summary>
+        /// <param name="monitoredCharacters">The monitored characters.</param>
+        private static void CloseOpenWindowsOf(IEnumerable<Character> monitoredCharacters)
+        {
+            foreach (Character character in monitoredCharacters)
+            {
+                CloseOpenWindowsOf(character);
+            }
+        }
+
+        /// <summary>
+        /// Closes any open windows of the specified character.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        private static void CloseOpenWindowsOf(Character character)
+        {
+            // Close any open Skill Planner window
+            foreach (Plan plan in character.Plans)
+            {
+                PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(plan);
+
+                if (planWindow != null)
+                    WindowsFactory.CloseByTag(planWindow, plan);
+            }
+
+            // Close any open Skill Pie Chart window
+            SkillsPieChart skillsPieChart = WindowsFactory.GetByTag<SkillsPieChart, Character>(character);
+            if (skillsPieChart != null)
+                WindowsFactory.CloseByTag(skillsPieChart, character);
+
+            // Close any open Implant Groups window
+            ImplantSetsWindow implantSetsWindow = WindowsFactory.GetByTag<ImplantSetsWindow, Character>(character);
+            if (implantSetsWindow != null)
+                WindowsFactory.CloseByTag(implantSetsWindow, character);
         }
 
         #endregion
