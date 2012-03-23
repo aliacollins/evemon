@@ -37,6 +37,7 @@ namespace EVEMon.CharacterMonitoring
             noEmploymentHistoryLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
         }
@@ -67,6 +68,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.CharacterStandingsUpdated -= EveMonClient_CharacterInfoUpdated;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
@@ -278,6 +280,17 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void record_EmploymentRecordImageUpdated(object sender, EventArgs e)
+        {
+            // Force to redraw
+            lbEmploymentHistory.Invalidate();
+        }
+
+        /// <summary>
+        /// Handles the EveIDToNameUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="eventArgs">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs eventArgs)
         {
             // Force to redraw
             lbEmploymentHistory.Invalidate();

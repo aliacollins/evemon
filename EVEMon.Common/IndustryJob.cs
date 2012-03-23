@@ -359,7 +359,7 @@ namespace EVEMon.Common
             // so we look it up in our datafile
             if (id <= Int32.MaxValue)
             {
-                int stationID = (int)id;
+                int stationID = Convert.ToInt32(id);
                 station = Station.GetByID(stationID);
             }
 
