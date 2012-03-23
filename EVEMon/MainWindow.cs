@@ -1315,6 +1315,10 @@ namespace EVEMon
 
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
+
+            // Remove the tip window if it exist and is confirmed in settings
+            if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
+                Controls.Remove(Controls.OfType<TipWindow>().First());
         }
 
         /// <summary>
