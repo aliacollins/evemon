@@ -1023,10 +1023,12 @@
     <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
       <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
       <Name>EVEMon.Common</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EveMon.LogitechG15\EVEMon.LogitechG15.csproj">
       <Project>{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}</Project>
       <Name>EVEMon.LogitechG15</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EVEMon.Watchdog\EVEMon.Watchdog.csproj">
       <Project>{8C4A87A0-780E-4765-ADD0-146091FE26F4}</Project>
@@ -1035,14 +1037,17 @@
     <ProjectReference Include="..\EVEMon.WindowsApi\EVEMon.WindowsApi.csproj">
       <Project>{D942D976-6185-4ECD-A83B-60260100D12E}</Project>
       <Name>EVEMon.WindowsApi</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EVEMon.PieChart\EVEMon.PieChart.csproj">
       <Project>{696E929A-6A4A-4C6D-A8B2-C4F25F781940}</Project>
       <Name>EVEMon.PieChart</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EVEMon.Sales\EVEMon.Sales.csproj">
       <Project>{097C8821-39BB-446D-87E1-5D24E9115CFB}</Project>
       <Name>EVEMon.Sales</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
