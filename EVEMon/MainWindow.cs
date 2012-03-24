@@ -304,121 +304,44 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Rebuild the tab pages.
+        /// Updates the tab pages.
         /// </summary>
         private void UpdateTabs()
         {
             TabPage selectedTab = tcCharacterTabs.SelectedTab;
-
-            // Collect the existing pages
-            Dictionary<Character, TabPage> pages = new Dictionary<Character, TabPage>();
-            foreach (TabPage page in tcCharacterTabs.TabPages.Cast<TabPage>().Where(page => page.Tag is Character))
-            {
-                pages[(Character)page.Tag] = page;
-            }
+            IEnumerable<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>();
 
             // Updates the pages
-            PerformLayout(pages);
+            tcCharacterTabs.SuspendLayout();
+            try
+            {
+                tcCharacterTabs.TabPages.Clear();
+
+                // Dispose the old pages
+                foreach (TabPage page in pages)
+                {
+                    page.Dispose();
+                }
+
+                // Rebuild the pages
+                foreach (TabPage page in EveMonClient.MonitoredCharacters.Select(CreateTab))
+                {
+                    tcCharacterTabs.TabPages.Add(page);
+                }
+
+                // Ensures the overview has been added if necessary
+                AddOverviewTab();
+            }
+            finally
+            {
+                tcCharacterTabs.ResumeLayout();
+            }
 
             // Reselect
             if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
                 tcCharacterTabs.SelectedTab = selectedTab;
 
             UpdateControlsOnTabSelectionChange();
-        }
-
-        /// <summary>
-        /// Performs the layout.
-        /// </summary>
-        /// <param name="pages">The pages.</param>
-        private void PerformLayout(Dictionary<Character, TabPage> pages)
-        {
-            tcCharacterTabs.SuspendLayout();
-            try
-            {
-                // Rebuild the pages
-                int index = 0;
-                foreach (Character character in EveMonClient.MonitoredCharacters)
-                {
-                    // Retrieve the current page, or null if we're past the limits
-                    TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
-
-                    // Is it the overview ? We'll deal with it later
-                    if (currentPage == tpOverview)
-                    {
-                        index++;
-                        currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
-                    }
-
-                    Object currentTag = (currentPage != null ? currentPage.Tag : null);
-
-                    // Does the page match with the character ?
-                    if (currentTag != character)
-                    {
-                        // Get the existing page and remove it from the old location
-                        // or create a new one
-                        TabPage page = GetPage(pages, character);
-
-                        // Inserts the page in the proper location
-                        tcCharacterTabs.TabPages.Insert(index, page);
-                    }
-
-                    // Remove processed character from the dictionary and move forward
-                    if (character != null)
-                        pages.Remove(character);
-                    index++;
-                }
-
-                // Ensures the overview has been added when necessary
-                AddOverviewTab();
-
-                // Dispose the removed tabs
-                foreach (TabPage page in pages.Values)
-                {
-                    page.Dispose();
-                }
-            }
-            finally
-            {
-                tcCharacterTabs.ResumeLayout();
-            }
-        }
-
-        /// <summary>
-        /// Gets the page.
-        /// </summary>
-        /// <param name="pages">The pages.</param>
-        /// <param name="character">The character.</param>
-        /// <returns></returns>
-        private TabPage GetPage(IDictionary<Character, TabPage> pages, Character character)
-        {
-            TabPage page;
-            TabPage tempPage = null;
-            try
-            {
-                // Retrieve the page when it was previously created
-                // Is the character later in the collection ?
-                if (pages.TryGetValue(character, out tempPage))
-                {
-                    // Remove the page from old location
-                    tcCharacterTabs.TabPages.Remove(tempPage);
-                }
-                else
-                {
-                    // Creates a new page
-                    tempPage = CreateTab(character);
-                }
-
-                page = tempPage;
-                tempPage = null;
-            }
-            finally
-            {
-                if (tempPage != null)
-                    tempPage.Dispose();
-            }
-
-            return page;
         }
 
         /// <summary>
