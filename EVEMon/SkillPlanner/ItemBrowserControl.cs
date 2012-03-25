@@ -3,7 +3,7 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ItemBrowserControl : EveObjectBrowserControl
+    internal partial class ItemBrowserControl : EveObjectBrowserControl
     {
         #region Constructors
 

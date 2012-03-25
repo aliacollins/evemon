@@ -5,7 +5,7 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ShipBrowserControl : EveObjectBrowserControl
+    internal partial class ShipBrowserControl : EveObjectBrowserControl
     {
         #region Constructors
 

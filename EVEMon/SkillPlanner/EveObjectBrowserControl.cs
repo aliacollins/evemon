@@ -13,13 +13,9 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// Base class for EveObject browsers.
     /// Provides basic split container layout and item header including icon, name and category, 
-    /// along with event handling for item selection and worksafeMode changes. Derived classes
-    /// should override DisplayItemDetails() as required
+    /// along with event handling for item selection and worksafeMode changes.
     /// </summary>
-    /// <remarks>
-    /// Should be an abstract class but Visual Studio Designer throws a wobbler when you
-    /// try to design a class that inherits from an abstract class.</remarks>
-    public partial class EveObjectBrowserControl : UserControl
+    internal abstract partial class EveObjectBrowserControl : UserControl
     {
         protected const int Pad = 3;
 

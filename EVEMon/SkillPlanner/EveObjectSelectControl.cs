@@ -518,6 +518,9 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CannotUse(Item item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             Blueprint blueprint = item as Blueprint;
 
             bool hasActivity = blueprint == null || ActivityFilter == ObjectActivityFilter.All

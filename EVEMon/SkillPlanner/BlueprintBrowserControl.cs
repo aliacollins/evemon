@@ -9,7 +9,7 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class BlueprintBrowserControl : EveObjectBrowserControl
+    internal partial class BlueprintBrowserControl : EveObjectBrowserControl
     {
         private readonly object[] m_laboratories = {
                                                        "Mobile Laboratory",
