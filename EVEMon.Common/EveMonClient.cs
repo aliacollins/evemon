@@ -473,6 +473,11 @@ namespace EVEMon.Common
         public static event EventHandler MonitoredCharacterCollectionChanged;
 
         /// <summary>
+        /// Occurs when the collection of a character implant set changed.
+        /// </summary>
+        public static event EventHandler CharacterImplantSetCollectionChanged;
+
+        /// <summary>
         /// Occurs when a character training check on an account type API key has been updated.
         /// </summary>
         public static event EventHandler CharactersSkillInTrainingUpdated;
@@ -747,6 +752,17 @@ namespace EVEMon.Common
             Settings.Save();
             if (CharacterCollectionChanged != null)
                 CharacterCollectionChanged(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the character implant set collection changed.
+        /// </summary>
+        internal static void OnCharacterImplantSetCollectionChanged()
+        {
+            Trace("EveMonClient.OnCharacterImplantSetCollectionChanged");
+            Settings.Save();
+            if (CharacterImplantSetCollectionChanged != null)
+                CharacterImplantSetCollectionChanged(null, EventArgs.Empty);
         }
 
         /// <summary>

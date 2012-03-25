@@ -76,6 +76,7 @@ namespace EVEMon.SkillPlanner
             cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterImplantSetCollectionChanged += EveMonClient_CharacterImplantSetCollectionChanged;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -96,6 +97,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterImplantSetCollectionChanged -= EveMonClient_CharacterImplantSetCollectionChanged;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
@@ -143,7 +145,7 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set
             {
-                if (value  == null || m_plan == value)
+                if (value == null || m_plan == value)
                     return;
 
                 m_plan = value;
@@ -247,6 +249,18 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// When the character implant sets changed, update the implant set selection. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_CharacterImplantSetCollectionChanged(object sender, EventArgs e)
+        {
+            UpdateImplantSetList();
+            cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex < cbChooseImplantSet.Items.Count ? m_lastImplantSetIndex : 0;
+            UpdateImplantSet();
+        }
+
+        /// <summary>
         /// When the plan changed, entries may have changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -266,10 +280,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            UpdateImplantSetList();
-            cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex;
-            UpdateImplantSet();
-
             UpdateSkillList();
         }
 
@@ -1631,7 +1641,7 @@ namespace EVEMon.SkillPlanner
 
                 // Shows the custom dialog box
                 DialogResult dialogResult = MessageBoxCustom.Show(this, text, CaptionText, CbOptionText, MessageBoxButtons.YesNo,
-                                                     MessageBoxIcon.Exclamation);
+                                                                  MessageBoxIcon.Exclamation);
                 Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = !MessageBoxCustom.CheckBoxChecked;
 
                 // When the checkbox is checked we store the dialog result
@@ -1941,7 +1951,7 @@ namespace EVEMon.SkillPlanner
             // When the first entry is a skill, shows it in the skill browser.
             if (GetFirstSelectedEntry() != null)
                 miShowInSkillBrowser_Click(sender, e);
-            // When it is a remapping point, edit it
+                // When it is a remapping point, edit it
             else
                 ShowUniqueAttributeOptimizationForm();
         }
