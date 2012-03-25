@@ -60,24 +60,22 @@ namespace EVEMon.Controls
             if (!DesignMode && !this.IsDesignModeHosted())
                 return;
 
-            List<NotificationEventArgs> list = new List<NotificationEventArgs>();
-            NotificationEventArgs notification = new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
-                                                     {
-                                                         Priority = NotificationPriority.Information,
-                                                         Description = "Some information"
-                                                     };
+            Notifications = new List<NotificationEventArgs>
+                                {
+                                    new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
+                                        {
+                                            Priority = NotificationPriority.Information,
+                                            Description = "Some information"
+                                        },
+                                    new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
+                                        {
+                                            Priority = NotificationPriority.Warning,
+                                            Description = "Some warning"
+                                        },
+                                    new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
+                                        { Priority = NotificationPriority.Error, Description = "Some error" }
+                                };
 
-            list.Add(notification);
-
-            notification = new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
-                               { Priority = NotificationPriority.Warning, Description = "Some warning" };
-            list.Add(notification);
-
-            notification = new NotificationEventArgs(null, NotificationCategory.AccountNotInTraining)
-                               { Priority = NotificationPriority.Error, Description = "Some error" };
-            list.Add(notification);
-
-            Notifications = list;
         }
 
         /// <summary>
@@ -91,12 +89,13 @@ namespace EVEMon.Controls
             set
             {
                 m_notifications.Clear();
-                if (value != null)
-                {
-                    IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(
-                        x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
-                    m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
-                }
+                if (value == null)
+                    return;
+
+                IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(
+                    x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
+                m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
+
                 UpdateContent();
             }
         }

@@ -51,16 +51,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Handles the TimerTick event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            UpdateOnOneSecondTick();
-        }
-
-        /// <summary>
         /// Gets true if we're currently restoring the settings.
         /// </summary>
         public static bool IsRestoringSettings { get; private set; }
@@ -71,22 +61,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the compatibility mode.
         /// </summary>
-        public static CompatibilityMode Compatibility { get; set; }
+        public static CompatibilityMode Compatibility { get; private set; }
 
         /// <summary>
         /// Gets the settings for updates.
         /// </summary>
-        public static UpdateSettings Updates { get; set; }
+        public static UpdateSettings Updates { get; private set; }
 
         /// <summary>
         /// Gets the settings for UI (look'n feel)
         /// </summary>
-        public static UISettings UI { get; set; }
+        public static UISettings UI { get; private set; }
 
         /// <summary>
         /// Gets the settings for the G15 keyboard.
         /// </summary>
-        public static G15Settings G15 { get; set; }
+        public static G15Settings G15 { get; private set; }
 
         /// <summary>
         /// Gets the settings for the notifications (alerts).
@@ -96,22 +86,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the settings for the network.
         /// </summary>
-        public static IGBSettings IGB { get; set; }
+        public static IGBSettings IGB { get; private set; }
 
         /// <summary>
         /// Gets the calendar settings.
         /// </summary>
-        public static CalendarSettings Calendar { get; set; }
+        public static CalendarSettings Calendar { get; private set; }
 
         /// <summary>
         /// Gets or sets the exportation settings.
         /// </summary>
-        public static ExportationSettings Exportation { get; set; }
+        public static ExportationSettings Exportation { get; private set; }
 
         /// <summary>
         /// Gets or sets the custom proxy settings.
         /// </summary>
-        public static ProxySettings Proxy { get; set; }
+        public static ProxySettings Proxy { get; private set; }
 
         #endregion
 
@@ -527,7 +517,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Every timer tick, checks whether we should save the settings every 10s.
         /// </summary>
-        private static void UpdateOnOneSecondTick()
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private static void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
