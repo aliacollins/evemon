@@ -118,9 +118,6 @@ namespace EVEMon
 
             Visible = false;
             trayIcon.Text = Application.ProductName;
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
-                               && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                                   || WindowState == FormWindowState.Minimized);
 
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
@@ -203,12 +200,16 @@ namespace EVEMon
             UpdateNotifications();
 
             // Updates tray icon visibility
-            if (WindowState != FormWindowState.Minimized || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled)
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                                || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                    WindowState == FormWindowState.Minimized));
+
+            if (WindowState != FormWindowState.Minimized)
                 return;
 
-            trayIcon.Visible = Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.MinimizeToTaskbar
-                               || Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled;
-            Visible = (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar);
+            ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
+                            || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
+            Visible = ShowInTaskbar;
         }
 
         /// <summary>
@@ -228,8 +229,8 @@ namespace EVEMon
             if (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.Exit)
                 return;
 
-            // If the user has right clicked the task bar item item while
-            // this window is minimized, and chosen close then then the
+            // If the user has right clicked the task bar item while
+            // this window is minimized, and chosen close then the
             // following will evaluate to false and EVEMon will close.
             if (WindowState == FormWindowState.Minimized)
                 return;
@@ -1905,7 +1906,7 @@ namespace EVEMon
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = Visible;
             Activate();
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
         }
 
         #endregion
@@ -1929,9 +1930,9 @@ namespace EVEMon
         private void UpdateControlsVisibility()
         {
             // Tray icon's visibility
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
-                               && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                                   || WindowState == FormWindowState.Minimized);
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                                || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                    WindowState == FormWindowState.Minimized));
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
