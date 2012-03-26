@@ -100,6 +100,7 @@ namespace EVEMon.Controls
             finally
             {
                 ResumeLayout();
+                labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
             }
         }
 
