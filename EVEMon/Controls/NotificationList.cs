@@ -89,12 +89,12 @@ namespace EVEMon.Controls
             set
             {
                 m_notifications.Clear();
-                if (value == null)
-                    return;
-
-                IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(
-                    x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
-                m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
+                if (value != null)
+                {
+                    IEnumerable<NotificationEventArgs> notificationsToAdd = value.Where(
+                        x => Settings.Notifications.Categories[x.Category].ShowOnMainWindow);
+                    m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
+                }
 
                 UpdateContent();
             }

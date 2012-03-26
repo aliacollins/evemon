@@ -64,12 +64,11 @@ namespace EVEMon.Controls
                 CleanUp();
 
                 // Updates the visibility of the label for when no characters are loaded
-                bool noCharacters = !EveMonClient.MonitoredCharacters.Any();
-
-                labelNoCharacters.Visible = noCharacters;
-
-                if (noCharacters)
+                if (!EveMonClient.MonitoredCharacters.Any())
+                {
+                    labelNoCharacters.Visible = true;
                     return;
+                }
 
                 // Creates the controls
                 List<Character> characters = new List<Character>();

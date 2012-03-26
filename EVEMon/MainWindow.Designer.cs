@@ -137,6 +137,7 @@ namespace EVEMon
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.overview = new EVEMon.Controls.Overview();
             this.notificationList = new EVEMon.Controls.NotificationList();
+            this.tabCreationLabel = new System.Windows.Forms.Label();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -1058,12 +1059,25 @@ namespace EVEMon
             this.notificationList.Size = new System.Drawing.Size(554, 72);
             this.notificationList.TabIndex = 6;
             // 
+            // tabCreationLabel
+            // 
+            this.tabCreationLabel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabCreationLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabCreationLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.tabCreationLabel.Location = new System.Drawing.Point(0, 49);
+            this.tabCreationLabel.Name = "tabCreationLabel";
+            this.tabCreationLabel.Size = new System.Drawing.Size(554, 503);
+            this.tabCreationLabel.TabIndex = 7;
+            this.tabCreationLabel.Text = "Tab pages creation in progress.\r\n\r\nPlease wait.";
+            this.tabCreationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(554, 646);
             this.Controls.Add(this.tcCharacterTabs);
+            this.Controls.Add(this.tabCreationLabel);
             this.Controls.Add(this.notificationList);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.mainToolBar);
@@ -1196,5 +1210,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton resetSettingsToolStripButton;
         private System.Windows.Forms.ToolStripButton tsbImplantGroups;
         private System.Windows.Forms.ToolStripButton tsbShowOwned;
+        private System.Windows.Forms.Label tabCreationLabel;
     }
 }
