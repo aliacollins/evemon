@@ -51,6 +51,16 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateOnOneSecondTick();
+        }
+
+        /// <summary>
         /// Gets true if we're currently restoring the settings.
         /// </summary>
         public static bool IsRestoringSettings { get; private set; }
@@ -109,7 +119,7 @@ namespace EVEMon.Common
         #region Serialization - Core - Methods to update to add a property
 
         /// <summary>
-        /// Creates new empty Settings file, overwriting the existing file
+        /// Creates new empty Settings file, overwriting the existing file.
         /// </summary>
         public static void Reset()
         {
@@ -153,23 +163,22 @@ namespace EVEMon.Common
                 G15 = serial.G15;
                 IGB = serial.IGB;
                 Proxy = serial.Proxy;
-                Exportation = serial.Exportation;
+                Updates = serial.Updates;
                 Calendar = serial.Calendar;
+                Exportation = serial.Exportation;
+                Notifications = serial.Notifications;
 
                 // Import the characters, API keys and plans
                 if (!preferencesOnly)
                 {
                     // The above check prevents the settings form to trigger a 
                     // characters updates since the last queried infos would be lost
+                    EveMonClient.ResetCollections();
                     EveMonClient.Characters.Import(serial.Characters);
                     EveMonClient.Characters.ImportPlans(serial.Plans);
                     EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
                     EveMonClient.APIKeys.Import(serial.APIKeys);
                 }
-
-                // 'Updates' and 'Notifications' settings should always follow character importation
-                Updates = serial.Updates;
-                Notifications = serial.Notifications;
 
                 // Trim the data
                 OnImportCompleted();
@@ -343,7 +352,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// loads the settings file, or the backup, prompting the user for errors.
+        /// Loads the settings file, or the backup, prompting the user for errors.
         /// </summary>
         /// <returns><c>Null</c> if we have been unable to load anything from files, the generated settings otherwise</returns>
         private static SerializableSettings TryDeserializeSettings()
@@ -517,9 +526,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Every timer tick, checks whether we should save the settings every 10s.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        private static void UpdateOnOneSecondTick()
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
@@ -544,12 +551,12 @@ namespace EVEMon.Common
         public static void SaveImmediate()
         {
             SerializableSettings settings = Export();
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
 
             // Save in settings file
             FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath,
                                               fs =>
                                                   {
+                                                      XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
                                                       xs.Serialize(fs, settings);
                                                       fs.Flush();
                                                       return true;

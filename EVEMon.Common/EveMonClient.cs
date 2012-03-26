@@ -97,13 +97,22 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Shutdowns the timer
+        /// Shutdowns the timer.
         /// </summary>
         public static void Shutdown()
         {
             Closed = true;
             s_running = false;
             Dispatcher.Shutdown();
+        }
+
+        /// <summary>
+        /// Resets collection that need to be cleared.
+        /// </summary>
+        internal static void ResetCollections()
+        {
+            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            Notifications = new GlobalNotificationCollection();
         }
 
         /// <summary>

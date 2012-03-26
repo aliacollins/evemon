@@ -14,6 +14,11 @@ namespace EVEMon
 {
     internal static class Program
     {
+        /// <summary>
+        /// The main window of the application.
+        /// </summary>
+        private static Form s_mainWindow;
+
         private static bool s_exitRequested;
         private static bool s_showNotWindowOnError;
 
@@ -52,7 +57,7 @@ namespace EVEMon
             // Initialization
             EveMonClient.Initialize();
             Settings.InitializeFromFile();
-            EveIDToName.EnsureCacheFileLoad();
+            EveIDToName.InitializeFromFile();
 
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested)
@@ -62,7 +67,8 @@ namespace EVEMon
             try
             {
                 EveMonClient.Trace("Main loop - start");
-                Application.Run(new MainWindow(startMinimized));
+                s_mainWindow = new MainWindow(startMinimized);
+                Application.Run(s_mainWindow);
                 EveMonClient.Trace("Main loop - done");
             }
                 // Save before we quit
@@ -80,12 +86,7 @@ namespace EVEMon
         #region Properties
 
         /// <summary>
-        /// The main window of the application.
-        /// </summary>
-        public static MainWindow MainWindow { private get; set; }
-
-        /// <summary>
-        /// Ensures that only one instance of EVEMon is ran at once.
+        /// Ensures that only one instance of EVEMon is run at once.
         /// </summary>
         private static bool IsInstanceUnique
         {
@@ -196,7 +197,7 @@ namespace EVEMon
                                       {
                                           using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
                                           {
-                                              form.ShowDialog(MainWindow);
+                                              form.ShowDialog(s_mainWindow);
                                           }
                                       });
             }

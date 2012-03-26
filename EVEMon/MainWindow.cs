@@ -40,7 +40,7 @@ using EVEMon.WindowsApi;
 
 namespace EVEMon
 {
-    public partial class MainWindow : EVEMonForm
+    public sealed partial class MainWindow : EVEMonForm
     {
         private Form m_trayPopup;
         private IgbServer m_igbServer;
@@ -62,9 +62,9 @@ namespace EVEMon
         private MainWindow()
         {
             InitializeComponent();
-            Program.MainWindow = this;
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
+            Visible = false;
 
             tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
             overview.CharacterClicked += overview_CharacterClicked;
@@ -100,7 +100,7 @@ namespace EVEMon
         /// </summary>
         private static void TriggerAutoShrink()
         {
-            AutoShrink.Dirty(TimeSpan.FromSeconds(5));
+            AutoShrink.Dirty(TimeSpan.FromSeconds(5).Seconds);
         }
 
 
@@ -116,7 +116,6 @@ namespace EVEMon
             if (DesignMode)
                 return;
 
-            Visible = false;
             trayIcon.Text = Application.ProductName;
 
             // Prepare control's visibility
@@ -310,25 +309,21 @@ namespace EVEMon
         private void UpdateTabs()
         {
             TabPage selectedTab = tcCharacterTabs.SelectedTab;
-            IEnumerable<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>();
+            List<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().ToList();
 
             // Updates the pages
+            tcCharacterTabs.Visible = false;
             tcCharacterTabs.SuspendLayout();
             try
             {
-                tcCharacterTabs.TabPages.Clear();
-
                 // Dispose the old pages
-                foreach (TabPage page in pages)
+                foreach (TabPage page in pages.Where(page => page != tpOverview))
                 {
                     page.Dispose();
                 }
 
                 // Rebuild the pages
-                foreach (TabPage page in EveMonClient.MonitoredCharacters.Select(CreateTab))
-                {
-                    tcCharacterTabs.TabPages.Add(page);
-                }
+                tcCharacterTabs.TabPages.AddRange(EveMonClient.MonitoredCharacters.Select(CreateTabPage).ToArray());
 
                 // Ensures the overview has been added if necessary
                 AddOverviewTab();
@@ -336,6 +331,7 @@ namespace EVEMon
             finally
             {
                 tcCharacterTabs.ResumeLayout();
+                tcCharacterTabs.Visible = true;
             }
 
             // Reselect
@@ -382,10 +378,10 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Creates the tab for the given character.
+        /// Creates the tab page for the given character.
         /// </summary>
         /// <param name="character">The character</param>
-        private static TabPage CreateTab(Character character)
+        private static TabPage CreateTabPage(Character character)
         {
             // Create the tab
             TabPage page;
@@ -1246,6 +1242,9 @@ namespace EVEMon
             // Close any open associated windows
             CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
 
+            // Clear any notifications
+            ClearNotifications();
+
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
 
@@ -1289,6 +1288,10 @@ namespace EVEMon
             // Close any open associated windows
             CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
 
+            // Clear any notifications
+            ClearNotifications();
+
+            // Reset the settings
             Settings.Reset();
 
             // Trigger the tip window
@@ -1762,6 +1765,18 @@ namespace EVEMon
             ImplantSetsWindow implantSetsWindow = WindowsFactory.GetByTag<ImplantSetsWindow, Character>(character);
             if (implantSetsWindow != null)
                 WindowsFactory.CloseByTag(implantSetsWindow, character);
+        }
+
+        /// <summary>
+        /// Clears the notifications.
+        /// </summary>
+        private void ClearNotifications()
+        {
+            // Clear all main window notifications
+            notificationList.Notifications = null;
+
+            // Clear all tray icon notifications
+            m_popupNotifications.Clear();
         }
 
         #endregion

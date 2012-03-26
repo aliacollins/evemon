@@ -38,9 +38,8 @@ namespace EVEMon.Common
         /// seconds.  By calling Dirty() at the start of a network operation, we're most likely going to clean up after WCF has
         /// completed processing either the successful call or the timeout.
         /// </remarks>
-        private static readonly TimeSpan s_idleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
+        private const int IdleMillisecondsBeforeClean = 65000;
 
-        private static readonly TimeSpan s_infinite = new TimeSpan(0, 0, 0, 0, -1);
         private static readonly Timer s_dirtyTimer = new Timer(DirtyCallback);
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Dirty()
         {
-            s_dirtyTimer.Change(s_idleMillisecondsBeforeClean, s_infinite);
+            s_dirtyTimer.Change(IdleMillisecondsBeforeClean, Timeout.Infinite);
         }
 
         /// <summary>
@@ -79,9 +78,9 @@ namespace EVEMon.Common
         /// <param name="idleMillisecondsBeforeClean">
         /// TimeSpan to wait for Dirty calls to dampen (e.g. time to pass without another call to dirty) before cleaning memory.
         /// </param>
-        public static void Dirty(TimeSpan idleMillisecondsBeforeClean)
+        public static void Dirty(int idleMillisecondsBeforeClean)
         {
-            s_dirtyTimer.Change(idleMillisecondsBeforeClean, s_infinite);
+            s_dirtyTimer.Change(idleMillisecondsBeforeClean, Timeout.Infinite);
         }
 
         /// <summary>
@@ -90,9 +89,13 @@ namespace EVEMon.Common
         public static void DirtyImmediate()
         {
             DirtyCallback(null);
-            s_dirtyTimer.Change(s_infinite, s_infinite);
+            s_dirtyTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
+        /// <summary>
+        /// The callback.
+        /// </summary>
+        /// <param name="state">The state.</param>
         private static void DirtyCallback(object state)
         {
             // These operations are very expensive and should be performed rarely.  One of the ironies of GC.Collect is that it touches
@@ -106,7 +109,7 @@ namespace EVEMon.Common
             // trim the working set.
             GC.WaitForPendingFinalizers();
 
-            // Performs the same operation that Windows does upon "minimize window".  This releases all memory pages not currently in use
+            // Performs the same operation that Windows does upon "minimize window". This releases all memory pages not currently in use
             // which greatly reduces the amount of RAM that a managed application take up when idle.
             // Note by Jimi: Using 'EmptyWorkingSet' in favor of 'SetProcessWorkingSetSize' as proposed in
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ms686234.aspx and

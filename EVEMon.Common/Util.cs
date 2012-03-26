@@ -87,8 +87,6 @@ namespace EVEMon.Common
         {
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(T));
-
                 if (transform != null)
                 {
                     MemoryStream stream = GetMemoryStream();
@@ -100,6 +98,7 @@ namespace EVEMon.Common
                         writer.Flush();
 
                         // Deserialize from the given stream
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
                         stream.Seek(0, SeekOrigin.Begin);
                         return (T)xs.Deserialize(stream);
                     }
@@ -108,6 +107,7 @@ namespace EVEMon.Common
                 // Deserialization without transform
                 using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -139,11 +139,11 @@ namespace EVEMon.Common
         public static T DeserializeXMLFromString<T>(string text)
             where T : class
         {
-            XmlSerializer xs = new XmlSerializer(typeof(T));
             try
             {
                 using (TextReader stream = new StringReader(text))
                 {
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -171,37 +171,36 @@ namespace EVEMon.Common
         {
             // Gets the full path
             string path = Datafile.GetFullPath(filename);
-            Stream stream = null;
             try
             {
-                stream = FileHelper.OpenRead(path, false);
-                GZipStream gZipStream = new GZipStream(stream, CompressionMode.Decompress);
-                XmlSerializer xs = new XmlSerializer(typeof(T));
-
-                // Deserialization with transform
-                if (transform != null)
+                using (Stream stream = FileHelper.OpenRead(path, false))
                 {
-                    using (XmlTextReader reader = new XmlTextReader(gZipStream))
+                    GZipStream gZipStream = new GZipStream(stream, CompressionMode.Decompress);
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
+
+                    // Deserialization with transform
+                    if (transform != null)
                     {
-                        stream = null;
-
-                        MemoryStream memoryStream = GetMemoryStream();
-                        using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.UTF8))
+                        using (XmlTextReader reader = new XmlTextReader(gZipStream))
                         {
-                            // Apply the XSL transform
-                            writer.Formatting = Formatting.Indented;
-                            transform.Transform(reader, writer);
-                            writer.Flush();
+                            MemoryStream memoryStream = GetMemoryStream();
+                            using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.UTF8))
+                            {
+                                // Apply the XSL transform
+                                writer.Formatting = Formatting.Indented;
+                                transform.Transform(reader, writer);
+                                writer.Flush();
 
-                            // Deserialize from the given stream
-                            memoryStream.Seek(0, SeekOrigin.Begin);
-                            return (T)xs.Deserialize(memoryStream);
+                                // Deserialize from the given stream
+                                memoryStream.Seek(0, SeekOrigin.Begin);
+                                return (T)xs.Deserialize(memoryStream);
+                            }
                         }
                     }
-                }
 
-                // Deserialization without transform
-                return (T)xs.Deserialize(gZipStream);
+                    // Deserialization without transform
+                    return (T)xs.Deserialize(gZipStream);
+                }
             }
             catch (InvalidOperationException ex)
             {
@@ -218,11 +217,6 @@ namespace EVEMon.Common
                                                + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
                                                ex.Message, ex.Source);
                 throw new XmlException(message, ex);
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Dispose();
             }
         }
 
@@ -336,11 +330,11 @@ namespace EVEMon.Common
 
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
-
                 // Deserialization with a transform
                 using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
+                    XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
+
                     if (transform != null)
                     {
                         MemoryStream stream = GetMemoryStream();

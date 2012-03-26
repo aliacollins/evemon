@@ -81,25 +81,24 @@ namespace EVEMon.Common
             s_listOfNames.Clear();
             s_listOfIDsToQuery.Clear();
 
-            EnsureCacheFileLoad();
             LookupForName();
 
             return s_listOfNames;
         }
 
         /// <summary>
-        /// Ensures the cache file is loaded.
+        /// Initializes the cache from file.
         /// </summary>
-        public static void EnsureCacheFileLoad()
+        public static void InitializeFromFile()
         {
             if (File.Exists(s_file) && !s_cacheList.Any())
-                TryDeserializeCacheFile();
+                ImportCacheFile();
         }
 
         /// <summary>
-        /// Tries to deserialize the EveIDToName file.
+        /// Imports the cache file.
         /// </summary>
-        private static void TryDeserializeCacheFile()
+        private static void ImportCacheFile()
         {
             // Deserialize the file
             SerializableEveIDToName cache = Util.DeserializeXMLFromFile<SerializableEveIDToName>(s_file);
@@ -265,15 +264,16 @@ namespace EVEMon.Common
         public static void SaveImmediate()
         {
             SerializableEveIDToName serial = Export();
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
 
             // Save in file
-            FileHelper.OverwriteOrWarnTheUser(s_file, fs =>
-                                                          {
-                                                              xs.Serialize(fs, serial);
-                                                              fs.Flush();
-                                                              return true;
-                                                          });
+            FileHelper.OverwriteOrWarnTheUser(s_file,
+                                              fs =>
+                                                  {
+                                                      XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
+                                                      xs.Serialize(fs, serial);
+                                                      fs.Flush();
+                                                      return true;
+                                                  });
             // Reset savePending flag
             s_lastSaveTime = DateTime.UtcNow;
             s_savePending = false;
