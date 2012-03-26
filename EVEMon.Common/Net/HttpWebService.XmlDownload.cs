@@ -89,6 +89,7 @@ namespace EVEMon.Common.Net
 
             if (requestState.Request.ResponseStream != null)
                 requestState.Request.ResponseStream.Close();
+
             requestState.DownloadXmlCompleted(new DownloadXmlAsyncResult(xdocResult, requestState.Error), requestState.UserState);
         }
 

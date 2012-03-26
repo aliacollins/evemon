@@ -276,7 +276,8 @@ namespace EVEMon.Common.ExternalCalendar
             int index = folderPath.IndexOf(Path.DirectorySeparatorChar, 0);
 
             // Reconstruct the root path according to the index found
-            return String.Format(@"\\{0}", index > 0 ? folderPath.Substring(0, index) : folderPath);
+            return String.Format(CultureConstants.InvariantCulture, @"\\{0}",
+                                 index > 0 ? folderPath.Substring(0, index) : folderPath);
         }
 
         #endregion
