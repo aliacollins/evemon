@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
@@ -72,6 +73,10 @@ namespace EVEMon.Common.Controls
             lock (s_lockObject)
             {
                 if (Settings.UI.ConfirmedTips.Contains(key))
+                    return;
+
+                // Quit if it's already shown
+                if (form.Controls.OfType<TipWindow>().Any())
                     return;
 
                 TipWindow tipWindow = new TipWindow(title, tiptext, key, checkBoxVisible);
