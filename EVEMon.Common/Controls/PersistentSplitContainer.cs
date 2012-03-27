@@ -46,7 +46,7 @@ namespace EVEMon.Common.Controls
                     ExceptionHandler.LogException(err, false);
                     return;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ExceptionHandler.LogRethrowException(ex);
                     throw;
@@ -55,6 +55,8 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.Windows.Forms.Control"/> 
+        /// and its child controls and optionally releases the managed resources.
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources;
         /// false to release only unmanaged resources.</param>

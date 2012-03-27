@@ -136,6 +136,16 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            m_listBox.Dispose();
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
         /// Gets the list of items.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
