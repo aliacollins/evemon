@@ -144,8 +144,9 @@ namespace EVEMon.Common
                 s_listOfIDsToQuery = s_listOfIDs;
 
             // Avoid querying an already querying id
-            if (s_listOfIDsToQuery.Any(id => !s_queriedIDs.Contains(id)))
-                QueryAPICharacterName(s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id)));
+            IEnumerable<string> idsToQuery = s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id));
+            if (idsToQuery.Any())
+                QueryAPICharacterName(idsToQuery);
 
             // Add an "Unknown" entry for every id we query
             s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add("Unknown"));

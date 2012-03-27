@@ -53,6 +53,9 @@ namespace EVEMon.Common
 
                 Trace("EveMonClient.Initialize - begin");
 
+                // Network monitoring (connection availability changes)
+                NetworkMonitor.Initialize();
+
                 // APIMethods collection initialization (always before members instatiation)
                 APIMethods.Initialize();
 
@@ -75,9 +78,6 @@ namespace EVEMon.Common
                 StaticCertificates.Load();
                 StaticBlueprints.Load();
                 Trace("Load Datafiles - done");
-
-                // Network monitoring (connection availability changes)
-                NetworkMonitor.Initialize();
 
                 Trace("EveMonClient.Initialize - done");
             }

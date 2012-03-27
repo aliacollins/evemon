@@ -35,10 +35,10 @@ namespace EVEMon.Common.Net
                 }
                 catch (ArgumentException ex)
                 {
-                    // GetIsNetworkAvailable dosn't seem to work on every system (f.ex. Mac OSX/Darwine)
+                    // GetIsNetworkAvailable doesn't seem to work on every system (f.ex. Mac OSX/Darwine)
                     ExceptionHandler.LogException(ex, true);
 
-                    // check the network manually and set the manual flag to true
+                    // Check the network manually and set the manual flag to true
                     s_networkAvailable = IsNetworkAvailableManual();
                     s_manualTestRequired = true;
                 }
