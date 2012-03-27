@@ -38,7 +38,7 @@ namespace EVEMon.Common
         /// seconds.  By calling Dirty() at the start of a network operation, we're most likely going to clean up after WCF has
         /// completed processing either the successful call or the timeout.
         /// </remarks>
-        private const int IdleMillisecondsBeforeClean = 65000;
+        private static readonly int s_idleMillisecondsBeforeClean = TimeSpan.FromSeconds(65).Milliseconds;
 
         private static readonly Timer s_dirtyTimer = new Timer(DirtyCallback);
 
@@ -49,16 +49,16 @@ namespace EVEMon.Common
         /// to be Collected/Released.
         /// </summary>
         /// <remarks>
-        /// This method has a built-in timer to "dampen" multiple rapid calls to this method.  This means that you can safely
+        /// This method has a built-in timer to "dampen" multiple rapid calls to this method. This means that you can safely
         /// place the call inside a "frequently called" submethod (like Connection.Close) and memory clean will not occur until
-        /// calls to Dirty() stop coming in.  The timer is also by default set to a large value (65 seconds) so you don't have
-        /// to be terribly precise about when you call it.  For instance, if your operation completes within 65 seconds you
+        /// calls to Dirty() stop coming in. The timer is also by default set to a large value (65 seconds) so you don't have
+        /// to be terribly precise about when you call it. For instance, if your operation completes within 65 seconds you
         /// could simply call Dirty() at Operation.Start() and then the cleanup wouldn't occur until 65 seconds later after the
         /// operation had finished.
         /// </remarks>
         public static void Dirty()
         {
-            s_dirtyTimer.Change(IdleMillisecondsBeforeClean, Timeout.Infinite);
+            s_dirtyTimer.Change(s_idleMillisecondsBeforeClean, Timeout.Infinite);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace EVEMon.Common
         /// to be Collected/Released.
         /// </summary>
         /// <remarks>
-        /// This method has a built-in timer to "dampen" multiple rapid calls to this method.  This means that you can safely
+        /// This method has a built-in timer to "dampen" multiple rapid calls to this method. This means that you can safely
         /// place the call inside a "frequently called" submethod (like Connection.Close) and memory clean will not occur until
         /// calls to Dirty() stop coming in.
         ///
@@ -98,16 +98,19 @@ namespace EVEMon.Common
         /// <param name="state">The state.</param>
         private static void DirtyCallback(object state)
         {
+            // Note by Jimi (03-2012): Reading several posts about GC.Collect usage being a bad practice and monitoring EVEMon behavior
+            // I have disabled the use of it. Left though the code that empties the working set memory.
+
             // These operations are very expensive and should be performed rarely.  One of the ironies of GC.Collect is that it touches
             // the memory of *every single* managed object in a program as part of it's "can I get rid of you now?" algorithm.
             // Ergo, if a piece of memory in a managed app was paged out into disk, GC.Collect will force it to be reloaded.
             // This is why if you want to manually "trim" your memory using GC.Collect, afterwards you should call
             // SetProcessWorkingSetSize to trim the memory pages that were brought in only for the GC interrogation.
-            GC.Collect();
+            //GC.Collect();
 
             // Not only collect, also wait for the finalizers routines to be run so that all the memory churn is finished before we
             // trim the working set.
-            GC.WaitForPendingFinalizers();
+            //GC.WaitForPendingFinalizers();
 
             // Performs the same operation that Windows does upon "minimize window". This releases all memory pages not currently in use
             // which greatly reduces the amount of RAM that a managed application take up when idle.
