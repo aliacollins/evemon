@@ -64,6 +64,7 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.CharacterContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
             EveMonClient.CorporationContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
             Disposed += OnDisposed;
@@ -203,6 +204,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.CharacterContractItemsDownloaded -= EveMonClient_ContractItemsDownloaded;
             EveMonClient.CorporationContractItemsDownloaded -= EveMonClient_ContractItemsDownloaded;
             Disposed -= OnDisposed;
@@ -899,7 +901,16 @@ namespace EVEMon.CharacterMonitoring
             UpdateContent();
         }
 
-
+        /// <summary>
+        /// When the EveIDToName list updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
+            UpdateColumns();
+        }
+        
         # endregion
 
 

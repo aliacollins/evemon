@@ -12,7 +12,11 @@ namespace EVEMon.Common
         private readonly List<ContractItem> m_contractItems = new List<ContractItem>();
         private ContractState m_state;
         private APIGenericMethods m_apiMethod;
-
+        private Enum m_method;
+        
+        private string m_issuer;
+        private string m_assignee;
+        private string m_acceptor;
         private bool m_queryPending;
 
         /// <summary>
@@ -58,150 +62,166 @@ namespace EVEMon.Common
 
         #region Properties
 
+        /// <summary>
+        /// Gets the character.
+        /// </summary>
         public CCPCharacter Character { get; private set; }
 
         /// <summary>
-        /// Gets or sets the ID.
+        /// Gets the ID.
         /// </summary>
-        /// <value>The ID.</value>
         public long ID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the issuer ID.
+        /// Gets the issuer ID.
         /// </summary>
-        /// <value>The issuer ID.</value>
         public long IssuerID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the start station.
+        /// Gets the assignee ID.
         /// </summary>
-        /// <value>The start station.</value>
+        public long AssigneeID { get; private set; }
+
+        /// <summary>
+        /// Gets the acceptor ID.
+        /// </summary>
+        public long AcceptorID { get; private set; }
+
+        /// <summary>
+        /// Gets the start station.
+        /// </summary>
         public Station StartStation { get; private set; }
 
         /// <summary>
-        /// Gets or sets the end station.
+        /// Gets the end station.
         /// </summary>
-        /// <value>The end station.</value>
         public Station EndStation { get; private set; }
 
         /// <summary>
-        /// Gets or sets the type of the contract.
+        /// Gets the type of the contract.
         /// </summary>
-        /// <value>The type of the contract.</value>
+        /// <value>
+        /// The type of the contract.
+        /// </value>
         public ContractType ContractType { get; private set; }
 
         /// <summary>
-        /// Gets or sets the status.
+        /// Gets the status.
         /// </summary>
-        /// <value>The status.</value>
         public CCPContractStatus Status { get; private set; }
 
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets the description.
         /// </summary>
-        /// <value>The title.</value>
         public string Description { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [for corp].
+        /// Gets the issued for.
         /// </summary>
-        /// <value><c>true</c> if [for corp]; otherwise, <c>false</c>.</value>
         public IssuedFor IssuedFor { get; private set; }
 
         /// <summary>
-        /// Gets or sets the availability.
+        /// Gets the availability.
         /// </summary>
-        /// <value>The availability.</value>
         public ContractAvailability Availability { get; private set; }
 
         /// <summary>
-        /// Gets or sets the issued date.
+        /// Gets the issued.
         /// </summary>
-        /// <value>The issued date.</value>
         public DateTime Issued { get; private set; }
 
         /// <summary>
-        /// Gets or sets the expiration date.
+        /// Gets the expiration.
         /// </summary>
-        /// <value>The expiration date.</value>
         public DateTime Expiration { get; private set; }
 
         /// <summary>
-        /// Gets or sets the accepted date.
+        /// Gets the accepted.
         /// </summary>
-        /// <value>The accepted date.</value>
         public DateTime Accepted { get; private set; }
 
         /// <summary>
-        /// Gets or sets the duration.
+        /// Gets the duration.
         /// </summary>
-        /// <value>The duration.</value>
         public int Duration { get; private set; }
 
         /// <summary>
-        /// Gets or sets the days to complete a courier contract.
+        /// Gets the days to complete.
         /// </summary>
-        /// <value>The days to complete.</value>
         public int DaysToComplete { get; private set; }
 
         /// <summary>
-        /// Gets or sets the completed date.
+        /// Gets the completed.
         /// </summary>
-        /// <value>The completed date.</value>
         public DateTime Completed { get; private set; }
 
         /// <summary>
-        /// Gets or sets the price.
+        /// Gets the price.
         /// </summary>
-        /// <value>The price.</value>
         public decimal Price { get; private set; }
 
         /// <summary>
-        /// Gets or sets the reward.
+        /// Gets the reward.
         /// </summary>
-        /// <value>The reward.</value>
         public decimal Reward { get; private set; }
 
         /// <summary>
-        /// Gets or sets the collateral.
+        /// Gets the collateral.
         /// </summary>
-        /// <value>The collateral.</value>
         public decimal Collateral { get; private set; }
 
         /// <summary>
-        /// Gets or sets the buyout.
+        /// Gets the buyout.
         /// </summary>
-        /// <value>The buyout.</value>
         public decimal Buyout { get; private set; }
 
         /// <summary>
-        /// Gets or sets the volume.
+        /// Gets the volume.
         /// </summary>
-        /// <value>The volume.</value>
         public double Volume { get; private set; }
 
         /// <summary>
-        /// Gets or sets the issuer.
+        /// Gets the issuer.
         /// </summary>
-        /// <value>The issuer.</value>
-        public string Issuer { get; private set; }
+        public string Issuer
+        {
+            get
+            {
+                return m_issuer == "Unknown"
+                    ? m_issuer = EveIDToName.GetIDToName(IssuerID)
+                    : m_issuer;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the assignee.
+        /// Gets the assignee.
         /// </summary>
-        /// <value>The assignee.</value>
-        public string Assignee { get; private set; }
+        public string Assignee
+        {
+            get
+            {
+                return m_assignee == "Unknown"
+                    ? m_assignee = EveIDToName.GetIDToName(AssigneeID)
+                    : m_assignee;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the acceptor.
+        /// Gets the acceptor.
         /// </summary>
-        /// <value>The acceptor.</value>
-        public string Acceptor { get; private set; }
+        public string Acceptor
+        {
+            get
+            {
+                return m_acceptor == "Unknown"
+                    ? m_acceptor = EveIDToName.GetIDToName(AcceptorID)
+                    : m_acceptor;
+            }
+        }
 
         /// <summary>
         /// Gets the contract items.
         /// </summary>
-        /// <value>The contract items.</value>
         public IEnumerable<ContractItem> ContractItems
         {
             get { return m_contractItems.Where(x => x.Item != null); }
@@ -210,7 +230,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the contract text.
         /// </summary>
-        /// <value>The contract text.</value>
         /// <remarks>Keep this order of checking.</remarks>
         public string ContractText
         {
@@ -244,16 +263,6 @@ namespace EVEMon.Common
         /// When true, the contract will be deleted unless it was found on the API feed.
         /// </summary>
         internal bool MarkedForDeletion { get; set; }
-
-        /// <summary>
-        /// Checks whether the given API object matches with this contract.
-        /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private bool MatchesWith(SerializableContractListItem src)
-        {
-            return src.ContractID == ID;
-        }
 
         /// <summary>
         /// Gets the contract state.
@@ -327,6 +336,16 @@ namespace EVEMon.Common
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Checks whether the given API object matches with this contract.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private bool MatchesWith(SerializableContractListItem src)
+        {
+            return src.ContractID == ID;
+        }
 
         /// <summary>
         /// Gets the state of a contract.
@@ -403,8 +422,6 @@ namespace EVEMon.Common
             return true;
         }
 
-        private Enum m_method;
-
         /// <summary>
         /// Populates the serialization object contract with the info from the API.
         /// </summary>
@@ -418,6 +435,8 @@ namespace EVEMon.Common
 
             ID = src.ContractID;
             IssuerID = src.IssuerID;
+            AssigneeID = src.AssigneeID;
+            AcceptorID = src.AcceptorID;
             StartStation = Station.GetByID(src.StartStationID);
             EndStation = Station.GetByID(src.EndStationID);
             Description = String.IsNullOrWhiteSpace(src.Title) ? "(None)" : src.Title;
@@ -446,23 +465,24 @@ namespace EVEMon.Common
                          ? (CCPContractStatus)Enum.Parse(typeof(CCPContractStatus), src.Status)
                          : CCPContractStatus.None;
 
-            Issuer = src.ForCorp
-                         ? Character.Corporation.Name
-                         : src.IssuerID == Character.CharacterID
-                               ? Character.Name
-                               : EveIDToName.GetIDToName(src.IssuerID);
+            m_issuer = src.ForCorp
+                           ? Character.Corporation.Name
+                           : src.IssuerID == Character.CharacterID
+                                 ? Character.Name
+                                 : EveIDToName.GetIDToName(src.IssuerID);
 
-            Assignee = src.AssigneeID == Character.CharacterID
-                           ? Character.Name
-                           : src.AssigneeID == Character.CorporationID
-                                 ? Character.Corporation.Name
-                                 : EveIDToName.GetIDToName(src.AssigneeID);
 
-            Acceptor = src.AcceptorID == Character.CharacterID
-                           ? Character.Name
-                           : src.AcceptorID == Character.CorporationID
-                                 ? Character.Corporation.Name
-                                 : EveIDToName.GetIDToName(src.AcceptorID);
+            m_assignee = src.AssigneeID == Character.CharacterID
+                             ? Character.Name
+                             : src.AssigneeID == Character.CorporationID
+                                   ? Character.Corporation.Name
+                                   : EveIDToName.GetIDToName(src.AssigneeID);
+
+            m_acceptor = src.AcceptorID == Character.CharacterID
+                             ? Character.Name
+                             : src.AcceptorID == Character.CorporationID
+                                   ? Character.Corporation.Name
+                                   : EveIDToName.GetIDToName(src.AcceptorID);
 
             if (ContractType != ContractType.Courier)
                 GetContractItems();
