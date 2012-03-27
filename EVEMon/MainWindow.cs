@@ -199,16 +199,18 @@ namespace EVEMon
             UpdateNotifications();
 
             // Updates tray icon visibility
+            if (WindowState != FormWindowState.Minimized &&
+                Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.MinimizeToTaskbar)
+            {
+                return;
+            }
+
             trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
                                 || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
                                     WindowState == FormWindowState.Minimized));
 
-            if (WindowState != FormWindowState.Minimized)
-                return;
-
-            ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
-                            || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
-            Visible = ShowInTaskbar;
+            Visible = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
+                      || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
         }
 
         /// <summary>
@@ -624,6 +626,9 @@ namespace EVEMon
         /// </summary>
         private void UpdateNotifications()
         {
+            if (WindowState == FormWindowState.Minimized)
+                return;
+
             notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == null || x.SenderAPIKey != null);
         }
 
@@ -841,7 +846,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateWindowTitle()
         {
-            if (!Visible)
+            if (WindowState == FormWindowState.Minimized)
                 return;
 
             // If character's trainings must be displayed in title
@@ -1917,11 +1922,15 @@ namespace EVEMon
         /// </summary>
         private void RestoreMainWindow()
         {
-            Visible = true;
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = Visible;
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Visible = true;
+                WindowState = FormWindowState.Normal;
+                ShowInTaskbar = Visible;
+                trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+            }
+
             Activate();
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
         }
 
         #endregion
