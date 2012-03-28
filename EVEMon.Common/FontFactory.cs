@@ -9,7 +9,7 @@ namespace EVEMon.Common
     public static class FontFactory
     {
         /// <summary>
-        /// Variable to store default font in
+        /// Variable to store default font in.
         /// </summary>
         /// <remarks>
         /// DefaultFont is cached for the following reasons:

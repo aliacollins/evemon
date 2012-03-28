@@ -42,6 +42,17 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.Windows.Forms.PictureBox"/> 
+        /// and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release managed and unmanaged resources; false to release unmanaged resources only.</param>
+        protected override void Dispose(bool disposing)
+        {
+            s_timer.Tick -= TimerTick;
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
         /// Gets or sets the throbber's state.
         /// </summary>
         public ThrobberState State
