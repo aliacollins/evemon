@@ -175,8 +175,8 @@ namespace EVEMon.About
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
             AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
-            AddLinkToLabel(eveCentralLinkLabel, "Eve-central", "http://www.eve-central.com/");
-            AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://www.eve-dev.net/");
+            AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
+            AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://http://wiki.eve-id.net/Main_Page");
             AddLinkToLabel(googleDataLinkLabel, "Google.Data", "http://code.google.com/apis/gdata/client-cs.html");
             AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/KB/cs/multipanelcontrol.aspx");
             AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com");
