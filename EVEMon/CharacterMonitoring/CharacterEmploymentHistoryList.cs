@@ -26,6 +26,9 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_recordFont;
         private readonly Font m_recordBoldFont;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CharacterEmploymentHistoryList"/> class.
+        /// </summary>
         public CharacterEmploymentHistoryList()
         {
             InitializeComponent();
@@ -67,7 +70,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterStandingsUpdated -= EveMonClient_CharacterInfoUpdated;
+            EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
@@ -91,11 +94,8 @@ namespace EVEMon.CharacterMonitoring
         #region Content Management
 
         /// <summary>
-        /// Updates all the content
+        /// Updates all the content.
         /// </summary>
-        /// <remarks>
-        /// Another high-complexity method for us to look at.
-        /// </remarks>
         private void UpdateContent()
         {
             // Returns if not visible
@@ -275,22 +275,11 @@ namespace EVEMon.CharacterMonitoring
         #region Local events
 
         /// <summary>
-        /// Handles the EmploymentRecordImageUpdated event of the employment records control.
+        /// When the image updates, we redraw the list.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void record_EmploymentRecordImageUpdated(object sender, EventArgs e)
-        {
-            // Force to redraw
-            lbEmploymentHistory.Invalidate();
-        }
-
-        /// <summary>
-        /// Handles the EveIDToNameUpdated event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="eventArgs">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs eventArgs)
         {
             // Force to redraw
             lbEmploymentHistory.Invalidate();
@@ -356,7 +345,7 @@ namespace EVEMon.CharacterMonitoring
         #region Global events
 
         /// <summary>
-        /// When the character standings update, we refresh the content.
+        /// When the character standings update, we update the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -369,7 +358,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// When the settings change we update the content.
+        /// When the settings change, we update the content.
         /// </summary>
         /// <remarks>In case 'SafeForWork' gets enabled.</remarks>
         /// <param name="sender">The source of the event.</param>
@@ -377,6 +366,17 @@ namespace EVEMon.CharacterMonitoring
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
+        }
+
+        /// <summary>
+        /// When the EveIDToName updates, we refresh the content.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
+            // Force to redraw
+            lbEmploymentHistory.Invalidate();
         }
 
         #endregion

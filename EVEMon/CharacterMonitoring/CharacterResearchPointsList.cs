@@ -155,6 +155,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
             Disposed -= OnDisposed;
         }
