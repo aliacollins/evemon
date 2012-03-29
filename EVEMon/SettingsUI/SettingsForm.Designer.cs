@@ -1085,7 +1085,7 @@ namespace EVEMon.SettingsUI
             // cbUseIncreasedContrastOnOverview
             // 
             this.cbUseIncreasedContrastOnOverview.AutoSize = true;
-            this.cbUseIncreasedContrastOnOverview.Location = new System.Drawing.Point(190, 20);
+            this.cbUseIncreasedContrastOnOverview.Location = new System.Drawing.Point(161, 51);
             this.cbUseIncreasedContrastOnOverview.Name = "cbUseIncreasedContrastOnOverview";
             this.cbUseIncreasedContrastOnOverview.Size = new System.Drawing.Size(137, 17);
             this.cbUseIncreasedContrastOnOverview.TabIndex = 34;
@@ -1308,7 +1308,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.externalCalendarPage;
+            this.multiPanel.SelectedPage = this.generalPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1389,7 +1389,6 @@ namespace EVEMon.SettingsUI
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.cbUseIncreasedContrastOnOverview);
             this.groupBox2.Controls.Add(this.overviewPanel);
             this.groupBox2.Controls.Add(this.cbShowOverViewTab);
             this.groupBox2.Location = new System.Drawing.Point(1, 274);
@@ -1403,6 +1402,7 @@ namespace EVEMon.SettingsUI
             // 
             this.overviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.overviewPanel.Controls.Add(this.cbUseIncreasedContrastOnOverview);
             this.overviewPanel.Controls.Add(this.overviewGroupCharactersInTrainingCheckBox);
             this.overviewPanel.Controls.Add(this.overviewShowSkillQueueTrainingTimeCheckBox);
             this.overviewPanel.Controls.Add(this.overviewShowWalletCheckBox);
