@@ -23,7 +23,7 @@ namespace EVEMon.Common
         /// Default constructor, only used by <see cref="Character"/>
         /// </summary>
         /// <param name="character">The character this collection is bound to.</param>
-        public SkillQueue(CCPCharacter character)
+        internal SkillQueue(CCPCharacter character)
         {
             m_character = character;
 
@@ -32,6 +32,13 @@ namespace EVEMon.Common
 
         #endregion
 
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+        }
 
         #region Properties
 

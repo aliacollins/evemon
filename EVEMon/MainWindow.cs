@@ -27,7 +27,6 @@ using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.ImplantControls;
-using EVEMon.LogitechG15;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.Sales;
@@ -36,7 +35,6 @@ using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.Updater;
 using EVEMon.Watchdog;
-using EVEMon.WindowsApi;
 
 namespace EVEMon
 {
@@ -142,10 +140,6 @@ namespace EVEMon
 
             // Update the content
             UpdateTabs();
-
-            // Initialize G15
-            if (OSFeatureCheck.IsWindowsNT)
-                G15Handler.Initialize();
 
             // Ensures the installation files downloaded through the autoupdate are correctly deleted
             UpdateManager.DeleteInstallationFiles();
@@ -1974,6 +1968,8 @@ namespace EVEMon
                 EveMonClient.DataUpdateAvailable -= OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = false;
             }
+
+            // G15/G19 Keyboard
 
             // IGB Server
             ConfigureIgbServer();

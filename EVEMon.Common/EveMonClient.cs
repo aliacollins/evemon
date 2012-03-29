@@ -107,6 +107,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Fires the timer tick event to notify the subscribers.
+        /// </summary>
+        internal static void UpdateOnOneSecondTick()
+        {
+            if (!s_running)
+                return;
+
+            // Fires the event for subscribers
+            if (TimerTick != null)
+                TimerTick(null, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Resets collection that need to be cleared.
         /// </summary>
         internal static void ResetCollections()
@@ -427,19 +440,6 @@ namespace EVEMon.Common
         /// Gets the collection of notifications.
         /// </summary>
         public static GlobalNotificationCollection Notifications { get; private set; }
-
-        /// <summary>
-        /// Fires the timer tick event to notify the subscribers.
-        /// </summary>
-        internal static void UpdateOnOneSecondTick()
-        {
-            if (!s_running)
-                return;
-
-            // Fires the event for subscribers
-            if (TimerTick != null)
-                TimerTick(null, EventArgs.Empty);
-        }
 
         #endregion
 
@@ -1278,18 +1278,6 @@ namespace EVEMon.Common
         #region Diagnostics
 
         /// <summary>
-        /// Sends a message to the trace with the prepended time since startup.
-        /// </summary>
-        /// <param name="message">message to trace</param>
-        public static void Trace(string message)
-        {
-            TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
-            string timeStr = String.Format(CultureConstants.DefaultCulture,
-                                           "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
-            System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
-        }
-
-        /// <summary>
         /// Sends a message to the trace with the prepended time since
         /// startup, in addition to argument inserting into the format.
         /// </summary>
@@ -1297,7 +1285,12 @@ namespace EVEMon.Common
         /// <param name="args"></param>
         public static void Trace(string format, params object[] args)
         {
-            Trace(String.Format(CultureConstants.DefaultCulture, format, args));
+            string message = String.Format(CultureConstants.DefaultCulture, format, args);
+            TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
+            string timeStr = String.Format(CultureConstants.DefaultCulture,
+                                           "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
+
+            System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
         }
 
         /// <summary>

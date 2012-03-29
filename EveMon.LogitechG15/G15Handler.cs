@@ -14,7 +14,6 @@ namespace EVEMon.LogitechG15
     public static class G15Handler
     {
         private static LcdDisplay s_lcd;
-        private static bool s_running;
         private static bool s_startupError;
 
 
@@ -26,16 +25,21 @@ namespace EVEMon.LogitechG15
         public static void Initialize()
         {
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-
-            // Subscribe to events which occur of G15 buttons pressed
-            LcdDisplay.ApiUpdateRequested += LcdDisplay_APIUpdateRequested;
-            LcdDisplay.AutoCycleChanged += LcdDisplay_AutoCycleChanged;
-            LcdDisplay.CurrentCharacterChanged += LcdDisplay_CurrentCharacterChanged;
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Gets a value indicating whether the LcdDisplay is running.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the LcdDisplay is running; otherwise, <c>false</c>.
+        /// </value>
+        private static bool IsRunning
+        {
+            get { return s_lcd != null; }
+        }
 
 
         #region LCD Updater
@@ -50,9 +54,9 @@ namespace EVEMon.LogitechG15
                 return;
 
             // Did the state changed ?
-            if (Settings.G15.Enabled != s_running)
+            if (Settings.G15.Enabled != IsRunning)
             {
-                if (!s_running)
+                if (!IsRunning)
                 {
                     Start();
                     if (s_startupError)
@@ -63,7 +67,7 @@ namespace EVEMon.LogitechG15
             }
 
             // Run
-            if (!s_running)
+            if (!IsRunning)
                 return;
 
             UpdateG15Data();
@@ -84,17 +88,26 @@ namespace EVEMon.LogitechG15
             {
                 s_lcd = LcdDisplay.Instance();
                 s_lcd.SwitchState(LcdState.SplashScreen);
-                s_running = true;
-                UpdateFromSettings();
 
                 // Initialize the current character
                 s_lcd.CurrentCharacter = EveMonClient.MonitoredCharacters.OfType<CCPCharacter>().FirstOrDefault();
+
+                UpdateFromSettings();
+
+                // Subscribe to events of the EVEMon client
+                EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+                EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+
+                // Subscribe to events which occur of G15 buttons pressed
+                LcdDisplay.ApiUpdateRequested += LcdDisplay_APIUpdateRequested;
+                LcdDisplay.AutoCycleChanged += LcdDisplay_AutoCycleChanged;
+                LcdDisplay.CurrentCharacterChanged += LcdDisplay_CurrentCharacterChanged;
             }
             catch (Exception ex)
             {
                 EveMonClient.Trace(ex.Message);
+                s_lcd = null;
                 s_startupError = true;
-                s_running = false;
             }
         }
 
@@ -114,7 +127,15 @@ namespace EVEMon.LogitechG15
             finally
             {
                 s_lcd = null;
-                s_running = false;
+
+                // Unsubscribe to events of the EVEMon client
+                EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
+                EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+
+                // Unsubscribe to events which occur of G15 buttons pressed
+                LcdDisplay.ApiUpdateRequested -= LcdDisplay_APIUpdateRequested;
+                LcdDisplay.AutoCycleChanged -= LcdDisplay_AutoCycleChanged;
+                LcdDisplay.CurrentCharacterChanged -= LcdDisplay_CurrentCharacterChanged;
             }
         }
 
@@ -123,9 +144,6 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private static void UpdateFromSettings()
         {
-            if (s_lcd == null || !s_running)
-                return;
-
             s_lcd.Cycle = Settings.G15.UseCharactersCycle;
             s_lcd.CycleInterval = Settings.G15.CharactersCycleInterval;
             s_lcd.CycleSkillQueueTime = Settings.G15.UseTimeFormatsCycle;
@@ -169,9 +187,6 @@ namespace EVEMon.LogitechG15
         /// <param name="e"></param>
         private static void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
-            if (!s_running)
-                return;
-
             s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
         }
 

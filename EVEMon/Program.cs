@@ -8,6 +8,7 @@ using EVEMon.Common;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
 using EVEMon.ExceptionHandling;
+using EVEMon.LogitechG15;
 using EVEMon.WindowsApi;
 
 namespace EVEMon
@@ -58,6 +59,10 @@ namespace EVEMon
             EveMonClient.Initialize();
             Settings.InitializeFromFile();
             EveIDToName.InitializeFromFile();
+
+            // Initialize G15
+            if (OSFeatureCheck.IsWindowsNT)
+                G15Handler.Initialize();
 
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested)

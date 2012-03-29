@@ -18,5 +18,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="retryOnError">When true, the update will be reattempted until succesful.</param>
         void ForceUpdate(bool retryOnError);
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        void Dispose();
     }
 }

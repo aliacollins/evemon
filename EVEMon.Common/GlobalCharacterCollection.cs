@@ -140,6 +140,12 @@ namespace EVEMon.Common
                 id.APIKeys.Clear();
             }
 
+            // Unsubscribe any event handlers in character
+            foreach (Character character in Items)
+            {
+                character.Dispose();
+            }
+            
             // Import the characters, their identies, etc
             Items.Clear();
             foreach (SerializableSettingsCharacter serialCharacter in serial)

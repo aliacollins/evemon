@@ -50,6 +50,19 @@ namespace EVEMon.Common
         #endregion
 
 
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            // Unsubscribe events in monitors
+            foreach (IQueryMonitorEx monitor in m_corporationQueryMonitors)
+            {
+                monitor.Dispose();
+            }
+        }
+
+
         #region Properties
 
         /// <summary>

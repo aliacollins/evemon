@@ -65,7 +65,6 @@ namespace EVEMon.Common
             }
 
             UISettings = new CharacterUISettings();
-
         }
 
         #endregion
@@ -595,6 +594,11 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal abstract void Dispose();
 
         /// <summary>
         /// Gets the UI settings for this character.

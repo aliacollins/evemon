@@ -25,6 +25,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+        }
+
+        /// <summary>
         /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

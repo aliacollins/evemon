@@ -41,6 +41,17 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.Windows.Forms.Control"/> 
+        /// and its child controls and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            DrawItem -= OnDrawItem;
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
         /// Gets or sets the enumeration of displayed API keys.
         /// </summary>
         [Browsable(false)]

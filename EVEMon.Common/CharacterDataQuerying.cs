@@ -102,6 +102,21 @@ namespace EVEMon.Common
         #endregion
 
 
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+
+            // Unsubscribe events in monitors
+            foreach (IQueryMonitorEx monitor in m_characterQueryMonitors)
+            {
+                monitor.Dispose();
+            }
+        }
+
+
         #region Properties
 
         /// <summary>

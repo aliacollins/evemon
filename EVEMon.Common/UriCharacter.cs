@@ -50,6 +50,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal override void Dispose(){}
+
+        /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
         public override string AdornedName

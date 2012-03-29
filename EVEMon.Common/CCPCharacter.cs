@@ -97,6 +97,35 @@ namespace EVEMon.Common
 
         #endregion
 
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal override void Dispose()
+        {
+            // Unsubscribe events
+            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CorporationMarketOrdersUpdated -= EveMonClient_CorporationMarketOrdersUpdated;
+            EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
+            EveMonClient.CorporationContractsUpdated -= EveMonClient_CorporationContractsUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
+            EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+
+            // Unsubscribe events
+            SkillQueue.Dispose();
+            CharacterIndustryJobs.Dispose();
+            CorporationIndustryJobs.Dispose();
+
+            // Unsubscribe events
+            if (m_characterDataQuerying != null)
+                m_characterDataQuerying.Dispose();
+
+            if (m_corporationDataQuerying != null)
+                m_corporationDataQuerying.Dispose();
+        }
+
 
         #region Public Properties
 

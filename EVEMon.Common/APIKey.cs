@@ -78,6 +78,16 @@ namespace EVEMon.Common
 
         #endregion
 
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            // Unsubscribe events
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            m_apiKeyInfoMonitor.Dispose();
+            m_accountStatusMonitor.Dispose();
+        }
 
         #region Properties
 
