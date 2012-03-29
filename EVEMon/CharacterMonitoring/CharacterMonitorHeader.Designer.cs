@@ -103,7 +103,6 @@
             // CharacterPortrait
             // 
             this.CharacterPortrait.Character = null;
-            this.CharacterPortrait.CharacterID = ((long)(-1));
             this.CharacterPortrait.Location = new System.Drawing.Point(0, 7);
             this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(0, 7, 3, 3);
             this.CharacterPortrait.MinimumSize = new System.Drawing.Size(128, 128);

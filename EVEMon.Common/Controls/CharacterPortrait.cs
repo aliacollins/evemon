@@ -7,13 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Common.Controls
 {
     public partial class CharacterPortrait : UserControl
     {
-        private long m_id = -1;
         private Character m_character;
         private bool m_updatingPortrait;
         private bool m_pendingUpdate;
@@ -25,20 +23,6 @@ namespace EVEMon.Common.Controls
         {
             InitializeComponent();
             pictureBox.Image = pictureBox.InitialImage;
-
-            EveMonClient.CharacterPortraitUpdated += EveMonClient_CharacterPortraitUpdated;
-            Disposed += OnDisposed;
-        }
-
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveMonClient.CharacterPortraitUpdated -= EveMonClient_CharacterPortraitUpdated;
-            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -58,25 +42,7 @@ namespace EVEMon.Common.Controls
         #region Properties
 
         /// <summary>
-        /// Gets or sets the character ID. Also sets the <see cref="Character"/> property to <c>null</c>.
-        /// </summary>
-        [Browsable(false)]
-        public long CharacterID
-        {
-            get { return m_id; }
-            set
-            {
-                if (m_id == value)
-                    return;
-
-                m_id = value;
-                m_character = null;
-                UpdateContent();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the character. Also updates the <see cref="CharacterID"/> property.
+        /// Gets or sets the character.
         /// </summary>
         [Browsable(false)]
         public Character Character
@@ -87,44 +53,22 @@ namespace EVEMon.Common.Controls
                 if (value == null || m_character == value)
                     return;
 
-                m_id = value.CharacterID;
                 m_character = value;
                 UpdateContent();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets true when control or the character it is bound to is updating.
-        /// </summary>
-        private bool IsUpdating
-        {
-            get
-            {
-                if (m_updatingPortrait)
-                    return true;
-
-                return m_character != null && m_character.IsUpdatingPortrait;
-            }
-            set
-            {
-                m_updatingPortrait = value;
-
-                if (m_character != null)
-                    m_character.IsUpdatingPortrait = value;
             }
         }
 
         #endregion
 
 
-        #region Default mechanism on character id change (portraits cache, then ImageService for CCP url)
+        #region Default mechanism on character change (portraits cache, then ImageService for CCP url)
 
         /// <summary>
-        /// When the character ID changed... 
+        /// Update the portrait.
         /// <list type="bullet">
-        /// <item>We check for a cached portrait in %APPDATA%\Cache.</item>
+        /// <item>We check for a cached portrait in %APPDATA%\cache\portraits.</item>
         /// <item>It if failed, we assemble the url for a CCP download and give it to ImageService.</item>
-        /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images),
+        /// <item>ImageService will first check its cache (%APPDATA%\cache),
         /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
@@ -145,7 +89,7 @@ namespace EVEMon.Common.Controls
                 return;
             }
 
-            // Try to retrieve the portrait from our portrait cache (%APPDATA%\Cache)
+            // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
             Image image = GetPortraitFromCache();
             if (image != null)
             {
@@ -164,7 +108,7 @@ namespace EVEMon.Common.Controls
         /// <returns>The character portrait as an Image object</returns>
         private Image GetPortraitFromCache()
         {
-            if (m_id <= 0)
+            if (m_character == null)
                 return null;
 
             EveMonClient.EnsureCacheDirInit();
@@ -190,6 +134,7 @@ namespace EVEMon.Common.Controls
 
                     image = Image.FromStream(stream);
                 }
+
                 return image;
             }
             catch (ArgumentException e)
@@ -214,21 +159,21 @@ namespace EVEMon.Common.Controls
         /// Download the image from CCP...
         /// <list type="bullet">
         /// <item>We assemble the url for a CCP download and give it to ImageService.</item>
-        /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images),
+        /// <item>ImageService will first check its cache (%APPDATA%\cache),
         /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
         private void UpdateCharacterImageFromCCP()
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (IsUpdating)
+            if (m_updatingPortrait)
                 return;
 
-            IsUpdating = true;
+            m_updatingPortrait = true;
 
             // Skip if it's a blank character
-            if (m_id != UriCharacter.BlankCharacterID)
-                ImageService.GetCharacterImageAsync(m_id, OnGotCharacterImageFromCCP);
+            if (m_character.CharacterID != UriCharacter.BlankCharacterID)
+                ImageService.GetCharacterImageAsync(m_character.CharacterID, OnGotCharacterImageFromCCP);
         }
 
         /// <summary>
@@ -242,7 +187,7 @@ namespace EVEMon.Common.Controls
             Cursor.Current = Cursors.Default;
             if (newImage == null)
             {
-                IsUpdating = false;
+                m_updatingPortrait = false;
                 return;
             }
 
@@ -260,11 +205,11 @@ namespace EVEMon.Common.Controls
             if (m_character == null)
             {
                 pictureBox.Image = newImage;
-                IsUpdating = false;
+                m_updatingPortrait = false;
                 return;
             }
 
-            // Save to the portraits cache and notify we changed this character's portrait
+            // Save to the portraits cache
             try
             {
                 // Save the image to the portrait cache file
@@ -284,8 +229,8 @@ namespace EVEMon.Common.Controls
                                                           return true;
                                                       });
 
-                // Notify the other controls we updated this portrait
-                EveMonClient.OnCharacterPortraitUpdated(m_character);
+                // Update the portrait
+                pictureBox.Image = newImage;
             }
             catch (IOException e)
             {
@@ -294,7 +239,7 @@ namespace EVEMon.Common.Controls
             finally
             {
                 // Release the updating flag
-                IsUpdating = false;
+                m_updatingPortrait = false;
             }
         }
 
@@ -308,7 +253,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void UpdateCharacterFromEVECache()
         {
-            IsUpdating = true;
+            m_updatingPortrait = true;
             try
             {
                 if (EveMonClient.EvePortraitCacheFolders == null)
@@ -327,13 +272,13 @@ namespace EVEMon.Common.Controls
                 foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
                     evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
                 {
-                    filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*", m_id)));
+                    filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*", m_character.CharacterID)));
 
                     // Look up for an image file and add it to the list
-                    // (CCP changed image format in Incursion 1.1.0
+                    // Note by Jimi : CCP changed image format in Incursion 1.1.0
                     // as part of new character portraits creator,
                     // so I added an image file check method to provide compatibility
-                    // with all image formats (Jimi))
+                    // with all image formats
                     imageFilesInEveCache.AddRange(filesInEveCache.Where(IsImageFile));
                 }
 
@@ -352,14 +297,14 @@ namespace EVEMon.Common.Controls
 
                     MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                    IsUpdating = false;
+                    m_updatingPortrait = false;
                     return;
                 }
 
                 // Search for the biggest portrait
                 int bestSize = 0;
                 string bestFile = String.Empty;
-                int charIDLength = m_id.ToString(CultureConstants.DefaultCulture).Length;
+                int charIDLength = m_character.CharacterID.ToString(CultureConstants.DefaultCulture).Length;
                 foreach (FileInfo file in imageFilesInEveCache)
                 {
                     int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
@@ -378,7 +323,7 @@ namespace EVEMon.Common.Controls
             }
             finally
             {
-                IsUpdating = false;
+                m_updatingPortrait = false;
             }
         }
 
@@ -425,23 +370,6 @@ namespace EVEMon.Common.Controls
         #region Controls and global events handler
 
         /// <summary>
-        /// Handles the CharacterPortraitUpdated event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterPortraitUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (!Visible)
-            {
-                m_pendingUpdate = true;
-                return;
-            }
-
-            Image image = GetPortraitFromCache();
-            pictureBox.Image = (image ?? pictureBox.InitialImage);
-        }
-
-        /// <summary>
         /// Handles the Click event of the miUpdatePicture control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -478,7 +406,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void pictureBox_Click(object sender, EventArgs e)
         {
-            if (IsUpdating)
+            if (m_updatingPortrait)
                 return;
 
             cmsPictureOptions.Show(MousePosition);

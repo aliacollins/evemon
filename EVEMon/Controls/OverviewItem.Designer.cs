@@ -40,7 +40,6 @@ namespace EVEMon.Controls
             // pbCharacterPortrait
             // 
             this.pbCharacterPortrait.Character = null;
-            this.pbCharacterPortrait.CharacterID = ((long)(-1));
             this.pbCharacterPortrait.Enabled = false;
             this.pbCharacterPortrait.Location = new System.Drawing.Point(9, 11);
             this.pbCharacterPortrait.Name = "pbCharacterPortrait";

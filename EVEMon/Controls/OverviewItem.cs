@@ -90,7 +90,7 @@ namespace EVEMon.Controls
         private OverviewItem(Character character, PortraitSizes portraitSize)
             : this()
         {
-            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.DefaultCulture);
+            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.InvariantCulture);
 
             pbCharacterPortrait.Visible = false;
             pbCharacterPortrait.Character = character;

@@ -190,11 +190,6 @@ namespace EVEMon.Common
         public decimal Balance { get; private set; }
 
         /// <summary>
-        /// Gets true whether the portrait is currently updating.
-        /// </summary>
-        internal bool IsUpdatingPortrait { get; set; }
-
-        /// <summary>
         /// Gets true when the character is in a NPC corporation, false otherwise.
         /// </summary>
         public bool IsInNPCCorporation
