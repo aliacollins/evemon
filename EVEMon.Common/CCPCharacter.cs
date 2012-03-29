@@ -14,6 +14,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
+        #region Fields
+
         private readonly List<MarketOrder> m_endedOrdersForCharacter;
         private readonly List<MarketOrder> m_endedOrdersForCorporation;
         private readonly List<Contract> m_endedContractsForCharacter;
@@ -25,6 +27,8 @@ namespace EVEMon.Common
         private IEnumerable<SerializableAPIUpdate> m_lastAPIUpdates;
 
         private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
+
+        #endregion
 
 
         #region Constructors
@@ -96,35 +100,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
-        /// <summary>
-        /// Called when the object gets disposed.
-        /// </summary>
-        internal override void Dispose()
-        {
-            // Unsubscribe events
-            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
-            EveMonClient.CorporationMarketOrdersUpdated -= EveMonClient_CorporationMarketOrdersUpdated;
-            EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
-            EveMonClient.CorporationContractsUpdated -= EveMonClient_CorporationContractsUpdated;
-            EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
-            EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
-            EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-
-            // Unsubscribe events
-            SkillQueue.Dispose();
-            CharacterIndustryJobs.Dispose();
-            CorporationIndustryJobs.Dispose();
-
-            // Unsubscribe events
-            if (m_characterDataQuerying != null)
-                m_characterDataQuerying.Dispose();
-
-            if (m_corporationDataQuerying != null)
-                m_corporationDataQuerying.Dispose();
-        }
 
 
         #region Public Properties
@@ -400,7 +375,7 @@ namespace EVEMon.Common
         {
             // Until we can determine what data the character's API keys can query,
             // we have to keep the data unprocessed. Once we know, we filter them
-            
+
             IEnumerable<SerializableJob> corporationIndustryJobsExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationIndustryJobs.ExportOnlyIssuedByCharacter()
@@ -481,6 +456,35 @@ namespace EVEMon.Common
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal override void Dispose()
+        {
+            // Unsubscribe events
+            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CorporationMarketOrdersUpdated -= EveMonClient_CorporationMarketOrdersUpdated;
+            EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
+            EveMonClient.CorporationContractsUpdated -= EveMonClient_CorporationContractsUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
+            EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+
+            // Unsubscribe events
+            SkillQueue.Dispose();
+            CharacterIndustryJobs.Dispose();
+            CorporationIndustryJobs.Dispose();
+
+            // Unsubscribe events
+            if (m_characterDataQuerying != null)
+                m_characterDataQuerying.Dispose();
+
+            if (m_corporationDataQuerying != null)
+                m_corporationDataQuerying.Dispose();
+        }
 
         /// <summary>
         /// Checks whether we should notify an error.
@@ -688,13 +692,15 @@ namespace EVEMon.Common
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(
+                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(
+                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
             }
         }
 

@@ -305,15 +305,16 @@ namespace EVEMon
         private void UpdateTabs()
         {
             TabPage selectedTab = tcCharacterTabs.SelectedTab;
-            List<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().ToList();
+            IEnumerable<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(page => page != tpOverview).ToList();
 
             // Updates the pages
             tcCharacterTabs.Visible = false;
+            tcCharacterTabs.TabPages.Clear();
             tcCharacterTabs.SuspendLayout();
             try
             {
                 // Dispose the old pages
-                foreach (TabPage page in pages.Where(page => page != tpOverview))
+                foreach (TabPage page in pages)
                 {
                     page.Dispose();
                 }
@@ -1968,8 +1969,6 @@ namespace EVEMon
                 EveMonClient.DataUpdateAvailable -= OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = false;
             }
-
-            // G15/G19 Keyboard
 
             // IGB Server
             ConfigureIgbServer();

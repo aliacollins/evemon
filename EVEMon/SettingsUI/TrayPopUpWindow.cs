@@ -331,15 +331,15 @@ namespace EVEMon.SettingsUI
             }
             m_updatePending = false;
 
-            IEnumerable<Character> characters = GetCharacters;
-
             // Remove controls and dispose them
-            IEnumerable<Control> oldControls = mainPanel.Controls.Cast<Control>();
+            IEnumerable<Control> oldControls = mainPanel.Controls.Cast<Control>().ToList();
             mainPanel.Controls.Clear();
             foreach (Control ctl in oldControls)
             {
                 ctl.Dispose();
             }
+
+            IEnumerable<Character> characters = GetCharacters;
 
             // Add controls for characters
             if (Settings.UI.SystemTrayPopup.GroupBy == TrayPopupGrouping.Account &&
@@ -383,18 +383,15 @@ namespace EVEMon.SettingsUI
                 }
             }
             else
-                mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray<Control>());
+                mainPanel.Controls.AddRange(
+                    characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray<Control>());
 
             // Skip if the user do not want to be warned about accounts not in training
-            if (Settings.UI.SystemTrayPopup.ShowWarning)
+            string warningMessage;
+            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
             {
-                // Creates the warning for accounts not in training
-                string warningMessage;
-                if (APIKey.HasCharactersNotTraining(out warningMessage))
-                {
-                    FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
-                    mainPanel.Controls.Add(warningPanel);
-                }
+                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
+                mainPanel.Controls.Add(warningPanel);
             }
 
             // Server Status

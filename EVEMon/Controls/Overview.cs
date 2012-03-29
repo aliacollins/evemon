@@ -110,7 +110,8 @@ namespace EVEMon.Controls
         private void CleanUp()
         {
             // Dispose every one of the control to prevent event triggering
-            foreach (OverviewItem item in Controls.OfType<OverviewItem>())
+            IEnumerable<OverviewItem> items = Controls.OfType<OverviewItem>().ToList();
+            foreach (OverviewItem item in items)
             {
                 item.Click -= item_Click;
                 item.Dispose();

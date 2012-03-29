@@ -31,7 +31,6 @@ namespace EVEMon.Common
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
         private static bool s_initialized;
-        private static bool s_running;
         private static string s_traceFile;
 
         public const int DefaultDpi = 96;
@@ -92,7 +91,6 @@ namespace EVEMon.Common
         {
             Trace("EveMonClient.Run");
 
-            s_running = true;
             Dispatcher.Run(new UIActor(mainForm));
         }
 
@@ -102,7 +100,6 @@ namespace EVEMon.Common
         public static void Shutdown()
         {
             Closed = true;
-            s_running = false;
             Dispatcher.Shutdown();
         }
 
@@ -111,7 +108,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void UpdateOnOneSecondTick()
         {
-            if (!s_running)
+            if (Closed)
                 return;
 
             // Fires the event for subscribers
