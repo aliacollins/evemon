@@ -257,10 +257,9 @@ namespace EVEMon.Common
                         }
                         catch (Exception e)
                         {
-                            ExceptionHandler.LogRethrowException(e);
+                            ExceptionHandler.LogException(e, false);
                             EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
                                 url.AbsoluteUri, postData, typeof(T).Name);
-                            throw;
                         }
                     },
                 null);
@@ -294,11 +293,10 @@ namespace EVEMon.Common
                             }
                             catch (Exception e)
                             {
-                                ExceptionHandler.LogRethrowException(e);
+                                ExceptionHandler.LogException(e, true);
                                 result = new APIResult<T>(APIError.Http, e.Message);
                                 EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
                                                    url.AbsoluteUri, postData, typeof(T).Name);
-                                throw;
                             }
                             finally
                             {

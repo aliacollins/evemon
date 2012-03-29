@@ -1242,11 +1242,11 @@ namespace EVEMon
             // Close any open associated windows
             CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
 
-            // Clear any notifications
-            ClearNotifications();
-
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
+
+            // Clear any notifications
+            ClearNotifications();
 
             // Remove the tip window if it exist and is confirmed in settings
             if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
@@ -1288,11 +1288,11 @@ namespace EVEMon
             // Close any open associated windows
             CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
 
-            // Clear any notifications
-            ClearNotifications();
-
             // Reset the settings
             Settings.Reset();
+
+            // Clear any notifications
+            ClearNotifications();
 
             // Trigger the tip window
             OnShown(e);
