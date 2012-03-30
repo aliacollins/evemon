@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -24,7 +23,7 @@ namespace EVEMon.Common
 
         private CharacterDataQuerying m_characterDataQuerying;
         private CorporationDataQuerying m_corporationDataQuerying;
-        private IEnumerable<SerializableAPIUpdate> m_lastAPIUpdates;
+        private List<SerializableAPIUpdate> m_lastAPIUpdates;
 
         private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
 
@@ -85,7 +84,7 @@ namespace EVEMon.Common
             : this(identity, serial.Guid)
         {
             Import(serial);
-            m_lastAPIUpdates = serial.LastUpdates;
+            m_lastAPIUpdates = serial.LastUpdates.ToList();
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace EVEMon.Common
             : this(identity, Guid.NewGuid())
         {
             ForceUpdateBasicFeatures = true;
-            m_lastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
+            m_lastAPIUpdates = new List<SerializableAPIUpdate>();
         }
 
         #endregion
@@ -313,7 +312,7 @@ namespace EVEMon.Common
                                    {
                                        Method = monitor.Method.ToString(),
                                        Time = monitor.LastUpdate
-                                   });
+                                   }).ToList();
             }
 
             serial.LastUpdates.AddRange(m_lastAPIUpdates);
@@ -333,12 +332,12 @@ namespace EVEMon.Common
             IEnumerable<SerializableOrderBase> corporationMarketOrdersExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationMarketOrders.ExportOnlyIssuedByCharacter()
-                    : new EmptyEnumerable<SerializableOrderBase>();
+                    : new List<SerializableOrderBase>();
 
             IEnumerable<SerializableOrderBase> characterMarketOrdersExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
                     ? CharacterMarketOrders.Export()
-                    : new EmptyEnumerable<SerializableOrderBase>();
+                    : new List<SerializableOrderBase>();
 
             return characterMarketOrdersExport.Concat(corporationMarketOrdersExport);
         }
@@ -356,13 +355,13 @@ namespace EVEMon.Common
             IEnumerable<SerializableContract> corporationContractsExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationContracts.ExportOnlyIssuedByCharacter()
-                    : new EmptyEnumerable<SerializableContract>();
+                    : new List<SerializableContract>();
 
             IEnumerable<SerializableContract> characterContractsExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
                     ? CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
                         corpContract => corpContract.ContractID != charContract.ContractID))
-                    : new EmptyEnumerable<SerializableContract>();
+                    : new List<SerializableContract>();
 
             return characterContractsExport.Concat(corporationContractsExport);
         }
@@ -379,12 +378,12 @@ namespace EVEMon.Common
             IEnumerable<SerializableJob> corporationIndustryJobsExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
                     ? CorporationIndustryJobs.ExportOnlyIssuedByCharacter()
-                    : new EmptyEnumerable<SerializableJob>();
+                    : new List<SerializableJob>();
 
             IEnumerable<SerializableJob> characterIndustryJobsExport =
                 EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
                     ? CharacterIndustryJobs.Export()
-                    : new EmptyEnumerable<SerializableJob>();
+                    : new List<SerializableJob>();
 
             return characterIndustryJobsExport.Concat(corporationIndustryJobsExport);
         }
