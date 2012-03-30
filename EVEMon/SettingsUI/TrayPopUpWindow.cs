@@ -348,10 +348,12 @@ namespace EVEMon.SettingsUI
                 List<APIKey> prevAPIKeys = new List<APIKey>();
                 foreach (Character character in characters)
                 {
+                    OverviewItem charPanel = new OverviewItem(character, true);
                     List<APIKey> apiKeys = character.Identity.APIKeys.ToList();
+                    
                     if (!apiKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
                     {
-                        mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
+                        mainPanel.Controls.Add(charPanel);
                         prevAPIKeys = apiKeys;
                     }
                     else
@@ -360,12 +362,11 @@ namespace EVEMon.SettingsUI
                         try
                         {
                             tempAccountGroupPanel = new FlowLayoutPanel();
-                            OverviewItem charPanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
+                            tempAccountGroupPanel.Controls.Add(charPanel);
                             tempAccountGroupPanel.AutoSize = true;
                             tempAccountGroupPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
                             tempAccountGroupPanel.FlowDirection = FlowDirection.TopDown;
                             tempAccountGroupPanel.Padding = new Padding(10, 0, 0, 0);
-                            tempAccountGroupPanel.Controls.Add(charPanel);
 
                             FlowLayoutPanel accountGroupPanel = tempAccountGroupPanel;
                             tempAccountGroupPanel = null;
@@ -384,7 +385,7 @@ namespace EVEMon.SettingsUI
             }
             else
                 mainPanel.Controls.AddRange(
-                    characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray<Control>());
+                    characters.Select(character => new OverviewItem(character, true)).ToArray<Control>());
 
             // Skip if the user do not want to be warned about accounts not in training
             string warningMessage;

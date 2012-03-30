@@ -31,7 +31,6 @@ namespace EVEMon.Controls
 
             DoubleBuffered = true;
 
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             Disposed += OnDisposed;
 
@@ -45,7 +44,6 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             Disposed -= OnDisposed;
         }
@@ -80,7 +78,7 @@ namespace EVEMon.Controls
                 else
                     characters.AddRange(EveMonClient.MonitoredCharacters);
 
-                foreach (OverviewItem item in characters.Select(character => new OverviewItem(character, Settings.UI.MainWindow)))
+                foreach (OverviewItem item in characters.Select(character => new OverviewItem(character)))
                 {
                     item.Click += item_Click;
                     item.Clickable = true;
@@ -212,16 +210,6 @@ namespace EVEMon.Controls
 
 
         #region Globals and locals events
-
-        /// <summary>
-        /// When the settings changed, we need to rebuild the items.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
-        {
-            UpdateContent();
-        }
 
         /// <summary>
         /// Occur when the monitored characters collection changed. We update the layout.

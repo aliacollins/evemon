@@ -17,16 +17,17 @@ namespace EVEMon.Controls
     {
         #region Fields
 
-        private readonly Color m_settingsForeColor;
-        private readonly bool m_showConflicts;
-        private readonly bool m_tooltip;
-        private readonly bool m_showSkillInTraining;
-        private readonly bool m_showCompletionTime;
-        private readonly bool m_showRemainingTime;
-        private readonly bool m_showWalletBalance;
-        private readonly bool m_showPortrait;
-        private readonly bool m_showSkillQueueTrainingTime;
-        private readonly int m_portraitSize = 96;
+        private readonly bool m_isTooltip;
+
+        private Color m_settingsForeColor;
+        private bool m_showConflicts;
+        private bool m_showSkillInTraining;
+        private bool m_showCompletionTime;
+        private bool m_showRemainingTime;
+        private bool m_showWalletBalance;
+        private bool m_showPortrait;
+        private bool m_showSkillQueueTrainingTime;
+        private int m_portraitSize = 96;
 
         private bool m_hovered;
         private bool m_pressed;
@@ -46,11 +47,11 @@ namespace EVEMon.Controls
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        private OverviewItem()
+        private OverviewItem(Character character)
         {
             InitializeComponent();
 
-            // Initializes fonts and colors
+            // Initializes fonts
             lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
             lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F);
@@ -58,16 +59,10 @@ namespace EVEMon.Controls
             lblCompletionTime.Font = FontFactory.GetFont("Tahoma");
             lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F);
 
-            // Misc fields
-            m_showPortrait = true;
-            m_showWalletBalance = true;
-            m_showRemainingTime = true;
-            m_showCompletionTime = true;
-            m_showSkillInTraining = true;
-            m_showConflicts = true;
-            m_showSkillQueueTrainingTime = true;
-            m_portraitSize = 96;
-            m_settingsForeColor = lblCompletionTime.ForeColor;
+            // Initializes the portrait
+            pbCharacterPortrait.Visible = false;
+            pbCharacterPortrait.Character = character;
+            Character = character;
 
             // Initialize the skill queue free room label text
             lblSkillQueueTrainingTime.Text = String.Empty;
@@ -78,6 +73,7 @@ namespace EVEMon.Controls
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
@@ -85,73 +81,33 @@ namespace EVEMon.Controls
         /// <summary>
         /// Constructor used in-code.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="portraitSize"></param>
-        private OverviewItem(Character character, PortraitSizes portraitSize)
-            : this()
+        /// <param name="character">The character.</param>
+        /// <param name="isTooltip">if set to <c>true</c> if this instance is used as tooltip.</param>
+        public OverviewItem(Character character, bool isTooltip = false)
+            : this(character)
         {
-            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.InvariantCulture);
-
-            pbCharacterPortrait.Visible = false;
-            pbCharacterPortrait.Character = character;
-            Character = character;
+            m_isTooltip = isTooltip;
         }
 
-        /// <summary>
-        /// Constructor used in-code.
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="settings"></param>
-        public OverviewItem(Character character, TrayPopupSettings settings)
-            : this(character, settings != null ? settings.PortraitSize : PortraitSizes.x16)
-        {
-            if (settings == null)
-                throw new ArgumentNullException("settings");
+        #endregion
 
-            m_showConflicts = settings.HighlightConflicts;
-            m_showCompletionTime = settings.ShowCompletionTime;
-            m_showRemainingTime = settings.ShowRemainingTime;
-            m_showSkillInTraining = settings.ShowSkillInTraining;
-            m_showWalletBalance = settings.ShowWallet;
-            m_showPortrait = settings.ShowPortrait;
-            m_showSkillQueueTrainingTime = settings.ShowSkillQueueTrainingTime;
-            m_tooltip = true;
 
-            // Initializes colors
-            if (!Settings.UI.SystemTrayPopup.UseIncreasedContrast)
-                return;
-
-            m_settingsForeColor = Color.Black;
-            lblBalance.ForeColor = m_settingsForeColor;
-            lblRemainingTime.ForeColor = m_settingsForeColor;
-            lblSkillInTraining.ForeColor = m_settingsForeColor;
-            lblCompletionTime.ForeColor = m_settingsForeColor;
-        }
+        #region Inherited Events
 
         /// <summary>
-        /// Constructor used in-code.
+        /// Completes initialization.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="settings"></param>
-        public OverviewItem(Character character, MainWindowSettings settings)
-            : this(character, settings != null ? settings.OverviewItemSize : PortraitSizes.x16 )
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
         {
-            if (settings == null)
-                throw new ArgumentNullException("settings");
-
-            m_showWalletBalance = settings.ShowOverviewWallet;
-            m_showPortrait = settings.ShowOverviewPortrait;
-            m_showSkillQueueTrainingTime = settings.ShowOverviewSkillQueueTrainingTime;
-
-            // Initializes colors
-            if (!Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
+            // Returns in design mode or when no char
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            m_settingsForeColor = Color.Black;
-            lblBalance.ForeColor = m_settingsForeColor;
-            lblRemainingTime.ForeColor = m_settingsForeColor;
-            lblSkillInTraining.ForeColor = m_settingsForeColor;
-            lblCompletionTime.ForeColor = m_settingsForeColor;
+            DoubleBuffered = true;
+            UpdateFromSettings();
+
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -166,8 +122,90 @@ namespace EVEMon.Controls
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
+        }
+
+        /// <summary>
+        /// Occurs when the visibility changed.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (!Visible)
+                return;
+
+            UpdateContent();
+            UpdateTrainingTime();
+
+            base.OnVisibleChanged(e);
+        }
+
+        /// <summary>
+        /// Paints a button behind when hovered.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (e == null)
+                throw new ArgumentNullException("e");
+
+            if (!m_hovered)
+                return;
+
+            ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
+                                                                        ? PushButtonState.Pressed
+                                                                        : PushButtonState.Hot);
+            base.OnPaint(e);
+        }
+
+        /// <summary>
+        /// When the mouse enters control, we need to display the back button.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            if (!Clickable)
+                return;
+
+            // Show back button
+            m_hovered = true;
+            Invalidate();
+
+            base.OnMouseEnter(e);
+        }
+
+        /// <summary>
+        /// When the mouse leaves the control, we need to hide the button background.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            m_hovered = false;
+            Invalidate();
+            base.OnMouseLeave(e);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            m_pressed = true;
+            Invalidate();
+            base.OnMouseDown(e);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseUp"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            m_pressed = false;
+            Invalidate();
+            base.OnMouseUp(e);
         }
 
         #endregion
@@ -192,6 +230,52 @@ namespace EVEMon.Controls
         #region Content update
 
         /// <summary>
+        /// Updates from settings.
+        /// </summary>
+        private void UpdateFromSettings()
+        {
+            TrayPopupSettings trayPopupSettings = Settings.UI.SystemTrayPopup;
+            MainWindowSettings mainWindowSettings = Settings.UI.MainWindow;
+            PortraitSizes portraitSize = m_isTooltip
+                                             ? trayPopupSettings.PortraitSize
+                                             : mainWindowSettings.OverviewItemSize;
+
+            // Misc fields
+            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.InvariantCulture);
+            m_showConflicts = !m_isTooltip || trayPopupSettings.HighlightConflicts;
+            m_showCompletionTime = !m_isTooltip || trayPopupSettings.ShowCompletionTime;
+            m_showRemainingTime = !m_isTooltip || trayPopupSettings.ShowRemainingTime;
+            m_showSkillInTraining = !m_isTooltip || trayPopupSettings.ShowSkillInTraining;
+            m_showWalletBalance = m_isTooltip ? trayPopupSettings.ShowWallet : mainWindowSettings.ShowOverviewWallet;
+            m_showPortrait = m_isTooltip ? trayPopupSettings.ShowPortrait : mainWindowSettings.ShowOverviewPortrait;
+            m_showSkillQueueTrainingTime = m_isTooltip
+                                               ? trayPopupSettings.ShowSkillQueueTrainingTime
+                                               : mainWindowSettings.ShowOverviewSkillQueueTrainingTime;
+
+            // Update colors
+            UpdateContrastColor();
+
+            // Update the controls
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// Updates the color of the contrast.
+        /// </summary>
+        private void UpdateContrastColor()
+        {
+            m_settingsForeColor = (m_isTooltip && Settings.UI.SystemTrayPopup.UseIncreasedContrast)
+                                  || (!m_isTooltip && Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
+                                      ? Color.Black
+                                      : Color.DimGray;
+
+            lblBalance.ForeColor = m_settingsForeColor;
+            lblRemainingTime.ForeColor = m_settingsForeColor;
+            lblSkillInTraining.ForeColor = m_settingsForeColor;
+            lblCompletionTime.ForeColor = m_settingsForeColor;
+        }
+
+        /// <summary>
         /// Update the controls.
         /// </summary>
         private void UpdateContent()
@@ -199,6 +283,7 @@ namespace EVEMon.Controls
             if (!Visible)
                 return;
 
+            // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
 
@@ -244,8 +329,8 @@ namespace EVEMon.Controls
                 m_hasSkillQueueTrainingTime = false;
             }
 
-            // Adjusts all the controls layout.
-            PerformCustomLayout(m_tooltip);
+            // Adjusts all the controls layout
+            PerformCustomLayout(m_isTooltip);
         }
 
         /// <summary>
@@ -376,6 +461,16 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
+        /// When the settings changed, update everything.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateFromSettings();
+        }
+
+        /// <summary>
         /// When the scheduler changed, we may have to display a warning (blocking entry).
         /// </summary>
         /// <param name="sender"></param>
@@ -443,108 +538,6 @@ namespace EVEMon.Controls
                 return;
 
             UpdateContent();
-        }
-
-        #endregion
-
-
-        #region Inherited Events
-
-        /// <summary>
-        /// Completes initialization.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            // Returns in design mode or when no char
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
-
-            DoubleBuffered = true;
-            UpdateContent();
-
-            base.OnLoad(e);
-        }
-
-        /// <summary>
-        /// Occurs when the visibility changed.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (!Visible)
-                return;
-
-            UpdateContent();
-            UpdateTrainingTime();
-
-            base.OnVisibleChanged(e);
-        }
-
-        /// <summary>
-        /// Paints a button behind when hovered.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
-            if (!m_hovered)
-                return;
-
-            ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
-                                                                        ? PushButtonState.Pressed
-                                                                        : PushButtonState.Hot);
-            base.OnPaint(e);
-        }
-
-        /// <summary>
-        /// When the mouse enters control, we need to display the back button.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            if (!Clickable)
-                return;
-
-            // Show back button
-            m_hovered = true;
-            Invalidate();
-
-            base.OnMouseEnter(e);
-        }
-
-        /// <summary>
-        /// When the mouse leaves the control, we need to hide the button background.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            m_hovered = false;
-            Invalidate();
-            base.OnMouseLeave(e);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            m_pressed = true;
-            Invalidate();
-            base.OnMouseDown(e);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseUp"/> event.
-        /// </summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            m_pressed = false;
-            Invalidate();
-            base.OnMouseUp(e);
         }
 
         #endregion
