@@ -50,6 +50,19 @@ namespace EVEMon.Common
         #endregion
 
 
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            // Unsubscribe events in monitors
+            foreach (IQueryMonitorEx monitor in m_corporationQueryMonitors)
+            {
+                monitor.Dispose();
+            }
+        }
+
+
         #region Properties
 
         /// <summary>
@@ -100,7 +113,7 @@ namespace EVEMon.Common
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
             if (apiKey == null)
                 return;
 
@@ -120,7 +133,7 @@ namespace EVEMon.Common
         private void OnCorporationMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occurred
@@ -149,7 +162,7 @@ namespace EVEMon.Common
         private void OnCorporationContractsUpdated(APIResult<SerializableAPIContracts> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occurred
@@ -180,7 +193,7 @@ namespace EVEMon.Common
         private void OnCorporationContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occured
@@ -206,7 +219,7 @@ namespace EVEMon.Common
         private void OnCorporationIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null)
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
 
             // Notify an error occurred

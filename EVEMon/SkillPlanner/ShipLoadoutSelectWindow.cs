@@ -317,7 +317,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlanningControls()
         {
-            if (m_prerequisites.IsEmpty())
+            if (!m_prerequisites.Any())
                 return;
 
             // Are all the prerequisites trained ?
@@ -566,21 +566,21 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Export to EFT
+        /// Export to Clipboard
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miExportToEFT_Click(object sender, EventArgs e)
+        private void miExportToClipboard_Click(object sender, EventArgs e)
         {
-            ExportToEFT();
+            ExportToClipboard();
         }
 
         #endregion
 
 
-        #region EFT Export Function
+        #region CLipboard Export Function
 
-        private void ExportToEFT()
+        private void ExportToClipboard()
         {
             Dictionary<string, List<string>> items = GetItemsBySlots();
             ExtractProperties(items);
@@ -594,8 +594,8 @@ namespace EVEMon.SkillPlanner
             }
             catch (ExternalException ex)
             {
-                // there is a bug that results in an exception being
-                // thrown when the clipboard is in use by another process.
+                // There is a bug that results in an exception being
+                // thrown when the clipboard is in use by another process
                 ExceptionHandler.LogException(ex, true);
             }
         }

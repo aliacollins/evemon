@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -100,6 +99,17 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
+        /// Gets a value indicating whether this solar system is in high sec.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this solar system is in high sec; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsHighSec
+        {
+            get { return Math.Round(SecurityLevel, 1) >= 0.5; }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether this solar system is in low sec.
         /// </summary>
         /// <value>
@@ -161,11 +171,16 @@ namespace EVEMon.Common.Data
         /// Find the guessed shortest path using a A* (heuristic) algorithm.
         /// </summary>
         /// <param name="target">The target system.</param>
-        /// <param name="minSecurityLevel">The mininmum, inclusive, real security level. Systems have levels between -1 and +1.</param>
-        /// <returns>The list of systems, beginning with this one and ending with the provided target.</returns>
-        public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, float minSecurityLevel)
+        /// <param name="criteria">The path searching criteria.</param>
+        /// <param name="minSecurityLevel">The minimum, inclusive, real security level. Systems have levels between -1 and +1.</param>
+        /// <param name="maxSecurityLevel">The maximum, inclusive, real security level. Systems have levels between -1 and +1.</param>
+        /// <returns>
+        /// The list of systems, beginning with this one and ending with the provided target.
+        /// </returns>
+        public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, PathSearchCriteria criteria,
+                                                         float minSecurityLevel = -1.0f, float maxSecurityLevel = 1.0f)
         {
-            return PathFinder.FindBestPath(this, target, minSecurityLevel);
+            return PathFinder.FindBestPath(this, target, criteria, minSecurityLevel, maxSecurityLevel);
         }
 
         /// <summary>
@@ -243,5 +258,6 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
+
     }
 }

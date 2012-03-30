@@ -14,6 +14,7 @@ namespace EVEMon.Common
         private static readonly string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
         private static readonly List<string> s_listOfNames = new List<string>();
+        private static readonly List<string> s_queriedIDs = new List<string>();
 
         private static List<string> s_listOfIDs = new List<string>();
         private static List<string> s_listOfIDsToQuery = new List<string>();
@@ -66,8 +67,7 @@ namespace EVEMon.Common
 
             List<string> list = new List<string> { id };
 
-            List<string> name = GetIDsToNames(list);
-            return name[0];
+            return GetIDsToNames(list).First();
         }
 
         /// <summary>
@@ -75,33 +75,30 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns></returns>
-        internal static List<string> GetIDsToNames(List<string> ids)
+        internal static IEnumerable<string> GetIDsToNames(IEnumerable<string> ids)
         {
-            s_listOfIDs = ids;
+            s_listOfIDs = ids.ToList();
             s_listOfNames.Clear();
             s_listOfIDsToQuery.Clear();
 
-            EnsureCacheFileLoad();
             LookupForName();
 
             return s_listOfNames;
         }
 
         /// <summary>
-        /// Ensures the cache file is loaded.
+        /// Initializes the cache from file.
         /// </summary>
-        public static void EnsureCacheFileLoad()
+        public static void InitializeFromFile()
         {
-            if (!File.Exists(s_file) || s_cacheList.Any())
-                return;
-
-            TryDeserializeCacheFile();
+            if (File.Exists(s_file) && !s_cacheList.Any())
+                ImportCacheFile();
         }
 
         /// <summary>
-        /// Tries to deserialize the EveIDToName file.
+        /// Imports the cache file.
         /// </summary>
-        private static void TryDeserializeCacheFile()
+        private static void ImportCacheFile()
         {
             // Deserialize the file
             SerializableEveIDToName cache = Util.DeserializeXMLFromFile<SerializableEveIDToName>(s_file);
@@ -110,7 +107,22 @@ namespace EVEMon.Common
             if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
             {
                 EveMonClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
-                File.Delete(s_file);
+                try
+                {
+                    File.Delete(s_file);
+                }
+                catch (ArgumentException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+                catch (IOException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
                 return;
             }
 
@@ -126,17 +138,18 @@ namespace EVEMon.Common
         /// </summary>
         private static void LookupForName()
         {
-            if (!s_cacheList.IsEmpty())
+            if (s_cacheList.Any())
                 QueryCacheList();
             else
                 s_listOfIDsToQuery = s_listOfIDs;
 
-            if (!s_listOfIDsToQuery.IsEmpty())
-                QueryAPICharacterName();
+            // Avoid querying an already querying id
+            IEnumerable<string> idsToQuery = s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id));
+            if (idsToQuery.Any())
+                QueryAPICharacterName(idsToQuery);
 
-            // In case the list is empty, add an "Unknown" entry
-            if (s_listOfNames.Count == 0)
-                s_listOfNames.Add("Unknown");
+            // Add an "Unknown" entry for every id we query
+            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add("Unknown"));
         }
 
         /// <summary>
@@ -158,11 +171,18 @@ namespace EVEMon.Common
         /// <summary>
         /// Queries the API Character Name.
         /// </summary>
-        private static void QueryAPICharacterName()
+        private static void QueryAPICharacterName(IEnumerable<string> idsToQuery)
         {
-            string ids = string.Join(",", s_listOfIDsToQuery);
-            APIResult<SerializableAPICharacterName> result = EveMonClient.APIProviders.CurrentProvider.QueryCharacterName(ids);
-            OnQueryAPICharacterNameUpdated(result);
+            string ids = string.Join(",", idsToQuery);
+
+            if (String.IsNullOrWhiteSpace(ids))
+                return;
+
+            // Add the ids to the queried list
+            s_queriedIDs.AddRange(idsToQuery);
+
+            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterName>(
+                APIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
         }
 
         /// <summary>
@@ -198,6 +218,10 @@ namespace EVEMon.Common
         {
             foreach (SerializableCharacterNameListItem entity in entities)
             {
+                // Remove the queried id from the queried list
+                if (s_queriedIDs.Contains(entity.ID.ToString(CultureConstants.InvariantCulture)))
+                    s_queriedIDs.Remove(entity.ID.ToString(CultureConstants.InvariantCulture));
+
                 // Add the name to the list of names
                 s_listOfNames.Add(entity.Name);
 
@@ -207,8 +231,10 @@ namespace EVEMon.Common
             }
 
             // In case the list is empty, add an "Unknown" entry
-            if (s_listOfNames.Count == 0)
+            if (!s_listOfNames.Any())
                 s_listOfNames.Add("Unknown");
+
+            EveMonClient.OnEveIDToNameUpdated();
         }
 
         /// <summary>
@@ -239,15 +265,16 @@ namespace EVEMon.Common
         public static void SaveImmediate()
         {
             SerializableEveIDToName serial = Export();
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
 
             // Save in file
-            FileHelper.OverwriteOrWarnTheUser(s_file, fs =>
-                                                          {
-                                                              xs.Serialize(fs, serial);
-                                                              fs.Flush();
-                                                              return true;
-                                                          });
+            FileHelper.OverwriteOrWarnTheUser(s_file,
+                                              fs =>
+                                                  {
+                                                      XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
+                                                      xs.Serialize(fs, serial);
+                                                      fs.Flush();
+                                                      return true;
+                                                  });
             // Reset savePending flag
             s_lastSaveTime = DateTime.UtcNow;
             s_savePending = false;

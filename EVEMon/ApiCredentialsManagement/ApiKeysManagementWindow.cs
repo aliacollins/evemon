@@ -15,7 +15,7 @@ namespace EVEMon.ApiCredentialsManagement
         private int m_refreshingCharactersCounter;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public ApiKeysManagementWindow()
         {
@@ -39,7 +39,6 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
-            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
 
@@ -61,7 +60,6 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.APIKeyCollectionChanged -= EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
             base.OnClosing(e);
@@ -116,16 +114,6 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// When the monitored characters collection changed, we update the characters list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
-        {
-            UpdateCharactersList();
-        }
-
-        /// <summary>
         /// When the character changes, the displayed names changes too.
         /// </summary>
         /// <param name="sender"></param>
@@ -162,7 +150,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             apiKeysListBox.APIKeys = EveMonClient.APIKeys;
-            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.IsEmpty() ? noAPIKeysPage : apiKeysListPage);
+            apiKeysMultiPanel.SelectedPage = (EveMonClient.APIKeys.Any() ? apiKeysListPage : noAPIKeysPage);
         }
 
         /// <summary>
@@ -328,6 +316,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         private void UpdateCharactersListContent()
         {
+            int position = charactersListView.GetVerticalScrollBarPosition();
+
             charactersListView.BeginUpdate();
             try
             {
@@ -355,9 +345,9 @@ namespace EVEMon.ApiCredentialsManagement
 
                     // Retrieve the texts for the different columns
                     IEnumerable<APIKey> apiKeys = character.Identity.APIKeys.OrderBy(apiKey => apiKey.ID);
-                    string apiKeyIDText = (apiKeys.IsEmpty()
-                                               ? String.Empty
-                                               : String.Join(", ", apiKeys.Select(apiKey => apiKey.ID)));
+                    string apiKeyIDText = apiKeys.Any()
+                                              ? String.Join(", ", apiKeys.Select(apiKey => apiKey.ID))
+                                              : String.Empty;
                     string typeText = "CCP";
                     string uriText = "-";
 
@@ -373,7 +363,7 @@ namespace EVEMon.ApiCredentialsManagement
                         // Grouping CCP characters
                     else if (isGrouping)
                     {
-                        if (apiKeys.IsEmpty())
+                        if (!apiKeys.Any())
                             item.Group = noAPIKeyGroup;
                         else
                         {
@@ -408,6 +398,7 @@ namespace EVEMon.ApiCredentialsManagement
             finally
             {
                 charactersListView.EndUpdate();
+                charactersListView.SetVerticalScrollBarPosition(position);
             }
 
             // Forces a refresh of the enabled/disabled items
@@ -444,7 +435,7 @@ namespace EVEMon.ApiCredentialsManagement
                     // CCP character ?
                 else
                 {
-                    if (character.Identity.APIKeys.IsEmpty())
+                    if (!character.Identity.APIKeys.Any())
                         hasNoAPIKey = true;
                     else
                     {

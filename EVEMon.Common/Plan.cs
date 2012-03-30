@@ -109,14 +109,16 @@ namespace EVEMon.Common
         public SerializablePlan Export()
         {
             // Create serialization object
-            Character character = (Character)Character;
             SerializablePlan serial = new SerializablePlan
                                           {
                                               Name = m_name,
-                                              Owner = character.Guid,
                                               Description = m_description,
                                               SortingPreferences = SortingPreferences
                                           };
+
+            Character character = Character as Character;
+            if (character != null)
+                serial.Owner = character.Guid;
 
             // Add entries
             foreach (PlanEntry entry in Items)
@@ -144,13 +146,13 @@ namespace EVEMon.Common
                 serial.Entries.Add(serialEntry);
             }
 
-            foreach (SerializableInvalidPlanEntry serialEntry in m_invalidEntries
-                .Select(entry => new SerializableInvalidPlanEntry
-                                     {
-                                         SkillName = entry.SkillName,
-                                         PlannedLevel = entry.PlannedLevel,
-                                         Acknowledged = entry.Acknowledged
-                                     }))
+            foreach (SerializableInvalidPlanEntry serialEntry in m_invalidEntries.Select(
+                entry => new SerializableInvalidPlanEntry
+                             {
+                                 SkillName = entry.SkillName,
+                                 PlannedLevel = entry.PlannedLevel,
+                                 Acknowledged = entry.Acknowledged
+                             }))
             {
                 serial.InvalidEntries.Add(serialEntry);
             }
@@ -223,7 +225,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool ContainsInvalidEntries
         {
-            get { return m_invalidEntries.Where(x => !x.Acknowledged).Count() != 0; }
+            get { return m_invalidEntries.Any(x => !x.Acknowledged); }
         }
 
         /// <summary>
@@ -431,12 +433,11 @@ namespace EVEMon.Common
 
             // Gather removables prerequisites now useless
             List<PlanEntry> removablePrerequisites = new List<PlanEntry>();
-            foreach (PlanEntry prereqEntry in allEntriesToRemove
-                .SelectMany(entryToRemove => Items.Where(entryToRemove.IsDependentOf)
-                                                 .Where(prereq => freePlan.GetMinimumLevel(prereq.Skill) == 0)
-                                                 .Select(prereq => freePlan.GetEntry(prereq.Skill, prereq.Level))
-                                                 .Where(prereqEntry => prereqEntry != null &&
-                                                                       prereqEntry.Type == PlanEntryType.Prerequisite)))
+            foreach (PlanEntry prereqEntry in allEntriesToRemove.SelectMany(
+                entryToRemove => Items.Where(entryToRemove.IsDependentOf).Where(
+                    prereq => freePlan.GetMinimumLevel(prereq.Skill) == 0).Select(
+                        prereq => freePlan.GetEntry(prereq.Skill, prereq.Level)).Where(
+                            prereqEntry => prereqEntry != null && prereqEntry.Type == PlanEntryType.Prerequisite)))
             {
                 removablePrerequisites.Add(prereqEntry);
                 freePlan.Remove(prereqEntry);
@@ -626,7 +627,7 @@ namespace EVEMon.Common
                                  int lowestPrerequisitesPriority)
             {
                 m_plan = plan;
-                m_type = (skillsToAdd.IsEmpty() ? PlanOperations.None : PlanOperations.Addition);
+                m_type = (!skillsToAdd.Any() ? PlanOperations.None : PlanOperations.Addition);
 
                 m_skillsToAdd.AddRange(skillsToAdd);
                 m_allEntriesToAdd.AddRange(allEntriesToAdd);
@@ -645,7 +646,7 @@ namespace EVEMon.Common
                                  IEnumerable<PlanEntry> removablePrerequisites)
             {
                 m_plan = plan;
-                m_type = (skillsToRemove.IsEmpty() ? PlanOperations.None : PlanOperations.Suppression);
+                m_type = (!skillsToRemove.Any() ? PlanOperations.None : PlanOperations.Suppression);
 
                 m_skillsToRemove.AddRange(skillsToRemove);
                 m_allEntriesToRemove.AddRange(allEntriesToRemove);

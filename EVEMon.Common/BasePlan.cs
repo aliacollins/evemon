@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Attributes;
@@ -41,11 +40,9 @@ namespace EVEMon.Common
         public ImplantSet ChosenImplantSet { get; set; }
 
         /// <summary>
-        /// Gets the owner of this plan
+        /// Gets the owner of this plan.
         /// </summary>
         public BaseCharacter Character { get; private set; }
-
-
 
         /// <summary>
         /// Does the plan contain obsolete entries.

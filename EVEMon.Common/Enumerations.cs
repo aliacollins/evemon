@@ -887,6 +887,12 @@ namespace EVEMon.Common
         StretchImage
     };
 
+    public enum PathSearchCriteria
+    {
+        FewerJumps,
+        ShortestDistance
+    }
+
     #endregion
 
 

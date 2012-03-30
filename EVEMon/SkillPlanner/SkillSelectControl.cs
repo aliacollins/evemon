@@ -22,6 +22,7 @@ namespace EVEMon.SkillPlanner
         private Character m_character;
         private Skill m_selectedSkill;
         private Plan m_plan;
+        private bool m_init;
 
 
         #region Lifecycle
@@ -48,12 +49,24 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// On load, restore settings and update the content
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SkillSelectControl_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            // Call the base method
+            base.OnLoad(e);
+
+            // Create the attributes combinations and add them to the combo box
+            // (This complex LINQ expression ensures the automatic catch of all present attributes combinations
+            // and the ones that CCP may introduce in the future)
+            cbFilterBy.Items.AddRange(EnumExtensions.GetValues<EveAttribute>().OrderBy(
+                x => x.ToString()).SelectMany(primaryAttribute => m_character.Skills.Where(
+                    x => x.PrimaryAttribute == primaryAttribute).Select(x => x.SecondaryAttribute).Distinct().OrderBy(
+                        x => x.ToString()).Select(secondaryAttribute =>
+                                                  String.Format(CultureConstants.InvariantCulture, "{0} - {1}",
+                                                                primaryAttribute, secondaryAttribute))).ToArray<object>());
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
@@ -61,8 +74,8 @@ namespace EVEMon.SkillPlanner
             if (Settings.UI.UseStoredSearchFilters)
             {
                 cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
-                cbFilterBy.SelectedIndex = Settings.UI.SkillBrowser.FilterByAttributesIndex;
                 cbSkillFilter.SelectedIndex = (int)Settings.UI.SkillBrowser.Filter;
+                cbFilterBy.SelectedIndex = Settings.UI.SkillBrowser.FilterByAttributesIndex;
                 cbSorting.SelectedIndex = (int)Settings.UI.SkillBrowser.Sort;
 
                 tbSearchText.Text = Settings.UI.SkillBrowser.TextSearch;
@@ -71,10 +84,12 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cbShowNonPublic.Checked = false;
-                cbFilterBy.SelectedIndex = 0;
                 cbSkillFilter.SelectedIndex = 0;
+                cbFilterBy.SelectedIndex = 0;
                 cbSorting.SelectedIndex = 0;
             }
+
+            m_init = true;
 
             // Updates the controls
             UpdateControlVisibility();
@@ -302,7 +317,7 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = false;
 
             // Nothing to display ?
-            if (skills.IsEmpty())
+            if (!skills.Any())
             {
                 lbNoMatches.Visible = true;
                 SelectedSkill = null;
@@ -757,7 +772,9 @@ namespace EVEMon.SkillPlanner
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.TextSearch = tbSearchText.Text;
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -817,7 +834,9 @@ namespace EVEMon.SkillPlanner
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Sort = (SkillSort)cbSorting.SelectedIndex;
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -828,7 +847,9 @@ namespace EVEMon.SkillPlanner
         private void cbFilterBy_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.FilterByAttributesIndex = cbFilterBy.SelectedIndex;
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -839,7 +860,9 @@ namespace EVEMon.SkillPlanner
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Filter = (SkillFilter)cbSkillFilter.SelectedIndex;
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>

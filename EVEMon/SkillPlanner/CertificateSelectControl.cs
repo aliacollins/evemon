@@ -27,6 +27,7 @@ namespace EVEMon.SkillPlanner
         private Font m_iconsFont;
         private bool m_blockSelectionReentrancy;
         private bool m_allExpanded;
+        private bool m_init;
 
         public event EventHandler<EventArgs> SelectionChanged;
 
@@ -165,6 +166,8 @@ namespace EVEMon.SkillPlanner
                 cbFilter.SelectedIndex = 0;
             }
 
+            m_init = true;
+
             // Updates the controls
             UpdateControlVisibility();
         }
@@ -206,7 +209,9 @@ namespace EVEMon.SkillPlanner
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSettingsForFilter(cbFilter.SelectedIndex);
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -217,7 +222,9 @@ namespace EVEMon.SkillPlanner
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSettingsForSort(cbSorting.SelectedIndex);
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -258,7 +265,9 @@ namespace EVEMon.SkillPlanner
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             UpdateSettingsForTextSearch(tbSearchText.Text);
-            UpdateContent();
+            
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -339,7 +348,7 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = false;
 
             // Nothing to display ?
-            if (classes.IsEmpty())
+            if (!classes.Any())
             {
                 lbNoMatches.Visible = true;
                 UpdateSelection(null);

@@ -10,12 +10,10 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Geography
     {
-        private const int GeoGenTotal = 97;
-
         private static DateTime s_startTime;
 
         /// <summary>
-        /// Generates the geo datafile.
+        /// Generates the geography datafile.
         /// </summary>
         internal static void GenerateDatafile()
         {
@@ -29,7 +27,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             List<SerializableRegion> regions = new List<SerializableRegion>();
             foreach (MapRegion srcRegion in Database.MapRegionsTable)
             {
-                Util.UpdatePercentDone(GeoGenTotal);
+                Util.UpdatePercentDone(Database.GeographyTotalCount);
 
                 SerializableRegion region = new SerializableRegion
                                                 {

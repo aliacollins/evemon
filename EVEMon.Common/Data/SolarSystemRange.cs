@@ -69,7 +69,7 @@ namespace EVEMon.Common.Data
         /// Gets the next solar system range.
         /// </summary>
         /// <returns></returns>
-        private SolarSystemRange GetNextRange(Dictionary<long, SolarSystem> collectedSystems)
+        private SolarSystemRange GetNextRange(IDictionary<long, SolarSystem> collectedSystems)
         {
             SolarSystemRange nextRange = new SolarSystemRange(Source, Range + 1);
 

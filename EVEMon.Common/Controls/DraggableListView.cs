@@ -20,7 +20,7 @@ namespace EVEMon.Common.Controls
 
         public DraggableListView()
         {
-            DraggableInit();
+            Initialize();
         }
 
 
@@ -54,9 +54,9 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Draggables the init.
+        /// Initializes this instance.
         /// </summary>
-        private void DraggableInit()
+        private void Initialize()
         {
             AllowRowReorder = true;
         }
@@ -116,9 +116,8 @@ namespace EVEMon.Common.Controls
                     return;
             }
 
-            ArrayList insertItems = new ArrayList(SelectedItems.Count);
             // Make a copy of all the selected items
-
+            ArrayList insertItems = new ArrayList(SelectedItems.Count);
             foreach (ListViewItem item in SelectedItems)
             {
                 insertItems.Add(item.Clone());

@@ -73,9 +73,7 @@ namespace EVEMon.Common.ExternalCalendar
         private static void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             // Get the calendar
-            if (!OutlookAppointmentFilter.GetMapiFolder(Settings.Calendar.UseOutlookDefaultCalendar,
-                                                        Settings.Calendar.OutlookCustomCalendarPath,
-                                                        OutlookAppointmentFilter.OutlookApplication.Session.Folders))
+            if (!OutlookAppointmentFilter.OutlookCalendarExist(Settings.Calendar.UseOutlookDefaultCalendar))
             {
                 MessageBox.Show("Outlook calendar does not exist. Please check your settings.", "Outlook Error",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);

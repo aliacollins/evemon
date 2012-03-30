@@ -11,6 +11,7 @@ namespace EVEMon.SkillPlanner
     {
         private Func<Item, Boolean> m_metaGroupPredicate = x => true;
 
+        private bool m_init;
 
         #region Initialization
 
@@ -69,6 +70,11 @@ namespace EVEMon.SkillPlanner
                 cbStoryline.Checked = true;
                 cbOfficer.Checked = true;
             }
+
+            m_init = true;
+
+            // Update the control's content
+            UpdateContent();
         }
 
         #endregion
@@ -83,33 +89,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Update settings
-            Settings.UI.BlueprintBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
-
-            // Enable/Disable the activity filter
-            cbActivityFilter.Enabled = Settings.UI.BlueprintBrowser.UsabilityFilter != ObjectUsabilityFilter.All;
-
-            // Update the filter delegate
-            switch (Settings.UI.BlueprintBrowser.UsabilityFilter)
-            {
-                case ObjectUsabilityFilter.All:
-                    UsabilityPredicate = SelectAll;
-                    break;
-
-                case ObjectUsabilityFilter.Usable:
-                    UsabilityPredicate = CanUse;
-                    break;
-
-                case ObjectUsabilityFilter.Unusable:
-                    UsabilityPredicate = CannotUse;
-                    break;
-
-                default:
-                    throw new NotImplementedException();
-            }
-
-            // Update content
-            UpdateContent();
+            OnSelectedIndexChanged();
         }
 
         /// <summary>
@@ -150,7 +130,7 @@ namespace EVEMon.SkillPlanner
                     break;
             }
 
-            cbUsabilityFilter_SelectedIndexChanged(sender, e);
+            OnSelectedIndexChanged();
         }
 
         /// <summary>
@@ -182,7 +162,8 @@ namespace EVEMon.SkillPlanner
             m_metaGroupPredicate = x => (x.MetaGroup & metagroup) != ItemMetaGroup.None;
 
             // Update content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -193,6 +174,41 @@ namespace EVEMon.SkillPlanner
         {
             Settings.UI.BlueprintBrowser.TextSearch = searchText;
             base.OnSearchTextChanged(searchText);
+        }
+
+        /// <summary>
+        /// Called when the selected index changed.
+        /// </summary>
+        private void OnSelectedIndexChanged()
+        {
+            // Update settings
+            Settings.UI.BlueprintBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
+
+            // Enable/Disable the activity filter
+            cbActivityFilter.Enabled = Settings.UI.BlueprintBrowser.UsabilityFilter != ObjectUsabilityFilter.All;
+
+            // Update the filter delegate
+            switch (Settings.UI.BlueprintBrowser.UsabilityFilter)
+            {
+                case ObjectUsabilityFilter.All:
+                    UsabilityPredicate = SelectAll;
+                    break;
+
+                case ObjectUsabilityFilter.Usable:
+                    UsabilityPredicate = CanUse;
+                    break;
+
+                case ObjectUsabilityFilter.Unusable:
+                    UsabilityPredicate = CannotUse;
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            // Update content
+            if (m_init)
+                UpdateContent();
         }
 
         #endregion
@@ -258,7 +274,7 @@ namespace EVEMon.SkillPlanner
                 // Reset if the node doesn't exist anymore
                 if (selectedNode == null)
                 {
-                    tvItems.UnselectAllNodes();
+                    tvItems.SelectNodeWithTag(null);
                     SelectedObject = null;
                 }
             }
@@ -305,13 +321,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all blueprints
-            foreach (TreeNode node in group.Blueprints.Where(x => UsabilityPredicate(x)
-                                                                  && m_metaGroupPredicate(x)).Select(
-                                                                      childItem => new TreeNode
-                                                                                       {
-                                                                                           Text = childItem.Name,
-                                                                                           Tag = childItem
-                                                                                       }))
+            foreach (TreeNode node in group.Blueprints.Where(
+                x => UsabilityPredicate(x) && m_metaGroupPredicate(x)).Select(
+                    childItem => new TreeNode { Text = childItem.Name, Tag = childItem }))
             {
                 nodeCollection.Add(node);
                 result++;

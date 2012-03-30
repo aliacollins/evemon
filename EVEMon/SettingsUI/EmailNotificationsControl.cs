@@ -274,13 +274,13 @@ namespace EVEMon.SettingsUI
 
             IEnumerable<string> invalidToAddresses = toAddresses.Where(address => !address.IsValidEmail());
 
-            e.Cancel = String.IsNullOrEmpty(tbToAddress.Text.Trim()) || toAddresses.IsEmpty() || !invalidToAddresses.IsEmpty();
+            e.Cancel = String.IsNullOrEmpty(tbToAddress.Text.Trim()) || !toAddresses.Any() || invalidToAddresses.Any();
 
             // Receivers are not of valid email format
             if (!e.Cancel)
                 return;
 
-            string text = invalidToAddresses.IsEmpty()
+            string text = !invalidToAddresses.Any()
                               ? "\'To address\' can not be blank"
                               : String.Format(CultureConstants.DefaultCulture, "{0} {1} not of a valid email format",
                                               string.Join(", ", invalidToAddresses),

@@ -174,8 +174,6 @@ namespace EVEMon.ApiCredentialsManagement
             }
             else
                 APIKey.TryAddOrUpdateAsync(id, VerificationCodeTextBox.Text, OnUpdated);
-
-            return;
         }
 
         /// <summary>

@@ -7,7 +7,6 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.Settings;
-using EVEMon.Controls;
 using SortOrder = EVEMon.Common.SortOrder;
 
 namespace EVEMon.SkillPlanner
@@ -58,6 +57,8 @@ namespace EVEMon.SkillPlanner
         {
             if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            MinimumSize = Size;
 
             EveMonClient.CharacterPlanCollectionChanged += EveMonClient_CharacterPlanCollectionChanged;
 
@@ -115,8 +116,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateContent(bool restoreSelectionAndFocus)
         {
             // Store selection and focus
-            List<Plan> selection =
-                lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).ToList();
+            Plan selection =
+                lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).FirstOrDefault();
             Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
 
             lbPlanList.BeginUpdate();
@@ -138,16 +139,53 @@ namespace EVEMon.SkillPlanner
                     if (!restoreSelectionAndFocus)
                         continue;
 
-                    lvi.Selected = selection.Contains(plan);
+                    lvi.Selected = (selection == plan);
                     lvi.Focused = (focused == plan);
                 }
 
+                // Adjust the size of the columns
+                AdjustColumns();
+
                 // Enable/disable the button
-                btnOpen.Enabled = (lbPlanList.SelectedItems.Count > 0);
+                btnOpen.Enabled = lbPlanList.SelectedItems.Count > 0;
             }
             finally
             {
                 lbPlanList.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Adjusts the columns.
+        /// </summary>
+        private void AdjustColumns()
+        {
+            foreach (ColumnHeader column in lbPlanList.Columns.Cast<ColumnHeader>())
+            {
+                column.Width = -2;
+
+                // Due to .NET design we need to prevent the last colummn to resize to the right end
+
+                // Return if it's not the last column
+                if (column.Index != lbPlanList.Columns.Count - 1)
+                    continue;
+
+                const int Pad = 4;
+
+                // Calculate column header text width with padding
+                int columnHeaderWidth = TextRenderer.MeasureText(column.Text, Font).Width + Pad * 2;
+
+                // If there is an image assigned to the header, add its width with padding
+                if (lbPlanList.SmallImageList != null && column.ImageIndex > -1)
+                    columnHeaderWidth += lbPlanList.SmallImageList.ImageSize.Width + Pad;
+
+                // Calculate the width of the header and the items of the column
+                int columnMaxWidth = column.ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                        new[] { columnHeaderWidth }).Max() + Pad + 1;
+
+                // Assign the width found
+                column.Width = columnMaxWidth;
             }
         }
 
@@ -354,7 +392,7 @@ namespace EVEMon.SkillPlanner
                 // Prompt the user for the new plan's name
                 using (NewPlanWindow f = new NewPlanWindow())
                 {
-                    f.PlanName = m_character.Name + "-" + plan.Name;
+                    f.PlanName = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_character.Name, plan.Name);
                     f.Text = "Save Plan As";
 
                     dr = f.ShowDialog();
@@ -371,7 +409,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Edit > Export Plan...
+        /// File > Export Plan...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -382,6 +420,16 @@ namespace EVEMon.SkillPlanner
 
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
             UIHelper.ExportPlan(plan);
+        }
+
+        /// <summary>
+        /// File > Export Character Skills as Plan...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miExportCharacterSkillsAsPlan_Click(object sender, EventArgs e)
+        {
+            UIHelper.ExportCharacterSkillsAsPlan(m_character);
         }
 
         /// <summary>
@@ -473,11 +521,12 @@ namespace EVEMon.SkillPlanner
             else
             {
                 Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-                planName = "\"" + plan.Name + "\"";
+                planName = String.Format(CultureConstants.InvariantCulture, "\"{0}\"", plan.Name);
             }
 
             // Prompt the user for confirmation with a message box
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete " + planName + "?", title,
+            DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                                                            "Are you sure you want to delete {0}?", planName), title,
                                               MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)

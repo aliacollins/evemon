@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
@@ -14,41 +13,24 @@ namespace EVEMon.Common
         /// <returns>Count of unique skills.</returns>
         public static int GetUniqueSkillsCount(this IEnumerable<PlanEntry> items)
         {
-            int count = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
+            if (items == null)
+                throw new ArgumentNullException("items");
 
-            // Scroll through entries
-            foreach (int index in items.Select(pe => pe.Skill.ArrayIndex).Where(index => !counted[index]))
-            {
-                counted[index] = true;
-                count++;
-            }
-
-            // Return the count
-            return count;
+            return items.Distinct(new PlanEntryComparer()).Count();
         }
 
         /// <summary>
         /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
-        /// <returns>Count of known skills.</returns>
+        /// <returns>Count of not known skills.</returns>
         public static int GetNotKnownSkillsCount(this IEnumerable<PlanEntry> items)
         {
-            int count = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
+            if (items == null)
+                throw new ArgumentNullException("items");
 
-            // Scroll through selection
-            foreach (int index in items.Select(pe => new { pe, index = pe.Skill.ArrayIndex }).Where(
-                item => !counted[item.index] && !item.pe.CharacterSkill.IsKnown && !item.pe.CharacterSkill.IsOwned).Select(
-                    item => item.index))
-            {
-                counted[index] = true;
-                count++;
-            }
-
-            // Return the count
-            return count;
+            return items.Distinct(new PlanEntryComparer()).Count(
+                    entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned);
         }
 
         /// <summary>
@@ -61,48 +43,21 @@ namespace EVEMon.Common
             if (items == null)
                 throw new ArgumentNullException("items");
 
-            long cost = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-            // Scroll through entries
-            foreach (PlanEntry pe in items)
-            {
-                int index = pe.Skill.ArrayIndex;
-                if (counted[index])
-                    continue;
-                counted[index] = true;
-                cost += pe.Skill.Cost;
-            }
-
-            // Return the cost
-            return cost;
+            return items.Distinct(new PlanEntryComparer()).Sum(entry => entry.Skill.Cost);
         }
 
         /// <summary>
         /// Gets the cost of the not known skill books, in ISK.
         /// </summary>
         /// <param name="items">List of <see cref="PlanEntry" />.</param>
-        /// <returns>Cumulative cost of known skill books.</returns>
+        /// <returns>Cumulative cost of not known skill books.</returns>
         public static long GetNotKnownSkillBooksCost(this IEnumerable<PlanEntry> items)
         {
             if (items == null)
                 throw new ArgumentNullException("items");
 
-            long cost = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-            // Scroll through entries
-            foreach (PlanEntry pe in items)
-            {
-                int index = pe.Skill.ArrayIndex;
-                if (counted[index] || pe.CharacterSkill.IsKnown || pe.CharacterSkill.IsOwned)
-                    continue;
-                counted[index] = true;
-                cost += pe.Skill.Cost;
-            }
-
-            // Return the cost
-            return cost;
+            return items.Distinct(new PlanEntryComparer()).Where
+                (entry => !entry.CharacterSkill.IsKnown && !entry.CharacterSkill.IsOwned).Sum(entry => entry.Skill.Cost);
         }
     }
 }

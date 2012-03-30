@@ -3,9 +3,6 @@ using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public sealed class IntuitiveDataGridView : DataGridView
     {
         /// <summary>

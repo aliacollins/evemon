@@ -11,8 +11,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Properties
     {
-        private const int PropGenTotal = 1623;
-
         private static DateTime s_startTime;
 
         /// <summary>
@@ -178,7 +176,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Export attributes
                 foreach (DgmAttributeTypes srcProp in Database.DgmAttributeTypesTable.Where(x => x.CategoryID == srcCategory.ID))
                 {
-                    Util.UpdatePercentDone(PropGenTotal);
+                    Util.UpdatePercentDone(Database.PropertiesTotalCount);
 
                     SerializableProperty prop = new SerializableProperty();
                     properties.Add(prop);

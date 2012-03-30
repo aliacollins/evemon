@@ -34,7 +34,6 @@ namespace EVEMon.Common.SettingsObjects
             Scheduler = new SchedulerUISettings();
 
             UseStoredSearchFilters = true;
-            ShowTextInToolStrip = true;
         }
 
         /// <summary>
@@ -42,15 +41,6 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         [XmlElement("safeForWork")]
         public bool SafeForWork { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [show text in tool strip].
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [show text in tool strip]; otherwise, <c>false</c>.
-        /// </value>
-        [XmlElement("showTextInToolStrip")]
-        public bool ShowTextInToolStrip { get; set; }
 
         /// <summary>
         /// Gets or sets the main window close behaviour.

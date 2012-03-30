@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
             splitContainer.RememberDistanceKey = "SkillExplorer";
 
-            toolTip.SetToolTip(cbHistory, "A history of the skills that you have been looking at");
+            toolTip.SetToolTip(cbHistory, "A history of the skills that you have been looking at.");
         }
 
         /// <summary>
@@ -112,10 +112,10 @@ namespace EVEMon.SkillPlanner
                 m_skill = value;
 
                 // If already in history combo, remove it to reinsert it at the top
-                if (cbHistory.Items.Contains(m_skill.Name))
-                    cbHistory.Items.RemoveAt(cbHistory.Items.IndexOf(m_skill.Name));
+                if (cbHistory.Items.Contains(m_skill))
+                    cbHistory.Items.RemoveAt(cbHistory.Items.IndexOf(m_skill));
 
-                cbHistory.Items.Insert(0, m_skill.Name);
+                cbHistory.Items.Insert(0, m_skill);
                 cbHistory.SelectedIndex = 0;
 
                 UpdateContent();
@@ -268,8 +268,8 @@ namespace EVEMon.SkillPlanner
                     // Gets the enabled skills and check it's not empty
                     List<Skill> enabledSkills = m_skill.Character.Skills.Where(
                         x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToList();
-                    
-                    if (enabledSkills.IsEmpty())
+
+                    if (!enabledSkills.Any())
                         continue;
 
                     // Add a node for this skill level
@@ -311,8 +311,8 @@ namespace EVEMon.SkillPlanner
                 // Or do we need to group skills by their groups ?
             else if (rbShowTree.Checked)
             {
-                foreach (IGrouping<SkillGroup, Skill> group in enabledSkills
-                    .GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
+                foreach (IGrouping<SkillGroup, Skill> group in enabledSkills.GroupBy(
+                    x => x.Group).ToArray().OrderBy(x => x.Key.Name))
                 {
                     TreeNode groupNode = new TreeNode(group.Key.Name);
                     foreach (Skill skill in group.ToArray().OrderBy(x => x.Name))
@@ -364,7 +364,7 @@ namespace EVEMon.SkillPlanner
                     // Gets the enabled objects and check it's not empty
                     IEnumerable<Item> enabledObjects =
                         items.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData && y.Level == i));
-                    if (enabledObjects.IsEmpty())
+                    if (!enabledObjects.Any())
                         continue;
 
                     // Add a node for this skill level
@@ -489,7 +489,7 @@ namespace EVEMon.SkillPlanner
             foreach (BlueprintMarketGroup category in blueprintMarketGroup.SubGroups)
             {
                 IEnumerable<TreeNode> children = CreateMarketGroupsNode(category, blueprints, level);
-                if (children.IsEmpty())
+                if (!children.Any())
                     continue;
 
                 TreeNode node = new TreeNode(category.Name);
@@ -526,7 +526,7 @@ namespace EVEMon.SkillPlanner
             foreach (MarketGroup category in marketGroup.SubGroups)
             {
                 IEnumerable<TreeNode> children = CreateMarketGroupsNode(category, items);
-                if (children.IsEmpty())
+                if (!children.Any())
                     continue;
 
                 TreeNode node = new TreeNode(category.Name);
@@ -906,7 +906,7 @@ namespace EVEMon.SkillPlanner
         #region Controls' events
 
         /// <summary>
-        /// Toggling the radio buttons to switch between sorted list and category views
+        /// Toggling the radio buttons to switch between sorted list and category views.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -917,7 +917,7 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// Toggling the "Show base items/show variants",
-        /// just redisplay the items tree
+        /// just redisplay the items tree.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -927,7 +927,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// We're done!
+        /// Occurs when the window closes.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -968,7 +968,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Sklll context menu > Show me what this skill unlocks
+        /// Sklll context menu > Show me what this skill unlocks.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -982,14 +982,14 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// We want to go look at a skill in the history list again
+        /// We want to go look at a skill in the history list again.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void cbHistory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string skillName = cbHistory.Items[cbHistory.SelectedIndex] as String;
-            Skill = m_character.Skills[skillName];
+            Skill skill = (Skill)cbHistory.Items[cbHistory.SelectedIndex];
+            Skill = m_character.Skills[skill.ID];
         }
 
         #endregion

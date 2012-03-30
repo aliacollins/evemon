@@ -14,13 +14,9 @@ namespace EVEMon.WindowsApi
         {
             get
             {
-                if (Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                    return true;
-
-                if (Environment.OSVersion.Platform == PlatformID.Win32S)
-                    return true;
-
-                return Environment.OSVersion.Platform == PlatformID.Win32NT;
+                return Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                       Environment.OSVersion.Platform == PlatformID.Win32S ||
+                       IsWindowsNT;
             }
         }
 

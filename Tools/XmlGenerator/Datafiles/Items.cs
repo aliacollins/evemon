@@ -11,8 +11,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Items
     {
-        private const int ItemGenTotal = 11466;
-
         private static DateTime s_startTime;
         private static List<InvMarketGroup> s_injectedMarketGroups;
         private static List<InvType> s_nullMarketItems; 
@@ -226,7 +224,6 @@ namespace EVEMon.XmlGenerator.Datafiles
             Database.InvTypeTable[DBConstants.StormPlanetID].Published = true;
             Database.InvTypeTable[DBConstants.PlasmaPlanetID].Published = true;
             Database.InvTypeTable[DBConstants.ShatteredPlanetID].Published = true;
-            Database.InvTypeTable[DBConstants.ChalcopyriteID].Published = true;
             Database.InvTypeTable[DBConstants.ImpairorID].Published = true;
             Database.InvTypeTable[DBConstants.IbisID].Published = true;
             Database.InvTypeTable[DBConstants.VelatorID].Published = true;
@@ -307,7 +304,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static void CreateItem(InvType srcItem, ICollection<SerializableItem> groupItems)
         {
-            Util.UpdatePercentDone(ItemGenTotal);
+            Util.UpdatePercentDone(Database.ItemsTotalCount);
 
             srcItem.Generated = true;
 

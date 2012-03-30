@@ -132,7 +132,7 @@ namespace EVEMon.Common
             // Imports selection
             m_current = this[serial.SelectedIndex];
 
-            EveMonClient.OnSettingsChanged();
+            EveMonClient.OnCharacterImplantSetCollectionChanged();
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace EVEMon.Common
 
             API.Import(serial);
 
-            EveMonClient.OnSettingsChanged();
+            EveMonClient.OnCharacterImplantSetCollectionChanged();
         }
 
         /// <summary>

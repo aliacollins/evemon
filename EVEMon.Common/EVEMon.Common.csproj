@@ -43,6 +43,7 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -52,37 +53,47 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Snapshot|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NO_THREAD_SAFETY</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Google.GData.AccessControl, Version=1.4.0.2, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
+    <Reference Include="Google.GData.AccessControl, Version=1.8.0.0, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalCalendar\Google.GData.AccessControl.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.GData.Calendar">
+    <Reference Include="Google.GData.Calendar, Version=1.8.0.0, Culture=neutral, PublicKeyToken=aa6748391206b888, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalCalendar\Google.GData.Calendar.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.GData.Client">
+    <Reference Include="Google.GData.Client, Version=1.8.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalCalendar\Google.GData.Client.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.GData.Extensions">
+    <Reference Include="Google.GData.Extensions, Version=1.8.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalCalendar\Google.GData.Extensions.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>ExternalCalendar\Microsoft.Office.Interop.Outlook.dll</HintPath>
-    </Reference>
-    <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>ExternalCalendar\Office.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -98,7 +109,7 @@
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractBid.cs" />
-    <Compile Include="ContractBidsCollection.cs" />
+    <Compile Include="ContractBidCollection.cs" />
     <Compile Include="ContractCollection.cs" />
     <Compile Include="ContractComparer.cs" />
     <Compile Include="ContractItem.cs" />
@@ -163,6 +174,12 @@
     </Compile>
     <Compile Include="Controls\Throbber.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TipWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TipWindow.Designer.cs">
+      <DependentUpon>TipWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\TrayIcon.cs">
       <SubType>Component</SubType>
@@ -244,6 +261,7 @@
     <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
     <Compile Include="Notifications\NotificationPriority.cs" />
     <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs" />
+    <Compile Include="PlanEntryComparer.cs" />
     <Compile Include="PlanPrinter.cs" />
     <Compile Include="RemappingResult.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
@@ -341,6 +359,7 @@
     <Compile Include="Data\StaticSkillExtensions.cs" />
     <Compile Include="APIKey.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="UIHelper.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
@@ -774,6 +793,10 @@
       <DependentUpon>PrintOptionsDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TipWindow.resx">
+      <DependentUpon>TipWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\TrayIcon.resx">
       <DependentUpon>TrayIcon.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1004,7 +1027,7 @@
     </SGen>
   </Target>
   <UsingTask TaskName="HgVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
-  <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' ">
+  <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)' == 'Snapshot' ">
     <HgVersionFile TemplateFile="Properties\AssemblyInfo.template.cs" DestinationFile="Properties\AssemblyInfo.cs" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">

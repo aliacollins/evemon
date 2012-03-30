@@ -49,12 +49,12 @@ namespace Tests.EVEMon
         {
             List<PathVersion> versions = GetAllNUnitInstalls();
 
-            if (versions.IsEmpty())
+            if (!versions.Any())
                 return String.Empty;
 
             Version verMax = versions.Select(x => x.Version).Max();
 
-            string newestInstall = versions.Where(x => x.Version == verMax).First().Path;
+            string newestInstall = versions.First(x => x.Version == verMax).Path;
 
             string binPath = Path.Combine(newestInstall, BinFolder);
             return Path.Combine(binPath, ExecutableName);

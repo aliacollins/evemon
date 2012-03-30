@@ -10,7 +10,8 @@ namespace EVEMon.SkillPlanner
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
         private Func<Item, Boolean> m_racePredicate = x => true;
-
+        
+        private bool m_init;
 
         #region Initialization
 
@@ -64,6 +65,11 @@ namespace EVEMon.SkillPlanner
                 cbFaction.Checked = true;
                 cbORE.Checked = true;
             }
+
+            m_init = true;
+
+            // Update the control's content
+            UpdateContent();
         }
 
         #endregion
@@ -102,7 +108,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -134,7 +141,8 @@ namespace EVEMon.SkillPlanner
             m_racePredicate = x => (x.Race & race) != Race.None;
 
             // Update content
-            UpdateContent();
+            if (m_init)
+                UpdateContent();
         }
 
         /// <summary>
@@ -168,9 +176,9 @@ namespace EVEMon.SkillPlanner
         private void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                                       ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                                       : 0;
 
             if (StaticItems.ShipsMarketGroup == null)
                 return;
@@ -214,7 +222,7 @@ namespace EVEMon.SkillPlanner
                 // Reset if the node doesn't exist anymore
                 if (selectedNode == null)
                 {
-                    tvItems.UnselectAllNodes();
+                    tvItems.SelectNodeWithTag(null);
                     SelectedObject = null;
                 }
             }
@@ -261,13 +269,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add all items
-            foreach (TreeNode node in group.Items.Where(x => UsabilityPredicate(x)
-                                                             && m_racePredicate(x)).Select(
-                                                                 childItem => new TreeNode
-                                                                                  {
-                                                                                      Text = childItem.Name,
-                                                                                      Tag = childItem
-                                                                                  }))
+            foreach (TreeNode node in group.Items.Where(
+                x => UsabilityPredicate(x) && m_racePredicate(x)).Select(
+                    childItem => new TreeNode { Text = childItem.Name, Tag = childItem }))
             {
                 nodeCollection.Add(node);
                 result++;

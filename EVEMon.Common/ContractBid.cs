@@ -6,6 +6,10 @@ namespace EVEMon.Common
 {
     public sealed class ContractBid
     {
+        private readonly long m_bidderId;
+        private string m_bidder;
+
+
         #region Constructor
 
         /// <summary>
@@ -19,7 +23,8 @@ namespace EVEMon.Common
 
             ID = src.ID;
             ContractID = src.ContractID;
-            Bidder = EveIDToName.GetIDToName(src.BidderID);
+            m_bidderId = src.BidderID;
+            m_bidder = EveIDToName.GetIDToName(src.BidderID);
             BidDate = src.DateBid;
             Amount = src.Amount;
         }
@@ -35,7 +40,7 @@ namespace EVEMon.Common
 
             ID = src.BidID;
             ContractID = src.ContractID;
-            Bidder = src.Bidder;
+            m_bidder = src.Bidder;
             BidDate = src.BidDate;
             Amount = src.Amount;
         }
@@ -46,33 +51,36 @@ namespace EVEMon.Common
         #region Properties
 
         /// <summary>
-        /// Gets or sets the ID.
+        /// Gets the ID.
         /// </summary>
-        /// <value>The ID.</value>
         public long ID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the contract ID.
+        /// Gets the contract ID.
         /// </summary>
-        /// <value>The contract ID.</value>
         public long ContractID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the bidder.
+        /// Gets the bidder.
         /// </summary>
-        /// <value>The bidder.</value>
-        public string Bidder { get; private set; }
+        public string Bidder
+        {
+            get
+            {
+                return m_bidder == "Unknown"
+                           ? m_bidder = EveIDToName.GetIDToName(m_bidderId)
+                           : m_bidder;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the bid date.
+        /// Gets the bid date.
         /// </summary>
-        /// <value>The bid date.</value>
         public DateTime BidDate { get; private set; }
 
         /// <summary>
-        /// Gets or sets the amount.
+        /// Gets the amount.
         /// </summary>
-        /// <value>The amount.</value>
         public decimal Amount { get; private set; }
 
         #endregion

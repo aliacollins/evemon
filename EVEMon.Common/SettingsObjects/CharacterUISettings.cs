@@ -47,6 +47,13 @@ namespace EVEMon.Common.SettingsObjects
         public MarketOrderGrouping OrdersGroupBy { get; set; }
 
         /// <summary>
+        /// Gets or sets the contracts group by.
+        /// </summary>
+        /// <value>The contracts group by.</value>
+        [XmlElement("contractsGroupBy")]
+        public ContractGrouping ContractsGroupBy { get; set; }
+
+        /// <summary>
         /// Gets or sets the jobs group by.
         /// </summary>
         /// <value>The jobs group by.</value>

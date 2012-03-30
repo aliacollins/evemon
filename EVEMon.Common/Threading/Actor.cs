@@ -157,7 +157,7 @@ namespace EVEMon.Common.Threading
         /// <param name="action"></param>
         /// <param name="waitForCompletion">When true, will wait for the completion</param>
         /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
-        private void Invoke(Action action, bool waitForCompletion = false)
+        private void Invoke(Action action, bool waitForCompletion)
         {
             // Already on the bound thread, execute immediately
             if (Thread.CurrentThread == m_thread)

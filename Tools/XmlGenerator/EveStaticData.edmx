@@ -440,7 +440,7 @@
           <Key>
             <PropertyRef Name="categoryID" />
           </Key>
-          <Property Name="categoryID" Type="tinyint" Nullable="false" />
+          <Property Name="categoryID" Type="int" Nullable="false" />
           <Property Name="categoryName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
           <Property Name="iconID" Type="int" />
@@ -490,8 +490,8 @@
           <Key>
             <PropertyRef Name="groupID" />
           </Key>
-          <Property Name="groupID" Type="smallint" Nullable="false" />
-          <Property Name="categoryID" Type="tinyint" />
+          <Property Name="groupID" Type="int" Nullable="false" />
+          <Property Name="categoryID" Type="int" />
           <Property Name="groupName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
           <Property Name="iconID" Type="int" />
@@ -586,7 +586,7 @@
             <PropertyRef Name="typeID" />
           </Key>
           <Property Name="typeID" Type="int" Nullable="false" />
-          <Property Name="groupID" Type="smallint" />
+          <Property Name="groupID" Type="int" />
           <Property Name="typeName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
           <Property Name="graphicID" Type="int" />
@@ -670,7 +670,7 @@
           </Key>
           <Property Name="itemID" Type="int" Nullable="false" />
           <Property Name="typeID" Type="int" />
-          <Property Name="groupID" Type="smallint" />
+          <Property Name="groupID" Type="int" />
           <Property Name="solarSystemID" Type="int" />
           <Property Name="constellationID" Type="int" />
           <Property Name="regionID" Type="int" />
@@ -883,7 +883,7 @@
             <PropertyRef Name="categoryID" />
           </Key>
           <Property Name="assemblyLineTypeID" Type="tinyint" Nullable="false" />
-          <Property Name="categoryID" Type="tinyint" Nullable="false" />
+          <Property Name="categoryID" Type="int" Nullable="false" />
           <Property Name="timeMultiplier" Type="float" />
           <Property Name="materialMultiplier" Type="float" />
         </EntityType>
@@ -893,7 +893,7 @@
             <PropertyRef Name="groupID" />
           </Key>
           <Property Name="assemblyLineTypeID" Type="tinyint" Nullable="false" />
-          <Property Name="groupID" Type="smallint" Nullable="false" />
+          <Property Name="groupID" Type="int" Nullable="false" />
           <Property Name="timeMultiplier" Type="float" />
           <Property Name="materialMultiplier" Type="float" />
         </EntityType>
@@ -1483,7 +1483,7 @@
           <Key>
             <PropertyRef Name="categoryID" />
           </Key>
-          <Property Name="categoryID" Type="Byte" Nullable="false" />
+          <Property Name="categoryID" Type="Int32" Nullable="false" />
           <Property Name="categoryName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
           <Property Name="published" Type="Boolean" />
@@ -1533,8 +1533,8 @@
           <Key>
             <PropertyRef Name="groupID" />
           </Key>
-          <Property Name="groupID" Type="Int16" Nullable="false" />
-          <Property Name="categoryID" Type="Byte" />
+          <Property Name="groupID" Type="Int32" Nullable="false" />
+          <Property Name="categoryID" Type="Int32" />
           <Property Name="groupName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
           <Property Name="useBasePrice" Type="Boolean" />

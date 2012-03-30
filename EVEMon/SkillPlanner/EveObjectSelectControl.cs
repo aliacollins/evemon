@@ -282,11 +282,11 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Selects the given nodes.
         /// </summary>
-        /// <param name="s"></param>
-        private void SetSelectedObjects(IEnumerable<Item> s)
+        /// <param name="items"></param>
+        private void SetSelectedObjects(IEnumerable<Item> items)
         {
             // Updates selection
-            SelectedObjects = (s == null ? new List<Item>() : new List<Item>(s));
+            SelectedObjects = (items == null ? new List<Item>() : new List<Item>(items));
 
             // Selects the proper nodes
             if (SelectedObjects.Count() == 1)
@@ -308,8 +308,7 @@ namespace EVEMon.SkillPlanner
         {
             if (tvItems.SelectedNodes.Count != 0)
             {
-                List<Item> selectedObjects =
-                    (tvItems.SelectedNodes.Select(node => node.Tag)).OfType<Item>().ToList();
+                List<Item> selectedObjects = tvItems.SelectedNodes.Select(node => node.Tag).OfType<Item>().ToList();
                 SetSelectedObjects(selectedObjects);
                 return;
             }
@@ -465,8 +464,8 @@ namespace EVEMon.SkillPlanner
                     prerequisites = prerequisites.Where(x => x.Activity == Activity);
             }
 
-            // Item doesn't have prerequisites skills
-            if (prerequisites.IsEmpty())
+            // Item doesn't have prerequisites
+            if (!prerequisites.Any())
                 return true;
 
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
@@ -494,7 +493,7 @@ namespace EVEMon.SkillPlanner
                                       }).Select(y => y.level >= y.prereq.Level));
 
                     // Has the character trained all prereq skills for this activity ?
-                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x))
+                    if (prereqTrained.All(x => x))
                         return true;
                 }
                 return false;
@@ -509,8 +508,7 @@ namespace EVEMon.SkillPlanner
                               }).Select(y => y.level >= y.prereq.Level));
 
             // Has the character trained all prereq skills ?
-            bool d = (prereqTrained.All(x => x));
-            return d;
+            return prereqTrained.All(x => x);
         }
 
         /// <summary>
@@ -520,7 +518,34 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CannotUse(Item item)
         {
-            return !CanUse(item);
+            if (item == null)
+                throw new ArgumentNullException("item");
+
+            Blueprint blueprint = item as Blueprint;
+
+            bool hasActivity = blueprint == null || ActivityFilter == ObjectActivityFilter.All
+                               || blueprint.Prerequisites.Any(x => x.Activity == Activity)
+                               || blueprint.MaterialRequirements.Any(x => x.Activity == Activity);
+
+            // Special condition check for activity 'Any' 
+            // as negative logic returns incorrect results
+            if (ActivityFilter == ObjectActivityFilter.Any)
+            {
+                IEnumerable<StaticSkillLevel> prerequisites =
+                    item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+
+                IEnumerable<Boolean> prereqTrained = prerequisites.Select(
+                    prereq => new
+                                  {
+                                      prereq,
+                                      level = Plan.Character.GetSkillLevel(prereq.Skill)
+                                  }).Select(y => y.level >= y.prereq.Level);
+
+                // Has the character trained all prereq skills for this activity ?
+                return prerequisites.Any() && !prereqTrained.All(x => x);
+            }
+
+            return !CanUse(item) && hasActivity;
         }
 
         #endregion

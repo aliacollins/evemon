@@ -149,8 +149,8 @@ namespace EVEMon.Common.SettingsObjects
 
     public enum CalendarProvider
     {
-        Outlook,
-        Google
+        Google,
+        Outlook
     }
 
     public enum GoogleCalendarReminder

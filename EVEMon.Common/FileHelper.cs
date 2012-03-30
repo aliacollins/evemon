@@ -91,7 +91,22 @@ namespace EVEMon.Common
             }
             finally
             {
-                File.Delete(tempFileName);
+                try
+                {
+                    File.Delete(tempFileName);
+                }
+                catch (ArgumentException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+                catch (IOException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
             }
         }
 

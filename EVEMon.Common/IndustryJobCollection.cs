@@ -25,6 +25,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal void Dispose()
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+        }
+
+        /// <summary>
         /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -115,7 +123,7 @@ namespace EVEMon.Common
         private void UpdateOnTimerTick()
         {
             // We exit if there are no jobs
-            if (Items.IsEmpty())
+            if (!Items.Any())
                 return;
 
             // Add the not notified "Ready" jobs to the completed list
@@ -125,7 +133,7 @@ namespace EVEMon.Common
             jobsCompleted.ForEach(job => job.NotificationSend = true);
 
             // We exit if no jobs have been completed
-            if (jobsCompleted.IsEmpty())
+            if (!jobsCompleted.Any())
                 return;
 
             // Sends a notification

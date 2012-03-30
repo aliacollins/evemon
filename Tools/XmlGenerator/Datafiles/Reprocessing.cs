@@ -9,8 +9,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Reprocessing
     {
-        private const int ReprocessGenTotal = 11704;
-
         private static DateTime s_startTime;
 
         /// <summary>
@@ -28,7 +26,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             foreach (int typeID in Database.InvTypeTable.Where(x => x.Generated).Select(x => x.ID))
             {
-                Util.UpdatePercentDone(ReprocessGenTotal);
+                Util.UpdatePercentDone(Database.ReprocessingTotalCount);
 
                 IEnumerable<SerializableMaterialQuantity> materials = Database.InvTypeMaterialsTable.Where(
                     x => x.TypeID == typeID).Select(

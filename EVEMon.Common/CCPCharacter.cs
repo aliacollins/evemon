@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EVEMon.Common.Collections;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -14,6 +13,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
+        #region Fields
+
         private readonly List<MarketOrder> m_endedOrdersForCharacter;
         private readonly List<MarketOrder> m_endedOrdersForCorporation;
         private readonly List<Contract> m_endedContractsForCharacter;
@@ -22,8 +23,11 @@ namespace EVEMon.Common
 
         private CharacterDataQuerying m_characterDataQuerying;
         private CorporationDataQuerying m_corporationDataQuerying;
+        private List<SerializableAPIUpdate> m_lastAPIUpdates;
 
         private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
+
+        #endregion
 
 
         #region Constructors
@@ -43,8 +47,8 @@ namespace EVEMon.Common
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
             CorporationContracts = new ContractCollection(this);
-            CharacterContractBids = new ContractBidsCollection(this);
-            CorporationContractBids = new ContractBidsCollection(this);
+            CharacterContractBids = new ContractBidCollection(this);
+            CorporationContractBids = new ContractBidCollection(this);
             CharacterIndustryJobs = new IndustryJobCollection(this);
             CorporationIndustryJobs = new IndustryJobCollection(this);
             ResearchPoints = new ResearchPointCollection(this);
@@ -80,7 +84,7 @@ namespace EVEMon.Common
             : this(identity, serial.Guid)
         {
             Import(serial);
-            LastAPIUpdates = serial.LastUpdates;
+            m_lastAPIUpdates = serial.LastUpdates.ToList();
         }
 
         /// <summary>
@@ -91,7 +95,7 @@ namespace EVEMon.Common
             : this(identity, Guid.NewGuid())
         {
             ForceUpdateBasicFeatures = true;
-            LastAPIUpdates = new EmptyEnumerable<SerializableAPIUpdate>();
+            m_lastAPIUpdates = new List<SerializableAPIUpdate>();
         }
 
         #endregion
@@ -173,13 +177,13 @@ namespace EVEMon.Common
         /// Gets or sets the character contract bids.
         /// </summary>
         /// <value>The character contract bids.</value>
-        public ContractBidsCollection CharacterContractBids { get; private set; }
+        public ContractBidCollection CharacterContractBids { get; private set; }
 
         /// <summary>
         /// Gets or sets the corporation contract bids.
         /// </summary>
         /// <value>The character contract bids.</value>
-        public ContractBidsCollection CorporationContractBids { get; private set; }
+        public ContractBidCollection CorporationContractBids { get; private set; }
 
         /// <summary>
         /// Gets the collection of industry jobs.
@@ -193,13 +197,13 @@ namespace EVEMon.Common
         /// Gets or sets the character industry jobs.
         /// </summary>
         /// <value>The character industry jobs.</value>
-        public IndustryJobCollection CharacterIndustryJobs { get; set; }
+        public IndustryJobCollection CharacterIndustryJobs { get; private set; }
 
         /// <summary>
         /// Gets or sets the corporation industry jobs.
         /// </summary>
         /// <value>The corporation industry jobs.</value>
-        public IndustryJobCollection CorporationIndustryJobs { get; set; }
+        public IndustryJobCollection CorporationIndustryJobs { get; private set; }
 
         /// <summary>
         /// Gets the collection of research points.
@@ -225,11 +229,6 @@ namespace EVEMon.Common
         /// Gets the query monitors enumeration.
         /// </summary>
         public QueryMonitorCollection QueryMonitors { get; private set; }
-
-        /// <summary>
-        /// Gets the query monitors last API updates enumeration.
-        /// </summary>
-        public IEnumerable<SerializableAPIUpdate> LastAPIUpdates { get; private set; }
 
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
@@ -308,15 +307,15 @@ namespace EVEMon.Common
             // Last API updates
             if (QueryMonitors.Any())
             {
-                LastAPIUpdates = QueryMonitors.Select(
-                monitor => new SerializableAPIUpdate
-                               {
-                                   Method = monitor.Method.ToString(),
-                                   Time = monitor.LastUpdate
-                               });
+                m_lastAPIUpdates = QueryMonitors.Select(
+                    monitor => new SerializableAPIUpdate
+                                   {
+                                       Method = monitor.Method.ToString(),
+                                       Time = monitor.LastUpdate
+                                   }).ToList();
             }
 
-            serial.LastUpdates.AddRange(LastAPIUpdates);
+            serial.LastUpdates.AddRange(m_lastAPIUpdates);
 
             return serial;
         }
@@ -327,19 +326,44 @@ namespace EVEMon.Common
         /// <returns></returns>
         private IEnumerable<SerializableOrderBase> MarketOrdersExport()
         {
-            return CharacterMarketOrders.Export().Concat(CorporationMarketOrders.ExportOnlyIssuedByCharacter());
+            // Until we can determine what data the character's API keys can query,
+            // we have to keep the data unprocessed. Once we know, we filter them
+
+            IEnumerable<SerializableOrderBase> corporationMarketOrdersExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                    ? CorporationMarketOrders.ExportOnlyIssuedByCharacter()
+                    : new List<SerializableOrderBase>();
+
+            IEnumerable<SerializableOrderBase> characterMarketOrdersExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                    ? CharacterMarketOrders.Export()
+                    : new List<SerializableOrderBase>();
+
+            return characterMarketOrdersExport.Concat(corporationMarketOrdersExport);
         }
 
         /// <summary>
         /// Exports the contracts.
         /// </summary>
         /// <returns></returns>
-        /// <remarks>Excludes contracts that appear in both collections</remarks>
+        /// <remarks>Excludes contracts that appear in both collections.</remarks>
         private IEnumerable<SerializableContract> ContractsExport()
         {
-            IEnumerable<SerializableContract> corporationContractsExport = CorporationContracts.ExportOnlyIssuedByCharacter();
-            return CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
-                corpContract => corpContract.ContractID != charContract.ContractID)).Concat(corporationContractsExport);
+            // Until we can determine what data the character's API keys can query,
+            // we have to keep the data unprocessed. Once we know, we filter them
+
+            IEnumerable<SerializableContract> corporationContractsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                    ? CorporationContracts.ExportOnlyIssuedByCharacter()
+                    : new List<SerializableContract>();
+
+            IEnumerable<SerializableContract> characterContractsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                    ? CharacterContracts.Export().Where(charContract => corporationContractsExport.All(
+                        corpContract => corpContract.ContractID != charContract.ContractID))
+                    : new List<SerializableContract>();
+
+            return characterContractsExport.Concat(corporationContractsExport);
         }
 
         /// <summary>
@@ -348,7 +372,20 @@ namespace EVEMon.Common
         /// <returns></returns>
         private IEnumerable<SerializableJob> IndustryJobsExport()
         {
-            return CharacterIndustryJobs.Export().Concat(CorporationIndustryJobs.ExportOnlyIssuedByCharacter());
+            // Until we can determine what data the character's API keys can query,
+            // we have to keep the data unprocessed. Once we know, we filter them
+
+            IEnumerable<SerializableJob> corporationIndustryJobsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_corporationDataQuerying != null
+                    ? CorporationIndustryJobs.ExportOnlyIssuedByCharacter()
+                    : new List<SerializableJob>();
+
+            IEnumerable<SerializableJob> characterIndustryJobsExport =
+                EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed) || m_characterDataQuerying != null
+                    ? CharacterIndustryJobs.Export()
+                    : new List<SerializableJob>();
+
+            return characterIndustryJobsExport.Concat(corporationIndustryJobsExport);
         }
 
         /// <summary>
@@ -418,6 +455,35 @@ namespace EVEMon.Common
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal override void Dispose()
+        {
+            // Unsubscribe events
+            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CorporationMarketOrdersUpdated -= EveMonClient_CorporationMarketOrdersUpdated;
+            EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
+            EveMonClient.CorporationContractsUpdated -= EveMonClient_CorporationContractsUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
+            EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+
+            // Unsubscribe events
+            SkillQueue.Dispose();
+            CharacterIndustryJobs.Dispose();
+            CorporationIndustryJobs.Dispose();
+
+            // Unsubscribe events
+            if (m_characterDataQuerying != null)
+                m_characterDataQuerying.Dispose();
+
+            if (m_corporationDataQuerying != null)
+                m_corporationDataQuerying.Dispose();
+        }
 
         /// <summary>
         /// Checks whether we should notify an error.
@@ -615,19 +681,25 @@ namespace EVEMon.Common
             if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == APIKeyType.Unknown))
                 return;
 
-            if (m_characterDataQuerying != null & m_corporationDataQuerying != null)
-                return;
+            // Force update a monitor if the last update exceed the current datetime
+            foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
+                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow))
+            {
+                monitor.ForceUpdate(true);
+            }
 
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(LastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(
+                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(LastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(
+                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
             }
         }
 

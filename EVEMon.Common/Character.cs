@@ -65,7 +65,6 @@ namespace EVEMon.Common
             }
 
             UISettings = new CharacterUISettings();
-
         }
 
         #endregion
@@ -189,11 +188,6 @@ namespace EVEMon.Common
         /// Gets the current character's wallet balance.
         /// </summary>
         public decimal Balance { get; private set; }
-
-        /// <summary>
-        /// Gets true whether the portrait is currently updating.
-        /// </summary>
-        internal bool IsUpdatingPortrait { get; set; }
 
         /// <summary>
         /// Gets true when the character is in a NPC corporation, false otherwise.
@@ -333,7 +327,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public int GetSkillCountAtLevel(int level)
         {
-            return Skills.Where(x => x.IsKnown).Count(skill => skill.LastConfirmedLvl == level);
+            return Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
         }
 
         /// <summary>
@@ -595,6 +589,11 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        internal abstract void Dispose();
 
         /// <summary>
         /// Gets the UI settings for this character.

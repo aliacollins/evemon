@@ -335,7 +335,22 @@ namespace EVEMon.Common
                     }
                     finally
                     {
-                        File.Delete(tempFile);
+                        try
+                        {
+                            File.Delete(tempFile);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
+                        }
+                        catch (IOException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
+                        }
                     }
                 }
 
@@ -387,7 +402,22 @@ namespace EVEMon.Common
                     }
                     finally
                     {
-                        File.Delete(tempFile);
+                        try
+                        {
+                            File.Delete(tempFile);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
+                        }
+                        catch (IOException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            ExceptionHandler.LogException(ex, false);
+                        }
                     }
                 }
 

@@ -612,7 +612,6 @@ namespace EVEMon.Common.Data
         public const int AdvancedMassProductionSkillID = 24625;
         public const int RavenStateIssueID = 26840;
         public const int TempestTribalIssueID = 26842;
-        public const int ChalcopyriteID = 27029;
         public const int ZainouBeancounterF50ID = 27167;
         public const int ZainouBeancounterG50ID = 27168;
         public const int ZainouBeancounterF40ID = 27170;

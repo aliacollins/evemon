@@ -4,11 +4,12 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class BlueprintBrowserControl : EveObjectBrowserControl
+    internal partial class BlueprintBrowserControl : EveObjectBrowserControl
     {
         private readonly object[] m_laboratories = {
                                                        "Mobile Laboratory",
@@ -288,7 +289,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateRequiredMaterialsList()
         {
-            int productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
+            int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
+
+            // Store the selected item (if any) to restore it after the update
+            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+                                    ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
+                                    : 0);
 
             PropertiesList.BeginUpdate();
             try
@@ -304,122 +310,135 @@ namespace EVEMon.SkillPlanner
                 PropertiesList.Columns.Add("Quantity (Perfect)");
                 PropertiesList.Columns.Add("Damage Per Run");
 
-                int perfectME = 0;
-                int perfectMELevel = 0;
-                bool hasPerfect = false;
-                bool hasDamagePerRun = false;
-                List<ListViewItem> items = new List<ListViewItem>();
-                foreach (MarketGroup marketGroup in StaticItems.AllGroups)
-                {
-                    // Create the groups
-                    ListViewGroup group = new ListViewGroup(marketGroup.CategoryPath);
-                    bool hasItem = false;
-                    foreach (StaticRequiredMaterial material in m_blueprint.MaterialRequirements
-                        .Where(x => x.Activity == m_activity && marketGroup.Items.Any(y => y.ID == x.ID)))
-                    {
-                        hasItem = true;
-
-                        // Create the item
-                        ListViewItem item = new ListViewItem(group)
-                                                { Tag = StaticItems.GetItemByID(material.ID), Text = material.Name };
-
-                        // Add the item to the list
-                        items.Add(item);
-
-                        // Set if the item is a raw material and therefore waste affected
-                        bool isRawMaterial = material.WasteAffected;
-
-                        // Calculate the base material quantity
-                        int baseMaterialQuantity =
-                            (int)
-                            Math.Round(
-                                material.Quantity * m_materialMultiplier *
-                                GetImplantMultiplier(DBConstants.MaterialQuantityModifyingImplantIDs),
-                                0, MidpointRounding.AwayFromZero);
-
-                        // Calculate the perfect material efficiency level if it's a raw material
-                        if (isRawMaterial)
-                        {
-                            perfectMELevel =
-                                (int)Math.Round(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity, 0,
-                                                MidpointRounding.AwayFromZero);
-                        }
-
-                        // Store the highest perfect material efficiency level
-                        if (perfectMELevel > perfectME)
-                            perfectME = perfectMELevel;
-
-                        // Calculate the needed quantity by the character skills
-                        int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
-                                               ? (int)Math.Round(
-                                                   baseMaterialQuantity *
-                                                   (1.25 - (0.05 * productionEfficiencyLevel)) +
-                                                   (baseMaterialQuantity * m_waste), 0,
-                                                   MidpointRounding.AwayFromZero)
-                                               : baseMaterialQuantity);
-
-                        // Calculate the perfect quantity
-                        int perfectQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
-                                                   ? (int)Math.Round(baseMaterialQuantity * (1 + m_waste),
-                                                                     0, MidpointRounding.AwayFromZero)
-                                                   : baseMaterialQuantity);
-
-                        // Add the quantity for every item
-                        ListViewItem.ListViewSubItem subItemYou =
-                            new ListViewItem.ListViewSubItem(item, youQuantity.ToString(CultureConstants.DefaultCulture));
-                        item.SubItems.Add(subItemYou);
-
-                        // Has perfect values ?
-                        hasPerfect |= (youQuantity != perfectQuantity);
-
-                        // Add the perfect quantity for every item
-                        ListViewItem.ListViewSubItem subItemPerfect =
-                            new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString(CultureConstants.DefaultCulture));
-                        item.SubItems.Add(subItemPerfect);
-
-                        // Has damage per run ?
-                        hasDamagePerRun |= (material.DamagePerJob > 0 && material.DamagePerJob < 1);
-
-                        // Add the damage per run for every item (empty string if it's 1)
-                        string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
-                                                   ? String.Format(CultureConstants.DefaultCulture, "{0:P1}",
-                                                                   material.DamagePerJob)
-                                                   : String.Empty);
-                        ListViewItem.ListViewSubItem subItemDamagePerRun =
-                            new ListViewItem.ListViewSubItem(item, damagePerRun);
-                        item.SubItems.Add(subItemDamagePerRun);
-                    }
-
-                    // Add the group that has an item
-                    if (hasItem)
-                        PropertiesList.Groups.Add(group);
-                }
-
-                // Remove the "Perfect" column if all values are empty
-                if (!hasPerfect)
-                    RemoveColumn(items, 2);
-
-                // Remove the "Damage Per Run" column if all values are empty
-                if (!hasDamagePerRun)
-                    RemoveColumn(items, PropertiesList.Columns.Count - 1);
+                IEnumerable<ListViewItem> items = AddGroups();
 
                 // Add the items
                 PropertiesList.Items.AddRange(items.OrderBy(x => x.Text).ToArray());
-
-                // Display the Perfect ME
-                if (tabControl.SelectedTab == tpManufacturing)
-                    lblPerfectMEValue.Text = perfectME.ToString("N0", CultureConstants.DefaultCulture);
 
                 // Show/Hide the "no item required" label and autoresize the columns 
                 PropertiesList.Visible = PropertiesList.Items.Count > 0;
 
                 if (PropertiesList.Items.Count > 0)
                     AdjustColumns();
+
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
+                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
+                    {
+                        lvItem.Selected = true;
+                    }
+                }
             }
             finally
             {
                 PropertiesList.EndUpdate();
+                PropertiesList.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        private IEnumerable<ListViewItem> AddGroups()
+        {
+            int perfectME = 0;
+            int perfectMELevel = 0;
+            bool hasPerfect = false;
+            bool hasDamagePerRun = false;
+            int productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
+            List<ListViewItem> items = new List<ListViewItem>();
+
+            foreach (MarketGroup marketGroup in StaticItems.AllGroups)
+            {
+                // Create the groups
+                ListViewGroup group = new ListViewGroup(marketGroup.CategoryPath);
+                bool hasItem = false;
+                foreach (StaticRequiredMaterial material in m_blueprint.MaterialRequirements.Where(
+                    x => x.Activity == m_activity && marketGroup.Items.Any(y => y.ID == x.ID)))
+                {
+                    hasItem = true;
+
+                    // Create the item
+                    ListViewItem item = new ListViewItem(group)
+                                            { Tag = StaticItems.GetItemByID(material.ID), Text = material.Name };
+
+                    // Add the item to the list
+                    items.Add(item);
+
+                    // Set if the item is a raw material and therefore waste affected
+                    bool isRawMaterial = material.WasteAffected;
+
+                    // Calculate the base material quantity
+                    int baseMaterialQuantity =
+                        (int)Math.Round(material.Quantity * m_materialMultiplier *
+                                        GetImplantMultiplier(DBConstants.MaterialQuantityModifyingImplantIDs),
+                                        0, MidpointRounding.AwayFromZero);
+
+                    // Calculate the perfect material efficiency level if it's a raw material
+                    if (isRawMaterial)
+                    {
+                        perfectMELevel = (int)Math.Round(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity, 0,
+                                                         MidpointRounding.AwayFromZero);
+                    }
+
+                    // Store the highest perfect material efficiency level
+                    if (perfectMELevel > perfectME)
+                        perfectME = perfectMELevel;
+
+                    // Calculate the needed quantity by the character skills
+                    int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
+                                           ? (int)Math.Round(baseMaterialQuantity * (1.25 - (0.05 * productionEfficiencyLevel)) +
+                                                             (baseMaterialQuantity * m_waste), 0, MidpointRounding.AwayFromZero)
+                                           : baseMaterialQuantity);
+
+                    // Calculate the perfect quantity
+                    int perfectQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
+                                               ? (int)Math.Round(baseMaterialQuantity * (1 + m_waste),
+                                                                 0, MidpointRounding.AwayFromZero)
+                                               : baseMaterialQuantity);
+
+                    // Add the quantity for every item
+                    ListViewItem.ListViewSubItem subItemYou =
+                        new ListViewItem.ListViewSubItem(item, youQuantity.ToString(CultureConstants.DefaultCulture));
+                    item.SubItems.Add(subItemYou);
+
+                    // Has perfect values ?
+                    hasPerfect |= (youQuantity != perfectQuantity);
+
+                    // Add the perfect quantity for every item
+                    ListViewItem.ListViewSubItem subItemPerfect =
+                        new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString(CultureConstants.DefaultCulture));
+                    item.SubItems.Add(subItemPerfect);
+
+                    // Has damage per run ?
+                    hasDamagePerRun |= (material.DamagePerJob > 0 && material.DamagePerJob < 1);
+
+                    // Add the damage per run for every item (empty string if it's 1)
+                    string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
+                                               ? String.Format(CultureConstants.DefaultCulture, "{0:P1}", material.DamagePerJob)
+                                               : String.Empty);
+                    ListViewItem.ListViewSubItem subItemDamagePerRun =
+                        new ListViewItem.ListViewSubItem(item, damagePerRun);
+                    item.SubItems.Add(subItemDamagePerRun);
+                }
+
+                // Add the group that has an item
+                if (hasItem)
+                    PropertiesList.Groups.Add(group);
+            }
+
+            // Remove the "Perfect" column if all values are empty
+            if (!hasPerfect)
+                RemoveColumn(items, 2);
+
+            // Remove the "Damage Per Run" column if all values are empty
+            if (!hasDamagePerRun)
+                RemoveColumn(items, PropertiesList.Columns.Count - 1);
+
+            // Display the Perfect ME
+            if (tabControl.SelectedTab == tpManufacturing)
+                lblPerfectMEValue.Text = perfectME.ToString("N0", CultureConstants.DefaultCulture);
+
+            return items;
         }
 
         /// <summary>

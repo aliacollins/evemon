@@ -9,12 +9,12 @@ namespace EVEMon.Common.Controls
 {
     public class ExpandablePanelControl : NoFlickerPanel
     {
+        #region Fields
+
         // Settings
         private PanelState m_panelState;
         private int m_animationStep;
         private int m_expandedHeight;
-
-        // Header
 
         // ContextMenu
         private ContextMenuStrip m_contextMenuStrip;
@@ -32,6 +32,8 @@ namespace EVEMon.Common.Controls
         private Bitmap m_collapseImage;
         private int m_offset;
         private const int Pad = 6;
+
+        #endregion
 
 
         #region Constructor
@@ -56,44 +58,30 @@ namespace EVEMon.Common.Controls
             MouseClick += expandablePanelControl_MouseClick;
         }
 
+        #endregion
+
+
+        #region Dispose
+
         /// <summary>
-        /// Gets true if the Panel is expanded.
+        /// Releases the unmanaged resources used by the <see cref="T:System.Windows.Forms.Control"/> 
+        /// and its child controls and optionally releases the managed resources.
         /// </summary>
-        private bool IsExpanded
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
         {
-            get { return m_panelState == PanelState.Expanded; }
-        }
-
-        /// <summary>
-        /// Gets the Header of the Panel.
-        /// </summary>
-        [Browsable(false)]
-        public NoFlickerPanel Header { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the Header text.
-        /// </summary>
-        [Browsable(false)]
-        public string HeaderText { get; set; }
-
-        /// <summary>
-        /// Gets or sets the expanded Height of the Panel.
-        /// </summary>
-        [Browsable(false)]
-        public int ExpandedHeight
-        {
-            get { return m_expandedHeight; }
-            set
-            {
-                m_expandedHeight = value;
-
-                // If we start collapsed we don't have to update the height
-                if (!IsExpanded && !ExpandedOnStartup)
-                    return;
-
-                Height = m_expandedHeight;
-                Refresh();
-            }
+            m_expandImage.Dispose();
+            m_collapseImage.Dispose();
+            m_tsmiExpandCollapse.Dispose();
+            m_tsmiSeparator.Dispose();
+            m_tsmiNoAnim.Dispose();
+            m_tsmiHighAnim.Dispose();
+            m_tsmiMedAnim.Dispose();
+            m_tsmiLowAnim.Dispose();
+            m_tsmiSelectAnim.Dispose();
+            m_contextMenuStrip.Dispose();
+            Header.Dispose();
+            base.Dispose(disposing);
         }
 
         #endregion
@@ -242,7 +230,52 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
+        #region Private Properties
+
+        /// <summary>
+        /// Gets true if the Panel is expanded.
+        /// </summary>
+        private bool IsExpanded
+        {
+            get { return m_panelState == PanelState.Expanded; }
+        }
+
+        #endregion
+
+
         #region Public Properties
+
+        /// <summary>
+        /// Gets the Header of the Panel.
+        /// </summary>
+        [Browsable(false)]
+        public NoFlickerPanel Header { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the Header text.
+        /// </summary>
+        [Browsable(false)]
+        public string HeaderText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expanded Height of the Panel.
+        /// </summary>
+        [Browsable(false)]
+        public int ExpandedHeight
+        {
+            get { return m_expandedHeight; }
+            set
+            {
+                m_expandedHeight = value;
+
+                // If we start collapsed we don't have to update the height
+                if (!IsExpanded && !ExpandedOnStartup)
+                    return;
+
+                Height = m_expandedHeight;
+                Refresh();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the image shown in the header when Panel is collapsed. Height must be less than HeaderHeight - 4 pixels. Null to disable it.

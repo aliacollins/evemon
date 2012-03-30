@@ -136,6 +136,7 @@ namespace EVEMon.SkillPlanner
             this.lvShipProperties.ContextMenuStrip = this.ShipPropertiesContextMenu;
             this.lvShipProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvShipProperties.FullRowSelect = true;
+            this.lvShipProperties.HideSelection = false;
             this.lvShipProperties.Location = new System.Drawing.Point(3, 16);
             this.lvShipProperties.Name = "lvShipProperties";
             this.lvShipProperties.Size = new System.Drawing.Size(232, 324);

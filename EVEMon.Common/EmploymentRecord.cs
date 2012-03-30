@@ -14,6 +14,8 @@ namespace EVEMon.Common
 
         private readonly Character m_character;
         private readonly long m_corporationId;
+
+        private string m_corporationName;
         private Image m_image;
 
         #endregion
@@ -33,7 +35,7 @@ namespace EVEMon.Common
 
             m_character = character;
             m_corporationId = src.CorporationID;
-            CorporationName = GetIDToName(src.CorporationID);
+            m_corporationName = GetIDToName(src.CorporationID);
             StartDate = src.StartDate;
         }
 
@@ -49,7 +51,7 @@ namespace EVEMon.Common
 
             m_character = character;
             m_corporationId = src.CorporationID;
-            CorporationName = src.CorporationName;
+            m_corporationName = src.CorporationName;
             StartDate = src.StartDate.TimeStringToDateTime();
         }
 
@@ -62,7 +64,16 @@ namespace EVEMon.Common
         /// Gets or sets the name of the corporation.
         /// </summary>
         /// <value>The name of the corporation.</value>
-        public string CorporationName { get; private set; }
+        public string CorporationName
+        {
+            get
+            {
+                return m_corporationName == "Unknown"
+                           ? m_corporationName = GetIDToName(m_corporationId)
+                           : m_corporationName;
+
+            }
+        }
 
         /// <summary>
         /// Gets or sets the start date.
@@ -95,10 +106,17 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        private static string GetIDToName(int id)
+        private static string GetIDToName(long id)
         {
-            NPCCorporation corporation = StaticGeography.GetCorporationByID(id);
-            string corporationName = corporation != null ? corporation.Name : String.Empty;
+            string corporationName = String.Empty;
+
+            // Check if it's an NPC Corporation
+            if (id <= Int32.MaxValue)
+            {
+                int npcCorpID = Convert.ToInt32(id);
+                NPCCorporation corporation = StaticGeography.GetCorporationByID(npcCorpID);
+                corporationName = corporation != null ? corporation.Name : String.Empty;
+            }
 
             // If it's a player's corporation, query the API
             return String.IsNullOrEmpty(corporationName) ? EveIDToName.GetIDToName(id) : corporationName;

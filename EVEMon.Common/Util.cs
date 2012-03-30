@@ -56,23 +56,14 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static XslCompiledTransform LoadXSLT(string content)
         {
-            XslCompiledTransform xslt = new XslCompiledTransform();
-            StringReader stringReader = null;
-            try
+            using (StringReader stringReader = new StringReader(content))
             {
-                stringReader = new StringReader(content);
-                using (XmlTextReader reader = new XmlTextReader(stringReader))
-                {
-                    stringReader = null;
-                    xslt.Load(reader);
-                }
+                XmlTextReader reader = new XmlTextReader(stringReader);
+                XslCompiledTransform xslt = new XslCompiledTransform();
+
+                xslt.Load(reader);
+                return xslt;
             }
-            finally
-            {
-                if (stringReader != null)
-                    stringReader.Dispose();
-            }
-            return xslt;
         }
 
         /// <summary>
@@ -87,8 +78,6 @@ namespace EVEMon.Common
         {
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(T));
-
                 if (transform != null)
                 {
                     MemoryStream stream = GetMemoryStream();
@@ -100,6 +89,7 @@ namespace EVEMon.Common
                         writer.Flush();
 
                         // Deserialize from the given stream
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
                         stream.Seek(0, SeekOrigin.Begin);
                         return (T)xs.Deserialize(stream);
                     }
@@ -108,6 +98,7 @@ namespace EVEMon.Common
                 // Deserialization without transform
                 using (Stream stream = FileHelper.OpenRead(filename, false))
                 {
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -139,11 +130,11 @@ namespace EVEMon.Common
         public static T DeserializeXMLFromString<T>(string text)
             where T : class
         {
-            XmlSerializer xs = new XmlSerializer(typeof(T));
             try
             {
                 using (TextReader stream = new StringReader(text))
                 {
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
                     return (T)xs.Deserialize(stream);
                 }
             }
@@ -171,37 +162,33 @@ namespace EVEMon.Common
         {
             // Gets the full path
             string path = Datafile.GetFullPath(filename);
-            Stream stream = null;
             try
             {
-                stream = FileHelper.OpenRead(path, false);
-                GZipStream gZipStream = new GZipStream(stream, CompressionMode.Decompress);
-                XmlSerializer xs = new XmlSerializer(typeof(T));
-
-                // Deserialization with transform
-                if (transform != null)
+                using (Stream stream = FileHelper.OpenRead(path, false))
                 {
-                    using (XmlTextReader reader = new XmlTextReader(gZipStream))
+                    GZipStream gZipStream = new GZipStream(stream, CompressionMode.Decompress);
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
+
+                    // Deserialization with transform
+                    if (transform != null)
                     {
-                        stream = null;
-
                         MemoryStream memoryStream = GetMemoryStream();
-                        using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.UTF8))
-                        {
-                            // Apply the XSL transform
-                            writer.Formatting = Formatting.Indented;
-                            transform.Transform(reader, writer);
-                            writer.Flush();
+                        XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.UTF8);
+                        XmlTextReader reader = new XmlTextReader(gZipStream);
 
-                            // Deserialize from the given stream
-                            memoryStream.Seek(0, SeekOrigin.Begin);
-                            return (T)xs.Deserialize(memoryStream);
-                        }
+                        // Apply the XSL transform
+                        writer.Formatting = Formatting.Indented;
+                        transform.Transform(reader, writer);
+                        writer.Flush();
+
+                        // Deserialize from the given stream
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+                        return (T)xs.Deserialize(memoryStream);
                     }
-                }
 
-                // Deserialization without transform
-                return (T)xs.Deserialize(gZipStream);
+                    // Deserialization without transform
+                    return (T)xs.Deserialize(gZipStream);
+                }
             }
             catch (InvalidOperationException ex)
             {
@@ -218,11 +205,6 @@ namespace EVEMon.Common
                                                + "Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename,
                                                ex.Message, ex.Source);
                 throw new XmlException(message, ex);
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Dispose();
             }
         }
 
@@ -263,13 +245,22 @@ namespace EVEMon.Common
                 url, postData,
                 (asyncResult, userState) =>
                     {
-                        // Was there an HTTP error ?
-                        APIResult<T> result = asyncResult.Error != null
-                                                  ? new APIResult<T>(asyncResult.Error)
-                                                  : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
+                        try
+                        {
+                            // Was there an HTTP error ?
+                            APIResult<T> result = asyncResult.Error != null
+                                                      ? new APIResult<T>(asyncResult.Error)
+                                                      : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
 
-                        // We got the result, let's invoke the callback on this actor
-                        Dispatcher.Invoke(() => callback.Invoke(result));
+                            // We got the result, let's invoke the callback on this actor
+                            Dispatcher.Invoke(() => callback.Invoke(result));
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, false);
+                            EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
+                                url.AbsoluteUri, postData, typeof(T).Name);
+                        }
                     },
                 null);
         }
@@ -281,8 +272,7 @@ namespace EVEMon.Common
         /// <param name="url">The url to query</param>
         /// <param name="postData">The HTTP POST data to send, may be null.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(Uri url, HttpPostData postData,
-                                                          XslCompiledTransform transform)
+        internal static APIResult<T> DownloadAPIResult<T>(Uri url, HttpPostData postData, XslCompiledTransform transform)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
                                                    String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
@@ -305,7 +295,8 @@ namespace EVEMon.Common
                             {
                                 ExceptionHandler.LogException(e, true);
                                 result = new APIResult<T>(APIError.Http, e.Message);
-                                throw;
+                                EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
+                                                   url.AbsoluteUri, postData, typeof(T).Name);
                             }
                             finally
                             {
@@ -336,11 +327,11 @@ namespace EVEMon.Common
 
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
-
                 // Deserialization with a transform
                 using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
+                    XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
+
                     if (transform != null)
                     {
                         MemoryStream stream = GetMemoryStream();

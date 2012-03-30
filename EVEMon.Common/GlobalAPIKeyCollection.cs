@@ -73,6 +73,12 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableAPIKey> serial)
         {
+            // Unsubscribe events
+            foreach (APIKey apiKey in Items.Values)
+            {
+                apiKey.Dispose();
+            }
+
             Items.Clear();
             foreach (SerializableAPIKey apikey in serial)
             {

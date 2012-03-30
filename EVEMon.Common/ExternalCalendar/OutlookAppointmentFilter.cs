@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Outlook;
@@ -11,8 +12,6 @@ namespace EVEMon.Common.ExternalCalendar
     /// </summary>
     public sealed class OutlookAppointmentFilter : AppointmentFilter
     {
-        private const string RootFolderPath = @"\\Personal Folders";
-
         private static Application s_outlookApplication;
         private static MAPIFolder s_mapiFolder;
 
@@ -25,29 +24,39 @@ namespace EVEMon.Common.ExternalCalendar
         /// <value>The outlook application.</value>
         internal static Application OutlookApplication
         {
-            get { return s_outlookApplication ?? GetApplication; }
-        }
-
-        /// <summary>
-        /// Gets the Outlook application.
-        /// </summary>
-        /// <value>The outlook application.</value>
-        private static Application GetApplication
-        {
             get
             {
                 try
                 {
-                    s_outlookApplication = new Application();
+                    if (s_outlookApplication == null)
+                    {
+                        s_outlookApplication = new Application();
+                        ((ApplicationEvents_11_Event)s_outlookApplication).Quit += Outlook_Quit;
+                    }
                 }
                 catch (COMException ex)
                 {
                     ExceptionHandler.LogException(ex, true);
-                    return null;
                 }
                 return s_outlookApplication;
             }
         }
+
+        #endregion
+
+
+        #region Event Hanlders
+
+        /// <summary>
+        /// Occurs when Outlook quits.
+        /// </summary>
+        private static void Outlook_Quit()
+        {
+            ((ApplicationEvents_11_Event)s_outlookApplication).Quit -= Outlook_Quit;
+            s_outlookApplication = null;
+            s_mapiFolder = null;
+        }
+
 
         #endregion
 
@@ -166,10 +175,10 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="useDefaultCalendar">if set to <c>true</c> [use default calendar].</param>
         /// <param name="path">The path.</param>
         /// <returns></returns>
-        internal static bool OutlookCalendarExist(bool useDefaultCalendar, string path)
+        internal static bool OutlookCalendarExist(bool useDefaultCalendar, string path = null)
         {
             s_mapiFolder = null;
-            return GetMapiFolder(useDefaultCalendar, path, OutlookApplication.Session.Folders);
+            return GetMapiFolder(useDefaultCalendar, OutlookApplication.Session.Folders, path);
         }
 
         /// <summary>
@@ -179,30 +188,38 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="path">The path.</param>
         /// <param name="folders">The folders.</param>
         /// <returns></returns>
-        internal static bool GetMapiFolder(bool useDefaultCalendar, string path, IEnumerable folders)
+        private static bool GetMapiFolder(bool useDefaultCalendar, IEnumerable folders, string path = null)
         {
             if (useDefaultCalendar)
             {
                 s_mapiFolder = OutlookApplication.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
-                return true;
+                return s_mapiFolder != null;
             }
 
-            string folderPath = System.IO.Path.Combine(RootFolderPath, path);
+            if (String.IsNullOrWhiteSpace(path))
+                path = Settings.Calendar.OutlookCustomCalendarPath;
 
-            foreach (Folder folder in folders.Cast<Folder>().Where(
-                folder => folder.FolderPath.StartsWith(RootFolderPath) && s_mapiFolder == null))
+            if (!path.StartsWith(@"\\", StringComparison.Ordinal))
+                return s_mapiFolder != null;
+
+            string pathRoot = GetFolderPathRoot(path);
+
+            foreach (Folder folder in folders.Cast<Folder>().TakeWhile(
+                folder => s_mapiFolder == null).Select(
+                    folder => new { folder, folderRoot = GetFolderPathRoot(folder.FolderPath) }).Where(
+                        folder => folder.folderRoot == pathRoot).Select(folder => folder.folder))
             {
-                if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == folderPath)
+                if (folder.DefaultItemType == OlItemType.olAppointmentItem && folder.FolderPath == path)
                 {
                     s_mapiFolder = folder;
-                    return true;
+                    break;
                 }
 
                 if (folder.Folders.Cast<Folder>().Any())
-                    GetMapiFolder(false, path, folder.Folders);
+                    GetMapiFolder(false, folder.Folders, path);
             }
 
-            return s_mapiFolder != null && s_mapiFolder.FolderPath == folderPath;
+            return s_mapiFolder != null && s_mapiFolder.FolderPath == path;
         }
 
         #endregion
@@ -243,6 +260,24 @@ namespace EVEMon.Common.ExternalCalendar
             }
 
             return resultArray;
+        }
+
+        /// <summary>
+        /// Gets the folder path root.
+        /// </summary>
+        /// <param name="folderPath">The folder path.</param>
+        /// <returns></returns>
+        private static string GetFolderPathRoot(string folderPath)
+        {
+            // Strip header directory seperator characters
+            folderPath = folderPath.Remove(0, 2);
+
+            // Find the index of a directory seperator character
+            int index = folderPath.IndexOf(Path.DirectorySeparatorChar, 0);
+
+            // Reconstruct the root path according to the index found
+            return String.Format(CultureConstants.InvariantCulture, @"\\{0}",
+                                 index > 0 ? folderPath.Substring(0, index) : folderPath);
         }
 
         #endregion

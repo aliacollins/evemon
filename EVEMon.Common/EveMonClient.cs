@@ -31,7 +31,6 @@ namespace EVEMon.Common
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
         private static bool s_initialized;
-        private static bool s_running;
         private static string s_traceFile;
 
         public const int DefaultDpi = 96;
@@ -52,6 +51,9 @@ namespace EVEMon.Common
                 s_initialized = true;
 
                 Trace("EveMonClient.Initialize - begin");
+
+                // Network monitoring (connection availability changes)
+                NetworkMonitor.Initialize();
 
                 // APIMethods collection initialization (always before members instatiation)
                 APIMethods.Initialize();
@@ -76,9 +78,6 @@ namespace EVEMon.Common
                 StaticBlueprints.Load();
                 Trace("Load Datafiles - done");
 
-                // Network monitoring (connection availability changes)
-                NetworkMonitor.Initialize();
-
                 Trace("EveMonClient.Initialize - done");
             }
         }
@@ -92,18 +91,38 @@ namespace EVEMon.Common
         {
             Trace("EveMonClient.Run");
 
-            s_running = true;
             Dispatcher.Run(new UIActor(mainForm));
         }
 
         /// <summary>
-        /// Shutdowns the timer
+        /// Shutdowns the timer.
         /// </summary>
         public static void Shutdown()
         {
             Closed = true;
-            s_running = false;
             Dispatcher.Shutdown();
+        }
+
+        /// <summary>
+        /// Fires the timer tick event to notify the subscribers.
+        /// </summary>
+        internal static void UpdateOnOneSecondTick()
+        {
+            if (Closed)
+                return;
+
+            // Fires the event for subscribers
+            if (TimerTick != null)
+                TimerTick(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Resets collection that need to be cleared.
+        /// </summary>
+        internal static void ResetCollections()
+        {
+            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            Notifications = new GlobalNotificationCollection();
         }
 
         /// <summary>
@@ -238,11 +257,11 @@ namespace EVEMon.Common
                         DialogResult result = MessageBox.Show(msg, "EVEMon Error", MessageBoxButtons.RetryCancel,
                                                               MessageBoxIcon.Error);
 
-                        if (result == DialogResult.Cancel)
-                        {
-                            Application.Exit();
-                            return;
-                        }
+                        if (result != DialogResult.Cancel)
+                            continue;
+
+                        Application.Exit();
+                        return;
                     }
                 }
             }
@@ -293,7 +312,7 @@ namespace EVEMon.Common
         {
             DefaultEvePortraitCacheFolders = new ReadOnlyCollection<string>(new string[] { });
             string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE",
+            EVEApplicationDataDir = String.Format(CultureConstants.InvariantCulture, "{1}{0}CCP{0}EVE",
                                                   Path.DirectorySeparatorChar, localApplicationData);
 
             // Check folder exists
@@ -303,7 +322,7 @@ namespace EVEMon.Common
             // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
-            DirectoryInfo[] foldersInEveCache = di.GetDirectories("e_ccp_eve*_tranquility");
+            DirectoryInfo[] foldersInEveCache = di.GetDirectories("*_tranquility");
 
             if (!foldersInEveCache.Any())
                 return;
@@ -311,7 +330,7 @@ namespace EVEMon.Common
             EvePortraitCacheFolders = foldersInEveCache.Select(
                 eveDataPath => eveDataPath.Name).Select(
                     portraitCache => String.Format(
-                        CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
+                        CultureConstants.InvariantCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
                         Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).ToList().AsReadOnly();
 
             DefaultEvePortraitCacheFolders = EvePortraitCacheFolders;
@@ -419,19 +438,6 @@ namespace EVEMon.Common
         /// </summary>
         public static GlobalNotificationCollection Notifications { get; private set; }
 
-        /// <summary>
-        /// Fires the timer tick event to notify the subscribers.
-        /// </summary>
-        internal static void UpdateOnOneSecondTick()
-        {
-            if (!s_running)
-                return;
-
-            // Fires the event for subscribers
-            if (TimerTick != null)
-                TimerTick(null, EventArgs.Empty);
-        }
-
         #endregion
 
 
@@ -473,6 +479,11 @@ namespace EVEMon.Common
         public static event EventHandler MonitoredCharacterCollectionChanged;
 
         /// <summary>
+        /// Occurs when the collection of a character implant set changed.
+        /// </summary>
+        public static event EventHandler CharacterImplantSetCollectionChanged;
+
+        /// <summary>
         /// Occurs when a character training check on an account type API key has been updated.
         /// </summary>
         public static event EventHandler CharactersSkillInTrainingUpdated;
@@ -491,6 +502,11 @@ namespace EVEMon.Common
         /// Occurs when the API key info have been updated.
         /// </summary>
         public static event EventHandler APIKeyInfoUpdated;
+
+        /// <summary>
+        /// Occurs when the EveIDToName list has been updated.
+        /// </summary>
+        public static event EventHandler EveIDToNameUpdated;
 
         /// <summary>
         /// Occurs when the list of characters in an API key has been updated.
@@ -745,6 +761,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the character implant set collection changed.
+        /// </summary>
+        internal static void OnCharacterImplantSetCollectionChanged()
+        {
+            Trace("EveMonClient.OnCharacterImplantSetCollectionChanged");
+            Settings.Save();
+            if (CharacterImplantSetCollectionChanged != null)
+                CharacterImplantSetCollectionChanged(null, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Called when the conquerable station list has been updated.
         /// </summary>
         internal static void OnConquerableStationListUpdated()
@@ -752,6 +779,16 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnConquerableStationListUpdated");
             if (ConquerableStationListUpdated != null)
                 ConquerableStationListUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the EveIDToName list has been updated.
+        /// </summary>
+        internal static void OnEveIDToNameUpdated()
+        {
+            Trace("EveMonClient.OnEveIDToNameUpdated");
+            if (EveIDToNameUpdated != null)
+                EveIDToNameUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -1238,18 +1275,6 @@ namespace EVEMon.Common
         #region Diagnostics
 
         /// <summary>
-        /// Sends a message to the trace with the prepended time since startup.
-        /// </summary>
-        /// <param name="message">message to trace</param>
-        public static void Trace(string message)
-        {
-            TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
-            string timeStr = String.Format(CultureConstants.DefaultCulture,
-                                           "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
-            System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
-        }
-
-        /// <summary>
         /// Sends a message to the trace with the prepended time since
         /// startup, in addition to argument inserting into the format.
         /// </summary>
@@ -1257,7 +1282,12 @@ namespace EVEMon.Common
         /// <param name="args"></param>
         public static void Trace(string format, params object[] args)
         {
-            Trace(String.Format(CultureConstants.DefaultCulture, format, args));
+            string message = String.Format(CultureConstants.DefaultCulture, format, args);
+            TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
+            string timeStr = String.Format(CultureConstants.DefaultCulture,
+                                           "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
+
+            System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
         }
 
         /// <summary>

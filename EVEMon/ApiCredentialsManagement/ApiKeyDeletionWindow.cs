@@ -53,7 +53,7 @@ namespace EVEMon.ApiCredentialsManagement
                           {
                               Tag = id.CCPCharacter,
                               Checked = id.CCPCharacter != null &&
-                                        !id.CCPCharacter.Identity.APIKeys.Any(key => key != m_apiKey),
+                                        id.CCPCharacter.Identity.APIKeys.All(key => key == m_apiKey),
                           }))
             {
                 // Gray out a character with another associated API key
@@ -108,7 +108,7 @@ namespace EVEMon.ApiCredentialsManagement
             foreach (CCPCharacter ccpCharacter in charactersListView.Items.Cast<ListViewItem>().Where(
                 item => item.Checked).Select(item => item.Tag as CCPCharacter).Where(
                     ccpCharacter => ccpCharacter != null).Where(
-                        ccpCharacter => ccpCharacter.Identity.APIKeys.IsEmpty()))
+                        ccpCharacter => !ccpCharacter.Identity.APIKeys.Any()))
             {
                 EveMonClient.Characters.Remove(ccpCharacter);
             }

@@ -11,8 +11,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Blueprints
     {
-        private const int BlueprintGenTotal = 4084;
-
         private static DateTime s_startTime;
         private static List<InvMarketGroup> s_injectedMarketGroups;
         private static List<InvType> s_nullMarketBlueprints; 
@@ -164,7 +162,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             s_nullMarketBlueprints = new List<InvType>();
             foreach (InvType srcItem in Database.InvTypeTable.Where(
-                item => (item.MarketGroupID == null) && !item.Name.Contains("TEST") &&
+                item => item.MarketGroupID == null && !item.Name.Contains("TEST") &&
                         Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
                             blueprint => new
                                         {
@@ -175,7 +173,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                             Database.InvTypeTable[blueprint.productedItemID].Published).Select(
                                                                 item => item.blueprint))
             {
-                Util.UpdatePercentDone(BlueprintGenTotal);
+                Util.UpdatePercentDone(Database.BlueprintsTotalCount);
 
                 srcItem.Published = true;
                 s_nullMarketBlueprints.Add(srcItem);
@@ -307,7 +305,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static void CreateBlueprint(InvType srcBlueprint, ICollection<SerializableBlueprint> blueprintsGroup)
         {
-            Util.UpdatePercentDone(BlueprintGenTotal);
+            Util.UpdatePercentDone(Database.BlueprintsTotalCount);
 
             srcBlueprint.Generated = true;
 

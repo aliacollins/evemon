@@ -143,18 +143,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query the character name from the provided list of IDs.
-        /// </summary>
-        /// <param name="ids">The Ids.</param>
-        /// <returns></returns>
-        public APIResult<SerializableAPICharacterName> QueryCharacterName(string ids)
-        {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   NetworkConstants.PostDataIDsOnly, ids));
-            return QueryMethod<SerializableAPICharacterName>(APIGenericMethods.CharacterName, postData, RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query a method without arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
@@ -214,6 +202,20 @@ namespace EVEMon.Common
             HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture, GetPostDataURL(method),
                                                                    id, verificationCode,
                                                                    characterID, messageID));
+            QueryMethodAsync(method, postData, RowsetsTransform, callback);
+        }
+
+        /// <summary>
+        /// Query a method with the provided arguments.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="method">The method.</param>
+        /// <param name="ids">The ids.</param>
+        /// <param name="callback">The callback.</param>
+        public void  QueryMethodAsync<T>(Enum method, string ids, QueryCallback<T> callback)
+        {
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   NetworkConstants.PostDataIDsOnly, ids));
             QueryMethodAsync(method, postData, RowsetsTransform, callback);
         }
 

@@ -64,12 +64,12 @@ namespace EVEMon.SkillPlanner
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(158, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Select Plan...";
             // 
@@ -79,14 +79,14 @@ namespace EVEMon.SkillPlanner
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Select Character...";
             // 
             // lbPlan
             // 
-            this.lbPlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbPlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbPlan.DisplayMember = "Name";
             this.lbPlan.FormattingEnabled = true;
             this.lbPlan.Location = new System.Drawing.Point(161, 25);
@@ -130,7 +130,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.panel1);
             this.Name = "PlanImportationFromCharacterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "CrossPlanSelect";
+            this.Text = "Cross Character Plan Import";
             this.Load += new System.EventHandler(this.CrossPlanSelect_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -51,9 +51,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            tbCalendarPath.CausesValidation = false;
-
-
             // Update settings
             Settings.Import(m_oldSettings, true);
             Settings.Save();
@@ -70,10 +67,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            // If enabled validate email notification settings
-            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return;
-
             // Return settings
             ApplyToSettings();
 
@@ -89,10 +82,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void applyButton_Click(object sender, EventArgs e)
         {
-            // If enabled validate email notification settings
-            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return;
-
             // Return settings
             ApplyToSettings();
         }
@@ -125,7 +114,7 @@ namespace EVEMon.SettingsUI
                         // Transforms x64 to 64 by 64
                         string size = x.ToString().Substring(1);
                         return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
-                    }).ToArray<Object>());
+                    }).ToArray<object>());
 
             // Expands the left panel and selects the first page and node
             treeView.ExpandAll();
@@ -134,9 +123,6 @@ namespace EVEMon.SettingsUI
             // Misc settings
             cbWorksafeMode.Checked = m_settings.UI.SafeForWork;
             compatibilityCombo.SelectedIndex = (int)m_settings.Compatibility;
-
-            // Queries Updater
-            btnResetUpdateQueryTimers.Enabled = false;
 
             // Skills icon sets
             cbSkillIconSet.Items.Clear();
@@ -222,7 +208,7 @@ namespace EVEMon.SettingsUI
             SetStartUpSettings();
 
             // API providers
-            InitialiseAPIProvidersDropDown();
+            InitializeAPIProvidersDropDown();
 
             // Enables / disables controls
             m_isLoading = false;
@@ -328,13 +314,12 @@ namespace EVEMon.SettingsUI
         {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            rbMSOutlook.Enabled = ExternalCalendar.OutlookInstalled;
-            rbMSOutlook.Checked = rbMSOutlook.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook;
+            rbMSOutlook.Checked = m_settings.Calendar.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook &&
+                                  ExternalCalendar.OutlookInstalled;
             rbGoogle.Checked = !rbMSOutlook.Checked;
             
             rbDefaultCalendar.Checked = m_settings.Calendar.UseOutlookDefaultCalendar;
             rbCustomCalendar.Checked = !rbDefaultCalendar.Checked;
-            calendarPathExampleLabel.Visible = rbCustomCalendar.Checked;
             tbCalendarPath.Text = m_settings.Calendar.OutlookCustomCalendarPath;
 
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
@@ -386,6 +371,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void ApplyToSettings()
         {
+            // If enabled validate email notification settings
+            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
+                return;
+
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
             m_settings.UI.SafeForWork = cbWorksafeMode.Checked;
@@ -542,7 +531,7 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Populates the combobox for API providers.
         /// </summary>
-        private void InitialiseAPIProvidersDropDown()
+        private void InitializeAPIProvidersDropDown()
         {
             cbAPIServer.Items.Clear();
             cbAPIServer.Items.Add(GlobalAPIProviderCollection.DefaultProvider.Name);
@@ -583,16 +572,18 @@ namespace EVEMon.SettingsUI
         #region Validation
 
         /// <summary>
-        /// Outlook custom calendar name validation.
+        /// Outlook custom calendar path validation.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbCalendarName_Validating(object sender, CancelEventArgs e)
+        private void tbCalendarPath_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = String.IsNullOrWhiteSpace(tbCalendarPath.Text.Trim()) ||
-                !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text);
-            
-            if(e.Cancel)
+            e.Cancel = externalCalendarCheckbox.Checked && rbMSOutlook.Checked && rbCustomCalendar.Checked &&
+                       (tbCalendarPath.Text.Any(x => Path.GetInvalidPathChars().Contains(x)) ||
+                        String.IsNullOrWhiteSpace(tbCalendarPath.Text.Trim()) ||
+                        !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text));
+
+            if (e.Cancel)
                 ShowErrorMessage("MS Outlook", "A calendar at that path could not be found.");
         }
 
@@ -722,6 +713,7 @@ namespace EVEMon.SettingsUI
 
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
+            rbMSOutlook.Enabled = externalCalendarCheckbox.Checked && ExternalCalendar.OutlookInstalled;
             gbMSOutlook.Visible = rbMSOutlook.Checked;
             gbGoogle.Visible = rbGoogle.Checked;
             calendarPathLabel.Enabled = tbCalendarPath.Enabled = rbCustomCalendar.Checked;
@@ -749,11 +741,6 @@ namespace EVEMon.SettingsUI
                 cbShowPrereqMetSkills.Enabled = true;
                 cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
             }
-
-            // Queries Updater
-            // If any monitor's last update is found to exceed the max period,
-            // enable the queries updater button
-            btnResetUpdateQueryTimers.Enabled = EveMonClient.MonitoredCharacters.HasExcessUpdateTimer;
         }
 
         #endregion
@@ -842,7 +829,7 @@ namespace EVEMon.SettingsUI
                     return;
 
                 m_settings.APIProviders.CustomProviders.Add(newProvider);
-                InitialiseAPIProvidersDropDown();
+                InitializeAPIProvidersDropDown();
                 cbAPIServer.SelectedIndex = cbAPIServer.Items.Count - 1;
             }
         }
@@ -890,7 +877,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             m_settings.APIProviders.CustomProviders.Remove(providerToRemove);
-            InitialiseAPIProvidersDropDown();
+            InitializeAPIProvidersDropDown();
             cbAPIServer.SelectedIndex = 0;
         }
 
@@ -903,22 +890,6 @@ namespace EVEMon.SettingsUI
         {
             Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = true;
             Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = DialogResult.None;
-        }
-
-        /// <summary>
-        /// Updates the timers of the query monitors.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnResetUpdateQueryTimers_Click(object sender, EventArgs e)
-        {
-            // Disable the button to prevent spamming
-            btnResetUpdateQueryTimers.Enabled = false;
-
-            foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.Where(x => x is CCPCharacter))
-            {
-                character.QueryMonitors.QueryEverything();
-            }
         }
 
         /// <summary>
