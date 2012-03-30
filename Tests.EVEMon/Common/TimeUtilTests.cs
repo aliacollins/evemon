@@ -22,7 +22,7 @@ namespace Tests.EVEMon.Common
         /// </summary>
         private static string InvalidCcpDateTime
         {
-            get { return "18:23:32 2010-05-07"; }
+            get { return "18-23-32 2010:05:07"; }
         }
 
         /// <summary>
@@ -61,15 +61,11 @@ namespace Tests.EVEMon.Common
         /// <summary>
         /// Handles an incorrect input string appropiately.
         /// </summary>
-        /// <remarks>
-        /// Exception thrown is a .NET Exception so there is no need to test the exception itself.
-        /// </remarks>
         [Test]
         public static void ConvertInvalidCCPDateTimeToDateTime()
         {
-            Assert.Throws<FormatException>
-                (() => InvalidCcpDateTime.TimeStringToDateTime()
-                );
+            DateTime result = InvalidCcpDateTime.TimeStringToDateTime();
+            Assert.AreEqual(default(DateTime), result);
         }
 
         /// <summary>
