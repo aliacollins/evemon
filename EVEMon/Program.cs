@@ -123,9 +123,9 @@ namespace EVEMon
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                String appId = "EVEMon";
+                string appId = "EVEMon";
                 if (EveMonClient.IsDebugBuild)
-                    appId = String.Format(CultureConstants.DefaultCulture, "{0}-DEBUG", appId);
+                    appId = String.Format(CultureConstants.InvariantCulture, "{0}-DEBUG", appId);
 
                 Windows7.SetProcessAppId(appId);
             }
