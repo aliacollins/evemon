@@ -342,9 +342,13 @@ namespace EVEMon
                     // Does the page match with the character ?
                     if (currentTag != character)
                     {
-                        // Get the existing page and remove it from the old location
-                        // or create a new one
-                        TabPage page = GetPage(pages, character);
+                        // Retrieve the page when it was previously created
+                        // Is the page later in the collection ?
+                        TabPage page;
+                        if (pages.TryGetValue(character, out page))
+                            tcCharacterTabs.TabPages.Remove(page); // Remove the page from old location
+                        else
+                            page = CreateTabPage(character); // Create a new page
 
                         // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
@@ -377,42 +381,6 @@ namespace EVEMon
             }
         }
 
-        /// <summary>
-        /// Gets the page.
-        /// </summary>
-        /// <param name="pages">The pages.</param>
-        /// <param name="character">The character.</param>
-        /// <returns>A tab page.</returns>
-        private TabPage GetPage(IDictionary<Character, TabPage> pages, Character character)
-        {
-            TabPage page;
-            TabPage tempPage = null;
-            try
-            {
-                // Retrieve the page when it was previously created
-                // Is the character later in the collection ?
-                if (pages.TryGetValue(character, out tempPage))
-                {
-                    // Remove the page from old location
-                    tcCharacterTabs.TabPages.Remove(tempPage);
-                }
-                else
-                {
-                    // Creates a new page
-                    tempPage = CreateTabPage(character);
-                }
-
-                page = tempPage;
-                tempPage = null;
-            }
-            finally
-            {
-                if (tempPage != null)
-                    tempPage.Dispose();
-            }
-
-            return page;
-        }
         /// <summary>
         /// Adds the overview tab.
         /// </summary>

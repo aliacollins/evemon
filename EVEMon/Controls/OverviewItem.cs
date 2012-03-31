@@ -83,7 +83,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="isTooltip">if set to <c>true</c> if this instance is used as tooltip.</param>
-        public OverviewItem(Character character, bool isTooltip = false)
+        internal OverviewItem(Character character, bool isTooltip = false)
             : this(character)
         {
             m_isTooltip = isTooltip;
@@ -133,10 +133,7 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (!Visible)
-                return;
-
-            UpdateContent();
+            PerformCustomLayout(m_isTooltip); 
             UpdateTrainingTime();
 
             base.OnVisibleChanged(e);
@@ -280,9 +277,6 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            if (!Visible)
-                return;
-
             // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
@@ -338,7 +332,6 @@ namespace EVEMon.Controls
         /// </summary>
         private void FormatBalance()
         {
-
             lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", Character.Balance);
 
             CCPCharacter ccpCharacter = Character as CCPCharacter;
@@ -551,6 +544,9 @@ namespace EVEMon.Controls
         /// <param name="tooltip"></param>
         private void PerformCustomLayout(bool tooltip)
         {
+            if (!Visible)
+                return;
+
             UpdateVisibilities();
 
             bool showPortrait = (m_showPortrait && !Settings.UI.SafeForWork);

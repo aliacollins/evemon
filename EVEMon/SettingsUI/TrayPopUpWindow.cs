@@ -348,7 +348,7 @@ namespace EVEMon.SettingsUI
                 List<APIKey> prevAPIKeys = new List<APIKey>();
                 foreach (Character character in characters)
                 {
-                    OverviewItem charPanel = new OverviewItem(character, true);
+                    OverviewItem charPanel = GetOverviewItem(character);
                     List<APIKey> apiKeys = character.Identity.APIKeys.ToList();
                     
                     if (!apiKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
@@ -384,8 +384,7 @@ namespace EVEMon.SettingsUI
                 }
             }
             else
-                mainPanel.Controls.AddRange(
-                    characters.Select(character => new OverviewItem(character, true)).ToArray<Control>());
+                mainPanel.Controls.AddRange(characters.Select(GetOverviewItem).ToArray<Control>());
 
             // Skip if the user do not want to be warned about accounts not in training
             string warningMessage;
@@ -413,6 +412,33 @@ namespace EVEMon.SettingsUI
 
             // Updates the tooltip width
             CompleteLayout();
+        }
+
+        /// <summary>
+        /// Gets the overview item.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        private static OverviewItem GetOverviewItem(Character character)
+        {
+            OverviewItem overviewItem;
+            OverviewItem tempOverviewItem = null;
+            try
+            {
+                // Creates a new page
+                tempOverviewItem = new OverviewItem(character, true);
+                tempOverviewItem.Tag = character;
+
+                overviewItem = tempOverviewItem;
+                tempOverviewItem = null;
+            }
+            finally
+            {
+                if (tempOverviewItem != null)
+                    tempOverviewItem.Dispose();
+            }
+
+            return overviewItem;
         }
 
         /// <summary>

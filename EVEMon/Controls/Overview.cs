@@ -11,13 +11,23 @@ namespace EVEMon.Controls
     {
         public event EventHandler<CharacterChangedEventArgs> CharacterClicked;
 
+        private bool m_grouping;
+
+
+        #region Constructor
+
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public Overview()
+        internal Overview()
         {
             InitializeComponent();
         }
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load, update the controls.
@@ -32,6 +42,7 @@ namespace EVEMon.Controls
             DoubleBuffered = true;
 
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             UpdateContent();
@@ -45,79 +56,140 @@ namespace EVEMon.Controls
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
+
+        /// <summary>
+        /// Occurs when the visibility changed.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            PerformCustomLayout();
+            base.OnVisibleChanged(e);
+        }
+
+        /// <summary>
+        /// Adjust the layout on size change.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            PerformCustomLayout();
+            base.OnSizeChanged(e);
+        }
+
+        #endregion
 
 
         #region Content creation and layout
 
         /// <summary>
-        /// Updates the characters' list with the provided monitors.
+        /// Updates the overview content.
         /// </summary>
         private void UpdateContent()
         {
-            SuspendLayout();
-            try
+            // Updates the visibility of the label for when no characters are loaded
+            if (!EveMonClient.MonitoredCharacters.Any())
             {
-                CleanUp();
-
-                // Updates the visibility of the label for when no characters are loaded
-                if (!EveMonClient.MonitoredCharacters.Any())
-                {
-                    labelNoCharacters.Visible = true;
-                    return;
-                }
-
-                // Creates the controls
-                List<Character> characters = new List<Character>();
-                if (Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
-                {
-                    characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
-                    characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => !x.IsTraining));
-                }
-                else
-                    characters.AddRange(EveMonClient.MonitoredCharacters);
-
-                foreach (OverviewItem item in characters.Select(character => new OverviewItem(character)))
-                {
-                    item.Click += item_Click;
-                    item.Clickable = true;
-
-                    // Ensure that the control gets created before we add it,
-                    // (when Overview is created and then we hide a character,
-                    // the control gets created after the custom layout has been performed,
-                    // causing the controls to get misplaced)
-                    item.CreateControl();
-
-                    // Add it 
-                    Controls.Add(item);
-                }
-
-                PerformCustomLayout();
+                labelNoCharacters.Visible = true;
+                return;
             }
-            finally
-            {
-                ResumeLayout();
-                labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
-            }
-        }
 
-        /// <summary>
-        /// Cleans up the existing controls.
-        /// </summary>
-        private void CleanUp()
-        {
-            // Dispose every one of the control to prevent event triggering
-            IEnumerable<OverviewItem> items = Controls.OfType<OverviewItem>().ToList();
-            foreach (OverviewItem item in items)
+            // Collect the existing overview items
+            Dictionary<Character, OverviewItem> items = Controls.OfType<OverviewItem>().ToDictionary(page => (Character)page.Tag);
+
+            // Create the order we will layout the controls
+            List<Character> characters = new List<Character>();
+            m_grouping = Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+            if (m_grouping)
             {
+                characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
+                characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => !x.IsTraining));
+            }
+            else
+                characters.AddRange(EveMonClient.MonitoredCharacters);
+
+            int index = 0;
+            List<OverviewItem> overviewItems = Controls.OfType<OverviewItem>().ToList();
+            foreach (Character character in characters)
+            {
+                // Retrieve the current overview item, or null if we're past the limits
+                OverviewItem currentOverviewItem = (index < overviewItems.Count ? overviewItems[index] : null);
+                Character currentTag = currentOverviewItem != null ? (Character)currentOverviewItem.Tag : null;
+
+                // Does the overview item match with the character ?
+                if (currentTag != character)
+                {
+                    // Retrieve the overview item when it was previously created
+                    // Is the overview item later in the collection ?
+                    OverviewItem overviewItem;
+                    if (items.TryGetValue(character, out overviewItem))
+                        overviewItems.Remove(overviewItem); // Remove the overview item from old location
+                    else
+                        overviewItem = GetOverviewItem(character); // Create a new overview item
+
+                    // Inserts the overview item in the proper location
+                    overviewItems.Insert(index, overviewItem);
+                }
+
+                // Remove processed character from the dictionary and move forward
+                if (character != null)
+                    items.Remove(character);
+
+                index++;
+            }
+
+            // Clean up remaining items
+            foreach (OverviewItem item in items.Values)
+            {
+                overviewItems.Remove(item);
                 item.Click -= item_Click;
                 item.Dispose();
             }
 
-            // Clear the controls list
+            // Add the created items to the Overview
             Controls.Clear();
             Controls.Add(labelNoCharacters);
+            Controls.AddRange(overviewItems.ToArray<Control>());
+
+            PerformCustomLayout();
+        }
+
+        /// <summary>
+        /// Gets the overview item.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        private OverviewItem GetOverviewItem(Character character)
+        {
+            OverviewItem overviewItem;
+            OverviewItem tempOverviewItem = null;
+            try
+            {
+                // Creates a new page
+                tempOverviewItem = new OverviewItem(character);
+                tempOverviewItem.Click += item_Click;
+                tempOverviewItem.Clickable = true;
+                tempOverviewItem.Tag = character;
+
+                // Ensure that the control gets created before we add it,
+                // (when Overview is created and then we hide a character,
+                // the control gets created after the custom layout has been performed,
+                // causing the controls to get misplaced)
+                tempOverviewItem.CreateControl();
+
+                overviewItem = tempOverviewItem;
+                tempOverviewItem = null;
+            }
+            finally
+            {
+                if (tempOverviewItem != null)
+                    tempOverviewItem.Dispose();
+            }
+
+            return overviewItem;
         }
 
         /// <summary>
@@ -128,6 +200,9 @@ namespace EVEMon.Controls
         /// </remarks>
         private void PerformCustomLayout()
         {
+            if (!Visible)
+                return;
+
             IEnumerable<OverviewItem> overviewItems = Controls.OfType<OverviewItem>();
 
             // Check there is at least one control
@@ -185,7 +260,7 @@ namespace EVEMon.Controls
                 {
                     // Set the control bound
                     overviewItem.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, overviewItem.PreferredSize.Width,
-                                      overviewItem.PreferredSize.Height);
+                                           overviewItem.PreferredSize.Height);
                     rowHeight = Math.Max(rowHeight, overviewItem.PreferredSize.Height);
                     rowIndex++;
 
@@ -201,6 +276,7 @@ namespace EVEMon.Controls
             finally
             {
                 ResumeLayout(true);
+                labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
 
                 // Restore the scroll bar position
                 VerticalScroll.Value = scrollBarPosition;
@@ -223,13 +299,15 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Adjust the layout on size change.
+        /// When the settings changed, update if necessary.
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void OnSizeChanged(EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            PerformCustomLayout();
-            base.OnSizeChanged(e);
+            // Update only when grouping settings have changed
+            if (m_grouping != Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
+                UpdateContent();
         }
 
         /// <summary>
