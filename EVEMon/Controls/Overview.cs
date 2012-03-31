@@ -128,8 +128,10 @@ namespace EVEMon.Controls
         /// </remarks>
         private void PerformCustomLayout()
         {
+            IEnumerable<OverviewItem> overviewItems = Controls.OfType<OverviewItem>();
+
             // Check there is at least one control
-            int numControls = Controls.OfType<OverviewItem>().Count();
+            int numControls = overviewItems.Count();
             if (numControls == 0)
                 return;
 
@@ -143,8 +145,7 @@ namespace EVEMon.Controls
             try
             {
                 // Retrieve the item width (should be the same for all controls) and compute the item and row width
-                OverviewItem firstItem = Controls.OfType<OverviewItem>().First();
-                int itemWidth = firstItem.PreferredSize.Width;
+                int itemWidth = overviewItems.First().PreferredSize.Width;
 
                 // Computes the number of columns and rows we need
                 int numColumns = Math.Max(1, Math.Min(numControls, ClientSize.Width / itemWidth));
@@ -157,10 +158,10 @@ namespace EVEMon.Controls
                 int rowIndex = 0;
                 int rowHeight = 0;
                 int height = 0;
-                foreach (OverviewItem control in Controls.OfType<OverviewItem>())
+                foreach (OverviewItem overviewItem in overviewItems)
                 {
                     // Add the item to the row
-                    rowHeight = Math.Max(rowHeight, control.PreferredSize.Height);
+                    rowHeight = Math.Max(rowHeight, overviewItem.PreferredSize.Height);
                     rowIndex++;
 
                     // Skip if row not complete yet
@@ -180,12 +181,12 @@ namespace EVEMon.Controls
                 rowIndex = 0;
                 rowHeight = 0;
                 height = marginV;
-                foreach (OverviewItem control in Controls.OfType<OverviewItem>())
+                foreach (OverviewItem overviewItem in overviewItems)
                 {
                     // Set the control bound
-                    control.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, control.PreferredSize.Width,
-                                      control.PreferredSize.Height);
-                    rowHeight = Math.Max(rowHeight, control.PreferredSize.Height);
+                    overviewItem.SetBounds(marginH + rowIndex * (itemWidth + Pad), height, overviewItem.PreferredSize.Width,
+                                      overviewItem.PreferredSize.Height);
+                    rowHeight = Math.Max(rowHeight, overviewItem.PreferredSize.Height);
                     rowIndex++;
 
                     // Skip if row not complete yet

@@ -304,40 +304,115 @@ namespace EVEMon
         /// </summary>
         private void UpdateTabs()
         {
-            TabPage selectedTab = tcCharacterTabs.SelectedTab;
-            IEnumerable<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(page => page != tpOverview).ToList();
+            // Layouts the tab pages
+            LayoutTabPages();
 
-            // Updates the pages
+            // Updates the controls related to tab selection
+            UpdateControlsOnTabSelectionChange();
+        }
+
+        /// <summary>
+        /// Layouts the tab pages.
+        /// </summary>
+        private void LayoutTabPages()
+        {
+            TabPage selectedTab = tcCharacterTabs.SelectedTab;
+
+            // Collect the existing pages
+            Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
+                page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
+
             tcCharacterTabs.Visible = false;
-            tcCharacterTabs.TabPages.Clear();
             tcCharacterTabs.SuspendLayout();
             try
             {
-                // Dispose the old pages
-                foreach (TabPage page in pages)
+                // Rebuild the pages
+                int index = 0;
+                foreach (Character character in EveMonClient.MonitoredCharacters)
+                {
+                    // Retrieve the current page, or null if we're past the limits
+                    TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
+
+                    // Is it the overview ? We'll deal with it later
+                    if (currentPage == tpOverview)
+                        currentPage = (index++ < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
+
+                    Character currentTag = currentPage != null ? (Character)currentPage.Tag : null;
+
+                    // Does the page match with the character ?
+                    if (currentTag != character)
+                    {
+                        // Get the existing page and remove it from the old location
+                        // or create a new one
+                        TabPage page = GetPage(pages, character);
+
+                        // Inserts the page in the proper location
+                        tcCharacterTabs.TabPages.Insert(index, page);
+                    }
+
+                    // Remove processed character from the dictionary and move forward
+                    if (character != null)
+                        pages.Remove(character);
+
+                    index++;
+                }
+
+                // Ensures the overview has been added when necessary
+                AddOverviewTab();
+
+                // Dispose the removed tabs
+                foreach (TabPage page in pages.Values)
                 {
                     page.Dispose();
                 }
 
-                // Rebuild the pages
-                tcCharacterTabs.TabPages.AddRange(EveMonClient.MonitoredCharacters.Select(CreateTabPage).ToArray());
-
-                // Ensures the overview has been added if necessary
-                AddOverviewTab();
+                // Reselect
+                if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
+                    tcCharacterTabs.SelectedTab = selectedTab;
             }
             finally
             {
                 tcCharacterTabs.ResumeLayout();
                 tcCharacterTabs.Visible = true;
             }
-
-            // Reselect
-            if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
-                tcCharacterTabs.SelectedTab = selectedTab;
-
-            UpdateControlsOnTabSelectionChange();
         }
 
+        /// <summary>
+        /// Gets the page.
+        /// </summary>
+        /// <param name="pages">The pages.</param>
+        /// <param name="character">The character.</param>
+        /// <returns>A tab page.</returns>
+        private TabPage GetPage(IDictionary<Character, TabPage> pages, Character character)
+        {
+            TabPage page;
+            TabPage tempPage = null;
+            try
+            {
+                // Retrieve the page when it was previously created
+                // Is the character later in the collection ?
+                if (pages.TryGetValue(character, out tempPage))
+                {
+                    // Remove the page from old location
+                    tcCharacterTabs.TabPages.Remove(tempPage);
+                }
+                else
+                {
+                    // Creates a new page
+                    tempPage = CreateTabPage(character);
+                }
+
+                page = tempPage;
+                tempPage = null;
+            }
+            finally
+            {
+                if (tempPage != null)
+                    tempPage.Dispose();
+            }
+
+            return page;
+        }
         /// <summary>
         /// Adds the overview tab.
         /// </summary>
@@ -355,13 +430,6 @@ namespace EVEMon
                 if (!tcCharacterTabs.TabPages.Contains(tpOverview))
                     tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
 
-                // If it exist insert it at the correct position
-                if (tcCharacterTabs.TabPages.IndexOf(tpOverview) != overviewIndex)
-                {
-                    tcCharacterTabs.TabPages.Remove(tpOverview);
-                    tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
-                }
-
                 // Select the Overview tab if it's the first tab
                 if (Settings.UI.MainWindow.OverviewIndex == 0)
                     tcCharacterTabs.SelectedTab = tpOverview;
@@ -378,6 +446,7 @@ namespace EVEMon
         /// Creates the tab page for the given character.
         /// </summary>
         /// <param name="character">The character</param>
+        /// <returns>A tab page.</returns>
         private static TabPage CreateTabPage(Character character)
         {
             // Create the tab
