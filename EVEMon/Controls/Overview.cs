@@ -42,6 +42,7 @@ namespace EVEMon.Controls
             DoubleBuffered = true;
 
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
@@ -56,19 +57,20 @@ namespace EVEMon.Controls
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
-        /// <summary>
-        /// Occurs when the visibility changed.
-        /// </summary>
-        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            PerformCustomLayout();
-            base.OnVisibleChanged(e);
-        }
+        ///// <summary>
+        ///// Occurs when the visibility changed.
+        ///// </summary>
+        ///// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        //protected override void OnVisibleChanged(EventArgs e)
+        //{
+        //    UpdateContent();
+        //    base.OnVisibleChanged(e);
+        //}
 
         /// <summary>
         /// Adjust the layout on size change.
@@ -93,6 +95,9 @@ namespace EVEMon.Controls
             // Updates the visibility of the label for when no characters are loaded
             if (!EveMonClient.MonitoredCharacters.Any())
             {
+                if (Controls.OfType<OverviewItem>().Any())
+                    CleanUp(Controls.OfType<OverviewItem>().ToList());
+
                 labelNoCharacters.Visible = true;
                 return;
             }
@@ -141,22 +146,35 @@ namespace EVEMon.Controls
                 index++;
             }
 
-            // Clean up remaining items
+            // Remove the remaining items
+            CleanUp(items.Values.ToList());
             foreach (OverviewItem item in items.Values)
             {
                 overviewItems.Remove(item);
-                item.Click -= item_Click;
-                item.Dispose();
             }
 
             // Add the created items to the Overview
-            Controls.Clear();
-            Controls.Add(labelNoCharacters);
             Controls.AddRange(overviewItems.ToArray<Control>());
 
             PerformCustomLayout();
         }
 
+        /// <summary>
+        /// Cleans up the existing controls.
+        /// </summary>
+        private void CleanUp(IEnumerable<OverviewItem> items)
+        {
+            // Dispose every one of the control to prevent event triggering
+            foreach (OverviewItem item in items)
+            {
+                item.Click -= item_Click;
+                item.Dispose();
+            }
+
+            // Clear the controls list
+            Controls.Clear();
+            Controls.Add(labelNoCharacters);
+        }
         /// <summary>
         /// Gets the overview item.
         /// </summary>
@@ -294,6 +312,16 @@ namespace EVEMon.Controls
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        {
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// When aby character updates, we update the layout.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateContent();
         }

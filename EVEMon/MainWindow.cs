@@ -395,8 +395,15 @@ namespace EVEMon
                 if (!tcCharacterTabs.TabPages.Contains(tpOverview))
                     tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
 
+                // If it exist insert it at the correct position
+                if (tcCharacterTabs.TabPages.IndexOf(tpOverview) != overviewIndex)
+                {
+                    tcCharacterTabs.TabPages.Remove(tpOverview);
+                    tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
+                }
+
                 // Select the Overview tab if it's the first tab
-                if (Settings.UI.MainWindow.OverviewIndex == 0)
+                if (overviewIndex == 0)
                     tcCharacterTabs.SelectedTab = tpOverview;
 
                 return;
