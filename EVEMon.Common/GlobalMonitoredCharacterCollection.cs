@@ -52,7 +52,7 @@ namespace EVEMon.Common
         /// <summary>
         /// When the <see cref="Character.Monitored"/> property changed, this collection is updated.
         /// </summary>
-        /// <param name="character">The character for which the property changed</param>
+        /// <param name="character">The character for which the property changed.</param>
         /// <param name="value"></param>
         internal void OnCharacterMonitoringChanged(Character character, bool value)
         {
@@ -63,15 +63,14 @@ namespace EVEMon.Common
                     Items.Add(character);
                     EveMonClient.OnMonitoredCharactersChanged();
                 }
+                return;
             }
-            else
-            {
-                if (Items.Contains(character))
-                {
-                    Items.Remove(character);
-                    EveMonClient.OnMonitoredCharactersChanged();
-                }
-            }
+
+            if (!Items.Contains(character))
+                return;
+
+            Items.Remove(character);
+            EveMonClient.OnMonitoredCharactersChanged();
         }
 
         /// <summary>
