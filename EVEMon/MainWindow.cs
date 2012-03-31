@@ -64,11 +64,6 @@ namespace EVEMon
             notificationList.Notifications = null;
             Visible = false;
 
-            tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
-            overview.CharacterClicked += overview_CharacterClicked;
-            tcCharacterTabs.TabPages.Remove(tpOverview);
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
-
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
         }
@@ -115,6 +110,8 @@ namespace EVEMon
                 return;
 
             trayIcon.Text = Application.ProductName;
+
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
@@ -335,7 +332,7 @@ namespace EVEMon
 
                     // Is it the overview ? We'll deal with it later
                     if (currentPage == tpOverview)
-                        currentPage = (index++ < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
+                        currentPage = (++index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
 
                     Character currentTag = currentPage != null ? (Character)currentPage.Tag : null;
 
