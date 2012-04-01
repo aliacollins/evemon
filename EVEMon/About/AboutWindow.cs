@@ -82,6 +82,7 @@ namespace EVEMon.About
                                    { "coeus", 6 },
                                    { "CrazyMahone", 6 },
                                    { "CyberTech", 6 },
+                                   { "Derath Ellecon", 6 },
                                    { "Dariana", 6 },
                                    { "Eviro", 6 },
                                    { "exi", 6 },
