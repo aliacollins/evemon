@@ -495,7 +495,6 @@ namespace EVEMon.CharacterMonitoring
             // Subscribe to events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.APIKeyMonitoredChanged += EveMonClient_APIKeyMonitoredChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
@@ -528,7 +527,6 @@ namespace EVEMon.CharacterMonitoring
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.APIKeyMonitoredChanged -= EveMonClient_APIKeyMonitoredChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
@@ -560,16 +558,6 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
-            UpdateInfrequentControls();
-        }
-
-        /// <summary>
-        /// Handles the APIKeyMonitoredChanged event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_APIKeyMonitoredChanged(object sender, EventArgs e)
-        {
             UpdateInfrequentControls();
         }
 

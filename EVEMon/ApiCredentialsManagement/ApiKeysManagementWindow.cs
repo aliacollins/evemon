@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,6 +11,8 @@ namespace EVEMon.ApiCredentialsManagement
 {
     public partial class ApiKeysManagementWindow : EVEMonForm
     {
+        private readonly Dictionary<Character, bool> m_monitoredCharacters = new Dictionary<Character, bool>();
+
         private int m_refreshingCharactersCounter;
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
+            Disposed += OnDisposing;
 
             UpdateAPIKeysList();
             UpdateCharactersList();
@@ -52,17 +54,24 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// On closing, unsubscribe events.
+        /// Occurs on disposing.
         /// </summary>
-        /// <param name="e"></param>
-        protected override void OnClosing(CancelEventArgs e)
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposing(object sender, EventArgs e)
         {
+            // Unsubscribe events
             EveMonClient.APIKeyCollectionChanged -= EveMonClient_APIKeyCollectionChanged;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
-            base.OnClosing(e);
+
+            // Update the monitored status of selected characters
+            foreach (KeyValuePair<Character, bool> monitoredCharacter in m_monitoredCharacters)
+            {
+                monitoredCharacter.Key.Monitored = monitoredCharacter.Value;
+            }
         }
 
         /// <summary>
@@ -490,11 +499,11 @@ namespace EVEMon.ApiCredentialsManagement
         private void UpdateControlsUsability()
         {
             // "Edit uri" enabled when an uri char is selected
-            editUriMenu.Enabled = (charactersListView.SelectedItems.Count != 0) &&
-                                  ((charactersListView.SelectedItems[0].Tag as UriCharacter) != null);
+            editUriMenu.Enabled = (charactersListView.SelectedItems.Count > 0 &&
+                                   charactersListView.SelectedItems[0].Tag is UriCharacter);
 
             // Delete char enabled if one character selected
-            deleteCharacterMenu.Enabled = (charactersListView.SelectedItems.Count != 0);
+            deleteCharacterMenu.Enabled = (charactersListView.SelectedItems.Count > 0);
         }
 
         /// <summary>
@@ -507,8 +516,10 @@ namespace EVEMon.ApiCredentialsManagement
             if (m_refreshingCharactersCounter != 0)
                 return;
 
+            // Add the character with changed monitoring status to the dictionary,
+            // we will deal with them on closing
             Character character = (Character)e.Item.Tag;
-            character.Monitored = e.Item.Checked;
+            m_monitoredCharacters[character] = e.Item.Checked;
         }
 
         /// <summary>

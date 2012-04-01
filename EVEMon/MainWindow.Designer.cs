@@ -1,5 +1,3 @@
-using EVEMon.Common.Controls;
-using EVEMon.Controls;
 
 namespace EVEMon
 {
@@ -1016,6 +1014,7 @@ namespace EVEMon
             this.tcCharacterTabs.Size = new System.Drawing.Size(554, 503);
             this.tcCharacterTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tcCharacterTabs.TabIndex = 0;
+            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.tcCharacterTabs_SelectedIndexChanged);
             this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
             // 
             // tpOverview
@@ -1028,16 +1027,6 @@ namespace EVEMon
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
             // 
-            // trayIcon
-            // 
-            this.trayIcon.ContextMenuStrip = this.trayIconToolStrip;
-            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
-            this.trayIcon.MouseHoverTime = 200;
-            this.trayIcon.Text = "";
-            this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
-            this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
-            this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
-            // 
             // overview
             // 
             this.overview.AutoScroll = true;
@@ -1048,6 +1037,17 @@ namespace EVEMon
             this.overview.Name = "overview";
             this.overview.Size = new System.Drawing.Size(546, 477);
             this.overview.TabIndex = 0;
+            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
+            // 
+            // trayIcon
+            // 
+            this.trayIcon.ContextMenuStrip = this.trayIconToolStrip;
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+            this.trayIcon.MouseHoverTime = 200;
+            this.trayIcon.Text = "";
+            this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
+            this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
+            this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             // 
             // notificationList
             // 
@@ -1112,7 +1112,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem planToolStripMenuItem;
-        private DraggableTabControl tcCharacterTabs;
+        private EVEMon.Common.Controls.DraggableTabControl tcCharacterTabs;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripStatusLabel lblServerStatus;
@@ -1161,14 +1161,14 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator plansToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
-        private TrayIcon trayIcon;
+        private EVEMon.Common.Controls.TrayIcon trayIcon;
         private System.Windows.Forms.TabPage tpOverview;
-        private Overview overview;
+        private EVEMon.Controls.Overview overview;
         private System.Windows.Forms.ToolStripSeparator helpAboutKnownProblemsToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem knownProblemsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forumsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolsOwnedOptionsToolStripSeparator;
-        private Controls.NotificationList notificationList;
+        private EVEMon.Controls.NotificationList notificationList;
         private System.Windows.Forms.NotifyIcon niAlertIcon;
         private System.Windows.Forms.ToolStripMenuItem addAPIKeyMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteCharacterMenu;

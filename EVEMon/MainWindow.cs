@@ -64,11 +64,6 @@ namespace EVEMon
             notificationList.Notifications = null;
             Visible = false;
 
-            tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
-            overview.CharacterClicked += overview_CharacterClicked;
-            tcCharacterTabs.TabPages.Remove(tpOverview);
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
-
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
         }
@@ -115,6 +110,8 @@ namespace EVEMon
                 return;
 
             trayIcon.Text = Application.ProductName;
+
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
@@ -304,38 +301,81 @@ namespace EVEMon
         /// </summary>
         private void UpdateTabs()
         {
-            TabPage selectedTab = tcCharacterTabs.SelectedTab;
-            IEnumerable<TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(page => page != tpOverview).ToList();
+            // Layouts the tab pages
+            LayoutTabPages();
 
-            // Updates the pages
+            // Updates the controls related to tab selection
+            UpdateControlsOnTabSelectionChange();
+        }
+
+        /// <summary>
+        /// Layouts the tab pages.
+        /// </summary>
+        private void LayoutTabPages()
+        {
+            TabPage selectedTab = tcCharacterTabs.SelectedTab;
+
+            // Collect the existing pages
+            Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
+                page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
+
             tcCharacterTabs.Visible = false;
-            tcCharacterTabs.TabPages.Clear();
             tcCharacterTabs.SuspendLayout();
             try
             {
-                // Dispose the old pages
-                foreach (TabPage page in pages)
+                // Rebuild the pages
+                int index = 0;
+                foreach (Character character in EveMonClient.MonitoredCharacters)
+                {
+                    // Retrieve the current page, or null if we're past the limits
+                    TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
+
+                    // Is it the overview ? We'll deal with it later
+                    if (currentPage == tpOverview)
+                        currentPage = (++index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
+
+                    Character currentTag = currentPage != null ? (Character)currentPage.Tag : null;
+
+                    // Does the page match with the character ?
+                    if (currentTag != character)
+                    {
+                        // Retrieve the page when it was previously created
+                        // Is the page later in the collection ?
+                        TabPage page;
+                        if (pages.TryGetValue(character, out page))
+                            tcCharacterTabs.TabPages.Remove(page); // Remove the page from old location
+                        else
+                            page = CreateTabPage(character); // Create a new page
+
+                        // Inserts the page in the proper location
+                        tcCharacterTabs.TabPages.Insert(index, page);
+                    }
+
+                    // Remove processed character from the dictionary and move forward
+                    if (character != null)
+                        pages.Remove(character);
+
+                    index++;
+                }
+
+                // Ensures the overview has been added when necessary
+                AddOverviewTab();
+
+                // Dispose the removed tabs
+                foreach (TabPage page in pages.Values)
                 {
                     page.Dispose();
                 }
 
-                // Rebuild the pages
-                tcCharacterTabs.TabPages.AddRange(EveMonClient.MonitoredCharacters.Select(CreateTabPage).ToArray());
-
-                // Ensures the overview has been added if necessary
-                AddOverviewTab();
+                // Reselect
+                if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
+                    tcCharacterTabs.SelectedTab = selectedTab;
             }
             finally
             {
                 tcCharacterTabs.ResumeLayout();
                 tcCharacterTabs.Visible = true;
             }
-
-            // Reselect
-            if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
-                tcCharacterTabs.SelectedTab = selectedTab;
-
-            UpdateControlsOnTabSelectionChange();
         }
 
         /// <summary>
@@ -363,7 +403,7 @@ namespace EVEMon
                 }
 
                 // Select the Overview tab if it's the first tab
-                if (Settings.UI.MainWindow.OverviewIndex == 0)
+                if (overviewIndex == 0)
                     tcCharacterTabs.SelectedTab = tpOverview;
 
                 return;
@@ -378,6 +418,7 @@ namespace EVEMon
         /// Creates the tab page for the given character.
         /// </summary>
         /// <param name="character">The character</param>
+        /// <returns>A tab page.</returns>
         private static TabPage CreateTabPage(Character character)
         {
             // Create the tab
