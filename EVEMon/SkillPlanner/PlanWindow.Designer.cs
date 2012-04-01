@@ -258,7 +258,7 @@ namespace EVEMon.SkillPlanner
             // sfdSave
             // 
             this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*." +
-    "txt";
+                "txt";
             this.sfdSave.Title = "Save to File";
             // 
             // tabControl
@@ -414,11 +414,11 @@ namespace EVEMon.SkillPlanner
             this.ilTabIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilTabIcons.ImageStream")));
             this.ilTabIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.ilTabIcons.Images.SetKeyName(0, "Plan.png");
-            this.ilTabIcons.Images.SetKeyName(1, "Skills.png");
+            this.ilTabIcons.Images.SetKeyName(1, "Skill_24.png");
             this.ilTabIcons.Images.SetKeyName(2, "Certificate-24.png");
-            this.ilTabIcons.Images.SetKeyName(3, "Ships.png");
+            this.ilTabIcons.Images.SetKeyName(3, "Ships_24.png");
             this.ilTabIcons.Images.SetKeyName(4, "Items.png");
-            this.ilTabIcons.Images.SetKeyName(5, "Blueprint.png");
+            this.ilTabIcons.Images.SetKeyName(5, "Blueprint_24.png");
             // 
             // PlanWindow
             // 
