@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Windows.Forms;
-using System.Xml.XPath;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.BattleClinic
@@ -153,24 +152,64 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (!BCAPISettings.Default.UploadAlways || !HasCredentialsStored)
                 return;
 
+            if (!IsAuthenticated && !CheckAPICredentials())
+            {
+                MessageBox.Show("The BattleClinic API credentials could not be authenticated.",
+                                "BattleClinic API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             EveMonClient.Trace("BCAPI.UploadSettingsFile - Initiated");
 
-            FileSave();
-            
+            BCAPIResult<SerializableBCAPIFiles> result = FileSave();
+            if (result.HasError)
+            {
+                MessageBox.Show(result.Error.ErrorMessage, "BattleClinic API Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             EveMonClient.Trace("BCAPI.UploadSettingsFile - Completed");
         }
 
         /// <summary>
         /// Downloads the settings file.
         /// </summary>
-        public static void DownloadSettingsFile()
+        public static SerializableFilesListItem DownloadSettingsFile()
         {
             if (!BCAPISettings.Default.DownloadAlways || !HasCredentialsStored)
-                return;
+                return null;
+
+            if (!IsAuthenticated && !CheckAPICredentials())
+            {
+                MessageBox.Show("The BattleClinic API credentials could not be authenticated.",
+                                "BattleClinic API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return null;
+            }
 
             EveMonClient.Trace("BCAPI.DownloadSettingsFile - Initiated");
 
-            FileGetByNameAsync(OnFileGetByName);
+            SerializableFilesListItem settingsFile = null;
+            if (BCAPISettings.Default.UseImmediately)
+            {
+                BCAPIResult<SerializableBCAPIFiles> result = FileGetByName();
+                if (result.HasError)
+                {
+                    MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                                                  "File could not be downloaded.\n\nThe error was:\n{0}",
+                                                  result.Error.ErrorMessage),
+                                    "BattleClinic API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    settingsFile = result.Result.Files.First();
+                    EveMonClient.Trace("BCAPI.DownloadSettingsFile - Completed");
+                }
+            }
+            else
+                FileGetByNameAsync(OnFileGetByName);
+
+            return settingsFile;
         }
 
         #endregion
@@ -179,9 +218,28 @@ namespace EVEMon.Common.Serialization.BattleClinic
         #region Queries
 
         /// <summary>
+        /// Checks the BattleClinic API credentials.
+        /// </summary>
+        /// <returns><c>true</c> if credentials are authenticated; otherwise <c>false</c></returns>
+        public static bool CheckAPICredentials()
+        {
+            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
+                                                                   "userID={0}&apiKey={1}&applicationKey={2}",
+                                                                   BCAPISettings.Default.BCUserID,
+                                                                   BCAPISettings.Default.BCAPIKey,
+                                                                   BCAPISettings.Default.BCApplicationKey));
+
+            BCAPIResult<SerializableBCAPICredentials> result =
+                QueryMethod<SerializableBCAPICredentials>(BCAPIMethods.CheckCredentials, postData);
+            IsAuthenticated = !result.HasError;
+            return IsAuthenticated;
+        }
+
+        /// <summary>
         /// Saves a file content to the BattleClinic server.
         /// </summary>
-        public static void FileSave()
+        /// <returns><c>true</c> if file saving succeded; otherwise <c>false</c></returns>
+        public static BCAPIResult<SerializableBCAPIFiles> FileSave()
         {
             HttpPostData postData =
                 new HttpPostData(String.Format(CultureConstants.InvariantCulture,
@@ -190,13 +248,13 @@ namespace EVEMon.Common.Serialization.BattleClinic
                                                BCAPISettings.Default.BCApplicationKey,
                                                EveMonClient.SettingsFileName, SettingsFileContent));
 
-            QueryMethod(BCAPIMethods.FileSave, postData);
+            return QueryMethod<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData);
         }
 
         /// <summary>
         /// Gets the file content by the file name.
         /// </summary>
-        public static IXPathNavigable FileGetByName()
+        public static BCAPIResult<SerializableBCAPIFiles> FileGetByName()
         {
             HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
                                                                    "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
@@ -204,7 +262,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                                                                    BCAPISettings.Default.BCApplicationKey,
                                                                    EveMonClient.SettingsFileName));
 
-            return QueryMethod(BCAPIMethods.FileGetByName, postData);
+            return QueryMethod<SerializableBCAPIFiles>(BCAPIMethods.FileGetByName, postData);
         }
 
         /// <summary>
@@ -263,10 +321,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
-        private static IXPathNavigable QueryMethod(BCAPIMethods method, HttpPostData postData)
+        private static BCAPIResult<T> QueryMethod<T>(BCAPIMethods method, HttpPostData postData)
         {
             Uri url = GetMethodUrl(method);
-            return EveMonClient.HttpWebService.DownloadXml(url, postData);
+            return Util.DownloadBCAPIResult<T>(url, postData);
         }
 
         /// <summary>
@@ -325,13 +383,14 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                MessageBox.Show(errorMessage, "Network Error", MessageBoxButtons.OK);
+                MessageBox.Show(errorMessage, "Network Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
             if (result.HasError)
             {
-                MessageBox.Show(result.Error.ErrorMessage, "BattleClinic API Error", MessageBoxButtons.OK);
+                MessageBox.Show(result.Error.ErrorMessage, "BattleClinic API Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 

@@ -22,7 +22,6 @@ using EVEMon.Common.IgbService;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
-using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
@@ -128,12 +127,6 @@ namespace EVEMon
 
             // Initialize all of our business objects
             EveMonClient.Run(this);
-
-            // Upgrades the BattleClinic API settings
-            BCAPI.UpgradeSettings();
-
-            // BattleClinic storage service
-            BCAPI.DownloadSettingsFile();
 
             // Update the content
             UpdateTabs();

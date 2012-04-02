@@ -55,9 +55,12 @@ namespace EVEMon
             // Check arguments
             bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
 
+            // Upgrades the BattleClinic API settings
+            BCAPI.UpgradeSettings();
+
             // Initialization
             EveMonClient.Initialize();
-            Settings.InitializeFromFile();
+            Settings.Initialize();
             EveIDToName.InitializeFromFile();
 
             // Initialize G15
