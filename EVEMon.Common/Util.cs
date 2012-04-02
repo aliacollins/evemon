@@ -595,12 +595,11 @@ namespace EVEMon.Common
         /// or <c>0</c> if no such file was found (old format, before the introduction of the revision numbers).</returns>
         public static int GetRevisionNumber(string filename)
         {
-            // Uses a regex to retrieve the revision number.
+            // Uses a regex to retrieve the revision number
             string content = File.ReadAllText(filename);
-            Regex regex = new Regex("revision=\"([0-9]+)\"", RegexOptions.Compiled);
-            Match match = regex.Match(content);
+            Match match = Regex.Match(content, "revision=\"([0-9]+)\"", RegexOptions.Compiled);
 
-            // No match ? Then there was no "revision" attribute, this is an old format.
+            // No match ? Then there was no "revision" attribute, this is an old format
             if (!match.Success || match.Groups.Count < 2)
                 return 0;
 

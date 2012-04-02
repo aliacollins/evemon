@@ -124,7 +124,7 @@ namespace EVEMon.Common
         public static void Reset()
         {
             // Append new properties here
-            Import(new SerializableSettings(), false);
+            Import(new SerializableSettings());
 
             // Notifies the client and save
             SaveImmediate();
@@ -135,7 +135,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="serial">The serializable version of the new settings. May be null (acts as a reset)</param>
         /// <param name="preferencesOnly">When true, only the user preferences will be reimported, not plans, characters, accounts and such.</param>
-        public static void Import(SerializableSettings serial, bool preferencesOnly)
+        public static void Import(SerializableSettings serial, bool preferencesOnly = false)
         {
             // When null, we just reset
             if (serial == null)
@@ -324,7 +324,7 @@ namespace EVEMon.Common
             if (settings == null)
                 Reset();
             else
-                Import(settings, false);
+                Import(settings);
         }
 
         /// <summary>
@@ -343,7 +343,7 @@ namespace EVEMon.Common
                 return;
 
             // Updates and save
-            Import(settings, false);
+            Import(settings);
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace EVEMon.Common
             if (recover)
             {
                 // Backup failed too, notify the user we have a problem
-                MessageBox.Show("Loading from backup failed. A new settings file will be created.\n"
+                MessageBox.Show("Loading from backup failed.\nA new settings file will be created.\n"
                                 + "You may wish then to restore a saved copy of the file.",
                                 Caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
