@@ -218,7 +218,7 @@ namespace EVEMon.Common
 
                 s_smtpClient.SendCompleted += SendCompleted;
                 s_smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                s_smtpClient.Timeout = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).Milliseconds;
+                s_smtpClient.Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
                 
                 // Host and port
                 s_smtpClient.Host = settings.EmailSmtpServerAddress;

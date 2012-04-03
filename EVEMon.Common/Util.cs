@@ -334,7 +334,7 @@ namespace EVEMon.Common
                     null);
 
                 // Wait for the completion of the background thread
-                wait.WaitOne(TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).Milliseconds);
+                wait.WaitOne();
             }
 
             // Returns
@@ -459,7 +459,7 @@ namespace EVEMon.Common
                     null);
 
                 // Wait for the completion of the background thread
-                wait.WaitOne(TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).Milliseconds);
+                wait.WaitOne();
             }
 
             // Returns

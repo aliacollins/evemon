@@ -53,7 +53,7 @@ namespace EVEMon.NotificationWindow
 
             // Configure the timer to close the form on queries timeout
             m_timer.Start();
-            m_timer.Interval = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).Milliseconds;
+            m_timer.Interval = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
 
             m_timer.Tick += timer_Tick;
         }
