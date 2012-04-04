@@ -70,8 +70,7 @@ namespace EVEMon.SettingsUI
 
                 methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                     method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().
-                                     OrderBy(
-                                         method => method.GetHeader()));
+                                     OrderBy(method => method.GetHeader()));
 
                 // Uncomment upon implementing an exclicit corporation monitor feature
                 //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(

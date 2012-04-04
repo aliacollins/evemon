@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.HeaderPanel = new System.Windows.Forms.Panel();
+            this.lblAPIUrl = new System.Windows.Forms.Label();
             this.tbCharID = new System.Windows.Forms.TextBox();
             this.lblCharID = new System.Windows.Forms.Label();
             this.rbExternal = new System.Windows.Forms.RadioButton();
@@ -55,6 +56,7 @@
             // 
             // HeaderPanel
             // 
+            this.HeaderPanel.Controls.Add(this.lblAPIUrl);
             this.HeaderPanel.Controls.Add(this.tbCharID);
             this.HeaderPanel.Controls.Add(this.lblCharID);
             this.HeaderPanel.Controls.Add(this.rbExternal);
@@ -73,25 +75,35 @@
             this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.HeaderPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderPanel.Name = "HeaderPanel";
-            this.HeaderPanel.Size = new System.Drawing.Size(574, 166);
+            this.HeaderPanel.Size = new System.Drawing.Size(564, 174);
             this.HeaderPanel.TabIndex = 0;
+            // 
+            // lblAPIUrl
+            // 
+            this.lblAPIUrl.AutoSize = true;
+            this.lblAPIUrl.Location = new System.Drawing.Point(22, 153);
+            this.lblAPIUrl.Name = "lblAPIUrl";
+            this.lblAPIUrl.Size = new System.Drawing.Size(120, 13);
+            this.lblAPIUrl.TabIndex = 12;
+            this.lblAPIUrl.Text = "The URL of the API call";
+            this.lblAPIUrl.UseMnemonic = false;
             // 
             // tbCharID
             // 
-            this.tbCharID.Location = new System.Drawing.Point(382, 95);
-            this.tbCharID.MaxLength = 12;
+            this.tbCharID.Location = new System.Drawing.Point(382, 87);
+            this.tbCharID.MaxLength = 16;
             this.tbCharID.Name = "tbCharID";
             this.tbCharID.Size = new System.Drawing.Size(100, 20);
             this.tbCharID.TabIndex = 9;
             this.tbCharID.Visible = false;
             this.tbCharID.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbCharID_KeyUp);
-            this.tbCharID.Validating += new System.ComponentModel.CancelEventHandler(this.IDRequiredTextBox_Validating);
-            this.tbCharID.Validated += new System.EventHandler(this.IDRequiredTextBox_Validated);
+            this.tbCharID.Validating += new System.ComponentModel.CancelEventHandler(this.tbCharID_Validating);
+            this.tbCharID.Validated += new System.EventHandler(this.tbCharID_Validated);
             // 
             // lblCharID
             // 
             this.lblCharID.AutoSize = true;
-            this.lblCharID.Location = new System.Drawing.Point(382, 79);
+            this.lblCharID.Location = new System.Drawing.Point(382, 71);
             this.lblCharID.Name = "lblCharID";
             this.lblCharID.Size = new System.Drawing.Size(70, 13);
             this.lblCharID.TabIndex = 11;
@@ -102,7 +114,7 @@
             // 
             this.rbExternal.AutoSize = true;
             this.rbExternal.CausesValidation = false;
-            this.rbExternal.Location = new System.Drawing.Point(203, 54);
+            this.rbExternal.Location = new System.Drawing.Point(203, 46);
             this.rbExternal.Name = "rbExternal";
             this.rbExternal.Size = new System.Drawing.Size(106, 17);
             this.rbExternal.TabIndex = 4;
@@ -115,7 +127,7 @@
             this.rbInternal.AutoSize = true;
             this.rbInternal.CausesValidation = false;
             this.rbInternal.Checked = true;
-            this.rbInternal.Location = new System.Drawing.Point(25, 54);
+            this.rbInternal.Location = new System.Drawing.Point(25, 46);
             this.rbInternal.Name = "rbInternal";
             this.rbInternal.Size = new System.Drawing.Size(103, 17);
             this.rbInternal.TabIndex = 3;
@@ -126,8 +138,8 @@
             // 
             // tbVCode
             // 
-            this.tbVCode.Location = new System.Drawing.Point(203, 134);
-            this.tbVCode.MaxLength = 32;
+            this.tbVCode.Location = new System.Drawing.Point(203, 126);
+            this.tbVCode.MaxLength = 64;
             this.tbVCode.Name = "tbVCode";
             this.tbVCode.Size = new System.Drawing.Size(342, 20);
             this.tbVCode.TabIndex = 8;
@@ -137,19 +149,19 @@
             // 
             // tbKeyID
             // 
-            this.tbKeyID.Location = new System.Drawing.Point(203, 95);
-            this.tbKeyID.MaxLength = 12;
+            this.tbKeyID.Location = new System.Drawing.Point(203, 87);
+            this.tbKeyID.MaxLength = 16;
             this.tbKeyID.Name = "tbKeyID";
             this.tbKeyID.Size = new System.Drawing.Size(100, 20);
             this.tbKeyID.TabIndex = 7;
             this.tbKeyID.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbKeyID_KeyUp);
-            this.tbKeyID.Validating += new System.ComponentModel.CancelEventHandler(this.IDRequiredTextBox_Validating);
-            this.tbKeyID.Validated += new System.EventHandler(this.IDRequiredTextBox_Validated);
+            this.tbKeyID.Validating += new System.ComponentModel.CancelEventHandler(this.tbCharID_Validating);
+            this.tbKeyID.Validated += new System.EventHandler(this.tbCharID_Validated);
             // 
             // lblVCode
             // 
             this.lblVCode.AutoSize = true;
-            this.lblVCode.Location = new System.Drawing.Point(203, 118);
+            this.lblVCode.Location = new System.Drawing.Point(203, 110);
             this.lblVCode.Name = "lblVCode";
             this.lblVCode.Size = new System.Drawing.Size(90, 13);
             this.lblVCode.TabIndex = 6;
@@ -158,7 +170,7 @@
             // lblKeyID
             // 
             this.lblKeyID.AutoSize = true;
-            this.lblKeyID.Location = new System.Drawing.Point(203, 79);
+            this.lblKeyID.Location = new System.Drawing.Point(203, 71);
             this.lblKeyID.Name = "lblKeyID";
             this.lblKeyID.Size = new System.Drawing.Size(42, 13);
             this.lblKeyID.TabIndex = 5;
@@ -166,20 +178,19 @@
             // 
             // tbIDOrName
             // 
-            this.tbIDOrName.Location = new System.Drawing.Point(25, 134);
-            this.tbIDOrName.MaxLength = 32;
+            this.tbIDOrName.Location = new System.Drawing.Point(25, 126);
             this.tbIDOrName.Name = "tbIDOrName";
             this.tbIDOrName.Size = new System.Drawing.Size(155, 20);
             this.tbIDOrName.TabIndex = 6;
             this.tbIDOrName.Visible = false;
             this.tbIDOrName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbIDOrName_KeyUp);
-            this.tbIDOrName.Validating += new System.ComponentModel.CancelEventHandler(this.IDRequiredTextBox_Validating);
-            this.tbIDOrName.Validated += new System.EventHandler(this.IDRequiredTextBox_Validated);
+            this.tbIDOrName.Validating += new System.ComponentModel.CancelEventHandler(this.tbCharID_Validating);
+            this.tbIDOrName.Validated += new System.EventHandler(this.tbCharID_Validated);
             // 
             // lblIDOrName
             // 
             this.lblIDOrName.AutoSize = true;
-            this.lblIDOrName.Location = new System.Drawing.Point(22, 118);
+            this.lblIDOrName.Location = new System.Drawing.Point(22, 110);
             this.lblIDOrName.Name = "lblIDOrName";
             this.lblIDOrName.Size = new System.Drawing.Size(21, 13);
             this.lblIDOrName.TabIndex = 3;
@@ -190,7 +201,7 @@
             // 
             this.saveButton.CausesValidation = false;
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(268, 16);
+            this.saveButton.Location = new System.Drawing.Point(330, 16);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 1;
@@ -203,7 +214,7 @@
             this.cbCharacter.CausesValidation = false;
             this.cbCharacter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCharacter.FormattingEnabled = true;
-            this.cbCharacter.Location = new System.Drawing.Point(25, 95);
+            this.cbCharacter.Location = new System.Drawing.Point(25, 87);
             this.cbCharacter.Name = "cbCharacter";
             this.cbCharacter.Size = new System.Drawing.Size(155, 21);
             this.cbCharacter.TabIndex = 5;
@@ -212,7 +223,7 @@
             // lblCharacter
             // 
             this.lblCharacter.AutoSize = true;
-            this.lblCharacter.Location = new System.Drawing.Point(22, 79);
+            this.lblCharacter.Location = new System.Drawing.Point(22, 71);
             this.lblCharacter.Name = "lblCharacter";
             this.lblCharacter.Size = new System.Drawing.Size(56, 13);
             this.lblCharacter.TabIndex = 2;
@@ -225,7 +236,7 @@
             this.cbAPIMethod.FormattingEnabled = true;
             this.cbAPIMethod.Location = new System.Drawing.Point(84, 17);
             this.cbAPIMethod.Name = "cbAPIMethod";
-            this.cbAPIMethod.Size = new System.Drawing.Size(155, 21);
+            this.cbAPIMethod.Size = new System.Drawing.Size(220, 21);
             this.cbAPIMethod.TabIndex = 2;
             this.cbAPIMethod.SelectedIndexChanged += new System.EventHandler(this.cbAPIMethod_SelectedIndexChanged);
             // 
@@ -242,10 +253,10 @@
             // 
             this.BodyPanel.Controls.Add(this.webBrowser);
             this.BodyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BodyPanel.Location = new System.Drawing.Point(0, 166);
+            this.BodyPanel.Location = new System.Drawing.Point(0, 174);
             this.BodyPanel.Name = "BodyPanel";
             this.BodyPanel.Padding = new System.Windows.Forms.Padding(3);
-            this.BodyPanel.Size = new System.Drawing.Size(574, 229);
+            this.BodyPanel.Size = new System.Drawing.Size(564, 228);
             this.BodyPanel.TabIndex = 1;
             // 
             // webBrowser
@@ -256,7 +267,7 @@
             this.webBrowser.Location = new System.Drawing.Point(3, 3);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(568, 223);
+            this.webBrowser.Size = new System.Drawing.Size(558, 222);
             this.webBrowser.TabIndex = 0;
             this.webBrowser.TabStop = false;
             this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser_DocumentCompleted);
@@ -267,17 +278,16 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // APITesterWindow
+            // ApiTesterWindow
             // 
             this.AcceptButton = this.saveButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(574, 395);
+            this.ClientSize = new System.Drawing.Size(564, 402);
             this.Controls.Add(this.BodyPanel);
             this.Controls.Add(this.HeaderPanel);
             this.KeyPreview = true;
-            this.Name = "APITesterWindow";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Name = "ApiTesterWindow";
             this.Text = "API Tester";
             this.Load += new System.EventHandler(this.APITesterWindow_Load);
             this.HeaderPanel.ResumeLayout(false);
@@ -309,5 +319,6 @@
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.TextBox tbCharID;
         private System.Windows.Forms.Label lblCharID;
+        private System.Windows.Forms.Label lblAPIUrl;
     }
 }

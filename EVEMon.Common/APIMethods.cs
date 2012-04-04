@@ -11,7 +11,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes this instance.
         /// </summary>
-        public static void Initialize()
+        internal static void Initialize()
         {
             s_items.AddRange(EnumExtensions.GetValues<APIGenericMethods>().Cast<Enum>());
             s_items.AddRange(EnumExtensions.GetValues<APICharacterMethods>().Where(

@@ -314,7 +314,7 @@ namespace EVEMon.Common
             m_ccpCharacter.SkillQueue.Import(result.Result.Queue);
 
             // Check the account has a character in training (if API key of type "Account")
-            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSkillInTraining);
+            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.SkillInTraining);
             if (apikey != null)
                 apikey.CharacterInTraining();
 

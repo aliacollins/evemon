@@ -256,7 +256,7 @@ namespace EVEMon.Common
                     m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
 
                 EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
-                    APICharacterMethods.CharacterSkillInTraining, ID, VerificationCode, id.CharacterID,
+                    APICharacterMethods.SkillInTraining, ID, VerificationCode, id.CharacterID,
                     x => OnSkillInTrainingUpdated(x, identity));
             }
         }
@@ -367,7 +367,7 @@ namespace EVEMon.Common
             // Return on error
             if (result.HasError)
             {
-                if (ccpCharacter != null && ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterSkillInTraining))
+                if (ccpCharacter != null && ccpCharacter.ShouldNotifyError(result, APICharacterMethods.SkillInTraining))
                     EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
 
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
