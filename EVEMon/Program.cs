@@ -85,6 +85,9 @@ namespace EVEMon
                 Settings.SaveImmediate();
                 EveIDToName.SaveImmediate();
                 BCAPI.UploadSettingsFile();
+
+                // Stops the one-second timer right now
+                EveMonClient.Shutdown();
                 EveMonClient.Trace("Closed");
                 EveMonClient.StopTraceLogging();
             }

@@ -237,9 +237,6 @@ namespace EVEMon
             // Hide the system tray icons
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
-
-            // Stops the one-second timer right now
-            EveMonClient.Shutdown();
         }
 
         /// <summary>
